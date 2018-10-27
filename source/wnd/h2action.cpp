@@ -1,0 +1,27 @@
+#include "h2action.h"
+#include "ui_h2action.h"
+
+H2Action::H2Action(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::H2Action)
+{
+    ui->setupUi(this);
+
+
+    m_pDelegate1 = new comboxDelegate(this);
+    QStringList prxs;
+    prxs<<tr("PA")<<tr("PRN")<<tr("PRA");
+    m_pDelegate1->setItems( prxs );
+}
+
+H2Action::~H2Action()
+{
+    delete ui;
+}
+
+void H2Action::setModel( QAbstractTableModel *pModel )
+{
+    ui->tableView->setModel( pModel );
+
+    ui->tableView->setItemDelegateForColumn( 0, m_pDelegate1 );
+}

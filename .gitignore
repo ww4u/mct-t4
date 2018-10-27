@@ -31,7 +31,8 @@ Release/
 source/arith/pvt/GelgoogProject/RTOS/
 #source/arith/pvt/GelgoogProject/BSP/
 #source/arith/pvt/GelgoogProject/APP/
-doc/
+#doc/
+
 _icon/
 _icon2/
 _icon3/

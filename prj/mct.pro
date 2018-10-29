@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -42,7 +42,8 @@ SOURCES += \
     ../source/model/comboxdelegate.cpp \
     ../source/widget/megalcdnumber.cpp \
     ../source/wnd/h2status.cpp \
-    ../source/sys/sysapi.cpp
+    ../source/sys/sysapi.cpp \
+    ../source/widget/megasplinechart.cpp
 
 
 HEADERS += \
@@ -58,7 +59,8 @@ HEADERS += \
     ../source/model/comboxdelegate.h \
     ../source/widget/megalcdnumber.h \
     ../source/wnd/h2status.h \
-    ../source/sys/sysapi.h
+    ../source/sys/sysapi.h \
+    ../source/widget/megasplinechart.h
 
 RESOURCES += ../source/res/res.qrc
 

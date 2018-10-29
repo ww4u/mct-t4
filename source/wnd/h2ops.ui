@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>609</width>
-    <height>273</height>
+    <width>754</width>
+    <height>379</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,14 +19,14 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_3">
-   <item row="0" column="0">
+  <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="tabPosition">
       <enum>QTabWidget::South</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>5</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -1051,6 +1051,7 @@
       <attribute name="title">
        <string>Monitor</string>
       </attribute>
+      <layout class="QHBoxLayout" name="horizontalLayout_3"/>
      </widget>
      <widget class="QWidget" name="Dbg">
       <attribute name="title">

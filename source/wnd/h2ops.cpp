@@ -5,11 +5,14 @@
 #include <QClipboard>
 #include <QTime>
 
+#include "megasplinechart.h"
+
 H2Ops::H2Ops(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::H2Ops)
 {
     ui->setupUi(this);
+
 
     //! actions for the logout
     mp_logClearAction = new QAction( tr("Clear"), this );
@@ -31,6 +34,20 @@ H2Ops::H2Ops(QWidget *parent) :
              this, SLOT(slot_logSelectAll_action()) );
     connect( mp_logCopyAction, SIGNAL(triggered(bool)),
              this, SLOT(slot_logCopy_action()) );
+
+    MegaSplineChart *m_splineChart1 = new MegaSplineChart("spline1 [%]");
+    MegaSplineChart *m_splineChart2 = new MegaSplineChart("spline2 [%]");
+
+    m_splineChart1->chart()->series()->setPen(QPen(Qt::blue));
+    m_splineChart2->chart()->series()->setPen(QPen(Qt::red));
+
+    ui->horizontalLayout_3->setMargin(0);
+    ui->horizontalLayout_3->setSpacing(1);
+
+    ui->horizontalLayout_3->addWidget(m_splineChart1);
+    ui->horizontalLayout_3->addWidget(m_splineChart2);
+    ui->horizontalLayout_3->addStretch();
+
 
 }
 

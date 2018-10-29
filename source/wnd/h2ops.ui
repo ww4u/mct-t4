@@ -672,7 +672,7 @@
              <string>Starting Home</string>
             </property>
             <property name="icon">
-             <iconset resource="../res/res.qrc">
+             <iconset>
               <normaloff>:/res/image/icon/address.png</normaloff>:/res/image/icon/address.png</iconset>
             </property>
            </widget>
@@ -840,7 +840,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset resource="../res/res.qrc">
+             <iconset>
               <normaloff>:/res/image/icon/arrow-left.png</normaloff>:/res/image/icon/arrow-left.png</iconset>
             </property>
            </widget>
@@ -851,7 +851,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset resource="../res/res.qrc">
+             <iconset>
               <normaloff>:/res/image/icon/arrow-right.png</normaloff>:/res/image/icon/arrow-right.png</iconset>
             </property>
            </widget>
@@ -862,7 +862,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="../res/res.qrc">
+             <iconset>
               <normaloff>:/res/image/icon/246.png</normaloff>:/res/image/icon/246.png</iconset>
             </property>
             <property name="iconSize">
@@ -879,7 +879,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset resource="../res/res.qrc">
+             <iconset>
               <normaloff>:/res/image/icon/arrow-left.png</normaloff>:/res/image/icon/arrow-left.png</iconset>
             </property>
            </widget>
@@ -890,7 +890,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset resource="../res/res.qrc">
+             <iconset>
               <normaloff>:/res/image/icon/arrow-right.png</normaloff>:/res/image/icon/arrow-right.png</iconset>
             </property>
            </widget>
@@ -908,7 +908,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset resource="../res/res.qrc">
+             <iconset>
               <normaloff>:/res/image/icon/arrow-left.png</normaloff>:/res/image/icon/arrow-left.png</iconset>
             </property>
            </widget>
@@ -919,7 +919,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset resource="../res/res.qrc">
+             <iconset>
               <normaloff>:/res/image/icon/arrow-right.png</normaloff>:/res/image/icon/arrow-right.png</iconset>
             </property>
            </widget>
@@ -930,7 +930,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset resource="../res/res.qrc">
+             <iconset>
               <normaloff>:/res/image/icon/arrow-left.png</normaloff>:/res/image/icon/arrow-left.png</iconset>
             </property>
            </widget>
@@ -941,7 +941,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset resource="../res/res.qrc">
+             <iconset>
               <normaloff>:/res/image/icon/arrow-right.png</normaloff>:/res/image/icon/arrow-right.png</iconset>
             </property>
            </widget>
@@ -1051,7 +1051,11 @@
       <attribute name="title">
        <string>Monitor</string>
       </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_3"/>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="H2Status" name="widget_5" native="true"/>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="Dbg">
       <attribute name="title">
@@ -1064,7 +1068,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset resource="../res/res.qrc">
+          <iconset>
            <normaloff>:/res/image/icon/arrow-down.png</normaloff>:/res/image/icon/arrow-down.png</iconset>
          </property>
         </widget>
@@ -1075,7 +1079,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset resource="../res/res.qrc">
+          <iconset>
            <normaloff>:/res/image/icon/subtract.png</normaloff>:/res/image/icon/subtract.png</iconset>
          </property>
         </widget>
@@ -1099,7 +1103,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset resource="../res/res.qrc">
+          <iconset>
            <normaloff>:/res/image/icon/arrow-up.png</normaloff>:/res/image/icon/arrow-up.png</iconset>
          </property>
         </widget>
@@ -1110,7 +1114,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset resource="../res/res.qrc">
+          <iconset>
            <normaloff>:/res/image/icon/219.png</normaloff>:/res/image/icon/219.png</iconset>
          </property>
         </widget>
@@ -1121,7 +1125,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset resource="../res/res.qrc">
+          <iconset>
            <normaloff>:/res/image/icon/add.png</normaloff>:/res/image/icon/add.png</iconset>
          </property>
         </widget>
@@ -1132,7 +1136,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset resource="../res/res.qrc">
+          <iconset>
            <normaloff>:/res/image/icon/218.png</normaloff>:/res/image/icon/218.png</iconset>
          </property>
         </widget>
@@ -1146,7 +1150,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset resource="../res/res.qrc">
+          <iconset>
            <normaloff>:/res/image/icon/trash.png</normaloff>:/res/image/icon/trash.png</iconset>
          </property>
         </widget>
@@ -1171,7 +1175,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset resource="../res/res.qrc">
+          <iconset>
            <normaloff>:/res/image/icon/skip.png</normaloff>:/res/image/icon/skip.png</iconset>
          </property>
         </widget>
@@ -1182,7 +1186,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset resource="../res/res.qrc">
+          <iconset>
            <normaloff>:/res/image/icon/delete.png</normaloff>:/res/image/icon/delete.png</iconset>
          </property>
         </widget>
@@ -1209,7 +1213,7 @@
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset resource="../res/res.qrc">
+          <iconset>
            <normaloff>:/res/image/icon/219.png</normaloff>:/res/image/icon/219.png</iconset>
          </property>
         </widget>
@@ -1228,8 +1232,6 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="../res/res.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

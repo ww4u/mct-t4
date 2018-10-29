@@ -48,6 +48,9 @@ public:
     Chart* chart();
     QChartView* chartView();
 
+public:
+    virtual QSize sizeHint() const;
+
 signals:
 
 public slots:

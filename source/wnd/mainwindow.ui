@@ -58,6 +58,22 @@
     <property name="title">
      <string>View</string>
     </property>
+    <widget class="QMenu" name="menuLanguage">
+     <property name="title">
+      <string>Language</string>
+     </property>
+     <addaction name="actionChinese"/>
+     <addaction name="actionEnglish"/>
+    </widget>
+    <widget class="QMenu" name="menuStyle">
+     <property name="title">
+      <string>Style</string>
+     </property>
+     <addaction name="actionMega"/>
+     <addaction name="actionClassic"/>
+    </widget>
+    <addaction name="menuLanguage"/>
+    <addaction name="menuStyle"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -84,7 +100,7 @@
     <string>Exit</string>
    </property>
    <property name="shortcut">
-    <string>Meta+F4</string>
+    <string>Alt+X</string>
    </property>
   </action>
   <action name="actionAbout">
@@ -122,8 +138,45 @@
     <string>Connect</string>
    </property>
   </action>
+  <action name="actionChinese">
+   <property name="text">
+    <string>Chinese</string>
+   </property>
+  </action>
+  <action name="actionEnglish">
+   <property name="text">
+    <string>English</string>
+   </property>
+  </action>
+  <action name="actionMega">
+   <property name="text">
+    <string>MEGAROBO</string>
+   </property>
+  </action>
+  <action name="actionClassic">
+   <property name="text">
+    <string>Classic</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

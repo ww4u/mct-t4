@@ -22,9 +22,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+VERSION = 0.0.0.0
 
 INCLUDEPATH += ../include
 INCLUDEPATH += ../source/widget
+INCLUDEPATH += ../source/wnd
 
 SOURCES += \
         ../source/main/main.cpp \
@@ -38,7 +40,9 @@ SOURCES += \
     ../source/model/h2actionmodel.cpp \
     ../source/model/h2actionitem.cpp \
     ../source/model/comboxdelegate.cpp \
-    ../source/widget/megalcdnumber.cpp
+    ../source/widget/megalcdnumber.cpp \
+    ../source/wnd/h2status.cpp \
+    ../source/sys/sysapi.cpp
 
 
 HEADERS += \
@@ -52,7 +56,13 @@ HEADERS += \
     ../source/model/h2actionmodel.h \
     ../source/model/h2actionitem.h \
     ../source/model/comboxdelegate.h \
-    ../source/widget/megalcdnumber.h
+    ../source/widget/megalcdnumber.h \
+    ../source/wnd/h2status.h \
+    ../source/sys/sysapi.h
+
+RESOURCES += ../source/res/res.qrc
+
+RC_ICONS = ../source/res/image/megarobo.ico
 
 FORMS += \
         ../source/wnd/mainwindow.ui \
@@ -60,4 +70,6 @@ FORMS += \
     ../source/wnd/h2pref.ui \
     ../source/wnd/h2ops.ui \
     ../source/wnd/h2zero.ui \
-    ../source/wnd/h2action.ui
+    ../source/wnd/h2action.ui \
+    ../source/wnd/h2status.ui
+

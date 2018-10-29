@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/res">
+        <file>image/icon/arrow-left.png</file>
+        <file>image/icon/arrow-right.png</file>
+        <file>image/icon/246.png</file>
+        <file>image/icon/address.png</file>
+        <file>image/icon/add.png</file>
+        <file>image/icon/arrow-down.png</file>
+        <file>image/icon/arrow-up.png</file>
+        <file>image/icon/subtract.png</file>
+        <file>image/icon/trash.png</file>
+        <file>image/icon/218.png</file>
+        <file>image/icon/219.png</file>
+        <file>image/icon/skip.png</file>
+        <file>image/icon/delete.png</file>
+        <file>image/icon/shibai2.png</file>
+        <file>image/icon/gantanhaozhong.png</file>
+        <file>image/icon/xiaoxi.png</file>
+    </qresource>
+</RCC>

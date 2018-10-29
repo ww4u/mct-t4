@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -38,7 +38,8 @@ SOURCES += \
     ../source/model/h2actionmodel.cpp \
     ../source/model/h2actionitem.cpp \
     ../source/model/comboxdelegate.cpp \
-    ../source/widget/megalcdnumber.cpp
+    ../source/widget/megalcdnumber.cpp \
+    ../source/widget/megasplinechart.cpp
 
 
 HEADERS += \
@@ -52,7 +53,8 @@ HEADERS += \
     ../source/model/h2actionmodel.h \
     ../source/model/h2actionitem.h \
     ../source/model/comboxdelegate.h \
-    ../source/widget/megalcdnumber.h
+    ../source/widget/megalcdnumber.h \
+    ../source/widget/megasplinechart.h
 
 FORMS += \
         ../source/wnd/mainwindow.ui \

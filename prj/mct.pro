@@ -43,7 +43,8 @@ SOURCES += \
     ../source/widget/megalcdnumber.cpp \
     ../source/wnd/h2status.cpp \
     ../source/sys/sysapi.cpp \
-    ../source/widget/megasplinechart.cpp
+    ../source/widget/megasplinechart.cpp \
+    ../source/wnd/h2configuration.cpp
 
 
 HEADERS += \
@@ -60,7 +61,8 @@ HEADERS += \
     ../source/widget/megalcdnumber.h \
     ../source/wnd/h2status.h \
     ../source/sys/sysapi.h \
-    ../source/widget/megasplinechart.h
+    ../source/widget/megasplinechart.h \
+    ../source/wnd/h2configuration.h
 
 RESOURCES += ../source/res/res.qrc
 
@@ -73,5 +75,6 @@ FORMS += \
     ../source/wnd/h2ops.ui \
     ../source/wnd/h2zero.ui \
     ../source/wnd/h2action.ui \
-    ../source/wnd/h2status.ui
+    ../source/wnd/h2status.ui \
+    ../source/wnd/h2configuration.ui
 

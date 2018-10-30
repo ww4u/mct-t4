@@ -47,7 +47,8 @@ SOURCES += \
     ../source/model/diagnosisitem.cpp \
     ../source/model/diagnosismodel.cpp \
     ../source/model/errmgritem.cpp \
-    ../source/model/errmgrmodel.cpp
+    ../source/model/errmgrmodel.cpp \
+    ../source/wnd/h2configuration.cpp
 
 
 HEADERS += \
@@ -68,7 +69,8 @@ HEADERS += \
     ../source/model/diagnosisitem.h \
     ../source/model/diagnosismodel.h \
     ../source/model/errmgritem.h \
-    ../source/model/errmgrmodel.h
+    ../source/model/errmgrmodel.h \
+    ../source/wnd/h2configuration.h
 
 RESOURCES += ../source/res/res.qrc
 
@@ -81,5 +83,5 @@ FORMS += \
     ../source/wnd/h2ops.ui \
     ../source/wnd/h2zero.ui \
     ../source/wnd/h2action.ui \
-    ../source/wnd/h2status.ui
-
+    ../source/wnd/h2status.ui \
+    ../source/wnd/h2configuration.ui

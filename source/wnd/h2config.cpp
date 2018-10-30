@@ -4,6 +4,7 @@
 #include "h2pref.h"
 #include "h2zero.h"
 #include "h2action.h"
+#include "h2configuration.h"
 
 #define new_widget( type, name, title ) type *name = new type();\
                                         ui->stackedWidget->addWidget( name );\
@@ -18,6 +19,9 @@ H2Config::H2Config(QWidget *parent) :
     //! build data
     for ( int i = 0; i < 31; i++ )
     { mActions.insertRow( i ); }
+
+    //! configuration
+    new_widget( H2Configuration, pConfiguration , tr("Configuration") );
 
     //! load data
     //! \todo

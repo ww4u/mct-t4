@@ -16,5 +16,8 @@
         <file>image/icon/shibai2.png</file>
         <file>image/icon/gantanhaozhong.png</file>
         <file>image/icon/xiaoxi.png</file>
+        <file>image/h2configuration/excm_10.PNG</file>
+        <file>image/h2configuration/excm_30_bottom.PNG</file>
+        <file>image/h2configuration/excm_30_top.PNG</file>
     </qresource>
 </RCC>

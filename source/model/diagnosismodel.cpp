@@ -251,3 +251,33 @@ int DiagnosisModel::serialIn( QXmlStreamReader & reader )
     return 0;
 }
 
+void DiagnosisModel::createDemoData()
+{
+    //! assign
+    delete_all( mItems );
+
+    DiagnosisItem *pItem;
+    for ( int i = 0; i < 10; i++ )
+    {
+        pItem = new DiagnosisItem();
+
+//        int mNr;
+//        QString mType;
+//        QString mTs;
+//        QString mAddInfo;
+//        int mCounter;
+//        QString mMessage;
+
+        pItem->mNr = i;
+        pItem->mType = "Err";
+        pItem->mTs = QDateTime::currentDateTime().toString( "yyyy/M/d h/m/s/z");
+        pItem->mAddInfo = "additional info";
+        pItem->mCounter = i;
+        pItem->mMessage = "no messgage";
+
+        mItems.append( pItem );
+    }
+
+    endResetModel();
+}
+

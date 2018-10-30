@@ -41,6 +41,7 @@ SOURCES += \
     ../source/model/h2actionitem.cpp \
     ../source/model/comboxdelegate.cpp \
     ../source/widget/megalcdnumber.cpp \
+    ../source/widget/megamessagebox.cpp \
     ../source/wnd/h2status.cpp \
     ../source/sys/sysapi.cpp \
     ../source/widget/megasplinechart.cpp \
@@ -48,8 +49,9 @@ SOURCES += \
     ../source/model/diagnosismodel.cpp \
     ../source/model/errmgritem.cpp \
     ../source/model/errmgrmodel.cpp \
+    ../source/model/debugitem.cpp \
+    ../source/model/debugmodel.cpp \
     ../source/wnd/h2configuration.cpp
-
 
 HEADERS += \
         ../source/wnd/mainwindow.h \
@@ -64,12 +66,15 @@ HEADERS += \
     ../source/model/comboxdelegate.h \
     ../source/widget/megalcdnumber.h \
     ../source/wnd/h2status.h \
+    ../source/widget/megamessagebox.h \
     ../source/sys/sysapi.h \
     ../source/widget/megasplinechart.h \
     ../source/model/diagnosisitem.h \
     ../source/model/diagnosismodel.h \
     ../source/model/errmgritem.h \
     ../source/model/errmgrmodel.h \
+    ../source/model/debugitem.h \
+    ../source/model/debugmodel.h \
     ../source/wnd/h2configuration.h
 
 RESOURCES += ../source/res/res.qrc
@@ -85,3 +90,5 @@ FORMS += \
     ../source/wnd/h2action.ui \
     ../source/wnd/h2status.ui \
     ../source/wnd/h2configuration.ui
+
+

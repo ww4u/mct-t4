@@ -1,14 +1,14 @@
-#ifndef DIAGNOSISMODEL_H
-#define DIAGNOSISMODEL_H
+#ifndef DEBUGMODEL_H
+#define DEBUGMODEL_H
 
 #include "megatablemodel.h"
-#include "diagnosisitem.h"
+#include "debugitem.h"
 
-class DiagnosisModel : public MegaTableModel
+class DebugModel : public MegaTableModel
 {
 public:
-    DiagnosisModel();
-    ~DiagnosisModel();
+    DebugModel();
+    ~DebugModel();
 
 public:
     virtual int rowCount(const QModelIndex &parent) const;
@@ -25,7 +25,7 @@ public:
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
 public:
-    QList< DiagnosisItem *> *items();
+    QList< DebugItem *> *items();
 
     int save( const QString &fileName );
     int load( const QString &fileName );
@@ -33,10 +33,11 @@ public:
     int serialOut( QXmlStreamWriter & writer );
     int serialIn( QXmlStreamReader & reader );
 
-    void createDemoData();
+    void signal_dataChanged( const QModelIndex &tl,
+                             const QModelIndex &br );
 
 public:
-    QList< DiagnosisItem *> mItems;
+    QList< DebugItem *> mItems;
 };
 
-#endif // DIAGNOSISMODEL_H
+#endif // DEBUGMODEL_H

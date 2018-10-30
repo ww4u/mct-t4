@@ -4,6 +4,7 @@
 #include <QWidget>
 
 #include "../model/diagnosismodel.h"
+#include "../model/debugmodel.h"
 
 namespace Ui {
 class H2Ops;
@@ -24,15 +25,19 @@ public:
     explicit H2Ops(QWidget *parent = 0);
     ~H2Ops();
 
+protected:
+    void setupUi();
+    void setupModel();
+
+    void buildConnection();
+
 public:
     void outConsole( const QString &str, log_level e );
     void outInfo( const QString &str );
     void outWarning( const QString &str );
-    void outError( const QString &str );
+    void outError( const QString &str );    
 
 protected Q_SLOTS:
-
-
     void slot_logSelectAll_action();
     void slot_logCopy_action();
     void slot_logClear_action();
@@ -52,6 +57,12 @@ private slots:
 
     void on_btnExport_clicked();
 
+    void on_btnRead_clicked();
+
+    void on_btnDelete_clicked();
+
+    void on_btnExport_2_clicked();
+
 private:
     Ui::H2Ops *ui;
 
@@ -63,6 +74,9 @@ private:
 
     //! diagnosis model
     DiagnosisModel *m_pDiagnosisModel;
+
+    //! debug
+    DebugModel *m_pDebugModel;
 };
 
 #endif // H2OPS_H

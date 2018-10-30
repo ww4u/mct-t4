@@ -104,4 +104,4 @@ QChartView *MegaSplineChart::chartView()
 }
 
 QSize MegaSplineChart::sizeHint() const
-{ return QSize(200,200); }
+{ return QSize(200,50); }

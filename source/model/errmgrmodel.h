@@ -1,14 +1,14 @@
-#ifndef H2ACTIONMODEL_H
-#define H2ACTIONMODEL_H
+#ifndef ERRMGRMODEL_H
+#define ERRMGRMODEL_H
 
 #include "megatablemodel.h"
-#include "h2actionitem.h"
-class H2ActionModel : public MegaTableModel
+#include "errmgritem.h"
+
+class ErrMgrModel : public MegaTableModel
 {
-    Q_OBJECT
 public:
-    H2ActionModel();
-    ~H2ActionModel();
+    ErrMgrModel();
+    ~ErrMgrModel();
 
 public:
     virtual int rowCount(const QModelIndex &parent) const;
@@ -25,7 +25,7 @@ public:
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
 public:
-    QList< H2ActionItem *> *items();
+    QList< ErrMgrItem *> *items();
 
     int save( const QString &fileName );
     int load( const QString &fileName );
@@ -34,7 +34,7 @@ public:
     int serialIn( QXmlStreamReader & reader );
 
 public:
-    QList< H2ActionItem *> mItems;
+    QList< ErrMgrItem *> mItems;
 };
 
-#endif // H2ACTIONMODEL_H
+#endif // ERRMGRMODEL_H

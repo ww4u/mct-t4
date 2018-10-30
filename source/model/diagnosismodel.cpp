@@ -1,22 +1,23 @@
-#include "h2actionmodel.h"
+#include "diagnosismodel.h"
+
 #include "mystd.h"
 
-H2ActionModel::H2ActionModel() : MegaTableModel()
+DiagnosisModel::DiagnosisModel() : MegaTableModel()
 {
 
 }
 
-H2ActionModel::~H2ActionModel()
+DiagnosisModel::~DiagnosisModel()
 {
     delete_all( mItems );
 }
 
-int H2ActionModel::rowCount(const QModelIndex &parent) const
+int DiagnosisModel::rowCount(const QModelIndex &parent) const
 { return mItems.count(); }
-int H2ActionModel::columnCount(const QModelIndex &parent) const
-{ return H2ActionItem::columns(); }
+int DiagnosisModel::columnCount(const QModelIndex &parent) const
+{ return DiagnosisItem::columns(); }
 
-QVariant H2ActionModel::data(const QModelIndex &index, int role) const
+QVariant DiagnosisModel::data(const QModelIndex &index, int role) const
 {
     if ( !index.isValid() )
     { return QVariant(); }
@@ -29,39 +30,39 @@ QVariant H2ActionModel::data(const QModelIndex &index, int role) const
     { return QVariant(); }
 
     if ( col == 0 )
-    { return QVariant( mItems[ row ]->mPrx ); }
+    { return QVariant( mItems[ row ]->mNr ); }
     else if ( col == 1 )
-    { return QVariant( ( mItems[ row ]->mX ) ); }
+    { return QVariant( ( mItems[ row ]->mType ) ); }
     else if ( col == 2 )
-    { return QVariant( ( mItems[ row ]->mY ) ); }
+    { return QVariant( ( mItems[ row ]->mTs ) ); }
     else if ( col == 3 )
-    { return QVariant( mItems[ row ]->mVel ); }
+    { return QVariant( mItems[ row ]->mAddInfo ); }
     else if ( col == 4 )
-    { return QVariant( mItems[ row ]->mAcc ); }
+    { return QVariant( mItems[ row ]->mCounter ); }
     else if ( col == 5 )
-    { return QVariant( mItems[ row ]->mComment ); }
+    { return QVariant( mItems[ row ]->mMessage ); }
     else
     { return QVariant(); }
 }
 
-bool H2ActionModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool DiagnosisModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (index.isValid() && role == Qt::EditRole)
     {
         int col = index.column();
         int row = index.row();
         if ( col == 0 )
-        { mItems[ row ]->mPrx = value.toString(); }
+        { mItems[ row ]->mNr = value.toInt(); }
         else if ( index.column() == 1 )
-        { mItems[ row ]->mX = value.toDouble(); }
+        { mItems[ row ]->mType = value.toString(); }
         else if ( index.column() == 2 )
-        { mItems[ row ]->mY = value.toDouble(); }
+        { mItems[ row ]->mTs = value.toString(); }
         else if ( index.column() == 3 )
-        { mItems[ row ]->mVel = value.toDouble(); }
+        { mItems[ row ]->mAddInfo = value.toString(); }
         else if( index.column() == 4 )
-        { mItems[ row ]->mAcc = value.toDouble(); }
+        { mItems[ row ]->mCounter = value.toInt(); }
         else if ( index.column() == 5 )
-        { mItems[ row ]->mComment = value.toString(); }
+        { mItems[ row ]->mMessage = value.toString(); }
         else
         {}
 
@@ -74,32 +75,32 @@ bool H2ActionModel::setData(const QModelIndex &index, const QVariant &value, int
         return false;
     }
 }
-Qt::ItemFlags H2ActionModel::flags(const QModelIndex &index) const
+Qt::ItemFlags DiagnosisModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
           return Qt::ItemIsEnabled;
 
-    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
+    return QAbstractItemModel::flags(index) /*| Qt::ItemIsEditable*/;
 }
 
-bool H2ActionModel::insertRows(int position, int rows, const QModelIndex &parent)
+bool DiagnosisModel::insertRows(int position, int rows, const QModelIndex &parent)
 {
     if ( position < 0 || rows < 0 )
     { return false; }
 
     beginInsertRows(QModelIndex(), position, position+rows-1);
 
-    H2ActionItem *pItem;
+    DiagnosisItem *pItem;
     for (int row = 0; row < rows; ++row)
     {
-        pItem = new H2ActionItem();
+        pItem = new DiagnosisItem();
         mItems.insert( position+row, pItem );
     }
 
     endInsertRows();
     return true;
 }
-bool H2ActionModel::removeRows(int position, int rows, const QModelIndex &parent)
+bool DiagnosisModel::removeRows(int position, int rows, const QModelIndex &parent)
 {
     if ( position < 0 || rows < 1 )
     { return false; }
@@ -116,23 +117,23 @@ bool H2ActionModel::removeRows(int position, int rows, const QModelIndex &parent
     return true;
 }
 
-QVariant H2ActionModel::headerData(int section, Qt::Orientation orientation, int role ) const
+QVariant DiagnosisModel::headerData(int section, Qt::Orientation orientation, int role ) const
 {
     if ( role != Qt::DisplayRole )
     { return QVariant(); }
 
     if ( orientation == Qt::Horizontal )
-    { return QVariant( H2ActionItem::header(section)); }
+    { return QVariant( DiagnosisItem::header(section)); }
     else
     { return QVariant(section);}
 }
 
-QList< H2ActionItem *> *H2ActionModel::items()
+QList< DiagnosisItem *> *DiagnosisModel::items()
 {
     return &mItems;
 }
 
-int H2ActionModel::save( const QString &fileName )
+int DiagnosisModel::save( const QString &fileName )
 {
     QFile fileOut( fileName );
 
@@ -145,7 +146,7 @@ int H2ActionModel::save( const QString &fileName )
 
     writer.writeStartDocument();
 
-    writer.writeStartElement("action");
+    writer.writeStartElement("diagnosis");
 
     ret = serialOut( writer );
 
@@ -158,7 +159,7 @@ int H2ActionModel::save( const QString &fileName )
     return ret;
 }
 
-int H2ActionModel::load( const QString &fileName )
+int DiagnosisModel::load( const QString &fileName )
 {
     //! check ver
     QFile fileIn(fileName);
@@ -170,7 +171,7 @@ int H2ActionModel::load( const QString &fileName )
     int ret = 0;
     while( reader.readNextStartElement() )
     {
-        if ( reader.name() == "action" )
+        if ( reader.name() == "diagnosis" )
         {
             ret = serialIn( reader );
         }
@@ -183,20 +184,20 @@ int H2ActionModel::load( const QString &fileName )
     return ret;
 }
 
-int H2ActionModel::serialOut( QXmlStreamWriter & writer )
+int DiagnosisModel::serialOut( QXmlStreamWriter & writer )
 {
-    foreach( H2ActionItem *pAction, mItems )
+    foreach( DiagnosisItem *pAction, mItems )
     {
         Q_ASSERT( NULL != pAction );
 
         writer.writeStartElement( "item" );
 
-        writer.writeTextElement( "prx", ( pAction->mPrx ) );
-        writer.writeTextElement( "x", QString::number( pAction->mX ) );
-        writer.writeTextElement( "y", QString::number( pAction->mY ) );
-        writer.writeTextElement( "acc", QString::number(pAction->mAcc) );
-        writer.writeTextElement( "vel", QString::number(pAction->mVel) );
-        writer.writeTextElement( "comment", (pAction->mComment) );
+        writer.writeTextElement( "nr", QString::number( pAction->mNr ) );
+        writer.writeTextElement( "type", ( pAction->mType ) );
+        writer.writeTextElement( "ts", ( pAction->mTs ) );
+        writer.writeTextElement( "addinfo", (pAction->mAddInfo) );
+        writer.writeTextElement( "counter", QString::number(pAction->mCounter) );
+        writer.writeTextElement( "message", (pAction->mMessage) );
 
         writer.writeEndElement();
     }
@@ -204,34 +205,33 @@ int H2ActionModel::serialOut( QXmlStreamWriter & writer )
     return 0;
 
 }
-int H2ActionModel::serialIn( QXmlStreamReader & reader )
+int DiagnosisModel::serialIn( QXmlStreamReader & reader )
 {
     //! item
-    H2ActionItem *pItem;
-    QList< H2ActionItem * > localItems;
+    DiagnosisItem *pItem;
+    QList< DiagnosisItem * > localItems;
 
     while( reader.readNextStartElement() )
     {
         if ( reader.name() == "item" )
         {
-            pItem = new H2ActionItem();
+            pItem = new DiagnosisItem();
             Q_ASSERT( NULL != pItem );
 
             while( reader.readNextStartElement() )
             {
-
-                if ( reader.name() == "prx" )
-                { pItem->mPrx = reader.readElementText(); }
-                else if ( reader.name() == "x" )
-                { pItem->mX = reader.readElementText().toDouble(); }
-                else if ( reader.name() == "y" )
-                { pItem->mY = reader.readElementText().toDouble(); }
-                else if ( reader.name() == "acc" )
-                { pItem->mAcc = reader.readElementText().toDouble(); }
-                else if ( reader.name() == "vel" )
-                { pItem->mVel = reader.readElementText().toDouble(); }
-                else if ( reader.name() == "comment" )
-                { pItem->mComment = reader.readElementText(); }
+                if ( reader.name() == "nr" )
+                { pItem->mNr = reader.readElementText().toInt(); }
+                else if ( reader.name() == "type" )
+                { pItem->mType = reader.readElementText(); }
+                else if ( reader.name() == "ts" )
+                { pItem->mTs = reader.readElementText(); }
+                else if ( reader.name() == "addinfo" )
+                { pItem->mAddInfo = reader.readElementText(); }
+                else if ( reader.name() == "counter" )
+                { pItem->mCounter = reader.readElementText().toInt(); }
+                else if ( reader.name() == "message" )
+                { pItem->mMessage = reader.readElementText(); }
                 else
                 { reader.skipCurrentElement(); }
             }

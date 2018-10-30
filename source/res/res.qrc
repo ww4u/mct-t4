@@ -16,5 +16,6 @@
         <file>image/icon/shibai2.png</file>
         <file>image/icon/gantanhaozhong.png</file>
         <file>image/icon/xiaoxi.png</file>
+        <file>qss/mega.qss</file>
     </qresource>
 </RCC>

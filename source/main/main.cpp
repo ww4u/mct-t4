@@ -19,7 +19,10 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     //! style
-    CommonHelper::setStyle( a.applicationDirPath() + "/style" + "/mega.qss" );
+    if ( QFile::exists(a.applicationDirPath() + "/style" + "/mega.qss") )
+    { CommonHelper::setStyle( a.applicationDirPath() + "/style" + "/mega.qss" ); }
+    else
+    { CommonHelper::setStyle( ":/res/qss/mega.qss" ); }
 
     MainWindow w;
     w.show();

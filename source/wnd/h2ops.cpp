@@ -35,8 +35,8 @@ H2Ops::H2Ops(QWidget *parent) :
     connect( mp_logCopyAction, SIGNAL(triggered(bool)),
              this, SLOT(slot_logCopy_action()) );
 
-    MegaSplineChart *m_splineChart1 = new MegaSplineChart("spline1 [%]");
-    MegaSplineChart *m_splineChart2 = new MegaSplineChart("spline2 [%]");
+    MegaSplineChart *m_splineChart1 = new MegaSplineChart("能效曲线1");
+    MegaSplineChart *m_splineChart2 = new MegaSplineChart("能效曲线2");
 
     m_splineChart1->chart()->series()->setPen(QPen(Qt::blue));
     m_splineChart2->chart()->series()->setPen(QPen(Qt::red));

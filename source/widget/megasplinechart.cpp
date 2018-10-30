@@ -13,7 +13,9 @@ Chart::Chart(QGraphicsItem *parent, Qt::WindowFlags wFlags):
 {
     setAnimationOptions(QChart::SeriesAnimations);
     setMargins(QMargins(0,0,0,0));
-    legend()->hide();
+
+    m_series->setName("%");
+    //    legend()->hide();
 
     addSeries(m_series);
     createDefaultAxes();
@@ -29,7 +31,7 @@ Chart::Chart(QGraphicsItem *parent, Qt::WindowFlags wFlags):
 
     qsrand((uint) QTime::currentTime().msec());
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(handleTimeout()));
-    m_timer.setInterval(1000 * 1); //轮询时间周期
+    m_timer.setInterval(1000 * 60); //轮询时间周期
     m_timer.start();
 }
 
@@ -47,6 +49,7 @@ void Chart::handleTimeout()
 
     m_x += m_step;
     m_series->append(m_x, m_y);
+    m_series->setName( QString::number(m_y,'f',2) + " %");
 
     if(qAbs(m_axis->min()-0) < 0.000001)
         axisX()->setRange(0, m_axis->max() + m_step);

@@ -26,7 +26,7 @@
       <enum>QTabWidget::South</enum>
      </property>
      <property name="currentIndex">
-      <number>5</number>
+      <number>6</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -672,7 +672,7 @@
              <string>Starting Home</string>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../res/res.qrc">
               <normaloff>:/res/image/icon/address.png</normaloff>:/res/image/icon/address.png</iconset>
             </property>
            </widget>
@@ -840,7 +840,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../res/res.qrc">
               <normaloff>:/res/image/icon/arrow-left.png</normaloff>:/res/image/icon/arrow-left.png</iconset>
             </property>
            </widget>
@@ -851,7 +851,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../res/res.qrc">
               <normaloff>:/res/image/icon/arrow-right.png</normaloff>:/res/image/icon/arrow-right.png</iconset>
             </property>
            </widget>
@@ -862,7 +862,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../res/res.qrc">
               <normaloff>:/res/image/icon/246.png</normaloff>:/res/image/icon/246.png</iconset>
             </property>
             <property name="iconSize">
@@ -879,7 +879,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../res/res.qrc">
               <normaloff>:/res/image/icon/arrow-left.png</normaloff>:/res/image/icon/arrow-left.png</iconset>
             </property>
            </widget>
@@ -890,7 +890,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../res/res.qrc">
               <normaloff>:/res/image/icon/arrow-right.png</normaloff>:/res/image/icon/arrow-right.png</iconset>
             </property>
            </widget>
@@ -908,7 +908,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../res/res.qrc">
               <normaloff>:/res/image/icon/arrow-left.png</normaloff>:/res/image/icon/arrow-left.png</iconset>
             </property>
            </widget>
@@ -919,7 +919,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../res/res.qrc">
               <normaloff>:/res/image/icon/arrow-right.png</normaloff>:/res/image/icon/arrow-right.png</iconset>
             </property>
            </widget>
@@ -930,7 +930,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../res/res.qrc">
               <normaloff>:/res/image/icon/arrow-left.png</normaloff>:/res/image/icon/arrow-left.png</iconset>
             </property>
            </widget>
@@ -941,7 +941,7 @@
              <string>...</string>
             </property>
             <property name="icon">
-             <iconset>
+             <iconset resource="../res/res.qrc">
               <normaloff>:/res/image/icon/arrow-right.png</normaloff>:/res/image/icon/arrow-right.png</iconset>
             </property>
            </widget>
@@ -1062,25 +1062,64 @@
        <string>Debug</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_8">
-       <item row="7" column="0">
-        <widget class="QToolButton" name="btnDown">
+       <item row="9" column="4">
+        <widget class="QDoubleSpinBox" name="spinDly">
+         <property name="suffix">
+          <string>s</string>
+         </property>
+         <property name="minimum">
+          <double>0.010000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>1000000.000000000000000</double>
+         </property>
+         <property name="value">
+          <double>1.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2" rowspan="9" colspan="3">
+        <widget class="QListView" name="listView"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QToolButton" name="btnDel">
+         <property name="toolTip">
+          <string>Remove the current record</string>
+         </property>
          <property name="text">
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="../res/res.qrc">
+           <normaloff>:/res/image/icon/subtract.png</normaloff>:/res/image/icon/subtract.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QToolButton" name="btnDown">
+         <property name="toolTip">
+          <string>Down</string>
+         </property>
+         <property name="text">
+          <string>...</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../res/res.qrc">
            <normaloff>:/res/image/icon/arrow-down.png</normaloff>:/res/image/icon/arrow-down.png</iconset>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QToolButton" name="btnDel">
+       <item row="4" column="0">
+        <widget class="QToolButton" name="btnExport">
+         <property name="toolTip">
+          <string>Export</string>
+         </property>
          <property name="text">
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>:/res/image/icon/subtract.png</normaloff>:/res/image/icon/subtract.png</iconset>
+          <iconset resource="../res/res.qrc">
+           <normaloff>:/res/image/icon/219.png</normaloff>:/res/image/icon/219.png</iconset>
          </property>
         </widget>
        </item>
@@ -1097,60 +1136,58 @@
          </property>
         </spacer>
        </item>
-       <item row="6" column="0">
-        <widget class="QToolButton" name="btnUp">
+       <item row="3" column="0">
+        <widget class="QToolButton" name="btnImport">
+         <property name="toolTip">
+          <string>Import</string>
+         </property>
          <property name="text">
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>:/res/image/icon/arrow-up.png</normaloff>:/res/image/icon/arrow-up.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QToolButton" name="btnExport">
-         <property name="text">
-          <string>...</string>
-         </property>
-         <property name="icon">
-          <iconset>
-           <normaloff>:/res/image/icon/219.png</normaloff>:/res/image/icon/219.png</iconset>
+          <iconset resource="../res/res.qrc">
+           <normaloff>:/res/image/icon/218.png</normaloff>:/res/image/icon/218.png</iconset>
          </property>
         </widget>
        </item>
        <item row="0" column="0">
         <widget class="QToolButton" name="btnAdd">
+         <property name="toolTip">
+          <string>Add the current record</string>
+         </property>
          <property name="text">
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="../res/res.qrc">
            <normaloff>:/res/image/icon/add.png</normaloff>:/res/image/icon/add.png</iconset>
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
-        <widget class="QToolButton" name="btnImport">
+       <item row="6" column="0">
+        <widget class="QToolButton" name="btnUp">
+         <property name="toolTip">
+          <string>Up</string>
+         </property>
          <property name="text">
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>:/res/image/icon/218.png</normaloff>:/res/image/icon/218.png</iconset>
+          <iconset resource="../res/res.qrc">
+           <normaloff>:/res/image/icon/arrow-up.png</normaloff>:/res/image/icon/arrow-up.png</iconset>
          </property>
         </widget>
        </item>
-       <item row="0" column="2" rowspan="9">
-        <widget class="QListView" name="listView"/>
-       </item>
        <item row="2" column="0">
         <widget class="QToolButton" name="btnClr">
+         <property name="toolTip">
+          <string>Delete all</string>
+         </property>
          <property name="text">
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="../res/res.qrc">
            <normaloff>:/res/image/icon/trash.png</normaloff>:/res/image/icon/trash.png</iconset>
          </property>
         </widget>
@@ -1159,6 +1196,13 @@
         <widget class="QCheckBox" name="checkBox">
          <property name="text">
           <string>Cyclic</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="3">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>Delay Time</string>
          </property>
         </widget>
        </item>
@@ -1171,28 +1215,34 @@
       <layout class="QGridLayout" name="gridLayout_10">
        <item row="0" column="0">
         <widget class="QToolButton" name="btnRead">
+         <property name="toolTip">
+          <string>Read from the controller</string>
+         </property>
          <property name="text">
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="../res/res.qrc">
            <normaloff>:/res/image/icon/skip.png</normaloff>:/res/image/icon/skip.png</iconset>
          </property>
         </widget>
        </item>
        <item row="0" column="1">
         <widget class="QToolButton" name="btnDelete">
+         <property name="toolTip">
+          <string>Deleta all</string>
+         </property>
          <property name="text">
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="../res/res.qrc">
            <normaloff>:/res/image/icon/delete.png</normaloff>:/res/image/icon/delete.png</iconset>
          </property>
         </widget>
        </item>
        <item row="1" column="0" colspan="4">
-        <widget class="QTableView" name="tableView"/>
+        <widget class="QTableView" name="tvDiagnosis"/>
        </item>
        <item row="0" column="3">
         <spacer name="horizontalSpacer_3">
@@ -1209,11 +1259,14 @@
        </item>
        <item row="0" column="2">
         <widget class="QToolButton" name="btnExport_2">
+         <property name="toolTip">
+          <string>Export</string>
+         </property>
          <property name="text">
           <string>...</string>
          </property>
          <property name="icon">
-          <iconset>
+          <iconset resource="../res/res.qrc">
            <normaloff>:/res/image/icon/219.png</normaloff>:/res/image/icon/219.png</iconset>
          </property>
         </widget>
@@ -1232,6 +1285,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../res/res.qrc"/>
+ </resources>
  <connections/>
 </ui>

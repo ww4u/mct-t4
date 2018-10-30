@@ -13,7 +13,6 @@ H2Ops::H2Ops(QWidget *parent) :
 {
     ui->setupUi(this);
 
-
     //! actions for the logout
     mp_logClearAction = new QAction( tr("Clear"), this );
     mp_logSelectAllAction = new QAction( tr("Select All"), this );
@@ -26,6 +25,10 @@ H2Ops::H2Ops(QWidget *parent) :
     actions<<mp_logSelectAllAction<<mp_logCopyAction<<mp_logSepAction<<mp_logClearAction;
 
     ui->lstLogout->addActions( actions );
+
+    //! model
+    m_pDiagnosisModel= new DiagnosisModel();
+    ui->tvDiagnosis->setModel( m_pDiagnosisModel );
 
     //! connect
     connect( mp_logClearAction, SIGNAL(triggered(bool)),
@@ -47,8 +50,6 @@ H2Ops::H2Ops(QWidget *parent) :
     ui->horizontalLayout_3->addWidget(m_splineChart1);
     ui->horizontalLayout_3->addWidget(m_splineChart2);
     ui->horizontalLayout_3->addStretch();
-
-
 }
 
 H2Ops::~H2Ops()
@@ -113,3 +114,38 @@ void H2Ops::slot_logClear_action()
     ui->lstLogout->clear();
 }
 
+
+void H2Ops::on_btnUp_clicked()
+{
+
+}
+
+void H2Ops::on_btnDown_clicked()
+{
+
+}
+
+void H2Ops::on_btnAdd_clicked()
+{
+
+}
+
+void H2Ops::on_btnDel_clicked()
+{
+
+}
+
+void H2Ops::on_btnClr_clicked()
+{
+
+}
+
+void H2Ops::on_btnImport_clicked()
+{
+
+}
+
+void H2Ops::on_btnExport_clicked()
+{
+
+}

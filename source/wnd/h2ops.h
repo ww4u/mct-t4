@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+#include "../model/diagnosismodel.h"
+
 namespace Ui {
 class H2Ops;
 }
@@ -35,6 +37,21 @@ protected Q_SLOTS:
     void slot_logCopy_action();
     void slot_logClear_action();
 
+private slots:
+    void on_btnUp_clicked();
+
+    void on_btnDown_clicked();
+
+    void on_btnAdd_clicked();
+
+    void on_btnDel_clicked();
+
+    void on_btnClr_clicked();
+
+    void on_btnImport_clicked();
+
+    void on_btnExport_clicked();
+
 private:
     Ui::H2Ops *ui;
 
@@ -43,6 +60,9 @@ private:
     QAction *mp_logSelectAllAction;
     QAction *mp_logCopyAction;
     QAction *mp_logSepAction;
+
+    //! diagnosis model
+    DiagnosisModel *m_pDiagnosisModel;
 };
 
 #endif // H2OPS_H

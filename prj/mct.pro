@@ -43,7 +43,11 @@ SOURCES += \
     ../source/widget/megalcdnumber.cpp \
     ../source/wnd/h2status.cpp \
     ../source/sys/sysapi.cpp \
-    ../source/widget/megasplinechart.cpp
+    ../source/widget/megasplinechart.cpp \
+    ../source/model/diagnosisitem.cpp \
+    ../source/model/diagnosismodel.cpp \
+    ../source/model/errmgritem.cpp \
+    ../source/model/errmgrmodel.cpp
 
 
 HEADERS += \
@@ -60,7 +64,11 @@ HEADERS += \
     ../source/widget/megalcdnumber.h \
     ../source/wnd/h2status.h \
     ../source/sys/sysapi.h \
-    ../source/widget/megasplinechart.h
+    ../source/widget/megasplinechart.h \
+    ../source/model/diagnosisitem.h \
+    ../source/model/diagnosismodel.h \
+    ../source/model/errmgritem.h \
+    ../source/model/errmgrmodel.h
 
 RESOURCES += ../source/res/res.qrc
 

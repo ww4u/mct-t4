@@ -4,8 +4,12 @@
 
 #include <QClipboard>
 #include <QTime>
+#include <QFileDialog>
 
 #include "megasplinechart.h"
+
+#include "../sys/sysapi.h"
+#include "../widget/megamessagebox.h"
 
 H2Ops::H2Ops(QWidget *parent) :
     QWidget(parent),
@@ -13,30 +17,12 @@ H2Ops::H2Ops(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //! actions for the logout
-    mp_logClearAction = new QAction( tr("Clear"), this );
-    mp_logSelectAllAction = new QAction( tr("Select All"), this );
-    mp_logCopyAction = new QAction( tr("Copy"), this );
+    setupUi();
 
-    mp_logSepAction = new QAction( this );
-    mp_logSepAction->setSeparator( true );
+    buildConnection();
 
-    QList<QAction*> actions;
-    actions<<mp_logSelectAllAction<<mp_logCopyAction<<mp_logSepAction<<mp_logClearAction;
+    setupModel();
 
-    ui->lstLogout->addActions( actions );
-
-    //! model
-    m_pDiagnosisModel= new DiagnosisModel();
-    ui->tvDiagnosis->setModel( m_pDiagnosisModel );
-
-    //! connect
-    connect( mp_logClearAction, SIGNAL(triggered(bool)),
-             this, SLOT(slot_logClear_action()) );
-    connect( mp_logSelectAllAction, SIGNAL(triggered(bool)),
-             this, SLOT(slot_logSelectAll_action()) );
-    connect( mp_logCopyAction, SIGNAL(triggered(bool)),
-             this, SLOT(slot_logCopy_action()) );
 
     MegaSplineChart *m_splineChart1 = new MegaSplineChart("spline1 [%]");
     MegaSplineChart *m_splineChart2 = new MegaSplineChart("spline2 [%]");
@@ -55,6 +41,42 @@ H2Ops::H2Ops(QWidget *parent) :
 H2Ops::~H2Ops()
 {
     delete ui;
+}
+
+void H2Ops::setupUi()
+{
+    //! actions for the logout
+    mp_logClearAction = new QAction( tr("Clear"), this );
+    mp_logSelectAllAction = new QAction( tr("Select All"), this );
+    mp_logCopyAction = new QAction( tr("Copy"), this );
+
+    mp_logSepAction = new QAction( this );
+    mp_logSepAction->setSeparator( true );
+
+    QList<QAction*> actions;
+    actions<<mp_logSelectAllAction<<mp_logCopyAction<<mp_logSepAction<<mp_logClearAction;
+
+    ui->lstLogout->addActions( actions );
+}
+void H2Ops::setupModel()
+{
+    //! model
+    m_pDiagnosisModel= new DiagnosisModel();
+    ui->tvDiagnosis->setModel( m_pDiagnosisModel );
+
+    m_pDebugModel = new DebugModel();
+    ui->tvDebug->setModel( m_pDebugModel );
+}
+
+void H2Ops::buildConnection()
+{
+    //! connect
+    connect( mp_logClearAction, SIGNAL(triggered(bool)),
+             this, SLOT(slot_logClear_action()) );
+    connect( mp_logSelectAllAction, SIGNAL(triggered(bool)),
+             this, SLOT(slot_logSelectAll_action()) );
+    connect( mp_logCopyAction, SIGNAL(triggered(bool)),
+             this, SLOT(slot_logCopy_action()) );
 }
 
 void H2Ops::outConsole( const QString &str, log_level e )
@@ -114,38 +136,163 @@ void H2Ops::slot_logClear_action()
     ui->lstLogout->clear();
 }
 
-
+//! debug
 void H2Ops::on_btnUp_clicked()
 {
+    //! current valid
+    if ( ui->tvDebug->currentIndex().isValid() )
+    {}
+    else
+    { return; }
+
+    //! check up index
+    QModelIndex prev = m_pDebugModel->index( ui->tvDebug->currentIndex().row() - 1,
+                                             ui->tvDebug->currentIndex().column() );
+    if ( prev.isValid() )
+    {}
+    else
+    { return; }
+
+    DebugItem *pItem = m_pDebugModel->items()->takeAt( ui->tvDebug->currentIndex().row() );
+    if ( NULL == pItem )
+    { return; }
+
+    //! exchange
+    m_pDebugModel->items()->insert( ui->tvDebug->currentIndex().row() - 1, pItem );
+    m_pDebugModel->signal_dataChanged(
+                                        m_pDebugModel->index( ui->tvDebug->currentIndex().row()-1, 0 ),
+                                        m_pDebugModel->index( ui->tvDebug->currentIndex().row(), 1 )
+                );
+
+    ui->tvDebug->setCurrentIndex( prev );
 
 }
 
 void H2Ops::on_btnDown_clicked()
 {
+    if ( ui->tvDebug->currentIndex().isValid() )
+    {}
+    else
+    { return; }
 
+    //! check next index
+    QModelIndex next = m_pDebugModel->index( ui->tvDebug->currentIndex().row() + 1,
+                                             ui->tvDebug->currentIndex().column() );
+    if ( next.isValid() )
+    {}
+    else
+    { return; }
+
+    DebugItem *pItem = m_pDebugModel->items()->takeAt( ui->tvDebug->currentIndex().row() );
+    if ( NULL == pItem )
+    { return; }
+
+    m_pDebugModel->items()->insert( next.row(), pItem );
+    m_pDebugModel->signal_dataChanged(
+                                        m_pDebugModel->index( ui->tvDebug->currentIndex().row(), 0 ),
+                                        m_pDebugModel->index( ui->tvDebug->currentIndex().row()+1, 1 )
+                                    );
+    ui->tvDebug->setCurrentIndex( next );
 }
 
 void H2Ops::on_btnAdd_clicked()
 {
-
+    if ( ui->tvDebug->currentIndex().isValid() )
+    {
+        m_pDebugModel->insertRow( ui->tvDebug->currentIndex().row() + 1 );
+        m_pDebugModel->setData( m_pDebugModel->index( ui->tvDebug->currentIndex().row()+1, 1),
+                                QVariant( ui->spinDly->value()),
+                                Qt::EditRole );
+    }
+    else
+    {
+        m_pDebugModel->insertRow( 0 );
+        m_pDebugModel->setData( m_pDebugModel->index( 0, 1),
+                                QVariant( ui->spinDly->value()),
+                                Qt::EditRole );
+        return;
+    }
 }
 
 void H2Ops::on_btnDel_clicked()
 {
+    if ( ui->tvDebug->currentIndex().isValid() )
+    {}
+    else
+    { return; }
 
+    m_pDebugModel->removeRow( ui->tvDebug->currentIndex().row() );
 }
 
 void H2Ops::on_btnClr_clicked()
 {
-
+    MegaDeleteAffirmMessageBox msgBox;
+    int ret = msgBox.exec();
+    if ( ret == QMessageBox::Ok )
+    {
+        m_pDebugModel->removeRows( 0, m_pDebugModel->items()->count(), QModelIndex() );
+    }
 }
 
 void H2Ops::on_btnImport_clicked()
 {
+    QFileDialog fDlg;
 
+    fDlg.setAcceptMode( QFileDialog::AcceptOpen );
+    fDlg.setNameFilter( tr("Debug (*.xml)") );
+
+    if ( QDialog::Accepted != fDlg.exec() )
+    { return; }
+
+    m_pDebugModel->load( fDlg.selectedFiles().first() );
+
+    sysInfo( fDlg.selectedFiles().first(), tr("load completed") );
 }
 
 void H2Ops::on_btnExport_clicked()
 {
+    QFileDialog fDlg;
 
+    fDlg.setAcceptMode( QFileDialog::AcceptSave );
+    fDlg.setNameFilter( tr("Debug (*.xml)") );
+
+    if ( QDialog::Accepted != fDlg.exec() )
+    { return; }
+
+    m_pDebugModel->save( fDlg.selectedFiles().first() );
+
+    sysInfo( fDlg.selectedFiles().first(), tr("save completed") );
+}
+
+//! diagnosis
+void H2Ops::on_btnRead_clicked()
+{
+    //! \todo read from device
+    //! debug for the model
+    m_pDiagnosisModel->createDemoData();
+}
+
+void H2Ops::on_btnDelete_clicked()
+{
+    MegaDeleteAffirmMessageBox msgBox;
+    int ret = msgBox.exec();
+    if ( ret == QMessageBox::Ok )
+    {
+        m_pDiagnosisModel->removeRows( 0, m_pDiagnosisModel->items()->count(), QModelIndex() );
+    }
+}
+
+void H2Ops::on_btnExport_2_clicked()
+{
+    QFileDialog fDlg;
+
+    fDlg.setAcceptMode( QFileDialog::AcceptSave );
+    fDlg.setNameFilter( tr("Diagnosis (*.xml)") );
+
+    if ( QDialog::Accepted != fDlg.exec() )
+    { return; }
+
+    m_pDiagnosisModel->save( fDlg.selectedFiles().first() );
+
+    sysInfo( fDlg.selectedFiles().first(), tr("save completed") );
 }

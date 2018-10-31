@@ -15,9 +15,6 @@ public:
     explicit H2Configuration(QWidget *parent = nullptr);
     ~H2Configuration();
 
-Q_SIGNALS:
-    void signal_model_changed();
-
 protected slots:
     void slotOnModelChanged();
     void slotSelectSize(QString text);

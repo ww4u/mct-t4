@@ -1,12 +1,11 @@
 #include "h2config.h"
 #include "ui_h2config.h"
 
-#include "h2pref.h"
-#include "h2zero.h"
 #include "h2action.h"
 #include "h2configuration.h"
 #include "h2jogmode.h"
 #include "h2homing.h"
+//#include "h2measurement.h"
 
 #define new_widget( type, name, title ) type *name = new type();\
                                         ui->stackedWidget->addWidget( name );\
@@ -25,21 +24,17 @@ H2Config::H2Config(QWidget *parent) :
     //! configuration
     new_widget( H2Configuration, pConfiguration , tr("Configuration") );
 
+    //! Measurement
+//    new_widget( H2Measurement, pMeasurement , tr("Measurements") );
+
+    //! Homing
+    new_widget( H2Homing, pHoming , tr("Homing") );
+
     //! jog mode
     new_widget( H2JogMode, pJogMode , tr("Jog Mode") );
 
-    //! jog mode
-    new_widget( H2Homing, pHoming , tr("Homing") );
-
-
     //! load data
     //! \todo
-
-    //! pref
-    new_widget( H2Pref, pPref, tr("Pref") )
-
-    //! zero
-    new_widget( H2Zero, pZero, tr("Zero") )
 
     //! action
     new_widget( H2Action, pAction, tr("Record Table") )

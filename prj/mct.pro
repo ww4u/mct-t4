@@ -48,7 +48,9 @@ SOURCES += \
     ../source/model/diagnosismodel.cpp \
     ../source/model/errmgritem.cpp \
     ../source/model/errmgrmodel.cpp \
-    ../source/wnd/h2configuration.cpp
+    ../source/wnd/h2configuration.cpp \
+    ../source/wnd/h2jogmode.cpp \
+    ../source/wnd/h2homing.cpp
 
 
 HEADERS += \
@@ -70,7 +72,9 @@ HEADERS += \
     ../source/model/diagnosismodel.h \
     ../source/model/errmgritem.h \
     ../source/model/errmgrmodel.h \
-    ../source/wnd/h2configuration.h
+    ../source/wnd/h2configuration.h \
+    ../source/wnd/h2jogmode.h \
+    ../source/wnd/h2homing.h
 
 RESOURCES += ../source/res/res.qrc
 
@@ -84,4 +88,6 @@ FORMS += \
     ../source/wnd/h2zero.ui \
     ../source/wnd/h2action.ui \
     ../source/wnd/h2status.ui \
-    ../source/wnd/h2configuration.ui
+    ../source/wnd/h2configuration.ui \
+    ../source/wnd/h2jogmode.ui \
+    ../source/wnd/h2homing.ui

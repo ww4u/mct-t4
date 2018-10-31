@@ -19,5 +19,9 @@
         <file>image/h2configuration/excm_10.PNG</file>
         <file>image/h2configuration/excm_30_bottom.PNG</file>
         <file>image/h2configuration/excm_30_top.PNG</file>
+        <file>image/h2homing/dir_X_Y.PNG</file>
+        <file>image/h2homing/dir_Y_X.PNG</file>
+        <file>image/h2homing/info.png</file>
+        <file>image/icon/jogmode.PNG</file>
     </qresource>
 </RCC>

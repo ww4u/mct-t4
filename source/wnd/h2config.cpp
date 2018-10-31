@@ -5,6 +5,8 @@
 #include "h2zero.h"
 #include "h2action.h"
 #include "h2configuration.h"
+#include "h2jogmode.h"
+#include "h2homing.h"
 
 #define new_widget( type, name, title ) type *name = new type();\
                                         ui->stackedWidget->addWidget( name );\
@@ -22,6 +24,13 @@ H2Config::H2Config(QWidget *parent) :
 
     //! configuration
     new_widget( H2Configuration, pConfiguration , tr("Configuration") );
+
+    //! jog mode
+    new_widget( H2JogMode, pJogMode , tr("Jog Mode") );
+
+    //! jog mode
+    new_widget( H2Homing, pHoming , tr("Homing") );
+
 
     //! load data
     //! \todo

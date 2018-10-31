@@ -77,6 +77,15 @@ void MainWindow::setupWorkArea()
              this, SLOT(slot_focus_in(const QString &)) );
 
     ui->menuView->addAction( pDock->toggleViewAction() );
+
+    //! help
+    pDock = new QDockWidget( tr("Help"), this  );
+    pDock->setAllowedAreas(  Qt::RightDockWidgetArea );
+    addDockWidget( Qt::RightDockWidgetArea, pDock );
+
+    m_pHelpPanel = new HelpPanel();
+    pDock->setWidget( m_pHelpPanel );
+    ui->menuHelp->addAction( pDock->toggleViewAction() );
 }
 
 void MainWindow::setupToolBar()
@@ -141,15 +150,5 @@ void MainWindow::on_actionAbout_triggered()
     aboutDlg dlg(this);
     dlg.exec();
 }
-void MainWindow::on_actionHelp_triggered()
-{
-    if ( m_pHelpPanel == NULL )
-    { m_pHelpPanel = new HelpPanel( this ); }
 
-    if ( NULL == m_pHelpPanel )
-    { return; }
-
-    m_pHelpPanel->show();
-    m_pHelpPanel->activateWindow();
-}
 

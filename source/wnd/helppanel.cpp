@@ -4,10 +4,11 @@
 
 #include "../include/mystd.h"
 HelpPanel::HelpPanel(QWidget *parent) :
-    QDialog(parent),
+    QWidget(parent),
     ui(new Ui::HelpPanel)
 {
     ui->setupUi(this);
+
 }
 
 HelpPanel::~HelpPanel()

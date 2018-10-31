@@ -7,7 +7,7 @@ namespace Ui {
 class HelpPanel;
 }
 
-class HelpPanel : public QDialog
+class HelpPanel : public QWidget
 {
     Q_OBJECT
 

@@ -39,6 +39,12 @@ protected Q_SLOTS:
     void slot_logout( const QString &str, log_level lev = e_log_info );
 
 
+private slots:
+    void on_actionAbout_triggered();
+    void on_actionHelp_triggered();
+
+
+
 private:
     Ui::MainWindow *ui;
 

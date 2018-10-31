@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include <QDockWidget>
+#include "aboutdlg.h"
 
 #include "h2config.h"
 #include "h2ops.h"
@@ -103,5 +104,16 @@ void MainWindow::slot_logout( const QString &str, log_level lev )
     Q_ASSERT( NULL != m_pOps );
 
     m_pOps->outConsole( str, lev );
+}
+
+
+void MainWindow::on_actionAbout_triggered()
+{
+    aboutDlg dlg(this);
+    dlg.exec();
+}
+void MainWindow::on_actionHelp_triggered()
+{
+
 }
 

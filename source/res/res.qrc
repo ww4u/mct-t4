@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/res">
+
+        <file>image/m.png</file>
         <file>image/icon/arrow-left.png</file>
         <file>image/icon/arrow-right.png</file>
         <file>image/icon/246.png</file>
@@ -16,6 +18,10 @@
         <file>image/icon/shibai2.png</file>
         <file>image/icon/gantanhaozhong.png</file>
         <file>image/icon/xiaoxi.png</file>
+
+        <file>image/widget/radiobutton_checked_green.png</file>
+        <file>image/widget/radiobutton_checked_red.png</file>
+        <file>image/widget/radiobutton_checked_yellow.png</file>
 
         <file>image/h2configuration/excm_10.PNG</file>
         <file>image/h2configuration/excm_30_bottom.PNG</file>

@@ -36,6 +36,7 @@ SOURCES += \
     ../source/wnd/h2ops.cpp \
     ../source/wnd/h2zero.cpp \
     ../source/wnd/h2action.cpp \
+    ../source/wnd/aboutdlg.cpp \
     ../source/model/megatablemodel.cpp \
     ../source/model/h2actionmodel.cpp \
     ../source/model/h2actionitem.cpp \
@@ -51,7 +52,8 @@ SOURCES += \
     ../source/model/errmgrmodel.cpp \
     ../source/model/debugitem.cpp \
     ../source/model/debugmodel.cpp \
-    ../source/wnd/h2configuration.cpp
+    ../source/wnd/h2configuration.cpp \
+    ../source/wnd/h2errmgr.cpp
 
 HEADERS += \
         ../source/wnd/mainwindow.h \
@@ -60,6 +62,7 @@ HEADERS += \
     ../source/wnd/h2ops.h \
     ../source/wnd/h2zero.h \
     ../source/wnd/h2action.h \
+    ../source/wnd/aboutdlg.h \
     ../source/model/megatablemodel.h \
     ../source/model/h2actionmodel.h \
     ../source/model/h2actionitem.h \
@@ -75,7 +78,8 @@ HEADERS += \
     ../source/model/errmgrmodel.h \
     ../source/model/debugitem.h \
     ../source/model/debugmodel.h \
-    ../source/wnd/h2configuration.h
+    ../source/wnd/h2configuration.h \
+    ../source/wnd/h2errmgr.h
 
 RESOURCES += ../source/res/res.qrc
 
@@ -88,7 +92,9 @@ FORMS += \
     ../source/wnd/h2ops.ui \
     ../source/wnd/h2zero.ui \
     ../source/wnd/h2action.ui \
+    ../source/wnd/aboutdlg.ui \
     ../source/wnd/h2status.ui \
-    ../source/wnd/h2configuration.ui
+    ../source/wnd/h2configuration.ui \
+    ../source/wnd/h2errmgr.ui
 
 

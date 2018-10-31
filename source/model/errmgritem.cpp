@@ -39,3 +39,36 @@ ErrMgrItem::ErrMgrItem()
 
     mbSaveDiagnosis = false;
 }
+
+eColumnAttr ErrMgrItem::columnAttr( int col )
+{
+    return column_unk;
+}
+
+void ErrMgrItem::setEventType( e_event_type evt, bool b )
+{
+    //! \todo according the event attr
+    if ( evt == e_error )
+    {
+        if ( b )
+        { mEventType = e_error; }
+        else
+        { mEventType = e_warning; }
+    }
+    else if ( evt == e_warning )
+    {
+        if ( b )
+        { mEventType = e_warning; }
+        else
+        { mEventType = e_info; }
+    }
+    else if ( evt == e_info )
+    {
+        if ( b )
+        { mEventType = e_info; }
+        else
+        { mEventType = e_error; }
+    }
+    else
+    { Q_ASSERT(false); }
+}

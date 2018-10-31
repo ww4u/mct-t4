@@ -24,6 +24,7 @@ public:
 
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
+
 public:
     QList< ErrMgrItem *> *items();
 
@@ -33,6 +34,7 @@ public:
     int serialOut( QXmlStreamWriter & writer );
     int serialIn( QXmlStreamReader & reader );
 
+    void createDebug();
 public:
     QList< ErrMgrItem *> mItems;
 };

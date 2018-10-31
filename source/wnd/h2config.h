@@ -8,8 +8,9 @@ class H2Config;
 }
 
 
-#include "h2action.h"
+
 #include "../model/h2actionmodel.h"
+#include "../model/errmgrmodel.h"
 
 class H2Config : public QWidget
 {
@@ -23,6 +24,7 @@ private:
     Ui::H2Config *ui;
 
     H2ActionModel mActions;
+    ErrMgrModel mErrManager;
 };
 
 #endif // H2CONFIG_H

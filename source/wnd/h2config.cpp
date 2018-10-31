@@ -5,6 +5,7 @@
 #include "h2zero.h"
 #include "h2action.h"
 #include "h2configuration.h"
+#include "h2errmgr.h"
 
 #define new_widget( type, name, title ) type *name = new type();\
                                         ui->stackedWidget->addWidget( name );\
@@ -35,6 +36,11 @@ H2Config::H2Config(QWidget *parent) :
     //! action
     new_widget( H2Action, pAction, tr("Record Table") )
     pAction->setModel( &mActions );
+
+    //! err mgr
+    new_widget( H2ErrMgr, pErrMgr, tr("Error Management") );
+    mErrManager.createDebug();
+    pErrMgr->setModel( &mErrManager );
 
     //! connect
     connect( ui->listWidget, SIGNAL(currentRowChanged(int)),

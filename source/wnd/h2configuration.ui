@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>589</width>
-    <height>322</height>
+    <height>376</height>
    </rect>
   </property>
   <property name="baseSize">
@@ -76,7 +76,7 @@
          </font>
         </property>
         <property name="text">
-         <string>EXCM-30-100-1100-KF-SB-B</string>
+         <string>MRX-H2-30-100-1100-KF-SB-B</string>
         </property>
        </widget>
       </item>
@@ -99,7 +99,7 @@
          </font>
         </property>
         <property name="text">
-         <string>EXCM</string>
+         <string>MRX-H2</string>
         </property>
        </widget>
       </item>
@@ -178,15 +178,34 @@
    </item>
    <item row="1" column="0">
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0" colspan="2">
-      <widget class="Line" name="line">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+     <item row="1" column="1">
+      <widget class="QGroupBox" name="groupBox_2">
+       <property name="title">
+        <string>Motor Position</string>
        </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QRadioButton" name="radioButton_b">
+          <property name="text">
+           <string>Bottom(B)</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QRadioButton" name="radioButton_t">
+          <property name="text">
+           <string>Top(T)</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QGroupBox" name="groupBox">
+      <widget class="QGroupBox" name="groupBox_brake">
        <property name="title">
         <string>Brake</string>
        </property>
@@ -214,31 +233,25 @@
        </layout>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QGroupBox" name="groupBox_2">
-       <property name="title">
-        <string>Motor Position</string>
+     <item row="0" column="0" colspan="2">
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <item>
-         <widget class="QRadioButton" name="radioButton_b">
-          <property name="text">
-           <string>Bottom(B)</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radioButton_t">
-          <property name="text">
-           <string>Top(T)</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
       </widget>
+     </item>
+     <item row="1" column="2">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </item>

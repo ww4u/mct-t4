@@ -142,7 +142,7 @@ void MainWindow::slot_focus_in( const QString &name )
     if ( m_pHelpPanel == NULL )
     { return; }
 
-    m_pHelpPanel->setFile( "G:/work/mct/build-mct-Desktop_Qt_5_10_0_MinGW_32bit-Debug/debug/help/detail.html" );
+    m_pHelpPanel->setFile( "./" + name + ".html" );
 }
 
 void MainWindow::on_actionAbout_triggered()

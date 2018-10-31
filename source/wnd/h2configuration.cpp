@@ -2,8 +2,6 @@
 #include "ui_h2configuration.h"
 #include <QDebug>
 
-#define strUserDefine tr("User defined")
-
 H2Configuration::H2Configuration(QWidget *parent) :
     XConfig(parent),
     ui(new Ui::H2Configuration)
@@ -14,6 +12,9 @@ H2Configuration::H2Configuration(QWidget *parent) :
 
     ui->sizeComboBox->addItem("10");
     ui->sizeComboBox->addItem("30");
+
+    //先隐藏保留
+    ui->groupBox_brake->hide();
 
     connect(ui->sizeComboBox,SIGNAL(activated(QString)),this,SLOT(slotSelectSize(QString)) );
     connect(ui->radioButton_b,SIGNAL(toggled(bool)),this,SLOT(slotShowConfigPicture(bool)));
@@ -50,6 +51,7 @@ void H2Configuration::slotShowConfigPicture(bool bl)
 
 void H2Configuration::slotOnModelChanged()
 {
+    QString strUserDefine = ui->workSpaceStrokeXComboBox->itemText( ui->workSpaceStrokeXComboBox->count() - 1);
     QString model = QString("%1-%2")
             .arg(ui->label_family->text())
             .arg(ui->sizeComboBox->currentText());
@@ -61,6 +63,7 @@ void H2Configuration::slotOnModelChanged()
     else
         model += ui->lineEdit_X->text();
 
+    strUserDefine = ui->workSpaceStrokeYComboBox->itemText( ui->workSpaceStrokeYComboBox->count() - 1);
     t_str = ui->workSpaceStrokeYComboBox->currentText();
     model += "-";
     if(t_str != strUserDefine)
@@ -97,6 +100,7 @@ void H2Configuration::slotSelectSize(QString text)
 
 void H2Configuration::slotUserDefinedStrokeX(QString text)
 {
+    QString strUserDefine = ui->workSpaceStrokeXComboBox->itemText( ui->workSpaceStrokeXComboBox->count() - 1);
     if(text == strUserDefine)
     {
         ui->lineEdit_X->show();
@@ -111,6 +115,7 @@ void H2Configuration::slotUserDefinedStrokeX(QString text)
 
 void H2Configuration::slotUserDefinedStrokeY(QString text)
 {
+    QString strUserDefine = ui->workSpaceStrokeYComboBox->itemText( ui->workSpaceStrokeYComboBox->count() - 1);
     if(text == strUserDefine)
     {
         ui->lineEdit_Y->show();
@@ -126,12 +131,12 @@ void H2Configuration::slotUserDefinedStrokeY(QString text)
 void H2Configuration::selectSize10()
 {
     QStringList strList;
-    strList << tr("150mm") << tr("260mm") << tr("300mm") << tr("360mm") << tr("700mm") << strUserDefine;
+    strList << tr("150mm") << tr("260mm") << tr("300mm") << tr("360mm") << tr("700mm") << tr("User defined");
     ui->workSpaceStrokeXComboBox->clear();
     ui->workSpaceStrokeXComboBox->addItems(strList);
 
     strList.clear();
-    strList << tr("110mm") << tr("160mm") << tr("210mm") << tr("260mm") << tr("310mm") << tr("360mm") << strUserDefine;
+    strList << tr("110mm") << tr("160mm") << tr("210mm") << tr("260mm") << tr("310mm") << tr("360mm") << tr("User defined");
     ui->workSpaceStrokeYComboBox->clear();
     ui->workSpaceStrokeYComboBox->addItems(strList);
 
@@ -156,12 +161,12 @@ void H2Configuration::selectSize30()
 {
     QStringList strList;
     strList.clear();
-    strList << tr("100mm") << tr("150mm") << tr("200mm") << tr("300mm") << tr("400mm") << tr("500mm") << strUserDefine;
+    strList << tr("100mm") << tr("150mm") << tr("200mm") << tr("300mm") << tr("400mm") << tr("500mm") << tr("User defined");
     ui->workSpaceStrokeXComboBox->clear();
     ui->workSpaceStrokeXComboBox->addItems(strList);
 
     strList.clear();
-    strList << tr("110mm") << tr("160mm") << tr("210mm") << tr("260mm") << tr("310mm") << tr("360mm") << strUserDefine;
+    strList << tr("110mm") << tr("160mm") << tr("210mm") << tr("260mm") << tr("310mm") << tr("360mm") << tr("User defined");
     ui->workSpaceStrokeYComboBox->clear();
     ui->workSpaceStrokeYComboBox->addItems(strList);
 

@@ -47,8 +47,8 @@ void H2Ops::setupUi()
     ui->lstLogout->addActions( actions );
 
     //! monitor
-    MegaSplineChart *m_splineChart1 = new MegaSplineChart(tr("能效曲线1"));
-    MegaSplineChart *m_splineChart2 = new MegaSplineChart(tr("能效曲线2"));
+    MegaSplineChart *m_splineChart1 = new MegaSplineChart(tr("Energy1"));
+    MegaSplineChart *m_splineChart2 = new MegaSplineChart(tr("Energy2"));
 
     m_splineChart1->chart()->series()->setPen(QPen(Qt::blue));
     m_splineChart2->chart()->series()->setPen(QPen(Qt::red));

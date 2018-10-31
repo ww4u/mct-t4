@@ -2,7 +2,7 @@
 #include "ui_h2configuration.h"
 #include <QDebug>
 
-const QString strUserDefine = tr("User defined");
+#define strUserDefine tr("User defined")
 
 H2Configuration::H2Configuration(QWidget *parent) :
     QWidget(parent),

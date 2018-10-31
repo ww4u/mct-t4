@@ -2,7 +2,7 @@
 #include "ui_h2configuration.h"
 #include <QDebug>
 
-const QString strUserDefine = "User defined";
+const QString strUserDefine = ("User defined");
 
 H2Configuration::H2Configuration(QWidget *parent) :
     XConfig(parent),
@@ -89,15 +89,14 @@ void H2Configuration::slotOnModelChanged()
 
 void H2Configuration::slotSelectSize(QString text)
 {
-    if(text == "10")
+    if(text == tr("10"))
         selectSize10();
-    else if(text == "30")
+    else if(text == ("30"))
         selectSize30();
 }
 
 void H2Configuration::slotUserDefinedStrokeX(QString text)
 {
-    qDebug() << "StrokeX:" << text;
     if(text == strUserDefine)
     {
         ui->lineEdit_X->show();
@@ -112,7 +111,6 @@ void H2Configuration::slotUserDefinedStrokeX(QString text)
 
 void H2Configuration::slotUserDefinedStrokeY(QString text)
 {
-    qDebug() << "StrokeY:" << text;
     if(text == strUserDefine)
     {
         ui->lineEdit_Y->show();
@@ -128,12 +126,12 @@ void H2Configuration::slotUserDefinedStrokeY(QString text)
 void H2Configuration::selectSize10()
 {
     QStringList strList;
-    strList << "150mm" << "260mm" << "300mm" << "360mm" << "700mm" << strUserDefine;
+    strList << tr("150mm") << tr("260mm") << tr("300mm") << tr("360mm") << tr("700mm") << strUserDefine;
     ui->workSpaceStrokeXComboBox->clear();
     ui->workSpaceStrokeXComboBox->addItems(strList);
 
     strList.clear();
-    strList << "110mm" << "160mm" << "210mm" << "260mm" << "310mm" << "360mm" << strUserDefine;
+    strList << tr("110mm") << tr("160mm") << tr("210mm") << tr("260mm") << tr("310mm") << tr("360mm") << strUserDefine;
     ui->workSpaceStrokeYComboBox->clear();
     ui->workSpaceStrokeYComboBox->addItems(strList);
 
@@ -158,12 +156,12 @@ void H2Configuration::selectSize30()
 {
     QStringList strList;
     strList.clear();
-    strList << "100mm" << "150mm" << "200mm" << "300mm" << "400mm" << "500mm" << strUserDefine;
+    strList << tr("100mm") << tr("150mm") << tr("200mm") << tr("300mm") << tr("400mm") << tr("500mm") << strUserDefine;
     ui->workSpaceStrokeXComboBox->clear();
     ui->workSpaceStrokeXComboBox->addItems(strList);
 
     strList.clear();
-    strList << "110mm" << "160mm" << "210mm" << "260mm" << "310mm" << "360mm" << strUserDefine;
+    strList << tr("110mm") << tr("160mm") << tr("210mm") << tr("260mm") << tr("310mm") << tr("360mm") << strUserDefine;
     ui->workSpaceStrokeYComboBox->clear();
     ui->workSpaceStrokeYComboBox->addItems(strList);
 

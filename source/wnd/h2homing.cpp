@@ -1,8 +1,8 @@
 #include "h2homing.h"
 #include "ui_h2homing.h"
 
-const QString strDirXtoY = "First in direction of X,then Y";
-const QString strDirYtoX = "First in direction of Y,then X";
+const QString strDirXtoY = ("First in direction of X,then Y");
+const QString strDirYtoX = ("First in direction of Y,then X");
 
 H2Homing::H2Homing(QWidget *parent) :
     XConfig(parent),
@@ -10,10 +10,10 @@ H2Homing::H2Homing(QWidget *parent) :
 {
     ui->setupUi(this);
 
+
     setName( "homing" );
 
     ui->comboBox_target->addItem("Block");
-
     ui->comboBox_movement->addItem(strDirXtoY);
     ui->comboBox_movement->addItem(strDirYtoX);
 

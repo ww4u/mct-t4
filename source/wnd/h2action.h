@@ -3,12 +3,13 @@
 
 #include <QWidget>
 #include <QAbstractTableModel>
+#include "xconfig.h"
 #include "../model/comboxdelegate.h"
 namespace Ui {
 class H2Action;
 }
 
-class H2Action : public QWidget
+class H2Action : public XConfig
 {
     Q_OBJECT
 

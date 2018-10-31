@@ -2,12 +2,12 @@
 #define H2JOGMODE_H
 
 #include <QWidget>
-
+#include "xconfig.h"
 namespace Ui {
 class H2JogMode;
 }
 
-class H2JogMode : public QWidget
+class H2JogMode : public XConfig
 {
     Q_OBJECT
 

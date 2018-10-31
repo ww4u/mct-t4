@@ -5,10 +5,12 @@
 const QString strUserDefine = "User defined";
 
 H2Configuration::H2Configuration(QWidget *parent) :
-    QWidget(parent),
+    XConfig(parent),
     ui(new Ui::H2Configuration)
 {
     ui->setupUi(this);
+
+    setName( "config" );
 
     ui->sizeComboBox->addItem("10");
     ui->sizeComboBox->addItem("30");

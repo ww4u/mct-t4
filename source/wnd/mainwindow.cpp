@@ -2,6 +2,9 @@
 #include "ui_mainwindow.h"
 
 #include <QDockWidget>
+
+#include "../include/mystd.h"
+
 #include "aboutdlg.h"
 
 #include "h2config.h"
@@ -25,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    m_pHelpPanel = NULL;
+
     setupWorkArea();
 
     setupToolBar();
@@ -41,11 +46,18 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+
+    if ( NULL != m_pHelpPanel )
+    { delete m_pHelpPanel; }
 }
 
 void MainWindow::setupWorkArea()
 {
+    //! pref
     H2Config *pPref = new H2Config( this );
+    Q_ASSERT( NULL != pPref );
+    connect( pPref, SIGNAL(signal_focus_in( const QString &)),
+             this, SLOT(slot_focus_in(const QString &)) );
 
     //! docks
     ui->centralWidget->insertTab( 0, pPref, tr("Pref") );
@@ -59,7 +71,10 @@ void MainWindow::setupWorkArea()
     addDockWidget( Qt::BottomDockWidgetArea, pDock );
 
     m_pOps = new H2Ops();
+    Q_ASSERT( NULL != m_pOps );
     pDock->setWidget( m_pOps );
+    connect( m_pOps, SIGNAL(signal_focus_in( const QString &)),
+             this, SLOT(slot_focus_in(const QString &)) );
 
     ui->menuView->addAction( pDock->toggleViewAction() );
 }
@@ -106,6 +121,20 @@ void MainWindow::slot_logout( const QString &str, log_level lev )
     m_pOps->outConsole( str, lev );
 }
 
+void MainWindow::slot_focus_in( const QString &name )
+{
+    logDbg()<<name;
+
+    if ( name.length() > 0 )
+    {}
+    else
+    { return; }
+
+    if ( m_pHelpPanel == NULL )
+    { return; }
+
+    m_pHelpPanel->setFile( "G:/work/mct/build-mct-Desktop_Qt_5_10_0_MinGW_32bit-Debug/debug/help/detail.html" );
+}
 
 void MainWindow::on_actionAbout_triggered()
 {
@@ -114,6 +143,13 @@ void MainWindow::on_actionAbout_triggered()
 }
 void MainWindow::on_actionHelp_triggered()
 {
+    if ( m_pHelpPanel == NULL )
+    { m_pHelpPanel = new HelpPanel( this ); }
 
+    if ( NULL == m_pHelpPanel )
+    { return; }
+
+    m_pHelpPanel->show();
+    m_pHelpPanel->activateWindow();
 }
 

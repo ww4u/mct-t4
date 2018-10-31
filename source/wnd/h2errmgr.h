@@ -2,6 +2,7 @@
 #define H2ERRMGR_H
 
 #include <QWidget>
+#include "xconfig.h"
 #include "../model/comboxdelegate.h"
 #include "../model/checkdelegate.h"
 #include "../model/errmgrmodel.h"
@@ -10,7 +11,7 @@ namespace Ui {
 class H2ErrMgr;
 }
 
-class H2ErrMgr : public QWidget
+class H2ErrMgr : public XConfig
 {
     Q_OBJECT
 

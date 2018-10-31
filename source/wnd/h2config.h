@@ -20,6 +20,9 @@ public:
     explicit H2Config(QWidget *parent = 0);
     ~H2Config();
 
+Q_SIGNALS:
+    void signal_focus_in( const QString &);
+
 private:
     Ui::H2Config *ui;
 

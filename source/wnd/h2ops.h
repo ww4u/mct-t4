@@ -5,7 +5,7 @@
 
 #include "../model/diagnosismodel.h"
 #include "../model/debugmodel.h"
-
+#include "xconfig.h"
 namespace Ui {
 class H2Ops;
 }
@@ -17,7 +17,7 @@ enum log_level
     e_log_error,
 };
 
-class H2Ops : public QWidget
+class H2Ops : public XConfig
 {
     Q_OBJECT
 
@@ -27,6 +27,7 @@ public:
 
 protected:
     void setupUi();
+    void setupName();
     void setupModel();
 
     void buildConnection();
@@ -63,8 +64,14 @@ private slots:
 
     void on_btnExport_2_clicked();
 
+    void on_tabWidget_currentChanged(int index);
+
+    void on_tabWidget_tabBarClicked(int index);
+
 private:
     Ui::H2Ops *ui;
+
+    QList<XConfig*> mSubTabs;
 
     //! actions for the logout
     QAction *mp_logClearAction;

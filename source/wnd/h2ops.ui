@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>754</width>
-    <height>284</height>
+    <height>273</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -26,7 +26,7 @@
       <enum>QTabWidget::South</enum>
      </property>
      <property name="currentIndex">
-      <number>6</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -37,6 +37,12 @@
         <widget class="QListWidget" name="lstLogout">
          <property name="contextMenuPolicy">
           <enum>Qt::ActionsContextMenu</enum>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::MultiSelection</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectRows</enum>
          </property>
         </widget>
        </item>
@@ -519,12 +525,18 @@
             <property name="text">
              <string>Moiton Complete(MC)</string>
             </property>
+            <property name="autoExclusive">
+             <bool>false</bool>
+            </property>
            </widget>
           </item>
           <item row="4" column="0">
            <widget class="QRadioButton" name="radioButton_14">
             <property name="text">
              <string>24V Load Voltage</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>false</bool>
             </property>
            </widget>
           </item>

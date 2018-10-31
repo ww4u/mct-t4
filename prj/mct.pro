@@ -36,10 +36,12 @@ SOURCES += \
     ../source/wnd/h2ops.cpp \
     ../source/wnd/h2zero.cpp \
     ../source/wnd/h2action.cpp \
+    ../source/wnd/aboutdlg.cpp \
     ../source/model/megatablemodel.cpp \
     ../source/model/h2actionmodel.cpp \
     ../source/model/h2actionitem.cpp \
     ../source/model/comboxdelegate.cpp \
+    ../source/model/checkdelegate.cpp \
     ../source/widget/megalcdnumber.cpp \
     ../source/widget/megamessagebox.cpp \
     ../source/wnd/h2status.cpp \
@@ -52,6 +54,7 @@ SOURCES += \
     ../source/model/debugitem.cpp \
     ../source/model/debugmodel.cpp \
     ../source/wnd/h2configuration.cpp \
+    ../source/wnd/h2errmgr.cpp \
     ../source/wnd/h2jogmode.cpp \
     ../source/wnd/h2homing.cpp
 
@@ -62,10 +65,12 @@ HEADERS += \
     ../source/wnd/h2ops.h \
     ../source/wnd/h2zero.h \
     ../source/wnd/h2action.h \
+    ../source/wnd/aboutdlg.h \
     ../source/model/megatablemodel.h \
     ../source/model/h2actionmodel.h \
     ../source/model/h2actionitem.h \
     ../source/model/comboxdelegate.h \
+    ../source/model/checkdelegate.h \
     ../source/widget/megalcdnumber.h \
     ../source/wnd/h2status.h \
     ../source/widget/megamessagebox.h \
@@ -78,6 +83,7 @@ HEADERS += \
     ../source/model/debugitem.h \
     ../source/model/debugmodel.h \
     ../source/wnd/h2configuration.h \
+    ../source/wnd/h2errmgr.h \
     ../source/wnd/h2jogmode.h \
     ../source/wnd/h2homing.h
 
@@ -92,7 +98,10 @@ FORMS += \
     ../source/wnd/h2ops.ui \
     ../source/wnd/h2zero.ui \
     ../source/wnd/h2action.ui \
+    ../source/wnd/aboutdlg.ui \
     ../source/wnd/h2status.ui \
     ../source/wnd/h2configuration.ui \
+    ../source/wnd/h2errmgr.ui \
     ../source/wnd/h2jogmode.ui \
     ../source/wnd/h2homing.ui
+

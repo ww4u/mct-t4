@@ -527,16 +527,19 @@ QDockWidget::close-button, QDockWidget::float-button {
 QRadioButton#radEn::indicator:checked, QRadioButton#radTo::indicator:checked,
 QRadioButton#radES::indicator:checked
  {
-      background-color:green;
+      /*background-color:green;*/
+	  image: url(:/res/image/widget/radiobutton_checked_green.png);
 }
 
 QRadioButton#radReady::indicator:checked, QRadioButton#radMc::indicator:checked,
 QRadioButton#radHome::indicator:checked
  {
-      background-color:yellow;
+      /*background-color:yellow;*/
+	  image: url(:/res/image/widget/radiobutton_checked_yellow.png);
 }
 
 QRadioButton#radError::indicator:checked, QRadioButton#radWarning::indicator:checked {
-      background-color:red;
+      /*background-color:red;*/
+	  image: url(:/res/image/widget/radiobutton_checked_red.png);
 }
   

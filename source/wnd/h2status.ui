@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>332</width>
-    <height>255</height>
+    <height>231</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -26,6 +26,21 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <widget class="QGroupBox" name="groupBox_9">
      <property name="title">
@@ -39,6 +54,9 @@
         </property>
         <property name="text">
          <string>Ready</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
         <property name="autoExclusive">
          <bool>false</bool>
@@ -65,6 +83,9 @@
         </property>
         <property name="text">
          <string>Enable</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
         <property name="autoExclusive">
          <bool>false</bool>
@@ -99,6 +120,9 @@
         <property name="text">
          <string>Error</string>
         </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
         <property name="autoExclusive">
          <bool>false</bool>
         </property>
@@ -111,6 +135,9 @@
         </property>
         <property name="text">
          <string>Warning</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
         </property>
         <property name="autoExclusive">
          <bool>false</bool>

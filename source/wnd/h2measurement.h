@@ -15,6 +15,9 @@ public:
     explicit H2Measurement(QWidget *parent = 0);
     ~H2Measurement();
 
+protected slots:
+    void slotChangeCornerPicture(int index);
+
 private:
     Ui::H2Measurement *ui;
 };

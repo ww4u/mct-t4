@@ -6,9 +6,19 @@ H2Measurement::H2Measurement(QWidget *parent) :
     ui(new Ui::H2Measurement)
 {
     ui->setupUi(this);
+    connect(ui->comboBox_AxesZeroPoint,SIGNAL(currentIndexChanged(int)),this,SLOT(slotChangeCornerPicture(int)));
 }
 
 H2Measurement::~H2Measurement()
 {
     delete ui;
+}
+
+void H2Measurement::slotChangeCornerPicture(int index)
+{
+    QString strPixmap = ":/res/image/h2measurement/CornerPoint";
+    strPixmap += QString::number(index+1);
+    strPixmap += ".PNG";
+
+    ui->label_picture->setPixmap(QPixmap(strPixmap));
 }

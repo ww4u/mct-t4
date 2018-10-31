@@ -51,7 +51,9 @@ SOURCES += \
     ../source/model/errmgrmodel.cpp \
     ../source/model/debugitem.cpp \
     ../source/model/debugmodel.cpp \
-    ../source/wnd/h2configuration.cpp
+    ../source/wnd/h2configuration.cpp \
+    ../source/wnd/h2jogmode.cpp \
+    ../source/wnd/h2homing.cpp
 
 HEADERS += \
         ../source/wnd/mainwindow.h \
@@ -75,7 +77,9 @@ HEADERS += \
     ../source/model/errmgrmodel.h \
     ../source/model/debugitem.h \
     ../source/model/debugmodel.h \
-    ../source/wnd/h2configuration.h
+    ../source/wnd/h2configuration.h \
+    ../source/wnd/h2jogmode.h \
+    ../source/wnd/h2homing.h
 
 RESOURCES += ../source/res/res.qrc
 
@@ -89,6 +93,6 @@ FORMS += \
     ../source/wnd/h2zero.ui \
     ../source/wnd/h2action.ui \
     ../source/wnd/h2status.ui \
-    ../source/wnd/h2configuration.ui
-
-
+    ../source/wnd/h2configuration.ui \
+    ../source/wnd/h2jogmode.ui \
+    ../source/wnd/h2homing.ui

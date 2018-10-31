@@ -32,9 +32,7 @@ SOURCES += \
         ../source/main/main.cpp \
         ../source/wnd/mainwindow.cpp \
     ../source/wnd/h2config.cpp \
-    ../source/wnd/h2pref.cpp \
     ../source/wnd/h2ops.cpp \
-    ../source/wnd/h2zero.cpp \
     ../source/wnd/h2action.cpp \
     ../source/wnd/aboutdlg.cpp \
     ../source/model/megatablemodel.cpp \
@@ -56,14 +54,13 @@ SOURCES += \
     ../source/wnd/h2configuration.cpp \
     ../source/wnd/h2errmgr.cpp \
     ../source/wnd/h2jogmode.cpp \
-    ../source/wnd/h2homing.cpp
+    ../source/wnd/h2homing.cpp \
+    ../source/wnd/h2measurement.cpp
 
 HEADERS += \
         ../source/wnd/mainwindow.h \
     ../source/wnd/h2config.h \
-    ../source/wnd/h2pref.h \
     ../source/wnd/h2ops.h \
-    ../source/wnd/h2zero.h \
     ../source/wnd/h2action.h \
     ../source/wnd/aboutdlg.h \
     ../source/model/megatablemodel.h \
@@ -85,7 +82,8 @@ HEADERS += \
     ../source/wnd/h2configuration.h \
     ../source/wnd/h2errmgr.h \
     ../source/wnd/h2jogmode.h \
-    ../source/wnd/h2homing.h
+    ../source/wnd/h2homing.h \
+    ../source/wnd/h2measurement.h
 
 RESOURCES += ../source/res/res.qrc
 
@@ -94,14 +92,12 @@ RC_ICONS = ../source/res/image/megarobo.ico
 FORMS += \
         ../source/wnd/mainwindow.ui \
     ../source/wnd/h2config.ui \
-    ../source/wnd/h2pref.ui \
     ../source/wnd/h2ops.ui \
-    ../source/wnd/h2zero.ui \
     ../source/wnd/h2action.ui \
     ../source/wnd/aboutdlg.ui \
     ../source/wnd/h2status.ui \
     ../source/wnd/h2configuration.ui \
     ../source/wnd/h2errmgr.ui \
     ../source/wnd/h2jogmode.ui \
-    ../source/wnd/h2homing.ui
-
+    ../source/wnd/h2homing.ui \
+    ../source/wnd/h2measurement.ui

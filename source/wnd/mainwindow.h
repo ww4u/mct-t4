@@ -7,7 +7,7 @@ namespace Ui {
 class MainWindow;
 }
 
-
+#include "helppanel.h"
 #include "h2ops.h"
 
 class MainWindow : public QMainWindow
@@ -38,17 +38,18 @@ protected Q_SLOTS:
     void slot_post_startup();
     void slot_logout( const QString &str, log_level lev = e_log_info );
 
+    void slot_focus_in( const QString &name );
 
 private slots:
     void on_actionAbout_triggered();
     void on_actionHelp_triggered();
 
-
-
 private:
     Ui::MainWindow *ui;
 
     QLabel *m_pLabStatus, *m_pLabMctVer, *m_pLabConVer;
+
+    HelpPanel *m_pHelpPanel;
 
     H2Ops *m_pOps;
 };

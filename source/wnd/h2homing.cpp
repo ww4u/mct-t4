@@ -5,10 +5,12 @@ const QString strDirXtoY = "First in direction of X,then Y";
 const QString strDirYtoX = "First in direction of Y,then X";
 
 H2Homing::H2Homing(QWidget *parent) :
-    QWidget(parent),
+    XConfig(parent),
     ui(new Ui::H2Homing)
 {
     ui->setupUi(this);
+
+    setName( "homing" );
 
     ui->comboBox_target->addItem("Block");
 

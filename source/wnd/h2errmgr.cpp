@@ -2,11 +2,12 @@
 #include "ui_h2errmgr.h"
 
 H2ErrMgr::H2ErrMgr(QWidget *parent) :
-    QWidget(parent),
+    XConfig(parent),
     ui(new Ui::H2ErrMgr)
 {
     ui->setupUi(this);
 
+    setName( "error_mgr" );
 
     //! delegate
     m_pCheckDelegate = new checkDelegate( shape_check, this );

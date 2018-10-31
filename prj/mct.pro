@@ -56,7 +56,9 @@ SOURCES += \
     ../source/wnd/h2configuration.cpp \
     ../source/wnd/h2errmgr.cpp \
     ../source/wnd/h2jogmode.cpp \
-    ../source/wnd/h2homing.cpp
+    ../source/wnd/h2homing.cpp \
+    ../source/wnd/helppanel.cpp \
+    ../source/wnd/xconfig.cpp
 
 HEADERS += \
         ../source/wnd/mainwindow.h \
@@ -85,7 +87,9 @@ HEADERS += \
     ../source/wnd/h2configuration.h \
     ../source/wnd/h2errmgr.h \
     ../source/wnd/h2jogmode.h \
-    ../source/wnd/h2homing.h
+    ../source/wnd/h2homing.h \
+    ../source/wnd/helppanel.h \
+    ../source/wnd/xconfig.h
 
 RESOURCES += ../source/res/res.qrc
 
@@ -103,5 +107,6 @@ FORMS += \
     ../source/wnd/h2configuration.ui \
     ../source/wnd/h2errmgr.ui \
     ../source/wnd/h2jogmode.ui \
-    ../source/wnd/h2homing.ui
+    ../source/wnd/h2homing.ui \
+    ../source/wnd/helppanel.ui
 

@@ -12,12 +12,14 @@
 #include "../widget/megamessagebox.h"
 
 H2Ops::H2Ops(QWidget *parent) :
-    QWidget(parent),
+    XConfig(parent),
     ui(new Ui::H2Ops)
 {
     ui->setupUi(this);
 
     setupUi();
+
+    setupName();
 
     buildConnection();
 
@@ -58,6 +60,23 @@ void H2Ops::setupUi()
     ui->horizontalLayout_3->addWidget(m_splineChart2);
     ui->horizontalLayout_3->addStretch();
 }
+
+#define set_name( the, name )   the->setName( name );\
+                                mSubTabs.append( the );
+void H2Ops::setupName()
+{
+    set_name( ui->tab, "tab");
+    set_name( ui->tab_2, "tab2");
+    set_name( ui->tab_3, "tab3");
+
+    set_name( ui->tab_4, "tab4");
+    set_name( ui->tab_5, "tab5");
+    set_name( ui->tab_6, "tab6");
+    set_name( ui->tab_7, "tab7");
+
+    set_name( ui->Dbg, "tab8");
+}
+
 void H2Ops::setupModel()
 {
     //! model
@@ -77,6 +96,13 @@ void H2Ops::buildConnection()
              this, SLOT(slot_logSelectAll_action()) );
     connect( mp_logCopyAction, SIGNAL(triggered(bool)),
              this, SLOT(slot_logCopy_action()) );
+
+    //! option
+    foreach( XConfig *pCfg, mSubTabs )
+    {
+        connect( pCfg, SIGNAL(signal_focus_in( const QString &)),
+                 this, SIGNAL(signal_focus_in( const QString &)));
+    }
 }
 
 void H2Ops::outConsole( const QString &str, log_level e )
@@ -296,3 +322,14 @@ void H2Ops::on_btnExport_2_clicked()
 
     sysInfo( fDlg.selectedFiles().first(), tr("save completed") );
 }
+
+void H2Ops::on_tabWidget_currentChanged(int index)
+{
+    emit signal_focus_in( ui->tabWidget->tabText( index ) );
+}
+
+void H2Ops::on_tabWidget_tabBarClicked(int index)
+{
+    emit signal_focus_in( ui->tabWidget->tabText( index ) );
+}
+

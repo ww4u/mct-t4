@@ -62,6 +62,17 @@ H2Config::H2Config(QWidget *parent) :
     connect( ui->listWidget, SIGNAL(currentRowChanged(int)),
              ui->stackedWidget, SLOT(setCurrentIndex(int)));
 
+    //! for each
+    XConfig *pCfg;
+    for ( int i = 0; i < ui->stackedWidget->count(); i++ )
+    {
+        pCfg = (XConfig*)ui->stackedWidget->widget( i );
+        if ( NULL != pCfg )
+        {
+            connect( pCfg, SIGNAL(signal_focus_in( const QString &)),
+                     this, SIGNAL(signal_focus_in( const QString &)));
+        }
+    }
 }
 
 H2Config::~H2Config()

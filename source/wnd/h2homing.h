@@ -2,12 +2,12 @@
 #define H2HOMING_H
 
 #include <QWidget>
-
+#include "xconfig.h"
 namespace Ui {
 class H2Homing;
 }
 
-class H2Homing : public QWidget
+class H2Homing : public XConfig
 {
     Q_OBJECT
 

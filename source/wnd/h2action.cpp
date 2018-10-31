@@ -1,12 +1,14 @@
+
 #include "h2action.h"
 #include "ui_h2action.h"
 
 H2Action::H2Action(QWidget *parent) :
-    QWidget(parent),
+    XConfig(parent),
     ui(new Ui::H2Action)
 {
     ui->setupUi(this);
 
+    setName( "action" );
 
     m_pDelegate1 = new comboxDelegate(this);
     QStringList prxs;

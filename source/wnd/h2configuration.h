@@ -2,12 +2,12 @@
 #define FORMTEST_H
 
 #include <QWidget>
-
+#include "xconfig.h"
 namespace Ui {
 class H2Configuration;
 }
 
-class H2Configuration : public QWidget
+class H2Configuration : public XConfig
 {
     Q_OBJECT
 

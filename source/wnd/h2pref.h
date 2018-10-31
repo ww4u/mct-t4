@@ -2,12 +2,12 @@
 #define H2PREF_H
 
 #include <QWidget>
-
+#include "xconfig.h"
 namespace Ui {
 class H2Pref;
 }
 
-class H2Pref : public QWidget
+class H2Pref : public XConfig
 {
     Q_OBJECT
 

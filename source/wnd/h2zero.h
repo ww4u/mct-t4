@@ -2,12 +2,12 @@
 #define H2ZERO_H
 
 #include <QWidget>
-
+#include "xconfig.h"
 namespace Ui {
 class H2Zero;
 }
 
-class H2Zero : public QWidget
+class H2Zero : public XConfig
 {
     Q_OBJECT
 

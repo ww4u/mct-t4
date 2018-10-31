@@ -41,6 +41,7 @@ SOURCES += \
     ../source/model/h2actionmodel.cpp \
     ../source/model/h2actionitem.cpp \
     ../source/model/comboxdelegate.cpp \
+    ../source/model/checkdelegate.cpp \
     ../source/widget/megalcdnumber.cpp \
     ../source/widget/megamessagebox.cpp \
     ../source/wnd/h2status.cpp \
@@ -67,6 +68,7 @@ HEADERS += \
     ../source/model/h2actionmodel.h \
     ../source/model/h2actionitem.h \
     ../source/model/comboxdelegate.h \
+    ../source/model/checkdelegate.h \
     ../source/widget/megalcdnumber.h \
     ../source/wnd/h2status.h \
     ../source/widget/megamessagebox.h \

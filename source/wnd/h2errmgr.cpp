@@ -9,15 +9,26 @@ H2ErrMgr::H2ErrMgr(QWidget *parent) :
 
 
     //! delegate
+    m_pCheckDelegate = new checkDelegate( shape_check, this );
+    m_pRadioDelegate = new checkDelegate( shape_radio, this );
     m_pErrActionDelegate = new comboxDelegate( this );
 
+    //! opt
     QStringList errActions;
     errActions<<tr("Free-wheeling")
               <<tr("QS deceleration")
               <<tr("Record deceleration")
               <<tr("Finish Record");
     m_pErrActionDelegate->setItems( errActions );
+
+    ui->tvErr->setItemDelegateForColumn( 2, m_pRadioDelegate );
+    ui->tvErr->setItemDelegateForColumn( 3, m_pRadioDelegate );
+    ui->tvErr->setItemDelegateForColumn( 4, m_pRadioDelegate );
+
     ui->tvErr->setItemDelegateForColumn( 5, m_pErrActionDelegate );
+
+    ui->tvErr->setItemDelegateForColumn( 6, m_pCheckDelegate );
+    ui->tvErr->setItemDelegateForColumn( 7, m_pCheckDelegate );
 
 }
 

@@ -7,9 +7,10 @@
 #include "h2configuration.h"
 #include "h2errmgr.h"
 
-#define new_widget( type, name, title ) type *name = new type();\
+#define new_widget( type, name, title, icon ) type *name = new type();\
                                         ui->stackedWidget->addWidget( name );\
-                                        ui->listWidget->addItem( title );
+                                        plwItem = new QListWidgetItem( QIcon(icon), title );\
+                                        ui->listWidget->addItem( plwItem );
 
 H2Config::H2Config(QWidget *parent) :
     QWidget(parent),
@@ -21,24 +22,27 @@ H2Config::H2Config(QWidget *parent) :
     for ( int i = 0; i < 31; i++ )
     { mActions.insertRow( i ); }
 
-    //! configuration
-    new_widget( H2Configuration, pConfiguration , tr("Configuration") );
-
     //! load data
     //! \todo
 
+    //! list item
+    QListWidgetItem *plwItem;
+
+    //! configuration
+    new_widget( H2Configuration, pConfiguration , tr("Configuration"), ":/res/image/icon/54.png" );
+
     //! pref
-    new_widget( H2Pref, pPref, tr("Pref") )
+    new_widget( H2Pref, pPref, tr("Pref"), ":/res/image/icon/205.png" )
 
     //! zero
-    new_widget( H2Zero, pZero, tr("Zero") )
+    new_widget( H2Zero, pZero, tr("Zero"), ":/res/image/icon/address.png" )
 
     //! action
-    new_widget( H2Action, pAction, tr("Record Table") )
+    new_widget( H2Action, pAction, tr("Record Table"), ":/res/image/icon/activity.png" )
     pAction->setModel( &mActions );
 
     //! err mgr
-    new_widget( H2ErrMgr, pErrMgr, tr("Error Management") );
+    new_widget( H2ErrMgr, pErrMgr, tr("Error Management"), ":/res/image/icon/remind.png" );
     mErrManager.createDebug();
     pErrMgr->setModel( &mErrManager );
 

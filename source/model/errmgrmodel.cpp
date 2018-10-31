@@ -26,7 +26,12 @@ QVariant ErrMgrModel::data(const QModelIndex &index, int role) const
     int col = index.column();
     int row = index.row();
 
-    if ( role != Qt::DisplayRole && role != Qt::EditRole )
+    //! by role
+    if ( role == Qt::DisplayRole || role == Qt::EditRole )
+    {  }
+    else if ( role == Qt::TextAlignmentRole )
+    { return QVariant( Qt::AlignCenter ); }
+    else
     { return QVariant(); }
 
 //    QStringLiteral("No."),
@@ -70,10 +75,11 @@ QVariant ErrMgrModel::data(const QModelIndex &index, int role) const
 
 bool ErrMgrModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
+    int col = index.column();
+    int row = index.row();
+
     if (index.isValid() && role == Qt::EditRole)
     {
-        int col = index.column();
-        int row = index.row();
         if ( col == 0 )
         { mItems[ row ]->mNr = value.toInt(); }
         else if ( index.column() == 1 )
@@ -88,10 +94,11 @@ bool ErrMgrModel::setData(const QModelIndex &index, const QVariant &value, int r
 
         else if ( index.column() == 5 )
         { mItems[ row ]->mAction = value.toString(); }
+
         else if ( index.column() == 6 )
-        { mItems[ row ]->mbOutput = value.toInt() > 0; }
+        { mItems[ row ]->mbOutput = value.toBool(); }
         else if ( index.column() == 7 )
-        { mItems[ row ]->mbSaveDiagnosis = value.toInt() > 0; }
+        { mItems[ row ]->mbSaveDiagnosis = value.toBool(); }
 
         else
         {}

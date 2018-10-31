@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "../model/comboxdelegate.h"
+#include "../model/checkdelegate.h"
 #include "../model/errmgrmodel.h"
 
 namespace Ui {
@@ -22,6 +23,9 @@ public:
 
 private:
     Ui::H2ErrMgr *ui;
+
+    checkDelegate *m_pCheckDelegate;
+    checkDelegate *m_pRadioDelegate;
 
     comboxDelegate *m_pErrActionDelegate;
 };

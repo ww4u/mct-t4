@@ -2,12 +2,12 @@
 #define H2MEASUREMENT_H
 
 #include <QWidget>
-
+#include "xconfig.h"
 namespace Ui {
 class H2Measurement;
 }
 
-class H2Measurement : public QWidget
+class H2Measurement : public XConfig
 {
     Q_OBJECT
 

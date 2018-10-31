@@ -2,7 +2,7 @@
 #include "ui_h2measurement.h"
 
 H2Measurement::H2Measurement(QWidget *parent) :
-    QWidget(parent),
+    XConfig(parent),
     ui(new Ui::H2Measurement)
 {
     ui->setupUi(this);

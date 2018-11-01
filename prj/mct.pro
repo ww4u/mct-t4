@@ -57,7 +57,8 @@ SOURCES += \
     ../source/wnd/h2homing.cpp \
     ../source/wnd/helppanel.cpp \
     ../source/wnd/xconfig.cpp \
-    ../source/wnd/h2measurement.cpp
+    ../source/wnd/h2measurement.cpp \
+    ../source/widget/megainterface.cpp
 
 HEADERS += \
         ../source/wnd/mainwindow.h \
@@ -87,7 +88,8 @@ HEADERS += \
     ../source/wnd/h2homing.h \
     ../source/wnd/helppanel.h \
     ../source/wnd/xconfig.h \
-    ../source/wnd/h2measurement.h
+    ../source/wnd/h2measurement.h \
+    ../source/widget/megainterface.h
 
 RESOURCES += ../source/res/res.qrc
 
@@ -105,5 +107,6 @@ FORMS += \
     ../source/wnd/h2jogmode.ui \
     ../source/wnd/h2homing.ui \
     ../source/wnd/helppanel.ui \
-    ../source/wnd/h2measurement.ui
+    ../source/wnd/h2measurement.ui \
+    ../source/widget/megainterface.ui
 

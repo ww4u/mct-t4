@@ -37,5 +37,7 @@
         <file>image/h2measurement/CornerPoint2.PNG</file>
         <file>image/h2measurement/CornerPoint3.PNG</file>
         <file>image/h2measurement/CornerPoint4.PNG</file>
+        <file>image/icon/network.ico</file>
+        <file>image/icon/usb.ico</file>
     </qresource>
 </RCC>

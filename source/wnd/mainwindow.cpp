@@ -28,6 +28,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    m_megaSerachWidget = new MegaInterface;
+    connect(ui->actionSearch,SIGNAL(triggered(bool)),this,SLOT(slot_action_search()));
+
     m_pHelpPanel = NULL;
 
     setupWorkArea();
@@ -143,6 +146,13 @@ void MainWindow::slot_focus_in( const QString &name )
     { return; }
 
     m_pHelpPanel->setFile( "./" + name + ".html" );
+}
+
+void MainWindow::slot_action_search()
+{
+    QDesktopWidget *desktop=QApplication::desktop();
+    m_megaSerachWidget->move((desktop->width()-m_megaSerachWidget->width())/2,(desktop->height()-m_megaSerachWidget->height())/2);
+    m_megaSerachWidget->show();
 }
 
 void MainWindow::on_actionAbout_triggered()

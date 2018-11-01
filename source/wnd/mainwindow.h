@@ -10,6 +10,8 @@ class MainWindow;
 #include "helppanel.h"
 #include "h2ops.h"
 
+#include "megainterface.h"
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -40,6 +42,8 @@ protected Q_SLOTS:
 
     void slot_focus_in( const QString &name );
 
+    void slot_action_search();
+
 private slots:
     void on_actionAbout_triggered();
 
@@ -51,6 +55,8 @@ private:
     HelpPanel *m_pHelpPanel;
 
     H2Ops *m_pOps;
+
+    MegaInterface *m_megaSerachWidget;
 };
 
 #endif // MAINWINDOW_H

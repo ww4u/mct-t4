@@ -150,8 +150,7 @@ void MainWindow::slot_focus_in( const QString &name )
 
 void MainWindow::slot_action_search()
 {
-    QDesktopWidget *desktop=QApplication::desktop();
-    m_megaSerachWidget->move((desktop->width()-m_megaSerachWidget->width())/2,(desktop->height()-m_megaSerachWidget->height())/2);
+    m_megaSerachWidget->move(100,100);
     m_megaSerachWidget->show();
 }
 

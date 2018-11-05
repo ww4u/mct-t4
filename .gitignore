@@ -6,7 +6,7 @@ unittest/
 *.qm
 debug/
 *.lib
-*.a
+#*.a
 *.dll
 Makefile
 Makefile.*

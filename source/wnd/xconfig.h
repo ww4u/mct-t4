@@ -2,6 +2,7 @@
 #define XCONFIG_H
 
 #include <QWidget>
+#include "visa.h"
 
 class XConfig : public QWidget
 {
@@ -12,6 +13,9 @@ public:
 public:
     void setName( const QString &name );
     QString name();
+
+public:
+    virtual int setApply( ViSession vi );
 
 protected:
     virtual void focusInEvent(QFocusEvent *event);

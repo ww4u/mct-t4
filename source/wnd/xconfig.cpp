@@ -10,6 +10,9 @@ void XConfig::setName( const QString &name )
 QString XConfig::name()
 { return mName; }
 
+int XConfig::setApply( ViSession vi )
+{ return 0; }
+
 void XConfig::focusInEvent(QFocusEvent *event)
 {
     QWidget::focusInEvent( event );

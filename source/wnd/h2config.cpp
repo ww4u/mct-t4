@@ -10,11 +10,15 @@
 
 #include "h2errmgr.h"
 
+#include "../include/mystd.h"
 
 #define new_widget( type, name, title, icon ) type *name = new type();\
-                                        ui->stackedWidget->addWidget( name );\
-                                        plwItem = new QListWidgetItem( QIcon(icon), title );\
-                                        ui->listWidget->addItem( plwItem );
+                                        plwItem = new QTreeWidgetItem();\
+                                        plwItem->setText( 0, title ); \
+                                        plwItem->setIcon( 0, QIcon( icon) ); \
+                                        plwItem->setData( 0, Qt::UserRole, QVariant( ui->stackedWidget->count() ) ); \
+                                        pRoboNode->addChild( plwItem );\
+                                        ui->stackedWidget->addWidget( name );
 
 H2Config::H2Config(QWidget *parent) :
     QWidget(parent),
@@ -30,8 +34,19 @@ H2Config::H2Config(QWidget *parent) :
     //! load data
     //! \todo
 
+    QTreeWidgetItem *pRootNode;
+
+    pRootNode = new QTreeWidgetItem();
+    pRootNode->setText( 0, "Prj" );
+    ui->treeWidget->addTopLevelItem( pRootNode );
+
+    QTreeWidgetItem *pRoboNode;
+    pRoboNode = new QTreeWidgetItem();
+    pRoboNode->setText( 0, "MRH-H2" );
+    pRootNode->addChild( pRoboNode );
+
     //! list item
-    QListWidgetItem *plwItem;
+    QTreeWidgetItem *plwItem;
 
     //! configuration
     new_widget( H2Configuration, pConfiguration , tr("Configuration"), ":/res/image/icon/205.png" );
@@ -55,8 +70,8 @@ H2Config::H2Config(QWidget *parent) :
     pErrMgr->setModel( &mErrManager );
 
     //! connect
-    connect( ui->listWidget, SIGNAL(currentRowChanged(int)),
-             ui->stackedWidget, SLOT(setCurrentIndex(int)));
+    connect( ui->treeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
+             this, SLOT(slot_current_changed(QTreeWidgetItem*,QTreeWidgetItem*)));
 
     //! for each
     XConfig *pCfg;
@@ -74,4 +89,67 @@ H2Config::H2Config(QWidget *parent) :
 H2Config::~H2Config()
 {
     delete ui;
+}
+
+int H2Config::setApply()
+{
+    int ret;
+    XConfig *pCfg;
+    for ( int i = 0; i < ui->stackedWidget->count(); i++ )
+    {
+        pCfg = (XConfig*)ui->stackedWidget->widget( i );
+        Q_ASSERT( NULL != pCfg );
+
+        ret = pCfg->setApply( 0 );      //! \todo get from handle
+        if ( ret != 0 )
+        { return ret; }
+    }
+
+    return 0;
+}
+
+int H2Config::setReset()
+{
+    //! \todo for each prop
+
+    return 0;
+}
+int H2Config::setOK()
+{
+    //! setApply
+
+
+    //! close
+
+    return 0;
+}
+
+void H2Config::on_buttonBox_clicked(QAbstractButton *button)
+{
+    Q_ASSERT( NULL != button );
+
+    QDialogButtonBox::ButtonRole role = ui->buttonBox->buttonRole( button );
+    if ( QDialogButtonBox::ResetRole == role )
+    {}
+    else if ( QDialogButtonBox::AcceptRole == role )
+    {}
+    else if ( QDialogButtonBox::ApplyRole == role )
+    {}
+    else
+    {}
+}
+
+void H2Config::slot_current_changed( QTreeWidgetItem* cur,QTreeWidgetItem* prv )
+{
+    if ( cur != NULL )
+    {}
+    else
+    { return; }
+
+    QVariant var;
+    var = cur->data( 0, Qt::UserRole );
+    if ( var.isValid() && var.type() == QVariant::Int  )
+    {
+        ui->stackedWidget->setCurrentIndex( var.toInt() );
+    }
 }

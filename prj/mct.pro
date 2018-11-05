@@ -24,6 +24,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 VERSION = 0.0.0.0
 
+INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include"
+
 INCLUDEPATH += ../include
 INCLUDEPATH += ../source/widget
 INCLUDEPATH += ../source/wnd
@@ -119,11 +121,15 @@ FORMS += \
     ../source/widget/megainterface.ui
 
 
-win32:LIBS += 'C:/Windows/System32/visa32.dll'
-win32:LIBS += 'C:/MinGW/lib/libws2_32.a'
-win32:LIBS += 'C:/MinGW/lib/libiphlpapi.a'
+#win32:LIBS += 'C:/Windows/System32/visa32.dll'
+#win32:LIBS += 'C:/MinGW/lib/libws2_32.a'
+#win32:LIBS += 'C:/MinGW/lib/libiphlpapi.a'
 
-win32:INCLUDEPATH += 'C:/Program Files/IVI Foundation/VISA/Win64/Include'
+#win32:INCLUDEPATH += 'C:/Program Files/IVI Foundation/VISA/Win64/Include'
+#win32:DEPENDPATH += 'C:/Program Files/IVI Foundation/VISA/Win64/Lib_x64/msc'
 
+LIBS += -L"C:/Program Files (x86)/IVI Foundation/VISA/WinNT/lib/msc"
+LIBS += -lvisa32
 
-win32:DEPENDPATH += 'C:/Program Files/IVI Foundation/VISA/Win64/Lib_x64/msc'
+LIBS += -L"../3rdlib"
+LIBS += -llibws2_32 -llibiphlpapi

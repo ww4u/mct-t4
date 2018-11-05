@@ -13,8 +13,17 @@ extern "C" {
 #include <stdlib.h>
 
 
+int mrhtOpenDevice(char * ip, int timeout);
+
+int mrhtCloseDevice(int vi);
+
+
 //! *IDN?
 int mrhtIdn_Query(int inst, char* data,int len);
+
+
+//! :SYSTem:IDENtify <OFF|ON>
+int mrhtSystemIdentify(int inst,int state);
 
 
 //! :TRIGger:SEARch?

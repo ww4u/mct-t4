@@ -1,14 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <QDockWidget>
-
 #include "../include/mystd.h"
-
-#include "aboutdlg.h"
-
-#include "h2config.h"
-#include "h2ops.h"
 
 MainWindow *MainWindow::_pBackendProxy = NULL;
 
@@ -24,7 +17,8 @@ void MainWindow::requestLogout( const QString &str, log_level lev )
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    m_visa(0)
 {
     ui->setupUi(this);
 
@@ -57,38 +51,37 @@ MainWindow::~MainWindow()
 void MainWindow::setupWorkArea()
 {
     //! pref
-    H2Config *pPref = new H2Config( this );
-    Q_ASSERT( NULL != pPref );
-    connect( pPref, SIGNAL(signal_focus_in( const QString &)),
+    m_pConfig = new H2Config(this);
+    Q_ASSERT( NULL != m_pConfig );
+    connect( m_pConfig, SIGNAL(signal_focus_in( const QString &)),
              this, SLOT(slot_focus_in(const QString &)) );
 
     //! docks
-    ui->centralWidget->insertTab( 0, pPref, tr("Pref") );
+    ui->centralWidget->insertTab( 0, m_pConfig, tr("Pref") );
 
     //! dock
-    QDockWidget *pDock;
-    pDock = new QDockWidget( tr("Ops"), this );
-    pDock->setAllowedAreas(  Qt::BottomDockWidgetArea );
-    pDock->setFeatures( QDockWidget::DockWidgetVerticalTitleBar
-                           | pDock->features() );
-    addDockWidget( Qt::BottomDockWidgetArea, pDock );
+    m_pDockOps = new QDockWidget( tr("Ops"), this );
+    m_pDockOps->setAllowedAreas(  Qt::BottomDockWidgetArea );
+    m_pDockOps->setFeatures( QDockWidget::DockWidgetVerticalTitleBar
+                           | m_pDockOps->features() );
+    addDockWidget( Qt::BottomDockWidgetArea, m_pDockOps );
 
     m_pOps = new H2Ops();
     Q_ASSERT( NULL != m_pOps );
-    pDock->setWidget( m_pOps );
+    m_pDockOps->setWidget( m_pOps );
     connect( m_pOps, SIGNAL(signal_focus_in( const QString &)),
              this, SLOT(slot_focus_in(const QString &)) );
 
-    ui->menuView->addAction( pDock->toggleViewAction() );
+    ui->menuView->addAction( m_pDockOps->toggleViewAction() );
 
     //! help
-    pDock = new QDockWidget( tr("Help"), this  );
-    pDock->setAllowedAreas(  Qt::RightDockWidgetArea );
-    addDockWidget( Qt::RightDockWidgetArea, pDock );
+    m_pDockHelp = new QDockWidget( tr("Help"), this  );
+    m_pDockHelp->setAllowedAreas(  Qt::RightDockWidgetArea );
+    addDockWidget( Qt::RightDockWidgetArea, m_pDockHelp );
 
     m_pHelpPanel = new HelpPanel();
-    pDock->setWidget( m_pHelpPanel );
-    ui->menuHelp->addAction( pDock->toggleViewAction() );
+    m_pDockHelp->setWidget( m_pHelpPanel );
+    ui->menuHelp->addAction( m_pDockHelp->toggleViewAction() );
 }
 
 void MainWindow::setupToolBar()
@@ -152,6 +145,7 @@ void MainWindow::slot_action_search()
 {
     m_megaSerachWidget->move(100,100);
     m_megaSerachWidget->show();
+    m_visa = m_megaSerachWidget->visa();
 }
 
 void MainWindow::on_actionAbout_triggered()

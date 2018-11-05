@@ -20,12 +20,10 @@ enum _DEV_TYPES
 class DeviceSearchThread: public QThread
 {
     Q_OBJECT
-
 signals:
     void resultReady(const QString &s);
 
 public:
-//    explicit DeviceSearchThread(QObject *parent = Q_NULLPTR);
     void run();
     void setType(int type);
 
@@ -42,21 +40,18 @@ public:
     explicit MegaInterface(QWidget *parent = 0);
     ~MegaInterface();
 
-    void clearListView();
+    int visa() const;
 
-
-protected slots:
+private slots:
     void slotChangeDeviceType(int index);
     void slotScanDevices();
-
-    void slotShowContextmenu(const QPoint &pos);    
+    void slotScanFinished();
+    void insertOneRow(QString str);
+    void slotShowContextmenu(const QPoint &pos);
     void soltActionOpen();
     void soltActionClose();
 
-    void insertOneRow(QString str);
-
-private slots:
-    void slotScanFinished();
+    void deviceOpenAndRobotBuild();
 
 private:
     Ui::MegaInterface *ui;
@@ -66,6 +61,10 @@ private:
 
     int m_devType;
     DeviceSearchThread *m_searchThread;
+    void clearListView();
+    int deviceOpen();
+
+    int m_visa;
 };
 
 

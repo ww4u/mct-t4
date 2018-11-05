@@ -49,10 +49,42 @@
       <string>Mechanics</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="2" column="0">
-       <widget class="QLabel" name="sizeLabel">
+      <item row="3" column="2">
+       <widget class="QSpinBox" name="spinBox_X">
+        <property name="minimum">
+         <number>150</number>
+        </property>
+        <property name="maximum">
+         <number>700</number>
+        </property>
+        <property name="singleStep">
+         <number>10</number>
+        </property>
+        <property name="value">
+         <number>150</number>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QSpinBox" name="spinBox_Y">
+        <property name="minimum">
+         <number>100</number>
+        </property>
+        <property name="maximum">
+         <number>700</number>
+        </property>
+        <property name="singleStep">
+         <number>10</number>
+        </property>
+        <property name="value">
+         <number>300</number>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="workSpaceStrokeYLabel">
         <property name="text">
-         <string>Size</string>
+         <string>WorkSpace Y-Stroke</string>
         </property>
        </widget>
       </item>
@@ -65,6 +97,16 @@
       </item>
       <item row="3" column="1">
        <widget class="QComboBox" name="workSpaceStrokeXComboBox"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="sizeLabel">
+        <property name="text">
+         <string>Size</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QComboBox" name="workSpaceStrokeYComboBox"/>
       </item>
       <item row="0" column="0" colspan="2">
        <widget class="QLabel" name="label_model">
@@ -80,8 +122,22 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
-       <widget class="QComboBox" name="workSpaceStrokeYComboBox"/>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="sizeComboBox">
+        <property name="editable">
+         <bool>false</bool>
+        </property>
+        <item>
+         <property name="text">
+          <string>10</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>30</string>
+         </property>
+        </item>
+       </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_2">
@@ -100,76 +156,6 @@
         </property>
         <property name="text">
          <string>MRX-H2</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QComboBox" name="sizeComboBox">
-        <property name="editable">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="workSpaceStrokeYLabel">
-        <property name="text">
-         <string>WorkSpace Y-Stroke</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2">
-       <widget class="QLineEdit" name="lineEdit_X">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="baseSize">
-         <size>
-          <width>0</width>
-          <height>11</height>
-         </size>
-        </property>
-        <property name="inputMethodHints">
-         <set>Qt::ImhDigitsOnly</set>
-        </property>
-        <property name="text">
-         <string>150</string>
-        </property>
-        <property name="maxLength">
-         <number>3</number>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2">
-       <widget class="QLineEdit" name="lineEdit_Y">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="inputMethodHints">
-         <set>Qt::ImhDigitsOnly</set>
-        </property>
-        <property name="text">
-         <string>110</string>
-        </property>
-        <property name="maxLength">
-         <number>3</number>
-        </property>
-        <property name="cursorPosition">
-         <number>3</number>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="clearButtonEnabled">
-         <bool>false</bool>
         </property>
        </widget>
       </item>

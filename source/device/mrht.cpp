@@ -1,6 +1,35 @@
 #include "mrht.h"
 
 
+int mrhtOpenDevice(char * ip, int timeout)
+{
+    ViStatus status;
+    ViSession defaultRM,vi;
+    status = viOpenDefaultRM(&defaultRM);
+    if (status != VI_SUCCESS)
+        return 0;
+
+//    TCPIP0::192.168.1.5::inst0::INSTR
+    char rsrc[64];
+    snprintf(rsrc, 64, "TCPIP0::%s::inst0::INSTR", ip);
+
+    status = viOpen(defaultRM, rsrc, VI_NO_LOCK, VI_TMO_IMMEDIATE, &vi);
+    if (status != VI_SUCCESS)
+        return -1;
+
+    viSetAttribute(vi, VI_ATTR_TCPIP_NODELAY, VI_TRUE);
+    //viSetAttribute(vi, VI_ATTR_SEND_END_EN, VI_TRUE);
+    viSetAttribute(vi, VI_ATTR_TCPIP_KEEPALIVE, VI_TRUE);
+    //viSetAttribute(g_stLanInfo.instr_list[DevIndex], VI_ATTR_TERMCHAR, 0X0A);
+    viSetAttribute(vi, VI_ATTR_TMO_VALUE, timeout);
+    return vi;
+}
+
+int mrhtCloseDevice(int vi)
+{
+    return viClose(vi);
+}
+
 
 int _write(ViSession vi, char *cmd, unsigned int cmdlen)
 {
@@ -59,6 +88,30 @@ int mrhtIdn_Query(int inst, char* data,int len)
 }
 
 
+//! :SYSTem:IDENtify <OFF|ON>
+int mrhtSystemIdentify(int inst,int state)
+{
+    char as8FmtCmd[100] = {0};
+
+
+    char* ps8state = NULL;
+    if(state == 0)
+    {
+        ps8state = "OFF";
+    }
+    else if(state == 1)
+    {
+        ps8state = "ON";
+    }
+
+    sprintf(as8FmtCmd, ":SYSTem:IDENtify %s",ps8state);
+    if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
+    {
+        return -1;
+    }
+
+    return 0;
+}
 
 
 //! :TRIGger:SEARch?

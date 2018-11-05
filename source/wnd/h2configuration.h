@@ -15,6 +15,9 @@ public:
     explicit H2Configuration(QWidget *parent = nullptr);
     ~H2Configuration();
 
+public slots:
+    void slotChangeApply();
+
 protected slots:
     void slotOnModelChanged();
     void slotSelectSize(QString text);

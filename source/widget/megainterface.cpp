@@ -3,6 +3,7 @@
 
 #include <QByteArray>
 #include <QDebug>
+#include <QMessageBox>
 
 #include <lanfinddevice.h>
 #include <mrht.h>
@@ -12,7 +13,8 @@ MegaInterface::MegaInterface(QWidget *parent) :
     ui(new Ui::MegaInterface),
     m_devType(TYPE_LAN),
     m_menu(NULL),
-    m_searchThread(NULL)
+    m_searchThread(NULL),
+    m_visa(-1)
 {
     ui->setupUi(this);
 
@@ -26,7 +28,7 @@ MegaInterface::MegaInterface(QWidget *parent) :
     connect(ui->listView, SIGNAL(customContextMenuRequested(const QPoint&)),
             this, SLOT(slotShowContextmenu(const QPoint&)));
 
-
+    connect(ui->pushButton_ok,SIGNAL(pressed()),this,SLOT(deviceOpenAndRobotBuild()));
 }
 
 MegaInterface::~MegaInterface()
@@ -34,23 +36,11 @@ MegaInterface::~MegaInterface()
     delete ui;
 }
 
-void MegaInterface::clearListView()
+int MegaInterface::visa() const
 {
-    for(int i=0; i<m_itemList.count(); i++)
-    {
-        delete m_itemList.at(i);
-    }
-    m_itemList.clear();
-    m_model->clear();
+    return m_visa;
 }
 
-void MegaInterface::insertOneRow(QString str)
-{
-    int maxRow = m_model->rowCount();
-    QStandardItem *t_item = new QStandardItem(str);
-    m_itemList.append(t_item);
-    m_model->setItem(maxRow, 0, m_itemList.at(maxRow));
-}
 
 void MegaInterface::slotChangeDeviceType(int index)
 {
@@ -88,13 +78,22 @@ void MegaInterface::slotScanFinished()
     ui->progressBar->setMaximum(100);
 }
 
-void MegaInterface::soltActionOpen()
+void MegaInterface::insertOneRow(QString str)
 {
-    qDebug() << "open " << ui->listView->selectionModel()->selectedIndexes();
+    int maxRow = m_model->rowCount();
+    QStandardItem *t_item = new QStandardItem(str);
+    m_itemList.append(t_item);
+    m_model->setItem(maxRow, 0, m_itemList.at(maxRow));
 }
-void MegaInterface::soltActionClose()
+
+void MegaInterface::clearListView()
 {
-    qDebug() << "close " << ui->listView->selectionModel()->selectedIndexes();
+    for(int i=0; i<m_itemList.count(); i++)
+    {
+        delete m_itemList.at(i);
+    }
+    m_itemList.clear();
+    m_model->clear();
 }
 
 void MegaInterface::slotShowContextmenu(const QPoint& pos)
@@ -116,18 +115,102 @@ void MegaInterface::slotShowContextmenu(const QPoint& pos)
     }
 }
 
+void MegaInterface::soltActionOpen()
+{
+    int visa = deviceOpen();
+    if(visa < 0)
+        return;
+
+    mrhtSystemIdentify(visa, 1);
+    mrhtCloseDevice(visa);
+}
+
+void MegaInterface::soltActionClose()
+{
+    int visa = deviceOpen();
+    if(visa < 0)
+        return;
+
+    mrhtSystemIdentify(visa, 0);
+    mrhtCloseDevice(visa);
+}
+
+int MegaInterface::deviceOpen()
+{
+    QModelIndex index = ui->listView->selectionModel()->selectedIndexes().at(0);
+    QString strIP = m_model->data(index,Qt::DisplayRole).toString();
+    qDebug() << "open " << strIP;
+    int visa =  mrhtOpenDevice(strIP.toLatin1().data(), 2000);
+    if(visa < 0)
+        QMessageBox::warning(this,tr("error"),tr("open device error"));
+
+    return visa;
+}
+
+void MegaInterface::deviceOpenAndRobotBuild()
+{
+    int ret = -1;
+    int visa = deviceOpen();
+    if(visa < 0)
+    {
+        QMessageBox::warning(this,tr("error"),tr("open device error"));
+        return;
+    }
+    m_visa = visa;
+
+    {
+        char strIDN[1024] = "";
+        ret = mrhtIdn_Query(visa,strIDN,sizeof(strIDN));
+        qDebug() << strIDN; //MegaRobo Technologies,MRH-T,MRHT000005187U0032,00.00.01.06
+    }
+
+#if 0
+    {
+        //搜索驱控器
+        int devNames[128] = {0};
+        ret = mrhtDeviceName_Query(visa,devNames);
+        if(ret != 0)
+        {
+            QMessageBox::warning(this,tr("error"),tr("search DeviceName failure"));
+            return;
+        }
+        qDebug() << devNames[0];
+
+        char strType[128] = "";
+        ret = mrhtDeviceType_Query(visa, devNames[0], strType,sizeof(strType));
+        if(ret != 0)
+        {
+            QMessageBox::warning(this,tr("error"),tr("search GetDeviceType failure"));
+            return;
+        }
+        qDebug() << strType;
+
+
+        //构建机器人
+        //    mrhtRobotAlloc_Query(visa,  );
+    }
+#endif
+
+}
+
+
+
+
+
+
+
+
+
 
 
 /////////////////////////////////////////////////////////////
 void DeviceSearchThread::run()
 {
-    qDebug() << "-----begin-----";
-
     QString strDevices;
     if(m_type == TYPE_LAN)
     {
         char buff[4096] = "";
-        findResources(buff,10);
+        findResources(buff, 1);
         strDevices = QString("%1").arg(buff);
         if(strDevices.length() == 0)
         {
@@ -149,8 +232,6 @@ void DeviceSearchThread::run()
         emit resultReady(devList.at(devIndex));
         qDebug() << devList.at(devIndex);
     }
-
-    qDebug() << "-----  end  -----";
 }
 
 void DeviceSearchThread::setType(int type)

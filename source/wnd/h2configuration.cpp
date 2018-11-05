@@ -2,6 +2,8 @@
 #include "ui_h2configuration.h"
 #include <QDebug>
 
+#include "mrht.h"
+
 H2Configuration::H2Configuration(QWidget *parent) :
     XConfig(parent),
     ui(new Ui::H2Configuration)
@@ -9,9 +11,6 @@ H2Configuration::H2Configuration(QWidget *parent) :
     ui->setupUi(this);
 
     setName( "config" );
-
-    ui->sizeComboBox->addItem("10");
-    ui->sizeComboBox->addItem("30");
 
     //先隐藏保留
     ui->groupBox_brake->hide();
@@ -24,8 +23,8 @@ H2Configuration::H2Configuration(QWidget *parent) :
     connect( ui->sizeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slotOnModelChanged()));
     connect( ui->workSpaceStrokeXComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slotOnModelChanged()));
     connect( ui->workSpaceStrokeYComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slotOnModelChanged()));
-    connect( ui->lineEdit_X, SIGNAL(textChanged(QString)), this, SLOT(slotOnModelChanged()));
-    connect( ui->lineEdit_Y, SIGNAL(textChanged(QString)), this, SLOT(slotOnModelChanged()));
+    connect( ui->spinBox_X, SIGNAL(valueChanged(QString)), this, SLOT(slotOnModelChanged()));
+    connect( ui->spinBox_Y, SIGNAL(valueChanged(QString)), this, SLOT(slotOnModelChanged()));
 
     connect( ui->radioButton_st, SIGNAL(toggled(bool)), this, SLOT(slotOnModelChanged()));
     connect( ui->radioButton_sb, SIGNAL(toggled(bool)), this, SLOT(slotOnModelChanged()));
@@ -61,7 +60,7 @@ void H2Configuration::slotOnModelChanged()
     if(t_str != strUserDefine)
         model += t_str.left(t_str.length() - 2);
     else
-        model += ui->lineEdit_X->text();
+        model += ui->spinBox_X->text();
 
     strUserDefine = ui->workSpaceStrokeYComboBox->itemText( ui->workSpaceStrokeYComboBox->count() - 1);
     t_str = ui->workSpaceStrokeYComboBox->currentText();
@@ -69,7 +68,7 @@ void H2Configuration::slotOnModelChanged()
     if(t_str != strUserDefine)
         model += t_str.left(t_str.length() - 2);
     else
-        model += ui->lineEdit_Y->text();
+        model += ui->spinBox_Y->text();
 
 
     if("10" == ui->sizeComboBox->currentText())
@@ -77,10 +76,10 @@ void H2Configuration::slotOnModelChanged()
     else
         model += "-KF";
 
-    if(ui->radioButton_st->isChecked())
-        model += "-ST";
-    else
-        model += "-SB";
+//    if(ui->radioButton_st->isChecked())
+//        model += "-ST";
+//    else
+//        model += "-SB";
 
     if(ui->radioButton_b->isChecked())
         model += "-B";
@@ -103,13 +102,13 @@ void H2Configuration::slotUserDefinedStrokeX(QString text)
     QString strUserDefine = ui->workSpaceStrokeXComboBox->itemText( ui->workSpaceStrokeXComboBox->count() - 1);
     if(text == strUserDefine)
     {
-        ui->lineEdit_X->show();
-        ui->lineEdit_X->setEnabled(true);
+        ui->spinBox_X->show();
+        ui->spinBox_X->setEnabled(true);
     }
     else
     {
-        ui->lineEdit_X->hide();
-        ui->lineEdit_X->setEnabled(false);
+        ui->spinBox_X->hide();
+        ui->spinBox_X->setEnabled(false);
     }
 }
 
@@ -118,13 +117,13 @@ void H2Configuration::slotUserDefinedStrokeY(QString text)
     QString strUserDefine = ui->workSpaceStrokeYComboBox->itemText( ui->workSpaceStrokeYComboBox->count() - 1);
     if(text == strUserDefine)
     {
-        ui->lineEdit_Y->show();
-        ui->lineEdit_Y->setEnabled(true);
+        ui->spinBox_Y->show();
+        ui->spinBox_Y->setEnabled(true);
     }
     else
     {
-        ui->lineEdit_Y->hide();
-        ui->lineEdit_Y->setEnabled(false);
+        ui->spinBox_Y->hide();
+        ui->spinBox_Y->setEnabled(false);
     }
 }
 
@@ -150,10 +149,10 @@ void H2Configuration::selectSize10()
     ui->radioButton_b->setEnabled(false);
     ui->radioButton_t->setEnabled(false);
 
-    ui->lineEdit_X->hide();
-    ui->lineEdit_X->setEnabled(false);
-    ui->lineEdit_Y->hide();
-    ui->lineEdit_Y->setEnabled(false);
+    ui->spinBox_X->hide();
+    ui->spinBox_X->setEnabled(false);
+    ui->spinBox_Y->hide();
+    ui->spinBox_Y->setEnabled(false);
 }
 
 
@@ -183,3 +182,15 @@ void H2Configuration::selectSize30()
     slotShowConfigPicture(true);
 }
 
+void H2Configuration::slotChangeApply()
+{
+    //设置上下
+//    if(ui->radioButton_b->isChecked())
+//        mrhtDeviceMrqMotionReverse(visa, int name, 1);
+//    else
+//        mrhtDeviceMrqMotionReverse(visa, int name, 0);
+
+
+
+
+}

@@ -7,9 +7,13 @@ namespace Ui {
 class MainWindow;
 }
 
-#include "helppanel.h"
-#include "h2ops.h"
+#include <QDockWidget>
 
+#include "helppanel.h"
+#include "aboutdlg.h"
+#include "h2ops.h"
+#include "h2config.h"
+#include "h2ops.h"
 #include "megainterface.h"
 
 class MainWindow : public QMainWindow
@@ -52,11 +56,16 @@ private:
 
     QLabel *m_pLabStatus, *m_pLabMctVer, *m_pLabConVer;
 
+    QDockWidget *m_pDockOps;
+    QDockWidget *m_pDockHelp;
+
     HelpPanel *m_pHelpPanel;
 
     H2Ops *m_pOps;
+    H2Config *m_pConfig;
 
     MegaInterface *m_megaSerachWidget;
+    int m_visa;
 };
 
 #endif // MAINWINDOW_H

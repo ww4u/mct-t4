@@ -17,8 +17,7 @@ void MainWindow::requestLogout( const QString &str, log_level lev )
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    m_visa(0)
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
@@ -55,6 +54,8 @@ void MainWindow::setupWorkArea()
     Q_ASSERT( NULL != m_pConfig );
     connect( m_pConfig, SIGNAL(signal_focus_in( const QString &)),
              this, SLOT(slot_focus_in(const QString &)) );
+
+    connect(m_megaSerachWidget, SIGNAL(getDeviceIP(QString)), this->m_pConfig, SLOT(slotAddNewRobot(QString)));
 
     //! docks
     ui->centralWidget->insertTab( 0, m_pConfig, tr("Pref") );
@@ -145,7 +146,6 @@ void MainWindow::slot_action_search()
 {
     m_megaSerachWidget->move(100,100);
     m_megaSerachWidget->show();
-    m_visa = m_megaSerachWidget->visa();
 }
 
 void MainWindow::on_actionAbout_triggered()

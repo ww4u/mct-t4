@@ -1,8 +1,5 @@
 #include "h2configuration.h"
 #include "ui_h2configuration.h"
-#include <QDebug>
-
-#include "mrht.h"
 
 H2Configuration::H2Configuration(QWidget *parent) :
     XConfig(parent),
@@ -182,15 +179,17 @@ void H2Configuration::selectSize30()
     slotShowConfigPicture(true);
 }
 
-void H2Configuration::slotChangeApply()
+int H2Configuration::setApply(ViSession visa)
 {
-    //设置上下
-//    if(ui->radioButton_b->isChecked())
-//        mrhtDeviceMrqMotionReverse(visa, int name, 1);
-//    else
-//        mrhtDeviceMrqMotionReverse(visa, int name, 0);
+    qDebug() << "H2Configuration:" << visa;
 
+#if 0
+    if(visa == 0) return -1;
 
-
-
+    int ret = -1;
+    char strIDN[1024] = "";
+    ret = mrhtIdn_Query(visa,strIDN,sizeof(strIDN));
+    qDebug() << strIDN; //MegaRobo Technologies,MRH-T,MRHT000005187U0032,00.00.01.06
+#endif
+    return 0;
 }

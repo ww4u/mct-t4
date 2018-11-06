@@ -1,5 +1,6 @@
 #include "xconfig.h"
 #include "../include/mystd.h"
+
 XConfig::XConfig(QWidget *parent) : QWidget(parent)
 {
     setFocusPolicy( Qt::StrongFocus );

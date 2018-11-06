@@ -65,7 +65,8 @@ SOURCES += \
     ../source/wnd/h2measurement.cpp \
     ../source/device/lanfinddevice.cpp \
     ../source/device/mrht.cpp \
-    ../source/widget/megainterface.cpp
+    ../source/widget/megainterface.cpp \
+    ../source/wnd/h2product.cpp
 
 
 HEADERS += \
@@ -99,7 +100,8 @@ HEADERS += \
     ../source/wnd/h2measurement.h \
     ../source/device/mrht.h \
     ../source/device/lanfinddevice.h \
-    ../source/widget/megainterface.h
+    ../source/widget/megainterface.h \
+    ../source/wnd/h2product.h
 
 RESOURCES += ../source/res/res.qrc
 
@@ -118,15 +120,8 @@ FORMS += \
     ../source/wnd/h2homing.ui \
     ../source/wnd/helppanel.ui \
     ../source/wnd/h2measurement.ui \
-    ../source/widget/megainterface.ui
-
-
-#win32:LIBS += 'C:/Windows/System32/visa32.dll'
-#win32:LIBS += 'C:/MinGW/lib/libws2_32.a'
-#win32:LIBS += 'C:/MinGW/lib/libiphlpapi.a'
-
-#win32:INCLUDEPATH += 'C:/Program Files/IVI Foundation/VISA/Win64/Include'
-#win32:DEPENDPATH += 'C:/Program Files/IVI Foundation/VISA/Win64/Lib_x64/msc'
+    ../source/widget/megainterface.ui \
+    ../source/wnd/h2product.ui
 
 LIBS += -L"C:/Program Files (x86)/IVI Foundation/VISA/WinNT/lib/msc"
 LIBS += -lvisa32

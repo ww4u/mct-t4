@@ -2,7 +2,12 @@
 #define XCONFIG_H
 
 #include <QWidget>
+#include <QDebug>
+#include <QMessageBox>
+
+#include "lanfinddevice.h"
 #include "visa.h"
+#include "mrht.h"
 
 class XConfig : public QWidget
 {

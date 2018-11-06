@@ -13,8 +13,7 @@ MegaInterface::MegaInterface(QWidget *parent) :
     ui(new Ui::MegaInterface),
     m_devType(TYPE_LAN),
     m_menu(NULL),
-    m_searchThread(NULL),
-    m_visa(-1)
+    m_searchThread(NULL)
 {
     ui->setupUi(this);
 
@@ -27,20 +26,12 @@ MegaInterface::MegaInterface(QWidget *parent) :
     ui->listView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->listView, SIGNAL(customContextMenuRequested(const QPoint&)),
             this, SLOT(slotShowContextmenu(const QPoint&)));
-
-    connect(ui->pushButton_ok,SIGNAL(pressed()),this,SLOT(deviceOpenAndRobotBuild()));
 }
 
 MegaInterface::~MegaInterface()
 {
     delete ui;
 }
-
-int MegaInterface::visa() const
-{
-    return m_visa;
-}
-
 
 void MegaInterface::slotChangeDeviceType(int index)
 {
@@ -147,60 +138,11 @@ int MegaInterface::deviceOpen()
     return visa;
 }
 
-void MegaInterface::deviceOpenAndRobotBuild()
+void MegaInterface::on_pushButton_ok_clicked()
 {
-    int ret = -1;
-    int visa = deviceOpen();
-    if(visa < 0)
-    {
-        QMessageBox::warning(this,tr("error"),tr("open device error"));
-        return;
-    }
-    m_visa = visa;
-
-    {
-        char strIDN[1024] = "";
-        ret = mrhtIdn_Query(visa,strIDN,sizeof(strIDN));
-        qDebug() << strIDN; //MegaRobo Technologies,MRH-T,MRHT000005187U0032,00.00.01.06
-    }
-
-#if 0
-    {
-        //搜索驱控器
-        int devNames[128] = {0};
-        ret = mrhtDeviceName_Query(visa,devNames);
-        if(ret != 0)
-        {
-            QMessageBox::warning(this,tr("error"),tr("search DeviceName failure"));
-            return;
-        }
-        qDebug() << devNames[0];
-
-        char strType[128] = "";
-        ret = mrhtDeviceType_Query(visa, devNames[0], strType,sizeof(strType));
-        if(ret != 0)
-        {
-            QMessageBox::warning(this,tr("error"),tr("search GetDeviceType failure"));
-            return;
-        }
-        qDebug() << strType;
-
-
-        //构建机器人
-        //    mrhtRobotAlloc_Query(visa,  );
-    }
-#endif
-
+    emit getDeviceIP(m_model->data(ui->listView->selectionModel()->selectedIndexes().at(0),
+                                   Qt::DisplayRole).toString());
 }
-
-
-
-
-
-
-
-
-
 
 
 /////////////////////////////////////////////////////////////
@@ -226,11 +168,9 @@ void DeviceSearchThread::run()
     }
 
     QStringList devList = strDevices.split(';', QString::SkipEmptyParts);
-    qDebug() << devList;
     for(int devIndex=0; devIndex<devList.count(); devIndex++)
     {
         emit resultReady(devList.at(devIndex));
-        qDebug() << devList.at(devIndex);
     }
 }
 
@@ -238,3 +178,5 @@ void DeviceSearchThread::setType(int type)
 {
     m_type = type;
 }
+
+

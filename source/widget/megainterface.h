@@ -42,6 +42,9 @@ public:
 
     int visa() const;
 
+signals:
+    getDeviceIP(QString strIP);
+
 private slots:
     void slotChangeDeviceType(int index);
     void slotScanDevices();
@@ -51,7 +54,7 @@ private slots:
     void soltActionOpen();
     void soltActionClose();
 
-    void deviceOpenAndRobotBuild();
+    void on_pushButton_ok_clicked();
 
 private:
     Ui::MegaInterface *ui;
@@ -63,8 +66,6 @@ private:
     DeviceSearchThread *m_searchThread;
     void clearListView();
     int deviceOpen();
-
-    int m_visa;
 };
 
 

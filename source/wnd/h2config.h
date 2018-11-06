@@ -19,6 +19,9 @@ public:
     explicit H2Config(QWidget *parent = 0);
     ~H2Config();
 
+public slots:
+    int slotAddNewRobot(QString strIP);
+
 protected:
     int setApply();
     int setReset();
@@ -35,8 +38,12 @@ private slots:
 private:
     Ui::H2Config *ui;
 
+    QTreeWidgetItem *m_pRootNode;
+
     H2ActionModel mActions;
     ErrMgrModel mErrManager;
+
+    int m_visa;
 };
 
 #endif // H2CONFIG_H

@@ -19,6 +19,10 @@ public:
     explicit H2Config(QWidget *parent = 0);
     ~H2Config();
 
+public:
+    int open();
+    int close();
+
 protected:
     int loadDataset();
 
@@ -40,6 +44,8 @@ private:
 
     H2ActionModel mActions;
     ErrMgrModel mErrManager;
+
+    int mHandle;
 };
 
 #endif // H2CONFIG_H

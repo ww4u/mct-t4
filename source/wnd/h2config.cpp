@@ -90,6 +90,35 @@ H2Config::~H2Config()
     delete ui;
 }
 
+int H2Config::open()
+{
+    //! \todo open the device
+//    mHandle = vi
+
+    //! attach
+    XConfig *pCfg;
+    for ( int i = 0; i < ui->stackedWidget->count(); i++ )
+    {
+        pCfg = (XConfig*)ui->stackedWidget->widget( i );
+        pCfg->attachHandle( mHandle );
+    }
+
+    return 0;
+}
+int H2Config::close()
+{
+    //! \todo close device
+
+    XConfig *pCfg;
+    for ( int i = 0; i < ui->stackedWidget->count(); i++ )
+    {
+        pCfg = (XConfig*)ui->stackedWidget->widget( i );
+        pCfg->detachHandle( mHandle );
+    }
+
+    return 0;
+}
+
 int H2Config::loadDataset()
 {
     //! load action

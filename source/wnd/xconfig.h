@@ -16,6 +16,8 @@ public:
 
 public:
     virtual int setApply( ViSession vi );
+    int attachHandle( int handle );
+    int detachHandle( int handle );
 
 protected:
     virtual void focusInEvent(QFocusEvent *event);
@@ -27,6 +29,7 @@ public slots:
 
 protected:
     QString mName;
+    int mViHandle;
 };
 
 #endif // XCONFIG_H

@@ -36,7 +36,6 @@ INCLUDEPATH += ../source/model
 SOURCES += \
         ../source/main/main.cpp \
         ../source/wnd/mainwindow.cpp \
-    ../source/wnd/h2config.cpp \
     ../source/wnd/h2ops.cpp \
     ../source/wnd/h2action.cpp \
     ../source/wnd/aboutdlg.cpp \
@@ -68,12 +67,13 @@ SOURCES += \
     ../source/widget/megainterface.cpp \
     ../source/mrp/mdatarow.cpp \
     ../source/mrp/mdataset.cpp \
-    ../source/wnd/h2product.cpp
-
+    ../source/wnd/h2product.cpp \
+    ../source/wnd/roboconfig.cpp \
+    ../source/wnd/xrobo.cpp \
+    ../source/wnd/h2robo.cpp
 
 HEADERS += \
         ../source/wnd/mainwindow.h \
-    ../source/wnd/h2config.h \
     ../source/wnd/h2ops.h \
     ../source/wnd/h2action.h \
     ../source/wnd/aboutdlg.h \
@@ -105,7 +105,10 @@ HEADERS += \
     ../source/widget/megainterface.h \
     ../source/mrp/mdatarow.h \
     ../source/mrp/mdataset.h \
-    ../source/wnd/h2product.h
+    ../source/wnd/h2product.h \
+    ../source/wnd/roboconfig.h \
+    ../source/wnd/xrobo.h \
+    ../source/wnd/h2robo.h
 
 RESOURCES += ../source/res/res.qrc
 
@@ -113,7 +116,6 @@ RC_ICONS = ../source/res/image/megarobo.ico
 
 FORMS += \
         ../source/wnd/mainwindow.ui \
-    ../source/wnd/h2config.ui \
     ../source/wnd/h2ops.ui \
     ../source/wnd/h2action.ui \
     ../source/wnd/aboutdlg.ui \
@@ -125,7 +127,8 @@ FORMS += \
     ../source/wnd/helppanel.ui \
     ../source/wnd/h2measurement.ui \
     ../source/widget/megainterface.ui \
-    ../source/wnd/h2product.ui
+    ../source/wnd/h2product.ui \
+    ../source/wnd/roboconfig.ui
 
 LIBS += -L"C:/Program Files (x86)/IVI Foundation/VISA/WinNT/lib/msc"
 LIBS += -lvisa32

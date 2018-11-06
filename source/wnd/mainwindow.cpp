@@ -50,7 +50,7 @@ MainWindow::~MainWindow()
 void MainWindow::setupWorkArea()
 {
     //! pref
-    m_pConfig = new H2Config(this);
+    m_pConfig = new RoboConfig(this);
     Q_ASSERT( NULL != m_pConfig );
     connect( m_pConfig, SIGNAL(signal_focus_in( const QString &)),
              this, SLOT(slot_focus_in(const QString &)) );

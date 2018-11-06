@@ -12,7 +12,7 @@ class MainWindow;
 #include "helppanel.h"
 #include "aboutdlg.h"
 #include "h2ops.h"
-#include "h2config.h"
+#include "roboconfig.h"
 #include "megainterface.h"
 
 class MainWindow : public QMainWindow
@@ -61,7 +61,7 @@ private:
     HelpPanel *m_pHelpPanel;
 
     H2Ops *m_pOps;
-    H2Config *m_pConfig;
+    RoboConfig *m_pConfig;
 
     MegaInterface *m_megaSerachWidget;
 };

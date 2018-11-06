@@ -1,23 +1,22 @@
-#ifndef H2CONFIG_H
-#define H2CONFIG_H
+#ifndef ROBO_CONFIG_H
+#define ROBO_CONFIG_H
 
 #include <QtWidgets>
 
 
 namespace Ui {
-class H2Config;
+class RoboConfig;
 }
 
-#include "../model/h2actionmodel.h"
-#include "../model/errmgrmodel.h"
+#include "xrobo.h"
 
-class H2Config : public QWidget
+class RoboConfig : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit H2Config(QWidget *parent = 0);
-    ~H2Config();
+    explicit RoboConfig(QWidget *parent = 0);
+    ~RoboConfig();
 
 public:
     int open();
@@ -27,8 +26,6 @@ public slots:
     void slotAddNewRobot(const QString &strIP );
 
 protected:
-    int loadDataset();
-
     int setApply();
     int setReset();
     int setOK();
@@ -43,16 +40,11 @@ private slots:
     void slot_current_changed( QTreeWidgetItem* pre,QTreeWidgetItem* nxt );
 
 private:
-    Ui::H2Config *ui;
+    Ui::RoboConfig *ui;
 
     QTreeWidgetItem *m_pRootNode;
 
-    H2ActionModel mActions;
-    ErrMgrModel mErrManager;
-
-    int mHandle;
-    int m_visa;
-    QStringList m_strListRobot;
+    QList<XRobo*> mRobos;
 };
 
 #endif // H2CONFIG_H

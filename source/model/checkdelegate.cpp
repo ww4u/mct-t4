@@ -86,8 +86,18 @@ void checkDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     else
     { return; }
 
-    QStyleOption opt=option;
+    QVariant var = index.data( Qt::UserRole );
+    if ( var.isValid() && var.type() == QVariant::Bool )
+    {
+        if ( var.toBool() )
+        {}
+        else
+        { return; }
+    }
+    else
+    {}
 
+    QStyleOption opt=option;
     QStyleOptionButton optBtn;
 
     optBtn.rect = option.rect;

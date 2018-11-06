@@ -24,6 +24,7 @@ QString H2ActionItem::header( int col )
 
 H2ActionItem::H2ActionItem()
 {
+    mType = "PA";
     mX = 0;
     mY = 0;
 

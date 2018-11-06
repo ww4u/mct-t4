@@ -26,18 +26,33 @@ QString ErrMgrItem::header( int col )
 
 ErrMgrItem::ErrMgrItem()
 {
+//    int mNr;
+//    QString mErr;
+
+//    e_event_type mEventType;
+
+//    bool mbErrorAble, mbWarnAble, mbInfoAble;
+
+//    QString mAction;
+//    QList<int> mActionList;
+
+//    bool mbOutput, mbOutputAble;
+//    bool mbSaveDiagnosis, mbSaveAble;
+
     mNr = 0;
 
     mEventType = e_error;
-    mEventAttr = 0;
 
     mAction = e_action_freewheel;
-    mActionAttr = 0;
+    mbErrorAble = true;
+    mbWarnAble = true;
+    mbInfoAble = true;
 
     mbOutput = false;
     mbOutputAble = false;
 
     mbSaveDiagnosis = false;
+    mbSaveAble = true;
 }
 
 eColumnAttr ErrMgrItem::columnAttr( int col )

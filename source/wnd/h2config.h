@@ -20,9 +20,12 @@ public:
     ~H2Config();
 
 protected:
+    int loadDataset();
+
     int setApply();
     int setReset();
     int setOK();
+
 
 Q_SIGNALS:
     void signal_focus_in( const QString &);

@@ -33,6 +33,9 @@ public:
     int serialOut( QXmlStreamWriter & writer );
     int serialIn( QXmlStreamReader & reader );
 
+    int output( const QString &fileName );
+    int input( const QString &fileName );
+
 public:
     QList< H2ActionItem *> mItems;
 };

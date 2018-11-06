@@ -24,6 +24,9 @@ public:
 
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
+protected:
+    QVariant userRole_Visible( const QModelIndex &index ) const;
+    QVariant backRole( const QModelIndex &index ) const;
 
 public:
     QList< ErrMgrItem *> *items();

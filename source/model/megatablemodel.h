@@ -2,7 +2,7 @@
 #define MEGATABLEMODEL_H
 
 #include <QAbstractTableModel>
-
+#include <QAbstractItemView>
 
 class MegaTableModel : public QAbstractTableModel
 {
@@ -12,6 +12,8 @@ public:
     MegaTableModel( QObject *parent=Q_NULLPTR );
     virtual ~MegaTableModel()
     {}
+
+    QString fmtString( const QStringList &list );
 
 Q_SIGNALS:
     void signal_data_changed();

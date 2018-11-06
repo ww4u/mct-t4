@@ -27,21 +27,18 @@ QVariant ErrMgrModel::data(const QModelIndex &index, int role) const
     int row = index.row();
 
     //! by role
-    if ( role == Qt::DisplayRole || role == Qt::EditRole )
+    if ( role == Qt::DisplayRole || role == Qt::EditRole  )
     {  }
+    else if ( role == Qt::UserRole )
+    {
+        return userRole_Visible( index );
+    }
+    else if ( role == Qt::BackgroundColorRole )
+    { return backRole(index); }
     else if ( role == Qt::TextAlignmentRole )
     { return QVariant( Qt::AlignCenter ); }
     else
     { return QVariant(); }
-
-//    QStringLiteral("No."),
-//    QStringLiteral("Error Text"),
-//    QStringLiteral("Error"),
-//    QStringLiteral("Warning"),
-//    QStringLiteral("Information"),
-//    QStringLiteral("Recation on error"),
-//    QStringLiteral("Output stage on"),
-//    QStringLiteral("Save diagnosis"),
 
     if ( col == 0 )
     {
@@ -57,18 +54,30 @@ QVariant ErrMgrModel::data(const QModelIndex &index, int role) const
     { return QVariant( ( mItems[ row ]->mErr ) ); }
 
     else if ( col == 2 )
-    { return QVariant( ( mItems[ row ]->mEventType == e_error ) ); }
+    {
+        return QVariant( ( mItems[ row ]->mEventType == e_error ) );
+    }
     else if ( col == 3 )
-    { return QVariant( ( mItems[ row ]->mEventType == e_warning ) ); }
+    {
+        return QVariant( ( mItems[ row ]->mEventType == e_warning ) );
+    }
     else if ( col == 4 )
-    { return QVariant( ( mItems[ row ]->mEventType == e_info ) ); }
+    {
+        return QVariant( ( mItems[ row ]->mEventType == e_info ) );
+    }
 
     else if ( col == 5 )
-    { return QVariant( mItems[ row ]->mAction ); }
+    {
+        return QVariant( mItems[ row ]->mAction );
+    }
     else if ( col == 6 )
-    { return QVariant( mItems[ row ]->mbOutput ); }
+    {
+       return QVariant( mItems[ row ]->mbOutput );
+    }
     else if ( col == 7 )
-    { return QVariant( mItems[ row ]->mbSaveDiagnosis ); }
+    {
+        return QVariant( mItems[ row ]->mbSaveDiagnosis );
+    }
     else
     { return QVariant(); }
 }
@@ -112,22 +121,64 @@ bool ErrMgrModel::setData(const QModelIndex &index, const QVariant &value, int r
         return false;
     }
 }
+
+#define enable_flags( b )   b ? ( Qt::ItemIsSelectable \
+                                  | Qt::ItemIsEditable \
+                                  | Qt::ItemIsEnabled \
+                                    ) : ( Qt::NoItemFlags )
 Qt::ItemFlags ErrMgrModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
           return Qt::ItemIsEnabled;
 
-    //! \todo for other columns
-    int flag = Qt::NoItemFlags;
+    if ( index.isValid() )
+    {}
+    else
+    { return Qt::NoItemFlags; }
 
-    //! get item
-    eColumnAttr attr;
-    attr = mItems.at( index.row() )->columnAttr( index.column() );
-    if ( is_bit1( attr, column_editable) )
-    { flag |= Qt::ItemIsEditable; }
+    int col = index.column();
+    int row = index.row();
+    if ( col == 0 || col == 1 )
+    { return Qt::NoItemFlags; }
 
-//    return QAbstractItemModel::flags(index) | (Qt::ItemFlag)flag;
-    return QAbstractItemModel::flags(index) | (Qt::ItemIsEditable);
+    if ( col == 2 )
+    {
+        return enable_flags( mItems[row]->mbErrorAble );
+    }
+    else if ( col == 3 )
+    {
+        return enable_flags( mItems[row]->mbWarnAble );
+    }
+    else if ( col == 4 )
+    {
+        return enable_flags( mItems[row]->mbInfoAble );
+    }
+    else if ( col == 5 )
+    {
+        return enable_flags( mItems[row]->mActionList.size() > 1 );
+    }
+    else if ( col == 6 )
+    {
+        return enable_flags( mItems[row]->mbOutputAble );
+    }
+    else if ( col == 7 )
+    {
+        return enable_flags( mItems[row]->mbSaveAble );
+    }
+    else
+    { return false; }
+
+//    //! \todo for other columns
+//    int flag = Qt::NoItemFlags;
+
+//    //! get item
+//    eColumnAttr attr;
+//    attr = mItems.at( index.row() )->columnAttr( index.column() );
+//    if ( is_bit1( attr, column_editable) )
+//    { flag |= Qt::ItemIsEditable; }
+
+////    return QAbstractItemModel::flags(index) | (Qt::ItemFlag)flag;
+//    return QAbstractItemModel::flags(index) | (Qt::ItemIsEditable);
 }
 
 bool ErrMgrModel::insertRows(int position, int rows, const QModelIndex &parent)
@@ -173,6 +224,67 @@ QVariant ErrMgrModel::headerData(int section, Qt::Orientation orientation, int r
     { return QVariant( ErrMgrItem::header(section)); }
     else
     { return QVariant(section);}
+}
+
+#define role_visible( b )   QVariant(b)
+QVariant ErrMgrModel::userRole_Visible( const QModelIndex &index ) const
+{
+    if ( !index.isValid() )
+    { return QVariant(); }
+
+    //! index
+    int col = index.column();
+    int row = index.row();
+
+    if ( col == 2 )
+    { return role_visible(mItems[row]->mbErrorAble); }
+    else if ( col == 3 )
+    { return role_visible(mItems[row]->mbWarnAble); }
+    else if ( col == 4 )
+    { return role_visible(mItems[row]->mbInfoAble); }
+    else if ( col == 5 )
+    { return role_visible(mItems[row]->mActionList.size() > 0 ); }
+    else if ( col == 6 )
+    { return role_visible(mItems[row]->mbOutputAble); }
+    else if ( col == 7 )
+    {return role_visible(mItems[row]->mbSaveAble); }
+    else
+    { return QVariant(); }
+}
+
+#define back_role( b )  if ( b ){}else{ break; }
+QVariant ErrMgrModel::backRole( const QModelIndex &index ) const
+{
+    if ( !index.isValid() )
+    { return QVariant(); }
+
+    //! index
+    int col = index.column();
+    int row = index.row();
+
+    do
+    {
+        if ( col == 2 )
+        {  back_role(mItems[row]->mbErrorAble); }
+        else if ( col == 3 )
+        {  back_role(mItems[row]->mbWarnAble); }
+        else if ( col == 4 )
+        {  back_role(mItems[row]->mbInfoAble); }
+        else if ( col == 5 )
+        {  back_role(mItems[row]->mActionList.size() > 0 ); }
+        else if ( col == 6 )
+        {  back_role(mItems[row]->mbOutputAble); }
+        else if ( col == 7 )
+        {  back_role(mItems[row]->mbSaveAble); }
+        else
+        { return QVariant(); }
+
+        //! default
+        return QVariant();
+    }while ( 0 );
+
+    //! disabled
+    return QVariant( QColor( Qt::lightGray ) );
 }
 
 QList< ErrMgrItem *> *ErrMgrModel::items()
@@ -242,14 +354,18 @@ int ErrMgrModel::serialOut( QXmlStreamWriter & writer )
         writer.writeTextElement( "mNr", QString::number( pAction->mNr ) );
         writer.writeTextElement( "mErr", ( pAction->mErr ) );
         writer.writeTextElement( "mEventType", QString::number( pAction->mEventType ) );
-        writer.writeTextElement( "mEventAttr", QString::number( pAction->mEventAttr ) );
+
+        writer.writeTextElement( "mbErrorAble", QString::number( pAction->mbErrorAble ) );
+        writer.writeTextElement( "mbWarnAble", QString::number( pAction->mbWarnAble ) );
+        writer.writeTextElement( "mbInfoAble", QString::number( pAction->mbInfoAble ) );
 
         writer.writeTextElement( "mAction", ( pAction->mAction ) );
-        writer.writeTextElement( "mActionAttr", QString::number(pAction->mActionAttr) );
+        writer.writeTextElement( "mActionList", pAction->mActionList.join(';') );
 
         writer.writeTextElement( "mbOutput", QString::number(pAction->mbOutput) );
         writer.writeTextElement( "mbOutputAble", QString::number(pAction->mbOutputAble) );
         writer.writeTextElement( "mbSaveDiagnosis", QString::number(pAction->mbSaveDiagnosis) );
+        writer.writeTextElement( "mbSaveAble", QString::number(pAction->mbSaveAble) );
 
         writer.writeEndElement();
     }
@@ -278,21 +394,32 @@ int ErrMgrModel::serialIn( QXmlStreamReader & reader )
                 { pItem->mErr = reader.readElementText(); }
                 else if ( reader.name() == "mEventType" )
                 { pItem->mEventType = (e_event_type)reader.readElementText().toInt(); }
-                else if ( reader.name() == "mEventAttr" )
-                { pItem->mEventAttr = reader.readElementText().toInt(); }
+
+                else if ( reader.name() == "mbErrorAble" )
+                { pItem->mbErrorAble = reader.readElementText().toInt() > 0; }
+                else if ( reader.name() == "mbWarnAble" )
+                { pItem->mbWarnAble = reader.readElementText().toInt() > 0; }
+                else if ( reader.name() == "mbInfoAble" )
+                { pItem->mbInfoAble = reader.readElementText().toInt() > 0; }
 
                 else if ( reader.name() == "mAction" )
                 { pItem->mAction = reader.readElementText(); }
-                else if ( reader.name() == "mActionAttr" )
-                { pItem->mActionAttr = reader.readElementText().toInt(); }
-
+                else if ( reader.name() == "mActionList" )
+                {
+                    QStringList strList = reader.readElementText().split( ';', QString::SkipEmptyParts );
+                    foreach( const QString &subStr, strList )
+                    {
+                        pItem->mActionList<< subStr.trimmed();
+                    }
+                }
                 else if ( reader.name() == "mbOutput" )
                 { pItem->mbOutput = reader.readElementText().toInt() > 0; }
                 else if ( reader.name() == "mbOutputAble" )
                 { pItem->mbOutputAble = reader.readElementText().toInt() > 0; }
                 else if ( reader.name() == "mbSaveDiagnosis" )
                 { pItem->mbSaveDiagnosis = reader.readElementText().toInt() > 0; }
-
+                else if ( reader.name() == "mbSaveAble" )
+                { pItem->mbSaveAble = reader.readElementText().toInt() > 0; }
                 else
                 { reader.skipCurrentElement(); }
             }
@@ -312,17 +439,6 @@ int ErrMgrModel::serialIn( QXmlStreamReader & reader )
     return 0;
 }
 
-//int mNr;
-//QString mErr;
-//e_event_type mEventType;
-//int mEventAttr;         //! 1 2 4
-
-//e_event_action mAction;
-//int mActionAttr;
-
-//bool mbOutput, mbOutputAble;
-//bool mbSaveDiagnosis;
-
 void ErrMgrModel::createDebug()
 {
     ErrMgrItem *pItem;
@@ -333,15 +449,15 @@ void ErrMgrModel::createDebug()
 
     pItem->mEventType = e_error;
 
-    set_bit( pItem->mEventAttr, e_error);
-    set_bit( pItem->mEventAttr, e_warning);
-    set_bit( pItem->mEventAttr, e_info);
+//    set_bit( pItem->mEventAttr, e_error);
+//    set_bit( pItem->mEventAttr, e_warning);
+//    set_bit( pItem->mEventAttr, e_info);
 
-    pItem->mAction = e_action_freewheel;
-    set_bit( pItem->mActionAttr, e_action_freewheel );
-    set_bit( pItem->mActionAttr, e_action_qs );
-    set_bit( pItem->mActionAttr, e_action_record_dec );
-    set_bit( pItem->mActionAttr, e_action_finish );
+//    pItem->mAction = e_action_freewheel;
+//    set_bit( pItem->mActionAttr, e_action_freewheel );
+//    set_bit( pItem->mActionAttr, e_action_qs );
+//    set_bit( pItem->mActionAttr, e_action_record_dec );
+//    set_bit( pItem->mActionAttr, e_action_finish );
 
     pItem->mbOutput = true;
     pItem->mbOutputAble = true;

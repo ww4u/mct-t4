@@ -65,7 +65,9 @@ SOURCES += \
     ../source/wnd/h2measurement.cpp \
     ../source/device/lanfinddevice.cpp \
     ../source/device/mrht.cpp \
-    ../source/widget/megainterface.cpp
+    ../source/widget/megainterface.cpp \
+    ../source/mrp/mdatarow.cpp \
+    ../source/mrp/mdataset.cpp
 
 
 HEADERS += \
@@ -99,7 +101,9 @@ HEADERS += \
     ../source/wnd/h2measurement.h \
     ../source/device/mrht.h \
     ../source/device/lanfinddevice.h \
-    ../source/widget/megainterface.h
+    ../source/widget/megainterface.h \
+    ../source/mrp/mdatarow.h \
+    ../source/mrp/mdataset.h
 
 RESOURCES += ../source/res/res.qrc
 

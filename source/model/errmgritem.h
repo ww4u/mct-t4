@@ -46,13 +46,14 @@ public:
     QString mErr;
 
     e_event_type mEventType;
-    int mEventAttr;         //! 1 2 4
+
+    bool mbErrorAble, mbWarnAble, mbInfoAble;
 
     QString mAction;
-    int mActionAttr;
+    QStringList mActionList;
 
     bool mbOutput, mbOutputAble;
-    bool mbSaveDiagnosis;
+    bool mbSaveDiagnosis, mbSaveAble;
 };
 
 #endif // ERRMGRITEM_H

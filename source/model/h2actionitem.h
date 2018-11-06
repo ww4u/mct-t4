@@ -13,7 +13,7 @@ public:
     H2ActionItem();
 
 public:
-    QString mPrx;
+    QString mType;
     double mX, mY;
     double mVel,mAcc;
     QString mComment;

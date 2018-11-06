@@ -26,14 +26,14 @@ H2Config::H2Config(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //! build data
-    for ( int i = 0; i < 31; i++ )
-    { mActions.insertRow( i ); }
-
+//    //! build data
+//    for ( int i = 0; i < 31; i++ )
+//    { mActions.insertRow( i ); }
 
     //! load data
-    //! \todo
+    loadDataset();
 
+    //! config
     QTreeWidgetItem *pRootNode;
 
     pRootNode = new QTreeWidgetItem();
@@ -66,7 +66,6 @@ H2Config::H2Config(QWidget *parent) :
 
     //! err mgr
     new_widget( H2ErrMgr, pErrMgr, tr("Error Management"), ":/res/image/icon/remind.png" );
-    mErrManager.createDebug();
     pErrMgr->setModel( &mErrManager );
 
     //! connect
@@ -89,6 +88,18 @@ H2Config::H2Config(QWidget *parent) :
 H2Config::~H2Config()
 {
     delete ui;
+}
+
+int H2Config::loadDataset()
+{
+    //! load action
+    mActions.input( QApplication::applicationDirPath() + "/dataset/mrx-h2_action.csv");
+
+    //! load event
+    //!
+    mErrManager.load( QApplication::applicationDirPath() + "/dataset/mrx-h2_errmgr.xml");
+
+    return 0;
 }
 
 int H2Config::setApply()

@@ -13,7 +13,6 @@ class MainWindow;
 #include "aboutdlg.h"
 #include "h2ops.h"
 #include "h2config.h"
-#include "h2ops.h"
 #include "megainterface.h"
 
 class MainWindow : public QMainWindow
@@ -65,7 +64,6 @@ private:
     H2Config *m_pConfig;
 
     MegaInterface *m_megaSerachWidget;
-    int m_visa;
 };
 
 #endif // MAINWINDOW_H

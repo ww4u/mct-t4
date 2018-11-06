@@ -1,13 +1,12 @@
 #include "h2config.h"
 #include "ui_h2config.h"
 
-#include "h2action.h"
+#include "h2product.h"
 #include "h2configuration.h"
-
 #include "h2jogmode.h"
 #include "h2homing.h"
 #include "h2measurement.h"
-
+#include "h2action.h"
 #include "h2errmgr.h"
 
 #include "../include/mystd.h"
@@ -33,17 +32,29 @@ H2Config::H2Config(QWidget *parent) :
     //! load data
     loadDataset();
 
-    //! config
-    QTreeWidgetItem *pRootNode;
+    m_pRootNode = new QTreeWidgetItem();
+    m_pRootNode->setText( 0, "Project" );
+    ui->treeWidget->addTopLevelItem( m_pRootNode );
+    m_strListRobot.clear();
+}
 
-    pRootNode = new QTreeWidgetItem();
-    pRootNode->setText( 0, "Prj" );
-    ui->treeWidget->addTopLevelItem( pRootNode );
+void H2Config::slotAddNewRobot( const QString &strIP)
+{
+    if(m_strListRobot.contains(strIP))
+        return;
+    else
+        m_strListRobot << strIP;
 
     QTreeWidgetItem *pRoboNode;
     pRoboNode = new QTreeWidgetItem();
-    pRoboNode->setText( 0, "MRH-H2" );
-    pRootNode->addChild( pRoboNode );
+    pRoboNode->setText( 0, "MRH-H2[" + strIP + "]" );
+    pRoboNode->setIcon( 0, QIcon("") );
+    pRoboNode->setData( 0, Qt::UserRole, QVariant( ui->stackedWidget->count() ) );
+    m_pRootNode->addChild( pRoboNode );
+    H2Product *pProduct = new H2Product();
+    ui->stackedWidget->addWidget( pProduct );
+    m_pRootNode->setExpanded(true);
+    pRoboNode->setExpanded(true);
 
     //! list item
     QTreeWidgetItem *plwItem;
@@ -84,6 +95,9 @@ H2Config::H2Config(QWidget *parent) :
         }
     }
 }
+
+
+
 
 H2Config::~H2Config()
 {
@@ -140,7 +154,7 @@ int H2Config::setApply()
         pCfg = (XConfig*)ui->stackedWidget->widget( i );
         Q_ASSERT( NULL != pCfg );
 
-        ret = pCfg->setApply( 0 );      //! \todo get from handle
+        ret = pCfg->setApply( m_visa );      //! \todo get from handle
         if ( ret != 0 )
         { return ret; }
     }
@@ -170,11 +184,17 @@ void H2Config::on_buttonBox_clicked(QAbstractButton *button)
 
     QDialogButtonBox::ButtonRole role = ui->buttonBox->buttonRole( button );
     if ( QDialogButtonBox::ResetRole == role )
-    {}
+    {
+
+    }
     else if ( QDialogButtonBox::AcceptRole == role )
-    {}
+    {
+
+    }
     else if ( QDialogButtonBox::ApplyRole == role )
-    {}
+    {
+        setApply();
+    }
     else
     {}
 }

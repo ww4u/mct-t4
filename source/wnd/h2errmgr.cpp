@@ -39,6 +39,12 @@ H2ErrMgr::~H2ErrMgr()
 
 }
 
+int H2ErrMgr::setApply(ViSession vi)
+{
+    qDebug() << "H2ErrMgr:" << vi;
+    return 0;
+}
+
 void H2ErrMgr::setModel( ErrMgrModel *pModel )
 {
     Q_ASSERT( NULL != pModel );

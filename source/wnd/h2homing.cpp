@@ -28,6 +28,12 @@ H2Homing::~H2Homing()
     delete ui;
 }
 
+int H2Homing::setApply(ViSession vi)
+{
+    qDebug() << "H2Homing:" << vi;
+    return 0;
+}
+
 
 //void H2Homing::slotChangePicture(QString str)
 //{

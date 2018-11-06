@@ -23,6 +23,9 @@ public:
     int open();
     int close();
 
+public slots:
+    void slotAddNewRobot(const QString &strIP );
+
 protected:
     int loadDataset();
 
@@ -42,10 +45,14 @@ private slots:
 private:
     Ui::H2Config *ui;
 
+    QTreeWidgetItem *m_pRootNode;
+
     H2ActionModel mActions;
     ErrMgrModel mErrManager;
 
     int mHandle;
+    int m_visa;
+    QStringList m_strListRobot;
 };
 
 #endif // H2CONFIG_H

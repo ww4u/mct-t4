@@ -21,6 +21,12 @@ H2Action::~H2Action()
     delete ui;
 }
 
+int H2Action::setApply(ViSession vi)
+{
+    qDebug() << "H2Action:" << vi;
+    return 0;
+}
+
 void H2Action::setModel( QAbstractTableModel *pModel )
 {
     ui->tableView->setModel( pModel );

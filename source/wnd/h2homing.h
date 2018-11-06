@@ -15,6 +15,8 @@ public:
     explicit H2Homing(QWidget *parent = 0);
     ~H2Homing();
 
+    int setApply(ViSession vi);
+
 protected slots:
 //    void slotChangePicture(QString str);
 

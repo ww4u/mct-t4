@@ -1,6 +1,8 @@
-#include "../source/wnd/mainwindow.h"
+
 #include <QApplication>
 #include <QFile>
+
+#include "../source/wnd/mainwindow.h"
 
 class CommonHelper
 {
@@ -28,4 +30,23 @@ int main(int argc, char *argv[])
     w.showMaximized();
 
     return a.exec();
+
+#if 0
+    QSettings settings("E:\megaRobo.ini", QSettings::IniFormat);
+    //write
+    settings.beginGroup("GPS");
+    settings.setValue("gpsBaud", 4800);
+    settings.setValue("gpsPort", "com7");
+    settings.endGroup();
+
+    if(settings.contains("GPS/gpsBaud"))
+    {
+        QString gpsBaud = settings.value("GPS/gpsBaud").toString();
+        QString gpsPort = settings.value("GPS/gpsPort").toString();
+        qDebug() << gpsBaud << gpsPort;
+    }
+
+#endif
+
+
 }

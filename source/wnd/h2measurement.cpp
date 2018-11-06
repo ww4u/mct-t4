@@ -14,6 +14,12 @@ H2Measurement::~H2Measurement()
     delete ui;
 }
 
+int H2Measurement::setApply(ViSession vi)
+{
+    qDebug() << "H2Measurement:" << vi;
+    return 0;
+}
+
 void H2Measurement::slotChangeCornerPicture(int index)
 {
     QString strPixmap = ":/res/image/h2measurement/CornerPoint";

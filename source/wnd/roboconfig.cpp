@@ -25,6 +25,14 @@ RoboConfig::RoboConfig(QWidget *parent) :
     connect( ui->treeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
              this, SLOT(slot_current_changed(QTreeWidgetItem*,QTreeWidgetItem*)));
 
+    foreach( XRobo *pRobo, mRobos )
+    {
+        Q_ASSERT( NULL != pRobo );
+
+        connect( pRobo, SIGNAL(signal_focus_in( const QString &)),
+                 this, SIGNAL(signal_focus_in( const QString &)) );
+    }
+
 }
 
 RoboConfig::~RoboConfig()

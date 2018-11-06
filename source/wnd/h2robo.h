@@ -23,6 +23,7 @@ public:
 
 protected:
     int loadDataSet();
+    void buildConnection();
 
 protected:
     H2ActionModel mActions;

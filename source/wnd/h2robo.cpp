@@ -39,7 +39,6 @@ H2Robo::H2Robo( QStackedWidget *pWig, QObject *pObj ) : XRobo( pWig, pObj )
     m_pRoboNode->setIcon( 0, QIcon( ":/res/image/icon/205.png" ) );
     m_pRoboNode->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(pConfig) ) );
 
-
     new_widget( H2Configuration, tr("Configuration"), ":/res/image/icon/205.png" );
     new_widget( H2Measurement, tr("Measurements") , ":/res/image/icon/54.png");
     new_widget( H2Homing, tr("Homing") , ":/res/image/icon/address.png");
@@ -53,6 +52,9 @@ H2Robo::H2Robo( QStackedWidget *pWig, QObject *pObj ) : XRobo( pWig, pObj )
     //! apply data
     p_H2Action->setModel( &mActions );
     p_H2ErrMgr->setModel( &mErrManager );
+
+    //! connection
+    buildConnection();
 }
 
 QTreeWidgetItem *H2Robo::roboNode()
@@ -74,4 +76,15 @@ int H2Robo::loadDataSet()
     { return ret; }
 
     return 0;
+}
+
+void H2Robo::buildConnection()
+{
+    foreach( XConfig *pCfg, mSubConfigs )
+    {
+        Q_ASSERT( NULL != pCfg );
+
+        connect( pCfg, SIGNAL(signal_focus_in( const QString &)),
+                 this, SIGNAL(signal_focus_in( const QString &)));
+    }
 }

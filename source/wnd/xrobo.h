@@ -14,6 +14,7 @@ public:
     QString addr();
 
 signals:
+    void signal_focus_in( const QString & );
 
 public slots:
 

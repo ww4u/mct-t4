@@ -17,13 +17,9 @@ public:
 
     int setApply(ViSession vi);
 
-protected slots:
-//    void slotChangePicture(QString str);
-
 private:
     Ui::H2Homing *ui;
     QString m_strDirXtoY;
-    QString m_strDirYtoX;
 };
 
 #endif // H2HOMING_H

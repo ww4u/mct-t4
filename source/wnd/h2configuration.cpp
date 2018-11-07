@@ -9,9 +9,6 @@ H2Configuration::H2Configuration(QWidget *parent) :
 
     setName( "config" );
 
-    //先隐藏保留
-    ui->groupBox_brake->hide();
-
     connect(ui->sizeComboBox,SIGNAL(activated(QString)),this,SLOT(slotSelectSize(QString)) );
     connect(ui->radioButton_b,SIGNAL(toggled(bool)),this,SLOT(slotShowConfigPicture(bool)));
     connect(ui->workSpaceStrokeXComboBox,SIGNAL(currentTextChanged(QString)),this,SLOT(slotUserDefinedStrokeX(QString)));
@@ -23,8 +20,6 @@ H2Configuration::H2Configuration(QWidget *parent) :
     connect( ui->spinBox_X, SIGNAL(valueChanged(QString)), this, SLOT(slotOnModelChanged()));
     connect( ui->spinBox_Y, SIGNAL(valueChanged(QString)), this, SLOT(slotOnModelChanged()));
 
-    connect( ui->radioButton_st, SIGNAL(toggled(bool)), this, SLOT(slotOnModelChanged()));
-    connect( ui->radioButton_sb, SIGNAL(toggled(bool)), this, SLOT(slotOnModelChanged()));
     connect( ui->radioButton_b, SIGNAL(toggled(bool)), this, SLOT(slotOnModelChanged()));
     connect( ui->radioButton_t, SIGNAL(toggled(bool)), this, SLOT(slotOnModelChanged()));
 
@@ -39,10 +34,10 @@ H2Configuration::~H2Configuration()
 
 void H2Configuration::slotShowConfigPicture(bool bl)
 {
-    if(bl)
-        ui->label_picture->setPixmap(QPixmap(":/res/image/h2configuration/excm_30_bottom.PNG"));
-    else
-        ui->label_picture->setPixmap(QPixmap(":/res/image/h2configuration/excm_30_top.PNG"));
+//    if(bl)
+//        ui->label_picture->setPixmap(QPixmap(":/res/image/h2configuration/excm_30_bottom.PNG"));
+//    else
+//        ui->label_picture->setPixmap(QPixmap(":/res/image/h2configuration/excm_30_top.PNG"));
 }
 
 void H2Configuration::slotOnModelChanged()
@@ -72,11 +67,6 @@ void H2Configuration::slotOnModelChanged()
         model += "-GF";
     else
         model += "-KF";
-
-//    if(ui->radioButton_st->isChecked())
-//        model += "-ST";
-//    else
-//        model += "-SB";
 
     if(ui->radioButton_b->isChecked())
         model += "-B";
@@ -136,13 +126,9 @@ void H2Configuration::selectSize10()
     ui->workSpaceStrokeYComboBox->clear();
     ui->workSpaceStrokeYComboBox->addItems(strList);
 
-
-    ui->label_picture->setPixmap(QPixmap(":/res/image/h2configuration/excm_10.PNG"));
-
     ui->workSpaceStrokeYLabel->setEnabled(false);
     ui->workSpaceStrokeYComboBox->setEnabled(false);
-    ui->radioButton_st->setEnabled(false);
-    ui->radioButton_sb->setEnabled(false);
+
     ui->radioButton_b->setEnabled(false);
     ui->radioButton_t->setEnabled(false);
 
@@ -169,13 +155,10 @@ void H2Configuration::selectSize30()
 
     ui->workSpaceStrokeYLabel->setEnabled(true);
     ui->workSpaceStrokeYComboBox->setEnabled(true);
-//    ui->radioButton_st->setEnabled(true);
-//    ui->radioButton_sb->setEnabled(true);
+
     ui->radioButton_b->setEnabled(true);
     ui->radioButton_t->setEnabled(true);
 
-    ui->radioButton_st->setChecked(true);
-    ui->radioButton_b->setChecked(true);
     slotShowConfigPicture(true);
 }
 

@@ -48,8 +48,6 @@ H2Robo::H2Robo(QStackedWidget *pWig, QString strDevInfo, QObject *pObj ) : XRobo
     m_pRoboNode->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(pConfig) ) );
 
 
-
-
     new_widget( H2Configuration, tr("Configuration"), ":/res/image/icon/205.png" );
     new_widget( H2Measurement, tr("Measurements") , ":/res/image/icon/54.png");
     new_widget( H2Homing, tr("Homing") , ":/res/image/icon/address.png");

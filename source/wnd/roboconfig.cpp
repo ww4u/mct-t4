@@ -15,25 +15,6 @@ RoboConfig::RoboConfig(QWidget *parent) :
     m_pRootNode->setText( 0, tr("Project") );
     ui->treeWidget->addTopLevelItem( m_pRootNode );
 
-#if 0
-    H2Robo *pRobo = new H2Robo( ui->stackedWidget );
-    Q_ASSERT( NULL != pRobo );
-    mRobos.append(  pRobo );
-
-    m_pRootNode->addChild( pRobo->roboNode() );
-
-    //! build connection
-    connect( ui->treeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
-             this, SLOT(slot_current_changed(QTreeWidgetItem*,QTreeWidgetItem*)));
-
-    foreach( XRobo *pRobo, mRobos )
-    {
-        Q_ASSERT( NULL != pRobo );
-
-        connect( pRobo, SIGNAL(signal_focus_in( const QString &)),
-                 this, SIGNAL(signal_focus_in( const QString &)) );
-    }
-#endif
 }
 
 RoboConfig::~RoboConfig()

@@ -26,7 +26,10 @@
       <string notr="true"/>
      </property>
      <property name="text">
-      <string>TextLabel</string>
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="../res/res.qrc">:/res/image/h2configuration/size_bottom.png</pixmap>
      </property>
     </widget>
    </item>
@@ -190,35 +193,6 @@
        </layout>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QGroupBox" name="groupBox_brake">
-       <property name="title">
-        <string>Brake</string>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <widget class="QRadioButton" name="radioButton_st">
-          <property name="text">
-           <string>Not available(ST)</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="radioButton_sb">
-          <property name="text">
-           <string>Available(SB)</string>
-          </property>
-          <property name="checked">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
      <item row="0" column="0" colspan="2">
       <widget class="Line" name="line">
        <property name="orientation">
@@ -256,6 +230,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../res/res.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -25,12 +25,8 @@
         <file>image/widget/radiobutton_checked_green.png</file>
         <file>image/widget/radiobutton_checked_red.png</file>
         <file>image/widget/radiobutton_checked_yellow.png</file>
-        <file>image/h2configuration/excm_10.PNG</file>
-        <file>image/h2configuration/excm_30_bottom.PNG</file>
-        <file>image/h2configuration/excm_30_top.PNG</file>
         <file>qss/mega.qss</file>
         <file>image/h2homing/dir_X_Y.PNG</file>
-        <file>image/h2homing/dir_Y_X.PNG</file>
         <file>image/h2homing/info.png</file>
         <file>image/icon/jogmode.PNG</file>
         <file>image/h2measurement/CornerPoint1.PNG</file>
@@ -39,5 +35,9 @@
         <file>image/h2measurement/CornerPoint4.PNG</file>
         <file>image/icon/network.ico</file>
         <file>image/icon/usb.ico</file>
+        <file>image/icon/arrow-left-2.png</file>
+        <file>image/icon/arrow-right-2.png</file>
+        <file>image/product.png</file>
+        <file>image/h2configuration/size_bottom.png</file>
     </qresource>
 </RCC>

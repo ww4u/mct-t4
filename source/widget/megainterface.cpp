@@ -72,9 +72,13 @@ void MegaInterface::slotScanFinished()
 
 void MegaInterface::insertOneRow(QString str)
 {
-    QStringList strListHeader;
-    strListHeader << "IP" << "Manufacturer" << "Type" << "SN" << "Version";
-    m_model->setHorizontalHeaderLabels(strListHeader);
+#if 0
+//    QStringList strListHeader;
+//    strListHeader << "IP" << "Manufacturer" << "Type" << "SN" << "Version";
+//    m_model->setHorizontalHeaderLabels(strListHeader);
+#else
+
+#endif
 
     int maxRow = m_model->rowCount();
     QStringList strListInfo = str.split(',', QString::SkipEmptyParts);

@@ -15,6 +15,7 @@ RoboConfig::RoboConfig(QWidget *parent) :
     m_pRootNode->setText( 0, tr("Project") );
     ui->treeWidget->addTopLevelItem( m_pRootNode );
 
+#if 0
     H2Robo *pRobo = new H2Robo( ui->stackedWidget );
     Q_ASSERT( NULL != pRobo );
     mRobos.append(  pRobo );
@@ -32,7 +33,7 @@ RoboConfig::RoboConfig(QWidget *parent) :
         connect( pRobo, SIGNAL(signal_focus_in( const QString &)),
                  this, SIGNAL(signal_focus_in( const QString &)) );
     }
-
+#endif
 }
 
 RoboConfig::~RoboConfig()
@@ -42,9 +43,31 @@ RoboConfig::~RoboConfig()
     delete_all( mRobos );
 }
 
-void RoboConfig::slotAddNewRobot( const QString &strIP)
+void RoboConfig::slotAddNewRobot(QString strDevInfo)
 {
+    qDebug() << "slotAddNewRobot" << strDevInfo;
 
+#if 1 //shizhong add
+    H2Robo *pRobo = new H2Robo( ui->stackedWidget, strDevInfo );
+
+    Q_ASSERT( NULL != pRobo );
+    mRobos.append(  pRobo );
+
+    m_pRootNode->addChild( pRobo->roboNode() );
+    m_pRootNode->setExpanded(true);
+    pRobo->roboNode()->setExpanded(true);
+
+    //! build connection
+    connect( ui->treeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
+             this, SLOT(slot_current_changed(QTreeWidgetItem*,QTreeWidgetItem*)));
+
+    foreach( XRobo *pRobo, mRobos )
+    {
+        Q_ASSERT( NULL != pRobo );
+        connect( pRobo, SIGNAL(signal_focus_in( const QString &)),
+                 this, SIGNAL(signal_focus_in( const QString &)) );
+    }
+#endif
 }
 
 int RoboConfig::open()
@@ -72,6 +95,14 @@ int RoboConfig::close()
 
 int RoboConfig::setApply()
 {
+    int m_visa = 0;
+    XConfig *pCfg;
+    for ( int i = 0; i < ui->stackedWidget->count(); i++ )
+    {
+        pCfg = (XConfig*)ui->stackedWidget->widget( i );
+        pCfg->setApply(m_visa);
+    }
+
     return 0;
 }
 
@@ -84,7 +115,7 @@ int RoboConfig::setReset()
 int RoboConfig::setOK()
 {
     //! setApply
-
+    setApply();
 
     //! close
 
@@ -98,11 +129,11 @@ void RoboConfig::on_buttonBox_clicked(QAbstractButton *button)
     QDialogButtonBox::ButtonRole role = ui->buttonBox->buttonRole( button );
     if ( QDialogButtonBox::ResetRole == role )
     {
-
+        setReset();
     }
     else if ( QDialogButtonBox::AcceptRole == role )
     {
-
+        setOK();
     }
     else if ( QDialogButtonBox::ApplyRole == role )
     {

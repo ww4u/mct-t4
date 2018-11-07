@@ -50,15 +50,14 @@ MainWindow::~MainWindow()
 void MainWindow::setupWorkArea()
 {
     //! pref
-    m_pConfig = new RoboConfig(this);
-    Q_ASSERT( NULL != m_pConfig );
-    connect( m_pConfig, SIGNAL(signal_focus_in( const QString &)),
+    m_roboConfig = new RoboConfig(this);
+    connect( m_roboConfig, SIGNAL(signal_focus_in( const QString &)),
              this, SLOT(slot_focus_in(const QString &)) );
 
-    connect(m_megaSerachWidget, SIGNAL(getDeviceIP(const QString &)), this->m_pConfig, SLOT(slotAddNewRobot(const QString &)));
+    connect(m_megaSerachWidget, SIGNAL(getDeviceInfo(QString)), m_roboConfig, SLOT(slotAddNewRobot(QString)));
 
     //! docks
-    ui->centralWidget->insertTab( 0, m_pConfig, tr("Pref") );
+    ui->centralWidget->insertTab( 0, m_roboConfig, tr("Pref") );
 
     //! dock
     m_pDockOps = new QDockWidget( tr("Ops"), this );
@@ -68,7 +67,6 @@ void MainWindow::setupWorkArea()
     addDockWidget( Qt::BottomDockWidgetArea, m_pDockOps );
 
     m_pOps = new H2Ops();
-    Q_ASSERT( NULL != m_pOps );
     m_pDockOps->setWidget( m_pOps );
     connect( m_pOps, SIGNAL(signal_focus_in( const QString &)),
              this, SLOT(slot_focus_in(const QString &)) );

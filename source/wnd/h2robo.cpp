@@ -19,25 +19,36 @@
                                         mSubConfigs.append( p_##type );\
                                         pWig->addWidget( p_##type );
 
-H2Robo::H2Robo( QStackedWidget *pWig, QObject *pObj ) : XRobo( pWig, pObj )
+H2Robo::H2Robo(QStackedWidget *pWig, QString strDevInfo, QObject *pObj ) : XRobo( pWig, pObj )
 {
     Q_ASSERT( NULL != pWig );
 
-    XConfig *pConfig;
+    QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
+    QString strDeviceName;
+    if(strListDev.count() == 0)
+    {   return;     }
+    if(strListDev.count() > 2)
+    {   strDeviceName = strListDev.at(0) + "[" + strListDev.at(2) + "]";    }
+    else
+    {   strDeviceName = strListDev.at(0);    }
 
+    XConfig *pConfig;
     QTreeWidgetItem *plwItem;
 
     //! roboNode
-    pConfig = new H2Product();
+    pConfig = new H2Product(strDevInfo);
     Q_ASSERT( NULL != pConfig );
     mSubConfigs.append( pConfig );
     pWig->addWidget( pConfig );
 
     //! base
     m_pRoboNode = new QTreeWidgetItem();
-    m_pRoboNode->setText( 0, tr("MRX-H2") );
+    m_pRoboNode->setText( 0, strDeviceName );
     m_pRoboNode->setIcon( 0, QIcon( ":/res/image/icon/205.png" ) );
     m_pRoboNode->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(pConfig) ) );
+
+
+
 
     new_widget( H2Configuration, tr("Configuration"), ":/res/image/icon/205.png" );
     new_widget( H2Measurement, tr("Measurements") , ":/res/image/icon/54.png");

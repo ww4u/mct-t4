@@ -16,7 +16,7 @@ class H2Robo : public XRobo
     Q_OBJECT
 
 public:
-    H2Robo( QStackedWidget *pWig, QObject *pObj = Q_NULLPTR );
+    H2Robo( QStackedWidget *pWig, QString strDevInfo = "", QObject *pObj = Q_NULLPTR );
 
 public:
     QTreeWidgetItem *roboNode();

@@ -20,12 +20,13 @@ MegaInterface::MegaInterface(QWidget *parent) :
     connect(ui->comboBox_DevType,SIGNAL(currentIndexChanged(int)),this,SLOT(slotChangeDeviceType(int)));
     connect(ui->pushButton_Scan,SIGNAL(clicked(bool)),this,SLOT(slotScanDevices()));
 
-    m_model = new QStandardItemModel(ui->listView);
-    ui->listView->setModel(m_model);
+    m_model = new QStandardItemModel(ui->tableView);
+    ui->tableView->setModel(m_model);
 
-    ui->listView->setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(ui->listView, SIGNAL(customContextMenuRequested(const QPoint&)),
+    ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->tableView, SIGNAL(customContextMenuRequested(const QPoint&)),
             this, SLOT(slotShowContextmenu(const QPoint&)));
+
 }
 
 MegaInterface::~MegaInterface()
@@ -71,10 +72,18 @@ void MegaInterface::slotScanFinished()
 
 void MegaInterface::insertOneRow(QString str)
 {
+    QStringList strListHeader;
+    strListHeader << "IP" << "Manufacturer" << "Type" << "SN" << "Version";
+    m_model->setHorizontalHeaderLabels(strListHeader);
+
     int maxRow = m_model->rowCount();
-    QStandardItem *t_item = new QStandardItem(str);
-    m_itemList.append(t_item);
-    m_model->setItem(maxRow, 0, m_itemList.at(maxRow));
+    QStringList strListInfo = str.split(',', QString::SkipEmptyParts);
+    for(int index=0; index<strListInfo.count(); index++)
+    {
+        QStandardItem *t_item = new QStandardItem(strListInfo.at(index));
+        m_itemList.append(t_item);
+        m_model->setItem(maxRow, index, t_item);
+    }
 }
 
 void MegaInterface::clearListView()
@@ -89,12 +98,12 @@ void MegaInterface::clearListView()
 
 void MegaInterface::slotShowContextmenu(const QPoint& pos)
 {
-    if(!((ui->listView->selectionModel()->selectedIndexes()).empty()))
+    if(!((ui->tableView->selectionModel()->selectedIndexes()).empty()))
     {
         if(m_menu != NULL)
             delete m_menu;
 
-        m_menu = new QMenu(ui->listView);
+        m_menu = new QMenu(ui->tableView);
         QAction *actionOpen = m_menu->addAction(tr("ON"));
         QAction *actionClose = m_menu->addAction(tr("OFF"));
 
@@ -102,7 +111,7 @@ void MegaInterface::slotShowContextmenu(const QPoint& pos)
         connect(actionClose, SIGNAL(triggered(bool)), this, SLOT(soltActionClose()));
 
         m_menu->exec(QCursor::pos());
-        ui->listView->selectionModel()->clear();
+        ui->tableView->selectionModel()->clear();
     }
 }
 
@@ -128,7 +137,7 @@ void MegaInterface::soltActionClose()
 
 int MegaInterface::deviceOpen()
 {
-    QModelIndex index = ui->listView->selectionModel()->selectedIndexes().at(0);
+    QModelIndex index = ui->tableView->selectionModel()->selectedIndexes().at(0);
     QString strIP = m_model->data(index,Qt::DisplayRole).toString();
     qDebug() << "open " << strIP;
     int visa =  mrhtOpenDevice(strIP.toLatin1().data(), 2000);
@@ -140,8 +149,16 @@ int MegaInterface::deviceOpen()
 
 void MegaInterface::on_pushButton_ok_clicked()
 {
-    emit getDeviceIP(m_model->data(ui->listView->selectionModel()->selectedIndexes().at(0),
-                                   Qt::DisplayRole).toString());
+    QString strDevInfo = "";
+    QList<QModelIndex> modelList =  ui->tableView->selectionModel()->selectedIndexes();
+    for(int i=0;i<modelList.count(); i++)
+    {
+        strDevInfo += m_model->data(ui->tableView->selectionModel()->selectedIndexes().at(i),
+                                    Qt::DisplayRole).toString();
+        strDevInfo += ",";
+    }
+
+    emit getDeviceInfo(strDevInfo); //eg: "192.168.1.5,MegaRobo Technologies,MRH-T-06-N,MRHT00000518700001,00.00.01.07,"
 }
 
 
@@ -170,7 +187,18 @@ void DeviceSearchThread::run()
     QStringList devList = strDevices.split(';', QString::SkipEmptyParts);
     for(int devIndex=0; devIndex<devList.count(); devIndex++)
     {
-        emit resultReady(devList.at(devIndex));
+        int visa =  mrhtOpenDevice(devList.at(devIndex).toLatin1().data(), 2000);
+        if(visa < 0) {   return; }
+
+        char IDN[1024] = "";
+        int ret = mrhtIdn_Query(visa,IDN,sizeof(IDN));
+        if(ret != 0) {   return; }
+
+        qDebug() << devList.at(devIndex) << IDN ;
+        mrhtCloseDevice(visa);
+
+        QString strDev = devList.at(devIndex) + QString(",%1").arg(IDN);
+        emit resultReady(strDev);
     }
 }
 

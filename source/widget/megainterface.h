@@ -6,6 +6,8 @@
 #include <QWidget>
 #include <QThread>
 #include <QMetaType>
+#include <QAbstractItemView>
+#include <QTableWidget>
 
 namespace Ui {
 class MegaInterface;
@@ -43,7 +45,7 @@ public:
     int visa() const;
 
 signals:
-    void getDeviceIP(const QString &strIP);
+    void getDeviceInfo(const QString &strDevInfo);
 
 private slots:
     void slotChangeDeviceType(int index);
@@ -60,6 +62,7 @@ private:
     Ui::MegaInterface *ui;
     QStandardItemModel* m_model;
     QList<QStandardItem *> m_itemList;
+
     QMenu *m_menu;
 
     int m_devType;

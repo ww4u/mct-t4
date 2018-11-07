@@ -23,7 +23,7 @@ public:
     int close();
 
 public slots:
-    void slotAddNewRobot(const QString &strIP );
+    void slotAddNewRobot(QString strDevInfo );
 
 protected:
     int setApply();

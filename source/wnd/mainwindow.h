@@ -61,7 +61,7 @@ private:
     HelpPanel *m_pHelpPanel;
 
     H2Ops *m_pOps;
-    RoboConfig *m_pConfig;
+    RoboConfig *m_roboConfig;
 
     MegaInterface *m_megaSerachWidget;
 };

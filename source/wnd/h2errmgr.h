@@ -18,7 +18,7 @@ class H2ErrMgr : public XConfig
 public:
     explicit H2ErrMgr(QWidget *parent = 0);
     ~H2ErrMgr();
-    int setApply(ViSession vi);
+    int setApply();
 
 public:
     void setModel( ErrMgrModel *pModel );

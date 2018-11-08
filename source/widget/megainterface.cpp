@@ -143,7 +143,6 @@ int MegaInterface::deviceOpen()
 {
     QModelIndex index = ui->tableView->selectionModel()->selectedIndexes().at(0);
     QString strIP = m_model->data(index,Qt::DisplayRole).toString();
-    qDebug() << "open " << strIP;
     int visa =  mrhtOpenDevice(strIP.toLatin1().data(), 2000);
     if(visa < 0)
         QMessageBox::warning(this,tr("error"),tr("open device error"));
@@ -176,10 +175,7 @@ void DeviceSearchThread::run()
         findResources(buff, 1);
         strDevices = QString("%1").arg(buff);
         if(strDevices.length() == 0)
-        {
-            qDebug() << "mrgFindGateWay failure";
-            return;
-        }
+        {   return; }
     }
     else if(m_type == TYPE_USB)
     {
@@ -198,7 +194,7 @@ void DeviceSearchThread::run()
         int ret = mrhtIdn_Query(visa,IDN,sizeof(IDN));
         if(ret != 0) {   return; }
 
-        qDebug() << devList.at(devIndex) << IDN ;
+//        qDebug() << devList.at(devIndex) << IDN ;
         mrhtCloseDevice(visa);
 
         QString strDev = devList.at(devIndex) + QString(",%1").arg(IDN);

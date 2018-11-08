@@ -21,9 +21,9 @@ H2Action::~H2Action()
     delete ui;
 }
 
-int H2Action::setApply(ViSession vi)
+int H2Action::setApply()
 {
-    qDebug() << "H2Action:" << vi;
+//    qDebug() << "H2Action:" << mViHandle;
     return 0;
 }
 

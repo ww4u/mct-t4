@@ -10,8 +10,8 @@ public:
     explicit XRobo( QStackedWidget *pWig, QObject *parent = nullptr);
 
 public:
-    void setAddr( const QString &addr );
-    QString addr();
+    QString addr() const;
+    void setAddr(const QString &addr);
 
 signals:
     void signal_focus_in( const QString & );
@@ -19,8 +19,7 @@ signals:
 public slots:
 
 protected:
-    QString mAddr;
-
+    QString m_addr;
 };
 
 #endif // XROBO_H

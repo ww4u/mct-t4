@@ -18,10 +18,6 @@ public:
     explicit RoboConfig(QWidget *parent = 0);
     ~RoboConfig();
 
-public:
-    int open();
-    int close();
-
 public slots:
     void slotAddNewRobot(QString strDevInfo );
 
@@ -35,15 +31,19 @@ Q_SIGNALS:
 
 private slots:
     void on_buttonBox_clicked(QAbstractButton *button);
-
     void slot_current_changed( QTreeWidgetItem* pre,QTreeWidgetItem* nxt );
+    void slot_open_close(QString strIP);
 
 private:
     Ui::RoboConfig *ui;
 
     QTreeWidgetItem *m_pRootNode;
-
     QList<XRobo*> mRobos;
+    QList<int> mVisas;
+    int mIndex;
+
+    int deviceOpen(QString strIP);
+    int deviceClose();
 };
 
 #endif // H2CONFIG_H

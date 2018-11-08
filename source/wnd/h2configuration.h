@@ -14,7 +14,7 @@ class H2Configuration : public XConfig
 public:
     explicit H2Configuration(QWidget *parent = nullptr);
     ~H2Configuration();
-    int setApply(ViSession vi);
+    int setApply();
 
 protected slots:
     void slotOnModelChanged();

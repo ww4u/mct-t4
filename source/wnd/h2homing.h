@@ -14,8 +14,7 @@ class H2Homing : public XConfig
 public:
     explicit H2Homing(QWidget *parent = 0);
     ~H2Homing();
-
-    int setApply(ViSession vi);
+    int setApply();
 
 private:
     Ui::H2Homing *ui;

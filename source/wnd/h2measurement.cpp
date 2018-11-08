@@ -14,9 +14,9 @@ H2Measurement::~H2Measurement()
     delete ui;
 }
 
-int H2Measurement::setApply(ViSession vi)
+int H2Measurement::setApply()
 {
-    qDebug() << "H2Measurement:" << vi;
+//    qDebug() << "H2Measurement:" << mViHandle;
     return 0;
 }
 

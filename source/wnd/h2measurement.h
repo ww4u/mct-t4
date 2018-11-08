@@ -14,7 +14,7 @@ class H2Measurement : public XConfig
 public:
     explicit H2Measurement(QWidget *parent = 0);
     ~H2Measurement();
-    int setApply(ViSession vi);
+    int setApply();
 
 protected slots:
     void slotChangeCornerPicture(int index);

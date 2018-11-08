@@ -21,9 +21,9 @@ H2Homing::~H2Homing()
     delete ui;
 }
 
-int H2Homing::setApply(ViSession vi)
+int H2Homing::setApply()
 {
-    qDebug() << "H2Homing:" << vi;
+//    qDebug() << "H2Homing:" << mViHandle;
     return 0;
 }
 

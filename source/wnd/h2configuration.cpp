@@ -162,9 +162,9 @@ void H2Configuration::selectSize30()
     slotShowConfigPicture(true);
 }
 
-int H2Configuration::setApply(ViSession visa)
+int H2Configuration::setApply()
 {
-    qDebug() << "H2Configuration:" << visa;
+//    qDebug() << "H2Configuration:" << mViHandle;
 
 #if 0
     if(visa == 0) return -1;

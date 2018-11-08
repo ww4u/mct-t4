@@ -5,7 +5,12 @@ XRobo::XRobo( QStackedWidget *pWig, QObject *parent) : QObject(parent)
 
 }
 
-void XRobo::setAddr( const QString &addr )
-{ mAddr = addr; }
-QString XRobo::addr()
-{ return mAddr; }
+QString XRobo::addr() const
+{
+    return m_addr;
+}
+
+void XRobo::setAddr(const QString &addr)
+{
+    m_addr = addr;
+}

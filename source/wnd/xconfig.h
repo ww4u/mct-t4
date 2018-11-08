@@ -20,17 +20,15 @@ public:
     QString name();
 
 public:
-    virtual int setApply( ViSession vi );
+    virtual int setApply();
     int attachHandle( int handle );
-    int detachHandle( int handle );
+    int detachHandle();
 
 protected:
     virtual void focusInEvent(QFocusEvent *event);
 
 signals:
     void signal_focus_in( const QString &name );
-
-public slots:
 
 protected:
     QString mName;

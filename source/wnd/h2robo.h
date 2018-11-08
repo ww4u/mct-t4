@@ -11,6 +11,14 @@
 #include "../model/h2actionmodel.h"
 #include "../model/errmgrmodel.h"
 
+#include "h2product.h"
+#include "h2configuration.h"
+#include "h2jogmode.h"
+#include "h2homing.h"
+#include "h2measurement.h"
+#include "h2action.h"
+#include "h2errmgr.h"
+
 class H2Robo : public XRobo
 {
     Q_OBJECT
@@ -21,16 +29,21 @@ public:
 public:
     QTreeWidgetItem *roboNode();
 
+    H2Product *pProduct() const;
+    QList<XConfig *> subConfigs() const;
+
 protected:
     int loadDataSet();
     void buildConnection();
 
-protected:
+signals:
+    void signal_online_request(QString);
+
+private:
     H2ActionModel mActions;
     ErrMgrModel mErrManager;
-
+    H2Product *m_pProduct;
     QList<XConfig*> mSubConfigs;
-
     QTreeWidgetItem *m_pRoboNode;
 };
 

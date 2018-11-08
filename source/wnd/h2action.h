@@ -16,7 +16,7 @@ class H2Action : public XConfig
 public:
     explicit H2Action( QWidget *parent = 0);
     ~H2Action();
-    int setApply(ViSession vi);
+    int setApply();
 
 public:
     void setModel( QAbstractTableModel *pModel );

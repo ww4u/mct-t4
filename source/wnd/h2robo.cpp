@@ -1,13 +1,5 @@
 #include "h2robo.h"
 
-#include "h2product.h"
-#include "h2configuration.h"
-#include "h2jogmode.h"
-#include "h2homing.h"
-#include "h2measurement.h"
-#include "h2action.h"
-#include "h2errmgr.h"
-
 #define new_widget( type, title, icon ) type *p_##type = new type();\
                                         Q_ASSERT( NULL != p_##type ); \
                                         plwItem = new QTreeWidgetItem();\
@@ -32,20 +24,21 @@ H2Robo::H2Robo(QStackedWidget *pWig, QString strDevInfo, QObject *pObj ) : XRobo
     else
     {   strDeviceName = strListDev.at(0);    }
 
-    XConfig *pConfig;
     QTreeWidgetItem *plwItem;
 
     //! roboNode
-    pConfig = new H2Product(strDevInfo);
-    Q_ASSERT( NULL != pConfig );
-    mSubConfigs.append( pConfig );
-    pWig->addWidget( pConfig );
+    m_pProduct = new H2Product(strDevInfo);
+    Q_ASSERT( NULL != m_pProduct );
+    mSubConfigs.append( m_pProduct );
+    pWig->addWidget( m_pProduct );
+
+    connect(m_pProduct,SIGNAL(signal_online_clicked(QString)),this,SIGNAL(signal_online_request(QString)));
 
     //! base
     m_pRoboNode = new QTreeWidgetItem();
     m_pRoboNode->setText( 0, strDeviceName );
     m_pRoboNode->setIcon( 0, QIcon( ":/res/image/icon/205.png" ) );
-    m_pRoboNode->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(pConfig) ) );
+    m_pRoboNode->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(m_pProduct) ) );
 
 
     new_widget( H2Configuration, tr("Configuration"), ":/res/image/icon/205.png" );
@@ -96,4 +89,14 @@ void H2Robo::buildConnection()
         connect( pCfg, SIGNAL(signal_focus_in( const QString &)),
                  this, SIGNAL(signal_focus_in( const QString &)));
     }
+}
+
+QList<XConfig *> H2Robo::subConfigs() const
+{
+    return mSubConfigs;
+}
+
+H2Product *H2Robo::pProduct() const
+{
+    return m_pProduct;
 }

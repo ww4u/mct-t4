@@ -39,9 +39,9 @@ H2ErrMgr::~H2ErrMgr()
 
 }
 
-int H2ErrMgr::setApply(ViSession vi)
+int H2ErrMgr::setApply()
 {
-    qDebug() << "H2ErrMgr:" << vi;
+//    qDebug() << "H2ErrMgr:" << mViHandle;
     return 0;
 }
 

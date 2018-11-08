@@ -12,7 +12,7 @@ void XConfig::setName( const QString &name )
 QString XConfig::name()
 { return mName; }
 
-int XConfig::setApply( ViSession vi )
+int XConfig::setApply()
 { return 0; }
 
 int XConfig::attachHandle( int handle )
@@ -21,9 +21,8 @@ int XConfig::attachHandle( int handle )
     return 0;
 }
 
-int XConfig::detachHandle( int handle )
+int XConfig::detachHandle()
 {
-    //! \todo detach handle
     mViHandle = 0;
     return 0;
 }
@@ -31,6 +30,5 @@ int XConfig::detachHandle( int handle )
 void XConfig::focusInEvent(QFocusEvent *event)
 {
     QWidget::focusInEvent( event );
-
     emit signal_focus_in( mName );
 }

@@ -15,8 +15,8 @@ H2JogMode::~H2JogMode()
     delete ui;
 }
 
-int H2JogMode::setApply(ViSession vi)
+int H2JogMode::setApply()
 {
-    qDebug() << "H2JogMode:" << vi;
+    qDebug() << "H2JogMode:" << mViHandle;
     return 0;
 }

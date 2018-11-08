@@ -8,7 +8,6 @@ H2Product::H2Product(QString strDevInfo, QWidget *parent) :
     ui(new Ui::H2Product)
 {
     ui->setupUi(this);
-    m_visa = 0;
 
     setName( "product" );
 
@@ -28,7 +27,7 @@ H2Product::H2Product(QString strDevInfo, QWidget *parent) :
     ui->label_sn->setText(this->m_SN);
     ui->label_type->setText(this->m_Type);
     ui->label_version->setText(this->m_Version);
-    m_online = false;
+
     ui->toolButton_status->setText(tr("offline"));
     ui->toolButton_status->setToolTip(tr("click here to open device"));
 }
@@ -38,68 +37,31 @@ H2Product::~H2Product()
     delete ui;
 }
 
-int H2Product::setApply(ViSession visa)
+int H2Product::setApply()
 {
-    qDebug() << "H2Product:" << visa;
-
-    if(visa == 0) return -1;
-
-    int ret = -1;
-    char strIDN[1024] = "";
-    ret = mrhtIdn_Query(visa,strIDN,sizeof(strIDN));
-    qDebug() << strIDN; //MegaRobo Technologies,MRH-T,MRHT000005187U0032,00.00.01.06
-
+    qDebug() << "H2Product" << mViHandle;
+//    int ret = -1;
+//    char strIDN[1024] = "";
+//    ret = mrhtIdn_Query(mViHandle,strIDN,sizeof(strIDN));
+//    qDebug() << m_IP << strIDN; //MegaRobo Technologies,MRH-T,MRHT000005187U0032,00.00.01.06
+    return 0;
 }
 
-void H2Product::on_toolButton_status_clicked()
+void H2Product::change_online_status(bool bl)
 {
-    if(!m_online)
+    if(bl)
     {
-        m_visa = 0;
-        int ret = deviceOpen();
-        if(ret != 0)
-            return;
-
-        emit signal_device_open(m_visa);
-        m_online = true;
         ui->toolButton_status->setText(tr("online"));
         ui->toolButton_status->setToolTip(tr("click here to close device"));
     }
     else
     {
-        deviceClose();
-        emit signal_device_close();
-
-        m_online = false;
         ui->toolButton_status->setText(tr("offline"));
         ui->toolButton_status->setToolTip(tr("click here to open device"));
     }
 }
 
-int H2Product::deviceOpen()
+void H2Product::on_toolButton_status_clicked()
 {
-    int visa = mrhtOpenDevice(this->m_IP.toLatin1().data(), 2000);
-    qDebug() << "device open:" << visa;
-    if(visa <= 0)
-        return -1;
-
-    m_visa = visa;
-
-    mrhtSystemIdentify(m_visa, 1);
-    return 0;
+    emit signal_online_clicked(m_IP);
 }
-
-int H2Product::deviceClose()
-{
-    int ret = -1;
-    if(m_visa != 0)
-    {
-        mrhtSystemIdentify(m_visa, 0);
-        ret = mrhtCloseDevice(m_visa);
-        qDebug() << "device close:" << ret;
-        m_visa = 0;
-    }
-
-    return 0;
-}
-

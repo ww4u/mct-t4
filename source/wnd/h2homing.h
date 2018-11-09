@@ -16,6 +16,9 @@ public:
     ~H2Homing();
     int setApply();
 
+public slots:
+    void slot_set_direction(QString text);
+
 private:
     Ui::H2Homing *ui;
     QString m_strDirXtoY;

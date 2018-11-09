@@ -44,6 +44,7 @@ private:
 
     int deviceOpen(QString strIP);
     int deviceClose();
+    QStringList m_strListDevInfo;
 };
 
 #endif // H2CONFIG_H

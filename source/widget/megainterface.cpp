@@ -76,8 +76,6 @@ void MegaInterface::insertOneRow(QString str)
 //    QStringList strListHeader;
 //    strListHeader << "IP" << "Manufacturer" << "Type" << "SN" << "Version";
 //    m_model->setHorizontalHeaderLabels(strListHeader);
-#else
-
 #endif
 
     int maxRow = m_model->rowCount();
@@ -150,18 +148,23 @@ int MegaInterface::deviceOpen()
     return visa;
 }
 
-void MegaInterface::on_pushButton_ok_clicked()
+void MegaInterface::on_buttonBox_clicked(QAbstractButton *button)
 {
-    QString strDevInfo = "";
-    QList<QModelIndex> modelList =  ui->tableView->selectionModel()->selectedIndexes();
-    for(int i=0;i<modelList.count(); i++)
+    QDialogButtonBox::ButtonRole role = ui->buttonBox->buttonRole( button );
+    if ( QDialogButtonBox::AcceptRole == role )
     {
-        strDevInfo += m_model->data(ui->tableView->selectionModel()->selectedIndexes().at(i),
-                                    Qt::DisplayRole).toString();
-        strDevInfo += ",";
+        QString strDevInfo = "";
+        QList<QModelIndex> modelList =  ui->tableView->selectionModel()->selectedIndexes();
+        for(int i=0;i<modelList.count(); i++)
+        {
+            strDevInfo += m_model->data(modelList.at(i),Qt::DisplayRole).toString();
+            strDevInfo += ",";
+        }
+        emit signal_selected_info(strDevInfo);
     }
-
-    emit getDeviceInfo(strDevInfo); //eg: "192.168.1.5,MegaRobo Technologies,MRH-T-06-N,MRHT00000518700001,00.00.01.07,"
+    else
+    {}
+    close();
 }
 
 
@@ -206,5 +209,3 @@ void DeviceSearchThread::setType(int type)
 {
     m_type = type;
 }
-
-

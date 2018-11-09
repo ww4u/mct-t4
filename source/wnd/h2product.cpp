@@ -28,8 +28,7 @@ H2Product::H2Product(QString strDevInfo, QWidget *parent) :
     ui->label_type->setText(this->m_Type);
     ui->label_version->setText(this->m_Version);
 
-    ui->toolButton_status->setText(tr("offline"));
-    ui->toolButton_status->setToolTip(tr("click here to open device"));
+    change_online_status(false);
 }
 
 H2Product::~H2Product()
@@ -39,11 +38,10 @@ H2Product::~H2Product()
 
 int H2Product::setApply()
 {
-    qDebug() << "H2Product" << mViHandle;
 //    int ret = -1;
 //    char strIDN[1024] = "";
 //    ret = mrhtIdn_Query(mViHandle,strIDN,sizeof(strIDN));
-//    qDebug() << m_IP << strIDN; //MegaRobo Technologies,MRH-T,MRHT000005187U0032,00.00.01.06
+//    qDebug() << "H2Product" << m_IP << mViHandle << strIDN;
     return 0;
 }
 
@@ -51,11 +49,13 @@ void H2Product::change_online_status(bool bl)
 {
     if(bl)
     {
+        ui->toolButton_status->setIcon(QIcon(":/res/image/h2product/online.png"));
         ui->toolButton_status->setText(tr("online"));
         ui->toolButton_status->setToolTip(tr("click here to close device"));
     }
     else
     {
+        ui->toolButton_status->setIcon(QIcon(":/res/image/h2product/offline.png"));
         ui->toolButton_status->setText(tr("offline"));
         ui->toolButton_status->setToolTip(tr("click here to open device"));
     }

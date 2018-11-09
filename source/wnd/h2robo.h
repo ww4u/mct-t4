@@ -28,8 +28,6 @@ public:
 
 public:
     QTreeWidgetItem *roboNode();
-
-    H2Product *pProduct() const;
     QList<XConfig *> subConfigs() const;
 
 protected:
@@ -40,11 +38,19 @@ signals:
     void signal_online_request(QString);
 
 private:
-    H2ActionModel mActions;
-    ErrMgrModel mErrManager;
-    H2Product *m_pProduct;
-    QList<XConfig*> mSubConfigs;
     QTreeWidgetItem *m_pRoboNode;
+    QList<XConfig*> mSubConfigs;
+
+    H2ActionModel   mActions;
+    ErrMgrModel     mErrManager;
+
+    H2Product       *m_pProduct         ;
+    H2Configuration *m_pH2Configuration ;
+    H2Measurement   *m_pH2Measurement   ;
+    H2Homing        *m_pH2Homing        ;
+    H2JogMode       *m_pH2JogMode       ;
+    H2Action        *m_pH2Action        ;
+    H2ErrMgr        *m_pH2ErrMgr        ;
 };
 
 #endif // H2ROBO_H

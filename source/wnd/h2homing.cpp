@@ -23,8 +23,23 @@ H2Homing::~H2Homing()
 
 int H2Homing::setApply()
 {
-//    qDebug() << "H2Homing:" << mViHandle;
+//    qDebug() << "H2Homing:" << mViHandle << mRobotName.toInt();
+#if 0
+    //SearchVelocity=50.00
+
+
+    //Acceleration=5.000
+
+
+    //ForceLimit=75.0
+
+#endif
     return 0;
+}
+
+void H2Homing::slot_set_direction(QString text)
+{
+    ui->label_direction->setText(text);
 }
 
 

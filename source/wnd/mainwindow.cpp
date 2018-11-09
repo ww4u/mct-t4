@@ -21,10 +21,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_megaSerachWidget = new MegaInterface;
     connect(ui->actionSearch,SIGNAL(triggered(bool)),this,SLOT(slot_action_search()));
 
     m_pHelpPanel = NULL;
+    m_megaSerachWidget = NULL;
 
     setupWorkArea();
 
@@ -53,8 +53,6 @@ void MainWindow::setupWorkArea()
     m_roboConfig = new RoboConfig(this);
     connect( m_roboConfig, SIGNAL(signal_focus_in( const QString &)),
              this, SLOT(slot_focus_in(const QString &)) );
-
-    connect(m_megaSerachWidget, SIGNAL(getDeviceInfo(QString)), m_roboConfig, SLOT(slotAddNewRobot(QString)));
 
     //! docks
     ui->centralWidget->insertTab( 0, m_roboConfig, tr("Pref") );
@@ -127,7 +125,7 @@ void MainWindow::slot_logout( const QString &str, log_level lev )
 
 void MainWindow::slot_focus_in( const QString &name )
 {
-    logDbg()<<name;
+//    logDbg() << name;
 
     if ( name.length() > 0 )
     {}
@@ -142,8 +140,13 @@ void MainWindow::slot_focus_in( const QString &name )
 
 void MainWindow::slot_action_search()
 {
-    m_megaSerachWidget->move(100,100);
+    if(m_megaSerachWidget != NULL)
+        delete m_megaSerachWidget;
+
+    m_megaSerachWidget = new MegaInterface;
+    m_megaSerachWidget->move(x()+100,y()+100);
     m_megaSerachWidget->show();
+    connect(m_megaSerachWidget, SIGNAL(signal_selected_info(QString)), m_roboConfig, SLOT(slotAddNewRobot(QString)));
 }
 
 void MainWindow::on_actionAbout_triggered()

@@ -1,59 +1,53 @@
 #include "h2robo.h"
 
-#define new_widget( type, title, icon ) type *p_##type = new type();\
-                                        Q_ASSERT( NULL != p_##type ); \
-                                        plwItem = new QTreeWidgetItem();\
-                                        Q_ASSERT( NULL != plwItem ); \
-                                        plwItem->setText( 0, title ); \
-                                        plwItem->setIcon( 0, QIcon( icon) ); \
-                                        plwItem->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(p_##type) ) ); \
-                                        m_pRoboNode->addChild(plwItem); \
-                                        mSubConfigs.append( p_##type );\
-                                        pWig->addWidget( p_##type );
+#define new_widget( type, var, title, icon ) do{\
+    var = new type;\
+    Q_ASSERT( NULL != var ); \
+    QTreeWidgetItem *plwItem = new QTreeWidgetItem();\
+    Q_ASSERT( NULL != plwItem ); \
+    plwItem->setText( 0, title ); \
+    plwItem->setIcon( 0, QIcon( icon) ); \
+    plwItem->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(var) ) ); \
+    m_pRoboNode->addChild(plwItem); \
+    mSubConfigs.append( var );\
+    pWig->addWidget( var ); \
+}while(0)
 
 H2Robo::H2Robo(QStackedWidget *pWig, QString strDevInfo, QObject *pObj ) : XRobo( pWig, pObj )
 {
     Q_ASSERT( NULL != pWig );
-
     QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
     QString strDeviceName;
     if(strListDev.count() == 0)
     {   return;     }
     if(strListDev.count() > 2)
-    {   strDeviceName = strListDev.at(0) + "[" + strListDev.at(2) + "]";    }
+    {   strDeviceName = strListDev.at(2) + "[" + strListDev.at(0) + "]";    }
     else
     {   strDeviceName = strListDev.at(0);    }
-
-    QTreeWidgetItem *plwItem;
 
     //! roboNode
     m_pProduct = new H2Product(strDevInfo);
     Q_ASSERT( NULL != m_pProduct );
+    m_pRoboNode = new QTreeWidgetItem();
+    m_pRoboNode->setText( 0, strDeviceName );
+    m_pRoboNode->setIcon( 0, QIcon( ":/res/image/icon/201.png" ) );
+    m_pRoboNode->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(m_pProduct) ) );
     mSubConfigs.append( m_pProduct );
     pWig->addWidget( m_pProduct );
 
-    connect(m_pProduct,SIGNAL(signal_online_clicked(QString)),this,SIGNAL(signal_online_request(QString)));
-
-    //! base
-    m_pRoboNode = new QTreeWidgetItem();
-    m_pRoboNode->setText( 0, strDeviceName );
-    m_pRoboNode->setIcon( 0, QIcon( ":/res/image/icon/205.png" ) );
-    m_pRoboNode->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(m_pProduct) ) );
-
-
-    new_widget( H2Configuration, tr("Configuration"), ":/res/image/icon/205.png" );
-    new_widget( H2Measurement, tr("Measurements") , ":/res/image/icon/54.png");
-    new_widget( H2Homing, tr("Homing") , ":/res/image/icon/address.png");
-    new_widget( H2JogMode, tr("Jog Mode"), ":/res/image/icon/409.png" );
-    new_widget( H2Action, tr("Record Table"), ":/res/image/icon/activity.png" );
-    new_widget( H2ErrMgr, tr("Error Management"), ":/res/image/icon/remind.png" );
+    new_widget( H2Configuration, m_pH2Configuration, tr("Configuration"), ":/res/image/icon/205.png" );
+    new_widget( H2Measurement, m_pH2Measurement, tr("Measurements") , ":/res/image/icon/54.png");
+    new_widget( H2Homing, m_pH2Homing, tr("Homing") , ":/res/image/icon/address.png");
+    new_widget( H2JogMode, m_pH2JogMode, tr("Jog Mode"), ":/res/image/icon/409.png" );
+    new_widget( H2Action, m_pH2Action, tr("Record Table"), ":/res/image/icon/activity.png" );
+    new_widget( H2ErrMgr, m_pH2ErrMgr, tr("Error Management"), ":/res/image/icon/remind.png" );
 
     //! load data
     loadDataSet();
 
     //! apply data
-    p_H2Action->setModel( &mActions );
-    p_H2ErrMgr->setModel( &mErrManager );
+    m_pH2Action->setModel( &mActions );
+    m_pH2ErrMgr->setModel( &mErrManager );
 
     //! connection
     buildConnection();
@@ -82,10 +76,14 @@ int H2Robo::loadDataSet()
 
 void H2Robo::buildConnection()
 {
+    connect(m_pProduct,SIGNAL(signal_online_clicked(QString)),this,SIGNAL(signal_online_request(QString)));
+
+    connect(m_pH2Measurement,SIGNAL(signal_AxesZeroPoint_currentTextChanged(QString)),
+            m_pH2Homing,SLOT(slot_set_direction(QString)));
+
     foreach( XConfig *pCfg, mSubConfigs )
     {
         Q_ASSERT( NULL != pCfg );
-
         connect( pCfg, SIGNAL(signal_focus_in( const QString &)),
                  this, SIGNAL(signal_focus_in( const QString &)));
     }
@@ -94,9 +92,4 @@ void H2Robo::buildConnection()
 QList<XConfig *> H2Robo::subConfigs() const
 {
     return mSubConfigs;
-}
-
-H2Product *H2Robo::pProduct() const
-{
-    return m_pProduct;
 }

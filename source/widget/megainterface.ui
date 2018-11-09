@@ -52,7 +52,7 @@
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="../res/res.qrc">:/res/image/icon/network.ico</pixmap>
+        <pixmap>:/res/image/icon/network.ico</pixmap>
        </property>
       </widget>
      </item>
@@ -219,73 +219,14 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_5">
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_ok">
-       <property name="text">
-        <string>OK</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_cancel">
-       <property name="text">
-        <string>Cancel</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../res/res.qrc"/>
- </resources>
- <connections>
-  <connection>
-   <sender>pushButton_ok</sender>
-   <signal>clicked()</signal>
-   <receiver>MegaInterface</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>507</x>
-     <y>460</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>515</x>
-     <y>566</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_cancel</sender>
-   <signal>clicked()</signal>
-   <receiver>MegaInterface</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>595</x>
-     <y>452</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>600</x>
-     <y>531</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <resources/>
+ <connections/>
 </ui>

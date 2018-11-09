@@ -16,6 +16,9 @@ public:
     ~H2Measurement();
     int setApply();
 
+signals:
+    void signal_AxesZeroPoint_currentTextChanged(QString);
+
 protected slots:
     void slotChangeCornerPicture(int index);
 

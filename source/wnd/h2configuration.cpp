@@ -9,21 +9,15 @@ H2Configuration::H2Configuration(QWidget *parent) :
 
     setName( "config" );
 
-    connect(ui->sizeComboBox,SIGNAL(activated(QString)),this,SLOT(slotSelectSize(QString)) );
-    connect(ui->radioButton_b,SIGNAL(toggled(bool)),this,SLOT(slotShowConfigPicture(bool)));
-    connect(ui->workSpaceStrokeXComboBox,SIGNAL(currentTextChanged(QString)),this,SLOT(slotUserDefinedStrokeX(QString)));
-    connect(ui->workSpaceStrokeYComboBox,SIGNAL(currentTextChanged(QString)),this,SLOT(slotUserDefinedStrokeY(QString)));
+    connect(ui->sizeComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(slotSelectSize(int)));
 
     connect( ui->sizeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slotOnModelChanged()));
-    connect( ui->workSpaceStrokeXComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slotOnModelChanged()));
-    connect( ui->workSpaceStrokeYComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slotOnModelChanged()));
     connect( ui->spinBox_X, SIGNAL(valueChanged(QString)), this, SLOT(slotOnModelChanged()));
     connect( ui->spinBox_Y, SIGNAL(valueChanged(QString)), this, SLOT(slotOnModelChanged()));
-
     connect( ui->radioButton_b, SIGNAL(toggled(bool)), this, SLOT(slotOnModelChanged()));
     connect( ui->radioButton_t, SIGNAL(toggled(bool)), this, SLOT(slotOnModelChanged()));
 
-    selectSize10();
+    slotSelectSize(0);
     slotOnModelChanged();
 }
 
@@ -32,147 +26,89 @@ H2Configuration::~H2Configuration()
     delete ui;
 }
 
-void H2Configuration::slotShowConfigPicture(bool bl)
-{
-//    if(bl)
-//        ui->label_picture->setPixmap(QPixmap(":/res/image/h2configuration/excm_30_bottom.PNG"));
-//    else
-//        ui->label_picture->setPixmap(QPixmap(":/res/image/h2configuration/excm_30_top.PNG"));
-}
-
 void H2Configuration::slotOnModelChanged()
 {
-    QString strUserDefine = ui->workSpaceStrokeXComboBox->itemText( ui->workSpaceStrokeXComboBox->count() - 1);
     QString model = QString("%1-%2")
             .arg(ui->label_family->text())
             .arg(ui->sizeComboBox->currentText());
 
-    QString t_str = ui->workSpaceStrokeXComboBox->currentText();
+    QString str = ui->spinBox_X->text().left(ui->spinBox_X->text().length()-2);
+    m_WorkStrokeX = str.toInt();
     model += "-";
-    if(t_str != strUserDefine)
-        model += t_str.left(t_str.length() - 2);
-    else
-        model += ui->spinBox_X->text();
+    model += str;
 
-    strUserDefine = ui->workSpaceStrokeYComboBox->itemText( ui->workSpaceStrokeYComboBox->count() - 1);
-    t_str = ui->workSpaceStrokeYComboBox->currentText();
+    str = ui->spinBox_Y->text().left(ui->spinBox_Y->text().length()-2);
+    m_WorkStrokeY = str.toInt();
     model += "-";
-    if(t_str != strUserDefine)
-        model += t_str.left(t_str.length() - 2);
-    else
-        model += ui->spinBox_Y->text();
+    model += str;
 
-
-    if("10" == ui->sizeComboBox->currentText())
+    if(ui->sizeComboBox->currentIndex() == 0) //small
+    {
         model += "-GF";
-    else
+        m_size = 0;
+    }else{ //big
         model += "-KF";
+        m_size = 1;
+    }
 
-    if(ui->radioButton_b->isChecked())
+    if(ui->radioButton_b->isChecked()){
         model += "-B";
-    else
+        m_MotorPosition = 0;
+    }else{
         model += "-T";
+        m_MotorPosition = 1;
+    }
 
     ui->label_model->setText(model);
 }
 
-void H2Configuration::slotSelectSize(QString text)
+void H2Configuration::slotSelectSize(int index)
 {
-    if(text == tr("10"))
-        selectSize10();
-    else if(text == ("30"))
-        selectSize30();
-}
+    if(index == 0)
+    {
+        ui->spinBox_X->setMaximum(494);
+        ui->spinBox_X->setValue(494);
+        ui->spinBox_X->setToolTip("0-494");
 
-void H2Configuration::slotUserDefinedStrokeX(QString text)
-{
-    QString strUserDefine = ui->workSpaceStrokeXComboBox->itemText( ui->workSpaceStrokeXComboBox->count() - 1);
-    if(text == strUserDefine)
-    {
-        ui->spinBox_X->show();
-        ui->spinBox_X->setEnabled(true);
+        ui->spinBox_Y->setMaximum(802);
+        ui->spinBox_Y->setValue(802);
+        ui->spinBox_Y->setToolTip("0-820");
     }
-    else
+    else if(index == 1)
     {
-        ui->spinBox_X->hide();
-        ui->spinBox_X->setEnabled(false);
-    }
-}
+        ui->spinBox_X->setMaximum(770);
+        ui->spinBox_X->setValue(770);
+        ui->spinBox_X->setToolTip("0-770");
 
-void H2Configuration::slotUserDefinedStrokeY(QString text)
-{
-    QString strUserDefine = ui->workSpaceStrokeYComboBox->itemText( ui->workSpaceStrokeYComboBox->count() - 1);
-    if(text == strUserDefine)
-    {
-        ui->spinBox_Y->show();
-        ui->spinBox_Y->setEnabled(true);
-    }
-    else
-    {
-        ui->spinBox_Y->hide();
-        ui->spinBox_Y->setEnabled(false);
+        ui->spinBox_Y->setMaximum(890);
+        ui->spinBox_Y->setValue(890);
+        ui->spinBox_Y->setToolTip("0-890");
     }
 }
 
-void H2Configuration::selectSize10()
-{
-    QStringList strList;
-    strList << tr("150mm") << tr("260mm") << tr("300mm") << tr("360mm") << tr("700mm") << tr("User defined");
-    ui->workSpaceStrokeXComboBox->clear();
-    ui->workSpaceStrokeXComboBox->addItems(strList);
-
-    strList.clear();
-    strList << tr("110mm") << tr("160mm") << tr("210mm") << tr("260mm") << tr("310mm") << tr("360mm") << tr("User defined");
-    ui->workSpaceStrokeYComboBox->clear();
-    ui->workSpaceStrokeYComboBox->addItems(strList);
-
-    ui->workSpaceStrokeYLabel->setEnabled(false);
-    ui->workSpaceStrokeYComboBox->setEnabled(false);
-
-    ui->radioButton_b->setEnabled(false);
-    ui->radioButton_t->setEnabled(false);
-
-    ui->spinBox_X->hide();
-    ui->spinBox_X->setEnabled(false);
-    ui->spinBox_Y->hide();
-    ui->spinBox_Y->setEnabled(false);
-}
-
-
-void H2Configuration::selectSize30()
-{
-    QStringList strList;
-    strList.clear();
-    strList << tr("100mm") << tr("150mm") << tr("200mm") << tr("300mm") << tr("400mm") << tr("500mm") << tr("User defined");
-    ui->workSpaceStrokeXComboBox->clear();
-    ui->workSpaceStrokeXComboBox->addItems(strList);
-
-    strList.clear();
-    strList << tr("110mm") << tr("160mm") << tr("210mm") << tr("260mm") << tr("310mm") << tr("360mm") << tr("User defined");
-    ui->workSpaceStrokeYComboBox->clear();
-    ui->workSpaceStrokeYComboBox->addItems(strList);
-
-
-    ui->workSpaceStrokeYLabel->setEnabled(true);
-    ui->workSpaceStrokeYComboBox->setEnabled(true);
-
-    ui->radioButton_b->setEnabled(true);
-    ui->radioButton_t->setEnabled(true);
-
-    slotShowConfigPicture(true);
-}
 
 int H2Configuration::setApply()
 {
-//    qDebug() << "H2Configuration:" << mViHandle;
+    qDebug() << "H2Configuration:" << mViHandle << mRobotName.toInt();
 
 #if 0
-    if(visa == 0) return -1;
-
     int ret = -1;
-    char strIDN[1024] = "";
-    ret = mrhtIdn_Query(visa,strIDN,sizeof(strIDN));
-    qDebug() << strIDN; //MegaRobo Technologies,MRH-T,MRHT000005187U0032,00.00.01.06
+//    char strIDN[1024] = "";
+//    ret = mrhtIdn_Query(mViHandle, strIDN,sizeof(strIDN));
+//    qDebug() << strIDN; //MegaRobo Technologies,MRH-T,MRHT000005187U0032,00.00.01.06
+
+    //type:0==>small, 1==>big
+    ret = mrhtRobotSubtype(mViHandle, mRobotName.toInt(), m_size);
+
+    //WorkStrokeX
+
+
+    //WorkStrokeY
+
+
+    //states:OFF==>bottom, ON==>top
+    ret = mrhtDeviceMrqMotionReverse(mViHandle, mRobotName.toInt(), m_MotorPosition);
+
 #endif
     return 0;
 }

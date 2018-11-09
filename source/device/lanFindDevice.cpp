@@ -3,16 +3,16 @@
 //#include "stdafx.h"
 #include <WINSOCK2.H>
 #include <stdio.h>
-#include <Ws2tcpip.h> //×é²¥ÒªÓÃµ½µÄÍ·ÎÄ¼ş
+#include <Ws2tcpip.h> //ç»„æ’­è¦ç”¨åˆ°çš„å¤´æ–‡ä»¶
 #include <string.h>
-#define ADD_GROUP//¿ÉÒÔ²»¼ÓÈë×éÒ²¿ÉÒÔÏò×éÄÚ·¢ĞÅÏ¢
+#define ADD_GROUP//å¯ä»¥ä¸åŠ å…¥ç»„ä¹Ÿå¯ä»¥å‘ç»„å†…å‘ä¿¡æ¯
 #define MCASTADDR "224.0.0.251"
 #define UDP_PORT  5353//5566
 #pragma comment(lib, "ws2_32")
 
 #include <iostream>
 #include <IPHlpApi.h>
-#pragma comment(lib,"IPHlpApi.lib") //ĞèÒªÌí¼ÓIphlpapi.lib¿â
+#pragma comment(lib,"IPHlpApi.lib") //éœ€è¦æ·»åŠ Iphlpapi.libåº“
 
 //#define DEBUG_INFO printf("%s,%s,%d\n",__FILE__,__func__,__LINE__)
 
@@ -22,9 +22,9 @@ int getHostIpAddr(string* strHostIp, unsigned int len);
 
 #if 1
 /*
-    timeout Ò»´Î²éÑ¯Éè±¸µÄ×î³¤Ê±¼ä
-    desc :²éÑ¯µ½µÄÉè±¸ÃèÊö·û
-    ·µ»ØÕÒµ½µÄÒÇÆ÷µÄ¸öÊı
+    timeout ä¸€æ¬¡æŸ¥è¯¢è®¾å¤‡çš„æœ€é•¿æ—¶é—´
+    desc :æŸ¥è¯¢åˆ°çš„è®¾å¤‡æè¿°ç¬¦
+    è¿”å›æ‰¾åˆ°çš„ä»ªå™¨çš„ä¸ªæ•°
 */
 int findResources(char* ip,int timeout)
 {
@@ -35,7 +35,7 @@ int findResources(char* ip,int timeout)
     int len = sizeof(SOCKADDR);
     char recvBuf[50];
     char s;
-    int timeout_s = timeout*1000; //Ãë×ªÎªºÁÃë
+    int timeout_s = timeout*1000; //ç§’è½¬ä¸ºæ¯«ç§’
     ip[0] = 0;
 
 	string strHostIpAddr[1024];
@@ -78,7 +78,7 @@ int findResources(char* ip,int timeout)
 		}
 
 		bool bOpt = true;
-		//ÉèÖÃ¸ÃÌ×½Ó×ÖÎª¹ã²¥ÀàĞÍ
+		//è®¾ç½®è¯¥å¥—æ¥å­—ä¸ºå¹¿æ’­ç±»å‹
 		setsockopt(sock[i], SOL_SOCKET, SO_BROADCAST, (char*)&bOpt, sizeof(bOpt));
 	}
 
@@ -121,7 +121,7 @@ int findResources(char* ip,int timeout)
    
 	for (int i = 0; i < hostIpCount; i++)
 	{
-		shutdown(sock[i], 2);//ÕâÀïµÄ"2"ÔÚwin32ÖĞ¿ÉÒÔĞ´ÎªSD_BOTH
+		shutdown(sock[i], 2);//è¿™é‡Œçš„"2"åœ¨win32ä¸­å¯ä»¥å†™ä¸ºSD_BOTH
 		closesocket(sock[i]);
 	}
 
@@ -134,45 +134,45 @@ int findResources(char* ip,int timeout)
 
 int getHostIpAddr(string* strHostIp, unsigned int len)
 {
-	//PIP_ADAPTER_INFO½á¹¹ÌåÖ¸Õë´æ´¢±¾»úÍø¿¨ĞÅÏ¢
+	//PIP_ADAPTER_INFOç»“æ„ä½“æŒ‡é’ˆå­˜å‚¨æœ¬æœºç½‘å¡ä¿¡æ¯
 	PIP_ADAPTER_INFO pIpAdapterInfo = new IP_ADAPTER_INFO();
-	//µÃµ½½á¹¹Ìå´óĞ¡,ÓÃÓÚGetAdaptersInfo²ÎÊı
+	//å¾—åˆ°ç»“æ„ä½“å¤§å°,ç”¨äºGetAdaptersInfoå‚æ•°
 	unsigned long stSize = sizeof(IP_ADAPTER_INFO);
-	//µ÷ÓÃGetAdaptersInfoº¯Êı,Ìî³äpIpAdapterInfoÖ¸Õë±äÁ¿;ÆäÖĞstSize²ÎÊı¼ÈÊÇÒ»¸öÊäÈëÁ¿Ò²ÊÇÒ»¸öÊä³öÁ¿
+	//è°ƒç”¨GetAdaptersInfoå‡½æ•°,å¡«å……pIpAdapterInfoæŒ‡é’ˆå˜é‡;å…¶ä¸­stSizeå‚æ•°æ—¢æ˜¯ä¸€ä¸ªè¾“å…¥é‡ä¹Ÿæ˜¯ä¸€ä¸ªè¾“å‡ºé‡
 	int nRel = GetAdaptersInfo(pIpAdapterInfo, &stSize);
-	//¼ÇÂ¼Íø¿¨ÊıÁ¿
+	//è®°å½•ç½‘å¡æ•°é‡
 	int netCardNum = 0;
 
 	int ipcount = 0;
 
-	//¼ÇÂ¼Ã¿ÕÅÍø¿¨ÉÏµÄIPµØÖ·ÊıÁ¿
+	//è®°å½•æ¯å¼ ç½‘å¡ä¸Šçš„IPåœ°å€æ•°é‡
 	int IPnumPerNetCard = 0;
 	if (ERROR_BUFFER_OVERFLOW == nRel)
 	{
-		//Èç¹ûº¯Êı·µ»ØµÄÊÇERROR_BUFFER_OVERFLOW
-		//ÔòËµÃ÷GetAdaptersInfo²ÎÊı´«µİµÄÄÚ´æ¿Õ¼ä²»¹»,Í¬Ê±Æä´«³östSize,±íÊ¾ĞèÒªµÄ¿Õ¼ä´óĞ¡
-		//ÕâÒ²ÊÇËµÃ÷ÎªÊ²Ã´stSize¼ÈÊÇÒ»¸öÊäÈëÁ¿Ò²ÊÇÒ»¸öÊä³öÁ¿
-		//ÊÍ·ÅÔ­À´µÄÄÚ´æ¿Õ¼ä
+		//å¦‚æœå‡½æ•°è¿”å›çš„æ˜¯ERROR_BUFFER_OVERFLOW
+		//åˆ™è¯´æ˜GetAdaptersInfoå‚æ•°ä¼ é€’çš„å†…å­˜ç©ºé—´ä¸å¤Ÿ,åŒæ—¶å…¶ä¼ å‡ºstSize,è¡¨ç¤ºéœ€è¦çš„ç©ºé—´å¤§å°
+		//è¿™ä¹Ÿæ˜¯è¯´æ˜ä¸ºä»€ä¹ˆstSizeæ—¢æ˜¯ä¸€ä¸ªè¾“å…¥é‡ä¹Ÿæ˜¯ä¸€ä¸ªè¾“å‡ºé‡
+		//é‡Šæ”¾åŸæ¥çš„å†…å­˜ç©ºé—´
 		delete pIpAdapterInfo;
-		//ÖØĞÂÉêÇëÄÚ´æ¿Õ¼äÓÃÀ´´æ´¢ËùÓĞÍø¿¨ĞÅÏ¢
+		//é‡æ–°ç”³è¯·å†…å­˜ç©ºé—´ç”¨æ¥å­˜å‚¨æ‰€æœ‰ç½‘å¡ä¿¡æ¯
 		pIpAdapterInfo = (PIP_ADAPTER_INFO)new BYTE[stSize];
-		//ÔÙ´Îµ÷ÓÃGetAdaptersInfoº¯Êı,Ìî³äpIpAdapterInfoÖ¸Õë±äÁ¿
+		//å†æ¬¡è°ƒç”¨GetAdaptersInfoå‡½æ•°,å¡«å……pIpAdapterInfoæŒ‡é’ˆå˜é‡
 		nRel = GetAdaptersInfo(pIpAdapterInfo, &stSize);
 	}
 	if (ERROR_SUCCESS == nRel)
 	{
-		//Êä³öÍø¿¨ĞÅÏ¢
-		//¿ÉÄÜÓĞ¶àÍø¿¨,Òò´ËÍ¨¹ıÑ­»·È¥ÅĞ¶Ï
+		//è¾“å‡ºç½‘å¡ä¿¡æ¯
+		//å¯èƒ½æœ‰å¤šç½‘å¡,å› æ­¤é€šè¿‡å¾ªç¯å»åˆ¤æ–­
 		while (pIpAdapterInfo)
 		{			
 			IP_ADDR_STRING *pIpAddrString = &(pIpAdapterInfo->IpAddressList);
 
 			do
 			{
-				//cout << "¸ÃÍø¿¨ÉÏµÄIPÊıÁ¿£º" << ++IPnumPerNetCard << endl;
-				//cout << "IP µØÖ·£º" << pIpAddrString->IpAddress.String << endl;
-				//cout << "×ÓÍøµØÖ·£º" << pIpAddrString->IpMask.String << endl;
-				//cout << "Íø¹ØµØÖ·£º" << pIpAdapterInfo->GatewayList.IpAddress.String << endl;
+				//cout << "è¯¥ç½‘å¡ä¸Šçš„IPæ•°é‡ï¼š" << ++IPnumPerNetCard << endl;
+				//cout << "IP åœ°å€ï¼š" << pIpAddrString->IpAddress.String << endl;
+				//cout << "å­ç½‘åœ°å€ï¼š" << pIpAddrString->IpMask.String << endl;
+				//cout << "ç½‘å…³åœ°å€ï¼š" << pIpAdapterInfo->GatewayList.IpAddress.String << endl;
 
 				if (strcmp("0.0.0.0", pIpAddrString->IpAddress.String) == 0)
 				{
@@ -193,7 +193,7 @@ int getHostIpAddr(string* strHostIp, unsigned int len)
 		}
 
 	}
-	//ÊÍ·ÅÄÚ´æ¿Õ¼ä
+	//é‡Šæ”¾å†…å­˜ç©ºé—´
 	if (pIpAdapterInfo)
 	{
 		delete pIpAdapterInfo;

@@ -8,6 +8,7 @@
 #include <QMetaType>
 #include <QAbstractItemView>
 #include <QTableWidget>
+#include <QAbstractButton>
 
 namespace Ui {
 class MegaInterface;
@@ -45,7 +46,7 @@ public:
     int visa() const;
 
 signals:
-    void getDeviceInfo(const QString &strDevInfo);
+    void signal_selected_info(const QString &strDevInfo);
 
 private slots:
     void slotChangeDeviceType(int index);
@@ -56,7 +57,7 @@ private slots:
     void soltActionOpen();
     void soltActionClose();
 
-    void on_pushButton_ok_clicked();
+    void on_buttonBox_clicked(QAbstractButton *button);
 
 private:
     Ui::MegaInterface *ui;

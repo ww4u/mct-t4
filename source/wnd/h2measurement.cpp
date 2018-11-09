@@ -16,7 +16,33 @@ H2Measurement::~H2Measurement()
 
 int H2Measurement::setApply()
 {
-//    qDebug() << "H2Measurement:" << mViHandle;
+    int ret = -1;
+    qDebug() << "H2Measurement:" << mViHandle << mRobotName.toInt();
+
+#if 0
+    //ZeroPoint=[0,1,2,3]
+    char value = ui->comboBox_AxesZeroPoint->currentIndex();
+    ret = mrhtRobotProjectzero(mViHandle, mRobotName.toInt(), &value);
+
+    //ProjectZeroPointX=0.00
+
+
+    //ProjectZeroPointY=0.00
+
+
+    //SWLimitPositiveX=0.00
+
+
+    //SWLimitPositiveY=0.00
+
+
+    //SWLimitNegativeX=0.00
+
+
+    //SWLimitNegativeY=0.00
+
+
+#endif
     return 0;
 }
 
@@ -27,4 +53,6 @@ void H2Measurement::slotChangeCornerPicture(int index)
     strPixmap += ".PNG";
 
     ui->label_picture->setPixmap(QPixmap(strPixmap));
+    emit signal_AxesZeroPoint_currentTextChanged(ui->comboBox_AxesZeroPoint->currentText());
 }
+

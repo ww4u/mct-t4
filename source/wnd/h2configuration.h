@@ -18,17 +18,14 @@ public:
 
 protected slots:
     void slotOnModelChanged();
-    void slotSelectSize(QString text);
-
-private slots:
-    void slotShowConfigPicture(bool bl);
-    void slotUserDefinedStrokeX(QString text);
-    void slotUserDefinedStrokeY(QString text);
+    void slotSelectSize(int index);
 
 private:
     Ui::H2Configuration *ui;
-    void selectSize10();
-    void selectSize30();
+    int m_size;
+    int m_WorkStrokeX;
+    int m_WorkStrokeY;
+    int m_MotorPosition;
 };
 
 #endif // FORMTEST_H

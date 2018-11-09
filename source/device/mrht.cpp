@@ -5790,7 +5790,6 @@ int mrhtRobotName_Query(int inst, char* name,int len)
     char as8FmtCmd[100] = {0};
     char* ps8name = name;
 
-
     sprintf(as8FmtCmd, ":ROBOT:NAMe?");
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8name, len) == 0)
     {

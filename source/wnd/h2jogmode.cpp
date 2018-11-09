@@ -17,6 +17,18 @@ H2JogMode::~H2JogMode()
 
 int H2JogMode::setApply()
 {
-    qDebug() << "H2JogMode:" << mViHandle;
+//    qDebug() << "H2JogMode:" << mViHandle << mRobotName.toInt();
+#if 0
+
+    //CrawlingVelocity=10.00
+
+
+    //CrawlingTime=1000
+
+
+    //MaximumVelocity=50.00
+
+
+#endif
     return 0;
 }

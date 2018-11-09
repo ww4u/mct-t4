@@ -37,7 +37,10 @@
         <file>image/icon/usb.ico</file>
         <file>image/icon/arrow-left-2.png</file>
         <file>image/icon/arrow-right-2.png</file>
-        <file>image/product.png</file>
         <file>image/h2configuration/size_bottom.png</file>
+        <file>image/h2product/offline.png</file>
+        <file>image/h2product/online.png</file>
+        <file>image/h2product/product.png</file>
+        <file>image/icon/201.png</file>
     </qresource>
 </RCC>

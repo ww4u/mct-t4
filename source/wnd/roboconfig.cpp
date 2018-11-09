@@ -29,11 +29,17 @@ RoboConfig::~RoboConfig()
 
 void RoboConfig::slotAddNewRobot(QString strDevInfo)
 {
-//    qDebug() << "slotAddNewRobot" << strDevInfo;
+    if(m_strListDevInfo.contains(strDevInfo))
+    {
+        QMessageBox::information(this,tr("tips"),tr("The Device Added Already"));
+        return;
+    }
 
+    qDebug() << "slotAddNewRobot" << strDevInfo;
     H2Robo *pRobo = new H2Robo( ui->stackedWidget, strDevInfo );
     mRobos.insert(mRobos.count(), pRobo);
     mVisas.insert(mVisas.count(), 0);
+    m_strListDevInfo.insert(m_strListDevInfo.count(), strDevInfo);
 
     m_pRootNode->addChild( pRobo->roboNode() );
     ui->treeWidget->setCurrentItem(m_pRootNode->child(mRobos.count()-1));
@@ -48,22 +54,13 @@ void RoboConfig::slotAddNewRobot(QString strDevInfo)
 
 int RoboConfig::setApply()
 {
+    if(mIndex < 0) return -1;
     if(mVisas[mIndex] != 0)
     {
-#if 0 //for all robot
-        XConfig *pCfg;
-        for ( int i = 0; i < ui->stackedWidget->count(); i++ )
-        {
-            pCfg = (XConfig*)ui->stackedWidget->widget( i );
-            pCfg->setApply();
-        }
-#else //for current robot
         foreach (XConfig *pCfg, ((H2Robo *)mRobos[mIndex])->subConfigs()){
             pCfg->setApply();
         }
-#endif
-    }else
-    {
+    }else{
         QMessageBox::information(this,tr("tips"),"Current Device In Offline");
     }
     return 0;
@@ -75,6 +72,7 @@ int RoboConfig::setReset()
 
     return 0;
 }
+
 int RoboConfig::setOK()
 {
     //! setApply
@@ -108,9 +106,6 @@ void RoboConfig::on_buttonBox_clicked(QAbstractButton *button)
 
 void RoboConfig::slot_current_changed( QTreeWidgetItem* cur,QTreeWidgetItem* prv )
 {
-
-//    ui->treeWidget->topLevelItem(1)->child(0)->text(0);
-
     if ( cur == NULL )
     { return; }
 
@@ -139,22 +134,23 @@ void RoboConfig::slot_current_changed( QTreeWidgetItem* cur,QTreeWidgetItem* prv
 
 void RoboConfig::slot_open_close(QString strIP)
 {
+    H2Robo *pRobo = (H2Robo *)(mRobos.at(mIndex));
+    H2Product *pProduct = (H2Product *)(pRobo->subConfigs().at(0));
+
     if(mVisas[mIndex] == 0)
     {
         int ret = deviceOpen(strIP);
-        if(ret > 0)
-        {
-            mVisas[mIndex] = ret;
-            ((H2Robo *)(mRobos.at(mIndex)))->pProduct()->change_online_status(true);
+        if(ret > 0){
+            pProduct->change_online_status(true);
         }
-        qDebug() << "device open" << strIP << mVisas[mIndex] << ret;
+        else{
+            QMessageBox::information(this,tr("tips"),tr("Device Open Failure!!!"));
+        }
     }
     else
     {
-        int ret = deviceClose();
-        mVisas[mIndex] = 0;
-        ((H2Robo *)(mRobos.at(mIndex)))->pProduct()->change_online_status(false);
-        qDebug() << "device close" << strIP << mVisas[mIndex] << ret;
+        deviceClose();
+        pProduct->change_online_status(false);
     }
 }
 
@@ -164,12 +160,18 @@ int RoboConfig::deviceOpen(QString strIP)
     if(visa <= 0)
     {    return -1; }
 
-    mrhtSystemIdentify(mVisas[mIndex], 1);
+    char sName[8] = "";
+    int ret = mrhtRobotName_Query(visa, sName, sizeof(sName));
+    if(ret < 0) return -1;
 
     foreach (XConfig *pCfg, ((H2Robo *)mRobos[mIndex])->subConfigs()){
-        qDebug() << pCfg << visa;
-        pCfg->attachHandle( visa );
+        pCfg->attachHandle( visa, QString("%1").arg(sName));
     }
+    mVisas[mIndex] = visa;
+
+    qDebug() << "device open" << strIP << mVisas[mIndex];
+    mrhtSystemIdentify(mVisas[mIndex], 1);
+
     return visa;
 }
 
@@ -178,9 +180,11 @@ int RoboConfig::deviceClose()
     mrhtSystemIdentify(mVisas[mIndex], 0);
     int ret = mrhtCloseDevice(mVisas[mIndex]);
 
+    qDebug() << "device close" << mVisas[mIndex] << ret;
+
     foreach (XConfig *pCfg, ((H2Robo *)mRobos[mIndex])->subConfigs()){
         pCfg->detachHandle();
     }
-
+    mVisas[mIndex] = 0;
     return ret;
 }

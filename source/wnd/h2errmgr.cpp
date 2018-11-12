@@ -41,7 +41,7 @@ H2ErrMgr::~H2ErrMgr()
 
 int H2ErrMgr::setApply()
 {
-//    qDebug() << "H2ErrMgr:" << mViHandle << mRobotName.toInt();
+//    qDebug() << "H2ErrMgr:" << mViHandle << mRobotName;
     return 0;
 }
 

@@ -39,6 +39,7 @@ void RoboConfig::slotAddNewRobot(QString strDevInfo)
     H2Robo *pRobo = new H2Robo( ui->stackedWidget, strDevInfo );
     mRobos.insert(mRobos.count(), pRobo);
     mVisas.insert(mVisas.count(), 0);
+    mRoboNames.insert(mRoboNames.count(), 0);
     m_strListDevInfo.insert(m_strListDevInfo.count(), strDevInfo);
 
     m_pRootNode->addChild( pRobo->roboNode() );
@@ -114,10 +115,13 @@ void RoboConfig::slot_current_changed( QTreeWidgetItem* cur,QTreeWidgetItem* prv
     {   index = m_pRootNode->indexOfChild(cur->parent()); }
 
     if(-1 != index)
-    {   mIndex = index; }
+    {
+        mIndex = index;
+        if(0 != mVisas[mIndex])
+        {   emit signalCurrentRobotChanged(mVisas[mIndex], mRoboNames[mIndex]); }
+    }
 
-    qDebug() << "slot_current_changed"
-             << cur->text(0) << index;
+    qDebug() << "slot_current_changed" << cur->text(0) << index;
 
     QVariant var;
     QObject *pObj;
@@ -161,17 +165,20 @@ int RoboConfig::deviceOpen(QString strIP)
     {    return -1; }
 
     char sName[8] = "";
+    bool bl = false;
     int ret = mrhtRobotName_Query(visa, sName, sizeof(sName));
-    if(ret < 0) return -1;
+    int iName = QString("%1").arg(sName).toInt(&bl);
+    if((ret < 0) || (bl == false))
+    {   return -1;  }
 
-    foreach (XConfig *pCfg, ((H2Robo *)mRobos[mIndex])->subConfigs()){
-        pCfg->attachHandle( visa, QString("%1").arg(sName));
-    }
+    foreach (XConfig *pCfg, ((H2Robo *)mRobos[mIndex])->subConfigs())
+    {    pCfg->attachHandle( visa, iName);  }
+
+    mrhtSystemIdentify(visa, 1);
+
+    qDebug() << "device open" << strIP << visa;
     mVisas[mIndex] = visa;
-
-    qDebug() << "device open" << strIP << mVisas[mIndex];
-    mrhtSystemIdentify(mVisas[mIndex], 1);
-
+    mRoboNames[mIndex] = iName;
     return visa;
 }
 
@@ -182,9 +189,10 @@ int RoboConfig::deviceClose()
 
     qDebug() << "device close" << mVisas[mIndex] << ret;
 
-    foreach (XConfig *pCfg, ((H2Robo *)mRobos[mIndex])->subConfigs()){
-        pCfg->detachHandle();
-    }
+    foreach (XConfig *pCfg, ((H2Robo *)mRobos[mIndex])->subConfigs())
+    {    pCfg->detachHandle();  }
+
     mVisas[mIndex] = 0;
+    mRoboNames[mIndex] = 0;
     return ret;
 }

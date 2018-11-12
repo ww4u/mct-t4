@@ -69,6 +69,8 @@ void MainWindow::setupWorkArea()
     connect( m_pOps, SIGNAL(signal_focus_in( const QString &)),
              this, SLOT(slot_focus_in(const QString &)) );
 
+    connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(int,int)),m_pOps,SLOT(slotSetCurrentRobot(int,int)));//shizhong
+
     ui->menuView->addAction( m_pDockOps->toggleViewAction() );
 
     //! help

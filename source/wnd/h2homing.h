@@ -19,9 +19,15 @@ public:
 public slots:
     void slot_set_direction(QString text);
 
+protected slots:
+    void slotOnModelChanged();
+
 private:
     Ui::H2Homing *ui;
-    QString m_strDirXtoY;
+
+    double m_SearchVelocity;
+    double m_Acceleration  ;
+    double m_ForceLimit    ;
 };
 
 #endif // H2HOMING_H

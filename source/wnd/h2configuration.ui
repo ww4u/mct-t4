@@ -138,7 +138,7 @@
          </font>
         </property>
         <property name="text">
-         <string>MRX-H2</string>
+         <string>label</string>
         </property>
        </widget>
       </item>

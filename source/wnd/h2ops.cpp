@@ -137,6 +137,14 @@ void H2Ops::outError( const QString &str )
     ui->lstLogout->addItem( pItem );
 }
 
+void H2Ops::slotSetCurrentRobot(int visa, int name)
+{
+    m_ViHandle = visa;
+    m_RoboName = name;
+
+    qDebug() << "H2OPS:" << m_ViHandle << m_RoboName;
+}
+
 void H2Ops::slot_logSelectAll_action()
 {
     ui->lstLogout->selectAll();
@@ -157,6 +165,7 @@ void H2Ops::slot_logCopy_action()
     QClipboard *clipboard = QGuiApplication::clipboard();
     clipboard->setText( str );
 }
+
 void H2Ops::slot_logClear_action()
 { logDbg();
     ui->lstLogout->clear();
@@ -185,10 +194,8 @@ void H2Ops::on_btnUp_clicked()
 
     //! exchange
     m_pDebugModel->items()->insert( ui->tvDebug->currentIndex().row() - 1, pItem );
-    m_pDebugModel->signal_dataChanged(
-                                        m_pDebugModel->index( ui->tvDebug->currentIndex().row()-1, 0 ),
-                                        m_pDebugModel->index( ui->tvDebug->currentIndex().row(), 1 )
-                );
+    m_pDebugModel->signal_dataChanged(m_pDebugModel->index( ui->tvDebug->currentIndex().row()-1, 0 ),
+                                      m_pDebugModel->index( ui->tvDebug->currentIndex().row(), 1 ));
 
     ui->tvDebug->setCurrentIndex( prev );
 

@@ -21,9 +21,18 @@ signals:
 
 protected slots:
     void slotChangeCornerPicture(int index);
+    void slotOnModelChanged();
 
 private:
     Ui::H2Measurement *ui;
+
+    int m_ZeroPoint        ;
+    double m_ProjectZeroPointX;
+    double m_ProjectZeroPointY;
+    double m_SWLimitPositiveX ;
+    double m_SWLimitPositiveY ;
+    double m_SWLimitNegativeX ;
+    double m_SWLimitNegativeY ;
 };
 
 #endif // H2MEASUREMENT_H

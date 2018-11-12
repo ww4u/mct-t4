@@ -20,16 +20,14 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    static void requestLogout( const QString &str, log_level lev );
-protected:
-    static MainWindow *_pBackendProxy;
-
-public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    static void requestLogout( const QString &str, log_level lev );
 
 protected:
+    static MainWindow *_pBackendProxy;
+
     void setupWorkArea();
     void setupToolBar();
     void setupStatusBar();

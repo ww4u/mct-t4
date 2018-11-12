@@ -3,17 +3,15 @@
 
 H2Homing::H2Homing(QWidget *parent) :
     XConfig(parent),
-    ui(new Ui::H2Homing),
-    m_strDirXtoY(tr("First in direction of X,then Y"))
+    ui(new Ui::H2Homing)
 {
     ui->setupUi(this);
 
     setName( "homing" );
 
-    ui->comboBox_target->addItem("Block");
-
-    ui->comboBox_movement->addItem(m_strDirXtoY);
-
+    connect(ui->doubleSpinBox_SearchVelocity,SIGNAL(valueChanged(double)), this, SLOT(slotOnModelChanged()));
+    connect(ui->doubleSpinBox_Acceleration,  SIGNAL(valueChanged(double)), this, SLOT(slotOnModelChanged()));
+    connect(ui->doubleSpinBox_ForceLimit,    SIGNAL(valueChanged(double)), this, SLOT(slotOnModelChanged()));
 }
 
 H2Homing::~H2Homing()
@@ -23,7 +21,7 @@ H2Homing::~H2Homing()
 
 int H2Homing::setApply()
 {
-//    qDebug() << "H2Homing:" << mViHandle << mRobotName.toInt();
+//    qDebug() << "H2Homing:" << mViHandle << mRobotName;
 #if 0
     //SearchVelocity=50.00
 
@@ -40,6 +38,17 @@ int H2Homing::setApply()
 void H2Homing::slot_set_direction(QString text)
 {
     ui->label_direction->setText(text);
+}
+
+void H2Homing::slotOnModelChanged()
+{
+    m_SearchVelocity = ui->doubleSpinBox_SearchVelocity->value();
+    m_Acceleration   = ui->doubleSpinBox_Acceleration->value();
+    m_ForceLimit     = ui->doubleSpinBox_ForceLimit->value();
+
+//    qDebug() << m_SearchVelocity;
+//    qDebug() << m_Acceleration  ;
+//    qDebug() << m_ForceLimit    ;
 }
 
 

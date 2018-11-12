@@ -22,10 +22,11 @@ protected slots:
 
 private:
     Ui::H2Configuration *ui;
-    int m_size;
-    int m_WorkStrokeX;
-    int m_WorkStrokeY;
-    int m_MotorPosition;
+    QString m_Family;
+    int     m_Size;
+    int     m_WorkStrokeX;
+    int     m_WorkStrokeY;
+    int     m_MotorPosition;
 };
 
 #endif // FORMTEST_H

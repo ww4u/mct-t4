@@ -9,16 +9,16 @@ H2Configuration::H2Configuration(QWidget *parent) :
 
     setName( "config" );
 
+    ui->label_family->setText("MRX-H2");
+
     connect(ui->sizeComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(slotSelectSize(int)));
 
-    connect( ui->sizeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slotOnModelChanged()));
-    connect( ui->spinBox_X, SIGNAL(valueChanged(QString)), this, SLOT(slotOnModelChanged()));
-    connect( ui->spinBox_Y, SIGNAL(valueChanged(QString)), this, SLOT(slotOnModelChanged()));
-    connect( ui->radioButton_b, SIGNAL(toggled(bool)), this, SLOT(slotOnModelChanged()));
-    connect( ui->radioButton_t, SIGNAL(toggled(bool)), this, SLOT(slotOnModelChanged()));
+    connect( ui->sizeComboBox,  SIGNAL(currentIndexChanged(int)),   this, SLOT(slotOnModelChanged()));
+    connect( ui->spinBox_X,     SIGNAL(valueChanged(QString)),      this, SLOT(slotOnModelChanged()));
+    connect( ui->spinBox_Y,     SIGNAL(valueChanged(QString)),      this, SLOT(slotOnModelChanged()));
+    connect( ui->radioButton_b, SIGNAL(toggled(bool)),              this, SLOT(slotOnModelChanged()));
 
     slotSelectSize(0);
-    slotOnModelChanged();
 }
 
 H2Configuration::~H2Configuration()
@@ -28,27 +28,27 @@ H2Configuration::~H2Configuration()
 
 void H2Configuration::slotOnModelChanged()
 {
+    m_Family = ui->label_family->text();
+
     QString model = QString("%1-%2")
-            .arg(ui->label_family->text())
+            .arg(m_Family)
             .arg(ui->sizeComboBox->currentText());
 
-    QString str = ui->spinBox_X->text().left(ui->spinBox_X->text().length()-2);
-    m_WorkStrokeX = str.toInt();
+    m_WorkStrokeX = ui->spinBox_X->value();
     model += "-";
-    model += str;
+    model += QString::number(m_WorkStrokeX);
 
-    str = ui->spinBox_Y->text().left(ui->spinBox_Y->text().length()-2);
-    m_WorkStrokeY = str.toInt();
+    m_WorkStrokeY = ui->spinBox_Y->value();
     model += "-";
-    model += str;
+    model += QString::number(m_WorkStrokeY);
 
     if(ui->sizeComboBox->currentIndex() == 0) //small
     {
         model += "-GF";
-        m_size = 0;
+        m_Size = 0;
     }else{ //big
         model += "-KF";
-        m_size = 1;
+        m_Size = 1;
     }
 
     if(ui->radioButton_b->isChecked()){
@@ -60,6 +60,12 @@ void H2Configuration::slotOnModelChanged()
     }
 
     ui->label_model->setText(model);
+
+//    qDebug() << "m_Family      " << m_Family;
+//    qDebug() << "m_Size        " << m_Size;
+//    qDebug() << "m_WorkStrokeX " << m_WorkStrokeX;
+//    qDebug() << "m_WorkStrokeY " << m_WorkStrokeY;
+//    qDebug() << "m_MotorPosition" << m_MotorPosition;
 }
 
 void H2Configuration::slotSelectSize(int index)
@@ -89,7 +95,7 @@ void H2Configuration::slotSelectSize(int index)
 
 int H2Configuration::setApply()
 {
-    qDebug() << "H2Configuration:" << mViHandle << mRobotName.toInt();
+    qDebug() << "H2Configuration:" << mViHandle << mRobotName;
 
 #if 0
     int ret = -1;
@@ -98,7 +104,7 @@ int H2Configuration::setApply()
 //    qDebug() << strIDN; //MegaRobo Technologies,MRH-T,MRHT000005187U0032,00.00.01.06
 
     //type:0==>small, 1==>big
-    ret = mrhtRobotSubtype(mViHandle, mRobotName.toInt(), m_size);
+    ret = mrhtRobotSubtype(mViHandle, mRobotName, m_size);
 
     //WorkStrokeX
 
@@ -107,7 +113,7 @@ int H2Configuration::setApply()
 
 
     //states:OFF==>bottom, ON==>top
-    ret = mrhtDeviceMrqMotionReverse(mViHandle, mRobotName.toInt(), m_MotorPosition);
+    ret = mrhtDeviceMrqMotionReverse(mViHandle, mRobotName, m_MotorPosition);
 
 #endif
     return 0;

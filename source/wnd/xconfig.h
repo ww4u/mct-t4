@@ -21,7 +21,7 @@ public:
 
 public:
     virtual int setApply();
-    int attachHandle( int handle, QString robotName);
+    int attachHandle( int handle, int robotName);
     int detachHandle();
 
 protected:
@@ -33,7 +33,7 @@ signals:
 protected:
     QString mName;
     int mViHandle;
-    QString mRobotName;
+    int mRobotName;
 };
 
 #endif // XCONFIG_H

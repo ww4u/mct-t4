@@ -18,6 +18,9 @@ public:
     explicit RoboConfig(QWidget *parent = 0);
     ~RoboConfig();
 
+signals:
+    void signalCurrentRobotChanged(int,int);
+
 public slots:
     void slotAddNewRobot(QString strDevInfo );
 
@@ -40,6 +43,7 @@ private:
     QTreeWidgetItem *m_pRootNode;
     QList<XRobo*> mRobos;
     QList<int> mVisas;
+    QList<int> mRoboNames;
     int mIndex;
 
     int deviceOpen(QString strIP);

@@ -23,7 +23,7 @@ H2Action::~H2Action()
 
 int H2Action::setApply()
 {
-//    qDebug() << "H2Action:" << mViHandle << mRobotName.toInt();
+//    qDebug() << "H2Action:" << mViHandle << mRobotName;
     return 0;
 }
 

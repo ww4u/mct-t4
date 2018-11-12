@@ -25,20 +25,14 @@ public:
     explicit H2Ops(QWidget *parent = 0);
     ~H2Ops();
 
-protected:
-    void setupUi();
-    void setupName();
-    void setupModel();
-
-    void buildConnection();
-
-public:
     void outConsole( const QString &str, log_level e );
     void outInfo( const QString &str );
     void outWarning( const QString &str );
-    void outError( const QString &str );    
+    void outError( const QString &str );
 
-protected Q_SLOTS:
+public slots:
+    void slotSetCurrentRobot(int visa, int name);
+
     void slot_logSelectAll_action();
     void slot_logCopy_action();
     void slot_logClear_action();
@@ -68,6 +62,12 @@ private slots:
 
     void on_tabWidget_tabBarClicked(int index);
 
+protected:
+    void setupUi();
+    void setupName();
+    void setupModel();
+    void buildConnection();
+
 private:
     Ui::H2Ops *ui;
 
@@ -84,6 +84,9 @@ private:
 
     //! debug
     DebugModel *m_pDebugModel;
+
+    int m_ViHandle;
+    int m_RoboName;
 };
 
 #endif // H2OPS_H

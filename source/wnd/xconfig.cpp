@@ -15,7 +15,7 @@ QString XConfig::name()
 int XConfig::setApply()
 { return 0; }
 
-int XConfig::attachHandle(int handle , QString robotName)
+int XConfig::attachHandle(int handle , int robotName)
 {
     mViHandle = handle;
     mRobotName = robotName;

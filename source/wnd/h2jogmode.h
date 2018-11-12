@@ -16,8 +16,15 @@ public:
     ~H2JogMode();
     int setApply();
 
+protected slots:
+    void slotOnModelChanged();
+
 private:
     Ui::H2JogMode *ui;
+
+    double m_CrawlingVelocity;
+    double m_CrawlingTime    ;
+    double m_MaximumVelocity ;
 };
 
 #endif // H2JOGMODE_H

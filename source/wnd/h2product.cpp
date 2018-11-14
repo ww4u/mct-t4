@@ -12,16 +12,10 @@ H2Product::H2Product(QString strDevInfo, QWidget *parent) :
     setName( "product" );
 
     QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
-    if(strListDev.count() == 0)
-    {   return;     }
-    if(strListDev.count() > 0)
-    {   this->m_IP = strListDev.at(0);    }
-    if(strListDev.count() > 2)
-    {   this->m_Type = strListDev.at(2);    }
-    if(strListDev.count() > 3)
-    {   this->m_SN = strListDev.at(3);    }
-    if(strListDev.count() > 4)
-    {   this->m_Version = strListDev.at(4);    }
+    this->m_IP      = strListDev.at(0);
+    this->m_Type    = strListDev.at(2);
+    this->m_SN      = strListDev.at(3);
+    this->m_Version = strListDev.at(4);
 
     ui->label_ip->setText(this->m_IP);
     ui->label_sn->setText(this->m_SN);
@@ -43,6 +37,11 @@ int H2Product::setApply()
 //    ret = mrhtIdn_Query(mViHandle,strIDN,sizeof(strIDN));
 //    qDebug() << "H2Product" << m_IP << mViHandle << strIDN;
     return 0;
+}
+
+void H2Product::loadXmlConfig()
+{
+
 }
 
 void H2Product::change_online_status(bool bl)

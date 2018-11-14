@@ -1,29 +1,25 @@
 #include "h2robo.h"
 
-#define new_widget( type, var, title, icon ) do{\
+#define new_widget( type, var, title, icon ) \
+do{ \
     var = new type;\
     Q_ASSERT( NULL != var ); \
-    QTreeWidgetItem *plwItem = new QTreeWidgetItem();\
+    QTreeWidgetItem *plwItem = new QTreeWidgetItem();   \
     Q_ASSERT( NULL != plwItem ); \
     plwItem->setText( 0, title ); \
     plwItem->setIcon( 0, QIcon( icon) ); \
     plwItem->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(var) ) ); \
     m_pRoboNode->addChild(plwItem); \
-    mSubConfigs.append( var );\
-    pWig->addWidget( var ); \
+    mSubConfigs.append( var );  \
+    pWig->addWidget( var );     \
 }while(0)
 
 H2Robo::H2Robo(QStackedWidget *pWig, QString strDevInfo, QObject *pObj ) : XRobo( pWig, pObj )
 {
     Q_ASSERT( NULL != pWig );
-    QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
-    QString strDeviceName;
-    if(strListDev.count() == 0)
-    {   return;     }
-    if(strListDev.count() > 2)
-    {   strDeviceName = strListDev.at(2) + "[" + strListDev.at(0) + "]";    }
-    else
-    {   strDeviceName = strListDev.at(0);    }
+
+    QString strDeviceName = getDeviceName(strDevInfo);
+    if("" == strDeviceName) return;
 
     //! roboNode
     m_pProduct = new H2Product(strDevInfo);
@@ -92,4 +88,10 @@ void H2Robo::buildConnection()
 QList<XConfig *> H2Robo::subConfigs() const
 {
     return mSubConfigs;
+}
+
+QString H2Robo::getDeviceName(QString strDevInfo)
+{
+    QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
+    return strListDev.at(2) + "[" + strListDev.at(0) + "]";
 }

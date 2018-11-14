@@ -32,7 +32,32 @@ int H2Homing::setApply()
     //ForceLimit=75.0
 
 #endif
+
+    MegaXML mXML;
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QMap<QString,QString> map;
+
+    map.insert("SearchVelocity", QString::number(m_SearchVelocity,10,2));
+    map.insert("Acceleration", QString::number(m_Acceleration,10,2));
+    map.insert("ForceLimit", QString::number(m_ForceLimit,10,2));
+
+    mXML.xmlNodeRemove(fileName,"H2Homing");
+    mXML.xmlNodeAppend(fileName, "H2Homing", map);
+
     return 0;
+}
+
+void H2Homing::loadXmlConfig()
+{
+    //! load xml
+    MegaXML mXML;
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QMap<QString,QString> map = mXML.xmlRead(fileName);
+    if(map.isEmpty()) return;
+
+    ui->doubleSpinBox_SearchVelocity->setValue(map["SearchVelocity"].toDouble());
+    ui->doubleSpinBox_Acceleration->setValue(map["Acceleration"].toDouble());
+    ui->doubleSpinBox_ForceLimit->setValue(map["ForceLimit"].toDouble());
 }
 
 void H2Homing::slot_set_direction(QString text)

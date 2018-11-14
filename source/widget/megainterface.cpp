@@ -26,7 +26,6 @@ MegaInterface::MegaInterface(QWidget *parent) :
     ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tableView, SIGNAL(customContextMenuRequested(const QPoint&)),
             this, SLOT(slotShowContextmenu(const QPoint&)));
-
 }
 
 MegaInterface::~MegaInterface()
@@ -72,11 +71,11 @@ void MegaInterface::slotScanFinished()
 
 void MegaInterface::insertOneRow(QString str)
 {
-#if 0
+//#if 1
 //    QStringList strListHeader;
 //    strListHeader << "IP" << "Manufacturer" << "Type" << "SN" << "Version";
 //    m_model->setHorizontalHeaderLabels(strListHeader);
-#endif
+//#endif
 
     int maxRow = m_model->rowCount();
     QStringList strListInfo = str.split(',', QString::SkipEmptyParts);
@@ -160,7 +159,10 @@ void MegaInterface::on_buttonBox_clicked(QAbstractButton *button)
             strDevInfo += m_model->data(modelList.at(i),Qt::DisplayRole).toString();
             strDevInfo += ",";
         }
-        emit signal_selected_info(strDevInfo);
+        if(strDevInfo.split(",").count() >= 5)
+        {
+            emit signal_selected_info(strDevInfo);
+        }
     }
     else
     {}

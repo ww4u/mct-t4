@@ -40,13 +40,12 @@ Q_SIGNALS:
 protected Q_SLOTS:
     void slot_post_startup();
     void slot_logout( const QString &str, log_level lev = e_log_info );
-
     void slot_focus_in( const QString &name );
-
     void slot_action_search();
 
 private slots:
     void on_actionAbout_triggered();
+    void slotSetDockOpsName(QString strDevInfo,int visa,int name);
 
 private:
     Ui::MainWindow *ui;

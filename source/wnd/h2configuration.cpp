@@ -26,6 +26,30 @@ H2Configuration::~H2Configuration()
     delete ui;
 }
 
+void H2Configuration::loadXmlConfig()
+{
+    //! load xml
+    MegaXML mXML;
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QMap<QString,QString> map = mXML.xmlRead(fileName);
+    if(map.isEmpty()) return;
+
+    ui->label_family->setText(map["Family"]);
+    ui->sizeComboBox->setCurrentIndex(map["Size"].toInt());
+    ui->spinBox_X->setValue(map["WorkStrokeX"].toInt());
+    ui->spinBox_Y->setValue(map["WorkStrokeY"].toInt());
+
+    if(map["MotorPosition"].toInt() == 0)
+    {
+        ui->radioButton_b->setChecked(true);
+        ui->radioButton_t->setChecked(false);
+    }
+    else{
+        ui->radioButton_b->setChecked(false);
+        ui->radioButton_t->setChecked(true);
+    }
+}
+
 void H2Configuration::slotOnModelChanged()
 {
     m_Family = ui->label_family->text();
@@ -60,12 +84,6 @@ void H2Configuration::slotOnModelChanged()
     }
 
     ui->label_model->setText(model);
-
-//    qDebug() << "m_Family      " << m_Family;
-//    qDebug() << "m_Size        " << m_Size;
-//    qDebug() << "m_WorkStrokeX " << m_WorkStrokeX;
-//    qDebug() << "m_WorkStrokeY " << m_WorkStrokeY;
-//    qDebug() << "m_MotorPosition" << m_MotorPosition;
 }
 
 void H2Configuration::slotSelectSize(int index)
@@ -95,7 +113,7 @@ void H2Configuration::slotSelectSize(int index)
 
 int H2Configuration::setApply()
 {
-    qDebug() << "H2Configuration:" << mViHandle << mRobotName;
+//    qDebug() << "H2Configuration:" << mViHandle << mRobotName;
 
 #if 0
     int ret = -1;
@@ -116,5 +134,17 @@ int H2Configuration::setApply()
     ret = mrhtDeviceMrqMotionReverse(mViHandle, mRobotName, m_MotorPosition);
 
 #endif
+
+    MegaXML mXML;
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QMap<QString,QString> map;
+    map.insert( "Family", m_Family);
+    map.insert( "Size", QString::number(m_Size));
+    map.insert( "WorkStrokeX", QString::number(m_WorkStrokeX));
+    map.insert( "WorkStrokeY", QString::number(m_WorkStrokeY));
+    map.insert( "MotorPosition", QString::number(m_MotorPosition));
+    mXML.xmlNodeRemove(fileName,"H2Configuration");
+    mXML.xmlNodeAppend(fileName, "H2Configuration", map);
+
     return 0;
 }

@@ -15,6 +15,12 @@ QString XConfig::name()
 int XConfig::setApply()
 { return 0; }
 
+void XConfig::loadXmlConfig()
+{}
+
+void XConfig::slotOnModelChanged()
+{}
+
 int XConfig::attachHandle(int handle , int robotName)
 {
     mViHandle = handle;
@@ -32,4 +38,14 @@ void XConfig::focusInEvent(QFocusEvent *event)
 {
     QWidget::focusInEvent( event );
     emit signal_focus_in( mName );
+}
+
+QString XConfig::projectName() const
+{
+    return mProjectName;
+}
+
+void XConfig::setProjectName(const QString &projectName)
+{
+    mProjectName = projectName;
 }

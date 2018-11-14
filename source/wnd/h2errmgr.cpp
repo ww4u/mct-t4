@@ -45,6 +45,11 @@ int H2ErrMgr::setApply()
     return 0;
 }
 
+void H2ErrMgr::loadXmlConfig()
+{
+
+}
+
 void H2ErrMgr::setModel( ErrMgrModel *pModel )
 {
     Q_ASSERT( NULL != pModel );

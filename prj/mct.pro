@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui charts
+QT       += core gui charts xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -48,6 +48,7 @@ SOURCES += \
     ../source/widget/megamessagebox.cpp \
     ../source/wnd/h2status.cpp \
     ../source/sys/sysapi.cpp \
+    ../source/sys/megaxml.cpp \
     ../source/widget/megasplinechart.cpp \
     ../source/model/diagnosisitem.cpp \
     ../source/model/diagnosismodel.cpp \
@@ -72,6 +73,7 @@ SOURCES += \
     ../source/wnd/xrobo.cpp \
     ../source/wnd/h2robo.cpp
 
+
 HEADERS += \
         ../source/wnd/mainwindow.h \
     ../source/wnd/h2ops.h \
@@ -86,6 +88,7 @@ HEADERS += \
     ../source/wnd/h2status.h \
     ../source/widget/megamessagebox.h \
     ../source/sys/sysapi.h \
+    ../source/sys/megaxml.h \
     ../source/widget/megasplinechart.h \
     ../source/model/diagnosisitem.h \
     ../source/model/diagnosismodel.h \
@@ -109,6 +112,7 @@ HEADERS += \
     ../source/wnd/roboconfig.h \
     ../source/wnd/xrobo.h \
     ../source/wnd/h2robo.h
+
 
 RESOURCES += ../source/res/res.qrc
 

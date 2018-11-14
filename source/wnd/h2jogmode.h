@@ -15,6 +15,7 @@ public:
     explicit H2JogMode(QWidget *parent = 0);
     ~H2JogMode();
     int setApply();
+    void loadXmlConfig();
 
 protected slots:
     void slotOnModelChanged();

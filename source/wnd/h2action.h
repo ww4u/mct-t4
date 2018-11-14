@@ -17,6 +17,7 @@ public:
     explicit H2Action( QWidget *parent = 0);
     ~H2Action();
     int setApply();
+    void loadXmlConfig();
 
 public:
     void setModel( QAbstractTableModel *pModel );

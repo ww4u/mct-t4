@@ -16,6 +16,7 @@ public:
     explicit H2Product(QString strDevInfo = "", QWidget *parent = 0);
     ~H2Product();
     int setApply();
+    void loadXmlConfig();
     void change_online_status(bool bl);
 
 signals:

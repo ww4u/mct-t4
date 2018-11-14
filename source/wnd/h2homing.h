@@ -15,6 +15,7 @@ public:
     explicit H2Homing(QWidget *parent = 0);
     ~H2Homing();
     int setApply();
+    void loadXmlConfig();
 
 public slots:
     void slot_set_direction(QString text);

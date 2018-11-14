@@ -37,7 +37,32 @@ int H2JogMode::setApply()
 
 
 #endif
+
+    MegaXML mXML;
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QMap<QString,QString> map;
+
+    map.insert("CrawlingVelocity", QString::number(m_CrawlingVelocity,10,2));
+    map.insert("CrawlingTime", QString::number(m_CrawlingTime,10,2));
+    map.insert("MaximumVelocity", QString::number(m_MaximumVelocity,10,2));
+
+    mXML.xmlNodeRemove(fileName,"H2JogMode");
+    mXML.xmlNodeAppend(fileName, "H2JogMode", map);
+
     return 0;
+}
+
+void H2JogMode::loadXmlConfig()
+{
+    //! load xml
+    MegaXML mXML;
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QMap<QString,QString> map = mXML.xmlRead(fileName);
+    if(map.isEmpty()) return;
+
+    ui->doubleSpinBox_CrawlingVelocity->setValue(map["CrawlingVelocity"].toDouble());
+    ui->doubleSpinBox_CrawlingTime->setValue(map["CrawlingTime"].toDouble());
+    ui->doubleSpinBox_MaximumVelocity->setValue(map["MaximumVelocity"].toDouble());
 }
 
 void H2JogMode::slotOnModelChanged()

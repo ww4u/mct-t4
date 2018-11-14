@@ -27,6 +27,11 @@ int H2Action::setApply()
     return 0;
 }
 
+void H2Action::loadXmlConfig()
+{
+
+}
+
 void H2Action::setModel( QAbstractTableModel *pModel )
 {
     ui->tableView->setModel( pModel );

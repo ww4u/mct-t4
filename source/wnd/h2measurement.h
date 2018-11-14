@@ -15,6 +15,7 @@ public:
     explicit H2Measurement(QWidget *parent = 0);
     ~H2Measurement();
     int setApply();
+    void loadXmlConfig();
 
 signals:
     void signal_AxesZeroPoint_currentTextChanged(QString);

@@ -69,7 +69,8 @@ void MainWindow::setupWorkArea()
     connect( m_pOps, SIGNAL(signal_focus_in( const QString &)),
              this, SLOT(slot_focus_in(const QString &)) );
 
-    connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(int,int)),m_pOps,SLOT(slotSetCurrentRobot(int,int)));//shizhong
+    connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int)),m_pOps,SLOT(slotSetCurrentRobot(QString,int,int)));
+    connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int)),this,SLOT(slotSetDockOpsName(QString,int,int)));
 
     ui->menuView->addAction( m_pDockOps->toggleViewAction() );
 
@@ -129,9 +130,7 @@ void MainWindow::slot_focus_in( const QString &name )
 {
 //    logDbg() << name;
 
-    if ( name.length() > 0 )
-    {}
-    else
+    if ( name.length() <= 0 )
     { return; }
 
     if ( m_pHelpPanel == NULL )
@@ -155,6 +154,13 @@ void MainWindow::on_actionAbout_triggered()
 {
     aboutDlg dlg(this);
     dlg.exec();
+}
+
+void MainWindow::slotSetDockOpsName(QString strDevInfo, int visa, int name)
+{
+    QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
+    QString strDeviceName = strListDev.at(2) + "[" + strListDev.at(0) + "]";
+    m_pDockOps->setWindowTitle("Ops: " + strDeviceName);
 }
 
 

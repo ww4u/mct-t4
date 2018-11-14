@@ -30,6 +30,8 @@ public:
     QTreeWidgetItem *roboNode();
     QList<XConfig *> subConfigs() const;
 
+    QString getDeviceName(QString strDevInfo);
+
 protected:
     int loadDataSet();
     void buildConnection();

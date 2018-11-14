@@ -65,16 +65,14 @@ void H2Ops::setupUi()
                                 mSubTabs.append( the );
 void H2Ops::setupName()
 {
-    set_name( ui->tab, "tab");
-    set_name( ui->tab_2, "tab2");
-    set_name( ui->tab_3, "tab3");
-
-    set_name( ui->tab_4, "tab4");
-    set_name( ui->tab_5, "tab5");
-    set_name( ui->tab_6, "tab6");
-    set_name( ui->tab_7, "tab7");
-
-    set_name( ui->Dbg, "tab8");
+    set_name( ui->tab_LogOut,   "tab_LogOut");
+    set_name( ui->tab_Operate,  "tab_Operate");
+    set_name( ui->tab_DigitalIO,"tab_DigitalIO");
+    set_name( ui->tab_Homing,   "tab_Homing");
+    set_name( ui->tab_Manual,   "tab_Manual");
+    set_name( ui->tab_Monitor,  "tab_Monitor");
+    set_name( ui->Debug,        "tab_Debug");
+    set_name( ui->tab_Diagnosis,"tab_Diagnosis");
 }
 
 void H2Ops::setupModel()
@@ -137,12 +135,12 @@ void H2Ops::outError( const QString &str )
     ui->lstLogout->addItem( pItem );
 }
 
-void H2Ops::slotSetCurrentRobot(int visa, int name)
+void H2Ops::slotSetCurrentRobot(QString strDevType, int visa, int name)
 {
     m_ViHandle = visa;
     m_RoboName = name;
 
-    qDebug() << "H2OPS:" << m_ViHandle << m_RoboName;
+//    qDebug() << "H2OPS:" << m_ViHandle << m_RoboName;
 }
 
 void H2Ops::slot_logSelectAll_action()
@@ -340,3 +338,17 @@ void H2Ops::on_tabWidget_tabBarClicked(int index)
     emit signal_focus_in( ui->tabWidget->tabText( index ) );
 }
 
+QString H2Ops::getDeviceTypeName(QString strDevInfo)
+{
+    QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
+    QString strDeviceName = "";
+    if(strListDev.count() == 0)
+    {   return "";     }
+
+    if(strListDev.count() > 2)
+    {   strDeviceName = strListDev.at(2) + "[" + strListDev.at(0) + "]";    }
+    else
+    {   strDeviceName = strListDev.at(0);    }
+
+    return strDeviceName;
+}

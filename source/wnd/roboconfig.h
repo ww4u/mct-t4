@@ -2,35 +2,26 @@
 #define ROBO_CONFIG_H
 
 #include <QtWidgets>
-
+#include "xrobo.h"
 
 namespace Ui {
 class RoboConfig;
 }
 
-#include "xrobo.h"
-
 class RoboConfig : public QWidget
 {
     Q_OBJECT
+
+signals:
+    void signalCurrentRobotChanged(QString,int,int);
+    void signal_focus_in( const QString &);
 
 public:
     explicit RoboConfig(QWidget *parent = 0);
     ~RoboConfig();
 
-signals:
-    void signalCurrentRobotChanged(int,int);
-
 public slots:
     void slotAddNewRobot(QString strDevInfo );
-
-protected:
-    int setApply();
-    int setReset();
-    int setOK();
-
-Q_SIGNALS:
-    void signal_focus_in( const QString &);
 
 private slots:
     void on_buttonBox_clicked(QAbstractButton *button);
@@ -40,15 +31,26 @@ private slots:
 private:
     Ui::RoboConfig *ui;
 
+    class RobotInfo
+    {
+    public:
+        XRobo*  m_Robo;
+        int     m_Visa;
+        int     m_RoboName;
+        QString m_strDevInfo;
+    };
+
     QTreeWidgetItem *m_pRootNode;
-    QList<XRobo*> mRobos;
-    QList<int> mVisas;
-    QList<int> mRoboNames;
+    QList<RobotInfo> m_RobotList;
     int mIndex;
 
-    int deviceOpen(QString strIP);
-    int deviceClose();
-    QStringList m_strListDevInfo;
+    void loadXmlConfig();
+    void createNewRobot(QString strDevInfo);
+    int  deviceOpen(QString strIP);
+    int  deviceClose();
+    int  setApply();
+    int  setReset();
+    int  setOK();
 };
 
 #endif // H2CONFIG_H

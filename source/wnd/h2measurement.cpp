@@ -6,6 +6,8 @@ H2Measurement::H2Measurement(QWidget *parent) :
     ui(new Ui::H2Measurement)
 {
     ui->setupUi(this);
+    m_ZeroPoint = 0;
+
     connect(ui->comboBox_AxesZeroPoint,SIGNAL(currentIndexChanged(int)),this,SLOT(slotChangeCornerPicture(int)));
 
     connect(ui->comboBox_AxesZeroPoint,SIGNAL(currentIndexChanged(int)),this,SLOT(slotOnModelChanged()));
@@ -26,33 +28,60 @@ H2Measurement::~H2Measurement()
 int H2Measurement::setApply()
 {
     int ret = -1;
-    qDebug() << "H2Measurement:" << mViHandle << mRobotName;
+//    qDebug() << "H2Measurement:" << mViHandle << mRobotName;
 
 #if 0
     //ZeroPoint=[0,1,2,3]
-    char value = ui->comboBox_AxesZeroPoint->currentIndex();
-    ret = mrhtRobotProjectzero(mViHandle, mRobotName, &value);
+    int value = ui->comboBox_AxesZeroPoint->currentIndex();
+    ret = mrhtRobotCoordinate(mViHandle, mRobotName, value);
 
     //ProjectZeroPointX=0.00
-
-
     //ProjectZeroPointY=0.00
+    char str[64] = "";
+    ret = mrhtRobotProjectzero(mViHandle, mRobotName, str);
 
 
     //SWLimitPositiveX=0.00
-
-
     //SWLimitPositiveY=0.00
-
-
     //SWLimitNegativeX=0.00
-
-
     //SWLimitNegativeY=0.00
 
-
 #endif
+
+    MegaXML mXML;
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QMap<QString,QString> map;
+
+    map.insert("ZeroPoint"  , QString::number(m_ZeroPoint));
+    map.insert("ProjectZeroPointX"  , QString::number(m_ProjectZeroPointX,10,2));
+    map.insert("ProjectZeroPointY"  , QString::number(m_ProjectZeroPointY,10,2));
+    map.insert("SWLimitPositiveX"  , QString::number(m_SWLimitPositiveX,10,2 ));
+    map.insert("SWLimitPositiveY"  , QString::number(m_SWLimitPositiveY,10,2 ));
+    map.insert("SWLimitNegativeX"  , QString::number(m_SWLimitNegativeX,10,2 ));
+    map.insert("SWLimitNegativeY"  , QString::number(m_SWLimitNegativeY,10,2 ));
+
+    mXML.xmlNodeRemove(fileName,"H2Measurement");
+    mXML.xmlNodeAppend(fileName, "H2Measurement", map);
+
     return 0;
+}
+
+void H2Measurement::loadXmlConfig()
+{
+    //! load xml
+    MegaXML mXML;
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QMap<QString,QString> map = mXML.xmlRead(fileName);
+    if(map.isEmpty()) return;
+
+    ui->comboBox_AxesZeroPoint->setCurrentIndex(map["ZeroPoint"].toInt());
+    ui->doubleSpinBox_pzpX->setValue(map["ProjectZeroPointX"].toDouble());
+    ui->doubleSpinBox_pzpY->setValue(map["ProjectZeroPointY"].toDouble());
+    ui->doubleSpinBox_swlp_X->setValue(map["SWLimitPositiveX"].toDouble());
+    ui->doubleSpinBox_swlp_Y->setValue(map["SWLimitPositiveY"].toDouble());
+    ui->doubleSpinBox_swln_X->setValue(map["SWLimitNegativeX"].toDouble());
+    ui->doubleSpinBox_swln_Y->setValue(map["SWLimitNegativeY"].toDouble());
+
 }
 
 void H2Measurement::slotChangeCornerPicture(int index)

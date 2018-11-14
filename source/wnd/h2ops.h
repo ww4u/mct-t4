@@ -31,7 +31,7 @@ public:
     void outError( const QString &str );
 
 public slots:
-    void slotSetCurrentRobot(int visa, int name);
+    void slotSetCurrentRobot(QString strDevType, int visa, int name);
 
     void slot_logSelectAll_action();
     void slot_logCopy_action();
@@ -87,6 +87,8 @@ private:
 
     int m_ViHandle;
     int m_RoboName;
+
+    QString getDeviceTypeName(QString strDevInfo);
 };
 
 #endif // H2OPS_H

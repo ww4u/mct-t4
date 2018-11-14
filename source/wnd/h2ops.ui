@@ -34,7 +34,7 @@
      <property name="movable">
       <bool>true</bool>
      </property>
-     <widget class="XConfig" name="tab">
+     <widget class="XConfig" name="tab_LogOut">
       <attribute name="title">
        <string>Logout</string>
       </attribute>
@@ -54,7 +54,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="XConfig" name="tab_2">
+     <widget class="XConfig" name="tab_Operate">
       <attribute name="title">
        <string>Operate</string>
       </attribute>
@@ -392,7 +392,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="XConfig" name="tab_3">
+     <widget class="XConfig" name="tab_DigitalIO">
       <attribute name="title">
        <string>Digital IO</string>
       </attribute>
@@ -607,7 +607,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="XConfig" name="tab_7">
+     <widget class="XConfig" name="tab_Homing">
       <attribute name="title">
        <string>Homing</string>
       </attribute>
@@ -771,7 +771,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="XConfig" name="tab_5">
+     <widget class="XConfig" name="tab_Manual">
       <attribute name="title">
        <string>Manual</string>
       </attribute>
@@ -1065,7 +1065,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="XConfig" name="tab_4">
+     <widget class="XConfig" name="tab_Monitor">
       <attribute name="title">
        <string>Monitor</string>
       </attribute>
@@ -1075,7 +1075,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="XConfig" name="Dbg">
+     <widget class="XConfig" name="Debug">
       <attribute name="title">
        <string>Debug</string>
       </attribute>
@@ -1240,7 +1240,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="XConfig" name="tab_6">
+     <widget class="XConfig" name="tab_Diagnosis">
       <attribute name="title">
        <string>Diagnosis</string>
       </attribute>

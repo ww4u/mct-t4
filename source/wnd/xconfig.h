@@ -8,6 +8,7 @@
 #include "lanfinddevice.h"
 #include "visa.h"
 #include "mrht.h"
+#include "megaxml.h"
 
 class XConfig : public QWidget
 {
@@ -19,8 +20,13 @@ public:
     void setName( const QString &name );
     QString name();
 
-public:
+    QString projectName() const;
+    void setProjectName(const QString &projectName);
+
     virtual int setApply();
+    virtual void loadXmlConfig();
+    virtual void slotOnModelChanged();
+
     int attachHandle( int handle, int robotName);
     int detachHandle();
 
@@ -34,6 +40,8 @@ protected:
     QString mName;
     int mViHandle;
     int mRobotName;
+
+    QString mProjectName;
 };
 
 #endif // XCONFIG_H

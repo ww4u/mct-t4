@@ -15,6 +15,7 @@ public:
     explicit H2Configuration(QWidget *parent = nullptr);
     ~H2Configuration();
     int setApply();
+    void loadXmlConfig();
 
 protected slots:
     void slotOnModelChanged();

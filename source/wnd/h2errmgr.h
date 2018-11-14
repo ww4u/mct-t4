@@ -19,6 +19,7 @@ public:
     explicit H2ErrMgr(QWidget *parent = 0);
     ~H2ErrMgr();
     int setApply();
+    void loadXmlConfig();
 
 public:
     void setModel( ErrMgrModel *pModel );

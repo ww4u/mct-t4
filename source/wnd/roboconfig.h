@@ -27,6 +27,9 @@ private slots:
     void on_buttonBox_clicked(QAbstractButton *button);
     void slot_current_changed( QTreeWidgetItem* pre,QTreeWidgetItem* nxt );
     void slot_open_close(QString strIP);
+    void slotShowContextmenu(const QPoint &pos);
+    void soltActionClose();
+    void soltActionDelete();
 
 private:
     Ui::RoboConfig *ui;
@@ -51,6 +54,8 @@ private:
     int  setApply();
     int  setReset();
     int  setOK();
+
+    QMenu *m_menu;
 };
 
 #endif // H2CONFIG_H

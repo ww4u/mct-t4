@@ -12,15 +12,24 @@ RoboConfig::RoboConfig(QWidget *parent) :
     ui->setupUi(this);
 
     mIndex = -1;
+    m_menu = NULL;
 
     m_pRootNode = new QTreeWidgetItem();
     m_pRootNode->setText( 0, tr("Project") );
     ui->treeWidget->addTopLevelItem( m_pRootNode );
 
+    QWidget *pWidget = new QWidget;
+    m_pRootNode->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(pWidget) ) );
+    ui->stackedWidget->addWidget( pWidget );
+
     loadXmlConfig();
 
     connect( ui->treeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
              this, SLOT(slot_current_changed(QTreeWidgetItem*,QTreeWidgetItem*)));
+
+    ui->treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->treeWidget, SIGNAL(customContextMenuRequested(const QPoint&)),
+            this, SLOT(slotShowContextmenu(const QPoint&)));
 }
 
 RoboConfig::~RoboConfig()
@@ -32,16 +41,20 @@ void RoboConfig::loadXmlConfig()
 {
     //! load xml
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/robots/" + m_pRootNode->text(0) + ".xml";
+    QString fileName = QApplication::applicationDirPath() + "/robots/";
+    QDir dir(fileName);
+    if(!dir.exists()){dir.mkdir(fileName);}
+
+    fileName += m_pRootNode->text(0) + ".xml";
     mXML.xmlCreate(fileName);
 
     QMap<QString,QString> mapItems = mXML.xmlRead(fileName);
-//    qDebug() << fileName << mapItems;
-    QMap<QString,QString>::iterator itMap; //遍历map
+    QMap<QString,QString>::iterator itMap;
     for ( itMap=mapItems.begin(); itMap != mapItems.end(); ++itMap ) {
         if( "RobotDevice_" == itMap.key().left(QString("RobotDevice_").length()) )
             createNewRobot(itMap.value());
     }
+    ui->treeWidget->setCurrentItem(m_pRootNode);
 }
 
 void RoboConfig::createNewRobot(QString strDevInfo)
@@ -54,7 +67,8 @@ void RoboConfig::createNewRobot(QString strDevInfo)
     m_RobotList.insert(m_RobotList.count(), robotInfo);
 
     m_pRootNode->addChild( ((H2Robo *)(robotInfo.m_Robo))->roboNode() );
-    ui->treeWidget->setCurrentItem(m_pRootNode->child(m_RobotList.count()-1));
+    ui->treeWidget->setCurrentItem(m_pRootNode->child(m_RobotList.count()-1) );
+
     mIndex = m_RobotList.count()-1;
     m_pRootNode->setExpanded(true);
 
@@ -82,11 +96,83 @@ void RoboConfig::slotAddNewRobot(QString strDevInfo)
     //添加到project.xml中
     MegaXML mXML;
     QString fileName = QApplication::applicationDirPath() + "/robots/" + m_pRootNode->text(0) + ".xml";
-    QMap<QString,QString> map;
-    QString proName = QString("RobotDevice_%1").arg(mXML.xmlRead(fileName).size());
-    map.insert(proName ,strDevInfo );
-    mXML.xmlNodeAppend(fileName, "Config", map);
+
+    QMap<QString,QString> mapRead = mXML.xmlRead(fileName);
+    QMap<QString,QString> mapWrite;
+    for (QMap<QString,QString>::iterator itMap=mapRead.begin(); itMap != mapRead.end(); ++itMap ) {
+        if( "RobotDevice_" == itMap.key().left(QString("RobotDevice_").length()) )
+        {   mapWrite.insert(itMap.key(),itMap.value()); }
+    }
+    QString proName = QString("RobotDevice_%1").arg(mapWrite.size());
+    mapWrite.insert(proName ,strDevInfo );
+    mXML.xmlNodeRemove(fileName, "RobotConfigs");
+    mXML.xmlNodeAppend(fileName, "RobotConfigs", mapWrite);
     createNewRobot(strDevInfo);
+
+    QString strIP = strDevInfo.split(',').at(0);
+    slot_open_close(strIP); //default open device
+    setApply(); //create xml file
+}
+
+void RoboConfig::slotShowContextmenu(const QPoint& pos)
+{
+    QTreeWidgetItem* curItem = ui->treeWidget->itemAt(pos);  //获取当前被点击的节点
+    if(curItem == NULL) return; //即在空白位置右击
+
+    QVariant var = curItem->data(0,Qt::UserRole);
+    if( "H2Product*" == QString("%1").arg(var.typeName()) )
+    {
+        if(m_menu != NULL)
+            delete m_menu;
+
+        m_menu = new QMenu(ui->treeWidget);
+        QAction *actionClose = m_menu->addAction(tr("close"));
+        QAction *actionOpen = m_menu->addAction(tr("delete"));
+
+        connect(actionClose, SIGNAL(triggered(bool)), this, SLOT(soltActionClose()));
+        connect(actionOpen, SIGNAL(triggered(bool)), this, SLOT(soltActionDelete()));
+
+        m_menu->exec(QCursor::pos());
+        ui->treeWidget->selectionModel()->clear();
+    }
+}
+
+void RoboConfig::soltActionClose()
+{
+    m_pRootNode->removeChild(((H2Robo *)m_RobotList[mIndex].m_Robo)->roboNode());
+    delete (H2Robo *)m_RobotList[mIndex].m_Robo;
+    m_RobotList.removeAt(mIndex);
+
+    ui->treeWidget->setCurrentItem(m_pRootNode);
+
+    qDebug() << "after close:" << m_RobotList.count() << mIndex;
+}
+
+void RoboConfig::soltActionDelete()
+{
+    //! delete from xml file
+    MegaXML mXML;
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + m_pRootNode->text(0) + ".xml";
+    QMap<QString,QString> mapRead = mXML.xmlRead(fileName);
+    QMap<QString,QString> mapWrite;
+    for (QMap<QString,QString>::iterator itMap=mapRead.begin(); itMap != mapRead.end(); ++itMap ) {
+        if( "RobotDevice_" == itMap.key().left(QString("RobotDevice_").length())
+                && m_RobotList[mIndex].m_strDevInfo != itMap.value() )
+        {
+            mapWrite.insert(itMap.key(),itMap.value());
+        }
+    }
+    mXML.xmlNodeRemove(fileName, "RobotConfigs");
+    mXML.xmlNodeAppend(fileName, "RobotConfigs", mapWrite); //update project.xml
+
+    //delete device.xml
+    fileName = QApplication::applicationDirPath() + "/robots/" + m_RobotList[mIndex].m_strDevInfo.split(',').at(3) + ".xml";
+    QFile file(fileName);
+    if(file.exists())
+    {   file.remove();  }
+    //!
+
+    soltActionClose();
 }
 
 int RoboConfig::setApply()
@@ -161,7 +247,7 @@ void RoboConfig::slot_current_changed( QTreeWidgetItem* cur,QTreeWidgetItem* prv
         }
     }
 
-//    qDebug() << "slot_current_changed" << cur->text(0) << index;
+    qDebug() << "slot_current_changed" << cur->text(0) << index;
 
     QVariant var;
     QObject *pObj;

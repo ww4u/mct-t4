@@ -30,15 +30,15 @@ int H2Measurement::setApply()
     int ret = -1;
 //    qDebug() << "H2Measurement:" << mViHandle << mRobotName;
 
-#if 0
+#if 1
     //ZeroPoint=[0,1,2,3]
     int value = ui->comboBox_AxesZeroPoint->currentIndex();
     ret = mrhtRobotCoordinate(mViHandle, mRobotName, value);
 
     //ProjectZeroPointX=0.00
     //ProjectZeroPointY=0.00
-    char str[64] = "";
-    ret = mrhtRobotProjectzero(mViHandle, mRobotName, str);
+    ret = mrhtRobotZeroProject(mViHandle, mRobotName, m_ProjectZeroPointX, m_ProjectZeroPointY, 0);
+
 
 
     //SWLimitPositiveX=0.00

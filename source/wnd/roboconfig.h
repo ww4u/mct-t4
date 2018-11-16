@@ -15,6 +15,7 @@ class RoboConfig : public QWidget
 signals:
     void signalCurrentRobotChanged(QString,int,int);
     void signal_focus_in( const QString &);
+    void signalApplyClicked();
 
 public:
     explicit RoboConfig(QWidget *parent = 0);

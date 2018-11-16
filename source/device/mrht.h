@@ -94,31 +94,31 @@ int mrhtDeviceMrqMotionStateReport(int inst,int name,int chan,int state);
 int mrhtDeviceMrqMotionStateReport_Query(int inst,int name,int chan, int* state);
 
 
-//! :DEVice:MRQ:MOTion:RUN <name>,<ch>,<<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>>
+//! :DEVice:MRQ:MOTion:RUN <name>,<ch>,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>
 int mrhtDeviceMrqMotionRun(int inst,int name,int chan,int wave);
 
 
-//! :DEVice:MRQ:MOTion:RUN:STATe? <name>,<ch>,<<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>>
+//! :DEVice:MRQ:MOTion:RUN:STATe? <name>,<ch>,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>
 int mrhtDeviceMrqMotionRunState_Query(int inst,int name,int chan,int wave, int* state);
 
 
-//! :DEVice:MRQ:MOTion:STOP <name>,<ch>,<<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>>
+//! :DEVice:MRQ:MOTion:STOP <name>,<ch>,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>
 int mrhtDeviceMrqMotionStop(int inst,int name,int chan,int wave);
 
 
-//! :DEVice:MRQ:MOTion:TRIGger[:SOURce] <name>,<ch>,<SOFTWARE|DIGITALIO|CAN|ALL>
+//! :DEVice:MRQ:MOTion:TRIGger:SOURce <name>,<ch>,<SOFTWARE|DIGITALIO|CAN|ALL>
 int mrhtDeviceMrqMotionTriggerSource(int inst,int name,int chan,int trigSource);
 
 
-//! :DEVice:MRQ:MOTion:TRIGger[:SOURce]? <name>,<ch>
+//! :DEVice:MRQ:MOTion:TRIGger:SOURce? <name>,<ch>
 int mrhtDeviceMrqMotionTriggerSource_Query(int inst,int name,int chan, int* trig);
 
 
-//! :DEVice:MRQ:MOTion:OFFSet[:STATe] <name>,<ch>,<OFF|ON>
+//! :DEVice:MRQ:MOTion:OFFSet:STATe <name>,<ch>,<OFF|ON>
 int mrhtDeviceMrqMotionOffsetState(int inst,int name,int chan,int state);
 
 
-//! :DEVice:MRQ:MOTion:OFFSet[:STATe]? <name>,<ch>
+//! :DEVice:MRQ:MOTion:OFFSet:STATe? <name>,<ch>
 int mrhtDeviceMrqMotionOffsetState_Query(int inst,int name,int chan, int* state);
 
 
@@ -126,11 +126,11 @@ int mrhtDeviceMrqMotionOffsetState_Query(int inst,int name,int chan, int* state)
 int mrhtDeviceMrqMotionOffsetValue_Query(int inst, char* value,int len);
 
 
-//! :DEVice:MRQ:MOTion:ABCOUNt? <name>,<ch>
+//! :DEVice:MRQ:MOTion:ABCOUNt?  <name>,<ch>
 int mrhtDeviceMrqMotionAbcount_Query(int inst,int name,int chan, int* count);
 
 
-//! :DEVice:MRQ:MOTion:ABCOUNt:CLEAr <name>,<ch>
+//! :DEVice:MRQ:MOTion:ABCOUNt:CLEAr  <name>,<ch>
 int mrhtDeviceMrqMotionAbcountClear(int inst,int name,int chan);
 
 
@@ -138,7 +138,7 @@ int mrhtDeviceMrqMotionAbcountClear(int inst,int name,int chan);
 int mrhtDeviceMrqMotionAdjust(int inst,int name,int chan,int position,int time);
 
 
-//! :DEVice:MRQ:MOTion:REVERSe <name>,<OFF|ON>
+//! :DEVice:MRQ:MOTion:REVERSe <name>,<OFF|0|ON|1>
 int mrhtDeviceMrqMotionReverse(int inst,int name,int state);
 
 
@@ -162,7 +162,7 @@ int mrhtDeviceMrqMotorMotionType(int inst,int name,int chan,int motion);
 int mrhtDeviceMrqMotorMotionType_Query(int inst,int name,int chan, int* motion);
 
 
-//! :DEVice:MRQ:MOTOR:POSition:UNIT <name>,<CH>,<ANGLE|RADIAN|MILLIMETER>
+//! :DEVice:MRQ:MOTOR:POSition:UNIT <name>,<CH>,< ANGLE|RADIAN|MILLIMETER>
 int mrhtDeviceMrqMotorPositionUnit(int inst,int name,int chan,int pos);
 
 
@@ -338,8 +338,12 @@ int mrhtDeviceMrqReportPeriod(int inst,int name,int chan,int index,int ms);
 int mrhtDeviceMrqReportPeriod_Query(int inst,int name,int chan,int index, int* ms);
 
 
-//! :DEVice:MRQ:REPort:DATA? <name>,<ch>,<TORQUE|CYCLE|SGALL|SGSE|DIST|ABSEN>
-int mrhtDeviceMrqReportData_Query(int inst,int name,int chan,int index, char* data,int len);
+//! :DEVice:MRQ:REPort:DATA:VALue? <name>,<ch>,<TORQUE|CYCLE|SGALL|SGSE|DIST|ABSEN>
+int mrhtDeviceMrqReportDataValue_Query(int inst,int name,int chan,int index, char* data,int len);
+
+
+//! :DEVice:MRQ:REPort:DATA:Queue? <name>,<ch>,<TORQUE|CYCLE|SGALL|SGSE|DIST|ABSEN>[,count]
+int mrhtDeviceMrqReportDataQueue_Query(int inst,int name,int chan,int index,int count, int * value);
 
 
 //! :DEVice:MRQ:TRIGger:MODe <name>,<ch>,<PATTERN|LEVEL>
@@ -582,7 +586,7 @@ int mrhtDeviceMrqNdriverMicrosteps_Query(int inst,int name, int* micr);
 int mrhtDeviceMrqNdriverState_Query(int inst,int name,int chan, int* state);
 
 
-//! :DEVice:MRQ:NDRiver:STATe <name>,<ch>,<ON|OFF>
+//! :DEVice:MRQ:NDRiver:STATe <name>,<ch>,<OFF|ON>
 int mrhtDeviceMrqNdriverState(int inst,int name,int chan,int state);
 
 
@@ -594,16 +598,32 @@ int mrhtDeviceMrvPt(int inst);
 int mrhtRobotAlloc_Query(int inst,int configuration,char* chanList, int* name);
 
 
-//! :ROBOT:ALLOC:FILe? <configfile>
-int mrhtRobotAllocFile_Query(int inst,char* file, int* name);
+//! :ROBOT:CONFIGuration:FILe:RESET
+int mrhtRobotConfigurationFileReset(int inst);
+
+
+//! :ROBOT:CONFIGuration:FILe:EXPort 
+int mrhtRobotConfigurationFileExport(int inst);
+
+
+//! :ROBOT:CONFIGuration:FILe:IMPort   
+int mrhtRobotConfigurationFileImport(int inst);
+
+
+//! :ROBOT:CONFIGuration:FILe:STATe?
+int mrhtRobotConfigurationFileState_Query(int inst, int* state);
+
+
+//! :ROBOT:CONFIGuration:FILe:READ?
+int mrhtRobotConfigurationFileRead_Query(int inst, char* file,int len);
+
+
+//! :ROBOT:CONFIGuration? <name>
+int mrhtRobotConfiguration_Query(int inst,int name, char* configuration,int len);
 
 
 //! :ROBOT:DELETe <name>
 int mrhtRobotDelete(int inst);
-
-
-//! :ROBOT:CONFIGRATION? <name>
-int mrhtRobotConfigration_Query(int inst,int name, char* configuration,int len);
 
 
 //! :ROBOT:SUBTYPE <name>,<type>
@@ -622,8 +642,40 @@ int mrhtRobotCoordinate(int inst,int name,int coordiante);
 int mrhtRobotCoordinate_Query(int inst,int name, int* coordiante);
 
 
+//! :ROBOT:ZERO:AXIS <name>,<x>,<y>[,<z>]
+int mrhtRobotZeroAxis(int inst,int name,int x,int y,int z);
+
+
+//! :ROBOT:ZERO:AXIS?  <name>
+int mrhtRobotZeroAxis_Query(int inst,int name, int* x,int* y,int* z);
+
+
+//! :ROBOT:ZERO:PROJect <name>,<x>,<y>[,<z>]
+int mrhtRobotZeroProject(int inst,int name,int x,int y,int z);
+
+
+//! :ROBOT:ZERO:PROJect? <name>
+int mrhtRobotZeroProject_Query(int inst,int name, char* value,int len);
+
+
+//! :ROBOT:LIMIt:SOFT:POSITive <name>,<x>,<y>[,<z>]
+int mrhtRobotLimitSoftPositive(int inst,int name,int x,int y,int z);
+
+
+//! :ROBOT:LIMIt:SOFT:POSITive? <name>
+int mrhtRobotLimitSoftPositive_Query(int inst,int name, int* x,int* y,int* z);
+
+
+//! :ROBOT:LIMIt:SOFT:NEGATive <name>,<x>,<y>[,<z>]
+int mrhtRobotLimitSoftNegative(int inst,int name,int x,int y,int z);
+
+
+//! :ROBOT:LIMIt:SOFT:NEGATive? <name>
+int mrhtRobotLimitSoftNegative_Query(int inst,int name, int* x,int* y,int* z);
+
+
 //! :ROBOT:DEVice:NAMe? <name>
-int mrhtRobotDeviceName_Query(int inst,int name, int* subname);
+int mrhtRobotDeviceName_Query(int inst,int name, int* devname);
 
 
 //! :ROBOT:NAMe?
@@ -632,14 +684,6 @@ int mrhtRobotName_Query(int inst, char* name,int len);
 
 //! :ROBOT:COUNt?
 int mrhtRobotCount_Query(int inst, int* count);
-
-
-//! :ROBOT:PROJECTZERO <name>,<(value)>
-int mrhtRobotProjectzero(int inst,int name,char* value);
-
-
-//! :ROBOT:PROJECTZERO? <name>
-int mrhtRobotProjectzero_Query(int inst,int name, char* value,int len);
 
 
 //! :ROBOT:WAVETABLE <name>,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>
@@ -702,8 +746,8 @@ int mrhtRobotHomeMode(int inst,int name,int mode);
 int mrhtRobotHomeMode_Query(int inst,int name, int* mode);
 
 
-//! :ROBOT:MOVe <name>,<x>,<y>,<z>,<t>[,<<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>>]
-int mrhtRobotMove(int inst,int name,int x,int y,int z,int t,int wave);
+//! :ROBOT:MOVe <name>,<x>,<y>,<z>,<t>[,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>]
+int mrhtRobotMove(int inst,int name,double x,double y,double z,double t,int wave);
 
 
 //! :ROBOT:MOVe:HOLD <name>,<axle>,<speed>,<dir>[,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>]
@@ -711,15 +755,19 @@ int mrhtRobotMoveHold(int inst,int name,int axle,int speed,int dir,int wave);
 
 
 //! :ROBOT:MOVe:RELATive <name>,<x>,<y>,<z>,<t>[,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>]
-int mrhtRobotMoveRelative(int inst,int name,int x,int y,int z,int t,int wave);
+int mrhtRobotMoveRelative(int inst,int name,double x,double y,double z,double t,int wave);
 
 
 //! :ROBOT:MOVe:LINear <name>,<x>,<y>,<z>,<t>[,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>]
-int mrhtRobotMoveLinear(int inst,int name,int x,int y,int z,int t,int wave);
+int mrhtRobotMoveLinear(int inst,int name,double x,double y,double z,double t,int wave);
 
 
 //! :ROBOT:MOVe:LINear:RELATive <name>,<x>,<y>,<z>,<t>[,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>]
-int mrhtRobotMoveLinearRelative(int inst,int name,int x,int y,int z,int t,int wave);
+int mrhtRobotMoveLinearRelative(int inst,int name,double x,double y,double z,double t,int wave);
+
+
+//! :ROBOT:MOVe:JOG <name>,<axle>,<cr_time>,<cr_speed>,<speed>[,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>]
+int mrhtRobotMoveJog(int inst,int name,int axle,double cr_time,double cr_speed,double speed,int wave);
 
 
 //! :ROBOT:CURRENT:ANGLE?  <name>
@@ -731,7 +779,7 @@ int mrhtRobotCurrentPosition_Query(int inst,int name, char* pos,int len);
 
 
 //! :ROBOT:POINt:LOAD <name>,<x>,<y>,<z>,<e>,<t>,<mode>
-int mrhtRobotPointLoad(int inst,int name,int x,int y,int z,int e,int t,int mode);
+int mrhtRobotPointLoad(int inst,int name,double x,double y,double z,double e,double t,int mode);
 
 
 //! :ROBOT:POINt:COUNt? <name>
@@ -746,20 +794,8 @@ int mrhtRobotPointResolve(int inst,int name,int wave);
 int mrhtRobotPointClear(int inst,int name);
 
 
-//! :ROBOT:POINt:FILe:IMPORT <name>,<filename>
-int mrhtRobotPointFileImport(int inst,int name,char* file);
-
-
-//! :ROBOT:POINt:FILe:EXPORT <name>,<filename>
-int mrhtRobotPointFileExport(int inst,int name,char* file);
-
-
-//! :ROBOT:POINt:FILe?
-int mrhtRobotPointFile_Query(int inst, char* file,int len);
-
-
 //! :ROBOT:PVT:LOAD <name>,<p>,<v>,<t>,<axle>
-int mrhtRobotPvtLoad(int inst,int name,int p,int v,int t,int axle);
+int mrhtRobotPvtLoad(int inst,int name,double p,double v,double t,int axle);
 
 
 //! :ROBOT:PVT:RESOLVe <name>[,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>]
@@ -770,16 +806,20 @@ int mrhtRobotPvtResolve(int inst,int name,int wave);
 int mrhtRobotPvtClear(int inst,int name,int axle);
 
 
-//! :ROBOT:PVT:FILe:IMPORT <name>,<filename>
-int mrhtRobotPvtFileImport(int inst,int name,char* file);
+//! :ROBOT:FILe:IMPORT <name>,<filename>
+int mrhtRobotFileImport(int inst,int name,char* file);
 
 
-//! :ROBOT:PVT:FILe:EXPORT <name>,<filename>
-int mrhtRobotPvtFileExport(int inst,int name,char* file);
+//! :ROBOT:FILe:EXPORT :LOCal <name>,<filename>
+int mrhtRobotFileExport(int inst,int name,char* file);
 
 
-//! :ROBOT:PVT:FILe?
-int mrhtRobotPvtFile_Query(int inst, char* file,int len);
+//! :ROBOT:FILe:EXPORT:EXTERnal <name>,<filename>
+int mrhtRobotFileExportExternal(int inst,int name,char* file);
+
+
+//! :ROBOT:FILe:RESOLVe <name>,<section>[,<line>[,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>]]
+int mrhtRobotFileResolve(int inst,int name,int section,int line,int wave);
 
 
 //! :ROBOT:INTERPOLATe:MODe <name>,<mode>
@@ -828,6 +868,30 @@ int mrhtRobotEffectorHomeStop(int inst,int name);
 
 //! :ROBOT:EFFECTor:HOMe:STATe? <name>
 int mrhtRobotEffectorHomeState_Query(int inst,int name, int* state);
+
+
+//! :STORage:FILe:MOTion:LOCal?
+int mrhtStorageFileMotionLocal_Query(int inst, char* file,int len);
+
+
+//! :STORage:FILe:MOTion:EXTERnal?
+int mrhtStorageFileMotionExternal_Query(int inst, char* file,int len);
+
+
+//! :STORage:FILe:MOTion:CONText:READ? <filename>
+int mrhtStorageFileMotionContextRead_Query(int inst,char* file, char* context,int len);
+
+
+//! :STORage:FILe:MOTion:CONText:WRITe :NAMe <filename>
+int mrhtStorageFileMotionContextWrite(int inst,char* file);
+
+
+//! :STORage:FILe:MOTion:CONText:WRITe:DATa <context>
+int mrhtStorageFileMotionContextWriteData(int inst,char* context);
+
+
+//! :STORage:FILe:MOTion:CONText:WRITe:END
+int mrhtStorageFileMotionContextWriteEnd(int inst);
 
 
 

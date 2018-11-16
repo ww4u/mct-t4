@@ -6,8 +6,6 @@
 #include <QTime>
 #include <QFileDialog>
 
-#include "megasplinechart.h"
-
 #include "../sys/sysapi.h"
 #include "../widget/megamessagebox.h"
 
@@ -17,6 +15,10 @@ H2Ops::H2Ops(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    m_ViHandle = 0;
+    m_RoboName = 0;
+    m_strDevInfo = "";
+
     setupUi();
 
     setupName();
@@ -24,6 +26,15 @@ H2Ops::H2Ops(QWidget *parent) :
     buildConnection();
 
     setupModel();
+
+
+
+    qsrand((uint) QTime::currentTime().msec());
+    connect(&m_timer, SIGNAL(timeout()), this, SLOT(slot_handle_timeout()));
+    m_timer.setInterval(1000 * 2); //轮询时间周期
+//    m_timer.start();
+
+
 }
 
 H2Ops::~H2Ops()
@@ -47,14 +58,11 @@ void H2Ops::setupUi()
     ui->lstLogout->addActions( actions );
 
     //! monitor
-    MegaSplineChart *m_splineChart1 = new MegaSplineChart(tr("Energy1"));
-    MegaSplineChart *m_splineChart2 = new MegaSplineChart(tr("Energy2"));
+    m_splineChart1 = new MegaSplineChart(tr("Energy1"));
+    m_splineChart2 = new MegaSplineChart(tr("Energy2"));
 
     m_splineChart1->chart()->series()->setPen(QPen(Qt::blue));
     m_splineChart2->chart()->series()->setPen(QPen(Qt::red));
-
-    ui->horizontalLayout_3->setMargin(0);
-    ui->horizontalLayout_3->setSpacing(1);
 
     ui->horizontalLayout_3->addWidget(m_splineChart1);
     ui->horizontalLayout_3->addWidget(m_splineChart2);
@@ -135,12 +143,51 @@ void H2Ops::outError( const QString &str )
     ui->lstLogout->addItem( pItem );
 }
 
-void H2Ops::slotSetCurrentRobot(QString strDevType, int visa, int name)
+void H2Ops::slotSetCurrentRobot(QString strDevInfo, int visa, int name)
 {
+    if( (m_strDevInfo == strDevInfo) && (m_ViHandle == visa) && (m_RoboName == name) )
+    {
+        return;//没有切换机器人且机器人状态没有改变
+    }
+
+    m_strDevInfo = strDevInfo;
     m_ViHandle = visa;
     m_RoboName = name;
+    m_Data.clear();
 
-//    qDebug() << "H2OPS:" << m_ViHandle << m_RoboName;
+    qDebug() << "H2OPS " << "m_ViHandle:"  << m_ViHandle << "m_RoboName:" << m_RoboName;
+    if(m_ViHandle == 0)
+    {
+        ui->tabWidget->setEnabled(false);
+        if(m_timer.isActive())
+        {
+            qDebug() << "H2OPS timer stop";
+             m_timer.stop();
+        }
+    }
+    else
+    {
+        ui->tabWidget->setEnabled(true);
+        slotLoadConfigAgain();
+        if( !m_timer.isActive())
+        {
+            qDebug() << "H2OPS timer start";
+            m_timer.start();
+        }
+    }
+}
+
+void H2Ops::slotLoadConfigAgain()
+{
+    m_Data.clear();
+    MegaXML mXML;
+    QString deviceName = m_strDevInfo.split(',').at(3);
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + deviceName + ".xml";
+
+    qDebug() << "slotLoadConfigAgain:" << fileName;
+    QMap<QString,QString> map = mXML.xmlRead(fileName);
+    if(map.isEmpty()) return;
+    m_Data = map;
 }
 
 void H2Ops::slot_logSelectAll_action()
@@ -219,10 +266,8 @@ void H2Ops::on_btnDown_clicked()
     { return; }
 
     m_pDebugModel->items()->insert( next.row(), pItem );
-    m_pDebugModel->signal_dataChanged(
-                                        m_pDebugModel->index( ui->tvDebug->currentIndex().row(), 0 ),
-                                        m_pDebugModel->index( ui->tvDebug->currentIndex().row()+1, 1 )
-                                    );
+    m_pDebugModel->signal_dataChanged(m_pDebugModel->index( ui->tvDebug->currentIndex().row(), 0 ),
+                                        m_pDebugModel->index( ui->tvDebug->currentIndex().row()+1, 1));
     ui->tvDebug->setCurrentIndex( next );
 }
 
@@ -338,17 +383,177 @@ void H2Ops::on_tabWidget_tabBarClicked(int index)
     emit signal_focus_in( ui->tabWidget->tabText( index ) );
 }
 
-QString H2Ops::getDeviceTypeName(QString strDevInfo)
+
+////////////////////////////////////// 点击发送指令
+void H2Ops::on_pushButton_starting_home_clicked()
 {
-    QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
-    QString strDeviceName = "";
-    if(strListDev.count() == 0)
-    {   return "";     }
+//    qDebug() << m_ViHandle << m_RoboName;
 
-    if(strListDev.count() > 2)
-    {   strDeviceName = strListDev.at(2) + "[" + strListDev.at(0) + "]";    }
+}
+
+void H2Ops::on_toolButton_singlestep_x_dec_clicked()
+{
+    int speed = ui->doubleSpinBox_Velocity->value();
+    qDebug() << mrhtRobotMoveRelative(m_ViHandle, m_RoboName, 0, speed, -1, -1);
+}
+
+void H2Ops::on_toolButton_singlestep_x_inc_clicked()
+{
+    int speed = ui->doubleSpinBox_Velocity->value();
+    qDebug() << mrhtRobotMoveHold(m_ViHandle, m_RoboName, 0, speed, 1, -1);
+}
+
+void H2Ops::on_toolButton_singlestep_y_dec_clicked()
+{
+    int speed = ui->doubleSpinBox_Velocity->value();
+    qDebug() << mrhtRobotMoveHold(m_ViHandle, m_RoboName, 1, speed, -1, -1);
+}
+
+void H2Ops::on_toolButton_singlestep_y_inc_clicked()
+{
+    int speed = ui->doubleSpinBox_Velocity->value();
+    qDebug() << mrhtRobotMoveHold(m_ViHandle, m_RoboName, 1, speed, 1, -1);
+}
+
+
+void H2Ops::on_toolButton_jogmode_x_dec_clicked()
+{
+    int speed = ui->doubleSpinBox_Velocity->value();
+    double cr_speed = m_Data["CrawlingVelocity"].toDouble();
+    double cr_time = m_Data["CrawlingTime"].toDouble();
+    qDebug() << mrhtRobotMoveJog(m_ViHandle, m_RoboName, 0, cr_time, cr_speed * -1, speed, -1);
+}
+
+void H2Ops::on_toolButton_jogmode_x_inc_clicked()
+{
+    int speed = ui->doubleSpinBox_Velocity->value();
+    double cr_speed = m_Data["CrawlingVelocity"].toDouble();
+    double cr_time = m_Data["CrawlingTime"].toDouble();
+    qDebug() << mrhtRobotMoveJog(m_ViHandle, m_RoboName, 0, cr_time, cr_speed, speed, -1);
+}
+
+void H2Ops::on_toolButton_jogmode_y_dec_clicked()
+{
+    int speed = ui->doubleSpinBox_Velocity->value();
+    double cr_speed = m_Data["CrawlingVelocity"].toDouble();
+    double cr_time = m_Data["CrawlingTime"].toDouble();
+    qDebug() << mrhtRobotMoveJog(m_ViHandle, m_RoboName, 1, cr_time, cr_speed * -1, speed, -1);
+}
+
+void H2Ops::on_toolButton_jogmode_y_inc_clicked()
+{
+    int speed = ui->doubleSpinBox_Velocity->value();
+    double cr_speed = m_Data["CrawlingVelocity"].toDouble();
+    double cr_time = m_Data["CrawlingTime"].toDouble();
+    qDebug() << mrhtRobotMoveJog(m_ViHandle, m_RoboName, 1, cr_time, cr_speed, speed, -1);
+}
+
+void H2Ops::on_pushButton_apply_clicked()
+{
+
+}
+
+void H2Ops::on_pushButton_stop_clicked()
+{
+    mrhtRobotStop(m_ViHandle, m_RoboName, -1);
+}
+
+
+/////////////////////////////////////////////////////////////
+//更新标签的实时数值
+void H2Ops::slot_handle_timeout()
+{
+    if(m_strDevInfo == "")
+        return;
+
+    updateDeviceStatus();
+    updateOperate();
+    updateDigitalIO();
+    updateHoming();
+    updateManual();
+    updateMonitor();
+    updateDebug();
+    updateDiagnosis();
+
+}
+
+
+void H2Ops::updateDeviceStatus()
+{
+//    ui->H2Status_1
+//    ui->H2Status_2
+
+}
+
+void H2Ops::updateOperate()
+{
+    double rand = qrand() % 50;
+    ui->doubleSpinBox_RecordNumber->setValue(rand);
+    ui->doubleSpinBox_target_position_x->setValue(rand);
+    ui->doubleSpinBox_target_position_y->setValue(rand);
+    ui->doubleSpinBox_actual_position_x->setValue(rand);
+    ui->doubleSpinBox_actual_position_y->setValue(rand);
+    ui->doubleSpinBox_Mileage_x->setValue(rand);
+    ui->doubleSpinBox_Mileage_y->setValue(rand);
+
+    if( qrand()%2 )
+    {
+        ui->radHome->setChecked(true);
+        ui->radES->setChecked(false);
+    }
     else
-    {   strDeviceName = strListDev.at(0);    }
+    {
+        ui->radHome->setChecked(false);
+        ui->radES->setChecked(true);
+    }
 
-    return strDeviceName;
+}
+
+void H2Ops::updateDigitalIO()
+{
+
+}
+
+void H2Ops::updateHoming()
+{
+    ui->label_homing_target->setText(m_Data["Target"]);
+    ui->label_homing_direction->setText(m_Data["Direction"]);
+
+    double rand = qrand() % 101;
+    ui->doubleSpinBox_homing_actual_pos_x->setValue(rand);
+
+    rand = qrand() % 101;
+    ui->doubleSpinBox_homing_actual_pos_y->setValue(rand);
+
+}
+
+void H2Ops::updateManual()
+{
+
+    double rand = qrand() % 101;
+    ui->doubleSpinBox_currentPos_x->setValue(rand);
+
+    rand = qrand() % 101;
+    ui->doubleSpinBox_currentPos_y->setValue(rand);
+}
+
+
+void H2Ops::updateMonitor()
+{
+    double rand = qrand() % 101;
+    m_splineChart1->dataAppend(rand);
+
+    rand = qrand() % 101;
+    m_splineChart2->dataAppend(rand);
+
+}
+
+void H2Ops::updateDebug()
+{
+
+}
+
+void H2Ops::updateDiagnosis()
+{
+
 }

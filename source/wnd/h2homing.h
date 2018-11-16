@@ -27,7 +27,6 @@ private:
     Ui::H2Homing *ui;
 
     double m_SearchVelocity;
-    double m_Acceleration  ;
     double m_ForceLimit    ;
 };
 

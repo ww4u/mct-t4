@@ -1,5 +1,6 @@
 #include "mrht.h"
 
+#define ViConstBuf ViBuf
 
 int mrhtOpenDevice(char * ip, int timeout)
 {
@@ -36,7 +37,7 @@ int _write(ViSession vi, char *cmd, unsigned int cmdlen)
     ViStatus status = 0;
     ViUInt32 retCnt = 0;
 
-    status = viWrite(vi, (ViBuf)cmd, cmdlen, &retCnt);
+    status = viWrite(vi, (ViConstBuf)cmd, cmdlen, &retCnt);
     if(status != VI_SUCCESS)
     {
         return status;
@@ -53,7 +54,7 @@ int _query(ViSession vi, char *cmd, unsigned int cmdlen, char *buf, unsigned int
     ViStatus status = 0;
     ViUInt32 retCnt = 0;
 
-    status = viWrite(vi, (ViBuf)cmd, cmdlen, &retCnt);
+    status = viWrite(vi, (ViConstBuf)cmd, cmdlen, &retCnt);
     if(status != VI_SUCCESS)
     {
         return status;
@@ -71,6 +72,35 @@ int _query(ViSession vi, char *cmd, unsigned int cmdlen, char *buf, unsigned int
 }
 
 
+void del_substr(char s1[],char s2[])
+{
+    int i=0,k=0,j=0,len_s1,len_s2;
+    len_s1=strlen(s1);
+    len_s2=strlen(s2);
+    if(len_s1<len_s2)
+        return;
+    while(s1[i])
+    {
+        if(s1[i]-s2[0])
+            s1[k++]=s1[i++];
+        else
+        {
+            j=1;
+            while(!(s1[i+j]-s2[j]) && j<len_s2)
+                ++j;
+            if(!(j-len_s2))
+                i+=j;
+            else
+                s1[k++]=s1[i++];
+        }
+    }
+    s1[k]=0;
+    return;
+}
+
+
+
+
 //! *IDN?
 int mrhtIdn_Query(int inst, char* data,int len)
 {
@@ -79,6 +109,12 @@ int mrhtIdn_Query(int inst, char* data,int len)
 
 
     sprintf(as8FmtCmd, "*IDN?");
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8data, len) == 0)
     {
         return -1;
@@ -86,6 +122,8 @@ int mrhtIdn_Query(int inst, char* data,int len)
     
     return 0;
 }
+
+
 
 
 //! :SYSTem:IDENtify <OFF|ON>
@@ -103,15 +141,27 @@ int mrhtSystemIdentify(int inst,int state)
     {
         ps8state = "ON";
     }
+    else
+    {
+        ps8state = "None";
+    }
 
     sprintf(as8FmtCmd, ":SYSTem:IDENtify %s",ps8state);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
     }
-
+    
     return 0;
 }
+
+
 
 
 //! :TRIGger:SEARch?
@@ -122,6 +172,12 @@ int mrhtTriggerSearch_Query(int inst, char* file,int len)
 
 
     sprintf(as8FmtCmd, ":TRIGger:SEARch?");
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8file, len) == 0)
     {
         return -1;
@@ -150,6 +206,12 @@ int mrhtTriggerConfig(int inst,char* file1,char* file2,char* file3,char* file4,c
     char* ps8file5 = file5;
 
     sprintf(as8FmtCmd, ":TRIGger:CONFig %s,%s,%s,%s,%s",ps8file1,ps8file2,ps8file3,ps8file4,ps8file5);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -168,6 +230,12 @@ int mrhtTriggerSave(int inst)
 
 
     sprintf(as8FmtCmd, ":TRIGger:SAVe");
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -186,6 +254,12 @@ int mrhtDeviceSearch(int inst)
 
 
     sprintf(as8FmtCmd, ":DEVice:SEARch");
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -205,6 +279,12 @@ int mrhtDeviceCount_Query(int inst, int* count)
 
 
     sprintf(as8FmtCmd, ":DEVice:COUNt?");
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8count, 100) == 0)
     {
         return -1;
@@ -226,6 +306,12 @@ int mrhtDeviceType_Query(int inst,int name, char* type,int len)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:TYPe? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8type, len) == 0)
     {
         return -1;
@@ -245,6 +331,12 @@ int mrhtDeviceName_Query(int inst, int* name)
 
 
     sprintf(as8FmtCmd, ":DEVice:NAMe?");
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8name, 100) == 0)
     {
         return -1;
@@ -266,6 +358,12 @@ int mrhtDeviceChannelCount_Query(int inst,int name, int* chanNum)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:CHANnel:COUNt? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8chanNum, 100) == 0)
     {
         return -1;
@@ -287,6 +385,12 @@ int mrhtDeviceFirmwareAll_Query(int inst,int name, char* firmware,int len)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:FIRMware:ALL? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8firmware, len) == 0)
     {
         return -1;
@@ -307,6 +411,12 @@ int mrhtDeviceFirmwareHard_Query(int inst,int name, char* hard,int len)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:FIRMware:HARD? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8hard, len) == 0)
     {
         return -1;
@@ -327,6 +437,12 @@ int mrhtDeviceFirmwareSoft_Query(int inst,int name, char* soft,int len)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:FIRMware:SOFT? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8soft, len) == 0)
     {
         return -1;
@@ -347,6 +463,12 @@ int mrhtDeviceFirmwareSn_Query(int inst,int name, char* sn,int len)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:FIRMware:SN? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8sn, len) == 0)
     {
         return -1;
@@ -367,6 +489,12 @@ int mrhtDeviceFirmwareBoot_Query(int inst,int name , char* boot,int len)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:FIRMware:BOOT? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8boot, len) == 0)
     {
         return -1;
@@ -387,6 +515,12 @@ int mrhtDeviceFirmwareFpga_Query(int inst,int name , char* fpga,int len)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:FIRMware:FPGA? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8fpga, len) == 0)
     {
         return -1;
@@ -414,8 +548,18 @@ int mrhtDeviceMrqIdentify(int inst,int name,int state)
     {
         ps8state = "ON";
     }
+    else
+    {
+        ps8state = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:IDENtify %d,%s",s32name,ps8state);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -444,8 +588,18 @@ int mrhtDeviceMrqMotionStateReport(int inst,int name,int chan,int state)
     {
         ps8state = "QUERY";
     }
+    else
+    {
+        ps8state = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTion:STATe:REPORt %d,%d,%s",s32name,s32chan,ps8state);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -467,6 +621,12 @@ int mrhtDeviceMrqMotionStateReport_Query(int inst,int name,int chan, int* state)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTion:STATe:REPORt? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8state, 100) == 0)
     {
         return -1;
@@ -488,7 +648,7 @@ int mrhtDeviceMrqMotionStateReport_Query(int inst,int name,int chan, int* state)
 
 
 
-//! :DEVice:MRQ:MOTion:RUN <name>,<ch>,<<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>>
+//! :DEVice:MRQ:MOTion:RUN <name>,<ch>,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>
 int mrhtDeviceMrqMotionRun(int inst,int name,int chan,int wave)
 {
     char as8FmtCmd[100] = {0};
@@ -537,8 +697,18 @@ int mrhtDeviceMrqMotionRun(int inst,int name,int chan,int wave)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTion:RUN %d,%d,%s",s32name,s32chan,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -550,7 +720,7 @@ int mrhtDeviceMrqMotionRun(int inst,int name,int chan,int wave)
 
 
 
-//! :DEVice:MRQ:MOTion:RUN:STATe? <name>,<ch>,<<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>>
+//! :DEVice:MRQ:MOTion:RUN:STATe? <name>,<ch>,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>
 int mrhtDeviceMrqMotionRunState_Query(int inst,int name,int chan,int wave, int* state)
 {
     char as8FmtCmd[100] = {0};
@@ -600,8 +770,18 @@ int mrhtDeviceMrqMotionRunState_Query(int inst,int name,int chan,int wave, int* 
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTion:RUN:STATe? %d,%d,%s",s32name,s32chan,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8state, 100) == 0)
     {
         return -1;
@@ -638,7 +818,7 @@ int mrhtDeviceMrqMotionRunState_Query(int inst,int name,int chan,int wave, int* 
 
 
 
-//! :DEVice:MRQ:MOTion:STOP <name>,<ch>,<<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>>
+//! :DEVice:MRQ:MOTion:STOP <name>,<ch>,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>
 int mrhtDeviceMrqMotionStop(int inst,int name,int chan,int wave)
 {
     char as8FmtCmd[100] = {0};
@@ -687,8 +867,18 @@ int mrhtDeviceMrqMotionStop(int inst,int name,int chan,int wave)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTion:STOP %d,%d,%s",s32name,s32chan,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -700,7 +890,7 @@ int mrhtDeviceMrqMotionStop(int inst,int name,int chan,int wave)
 
 
 
-//! :DEVice:MRQ:MOTion:TRIGger[:SOURce] <name>,<ch>,<SOFTWARE|DIGITALIO|CAN|ALL>
+//! :DEVice:MRQ:MOTion:TRIGger:SOURce <name>,<ch>,<SOFTWARE|DIGITALIO|CAN|ALL>
 int mrhtDeviceMrqMotionTriggerSource(int inst,int name,int chan,int trigSource)
 {
     char as8FmtCmd[100] = {0};
@@ -725,8 +915,18 @@ int mrhtDeviceMrqMotionTriggerSource(int inst,int name,int chan,int trigSource)
     {
         ps8trigSource = "ALL";
     }
+    else
+    {
+        ps8trigSource = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTion:TRIGger:SOURce %d,%d,%s",s32name,s32chan,ps8trigSource);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -738,7 +938,7 @@ int mrhtDeviceMrqMotionTriggerSource(int inst,int name,int chan,int trigSource)
 
 
 
-//! :DEVice:MRQ:MOTion:TRIGger[:SOURce]? <name>,<ch>
+//! :DEVice:MRQ:MOTion:TRIGger:SOURce? <name>,<ch>
 int mrhtDeviceMrqMotionTriggerSource_Query(int inst,int name,int chan, int* trig)
 {
     char as8FmtCmd[100] = {0};
@@ -748,6 +948,12 @@ int mrhtDeviceMrqMotionTriggerSource_Query(int inst,int name,int chan, int* trig
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTion:TRIGger:SOURce? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8trig, 100) == 0)
     {
         return -1;
@@ -779,7 +985,7 @@ int mrhtDeviceMrqMotionTriggerSource_Query(int inst,int name,int chan, int* trig
 
 
 
-//! :DEVice:MRQ:MOTion:OFFSet[:STATe] <name>,<ch>,<OFF|ON>
+//! :DEVice:MRQ:MOTion:OFFSet:STATe <name>,<ch>,<OFF|ON>
 int mrhtDeviceMrqMotionOffsetState(int inst,int name,int chan,int state)
 {
     char as8FmtCmd[100] = {0};
@@ -796,8 +1002,18 @@ int mrhtDeviceMrqMotionOffsetState(int inst,int name,int chan,int state)
     {
         ps8state = "ON";
     }
+    else
+    {
+        ps8state = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTion:OFFSet:STATe %d,%d,%s",s32name,s32chan,ps8state);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -809,7 +1025,7 @@ int mrhtDeviceMrqMotionOffsetState(int inst,int name,int chan,int state)
 
 
 
-//! :DEVice:MRQ:MOTion:OFFSet[:STATe]? <name>,<ch>
+//! :DEVice:MRQ:MOTion:OFFSet:STATe? <name>,<ch>
 int mrhtDeviceMrqMotionOffsetState_Query(int inst,int name,int chan, int* state)
 {
     char as8FmtCmd[100] = {0};
@@ -819,6 +1035,12 @@ int mrhtDeviceMrqMotionOffsetState_Query(int inst,int name,int chan, int* state)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTion:OFFSet:STATe? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8state, 100) == 0)
     {
         return -1;
@@ -848,6 +1070,12 @@ int mrhtDeviceMrqMotionOffsetValue_Query(int inst, char* value,int len)
 
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTion:OFFSet:VALue? ");
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8value, len) == 0)
     {
         return -1;
@@ -859,7 +1087,7 @@ int mrhtDeviceMrqMotionOffsetValue_Query(int inst, char* value,int len)
 
 
 
-//! :DEVice:MRQ:MOTion:ABCOUNt? <name>,<ch>
+//! :DEVice:MRQ:MOTion:ABCOUNt?  <name>,<ch>
 int mrhtDeviceMrqMotionAbcount_Query(int inst,int name,int chan, int* count)
 {
     char as8FmtCmd[100] = {0};
@@ -869,6 +1097,12 @@ int mrhtDeviceMrqMotionAbcount_Query(int inst,int name,int chan, int* count)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTion:ABCOUNt? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8count, 100) == 0)
     {
         return -1;
@@ -881,7 +1115,7 @@ int mrhtDeviceMrqMotionAbcount_Query(int inst,int name,int chan, int* count)
 
 
 
-//! :DEVice:MRQ:MOTion:ABCOUNt:CLEAr <name>,<ch>
+//! :DEVice:MRQ:MOTion:ABCOUNt:CLEAr  <name>,<ch>
 int mrhtDeviceMrqMotionAbcountClear(int inst,int name,int chan)
 {
     char as8FmtCmd[100] = {0};
@@ -890,6 +1124,12 @@ int mrhtDeviceMrqMotionAbcountClear(int inst,int name,int chan)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTion:ABCOUNt:CLEAr %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -912,6 +1152,12 @@ int mrhtDeviceMrqMotionAdjust(int inst,int name,int chan,int position,int time)
     int s32time = time;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTion:ADJust %d,%d,%d,%d",s32name,s32chan,s32position,s32time);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -923,7 +1169,7 @@ int mrhtDeviceMrqMotionAdjust(int inst,int name,int chan,int position,int time)
 
 
 
-//! :DEVice:MRQ:MOTion:REVERSe <name>,<OFF|ON>
+//! :DEVice:MRQ:MOTion:REVERSe <name>,<OFF|0|ON|1>
 int mrhtDeviceMrqMotionReverse(int inst,int name,int state)
 {
     char as8FmtCmd[100] = {0};
@@ -937,10 +1183,28 @@ int mrhtDeviceMrqMotionReverse(int inst,int name,int state)
     }
     else if(state == 1)
     {
+        ps8state = "0";
+    }
+    else if(state == 2)
+    {
         ps8state = "ON";
+    }
+    else if(state == 3)
+    {
+        ps8state = "1";
+    }
+    else
+    {
+        ps8state = "None";
     }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTion:REVERSe %d,%s",s32name,ps8state);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -961,6 +1225,12 @@ int mrhtDeviceMrqMotionReverse_Query(int inst,int name, int* state)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTion:REVERSe? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8state, 100) == 0)
     {
         return -1;
@@ -1007,8 +1277,18 @@ int mrhtDeviceMrqMotorStepAngle(int inst,int name,int chan,int step)
     {
         ps8step = "7.5";
     }
+    else
+    {
+        ps8step = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTOR:STEP:ANGLe %d,%d,%s",s32name,s32chan,ps8step);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -1030,6 +1310,12 @@ int mrhtDeviceMrqMotorStepAngle_Query(int inst,int name,int chan, int* step)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTOR:STEP:ANGLe? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8step, 100) == 0)
     {
         return -1;
@@ -1078,8 +1364,18 @@ int mrhtDeviceMrqMotorMotionType(int inst,int name,int chan,int motion)
     {
         ps8motion = "LINEAR";
     }
+    else
+    {
+        ps8motion = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTOR:MOTion:TYPe %d,%d,%s",s32name,s32chan,ps8motion);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -1101,6 +1397,12 @@ int mrhtDeviceMrqMotorMotionType_Query(int inst,int name,int chan, int* motion)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTOR:MOTion:TYPe? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8motion, 100) == 0)
     {
         return -1;
@@ -1122,7 +1424,7 @@ int mrhtDeviceMrqMotorMotionType_Query(int inst,int name,int chan, int* motion)
 
 
 
-//! :DEVice:MRQ:MOTOR:POSition:UNIT <name>,<CH>,<ANGLE|RADIAN|MILLIMETER>
+//! :DEVice:MRQ:MOTOR:POSition:UNIT <name>,<CH>,< ANGLE|RADIAN|MILLIMETER>
 int mrhtDeviceMrqMotorPositionUnit(int inst,int name,int chan,int pos)
 {
     char as8FmtCmd[100] = {0};
@@ -1133,18 +1435,20 @@ int mrhtDeviceMrqMotorPositionUnit(int inst,int name,int chan,int pos)
     char* ps8pos = NULL;
     if(pos == 0)
     {
-        ps8pos = "ANGLE";
+        ps8pos = "";
     }
-    else if(pos == 1)
+    else
     {
-        ps8pos = "RADIAN";
-    }
-    else if(pos == 2)
-    {
-        ps8pos = "MILLIMETER";
+        ps8pos = "None";
     }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTOR:POSition:UNIT %d,%d,%s",s32name,s32chan,ps8pos);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -1166,6 +1470,12 @@ int mrhtDeviceMrqMotorPositionUnit_Query(int inst,int name,int chan, int* pos)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTOR:POSition:UNIT? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8pos, 100) == 0)
     {
         return -1;
@@ -1203,6 +1513,12 @@ int mrhtDeviceMrqMotorGearRatio(int inst,int name,int chan,int above,int below)
     int s32below = below;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTOR:GEAR:RATio %d,%d,%d,%d",s32name,s32chan,s32above,s32below);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -1224,6 +1540,12 @@ int mrhtDeviceMrqMotorGearRatio_Query(int inst,int name,int chan, int* above,int
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTOR:GEAR:RATio? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8above, 100) == 0)
     {
         return -1;
@@ -1260,6 +1582,12 @@ int mrhtDeviceMrqMotorLead(int inst,int name,int chan,int mm)
     int s32mm = mm;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTOR:LEAD %d,%d,%d",s32name,s32chan,s32mm);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -1281,6 +1609,12 @@ int mrhtDeviceMrqMotorLead_Query(int inst,int name,int chan, int* mm)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTOR:LEAD? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8mm, 100) == 0)
     {
         return -1;
@@ -1326,8 +1660,18 @@ int mrhtDeviceMrqMotorSize(int inst,int name,int chan,int size)
     {
         ps8size = "24";
     }
+    else
+    {
+        ps8size = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTOR:SIZE %d,%d,%s",s32name,s32chan,ps8size);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -1349,6 +1693,12 @@ int mrhtDeviceMrqMotorSize_Query(int inst,int name,int chan, int* size)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTOR:SIZE? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8size, 100) == 0)
     {
         return -1;
@@ -1400,6 +1750,12 @@ int mrhtDeviceMrqMotorVoltage(int inst,int name,int chan,int volt)
     int s32volt = volt;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTOR:VOLTage %d,%d,%d",s32name,s32chan,s32volt);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -1421,6 +1777,12 @@ int mrhtDeviceMrqMotorVoltage_Query(int inst,int name,int chan, int* volt)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTOR:VOLTage? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8volt, 100) == 0)
     {
         return -1;
@@ -1443,6 +1805,12 @@ int mrhtDeviceMrqMotorCurrent(int inst,int name,int chan,int curr)
     int s32curr = curr;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTOR:CURRent %d,%d,%d",s32name,s32chan,s32curr);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -1464,6 +1832,12 @@ int mrhtDeviceMrqMotorCurrent_Query(int inst,int name,int chan, int* curr)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTOR:CURRent? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8curr, 100) == 0)
     {
         return -1;
@@ -1486,6 +1860,12 @@ int mrhtDeviceMrqMotorBacklash(int inst,int name,int chan,int lash)
     int s32lash = lash;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTOR:BACKLash %d,%d,%d",s32name,s32chan,s32lash);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -1507,6 +1887,12 @@ int mrhtDeviceMrqMotorBacklash_Query(int inst,int name,int chan, int* lash)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:MOTOR:BACKLash? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8lash, 100) == 0)
     {
         return -1;
@@ -1568,6 +1954,10 @@ int mrhtDeviceMrqPvtConfig(int inst,int name,int chan,int wave,int state)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     char* ps8state = NULL;
     if(state == 0)
@@ -1578,8 +1968,18 @@ int mrhtDeviceMrqPvtConfig(int inst,int name,int chan,int wave,int state)
     {
         ps8state = "CLEAR";
     }
+    else
+    {
+        ps8state = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:CONFig %d,%d,%s,%s",s32name,s32chan,ps8wave,ps8state);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -1640,11 +2040,21 @@ int mrhtDeviceMrqPvtValue(int inst,int name,int chan,int wave,double p,double v,
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
     double f64p = p;
     double f64v = v;
     double f64t = t;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:VALue %d,%d,%s,%f,%f,%f",s32name,s32chan,ps8wave,f64p,f64v,f64t);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -1706,8 +2116,18 @@ int mrhtDeviceMrqPvtState_Query(int inst,int name,int chan,int wave, int* state)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:STATe? %d,%d,%s",s32name,s32chan,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8state, 100) == 0)
     {
         return -1;
@@ -1793,10 +2213,20 @@ int mrhtDeviceMrqPvtTscale(int inst,int name,int chan,int wave,int speedup,int s
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
     int s32speedup = speedup;
     int s32speedcut = speedcut;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:TSCale %d,%d,%s,%d,%d",s32name,s32chan,ps8wave,s32speedup,s32speedcut);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -1857,6 +2287,10 @@ int mrhtDeviceMrqPvtModeExe(int inst,int name,int chan,int wave,int exe)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     char* ps8exe = NULL;
     if(exe == 0)
@@ -1867,8 +2301,18 @@ int mrhtDeviceMrqPvtModeExe(int inst,int name,int chan,int wave,int exe)
     {
         ps8exe = "FIFO";
     }
+    else
+    {
+        ps8exe = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:MODe:EXE %d,%d,%s,%s",s32name,s32chan,ps8wave,ps8exe);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -1930,8 +2374,18 @@ int mrhtDeviceMrqPvtModeExe_Query(int inst,int name,int chan,int wave, int* exe)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:MODe:EXE? %d,%d,%s",s32name,s32chan,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8exe, 100) == 0)
     {
         return -1;
@@ -2002,6 +2456,10 @@ int mrhtDeviceMrqPvtModePlan(int inst,int name,int chan,int wave,int plan)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     char* ps8plan = NULL;
     if(plan == 0)
@@ -2020,8 +2478,18 @@ int mrhtDeviceMrqPvtModePlan(int inst,int name,int chan,int wave,int plan)
     {
         ps8plan = "TRAPEZOID";
     }
+    else
+    {
+        ps8plan = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:MODe:PLAN %d,%d,%s,%s",s32name,s32chan,ps8wave,ps8plan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -2083,8 +2551,18 @@ int mrhtDeviceMrqPvtModePlan_Query(int inst,int name,int chan,int wave, int* pla
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:MODe:PLAN? %d,%d,%s",s32name,s32chan,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8plan, 100) == 0)
     {
         return -1;
@@ -2165,6 +2643,10 @@ int mrhtDeviceMrqPvtModeMotion(int inst,int name,int chan,int wave,int motion)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     char* ps8motion = NULL;
     if(motion == 0)
@@ -2179,8 +2661,18 @@ int mrhtDeviceMrqPvtModeMotion(int inst,int name,int chan,int wave,int motion)
     {
         ps8motion = "LVT_NOCORRECT";
     }
+    else
+    {
+        ps8motion = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:MODe:MOTion %d,%d,%s,%s",s32name,s32chan,ps8wave,ps8motion);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -2242,8 +2734,18 @@ int mrhtDeviceMrqPvtModeMotion_Query(int inst,int name,int chan,int wave, int* m
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:MODe:MOTion? %d,%d,%s",s32name,s32chan,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8motion, 100) == 0)
     {
         return -1;
@@ -2319,6 +2821,10 @@ int mrhtDeviceMrqPvtModifyDuty(int inst,int name,int chan,int wave,int duty)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     char* ps8duty = NULL;
     if(duty == 0)
@@ -2337,8 +2843,18 @@ int mrhtDeviceMrqPvtModifyDuty(int inst,int name,int chan,int wave,int duty)
     {
         ps8duty = "1/32";
     }
+    else
+    {
+        ps8duty = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:MODIFy:DUTY %d,%d,%s,%s",s32name,s32chan,ps8wave,ps8duty);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -2400,8 +2916,18 @@ int mrhtDeviceMrqPvtModifyDuty_Query(int inst,int name,int chan,int wave, int* d
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:MODIFy:DUTY? %d,%d,%s",s32name,s32chan,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8duty, 100) == 0)
     {
         return -1;
@@ -2482,6 +3008,10 @@ int mrhtDeviceMrqPvtEndState(int inst,int name,int chan,int wave,int state)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     char* ps8state = NULL;
     if(state == 0)
@@ -2492,8 +3022,18 @@ int mrhtDeviceMrqPvtEndState(int inst,int name,int chan,int wave,int state)
     {
         ps8state = "HOLD";
     }
+    else
+    {
+        ps8state = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:END:STATe %d,%d,%s,%s",s32name,s32chan,ps8wave,ps8state);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -2555,8 +3095,18 @@ int mrhtDeviceMrqPvtEndState_Query(int inst,int name,int chan,int wave, int* sta
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:END:STATe? %d,%d,%s",s32name,s32chan,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8state, 100) == 0)
     {
         return -1;
@@ -2627,10 +3177,20 @@ int mrhtDeviceMrqPvtAdecScale(int inst,int name,int chan,int wave,int scaleA,int
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
     int s32scaleA = scaleA;
     int s32scaleD = scaleD;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:ADEC:SCALe %d,%d,%s,%d,%d",s32name,s32chan,ps8wave,s32scaleA,s32scaleD);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -2692,8 +3252,18 @@ int mrhtDeviceMrqPvtAdecScale_Query(int inst,int name,int chan,int wave, int* sc
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:ADEC:SCALe? %d,%d,%s",s32name,s32chan,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8scaleA, 100) == 0)
     {
         return -1;
@@ -2769,14 +3339,28 @@ int mrhtDeviceMrqPvtStopMode(int inst,int name,int chan,int wave,int mode)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     char* ps8mode = NULL;
     if(mode == 0)
     {
         ps8mode = "";
     }
+    else
+    {
+        ps8mode = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:STOP:MODe %d,%d,%s,%s",s32name,s32chan,ps8wave,ps8mode);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -2838,8 +3422,18 @@ int mrhtDeviceMrqPvtStopMode_Query(int inst,int name,int chan,int wave, int* mod
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:STOP:MODe? %d,%d,%s",s32name,s32chan,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8mode, 100) == 0)
     {
         return -1;
@@ -2910,9 +3504,19 @@ int mrhtDeviceMrqPvtStopDistance(int inst,int name,int chan,int wave,int dist)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
     int s32dist = dist;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:STOP:DISTance %d,%d,%s,%d",s32name,s32chan,ps8wave,s32dist);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -2974,8 +3578,18 @@ int mrhtDeviceMrqPvtStopDistance_Query(int inst,int name,int chan,int wave, int*
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:PVT:STOP:DISTance? %d,%d,%s",s32name,s32chan,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8dist, 100) == 0)
     {
         return -1;
@@ -3037,6 +3651,10 @@ int mrhtDeviceMrqLoststepLineState(int inst,int name,int chan,int wave,int state
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     char* ps8state = NULL;
     if(state == 0)
@@ -3047,8 +3665,18 @@ int mrhtDeviceMrqLoststepLineState(int inst,int name,int chan,int wave,int state
     {
         ps8state = "ON";
     }
+    else
+    {
+        ps8state = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:LOSTstep:LINe:STATe %d,%d,%s,%s",s32name,s32chan,ps8wave,ps8state);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -3110,8 +3738,18 @@ int mrhtDeviceMrqLoststepLineState_Query(int inst,int name,int chan,int wave, in
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:LOSTstep:LINe:STATe? %d,%d,%s",s32name,s32chan,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8state, 100) == 0)
     {
         return -1;
@@ -3182,9 +3820,19 @@ int mrhtDeviceMrqLoststepLineThreshold(int inst,int name,int chan,int wave,int v
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
     int s32value = value;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:LOSTstep:LINe:THREShold %d,%d,%s,%d",s32name,s32chan,ps8wave,s32value);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -3246,8 +3894,18 @@ int mrhtDeviceMrqLoststepLineThreshold_Query(int inst,int name,int chan,int wave
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:LOSTstep:LINe:THREShold? %d,%d,%s",s32name,s32chan,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8value, 100) == 0)
     {
         return -1;
@@ -3309,6 +3967,10 @@ int mrhtDeviceMrqLoststepLineResponse(int inst,int name,int chan,int wave,int re
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     char* ps8resp = NULL;
     if(resp == 0)
@@ -3327,8 +3989,18 @@ int mrhtDeviceMrqLoststepLineResponse(int inst,int name,int chan,int wave,int re
     {
         ps8resp = "ALARM&STOP";
     }
+    else
+    {
+        ps8resp = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:LOSTstep:LINe:RESPonse %d,%d,%s,%s",s32name,s32chan,ps8wave,ps8resp);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -3390,8 +4062,18 @@ int mrhtDeviceMrqLoststepLineResponse_Query(int inst,int name,int chan,int wave,
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:LOSTstep:LINe:RESPonse? %d,%d,%s",s32name,s32chan,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8resp, 100) == 0)
     {
         return -1;
@@ -3456,6 +4138,10 @@ int mrhtDeviceMrqReportState(int inst,int name,int chan,int index,int state)
     {
         ps8index = "ABSEN";
     }
+    else
+    {
+        ps8index = "None";
+    }
 
     char* ps8state = NULL;
     if(state == 0)
@@ -3466,8 +4152,18 @@ int mrhtDeviceMrqReportState(int inst,int name,int chan,int index,int state)
     {
         ps8state = "ON";
     }
+    else
+    {
+        ps8state = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:REPort:STATe %d,%d,%s,%s",s32name,s32chan,ps8index,ps8state);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -3513,8 +4209,18 @@ int mrhtDeviceMrqReportState_Query(int inst,int name,int chan,int index, int* st
     {
         ps8index = "ABSEN";
     }
+    else
+    {
+        ps8index = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:REPort:STATe? %d,%d,%s",s32name,s32chan,ps8index);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8state, 100) == 0)
     {
         return -1;
@@ -3569,9 +4275,19 @@ int mrhtDeviceMrqReportPeriod(int inst,int name,int chan,int index,int ms)
     {
         ps8index = "ABSEN";
     }
+    else
+    {
+        ps8index = "None";
+    }
     int s32ms = ms;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:REPort:PERiod %d,%d,%s,%d",s32name,s32chan,ps8index,s32ms);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -3617,8 +4333,18 @@ int mrhtDeviceMrqReportPeriod_Query(int inst,int name,int chan,int index, int* m
     {
         ps8index = "ABSEN";
     }
+    else
+    {
+        ps8index = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:REPort:PERiod? %d,%d,%s",s32name,s32chan,ps8index);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8ms, 100) == 0)
     {
         return -1;
@@ -3631,8 +4357,8 @@ int mrhtDeviceMrqReportPeriod_Query(int inst,int name,int chan,int index, int* m
 
 
 
-//! :DEVice:MRQ:REPort:DATA? <name>,<ch>,<TORQUE|CYCLE|SGALL|SGSE|DIST|ABSEN>
-int mrhtDeviceMrqReportData_Query(int inst,int name,int chan,int index, char* data,int len)
+//! :DEVice:MRQ:REPort:DATA:VALue? <name>,<ch>,<TORQUE|CYCLE|SGALL|SGSE|DIST|ABSEN>
+int mrhtDeviceMrqReportDataValue_Query(int inst,int name,int chan,int index, char* data,int len)
 {
     char as8FmtCmd[100] = {0};
     char* ps8data = data;
@@ -3665,13 +4391,82 @@ int mrhtDeviceMrqReportData_Query(int inst,int name,int chan,int index, char* da
     {
         ps8index = "ABSEN";
     }
+    else
+    {
+        ps8index = "None";
+    }
 
-    sprintf(as8FmtCmd, ":DEVice:MRQ:REPort:DATA? %d,%d,%s",s32name,s32chan,ps8index);
+    sprintf(as8FmtCmd, ":DEVice:MRQ:REPort:DATA:VALue? %d,%d,%s",s32name,s32chan,ps8index);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8data, len) == 0)
     {
         return -1;
     }
     
+    return 0;
+}
+
+
+
+
+//! :DEVice:MRQ:REPort:DATA:Queue? <name>,<ch>,<TORQUE|CYCLE|SGALL|SGSE|DIST|ABSEN>[,count]
+int mrhtDeviceMrqReportDataQueue_Query(int inst,int name,int chan,int index,int count, int* value)
+{
+    char as8FmtCmd[100] = {0};
+    char as8value[100] = {0};
+
+    int s32name = name;
+    int s32chan = chan;
+
+    char* ps8index = NULL;
+    if(index == 0)
+    {
+        ps8index = "TORQUE";
+    }
+    else if(index == 1)
+    {
+        ps8index = "CYCLE";
+    }
+    else if(index == 2)
+    {
+        ps8index = "SGALL";
+    }
+    else if(index == 3)
+    {
+        ps8index = "SGSE";
+    }
+    else if(index == 4)
+    {
+        ps8index = "DIST";
+    }
+    else if(index == 5)
+    {
+        ps8index = "ABSEN";
+    }
+    else
+    {
+        ps8index = "None";
+    }
+    int s32count = count;
+
+    sprintf(as8FmtCmd, ":DEVice:MRQ:REPort:DATA:Queue? %d,%d,%s,%d",s32name,s32chan,ps8index,s32count);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8value, 100) == 0)
+    {
+        return -1;
+    }
+    
+    *value = atoi(as8value);
     return 0;
 }
 
@@ -3695,8 +4490,18 @@ int mrhtDeviceMrqTriggerMode(int inst,int name,int chan,int mode)
     {
         ps8mode = "LEVEL";
     }
+    else
+    {
+        ps8mode = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:TRIGger:MODe %d,%d,%s",s32name,s32chan,ps8mode);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -3718,6 +4523,12 @@ int mrhtDeviceMrqTriggerMode_Query(int inst,int name,int chan, int* mode)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:TRIGger:MODe? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8mode, 100) == 0)
     {
         return -1;
@@ -3756,6 +4567,10 @@ int mrhtDeviceMrqTriggerLevelState(int inst,int name,int chan,int trig,int state
     {
         ps8trig = "TRIGR";
     }
+    else
+    {
+        ps8trig = "None";
+    }
 
     char* ps8state = NULL;
     if(state == 0)
@@ -3766,8 +4581,18 @@ int mrhtDeviceMrqTriggerLevelState(int inst,int name,int chan,int trig,int state
     {
         ps8state = "ON";
     }
+    else
+    {
+        ps8state = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:TRIGger:LEVel:STATe %d,%d,%s,%s",s32name,s32chan,ps8trig,ps8state);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -3797,8 +4622,18 @@ int mrhtDeviceMrqTriggerLevelState_Query(int inst,int name,int chan,int trig, in
     {
         ps8trig = "TRIGR";
     }
+    else
+    {
+        ps8trig = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:TRIGger:LEVel:STATe? %d,%d,%s",s32name,s32chan,ps8trig);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8state, 100) == 0)
     {
         return -1;
@@ -3837,6 +4672,10 @@ int mrhtDeviceMrqTriggerLevelType(int inst,int name,int chan,int trig,int type)
     {
         ps8trig = "TRIGR";
     }
+    else
+    {
+        ps8trig = "None";
+    }
 
     char* ps8type = NULL;
     if(type == 0)
@@ -3859,8 +4698,18 @@ int mrhtDeviceMrqTriggerLevelType(int inst,int name,int chan,int trig,int type)
     {
         ps8type = "HIGH";
     }
+    else
+    {
+        ps8type = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:TRIGger:LEVel:TYPe %d,%d,%s,%s",s32name,s32chan,ps8trig,ps8type);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -3890,8 +4739,18 @@ int mrhtDeviceMrqTriggerLevelType_Query(int inst,int name,int chan,int trig, int
     {
         ps8trig = "TRIGR";
     }
+    else
+    {
+        ps8trig = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:TRIGger:LEVel:TYPe? %d,%d,%s",s32name,s32chan,ps8trig);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8type, 100) == 0)
     {
         return -1;
@@ -3945,6 +4804,10 @@ int mrhtDeviceMrqTriggerLevelResponse(int inst,int name,int chan,int trig,int re
     {
         ps8trig = "TRIGR";
     }
+    else
+    {
+        ps8trig = "None";
+    }
 
     char* ps8resp = NULL;
     if(resp == 0)
@@ -3963,8 +4826,18 @@ int mrhtDeviceMrqTriggerLevelResponse(int inst,int name,int chan,int trig,int re
     {
         ps8resp = "ALARM&STOP";
     }
+    else
+    {
+        ps8resp = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:TRIGger:LEVel:RESPonse %d,%d,%s,%s",s32name,s32chan,ps8trig,ps8resp);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -3994,8 +4867,18 @@ int mrhtDeviceMrqTriggerLevelResponse_Query(int inst,int name,int chan,int trig,
     {
         ps8trig = "TRIGR";
     }
+    else
+    {
+        ps8trig = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:TRIGger:LEVel:RESPonse? %d,%d,%s",s32name,s32chan,ps8trig);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8resp, 100) == 0)
     {
         return -1;
@@ -4044,9 +4927,19 @@ int mrhtDeviceMrqTriggerLevelPeriod(int inst,int name,int chan,int trig,int peri
     {
         ps8trig = "TRIGR";
     }
+    else
+    {
+        ps8trig = "None";
+    }
     int s32period = period;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:TRIGger:LEVel:PERIod %d,%d,%s,%d",s32name,s32chan,ps8trig,s32period);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -4076,8 +4969,18 @@ int mrhtDeviceMrqTriggerLevelPeriod_Query(int inst,int name,int chan,int trig, i
     {
         ps8trig = "TRIGR";
     }
+    else
+    {
+        ps8trig = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:TRIGger:LEVel:PERIod? %d,%d,%s",s32name,s32chan,ps8trig);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8period, 100) == 0)
     {
         return -1;
@@ -4100,6 +5003,12 @@ int mrhtDeviceMrqDriverType_Query(int inst,int name,int chan, char* type,int len
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:DRIVER:TYPe? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8type, len) == 0)
     {
         return -1;
@@ -4121,6 +5030,12 @@ int mrhtDeviceMrqDriverCurrent(int inst,int name,int chan,int curr)
     int s32curr = curr;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:DRIVER:CURRent %d,%d,%d",s32name,s32chan,s32curr);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -4142,6 +5057,12 @@ int mrhtDeviceMrqDriverCurrent_Query(int inst,int name,int chan, int* curr)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:DRIVER:CURRent? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8curr, 100) == 0)
     {
         return -1;
@@ -4199,8 +5120,18 @@ int mrhtDeviceMrqDriverMicrostep(int inst,int name,int chan,int micr)
     {
         ps8micr = "1";
     }
+    else
+    {
+        ps8micr = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:DRIVER:MICROStep %d,%d,%s",s32name,s32chan,ps8micr);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -4222,6 +5153,12 @@ int mrhtDeviceMrqDriverMicrostep_Query(int inst,int name,int chan, int* micr)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:DRIVER:MICROStep? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8micr, 100) == 0)
     {
         return -1;
@@ -4295,8 +5232,18 @@ int mrhtDeviceMrqDriverState(int inst,int name,int chan,int state)
     {
         ps8state = "ON";
     }
+    else
+    {
+        ps8state = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:DRIVER:STATe %d,%d,%s",s32name,s32chan,ps8state);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -4318,6 +5265,12 @@ int mrhtDeviceMrqDriverState_Query(int inst,int name,int chan, int* state)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:DRIVER:STATe? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8state, 100) == 0)
     {
         return -1;
@@ -4349,6 +5302,12 @@ int mrhtDeviceMrqEncoderLineNumber(int inst,int name,int chan,int num)
     int s32num = num;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:ENCODer:LINe:NUMber %d,%d,%d",s32name,s32chan,s32num);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -4370,6 +5329,12 @@ int mrhtDeviceMrqEncoderLineNumber_Query(int inst,int name,int chan, int* num)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:ENCODer:LINe:NUMber? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8num, 100) == 0)
     {
         return -1;
@@ -4399,8 +5364,18 @@ int mrhtDeviceMrqEncoderChannelNumber(int inst,int name,int chan,int chanNum)
     {
         ps8chanNum = "3";
     }
+    else
+    {
+        ps8chanNum = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:ENCODer:CHANnel:NUMber %d,%d,%s",s32name,s32chan,ps8chanNum);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -4422,6 +5397,12 @@ int mrhtDeviceMrqEncoderChannelNumber_Query(int inst,int name,int chan, int* cha
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:ENCODer:CHANnel:NUMber? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8chanNum, 100) == 0)
     {
         return -1;
@@ -4460,8 +5441,18 @@ int mrhtDeviceMrqEncoderType(int inst,int name,int chan,int type)
     {
         ps8type = "ABSOLUTE";
     }
+    else
+    {
+        ps8type = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:ENCODer:TYPe %d,%d,%s",s32name,s32chan,ps8type);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -4483,6 +5474,12 @@ int mrhtDeviceMrqEncoderType_Query(int inst,int name,int chan, int* type)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:ENCODer:TYPe? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8type, 100) == 0)
     {
         return -1;
@@ -4514,6 +5511,12 @@ int mrhtDeviceMrqEncoderMultiple(int inst,int name,int chan,int multiple)
     int s32multiple = multiple;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:ENCODer:MULTIPLe %d,%d,%d",s32name,s32chan,s32multiple);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -4535,6 +5538,12 @@ int mrhtDeviceMrqEncoderMultiple_Query(int inst,int name,int chan, int* multiple
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:ENCODer:MULTIPLe? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8multiple, 100) == 0)
     {
         return -1;
@@ -4568,8 +5577,18 @@ int mrhtDeviceMrqEncoderState(int inst,int name,int chan,int state)
     {
         ps8state = "ON";
     }
+    else
+    {
+        ps8state = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:ENCODer:STATe %d,%d,%s",s32name,s32chan,ps8state);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -4591,6 +5610,12 @@ int mrhtDeviceMrqEncoderState_Query(int inst,int name,int chan, int* state)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:ENCODer:STATe? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8state, 100) == 0)
     {
         return -1;
@@ -4627,6 +5652,12 @@ int mrhtDeviceMrqEncoderfeedback(int inst,int name,int chan,int feed)
     int s32feed = feed;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:ENCODerFEEDBACK %d,%d,%d",s32name,s32chan,s32feed);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -4648,6 +5679,12 @@ int mrhtDeviceMrqEncoderfeedback_Query(int inst,int name,int chan, int* feed)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:ENCODerFEEDBACK? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8feed, 100) == 0)
     {
         return -1;
@@ -4672,6 +5709,12 @@ int mrhtDeviceMrqUartApply(int inst,int uart,int name,int parity,int wordlen,int
     int s32stopbit = stopbit;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:UART%d:APPLy %d,%d,%d,%d",s32uart,s32name,s32parity,s32wordlen,s32stopbit);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -4693,6 +5736,12 @@ int mrhtDeviceMrqUartApply_Query(int inst,int uart,int name, int* parity,int* wo
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:UART%d:APPLy? %d",s32uart,s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8parity, 100) == 0)
     {
         return -1;
@@ -4745,8 +5794,18 @@ int mrhtDeviceMrqUartFlowctrl(int inst,int uart,int name,int flow)
     {
         ps8flow = "RTS_CTS";
     }
+    else
+    {
+        ps8flow = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:UART%d:FLOWctrl %d,%s",s32uart,s32name,ps8flow);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -4768,6 +5827,12 @@ int mrhtDeviceMrqUartFlowctrl_Query(int inst,int uart,int name, int* flow)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:UART%d:FLOWctrl? %d",s32uart,s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8flow, 100) == 0)
     {
         return -1;
@@ -4817,8 +5882,18 @@ int mrhtDeviceMrqUartSensorState(int inst,int uart,int sensor,int name,int state
     {
         ps8state = "ON";
     }
+    else
+    {
+        ps8state = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:UART%d:SENSor%d:STATe %d,%s",s32uart,s32sensor,s32name,ps8state);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -4841,6 +5916,12 @@ int mrhtDeviceMrqUartSensorState_Query(int inst,int uart,int sensor,int name, in
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:UART%d:SENSor%d:STATe? %d",s32uart,s32sensor,s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8state, 100) == 0)
     {
         return -1;
@@ -4876,6 +5957,12 @@ int mrhtDeviceMrqUartSensorConfig(int inst,int uart,int sensor,int name,int sof,
     int s32period = period;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:UART%d:SENSor%d:CONFig %d,%d,%d,%d,%d",s32uart,s32sensor,s32name,s32sof,s32framelen,s32num,s32period);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -4898,6 +5985,12 @@ int mrhtDeviceMrqUartSensorConfigAll_Query(int inst,int uart,int sensor,int name
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:UART%d:SENSor%d:CONFig:ALL? %d",s32uart,s32sensor,s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8sof, 100) == 0)
     {
         return -1;
@@ -4937,6 +6030,12 @@ int mrhtDeviceMrqUartSensorConfigSof(int inst,int uart,int sensor,int name,int s
     int s32sof = sof;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:UART%d:SENSor%d:CONFig:SOF %d,%d",s32uart,s32sensor,s32name,s32sof);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -4959,6 +6058,12 @@ int mrhtDeviceMrqUartSensorConfigSof_Query(int inst,int uart,int sensor,int name
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:UART%d:SENSor%d:CONFig:SOF? %d",s32uart,s32sensor,s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8sof, 100) == 0)
     {
         return -1;
@@ -4982,6 +6087,12 @@ int mrhtDeviceMrqUartSensorConfigFramelen(int inst,int uart,int sensor,int name,
     int s32len = len;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:UART%d:SENSor%d:CONFig:FRAMELen %d,%d",s32uart,s32sensor,s32name,s32len);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -5004,6 +6115,12 @@ int mrhtDeviceMrqUartSensorConfigFramelen_Query(int inst,int uart,int sensor,int
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:UART%d:SENSor%d:CONFig:FRAMELen? %d",s32uart,s32sensor,s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8len, 100) == 0)
     {
         return -1;
@@ -5027,6 +6144,12 @@ int mrhtDeviceMrqUartSensorConfigNum(int inst,int uart,int sensor,int name,int n
     int s32num = num;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:UART%d:SENSor%d:CONFig:NUM %d,%d",s32uart,s32sensor,s32name,s32num);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -5049,6 +6172,12 @@ int mrhtDeviceMrqUartSensorConfigNum_Query(int inst,int uart,int sensor,int name
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:UART%d:SENSor%d:CONFig:NUM? %d",s32uart,s32sensor,s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8num, 100) == 0)
     {
         return -1;
@@ -5072,6 +6201,12 @@ int mrhtDeviceMrqUartSensorConfigPeriod(int inst,int uart,int sensor,int name,in
     int s32time = time;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:UART%d:SENSor%d:CONFig:PERIod %d,%d",s32uart,s32sensor,s32name,s32time);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -5094,6 +6229,12 @@ int mrhtDeviceMrqUartSensorConfigPeriod_Query(int inst,int uart,int sensor,int n
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:UART%d:SENSor%d:CONFig:PERIod? %d",s32uart,s32sensor,s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8time, 100) == 0)
     {
         return -1;
@@ -5117,6 +6258,12 @@ int mrhtDeviceMrqUartSensorData_Query(int inst,int uart,int sensor,int name, cha
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:UART%d:SENSor%d:DATA? %d",s32uart,s32sensor,s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8data, len) == 0)
     {
         return -1;
@@ -5138,6 +6285,12 @@ int mrhtDeviceMrqDalarmState_Query(int inst,int name,int chan, int* state)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:DALarm:STATe? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8state, 100) == 0)
     {
         return -1;
@@ -5176,8 +6329,18 @@ int mrhtDeviceMrqDalarmState(int inst,int name,int chan,int state)
     {
         ps8state = "OFF";
     }
+    else
+    {
+        ps8state = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:DALarm:STATe %d,%d,%s",s32name,s32chan,ps8state);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -5199,6 +6362,12 @@ int mrhtDeviceMrqDalarmAlarm1Distance(int inst,int name,int chan,int dist)
     int s32dist = dist;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:DALarm:ALARm1:DISTance %d,%d,%d",s32name,s32chan,s32dist);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -5220,6 +6389,12 @@ int mrhtDeviceMrqDalarmAlarm1Distance_Query(int inst,int name,int chan, int* dis
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:DALarm:ALARm1:DISTance? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8dist, 100) == 0)
     {
         return -1;
@@ -5242,6 +6417,12 @@ int mrhtDeviceMrqDalarmAlarm2Distance(int inst,int name,int chan,int dist)
     int s32dist = dist;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:DALarm:ALARm2:DISTance %d,%d,%d",s32name,s32chan,s32dist);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -5263,6 +6444,12 @@ int mrhtDeviceMrqDalarmAlarm2Distance_Query(int inst,int name,int chan, int* dis
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:DALarm:ALARm2:DISTance? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8dist, 100) == 0)
     {
         return -1;
@@ -5285,6 +6472,12 @@ int mrhtDeviceMrqDalarmAlarm3Distance(int inst,int name,int chan,int dist)
     int s32dist = dist;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:DALarm:ALARm3:DISTance %d,%d,%d",s32name,s32chan,s32dist);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -5306,6 +6499,12 @@ int mrhtDeviceMrqDalarmAlarm3Distance_Query(int inst,int name,int chan, int* dis
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:DALarm:ALARm3:DISTance? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8dist, 100) == 0)
     {
         return -1;
@@ -5328,6 +6527,12 @@ int mrhtDeviceMrqNdriverType_Query(int inst,int name,int chan, char* type,int le
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:NDRiver:TYPe? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8type, len) == 0)
     {
         return -1;
@@ -5348,6 +6553,12 @@ int mrhtDeviceMrqNdriverCurrent(int inst,int name,int curr)
     int s32curr = curr;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:NDRiver:CURRent %d,%d",s32name,s32curr);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -5368,6 +6579,12 @@ int mrhtDeviceMrqNdriverCurrent_Query(int inst,int name, int* curr)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:NDRiver:CURRent? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8curr, 100) == 0)
     {
         return -1;
@@ -5424,8 +6641,18 @@ int mrhtDeviceMrqNdriverMicrosteps(int inst,int name,int micr)
     {
         ps8micr = "1";
     }
+    else
+    {
+        ps8micr = "None";
+    }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:NDRiver:MICRosteps %d,%s",s32name,ps8micr);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -5446,6 +6673,12 @@ int mrhtDeviceMrqNdriverMicrosteps_Query(int inst,int name, int* micr)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:NDRiver:MICRosteps? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8micr, 100) == 0)
     {
         return -1;
@@ -5512,17 +6745,23 @@ int mrhtDeviceMrqNdriverState_Query(int inst,int name,int chan, int* state)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:NDRiver:STATe? %d,%d",s32name,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8state, 100) == 0)
     {
         return -1;
     }
     
-    if(strcmp(as8state, "ON") == 0)
+    if(strcmp(as8state, "OFF") == 0)
     {
         *state = 0;
     }
 
-    else if(strcmp(as8state, "OFF") == 0)
+    else if(strcmp(as8state, "ON") == 0)
     {
         *state = 1;
     }
@@ -5533,7 +6772,7 @@ int mrhtDeviceMrqNdriverState_Query(int inst,int name,int chan, int* state)
 
 
 
-//! :DEVice:MRQ:NDRiver:STATe <name>,<ch>,<ON|OFF>
+//! :DEVice:MRQ:NDRiver:STATe <name>,<ch>,<OFF|ON>
 int mrhtDeviceMrqNdriverState(int inst,int name,int chan,int state)
 {
     char as8FmtCmd[100] = {0};
@@ -5544,14 +6783,24 @@ int mrhtDeviceMrqNdriverState(int inst,int name,int chan,int state)
     char* ps8state = NULL;
     if(state == 0)
     {
-        ps8state = "ON";
+        ps8state = "OFF";
     }
     else if(state == 1)
     {
-        ps8state = "OFF";
+        ps8state = "ON";
+    }
+    else
+    {
+        ps8state = "None";
     }
 
     sprintf(as8FmtCmd, ":DEVice:MRQ:NDRiver:STATe %d,%d,%s",s32name,s32chan,ps8state);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -5570,6 +6819,12 @@ int mrhtDeviceMrvPt(int inst)
 
 
     sprintf(as8FmtCmd, ":DEVice:MRV:PT ");
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -5605,10 +6860,20 @@ int mrhtRobotAlloc_Query(int inst,int configuration,char* chanList, int* name)
     {
         ps8configuration = "MRX-DELTA";
     }
+    else
+    {
+        ps8configuration = "None";
+    }
 
     char* ps8chanList = chanList;
 
     sprintf(as8FmtCmd, ":ROBOT:ALLOC? %s,%s",ps8configuration,ps8chanList);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8name, 100) == 0)
     {
         return -1;
@@ -5621,22 +6886,173 @@ int mrhtRobotAlloc_Query(int inst,int configuration,char* chanList, int* name)
 
 
 
-//! :ROBOT:ALLOC:FILe? <configfile>
-int mrhtRobotAllocFile_Query(int inst,char* file, int* name)
+//! :ROBOT:CONFIGuration:FILe:RESET
+int mrhtRobotConfigurationFileReset(int inst)
 {
     char as8FmtCmd[100] = {0};
-    char as8name[100] = {0};
 
 
-    char* ps8file = file;
-
-    sprintf(as8FmtCmd, ":ROBOT:ALLOC:FILe? %s",ps8file);
-    if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8name, 100) == 0)
+    sprintf(as8FmtCmd, ":ROBOT:CONFIGuration:FILe:RESET");
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
     }
     
-    *name = atoi(as8name);
+    return 0;
+}
+
+
+
+
+//! :ROBOT:CONFIGuration:FILe:EXPort 
+int mrhtRobotConfigurationFileExport(int inst)
+{
+    char as8FmtCmd[100] = {0};
+
+
+    sprintf(as8FmtCmd, ":ROBOT:CONFIGuration:FILe:EXPort ");
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
+    {
+        return -1;
+    }
+    
+    return 0;
+}
+
+
+
+
+//! :ROBOT:CONFIGuration:FILe:IMPort   
+int mrhtRobotConfigurationFileImport(int inst)
+{
+    char as8FmtCmd[100] = {0};
+
+
+    sprintf(as8FmtCmd, ":ROBOT:CONFIGuration:FILe:IMPort ");
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
+    {
+        return -1;
+    }
+    
+    return 0;
+}
+
+
+
+
+//! :ROBOT:CONFIGuration:FILe:STATe?
+int mrhtRobotConfigurationFileState_Query(int inst, int* state)
+{
+    char as8FmtCmd[100] = {0};
+    char as8state[100] = {0};
+
+
+    sprintf(as8FmtCmd, ":ROBOT:CONFIGuration:FILe:STATe?");
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8state, 100) == 0)
+    {
+        return -1;
+    }
+    
+    if(strcmp(as8state, "ERROR") == 0)
+    {
+        *state = 0;
+    }
+
+    else if(strcmp(as8state, "READY") == 0)
+    {
+        *state = 1;
+    }
+
+    else if(strcmp(as8state, "LOADING") == 0)
+    {
+        *state = 2;
+    }
+
+    else if(strcmp(as8state, "IDLE") == 0)
+    {
+        *state = 3;
+    }
+
+    else if(strcmp(as8state, "RUNNING") == 0)
+    {
+        *state = 4;
+    }
+
+    return 0;
+}
+
+
+
+
+//! :ROBOT:CONFIGuration:FILe:READ?
+int mrhtRobotConfigurationFileRead_Query(int inst, char* file,int len)
+{
+    char as8FmtCmd[100] = {0};
+    char* ps8file = file;
+
+
+    sprintf(as8FmtCmd, ":ROBOT:CONFIGuration:FILe:READ?");
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8file, len) == 0)
+    {
+        return -1;
+    }
+    
+    return 0;
+}
+
+
+
+
+//! :ROBOT:CONFIGuration? <name>
+int mrhtRobotConfiguration_Query(int inst,int name, char* configuration,int len)
+{
+    char as8FmtCmd[100] = {0};
+    char* ps8configuration = configuration;
+
+    int s32name = name;
+
+    sprintf(as8FmtCmd, ":ROBOT:CONFIGuration? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8configuration, len) == 0)
+    {
+        return -1;
+    }
+    
     return 0;
 }
 
@@ -5650,27 +7066,13 @@ int mrhtRobotDelete(int inst)
 
 
     sprintf(as8FmtCmd, ":ROBOT:DELETe ");
-    if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
     {
-        return -1;
+        del_substr(as8FmtCmd, ",None");
     }
     
-    return 0;
-}
-
-
-
-
-//! :ROBOT:CONFIGRATION? <name>
-int mrhtRobotConfigration_Query(int inst,int name, char* configuration,int len)
-{
-    char as8FmtCmd[100] = {0};
-    char* ps8configuration = configuration;
-
-    int s32name = name;
-
-    sprintf(as8FmtCmd, ":ROBOT:CONFIGRATION? %d",s32name);
-    if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8configuration, len) == 0)
+    if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
     }
@@ -5690,6 +7092,12 @@ int mrhtRobotSubtype(int inst,int name,int type)
     int s32type = type;
 
     sprintf(as8FmtCmd, ":ROBOT:SUBTYPE %d,%d",s32name,s32type);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -5710,6 +7118,12 @@ int mrhtRobotSubtype_Query(int inst,int name, int* type)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:SUBTYPE? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8type, 100) == 0)
     {
         return -1;
@@ -5731,6 +7145,12 @@ int mrhtRobotCoordinate(int inst,int name,int coordiante)
     int s32coordiante = coordiante;
 
     sprintf(as8FmtCmd, ":ROBOT:COORDinate %d,%d",s32name,s32coordiante);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -5751,6 +7171,12 @@ int mrhtRobotCoordinate_Query(int inst,int name, int* coordiante)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:COORDinate? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8coordiante, 100) == 0)
     {
         return -1;
@@ -5763,21 +7189,291 @@ int mrhtRobotCoordinate_Query(int inst,int name, int* coordiante)
 
 
 
-//! :ROBOT:DEVice:NAMe? <name>
-int mrhtRobotDeviceName_Query(int inst,int name, int* subname)
+//! :ROBOT:ZERO:AXIS <name>,<x>,<y>[,<z>]
+int mrhtRobotZeroAxis(int inst,int name,int x,int y,int z)
 {
     char as8FmtCmd[100] = {0};
-    char as8subname[100] = {0};
 
     int s32name = name;
+    int s32x = x;
+    int s32y = y;
+    int s32z = z;
 
-    sprintf(as8FmtCmd, ":ROBOT:DEVice:NAMe? %d",s32name);
-    if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8subname, 100) == 0)
+    sprintf(as8FmtCmd, ":ROBOT:ZERO:AXIS %d,%d,%d,%d",s32name,s32x,s32y,s32z);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
     }
     
-    *subname = atoi(as8subname);
+    return 0;
+}
+
+
+
+
+//! :ROBOT:ZERO:AXIS?  <name>
+int mrhtRobotZeroAxis_Query(int inst,int name, int* x,int* y,int* z)
+{
+    char as8FmtCmd[100] = {0};
+    char as8x[100] = {0};
+
+    int s32name = name;
+
+    sprintf(as8FmtCmd, ":ROBOT:ZERO:AXIS? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8x, 100) == 0)
+    {
+        return -1;
+    }
+    
+    char* ps8Delims = ",";
+    char* result = NULL;
+    char* ret[10] = {NULL};
+    int count = 0;
+    result = strtok(as8x, ps8Delims);
+    while(result != NULL)
+    {
+        ret[count] = result;
+        count++;
+        result = strtok(NULL, ps8Delims);
+    }
+
+    *x = atoi(ret[0]);
+    *y = atoi(ret[1]);
+    *z = atoi(ret[2]);
+
+    return 0;
+}
+
+
+
+
+//! :ROBOT:ZERO:PROJect <name>,<x>,<y>[,<z>]
+int mrhtRobotZeroProject(int inst,int name,int x,int y,int z)
+{
+    char as8FmtCmd[100] = {0};
+
+    int s32name = name;
+    int s32x = x;
+    int s32y = y;
+    int s32z = z;
+
+    sprintf(as8FmtCmd, ":ROBOT:ZERO:PROJect %d,%d,%d,%d",s32name,s32x,s32y,s32z);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
+    {
+        return -1;
+    }
+    
+    return 0;
+}
+
+
+
+
+//! :ROBOT:ZERO:PROJect? <name>
+int mrhtRobotZeroProject_Query(int inst,int name, char* value,int len)
+{
+    char as8FmtCmd[100] = {0};
+    char* ps8value = value;
+
+    int s32name = name;
+
+    sprintf(as8FmtCmd, ":ROBOT:ZERO:PROJect? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8value, len) == 0)
+    {
+        return -1;
+    }
+    
+    return 0;
+}
+
+
+
+
+//! :ROBOT:LIMIt:SOFT:POSITive <name>,<x>,<y>[,<z>]
+int mrhtRobotLimitSoftPositive(int inst,int name,int x,int y,int z)
+{
+    char as8FmtCmd[100] = {0};
+
+    int s32name = name;
+    int s32x = x;
+    int s32y = y;
+    int s32z = z;
+
+    sprintf(as8FmtCmd, ":ROBOT:LIMIt:SOFT:POSITive %d,%d,%d,%d",s32name,s32x,s32y,s32z);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
+    {
+        return -1;
+    }
+    
+    return 0;
+}
+
+
+
+
+//! :ROBOT:LIMIt:SOFT:POSITive? <name>
+int mrhtRobotLimitSoftPositive_Query(int inst,int name, int* x,int* y,int* z)
+{
+    char as8FmtCmd[100] = {0};
+    char as8x[100] = {0};
+
+    int s32name = name;
+
+    sprintf(as8FmtCmd, ":ROBOT:LIMIt:SOFT:POSITive? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8x, 100) == 0)
+    {
+        return -1;
+    }
+    
+    char* ps8Delims = ",";
+    char* result = NULL;
+    char* ret[10] = {NULL};
+    int count = 0;
+    result = strtok(as8x, ps8Delims);
+    while(result != NULL)
+    {
+        ret[count] = result;
+        count++;
+        result = strtok(NULL, ps8Delims);
+    }
+
+    *x = atoi(ret[0]);
+    *y = atoi(ret[1]);
+    *z = atoi(ret[2]);
+
+    return 0;
+}
+
+
+
+
+//! :ROBOT:LIMIt:SOFT:NEGATive <name>,<x>,<y>[,<z>]
+int mrhtRobotLimitSoftNegative(int inst,int name,int x,int y,int z)
+{
+    char as8FmtCmd[100] = {0};
+
+    int s32name = name;
+    int s32x = x;
+    int s32y = y;
+    int s32z = z;
+
+    sprintf(as8FmtCmd, ":ROBOT:LIMIt:SOFT:NEGATive %d,%d,%d,%d",s32name,s32x,s32y,s32z);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
+    {
+        return -1;
+    }
+    
+    return 0;
+}
+
+
+
+
+//! :ROBOT:LIMIt:SOFT:NEGATive? <name>
+int mrhtRobotLimitSoftNegative_Query(int inst,int name, int* x,int* y,int* z)
+{
+    char as8FmtCmd[100] = {0};
+    char as8x[100] = {0};
+
+    int s32name = name;
+
+    sprintf(as8FmtCmd, ":ROBOT:LIMIt:SOFT:NEGATive? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8x, 100) == 0)
+    {
+        return -1;
+    }
+    
+    char* ps8Delims = ",";
+    char* result = NULL;
+    char* ret[10] = {NULL};
+    int count = 0;
+    result = strtok(as8x, ps8Delims);
+    while(result != NULL)
+    {
+        ret[count] = result;
+        count++;
+        result = strtok(NULL, ps8Delims);
+    }
+
+    *x = atoi(ret[0]);
+    *y = atoi(ret[1]);
+    *z = atoi(ret[2]);
+
+    return 0;
+}
+
+
+
+
+//! :ROBOT:DEVice:NAMe? <name>
+int mrhtRobotDeviceName_Query(int inst,int name, int* devname)
+{
+    char as8FmtCmd[100] = {0};
+    char as8devname[100] = {0};
+
+    int s32name = name;
+
+    sprintf(as8FmtCmd, ":ROBOT:DEVice:NAMe? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8devname, 100) == 0)
+    {
+        return -1;
+    }
+    
+    *devname = atoi(as8devname);
     return 0;
 }
 
@@ -5790,7 +7486,14 @@ int mrhtRobotName_Query(int inst, char* name,int len)
     char as8FmtCmd[100] = {0};
     char* ps8name = name;
 
+
     sprintf(as8FmtCmd, ":ROBOT:NAMe?");
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8name, len) == 0)
     {
         return -1;
@@ -5810,53 +7513,18 @@ int mrhtRobotCount_Query(int inst, int* count)
 
 
     sprintf(as8FmtCmd, ":ROBOT:COUNt?");
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8count, 100) == 0)
     {
         return -1;
     }
     
     *count = atoi(as8count);
-    return 0;
-}
-
-
-
-
-//! :ROBOT:PROJECTZERO <name>,<(value)>
-int mrhtRobotProjectzero(int inst,int name,char* value)
-{
-    char as8FmtCmd[100] = {0};
-
-    int s32name = name;
-
-    char* ps8value = value;
-
-    sprintf(as8FmtCmd, ":ROBOT:PROJECTZERO %d,%s",s32name,ps8value);
-    if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
-    {
-        return -1;
-    }
-    
-    return 0;
-}
-
-
-
-
-//! :ROBOT:PROJECTZERO? <name>
-int mrhtRobotProjectzero_Query(int inst,int name, char* value,int len)
-{
-    char as8FmtCmd[100] = {0};
-    char* ps8value = value;
-
-    int s32name = name;
-
-    sprintf(as8FmtCmd, ":ROBOT:PROJECTZERO? %d",s32name);
-    if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8value, len) == 0)
-    {
-        return -1;
-    }
-    
     return 0;
 }
 
@@ -5911,8 +7579,18 @@ int mrhtRobotWavetable(int inst,int name,int wave)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":ROBOT:WAVETABLE %d,%s",s32name,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -5933,6 +7611,12 @@ int mrhtRobotWavetable_Query(int inst,int name, int* wave)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:WAVETABLE? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8wave, 100) == 0)
     {
         return -1;
@@ -6009,8 +7693,18 @@ int mrhtRobotIdentify(int inst,int state)
     {
         ps8state = "ON";
     }
+    else
+    {
+        ps8state = "None";
+    }
 
     sprintf(as8FmtCmd, ":ROBOT:IDENtify %s",ps8state);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -6070,8 +7764,18 @@ int mrhtRobotRun(int inst,int name, int wave)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":ROBOT:RUN %d,%s",s32name,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -6132,8 +7836,18 @@ int mrhtRobotState_Query(int inst,int name,int wave, int* state)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":ROBOT:STATe? %d,%s",s32name,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8state, 100) == 0)
     {
         return -1;
@@ -6218,8 +7932,18 @@ int mrhtRobotStop(int inst,int name,int wave)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":ROBOT:STOP %d,%s",s32name,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -6279,8 +8003,18 @@ int mrhtRobotHomeWavetable(int inst,int name,int wave)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":ROBOT:HOMe:WAVETABLE %d,%s",s32name,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -6301,6 +8035,12 @@ int mrhtRobotHomeWavetable_Query(int inst,int name, int* wave)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:HOMe:WAVETABLE? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8wave, 100) == 0)
     {
         return -1;
@@ -6371,6 +8111,12 @@ int mrhtRobotHomePosition_Query(int inst,int name, char* pos,int len)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:HOMe:POSITION? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8pos, len) == 0)
     {
         return -1;
@@ -6391,6 +8137,12 @@ int mrhtRobotHomeAngle_Query(int inst,int name, char* angle,int len)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:HOMe:ANGLE? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8angle, len) == 0)
     {
         return -1;
@@ -6411,6 +8163,12 @@ int mrhtRobotHomeRun(int inst,int name,int time)
     int s32time = time;
 
     sprintf(as8FmtCmd, ":ROBOT:HOMe:RUN %d,%d",s32name,s32time);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -6430,6 +8188,12 @@ int mrhtRobotHomeStop(int inst,int name)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:HOMe:STOP %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -6450,6 +8214,12 @@ int mrhtRobotHomeState_Query(int inst,int name, int* state)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:HOMe:STATe? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8state, 100) == 0)
     {
         return -1;
@@ -6495,6 +8265,12 @@ int mrhtRobotHomeMode(int inst,int name,int mode)
     int s32mode = mode;
 
     sprintf(as8FmtCmd, ":ROBOT:HOMe:MODe %d,%d",s32name,s32mode);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -6515,6 +8291,12 @@ int mrhtRobotHomeMode_Query(int inst,int name, int* mode)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:HOMe:MODe? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8mode, 100) == 0)
     {
         return -1;
@@ -6527,16 +8309,16 @@ int mrhtRobotHomeMode_Query(int inst,int name, int* mode)
 
 
 
-//! :ROBOT:MOVe <name>,<x>,<y>,<z>,<t>[,<<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>>]
-int mrhtRobotMove(int inst,int name,int x,int y,int z,int t,int wave)
+//! :ROBOT:MOVe <name>,<x>,<y>,<z>,<t>[,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>]
+int mrhtRobotMove(int inst,int name,double x,double y,double z,double t,int wave)
 {
     char as8FmtCmd[100] = {0};
 
     int s32name = name;
-    int s32x = x;
-    int s32y = y;
-    int s32z = z;
-    int s32t = t;
+    double f64x = x;
+    double f64y = y;
+    double f64z = z;
+    double f64t = t;
 
     char* ps8wave = NULL;
     if(wave == 0)
@@ -6579,8 +8361,18 @@ int mrhtRobotMove(int inst,int name,int x,int y,int z,int t,int wave)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
-    sprintf(as8FmtCmd, ":ROBOT:MOVe %d,%d,%d,%d,%d,%s",s32name,s32x,s32y,s32z,s32t,ps8wave);
+    sprintf(as8FmtCmd, ":ROBOT:MOVe %d,%f,%f,%f,%f,%s",s32name,f64x,f64y,f64z,f64t,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -6643,8 +8435,18 @@ int mrhtRobotMoveHold(int inst,int name,int axle,int speed,int dir,int wave)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":ROBOT:MOVe:HOLD %d,%d,%d,%d,%s",s32name,s32axle,s32speed,s32dir,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -6657,15 +8459,15 @@ int mrhtRobotMoveHold(int inst,int name,int axle,int speed,int dir,int wave)
 
 
 //! :ROBOT:MOVe:RELATive <name>,<x>,<y>,<z>,<t>[,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>]
-int mrhtRobotMoveRelative(int inst,int name,int x,int y,int z,int t,int wave)
+int mrhtRobotMoveRelative(int inst,int name,double x,double y,double z,double t,int wave)
 {
     char as8FmtCmd[100] = {0};
 
     int s32name = name;
-    int s32x = x;
-    int s32y = y;
-    int s32z = z;
-    int s32t = t;
+    double f64x = x;
+    double f64y = y;
+    double f64z = z;
+    double f64t = t;
 
     char* ps8wave = NULL;
     if(wave == 0)
@@ -6708,8 +8510,18 @@ int mrhtRobotMoveRelative(int inst,int name,int x,int y,int z,int t,int wave)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
-    sprintf(as8FmtCmd, ":ROBOT:MOVe:RELATive %d,%d,%d,%d,%d,%s",s32name,s32x,s32y,s32z,s32t,ps8wave);
+    sprintf(as8FmtCmd, ":ROBOT:MOVe:RELATive %d,%f,%f,%f,%f,%s",s32name,f64x,f64y,f64z,f64t,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -6722,15 +8534,15 @@ int mrhtRobotMoveRelative(int inst,int name,int x,int y,int z,int t,int wave)
 
 
 //! :ROBOT:MOVe:LINear <name>,<x>,<y>,<z>,<t>[,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>]
-int mrhtRobotMoveLinear(int inst,int name,int x,int y,int z,int t,int wave)
+int mrhtRobotMoveLinear(int inst,int name,double x,double y,double z,double t,int wave)
 {
     char as8FmtCmd[100] = {0};
 
     int s32name = name;
-    int s32x = x;
-    int s32y = y;
-    int s32z = z;
-    int s32t = t;
+    double f64x = x;
+    double f64y = y;
+    double f64z = z;
+    double f64t = t;
 
     char* ps8wave = NULL;
     if(wave == 0)
@@ -6773,8 +8585,18 @@ int mrhtRobotMoveLinear(int inst,int name,int x,int y,int z,int t,int wave)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
-    sprintf(as8FmtCmd, ":ROBOT:MOVe:LINear %d,%d,%d,%d,%d,%s",s32name,s32x,s32y,s32z,s32t,ps8wave);
+    sprintf(as8FmtCmd, ":ROBOT:MOVe:LINear %d,%f,%f,%f,%f,%s",s32name,f64x,f64y,f64z,f64t,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -6787,15 +8609,15 @@ int mrhtRobotMoveLinear(int inst,int name,int x,int y,int z,int t,int wave)
 
 
 //! :ROBOT:MOVe:LINear:RELATive <name>,<x>,<y>,<z>,<t>[,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>]
-int mrhtRobotMoveLinearRelative(int inst,int name,int x,int y,int z,int t,int wave)
+int mrhtRobotMoveLinearRelative(int inst,int name,double x,double y,double z,double t,int wave)
 {
     char as8FmtCmd[100] = {0};
 
     int s32name = name;
-    int s32x = x;
-    int s32y = y;
-    int s32z = z;
-    int s32t = t;
+    double f64x = x;
+    double f64y = y;
+    double f64z = z;
+    double f64t = t;
 
     char* ps8wave = NULL;
     if(wave == 0)
@@ -6838,8 +8660,93 @@ int mrhtRobotMoveLinearRelative(int inst,int name,int x,int y,int z,int t,int wa
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
-    sprintf(as8FmtCmd, ":ROBOT:MOVe:LINear:RELATive %d,%d,%d,%d,%d,%s",s32name,s32x,s32y,s32z,s32t,ps8wave);
+    sprintf(as8FmtCmd, ":ROBOT:MOVe:LINear:RELATive %d,%f,%f,%f,%f,%s",s32name,f64x,f64y,f64z,f64t,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
+    {
+        return -1;
+    }
+    
+    return 0;
+}
+
+
+
+
+//! :ROBOT:MOVe:JOG <name>,<axle>,<cr_time>,<cr_speed>,<speed>[,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>]
+int mrhtRobotMoveJog(int inst,int name,int axle,double cr_time,double cr_speed,double speed,int wave)
+{
+    char as8FmtCmd[100] = {0};
+
+    int s32name = name;
+    int s32axle = axle;
+    double f64cr_time = cr_time;
+    double f64cr_speed = cr_speed;
+    double f64speed = speed;
+
+    char* ps8wave = NULL;
+    if(wave == 0)
+    {
+        ps8wave = "MAIN";
+    }
+    else if(wave == 1)
+    {
+        ps8wave = "SMALL";
+    }
+    else if(wave == 2)
+    {
+        ps8wave = "P1";
+    }
+    else if(wave == 3)
+    {
+        ps8wave = "P2";
+    }
+    else if(wave == 4)
+    {
+        ps8wave = "P3";
+    }
+    else if(wave == 5)
+    {
+        ps8wave = "P4";
+    }
+    else if(wave == 6)
+    {
+        ps8wave = "P5";
+    }
+    else if(wave == 7)
+    {
+        ps8wave = "P6";
+    }
+    else if(wave == 8)
+    {
+        ps8wave = "P7";
+    }
+    else if(wave == 9)
+    {
+        ps8wave = "P8";
+    }
+    else
+    {
+        ps8wave = "None";
+    }
+
+    sprintf(as8FmtCmd, ":ROBOT:MOVe:JOG %d,%d,%f,%f,%f,%s",s32name,s32axle,f64cr_time,f64cr_speed,f64speed,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -6860,6 +8767,12 @@ int mrhtRobotCurrentAngle_Query(int inst,int name, char* angle,int len)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:CURRENT:ANGLE? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8angle, len) == 0)
     {
         return -1;
@@ -6880,6 +8793,12 @@ int mrhtRobotCurrentPosition_Query(int inst,int name, char* pos,int len)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:CURRENT:POSITION? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8pos, len) == 0)
     {
         return -1;
@@ -6892,19 +8811,25 @@ int mrhtRobotCurrentPosition_Query(int inst,int name, char* pos,int len)
 
 
 //! :ROBOT:POINt:LOAD <name>,<x>,<y>,<z>,<e>,<t>,<mode>
-int mrhtRobotPointLoad(int inst,int name,int x,int y,int z,int e,int t,int mode)
+int mrhtRobotPointLoad(int inst,int name,double x,double y,double z,double e,double t,int mode)
 {
     char as8FmtCmd[100] = {0};
 
     int s32name = name;
-    int s32x = x;
-    int s32y = y;
-    int s32z = z;
-    int s32e = e;
-    int s32t = t;
+    double f64x = x;
+    double f64y = y;
+    double f64z = z;
+    double f64e = e;
+    double f64t = t;
     int s32mode = mode;
 
-    sprintf(as8FmtCmd, ":ROBOT:POINt:LOAD %d,%d,%d,%d,%d,%d,%d",s32name,s32x,s32y,s32z,s32e,s32t,s32mode);
+    sprintf(as8FmtCmd, ":ROBOT:POINt:LOAD %d,%f,%f,%f,%f,%f,%d",s32name,f64x,f64y,f64z,f64e,f64t,s32mode);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -6925,6 +8850,12 @@ int mrhtRobotPointCount_Query(int inst,int name, int* count)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:POINt:COUNt? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8count, 100) == 0)
     {
         return -1;
@@ -6985,8 +8916,18 @@ int mrhtRobotPointResolve(int inst,int name,int wave)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":ROBOT:POINt:RESOLVe %d,%s",s32name,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -7006,68 +8947,13 @@ int mrhtRobotPointClear(int inst,int name)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:POINt:CLEAr %d",s32name);
-    if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
     {
-        return -1;
+        del_substr(as8FmtCmd, ",None");
     }
     
-    return 0;
-}
-
-
-
-
-//! :ROBOT:POINt:FILe:IMPORT <name>,<filename>
-int mrhtRobotPointFileImport(int inst,int name,char* file)
-{
-    char as8FmtCmd[100] = {0};
-
-    int s32name = name;
-
-    char* ps8file = file;
-
-    sprintf(as8FmtCmd, ":ROBOT:POINt:FILe:IMPORT %d,%s",s32name,ps8file);
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
-    {
-        return -1;
-    }
-    
-    return 0;
-}
-
-
-
-
-//! :ROBOT:POINt:FILe:EXPORT <name>,<filename>
-int mrhtRobotPointFileExport(int inst,int name,char* file)
-{
-    char as8FmtCmd[100] = {0};
-
-    int s32name = name;
-
-    char* ps8file = file;
-
-    sprintf(as8FmtCmd, ":ROBOT:POINt:FILe:EXPORT %d,%s",s32name,ps8file);
-    if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
-    {
-        return -1;
-    }
-    
-    return 0;
-}
-
-
-
-
-//! :ROBOT:POINt:FILe?
-int mrhtRobotPointFile_Query(int inst, char* file,int len)
-{
-    char as8FmtCmd[100] = {0};
-    char* ps8file = file;
-
-
-    sprintf(as8FmtCmd, ":ROBOT:POINt:FILe?");
-    if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8file, len) == 0)
     {
         return -1;
     }
@@ -7079,17 +8965,23 @@ int mrhtRobotPointFile_Query(int inst, char* file,int len)
 
 
 //! :ROBOT:PVT:LOAD <name>,<p>,<v>,<t>,<axle>
-int mrhtRobotPvtLoad(int inst,int name,int p,int v,int t,int axle)
+int mrhtRobotPvtLoad(int inst,int name,double p,double v,double t,int axle)
 {
     char as8FmtCmd[100] = {0};
 
     int s32name = name;
-    int s32p = p;
-    int s32v = v;
-    int s32t = t;
+    double f64p = p;
+    double f64v = v;
+    double f64t = t;
     int s32axle = axle;
 
-    sprintf(as8FmtCmd, ":ROBOT:PVT:LOAD %d,%d,%d,%d,%d",s32name,s32p,s32v,s32t,s32axle);
+    sprintf(as8FmtCmd, ":ROBOT:PVT:LOAD %d,%f,%f,%f,%d",s32name,f64p,f64v,f64t,s32axle);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -7149,8 +9041,18 @@ int mrhtRobotPvtResolve(int inst,int name,int wave)
     {
         ps8wave = "P8";
     }
+    else
+    {
+        ps8wave = "None";
+    }
 
     sprintf(as8FmtCmd, ":ROBOT:PVT:RESOLVe %d,%s",s32name,ps8wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -7171,6 +9073,12 @@ int mrhtRobotPvtClear(int inst,int name,int axle)
     int s32axle = axle;
 
     sprintf(as8FmtCmd, ":ROBOT:PVT:CLEAr %d,%d",s32name,s32axle);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -7182,8 +9090,8 @@ int mrhtRobotPvtClear(int inst,int name,int axle)
 
 
 
-//! :ROBOT:PVT:FILe:IMPORT <name>,<filename>
-int mrhtRobotPvtFileImport(int inst,int name,char* file)
+//! :ROBOT:FILe:IMPORT <name>,<filename>
+int mrhtRobotFileImport(int inst,int name,char* file)
 {
     char as8FmtCmd[100] = {0};
 
@@ -7191,7 +9099,13 @@ int mrhtRobotPvtFileImport(int inst,int name,char* file)
 
     char* ps8file = file;
 
-    sprintf(as8FmtCmd, ":ROBOT:PVT:FILe:IMPORT %d,%s",s32name,ps8file);
+    sprintf(as8FmtCmd, ":ROBOT:FILe:IMPORT %d,%s",s32name,ps8file);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -7203,8 +9117,8 @@ int mrhtRobotPvtFileImport(int inst,int name,char* file)
 
 
 
-//! :ROBOT:PVT:FILe:EXPORT <name>,<filename>
-int mrhtRobotPvtFileExport(int inst,int name,char* file)
+//! :ROBOT:FILe:EXPORT :LOCal <name>,<filename>
+int mrhtRobotFileExport(int inst,int name,char* file)
 {
     char as8FmtCmd[100] = {0};
 
@@ -7212,7 +9126,13 @@ int mrhtRobotPvtFileExport(int inst,int name,char* file)
 
     char* ps8file = file;
 
-    sprintf(as8FmtCmd, ":ROBOT:PVT:FILe:EXPORT %d,%s",s32name,ps8file);
+    sprintf(as8FmtCmd, ":ROBOT:FILe:EXPORT %d,%s",s32name,ps8file);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -7224,15 +9144,51 @@ int mrhtRobotPvtFileExport(int inst,int name,char* file)
 
 
 
-//! :ROBOT:PVT:FILe?
-int mrhtRobotPvtFile_Query(int inst, char* file,int len)
+//! :ROBOT:FILe:EXPORT:EXTERnal <name>,<filename>
+int mrhtRobotFileExportExternal(int inst,int name,char* file)
 {
     char as8FmtCmd[100] = {0};
+
+    int s32name = name;
+
     char* ps8file = file;
 
+    sprintf(as8FmtCmd, ":ROBOT:FILe:EXPORT:EXTERnal %d,%s",s32name,ps8file);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
+    {
+        return -1;
+    }
+    
+    return 0;
+}
 
-    sprintf(as8FmtCmd, ":ROBOT:PVT:FILe?");
-    if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8file, len) == 0)
+
+
+
+//! :ROBOT:FILe:RESOLVe <name>,<section>[,<line>[,<MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8>]]
+int mrhtRobotFileResolve(int inst,int name,int section,int line,int wave)
+{
+    char as8FmtCmd[100] = {0};
+
+    int s32name = name;
+    int s32section = section;
+    int s32line = line;
+    int s32wave = wave;
+
+    sprintf(as8FmtCmd, ":ROBOT:FILe:RESOLVe %d,%d,%d,%d",s32name,s32section,s32line,s32wave);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
     }
@@ -7252,6 +9208,12 @@ int mrhtRobotInterpolateMode(int inst,int name,int mode)
     int s32mode = mode;
 
     sprintf(as8FmtCmd, ":ROBOT:INTERPOLATe:MODe %d,%d",s32name,s32mode);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -7272,6 +9234,12 @@ int mrhtRobotInterpolateMode_Query(int inst,int name, int* mode)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:INTERPOLATe:MODe? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8mode, 100) == 0)
     {
         return -1;
@@ -7293,6 +9261,12 @@ int mrhtRobotInterpolateStep(int inst,int name,int step)
     int s32step = step;
 
     sprintf(as8FmtCmd, ":ROBOT:INTERPOLATe:STEP %d,%d",s32name,s32step);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -7313,6 +9287,12 @@ int mrhtRobotInterpolateStep_Query(int inst,int name, int* step)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:INTERPOLATe:STEP? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8step, 100) == 0)
     {
         return -1;
@@ -7335,6 +9315,12 @@ int mrhtRobotEffectorSet(int inst,int name,int type,int chan)
     int s32chan = chan;
 
     sprintf(as8FmtCmd, ":ROBOT:EFFECTor:SET %d,%d,%d",s32name,s32type,s32chan);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -7354,6 +9340,12 @@ int mrhtRobotEffectorDelete(int inst,int name)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:EFFECTor:DELETe %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -7375,6 +9367,12 @@ int mrhtRobotEffectorExec(int inst,int name,int p,int t)
     int s32t = t;
 
     sprintf(as8FmtCmd, ":ROBOT:EFFECTor:EXEC %d,%d,%d",s32name,s32p,s32t);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -7394,6 +9392,12 @@ int mrhtRobotEffectorExecStop(int inst,int name)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:EFFECTor:EXEC:STOP %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -7414,6 +9418,12 @@ int mrhtRobotEffectorExecState_Query(int inst,int name, int* state)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:EFFECTor:EXEC:STATe? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8state, 100) == 0)
     {
         return -1;
@@ -7458,6 +9468,12 @@ int mrhtRobotEffectorHome(int inst,int name)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:EFFECTor:HOMe %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -7477,6 +9493,12 @@ int mrhtRobotEffectorHomeStop(int inst,int name)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:EFFECTor:HOMe:STOP %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
     {
         return -1;
@@ -7497,6 +9519,12 @@ int mrhtRobotEffectorHomeState_Query(int inst,int name, int* state)
     int s32name = name;
 
     sprintf(as8FmtCmd, ":ROBOT:EFFECTor:HOMe:STATe? %d",s32name);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
     if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),as8state, 100) == 0)
     {
         return -1;
@@ -7527,6 +9555,159 @@ int mrhtRobotEffectorHomeState_Query(int inst,int name, int* state)
         *state = 4;
     }
 
+    return 0;
+}
+
+
+
+
+//! :STORage:FILe:MOTion:LOCal?
+int mrhtStorageFileMotionLocal_Query(int inst, char* file,int len)
+{
+    char as8FmtCmd[100] = {0};
+    char* ps8file = file;
+
+
+    sprintf(as8FmtCmd, ":STORage:FILe:MOTion:LOCal?");
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8file, len) == 0)
+    {
+        return -1;
+    }
+    
+    return 0;
+}
+
+
+
+
+//! :STORage:FILe:MOTion:EXTERnal?
+int mrhtStorageFileMotionExternal_Query(int inst, char* file,int len)
+{
+    char as8FmtCmd[100] = {0};
+    char* ps8file = file;
+
+
+    sprintf(as8FmtCmd, ":STORage:FILe:MOTion:EXTERnal?");
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8file, len) == 0)
+    {
+        return -1;
+    }
+    
+    return 0;
+}
+
+
+
+
+//! :STORage:FILe:MOTion:CONText:READ? <filename>
+int mrhtStorageFileMotionContextRead_Query(int inst,char* file, char* context,int len)
+{
+    char as8FmtCmd[100] = {0};
+    char* ps8context = context;
+
+
+    char* ps8file = file;
+
+    sprintf(as8FmtCmd, ":STORage:FILe:MOTion:CONText:READ? %s",ps8file);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_query(inst, as8FmtCmd, strlen(as8FmtCmd),ps8context, len) == 0)
+    {
+        return -1;
+    }
+    
+    return 0;
+}
+
+
+
+
+//! :STORage:FILe:MOTion:CONText:WRITe :NAMe <filename>
+int mrhtStorageFileMotionContextWrite(int inst,char* file)
+{
+    char as8FmtCmd[100] = {0};
+
+
+    char* ps8file = file;
+
+    sprintf(as8FmtCmd, ":STORage:FILe:MOTion:CONText:WRITe %s",ps8file);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
+    {
+        return -1;
+    }
+    
+    return 0;
+}
+
+
+
+
+//! :STORage:FILe:MOTion:CONText:WRITe:DATa <context>
+int mrhtStorageFileMotionContextWriteData(int inst,char* context)
+{
+    char as8FmtCmd[100] = {0};
+
+
+    char* ps8context = context;
+
+    sprintf(as8FmtCmd, ":STORage:FILe:MOTion:CONText:WRITe:DATa %s",ps8context);
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
+    {
+        return -1;
+    }
+    
+    return 0;
+}
+
+
+
+
+//! :STORage:FILe:MOTion:CONText:WRITe:END
+int mrhtStorageFileMotionContextWriteEnd(int inst)
+{
+    char as8FmtCmd[100] = {0};
+
+
+    sprintf(as8FmtCmd, ":STORage:FILe:MOTion:CONText:WRITe:END");
+    
+    while(strcmp(as8FmtCmd, ",None") == 0)
+    {
+        del_substr(as8FmtCmd, ",None");
+    }
+    
+    if(_write(inst, as8FmtCmd, strlen(as8FmtCmd)) == 0)
+    {
+        return -1;
+    }
+    
     return 0;
 }
 

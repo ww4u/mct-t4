@@ -70,6 +70,8 @@ void MainWindow::setupWorkArea()
              this, SLOT(slot_focus_in(const QString &)) );
 
     connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int)),m_pOps,SLOT(slotSetCurrentRobot(QString,int,int)));
+    connect(m_roboConfig,SIGNAL(signalApplyClicked()),m_pOps,SLOT(slotLoadConfigAgain()));
+
     connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int)),this,SLOT(slotSetDockOpsName(QString,int,int)));
 
     ui->menuView->addAction( m_pDockOps->toggleViewAction() );

@@ -15,20 +15,17 @@ class Chart: public QChart
 public:
     Chart(QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
     virtual ~Chart();
+    void dataAppend(double value);
 
     QSplineSeries *series() const;
     QValueAxis *axis() const;
 
-public slots:
-    void handleTimeout();
-
 private:
-    QTimer m_timer;
     QSplineSeries *m_series;
     QValueAxis *m_axis;
-    qreal m_x;
-    qreal m_y;
-    qreal m_step;
+    double m_x;
+    double m_y;
+    double m_step;
 };
 
 
@@ -48,13 +45,10 @@ public:
     Chart* chart();
     QChartView* chartView();
 
+    void dataAppend(double value);
+
 public:
     virtual QSize sizeHint() const;
-
-signals:
-
-public slots:
-
 
 private:
     QChartView *m_chartView;

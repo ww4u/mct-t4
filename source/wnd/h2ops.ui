@@ -60,7 +60,7 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_9">
        <item row="0" column="0">
-        <widget class="H2Status" name="widget" native="true"/>
+        <widget class="H2Status" name="H2Status_1" native="true"/>
        </item>
        <item row="0" column="1">
         <widget class="QGroupBox" name="groupBox_9">
@@ -69,7 +69,7 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_11">
           <item row="2" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_target_position_y">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -97,7 +97,7 @@
            </widget>
           </item>
           <item row="5" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_6">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_Mileage_x">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -146,7 +146,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_target_position_x">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -174,7 +174,7 @@
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_5">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_actual_position_y">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -216,7 +216,7 @@
            </widget>
           </item>
           <item row="6" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_7">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_Mileage_y">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -258,7 +258,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_4">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_actual_position_x">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -286,7 +286,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_RecordNumber">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -398,7 +398,7 @@
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="H2Status" name="widget_2" native="true"/>
+        <widget class="H2Status" name="H2Status_2" native="true"/>
        </item>
        <item>
         <widget class="QGroupBox" name="groupBox">
@@ -527,7 +527,7 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
           <item row="3" column="0">
-           <widget class="QRadioButton" name="radioButton_13">
+           <widget class="QRadioButton" name="radioButton_moiton_complete">
             <property name="text">
              <string>Moiton Complete(MC)</string>
             </property>
@@ -537,7 +537,7 @@
            </widget>
           </item>
           <item row="4" column="0">
-           <widget class="QRadioButton" name="radioButton_14">
+           <widget class="QRadioButton" name="radioButton_load_voltage">
             <property name="text">
              <string>24V Load Voltage</string>
             </property>
@@ -547,7 +547,7 @@
            </widget>
           </item>
           <item row="2" column="0">
-           <widget class="QRadioButton" name="radioButton_7">
+           <widget class="QRadioButton" name="radioButton_acknowledge_start">
             <property name="text">
              <string>Acknowledge Start</string>
             </property>
@@ -557,7 +557,7 @@
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QRadioButton" name="radioButton_6">
+           <widget class="QRadioButton" name="radioButton_fault">
             <property name="text">
              <string>Fault</string>
             </property>
@@ -567,7 +567,7 @@
            </widget>
           </item>
           <item row="0" column="0">
-           <widget class="QRadioButton" name="radioButton_5">
+           <widget class="QRadioButton" name="radioButton_ready">
             <property name="text">
              <string>Ready</string>
             </property>
@@ -619,7 +619,7 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_14">
           <item row="2" column="0" colspan="2">
-           <widget class="QRadioButton" name="radioButton_15">
+           <widget class="QRadioButton" name="radioButton_homing_valid">
             <property name="layoutDirection">
              <enum>Qt::RightToLeft</enum>
             </property>
@@ -628,22 +628,14 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_23">
-            <property name="text">
-             <string>TextLabel</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QLabel" name="label_24">
-            <property name="text">
-             <string>TextLabel</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="0">
            <widget class="QLabel" name="label_19">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>Target:</string>
             </property>
@@ -651,13 +643,19 @@
           </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_20">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
              <string>Direction:</string>
             </property>
            </widget>
           </item>
           <item row="3" column="1" colspan="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_8">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_homing_actual_pos_x">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -685,7 +683,7 @@
            </widget>
           </item>
           <item row="5" column="0" colspan="3">
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="pushButton_starting_home">
             <property name="text">
              <string>Starting Home</string>
             </property>
@@ -710,7 +708,7 @@
            </widget>
           </item>
           <item row="4" column="1" colspan="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_9">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_homing_actual_pos_y">
             <property name="font">
              <font>
               <weight>75</weight>
@@ -750,11 +748,25 @@
             </property>
            </spacer>
           </item>
+          <item row="0" column="1" colspan="2">
+           <widget class="QLabel" name="label_homing_target">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" colspan="2">
+           <widget class="QLabel" name="label_homing_direction">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="H2Status" name="widget_3" native="true"/>
+        <widget class="H2Status" name="H2Status_3" native="true"/>
        </item>
        <item row="0" column="2">
         <spacer name="horizontalSpacer_4">
@@ -777,7 +789,7 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_7">
        <item row="0" column="0">
-        <widget class="H2Status" name="widget_4" native="true"/>
+        <widget class="H2Status" name="H2Status_4" native="true"/>
        </item>
        <item row="0" column="1">
         <widget class="QGroupBox" name="groupBox_3">
@@ -793,9 +805,12 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_10">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_Increament">
             <property name="suffix">
              <string>mm</string>
+            </property>
+            <property name="value">
+             <double>5.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -807,9 +822,12 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_11">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_Velocity">
             <property name="suffix">
              <string>mm/s</string>
+            </property>
+            <property name="value">
+             <double>1.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -853,7 +871,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="QToolButton" name="toolButton_2">
+           <widget class="QToolButton" name="toolButton_singlestep_x_dec">
             <property name="text">
              <string>...</string>
             </property>
@@ -864,7 +882,7 @@
            </widget>
           </item>
           <item row="3" column="2">
-           <widget class="QToolButton" name="toolButton_4">
+           <widget class="QToolButton" name="toolButton_singlestep_x_inc">
             <property name="text">
              <string>...</string>
             </property>
@@ -875,7 +893,7 @@
            </widget>
           </item>
           <item row="3" column="3" rowspan="2">
-           <widget class="QPushButton" name="pushButton_3">
+           <widget class="QPushButton" name="pushButton_stop">
             <property name="text">
              <string/>
             </property>
@@ -892,7 +910,7 @@
            </widget>
           </item>
           <item row="3" column="4">
-           <widget class="QToolButton" name="toolButton">
+           <widget class="QToolButton" name="toolButton_singlestep_y_dec">
             <property name="text">
              <string>...</string>
             </property>
@@ -903,7 +921,7 @@
            </widget>
           </item>
           <item row="3" column="5">
-           <widget class="QToolButton" name="toolButton_9">
+           <widget class="QToolButton" name="toolButton_singlestep_y_inc">
             <property name="text">
              <string>...</string>
             </property>
@@ -921,7 +939,7 @@
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QToolButton" name="toolButton_5">
+           <widget class="QToolButton" name="toolButton_jogmode_x_dec">
             <property name="text">
              <string>...</string>
             </property>
@@ -932,7 +950,7 @@
            </widget>
           </item>
           <item row="4" column="2">
-           <widget class="QToolButton" name="toolButton_6">
+           <widget class="QToolButton" name="toolButton_jogmode_x_inc">
             <property name="text">
              <string>...</string>
             </property>
@@ -943,7 +961,7 @@
            </widget>
           </item>
           <item row="4" column="4">
-           <widget class="QToolButton" name="toolButton_8">
+           <widget class="QToolButton" name="toolButton_jogmode_y_dec">
             <property name="text">
              <string>...</string>
             </property>
@@ -954,7 +972,7 @@
            </widget>
           </item>
           <item row="4" column="5">
-           <widget class="QToolButton" name="toolButton_7">
+           <widget class="QToolButton" name="toolButton_jogmode_y_inc">
             <property name="text">
              <string>...</string>
             </property>
@@ -972,7 +990,7 @@
            </widget>
           </item>
           <item row="5" column="1" colspan="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_12">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_currentPos_x">
             <property name="font">
              <font>
               <weight>50</weight>
@@ -1000,7 +1018,7 @@
            </widget>
           </item>
           <item row="5" column="4" colspan="2">
-           <widget class="QDoubleSpinBox" name="doubleSpinBox_13">
+           <widget class="QDoubleSpinBox" name="doubleSpinBox_currentPos_y">
             <property name="font">
              <font>
               <weight>50</weight>
@@ -1028,7 +1046,7 @@
            </widget>
           </item>
           <item row="6" column="1" colspan="5">
-           <widget class="QPushButton" name="pushButton_2">
+           <widget class="QPushButton" name="pushButton_apply">
             <property name="text">
              <string>Apply as...</string>
             </property>
@@ -1071,7 +1089,7 @@
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="H2Status" name="widget_5" native="true"/>
+        <widget class="H2Status" name="H2Status_5" native="true"/>
        </item>
       </layout>
      </widget>

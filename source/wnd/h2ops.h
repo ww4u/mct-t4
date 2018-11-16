@@ -6,6 +6,9 @@
 #include "../model/diagnosismodel.h"
 #include "../model/debugmodel.h"
 #include "xconfig.h"
+#include "megasplinechart.h"
+
+
 namespace Ui {
 class H2Ops;
 }
@@ -31,13 +34,16 @@ public:
     void outError( const QString &str );
 
 public slots:
-    void slotSetCurrentRobot(QString strDevType, int visa, int name);
+    void slotSetCurrentRobot(QString strDevInfo, int visa, int name);
+    void slotLoadConfigAgain();
 
     void slot_logSelectAll_action();
     void slot_logCopy_action();
     void slot_logClear_action();
 
 private slots:
+    void slot_handle_timeout();
+
     void on_btnUp_clicked();
 
     void on_btnDown_clicked();
@@ -62,6 +68,29 @@ private slots:
 
     void on_tabWidget_tabBarClicked(int index);
 
+
+    void on_pushButton_starting_home_clicked();
+
+    void on_toolButton_singlestep_x_dec_clicked();
+
+    void on_toolButton_singlestep_x_inc_clicked();
+
+    void on_toolButton_singlestep_y_dec_clicked();
+
+    void on_toolButton_singlestep_y_inc_clicked();
+
+    void on_toolButton_jogmode_x_dec_clicked();
+
+    void on_toolButton_jogmode_x_inc_clicked();
+
+    void on_toolButton_jogmode_y_dec_clicked();
+
+    void on_toolButton_jogmode_y_inc_clicked();
+
+    void on_pushButton_apply_clicked();
+
+    void on_pushButton_stop_clicked();
+
 protected:
     void setupUi();
     void setupName();
@@ -85,10 +114,24 @@ private:
     //! debug
     DebugModel *m_pDebugModel;
 
+    MegaSplineChart *m_splineChart1;
+    MegaSplineChart *m_splineChart2;
+
     int m_ViHandle;
     int m_RoboName;
+    QString m_strDevInfo;
+    QMap<QString,QString> m_Data;
 
-    QString getDeviceTypeName(QString strDevInfo);
+    QTimer m_timer;
+    void updateDeviceStatus();
+    void updateOperate();
+    void updateDigitalIO();
+    void updateHoming();
+    void updateManual();
+    void updateMonitor();
+    void updateDebug();
+    void updateDiagnosis();
+
 };
 
 #endif // H2OPS_H

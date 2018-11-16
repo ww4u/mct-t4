@@ -139,6 +139,12 @@ void RoboConfig::slotShowContextmenu(const QPoint& pos)
 
 void RoboConfig::soltActionClose()
 {
+    QString strIP = m_RobotList[mIndex].m_strDevInfo.split(',').at(0);
+    if(m_RobotList[mIndex].m_Visa != 0)
+    {   //如果没有关闭就关闭设备
+        slot_open_close(strIP);
+    }
+
     m_pRootNode->removeChild(((H2Robo *)m_RobotList[mIndex].m_Robo)->roboNode());
     delete (H2Robo *)m_RobotList[mIndex].m_Robo;
     m_RobotList.removeAt(mIndex);
@@ -183,6 +189,7 @@ int RoboConfig::setApply()
         foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
             pCfg->setApply();
         }
+        emit signalApplyClicked();
     }else{
         QMessageBox::information(this,tr("tips"),"Current Device In Offline");
     }
@@ -239,15 +246,11 @@ void RoboConfig::slot_current_changed( QTreeWidgetItem* cur,QTreeWidgetItem* prv
     if(-1 != index)
     {
         mIndex = index;
-        if(0 != m_RobotList[mIndex].m_Visa)
-        {
-            emit signalCurrentRobotChanged(m_RobotList[mIndex].m_strDevInfo,
-                                           m_RobotList[mIndex].m_Visa,
-                                           m_RobotList[mIndex].m_RoboName);
-        }
+        qDebug() << "slot_current_changed" << cur->text(0) << index;
+        emit signalCurrentRobotChanged(m_RobotList[mIndex].m_strDevInfo,
+                                       m_RobotList[mIndex].m_Visa,
+                                       m_RobotList[mIndex].m_RoboName);
     }
-
-    qDebug() << "slot_current_changed" << cur->text(0) << index;
 
     QVariant var;
     QObject *pObj;
@@ -283,6 +286,11 @@ void RoboConfig::slot_open_close(QString strIP)
         deviceClose();
         pProduct->change_online_status(false);
     }
+
+    //通知OPS
+    emit signalCurrentRobotChanged(m_RobotList[mIndex].m_strDevInfo,
+                                   m_RobotList[mIndex].m_Visa,
+                                   m_RobotList[mIndex].m_RoboName);
 }
 
 int RoboConfig::deviceOpen(QString strIP)
@@ -290,14 +298,20 @@ int RoboConfig::deviceOpen(QString strIP)
     if(mIndex < 0) return -1;
     int visa = mrhtOpenDevice(strIP.toLatin1().data(), 2000);
     if(visa <= 0)
-    {    return -1; }
+    {
+        qDebug() << "mrhtOpenDevice error" << visa;
+        return -1;
+    }
 
     char sName[8] = "";
     bool bl = false;
     int ret = mrhtRobotName_Query(visa, sName, sizeof(sName));
     int iName = QString("%1").arg(sName).toInt(&bl);
     if((ret < 0) || (bl == false))
-    {   return -1;  }
+    {
+        qDebug() << "mrhtRobotName_Query error" << ret << bl;
+        return -1;
+    }
 
     foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs())
     {    pCfg->attachHandle( visa, iName);  }

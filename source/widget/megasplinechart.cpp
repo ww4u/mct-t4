@@ -28,11 +28,6 @@ Chart::Chart(QGraphicsItem *parent, Qt::WindowFlags wFlags):
     axisX()->setTitleText("[min]");
 
     m_series->append(m_x, m_y);
-
-    qsrand((uint) QTime::currentTime().msec());
-    connect(&m_timer, SIGNAL(timeout()), this, SLOT(handleTimeout()));
-    m_timer.setInterval(1000 * 60); //轮询时间周期
-    m_timer.start();
 }
 
 Chart::~Chart()
@@ -40,12 +35,10 @@ Chart::~Chart()
 
 }
 
-void Chart::handleTimeout()
+void Chart::dataAppend(double value)
 {
     m_x += m_step;
-
-    //FIXME:在此处替换为实际的查询函数
-    m_y = qrand() % 101;
+    m_y = value;
 
     m_x += m_step;
     m_series->append(m_x, m_y);
@@ -57,14 +50,14 @@ void Chart::handleTimeout()
         axisX()->setRange(m_axis->min() + m_step, m_axis->max() + m_step);
 }
 
-QValueAxis *Chart::axis() const
-{
-    return m_axis;
-}
-
 QSplineSeries *Chart::series() const
 {
     return m_series;
+}
+
+QValueAxis *Chart::axis() const
+{
+    return m_axis;
 }
 
 
@@ -105,3 +98,8 @@ QChartView *MegaSplineChart::chartView()
 
 QSize MegaSplineChart::sizeHint() const
 { return QSize(200,50); }
+
+void MegaSplineChart::dataAppend(double value)
+{
+    m_chart->dataAppend(value);
+}

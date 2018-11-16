@@ -175,8 +175,9 @@ void DeviceSearchThread::run()
     QString strDevices;
     if(m_type == TYPE_LAN)
     {
+        char *bus = "";
         char buff[4096] = "";
-        busFindDevice("", buff, sizeof(buff), 1);
+        mrgFindGateWay(bus, buff, sizeof(buff), 1);
         strDevices = QString("%1").arg(buff);
         if(strDevices.length() == 0)
         {   return; }
@@ -196,7 +197,11 @@ void DeviceSearchThread::run()
 
         char IDN[1024] = "";
         int ret = mrgGateWayIDNQuery(visa,IDN);
-        if(ret != 0) {   return; }
+        if(ret != 0)
+        {
+            qDebug() << "mrgGateWayIDNQuery error" << ret;
+            return;
+        }
 
 //        qDebug() << devList.at(devIndex) << IDN ;
         mrgCloseGateWay(visa);

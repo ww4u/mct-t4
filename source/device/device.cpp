@@ -86,7 +86,7 @@ MEGAGATEWAY_API int CALL mrgGateWayIDNQuery(ViSession  vi, char * idn)
 {
     char args[SEND_BUF];
     int retlen = 0;
-    sprintf_s(args, SEND_BUF, "*IDN?\n");
+    snprintf(args, SEND_BUF, "*IDN?\n");
     if ((retlen = busQuery(vi, args, strlen(args), idn, 100)) <= 0)
     {
         return -1;
@@ -106,13 +106,13 @@ MEGAGATEWAY_API int CALL mrgFindDevice(ViSession vi, int timeout_ms)
     char ret[40];
     char args[SEND_BUF];
     int retlen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:SEARCH\n");
+    snprintf(args, SEND_BUF, "DEVICE:SEARCH\n");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return 0;
     }
     Sleep(timeout_ms);
-    sprintf_s(args, SEND_BUF, "DEVICE:COUNT?\n");
+    snprintf(args, SEND_BUF, "DEVICE:COUNT?\n");
     if ((retlen = busQuery(vi, args, strlen(args), ret, 40)) <= 0)
     {
         return 0;
@@ -132,17 +132,17 @@ MEGAGATEWAY_API int CALL mrgGetDeviceName(ViSession vi, int * name)
     char args[SEND_BUF];
     char names[1024];
     char * p, *pNext = NULL;
-    sprintf_s(args, SEND_BUF, "DEVICE:NAME?\n");
+    snprintf(args, SEND_BUF, "DEVICE:NAME?\n");
     if ((retlen = busQuery(vi, args, strlen(args), names, 1024)) == 0)
     {
         return -1;
     }
     name[retlen] = 0;
-    p = strtok_s(names, ",", &pNext);
+    p = strtok_r(names, ",", &pNext);
     while (p)
     {
         *name++ = atoi(p);
-        p = strtok_s(NULL, ",", &pNext);
+        p = strtok_r(NULL, ",", &pNext);
         count++;
     }
     return count;
@@ -159,7 +159,7 @@ MEGAGATEWAY_API int CALL mrgGetDeviceType(ViSession vi, int name, char * type)
 {
     char args[SEND_BUF];
     int len = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:TYPe? %d\n", name);
+    snprintf(args, SEND_BUF, "DEVICE:TYPe? %d\n", name);
     if ((len = busQuery(vi, args, strlen(args), type, 12)) == 0)
     {
         return -1;
@@ -177,7 +177,7 @@ MEGAGATEWAY_API int CALL mrgGetDeviceInfo(ViSession vi, int name, char * info)
 {
     char args[SEND_BUF];
     int retlen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:FIRMWARE:ALL? %d\n", name);
+    snprintf(args, SEND_BUF, "DEVICE:FIRMWARE:ALL? %d\n", name);
     if ((retlen = busQuery(vi, args, strlen(args), info, 100)) == 0) {
         return -1;
     }
@@ -197,7 +197,7 @@ MEGAGATEWAY_API int CALL mrgGetDeviceSoftVersion(ViSession vi, int name, char * 
 {
     char args[SEND_BUF];
     int len = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:FIRMWARE:SOFT? %d\n", name);
+    snprintf(args, SEND_BUF, "DEVICE:FIRMWARE:SOFT? %d\n", name);
     if ((len = busQuery(vi, args, strlen(args), version, 20)) == 0) {
         return -1;
     }
@@ -215,7 +215,7 @@ MEGAGATEWAY_API int CALL mrgGetDeviceSoftVersion(ViSession vi, int name, char * 
 MEGAGATEWAY_API int CALL mrgWriteDeviceSerial(ViSession  vi, int name, char * serial)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "PROJECT:DEVICE:SN %d,%s", name, serial);
+    snprintf(args, SEND_BUF, "PROJECT:DEVICE:SN %d,%s", name, serial);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -233,7 +233,7 @@ MEGAGATEWAY_API int CALL mrgGetDeviceSerialNumber(ViSession vi, int name, char *
 {
     char args[SEND_BUF];
     int len = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:FIRMWARE:SN? %d\n", name);
+    snprintf(args, SEND_BUF, "DEVICE:FIRMWARE:SN? %d\n", name);
     if ((len = busQuery(vi, args, strlen(args), serial, 20)) == 0) {
         return -1;
     }
@@ -252,7 +252,7 @@ MEGAGATEWAY_API int CALL mrgGetDeviceSerialNumber(ViSession vi, int name, char *
 MEGAGATEWAY_API int CALL  mrgIdentify(ViSession vi, int state)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "SYSTEM:IDENTIFY %s", state ? "ON" : "OFF");
+    snprintf(args, SEND_BUF, "SYSTEM:IDENTIFY %s", state ? "ON" : "OFF");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;

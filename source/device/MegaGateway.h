@@ -9,6 +9,7 @@
 #include "device.h"       /* 通用设备 */
 #include "mrqDevice.h"    /* MRQ设备 */
 #include "megaRobot.h"    /* 机器人  */
+#include "storage.h"
 
 /********************** 兼容 MiSA 接口函数 ************************************/
 MEGAGATEWAY_API int CALL robo_getIdn(int vi, char* val);

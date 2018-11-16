@@ -5,6 +5,20 @@
 //#include "export.h"
 #define MEGAGATEWAY_API
 #define CALL
+
+enum MRX_TYPE
+{
+    MRX_T4 = 0,  //arm
+    MRX_AS,  //megatron
+    MRX_H2,  //H2
+    MRX_DELTA,
+    MRX_RAW, //此类的机器人指的是没有构形,只有电机的机器人.这类机器人不需要空间解算,只接受PVT.
+    MRX_OTHER,
+    MRX_UNKOWN,
+};
+
+
+
 /*********************** 机器人操作 *******************************/
 /*
 * 构建一个机器人
@@ -14,6 +28,35 @@
 * 返回值：0表示执行成功，－1表示失败
 */
 MEGAGATEWAY_API int CALL mrgBuildRobot(ViSession vi, char * robotType, char * devList, int * robotname);
+/*
+* 查询当前机器人的构形
+* vi :visa设备句柄
+* name:机器人名称
+* 返回值：小于零表示出错。 0：MRX-T4;1:MRX-AS;2:MRX-H2,3:MRX-DELTA;4:MRX-RAW
+* 说明：此函数目前只对H2有效
+*/
+MEGAGATEWAY_API int CALL mrgGetRobotType(ViSession vi, int name);
+/*
+* 保存当前系统中所有机器人构形
+* vi :visa设备句柄
+* 返回值：0表示执行成功，－1表示失败
+* 说明：
+*/
+MEGAGATEWAY_API int CALL mrgSaveRobotConfig(ViSession vi);
+/*
+* 恢复上次保存的配置
+* vi :visa设备句柄
+* 返回值：0表示执行成功，－1表示失败
+* 说明：
+*/
+MEGAGATEWAY_API int CALL mrgRestoreRobotConfig(ViSession vi);
+/*
+* 查询导入或导出配置文件的状态
+* vi :visa设备句柄
+* 返回值：0表示执行完成；1表示正在执行；－1表示执行过程中出错
+* 说明：
+*/
+MEGAGATEWAY_API int CALL mrgGetRobotConfigState(ViSession vi);
 /*
 * 设置当前机器人构形下的子类型
 * vi :visa设备句柄
@@ -55,6 +98,13 @@ MEGAGATEWAY_API int CALL mrgGetRobotCoordinateSystem(ViSession vi, int name);
 */
 MEGAGATEWAY_API int CALL mrgGetRobotCount(ViSession vi);
 /*
+* 查询CAN网络中所有机器人的名子
+* vi :visa设备句柄
+* robotnames：输出参数，机器人名称集
+* 返回值：返回机器人个数
+*/
+MEGAGATEWAY_API int CALL mrgGetRobotName(ViSession vi, int *robotnames);
+/*
 * 查询当前机器人的所使用的设备
 * robotname: 机器人名称
 * vi :visa设备句柄
@@ -62,16 +112,6 @@ MEGAGATEWAY_API int CALL mrgGetRobotCount(ViSession vi);
 * 返回值：返回所使用的设备个数
 */
 MEGAGATEWAY_API int CALL mrgGetRobotDevice(ViSession vi, int robotname, int * device);
-
-/*
- * 查询当前机器人的名字
- * vi :visa设备句柄
- * name: 输出查询到的机器人名字
- * len: name的长度
- * 返回值: 返回0表示成功，-1表示失败
-*/
-MEGAGATEWAY_API int CALL mrgGetRobotName(ViSession vi, char *name, int len);
-
 /*
 * 设置当前机器人的项目零点
 * vi :visa设备句柄
@@ -90,6 +130,44 @@ MEGAGATEWAY_API int CALL mrgSetRobotProjectZero(ViSession vi, int name, double x
 * 说明：此函数目前只对H2有效
 */
 MEGAGATEWAY_API int CALL mrgGetRobotProjectZero(ViSession vi, int name, double * x, double *y, double *z);
+/*
+* 设置当前机器人的校准零点
+* vi :visa设备句柄
+* name:机器人名称
+* x,y，z:校准零点值（x,y,z）
+* 返回值：0表示执行成功，－1表示失败
+* 说明：此函数目前只对H2有效
+*/
+MEGAGATEWAY_API int CALL mrgSetRobotAxisZero(ViSession vi, int name, double x, double y, double z);
+/*
+* 查询当前机器人的校准零点
+* vi :visa设备句柄
+* name:机器人名称
+* x,y,z: 输出参数，校准零点值
+* 返回值：0表示执行成功，－1表示失败
+* 说明：此函数目前只对H2有效
+*/
+MEGAGATEWAY_API int CALL mrgGetRobotAxisZero(ViSession vi, int name, double * x, double *y, double *z);
+/*
+* 设置当前机器人的软件限位
+* vi :visa设备句柄
+* name:机器人名称
+* type: 正向限位还是负向限位。 0：表示正向限位；1表示负向限位
+* x,y，z:限位值（x,y,z）
+* 返回值：0表示执行成功，－1表示失败
+* 说明：此函数目前只对H2有效
+*/
+MEGAGATEWAY_API int CALL mrgSetRobotSoftWareLimit(ViSession vi, int name, int type, double x, double y, double z);
+/*
+* 查询当前机器人的校准零点
+* vi :visa设备句柄
+* name:机器人名称
+* type: 正向限位还是负向限位。 0：表示正向限位；1表示负向限位
+* x,y,z: 输出参数，校准零点值
+* 返回值：0表示执行成功，－1表示失败
+* 说明：此函数目前只对H2有效
+*/
+MEGAGATEWAY_API int CALL mrgGetRobotSoftWareLimit(ViSession vi, int name, int type, double * x, double *y, double *z);
 /*
 * 设置指定机器人的波表
 * vi :visa设备句柄
@@ -159,12 +237,24 @@ MEGAGATEWAY_API int CALL mrgRobotMove(ViSession vi, int name, int wavetable, flo
 * name: 机器人名称
 * wavetable ：波表索引，－1表示使用默认索引（调用mrgSetRobotWavetable设置的波表索引）
 * ax: 坐标轴，0表示X轴;1表示Y轴 ; 2表示Z轴
-* speed : 移动的速度。单位： 度/秒
-* dir: 0表示沿坐标轴负向运动，1表示沿坐标轴正向运动
+* speed : 移动的速度。单位： 度/秒。speed的符号决定方向，speed大于零 ，表示正方向。
 * 返回值：0表示执行成功，否则表示过程中出错
-* 说明：非阻塞函数
+* 说明：非阻塞函数，此命令只对H2有效
 */
-MEGAGATEWAY_API int CALL mrgRobotMoveOn(ViSession vi, int name, int wavetable, int ax, float speed, int dir);
+MEGAGATEWAY_API int CALL mrgRobotMoveOn(ViSession vi, int name, int wavetable, int ax, float speed);
+/*
+* 机器人末端沿指定的坐标轴持续运动(阶跃运行）
+* vi :visa设备句柄
+* name: 机器人名称
+* wavetable ：波表索引，－1表示使用默认索引（调用mrgSetRobotWavetable设置的波表索引）
+* ax: 坐标轴，0表示X轴;1表示Y轴 ; 2表示Z轴
+* cr_time：爬升时间
+* cr_speed：爬升的速度
+* speed : 移动的保持速度。单位： 度/秒。speed的符号决定方向，speed大于零 ，表示正方向。
+* 返回值：0表示执行成功，否则表示过程中出错
+* 说明：非阻塞函数,此命令只对H2有效
+*/
+MEGAGATEWAY_API int CALL mrgRobotMoveJog(ViSession vi, int name, int wavetable, int ax, float cr_time, float cr_speed, float speed);
 /*
 * 机器人从当前位置移动给定的距离（随机移动）
 * vi :visa设备句柄
@@ -305,23 +395,6 @@ MEGAGATEWAY_API int CALL mrgRobotPointLoad(ViSession vi, int name, float x, floa
 */
 MEGAGATEWAY_API int CALL mrgRobotPointResolve(ViSession vi, int name, int wavetable, int timeout_ms);
 /*
-* 从外部存储器（U盘）中，导入点坐标文件到机器人缓存中
-* vi :visa设备句柄
-* name: 机器人名称
-* filename: 点坐标文件名
-* 返回值：0表示执行成功，否则表示失败
-*/
-MEGAGATEWAY_API int CALL mrgRobotPointLoadFile(ViSession vi, int name, char* filename);
-/*
-* 查询外部存储器（U盘）中，可用的点坐标文件
-* vi :visa设备句柄
-* name: 机器人名称
-* fileList: 点坐标文件名列表，以逗号分隔
-* len : fileList的缓存长度
-* 返回值：0表示执行成功，否则表示失败
-*/
-MEGAGATEWAY_API int CALL mrgRobotPointLoadFileQuery(ViSession vi, char* fileList, int len);
-/*
 * 通知机器人清空PVT缓存
 * vi :visa设备句柄
 * name: 机器人名称
@@ -350,22 +423,34 @@ MEGAGATEWAY_API int CALL mrgRobotPvtLoad(ViSession vi, int name, float p, float 
 */
 MEGAGATEWAY_API int CALL mrgRobotPvtResolve(ViSession vi, int name, int wavetable, int timeout_ms);
 /*
-* 从外部存储器（U盘）中，导入PVT文件到机器人缓存中
+* 从存储器中，导入运动文件到机器人缓存中
 * vi :visa设备句柄
 * name: 机器人名称
 * filename: 点坐标文件名
 * 返回值：0表示执行成功，否则表示失败
 */
-MEGAGATEWAY_API int CALL mrgRobotPvtLoadFile(ViSession vi, int name, char* filename);
+MEGAGATEWAY_API int CALL mrgRobotFileImport(ViSession vi, char* filename);
 /*
-* 查询外部存储器（U盘）中，可用的PVT文件
+* 解算当前运动文件内容到模块中
 * vi :visa设备句柄
 * name: 机器人名称
-* fileList: 点坐标文件名列表，以逗号分隔
-* len : fileList的缓存长度
-* 返回值：0表示执行成功，否则表示失败
+* section:文件中的哪个段，这是个必须的参数
+* line：一个段中的哪一行（只针对MFC的文件），line从1开始计数。对于非MFC的文件，不关心line值。
+* wavetable : 波表索引。如果不想明确指定波表，可设置 为-1.
+* timeout_ms:等等解算完成的超时时间。若timeout_ms＝－1，表示不等待解算完成。timeout_ms ＝ 0，表示无限等待。
+* 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示等待超时
+*
 */
-MEGAGATEWAY_API int CALL mrgRobotPvtLoadFileQuery(ViSession vi, char* fileList, int len);
+MEGAGATEWAY_API int CALL mrgRobotFileResolve(ViSession vi, int name, int section, int line, int wavetable, int timeout_ms);
+/*
+* 将系统中的运动数据，导出成文件
+* vi :visa设备句柄
+* name: 机器人名称
+* type:0表示导出到本地存储（本地文件系统）；1表示导出到外部存储（U盘之类）
+* filename：表示导出的文件名
+* 返回值：0表示执行正确，否则表示失败。
+*/
+MEGAGATEWAY_API int CALL mrgRobotFileExport(ViSession vi, int name, int type, char* filename);
 /*
 * 设置末端执行器类型及相应的设备
 * vi :visa设备句柄

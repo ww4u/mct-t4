@@ -56,7 +56,7 @@ char *change(int wavetable)
 MEGAGATEWAY_API int CALL mrgMRQIdentify(ViSession vi, int name, int state)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:IDENtify %d,%s", name, state ? "ON" : "OFF");
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:IDENtify %d,%s", name, state ? "ON" : "OFF");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -74,7 +74,7 @@ MEGAGATEWAY_API int CALL mrgMRQIdentify(ViSession vi, int name, int state)
 MEGAGATEWAY_API int CALL mrgMRQMotionStateReport(ViSession vi, int name, int chan, int state)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTion:STATe:REPORt %d,%d,%s", name, chan, state ? "ACTIVE" : "QUERY");
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:STATe:REPORt %d,%d,%s", name, chan, state ? "ACTIVE" : "QUERY");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -94,7 +94,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotionStateReport_Query(ViSession vi, int name, i
     char args[SEND_BUF];
     char ret[8];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTion:STATe:REPORt? %d,%d\n", name, chan);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:STATe:REPORt? %d,%d\n", name, chan);
     if ((retLen = busQuery(vi, args, strlen(args), ret, 8)) == 0) {
         return -1;
     }
@@ -116,7 +116,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotionStateReport_Query(ViSession vi, int name, i
 MEGAGATEWAY_API int CALL mrgMRQMotionRun(ViSession vi, int name, int chan, int wavetable)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTion:STATe:RUN %d,%d,%d\n", name, chan, wavetable);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:STATe:RUN %d,%d,%d\n", name, chan, wavetable);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -135,7 +135,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotionRunState(ViSession vi, int name, int chan, 
 {
     char args[SEND_BUF];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTion:STATe? %d,%d,%d\n", name, chan, wavetable);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:STATe? %d,%d,%d\n", name, chan, wavetable);
     if ((retLen = busQuery(vi, args, strlen(args), robotstate, 10)) == 0) {
         return -1;
     }
@@ -156,7 +156,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotionRunState(ViSession vi, int name, int chan, 
 MEGAGATEWAY_API int CALL mrgMRQMotionStop(ViSession vi, int name, int chan, int wavetable)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTion:STOP %d,%d,%d\n", name, chan, wavetable);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:STOP %d,%d,%d\n", name, chan, wavetable);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -173,7 +173,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotionStop(ViSession vi, int name, int chan, int 
 MEGAGATEWAY_API int CALL mrgMRQMotionTrigSource(ViSession vi, int name, int chan, char *source)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTion:TRIGger:SOURce %d,%d,%s\n", name, chan, source);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:TRIGger:SOURce %d,%d,%s\n", name, chan, source);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -191,7 +191,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotionTrigSource_Query(ViSession vi, int name, in
 {
     char args[SEND_BUF];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTion:TRIGger:SOURce? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:TRIGger:SOURce? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), source, 10)) == 0) {
         return -1;
     }
@@ -212,7 +212,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotionTrigSource_Query(ViSession vi, int name, in
 MEGAGATEWAY_API int CALL mrgMRQMotionOffsetState(ViSession vi, int name, int devList, char *state)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTion:OFFSet:STATe %d,%d,%s", name, devList, state);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:OFFSet:STATe %d,%d,%s", name, devList, state);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -231,7 +231,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotionOffsetState_Query(ViSession vi, int name, i
 {
     char args[SEND_BUF];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTion:OFFSet:STATe? %d,%d", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:OFFSet:STATe? %d,%d", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), source, 10)) == 0) {
         return -1;
     }
@@ -254,7 +254,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotionOffsetValue_Query(ViSession vi, int name, i
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTion:OFFSet:VALue? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:OFFSet:VALue? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -294,7 +294,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotionABCount_Query(ViSession vi, int name, int d
 MEGAGATEWAY_API int CALL mrgMRQMotionABCountClear(ViSession vi, int name, int devList)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTion:ABCOUNt:CLEAr %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:ABCOUNt:CLEAr %d,%d\n", name, devList);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -312,7 +312,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotionABCountClear(ViSession vi, int name, int de
 MEGAGATEWAY_API int CALL mrgMRQAdjust(ViSession vi, int name, int devList, float position, float time)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTion:ADJust %d,%d,%f,%f\n", name, devList, position, time);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:ADJust %d,%d,%f,%f\n", name, devList, position, time);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -328,7 +328,7 @@ MEGAGATEWAY_API int CALL mrgMRQAdjust(ViSession vi, int name, int devList, float
 MEGAGATEWAY_API int CALL mrgMRQClockSync(ViSession vi, char *name_list, float time)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:CLOCk %s,%f\n", name_list, time);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:CLOCk %s,%f\n", name_list, time);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -345,7 +345,7 @@ MEGAGATEWAY_API int CALL mrgMRQClockSync(ViSession vi, char *name_list, float ti
 MEGAGATEWAY_API int CALL mrgMRQMotorStepAngle(ViSession vi, int name, int devList, float stepangle)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTOR:STEP:ANGLe %d,%d,%f\n", name, devList, stepangle);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:STEP:ANGLe %d,%d,%f\n", name, devList, stepangle);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -364,7 +364,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotorStepAngle_Query(ViSession vi, int name, int 
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTOR:STEP:ANGLe? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:STEP:ANGLe? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -387,7 +387,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotorStepAngle_Query(ViSession vi, int name, int 
 MEGAGATEWAY_API int CALL mrgMRQMotorMotionType(ViSession vi, int name, int devList, char *state)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTOR:MOTion:TYPe %d,%d,%s\n", name, devList, state);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:MOTion:TYPe %d,%d,%s\n", name, devList, state);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -405,7 +405,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotorMotionType_Query(ViSession vi, int name, int
 {
     char args[SEND_BUF];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTOR:MOTion:TYPe? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:MOTion:TYPe? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), type, 10)) == 0) {
         return -1;
     }
@@ -426,7 +426,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotorMotionType_Query(ViSession vi, int name, int
 MEGAGATEWAY_API int CALL mrgMRQMotorPositionUnit(ViSession vi, int name, int devList, char *unit)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTOR:POSition:UNIT %d,%d,%s\n", name, devList, unit);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:POSition:UNIT %d,%d,%s\n", name, devList, unit);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -444,7 +444,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotorPositionUnit_Query(ViSession vi, int name, i
 {
     char args[SEND_BUF];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTOR:POSition:UNIT? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:POSition:UNIT? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), unit, 10)) == 0) {
         return -1;
     }
@@ -465,7 +465,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotorPositionUnit_Query(ViSession vi, int name, i
 MEGAGATEWAY_API int CALL mrgMRQMotorGearRatio(ViSession vi, int name, int devList, int a, int b)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTOR:GEAR:RATio %d,%d,%d:%d\n", name, devList, a, b);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:GEAR:RATio %d,%d,%d:%d\n", name, devList, a, b);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -483,7 +483,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotorGearRatio_Query(ViSession vi, int name, int 
 {
     char args[SEND_BUF];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTOR:GEAR:RATio? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:GEAR:RATio? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), ratio, 100)) == 0) {
         return -1;
     }
@@ -504,7 +504,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotorGearRatio_Query(ViSession vi, int name, int 
 MEGAGATEWAY_API int CALL mrgMRQMotorLead(ViSession vi, int name, int devList, float millimeter)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTOR:LEAD %d,%d,%f\n", name, devList, millimeter);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:LEAD %d,%d,%f\n", name, devList, millimeter);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -523,7 +523,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotorLead_Query(ViSession vi, int name, int devLi
     char args[SEND_BUF];
     char state[64];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTOR:LEAD? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:LEAD? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 1024)) == 0) {
         return -1;
     }
@@ -546,7 +546,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotorLead_Query(ViSession vi, int name, int devLi
 MEGAGATEWAY_API int CALL mrgMRQMotorSize(ViSession vi, int name, int devList, int size)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTOR:SIZE %d,%d,%d\n", name, devList, size);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:SIZE %d,%d,%d\n", name, devList, size);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -565,7 +565,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotorSize_Query(ViSession vi, int name, int devLi
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTOR:SIZE? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:SIZE? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -588,7 +588,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotorSize_Query(ViSession vi, int name, int devLi
 MEGAGATEWAY_API int CALL mrgMRQMotorVoltate(ViSession vi, int name, int devList, int volt)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTOR:VOLTage %d,%d,%d\n", name, devList, volt);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:VOLTage %d,%d,%d\n", name, devList, volt);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -607,7 +607,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotorVoltage_Query(ViSession vi, int name, int de
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTOR:VOLTage? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:VOLTage? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -631,7 +631,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotorVoltage_Query(ViSession vi, int name, int de
 MEGAGATEWAY_API int CALL mrgMRQMotorCurrent(ViSession vi, int name, int devList, double current)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTOR:CURRent %d,%d,%f\n", name, devList, current);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:CURRent %d,%d,%f\n", name, devList, current);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -650,7 +650,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotorCurrent_Query(ViSession vi, int name, int de
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTOR:CURRent? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:CURRent? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 1024)) == 0) {
         return -1;
     }
@@ -673,7 +673,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotorCurrent_Query(ViSession vi, int name, int de
 MEGAGATEWAY_API int CALL mrgMRQMotorBackLash(ViSession vi, int name, int devList, double lash)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTOR:BACKLash %d,%d,%f\n", name, devList, lash);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:BACKLash %d,%d,%f\n", name, devList, lash);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -692,7 +692,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotorBackLash_Query(ViSession vi, int name, int d
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:MOTOR:BACKLash? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:BACKLash? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -716,7 +716,7 @@ MEGAGATEWAY_API int CALL mrgMRQMotorBackLash_Query(ViSession vi, int name, int d
 MEGAGATEWAY_API int CALL mrgMRQPVTConfig(ViSession vi, int name, int devList, int wavetable, char *state)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:CONFig %d,%d,%d,%s\n", name, devList, wavetable, state);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:CONFig %d,%d,%d,%s\n", name, devList, wavetable, state);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -736,7 +736,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTConfig(ViSession vi, int name, int devList, in
 MEGAGATEWAY_API int CALL mrgMRQPVTValue(ViSession vi, int name, int devList, int wavetable, float p, float v, float t)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:VALue %d,%d,%d,%f,%f,%f\n", name, devList, wavetable, p, v, t);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:VALue %d,%d,%d,%f,%f,%f\n", name, devList, wavetable, p, v, t);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -756,7 +756,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTState_Query(ViSession vi, int name, int devLis
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:STATe? %d,%d,%d\n", name, devList, wavetable);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:STATe? %d,%d,%d\n", name, devList, wavetable);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -781,7 +781,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTState_Query(ViSession vi, int name, int devLis
 MEGAGATEWAY_API int CALL mrgMRQPVTTimeScale(ViSession vi, int name, int devList, int wavetable, float speedup, float speedcut)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:TSCale %d,%d,%d,%f,%f\n", name, devList, wavetable, speedup, speedcut);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:TSCale %d,%d,%d,%f,%f\n", name, devList, wavetable, speedup, speedcut);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -801,7 +801,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTModeConfig_Query(ViSession vi, int name, int d
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:CONFig? %d,%d,%d\n", name, devList, wavetable);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:CONFig? %d,%d,%d\n", name, devList, wavetable);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -827,7 +827,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTModeConfig_Query(ViSession vi, int name, int d
 MEGAGATEWAY_API int CALL mrgMRQPVTModeConfig(ViSession vi, int name, int devList, int wavetable, char *exe, char *plan, char *motion)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:CONFig %d,%d,%d,%s,%s,%s\n", name, devList, wavetable, exe, plan, motion);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:CONFig %d,%d,%d,%s,%s,%s\n", name, devList, wavetable, exe, plan, motion);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -845,7 +845,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTModeConfig(ViSession vi, int name, int devList
 MEGAGATEWAY_API int CALL mrgMRQPVTModeExe(ViSession vi, int name, int devList, int wavetable, char *pattern)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:EXE %d,%d,%d,%s\n", name, devList, wavetable, pattern);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:EXE %d,%d,%d,%s\n", name, devList, wavetable, pattern);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -865,7 +865,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTModeExe_Query(ViSession vi, int name, int devL
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:EXE? %d,%d,%d\n", name, devList, wavetable);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:EXE? %d,%d,%d\n", name, devList, wavetable);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -889,7 +889,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTModeExe_Query(ViSession vi, int name, int devL
 MEGAGATEWAY_API int CALL mrgMRQPVTModePlan(ViSession vi, int name, int devList, int wavetable, char *pattern)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:PLAN %d,%d,%d,%s\n", name, devList, wavetable, pattern);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:PLAN %d,%d,%d,%s\n", name, devList, wavetable, pattern);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -909,7 +909,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTModePlan_Query(ViSession vi, int name, int dev
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:PLAN? %d,%d,%d\n", name, devList, wavetable);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:PLAN? %d,%d,%d\n", name, devList, wavetable);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -933,7 +933,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTModePlan_Query(ViSession vi, int name, int dev
 MEGAGATEWAY_API int CALL mrgMRQPVTModeMotion(ViSession vi, int name, int devList, int wavetable, char *pattern)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:MOTion %d,%d,%d,%s\n", name, devList, wavetable, pattern);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:MOTion %d,%d,%d,%s\n", name, devList, wavetable, pattern);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -953,7 +953,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTModeMotion_Query(ViSession vi, int name, int d
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:MOTion? %d,%d,%d\n", name, devList, wavetable);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:MOTion? %d,%d,%d\n", name, devList, wavetable);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -977,7 +977,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTModeMotion_Query(ViSession vi, int name, int d
 MEGAGATEWAY_API int CALL mrgMRQPVTModifyDuty(ViSession vi, int name, int devList, int wavetable, float duty)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:MODIFy:DUTY %d,%d,%d,%f\n", name, devList, wavetable, duty);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODIFy:DUTY %d,%d,%d,%f\n", name, devList, wavetable, duty);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -997,7 +997,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTModifyDuty_Query(ViSession vi, int name, int d
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:MODIFy:DUTY? %d,%d,%d\n", name, devList, wavetable);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODIFy:DUTY? %d,%d,%d\n", name, devList, wavetable);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -1021,7 +1021,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTModifyDuty_Query(ViSession vi, int name, int d
 MEGAGATEWAY_API int CALL mrgMRQPVTEndState(ViSession vi, int name, int devList, int wavetable, char *pattern)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:END:STATe %d,%d,%d,%s\n", name, devList, wavetable, pattern);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:END:STATe %d,%d,%d,%s\n", name, devList, wavetable, pattern);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1041,7 +1041,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTEndState_Query(ViSession vi, int name, int dev
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:END:STATe? %d,%d,%d\n", name, devList, wavetable);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:END:STATe? %d,%d,%d\n", name, devList, wavetable);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -1065,7 +1065,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTEndState_Query(ViSession vi, int name, int dev
 MEGAGATEWAY_API int CALL mrgMRQPVTDecScale(ViSession vi, int name, int devList, int wavetable, float scale)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:ADEC:SCALe %d,%d,%d,%f\n", name, devList, wavetable, scale);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:ADEC:SCALe %d,%d,%d,%f\n", name, devList, wavetable, scale);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1085,7 +1085,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTDecScale_Query(ViSession vi, int name, int dev
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:ADEC:SCALe? %d,%d,%d\n", name, devList, wavetable);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:ADEC:SCALe? %d,%d,%d\n", name, devList, wavetable);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -1109,7 +1109,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTDecScale_Query(ViSession vi, int name, int dev
 MEGAGATEWAY_API int CALL mrgMRQPVTStopMode(ViSession vi, int name, int devList, int wavetable, char *way)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:MODe %d,%d,%d,%s\n", name, devList, wavetable, way);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:MODe %d,%d,%d,%s\n", name, devList, wavetable, way);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1129,7 +1129,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTStopMode_Query(ViSession vi, int name, int dev
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:MODe? %d,%d,%d\n", name, devList, wavetable);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:MODe? %d,%d,%d\n", name, devList, wavetable);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -1153,7 +1153,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTStopMode_Query(ViSession vi, int name, int dev
 MEGAGATEWAY_API int CALL mrgMRQPVTStopTime(ViSession vi, int name, int devList, int wavetable, float time)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:TIMe %d,%d,%d,%f\n", name, devList, wavetable, time);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:TIMe %d,%d,%d,%f\n", name, devList, wavetable, time);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1173,7 +1173,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTStopTime_Query(ViSession vi, int name, int dev
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:TIMe? %d,%d,%d\n", name, devList, wavetable);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:TIMe? %d,%d,%d\n", name, devList, wavetable);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -1197,7 +1197,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTStopTime_Query(ViSession vi, int name, int dev
 MEGAGATEWAY_API int CALL mrgMRQPVTStopDistance(ViSession vi, int name, int devList, int wavetable, float distance)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:DISTance %d,%d,%d,%f\n", name, devList, wavetable, distance);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:DISTance %d,%d,%d,%f\n", name, devList, wavetable, distance);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1217,7 +1217,7 @@ MEGAGATEWAY_API int CALL mrgMRQPVTStopDistance_Query(ViSession vi, int name, int
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:DISTance? %d,%d,%d\n", name, devList, wavetable);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:DISTance? %d,%d,%d\n", name, devList, wavetable);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -1242,7 +1242,7 @@ MEGAGATEWAY_API int CALL mrgMRQLostStepLineConfig_Query(ViSession vi, int name, 
 {
     char args[SEND_BUF];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:CONFig? %d,%d,%s\n", name, devList, change(wavetable));
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:CONFig? %d,%d,%s\n", name, devList, change(wavetable));
     if ((retLen = busQuery(vi, args, strlen(args), state1, 64)) == 0) {
         return -1;
     }
@@ -1266,7 +1266,7 @@ MEGAGATEWAY_API int CALL mrgMRQLostStepLineConfig_Query(ViSession vi, int name, 
 MEGAGATEWAY_API int CALL mrgMRQLostStepLineConfig(ViSession vi, int name, int devList, int wavetable, char *state, double threshold, char *resp)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:CONFig %d,%d,%s,%s,%f,%s\n", name, devList, change(wavetable), state, threshold, resp);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:CONFig %d,%d,%s,%s,%f,%s\n", name, devList, change(wavetable), state, threshold, resp);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1284,7 +1284,7 @@ MEGAGATEWAY_API int CALL mrgMRQLostStepLineConfig(ViSession vi, int name, int de
 MEGAGATEWAY_API int CALL DeviceMRQLostStepState(ViSession vi, int name, int devList, int wavetable, char *state)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:STATe %d,%d,%d,%s\n", name, devList, wavetable, state);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:STATe %d,%d,%d,%s\n", name, devList, wavetable, state);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1303,7 +1303,7 @@ MEGAGATEWAY_API int CALL DeviceMRQLostStepState_Query(ViSession vi, int name, in
 {
     char args[SEND_BUF];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:STATe? %d,%d,%d\n", name, devList, wavetable);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:STATe? %d,%d,%d\n", name, devList, wavetable);
     if ((retLen = busQuery(vi, args, strlen(args), state1, 10)) == 0) {
         return -1;
     }
@@ -1325,7 +1325,7 @@ MEGAGATEWAY_API int CALL DeviceMRQLostStepState_Query(ViSession vi, int name, in
 MEGAGATEWAY_API int CALL mrgMRQLostStepThreshold(ViSession vi, int name, int devList, int wavetable, double value)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:THREShold %d,%d,%s,%f\n", name, devList, change(wavetable), value);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:THREShold %d,%d,%s,%f\n", name, devList, change(wavetable), value);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1345,7 +1345,7 @@ MEGAGATEWAY_API int CALL mrgMRQLostStepThreshold_Query(ViSession vi, int name, i
     char args[SEND_BUF];
     char state[64];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:THREShold? %d,%d,%s\n", name, devList, change(wavetable));
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:THREShold? %d,%d,%s\n", name, devList, change(wavetable));
     if ((retLen = busQuery(vi, args, strlen(args), state, 1024)) == 0) {
         return -1;
     }
@@ -1369,7 +1369,7 @@ MEGAGATEWAY_API int CALL mrgMRQLostStepThreshold_Query(ViSession vi, int name, i
 MEGAGATEWAY_API int CALL mrgMRQLostStepResponse(ViSession vi, int name, int devList, int wavetable, char *state)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:RESPonse %d,%d,%s,%s\n", name, devList, change(wavetable), state);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:RESPonse %d,%d,%s,%s\n", name, devList, change(wavetable), state);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1388,7 +1388,7 @@ MEGAGATEWAY_API int mrgMRQLostStepResponse_Query(ViSession vi, int name, int dev
 {
     char args[SEND_BUF];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:RESPonse? %d,%d,%s\n", name, devList, change(wavetable));
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:RESPonse? %d,%d,%s\n", name, devList, change(wavetable));
     if ((retLen = busQuery(vi, args, strlen(args), state1, 10)) == 0) {
         return -1;
     }
@@ -1410,7 +1410,7 @@ MEGAGATEWAY_API int CALL mrgMRQReportConfig_Query(ViSession vi, int name, int de
 {
     char args[SEND_BUF];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:REPort:CONFig? %d,%d,%s\n", name, devList, funs);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:CONFig? %d,%d,%s\n", name, devList, funs);
     if ((retLen = busQuery(vi, args, strlen(args), funs, 10)) == 0) {
         return -1;
     }
@@ -1433,7 +1433,7 @@ MEGAGATEWAY_API int CALL mrgMRQReportConfig_Query(ViSession vi, int name, int de
 MEGAGATEWAY_API int CALL mrgMRQReportConfig(ViSession vi, int name, int devList, char *funs, char *state, double period)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:REPort:CONFig %d,%d,%s,%s,%f\n", name, devList, funs, state, period);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:CONFig %d,%d,%s,%s,%f\n", name, devList, funs, state, period);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1451,7 +1451,7 @@ MEGAGATEWAY_API int CALL mrgMRQReportConfig(ViSession vi, int name, int devList,
 MEGAGATEWAY_API int CALL mrgMRQReportState(ViSession vi, int name, int devList, char *funs, char *state)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:REPort:STATe %d,%d,%s,%s\n", name, devList, funs, state);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:STATe %d,%d,%s,%s\n", name, devList, funs, state);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1470,7 +1470,7 @@ MEGAGATEWAY_API int CALL mrgMRQReportState_Query(ViSession vi, int name, int dev
 {
     char args[SEND_BUF];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:REPort:STATe? %d,%d,%s\n", name, devList, funs);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:STATe? %d,%d,%s\n", name, devList, funs);
     if ((retLen = busQuery(vi, args, strlen(args), state1, 10)) == 0) {
         return -1;
     }
@@ -1492,7 +1492,7 @@ MEGAGATEWAY_API int CALL mrgMRQReportState_Query(ViSession vi, int name, int dev
 MEGAGATEWAY_API int CALL mrgMRQReportPeriod(ViSession vi, int name, int devList, char *funs, double period)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:REPort:PERiod %d,%d,%s,%f\n", name, devList, funs, period);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:PERiod %d,%d,%s,%f\n", name, devList, funs, period);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1512,7 +1512,7 @@ MEGAGATEWAY_API int CALL mrgMRQReportPeriod_Query(ViSession vi, int name, int de
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:REPort:PERiod? %d,%d,%s\n", name, devList, funs);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:PERiod? %d,%d,%s\n", name, devList, funs);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -1538,7 +1538,7 @@ MEGAGATEWAY_API int CALL mrgMRQReportData_Query(ViSession vi, int name, int devL
 {
     char args[SEND_BUF];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:REPort:DATA? %d,%d,%s\n", name, devList, index);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:DATA? %d,%d,%s\n", name, devList, index);
     if ((retLen = busQuery(vi, args, strlen(args), data, 10)) == 0) {
         return -1;
     }
@@ -1559,7 +1559,7 @@ MEGAGATEWAY_API int CALL mrgMRQReportData_Query(ViSession vi, int name, int devL
 MEGAGATEWAY_API int CALL mrgMRQTriggerMode(ViSession vi, int name, int devList, char *mode)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:TRIGger:MODe %d,%d,%s\n", name, devList, mode);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:MODe %d,%d,%s\n", name, devList, mode);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1578,7 +1578,7 @@ MEGAGATEWAY_API int CALL mrgMRQTriggerMode_Query(ViSession vi, int name, int dev
 {
     char args[SEND_BUF];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:TRIGger:MODe? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:MODe? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), mode, 10)) == 0) {
         return -1;
     }
@@ -1602,7 +1602,7 @@ MEGAGATEWAY_API int CALL mrgMRQTriggerLevelConfig_Query(ViSession vi, int name, 
     char args[SEND_BUF];
     char state[40];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:CONFig? %d,%d,%s\n", name, devList, trig);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:CONFig? %d,%d,%s\n", name, devList, trig);
     if ((retLen = busQuery(vi, args, strlen(args), state, 40)) == 0) {
         return -1;
     }
@@ -1626,7 +1626,7 @@ MEGAGATEWAY_API int CALL mrgMRQTriggerLevelConfig_Query(ViSession vi, int name, 
 MEGAGATEWAY_API int CALL mrgMRQTriggerLevelConfig(ViSession vi, int name, int devList, char *trig, char *state, char *type, float period, char *response)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:CONFig %d,%d,%s,%s,%s,%f,%s\n", name, devList, trig, state, type, period, response);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:CONFig %d,%d,%s,%s,%s,%f,%s\n", name, devList, trig, state, type, period, response);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1644,7 +1644,7 @@ MEGAGATEWAY_API int CALL mrgMRQTriggerLevelConfig(ViSession vi, int name, int de
 MEGAGATEWAY_API int CALL mrgMRQTriggerLevelState(ViSession vi, int name, int devList, char *trig, char *state)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:STATe %d,%d,%s,%s\n", name, devList, trig, state);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:STATe %d,%d,%s,%s\n", name, devList, trig, state);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1664,7 +1664,7 @@ MEGAGATEWAY_API int CALL mrgMRQTriggerLevelState_Query(ViSession vi, int name, i
     char args[SEND_BUF];
     char state[40];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:STATe? %d,%d,%s\n", name, devList, trig);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:STATe? %d,%d,%s\n", name, devList, trig);
     if ((retLen = busQuery(vi, args, strlen(args), state, 40)) == 0) {
         return -1;
     }
@@ -1688,7 +1688,7 @@ MEGAGATEWAY_API int CALL mrgMRQTriggerLevelState_Query(ViSession vi, int name, i
 MEGAGATEWAY_API int CALL mrgMRQTriggerLevelType(ViSession vi, int name, int devList, char *trig, char *type)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:TYPe %d,%d,%s,%s\n", name, devList, trig, type);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:TYPe %d,%d,%s,%s\n", name, devList, trig, type);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1708,7 +1708,7 @@ MEGAGATEWAY_API int CALL mrgMRQTriggerLevelType_Query(ViSession vi, int name, in
     char args[SEND_BUF];
     char state[40];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:TYPe? %d,%d,%s\n", name, devList, trig);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:TYPe? %d,%d,%s\n", name, devList, trig);
     if ((retLen = busQuery(vi, args, strlen(args), state, 40)) == 0) {
         return -1;
     }
@@ -1732,7 +1732,7 @@ MEGAGATEWAY_API int CALL mrgMRQTriggerLevelType_Query(ViSession vi, int name, in
 MEGAGATEWAY_API int CALL mrgMRQTriggerLevelResponse(ViSession vi, int name, int devList, char *trig, char *resp)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:RESPonse %d,%d,%s,%s\n", name, devList, trig, resp);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:RESPonse %d,%d,%s,%s\n", name, devList, trig, resp);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1752,7 +1752,7 @@ MEGAGATEWAY_API int CALL mrgMRQTriggerLevelResponse_Query(ViSession vi, int name
     char args[SEND_BUF];
     char state[40];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:RESPonse? %d,%d,%s\n", name, devList, trig);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:RESPonse? %d,%d,%s\n", name, devList, trig);
     if ((retLen = busQuery(vi, args, strlen(args), state, 40)) == 0) {
         return -1;
     }
@@ -1776,7 +1776,7 @@ MEGAGATEWAY_API int CALL mrgMRQTriggerLevelResponse_Query(ViSession vi, int name
 MEGAGATEWAY_API int CALL mrgMRQTriggerLevelPeriod(ViSession vi, int name, int devList, char *trig, float period)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:PERIod %d,%d,%s,%f\n", name, devList, trig, period);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:PERIod %d,%d,%s,%f\n", name, devList, trig, period);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1796,7 +1796,7 @@ MEGAGATEWAY_API int CALL mrgMRQTriggerLevelPeriod_Query(ViSession vi, int name, 
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:PERIod? %d,%d,%s\n", name, devList, trig);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:PERIod? %d,%d,%s\n", name, devList, trig);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -1821,7 +1821,7 @@ MEGAGATEWAY_API int CALL mrgMRQDriverConfig_Query(ViSession vi, int name, int de
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:DRIVER:CONFig? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:CONFig? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -1844,7 +1844,7 @@ MEGAGATEWAY_API int CALL mrgMRQDriverConfig_Query(ViSession vi, int name, int de
 MEGAGATEWAY_API int CALL mrgMRQDriverConfig(ViSession vi, int name, int devList, char *state, int microstep, float current)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:DRIVER:CONFig %d,%d,%s,%d,%f\n", name, devList, state, microstep, current);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:CONFig %d,%d,%s,%d,%f\n", name, devList, state, microstep, current);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1863,7 +1863,7 @@ MEGAGATEWAY_API int CALL mrgMRQDriverType_Query(ViSession vi, int name, int devL
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:DRIVER:TYPe? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:TYPe? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -1886,7 +1886,7 @@ MEGAGATEWAY_API int CALL mrgMRQDriverType_Query(ViSession vi, int name, int devL
 MEGAGATEWAY_API int CALL mrgMRQDriverCurrent(ViSession vi, int name, int devList, float current)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:DRIVER:CURRent %d,%d,%f\n", name, devList, current);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:CURRent %d,%d,%f\n", name, devList, current);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1905,7 +1905,7 @@ MEGAGATEWAY_API int CALL mrgMRQDriverCurrent_Query(ViSession vi, int name, int d
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:DRIVER:CURRent? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:CURRent? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -1928,7 +1928,7 @@ MEGAGATEWAY_API int CALL mrgMRQDriverCurrent_Query(ViSession vi, int name, int d
 MEGAGATEWAY_API int CALL mrgMRQDriverMicroStep(ViSession vi, int name, int devList, int microstep)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:DRIVER:MICROStep %d,%d,%d\n", name, devList, microstep);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:MICROStep %d,%d,%d\n", name, devList, microstep);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1947,7 +1947,7 @@ MEGAGATEWAY_API int CALL mrgMRQDriverMicroStep_Query(ViSession vi, int name, int
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:DRIVER:MICROStep? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:MICROStep? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -1970,7 +1970,7 @@ MEGAGATEWAY_API int CALL mrgMRQDriverMicroStep_Query(ViSession vi, int name, int
 MEGAGATEWAY_API int CALL mrgMRQDriverState(ViSession vi, int name, int devList, char *state)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:DRIVER:STATe %d,%d,%s\n", name, devList, state);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:STATe %d,%d,%s\n", name, devList, state);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1989,7 +1989,7 @@ MEGAGATEWAY_API int CALL mrgMRQDriverState_Query(ViSession vi, int name, int dev
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:DRIVER:STATe? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:STATe? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -2014,7 +2014,7 @@ MEGAGATEWAY_API int CALL mrgMRQEncoderConfig_Query(ViSession vi, int name, int d
     char args[SEND_BUF];
     char state[40];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:ENCODer:CONFig? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:CONFig? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 40)) == 0) {
         return -1;
     }
@@ -2040,7 +2040,7 @@ MEGAGATEWAY_API int CALL mrgMRQEncoderConfig_Query(ViSession vi, int name, int d
 MEGAGATEWAY_API int CALL mrgMRQEncoderConfig(ViSession vi, int name, int devList, char *state, char *type, int linenum, int channelnum)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:ENCODer:CONFig %d,%d,%s,%s,%d,%d\n", name, devList, state, type, linenum, channelnum);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:CONFig %d,%d,%s,%s,%d,%d\n", name, devList, state, type, linenum, channelnum);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -2057,7 +2057,7 @@ MEGAGATEWAY_API int CALL mrgMRQEncoderConfig(ViSession vi, int name, int devList
 MEGAGATEWAY_API int CALL mrgMRQEncoderLineNum(ViSession vi, int name, int devList, int num)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:ENCODer:LINe:NUMber %d,%d,%d\n", name, devList, num);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:LINe:NUMber %d,%d,%d\n", name, devList, num);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -2076,7 +2076,7 @@ MEGAGATEWAY_API int CALL mrgMRQEncoderLineNum_Query(ViSession vi, int name, int 
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:ENCODer:LINe:NUMber? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:LINe:NUMber? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -2099,7 +2099,7 @@ MEGAGATEWAY_API int CALL mrgMRQEncoderLineNum_Query(ViSession vi, int name, int 
 MEGAGATEWAY_API int CALL mrgMRQEncoderChannelNum(ViSession vi, int name, int devList, int channelnum)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:ENCODer:CHANnel:NUMber %d,%d,%d\n", name, devList, channelnum);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:CHANnel:NUMber %d,%d,%d\n", name, devList, channelnum);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -2118,7 +2118,7 @@ MEGAGATEWAY_API int CALL mrgMRQEncoderChannelNum_Query(ViSession vi, int name, i
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:ENCODer:CHANnel:NUMber? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:CHANnel:NUMber? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -2141,7 +2141,7 @@ MEGAGATEWAY_API int CALL mrgMRQEncoderChannelNum_Query(ViSession vi, int name, i
 MEGAGATEWAY_API int CALL mrgMRQEncoderType(ViSession vi, int name, int devList, char *type)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:ENCODer:TYPe %d,%d,%s\n", name, devList, type);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:TYPe %d,%d,%s\n", name, devList, type);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -2160,7 +2160,7 @@ MEGAGATEWAY_API int CALL mrgMRQEncoderType_Query(ViSession vi, int name, int dev
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:ENCODer:TYPe? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:TYPe? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -2183,7 +2183,7 @@ MEGAGATEWAY_API int CALL mrgMRQEncoderType_Query(ViSession vi, int name, int dev
 MEGAGATEWAY_API int CALL mrgMRQEncoderMultiple(ViSession vi, int name, int devList, char *multiple)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:ENCODer:MULTIPLe %d,%d,%s\n", name, devList, multiple);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:MULTIPLe %d,%d,%s\n", name, devList, multiple);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -2202,7 +2202,7 @@ MEGAGATEWAY_API int CALL mrgMRQEncoderMultiple_Query(ViSession vi, int name, int
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:ENCODer:MULTIPLe? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:MULTIPLe? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -2225,7 +2225,7 @@ MEGAGATEWAY_API int CALL mrgMRQEncoderMultiple_Query(ViSession vi, int name, int
 MEGAGATEWAY_API int CALL mrgMRQEncoderState(ViSession vi, int name, int devList, char *state)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:ENCODer:STATe %d,%d,%s\n", name, devList, state);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:STATe %d,%d,%s\n", name, devList, state);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -2244,7 +2244,7 @@ MEGAGATEWAY_API int CALL mrgMRQEncoderState_Query(ViSession vi, int name, int de
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:ENCODer:STATe? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:STATe? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -2267,7 +2267,7 @@ MEGAGATEWAY_API int CALL mrgMRQEncoderState_Query(ViSession vi, int name, int de
 MEGAGATEWAY_API int CALL mrgMRQEncoderFeedback(ViSession vi, int name, int devList, float feed)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:ENCODer:FEEDBACK %d,%d,%f\n", name, devList, feed);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:FEEDBACK %d,%d,%f\n", name, devList, feed);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -2286,7 +2286,7 @@ MEGAGATEWAY_API int CALL mrgMRQEncoderFeedback_Query(ViSession vi, int name, int
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:ENCODer:FEEDBACK? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:FEEDBACK? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -2311,7 +2311,7 @@ MEGAGATEWAY_API int CALL mrgMRQEncoderFeedback_Query(ViSession vi, int name, int
 MEGAGATEWAY_API int CALL mrgMRQUartApply(ViSession vi, int name,int port,char *parity, int wordlen, float stopbit)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:UART%d:APPLy %d,%s,%d,%f\n",port, name, parity, wordlen, stopbit);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:APPLy %d,%s,%d,%f\n",port, name, parity, wordlen, stopbit);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -2330,7 +2330,7 @@ MEGAGATEWAY_API int CALL mrgMRQUartApply_Query(ViSession vi, int name,int port, 
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:UART%d:APPLy? %d\n",port, name);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:APPLy? %d\n",port, name);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -2353,7 +2353,7 @@ MEGAGATEWAY_API int CALL mrgMRQUartApply_Query(ViSession vi, int name,int port, 
 MEGAGATEWAY_API int CALL mrgMRQUartFlowctrl(ViSession vi, int name,int port, char *mode)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:UART%d:FLOWctrl %d,%s\n", port,name, mode);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:FLOWctrl %d,%s\n", port,name, mode);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -2372,7 +2372,7 @@ MEGAGATEWAY_API int CALL mrgMRQUartFlowctrl_Query(ViSession vi, int name,int por
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:UART%d:FLOWctrl? %d\n",port, name);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:FLOWctrl? %d\n",port, name);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -2395,7 +2395,7 @@ MEGAGATEWAY_API int CALL mrgMRQUartFlowctrl_Query(ViSession vi, int name,int por
 //MEGAGATEWAY_API int CALL mrgMRQUartSensorState(ViSession vi, int name,int port,int index, int state)
 //{
 //    char args[SEND_BUF];
-//    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:UART%d:SENSor%d:STATe %d,%s\n",port,index, name, state?"ON":"OFF");
+//    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:SENSor%d:STATe %d,%s\n",port,index, name, state?"ON":"OFF");
 //    if (busWrite(vi, args, strlen(args)) == 0) {
 //        return -1;
 //    }
@@ -2413,7 +2413,7 @@ MEGAGATEWAY_API int CALL mrgMRQUartSensorState_Query(ViSession vi, int name,int 
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:UART%d:SENSor%d:STATe? %d\n",port,index, name);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:SENSor%d:STATe? %d\n",port,index, name);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -2444,7 +2444,7 @@ MEGAGATEWAY_API int CALL mrgMRQUartSensorData_Query(ViSession vi, int name,int p
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:UART%d:SENSor%d:DATA? %d\n",port,index, name);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:SENSor%d:DATA? %d\n",port,index, name);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -2469,7 +2469,7 @@ MEGAGATEWAY_API int CALL mrgMRQUartSensorData_Query(ViSession vi, int name,int p
 //    char args[SEND_BUF];
 //    char state[10];
 //    int retLen = 0;
-//    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:DALarm:STATe? %d,%d\n", name, devList);
+//    snprintf(args, SEND_BUF, "DEVICE:MRQ:DALarm:STATe? %d,%d\n", name, devList);
 //    if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
 //        return -1;
 //    }
@@ -2492,7 +2492,7 @@ MEGAGATEWAY_API int CALL mrgMRQUartSensorData_Query(ViSession vi, int name,int p
 //MEGAGATEWAY_API int CALL mrgMRQDistanceAlarmState(ViSession vi, int name, int devList,int state)
 //{
 //    char args[SEND_BUF];
-//    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:DALarm:STATe %d,%d,%s\n", name, devList, state?"ON":"OFF");
+//    snprintf(args, SEND_BUF, "DEVICE:MRQ:DALarm:STATe %d,%d,%s\n", name, devList, state?"ON":"OFF");
 //    if (busWrite(vi, args, strlen(args)) == 0) {
 //        return -1;
 //    }
@@ -2510,7 +2510,7 @@ MEGAGATEWAY_API int CALL mrgMRQUartSensorData_Query(ViSession vi, int name,int p
 //MEGAGATEWAY_API int CALL mrgMRQDistanceAlarm(ViSession vi, int name, int devList, float distance,  int alarm)
 //{
 //    char args[SEND_BUF];
-//    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:DALarm%d:DISTance %d,%d,%f\n", alarm, name, devList, distance);
+//    snprintf(args, SEND_BUF, "DEVICE:MRQ:DALarm%d:DISTance %d,%d,%f\n", alarm, name, devList, distance);
 //    if (busWrite(vi, args, strlen(args)) == 0) {
 //        return -1;
 //    }
@@ -2530,7 +2530,7 @@ MEGAGATEWAY_API int CALL mrgMRQDistanceAlarm_Query(ViSession vi, int name, int d
     char args[SEND_BUF];
     char ret[12];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:DALarm:%d:DISTance? %d,%d\n", alarm, name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:DALarm:%d:DISTance? %d,%d\n", alarm, name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), ret, 12)) == 0) {
         return -1;
     }
@@ -2555,7 +2555,7 @@ MEGAGATEWAY_API int CALL mrgMRQNewDriverType_Query(ViSession vi, int name, int d
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:NDRiver:TYPe? %d,%d\n", name, devList);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:NDRiver:TYPe? %d,%d\n", name, devList);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -2577,7 +2577,7 @@ MEGAGATEWAY_API int CALL mrgMRQNewDriverType_Query(ViSession vi, int name, int d
 MEGAGATEWAY_API int CALL mrgMRQNewDriverCurrent(ViSession vi, int name, float current)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:NDRiver:CURRent %d,%f\n", name, current);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:NDRiver:CURRent %d,%f\n", name, current);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -2595,7 +2595,7 @@ MEGAGATEWAY_API int CALL mrgMRQNewDriverCurrent_Query(ViSession vi, int name, do
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:NDRiver:CURRent? %d\n", name);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:NDRiver:CURRent? %d\n", name);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -2617,7 +2617,7 @@ MEGAGATEWAY_API int CALL mrgMRQNewDriverCurrent_Query(ViSession vi, int name, do
 MEGAGATEWAY_API int CALL mrgMRQNewDriverMicrosteps(ViSession vi, int name, int microstep)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:NDRiver:MICRosteps %d,%d\n", name, microstep);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:NDRiver:MICRosteps %d,%d\n", name, microstep);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -2635,7 +2635,7 @@ MEGAGATEWAY_API int CALL mrgMRQNewDriverMicrosteps_Query(ViSession vi, int name,
     char args[SEND_BUF];
     char state[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:NDRiver:MICRosteps? %d\n", name);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:NDRiver:MICRosteps? %d\n", name);
     if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
         return -1;
     }
@@ -2660,7 +2660,7 @@ MEGAGATEWAY_API int CALL mrgMRQNewDriverState_Query(ViSession vi, int name, int 
     char args[SEND_BUF];
     char ret[10];
     int retLen = 0;
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:NDRiver:STATe? %d,%d\n", name, chan);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:NDRiver:STATe? %d,%d\n", name, chan);
     if ((retLen = busQuery(vi, args, strlen(args), ret, 10)) == 0) {
         return -1;
     }
@@ -2689,7 +2689,7 @@ MEGAGATEWAY_API int CALL mrgMRQNewDriverState_Query(ViSession vi, int name, int 
 MEGAGATEWAY_API int CALL mrgMRQNewDriverState(ViSession vi, int name, int devList, int state)
 {
     char args[SEND_BUF];
-    sprintf_s(args, SEND_BUF, "DEVICE:MRQ:NDRiver:STATe %d,%d,%s\n", name, devList, state?"ON":"OFF");
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:NDRiver:STATe %d,%d,%s\n", name, devList, state?"ON":"OFF");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }

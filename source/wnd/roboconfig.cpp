@@ -303,15 +303,14 @@ int RoboConfig::deviceOpen(QString strIP)
         return -1;
     }
 
-    char sName[32] = "";
-    bool bl = false;
-    int ret = mrgGetRobotName(visa, sName, sizeof(sName));
-    int iName = QString("%1").arg(sName).toInt(&bl);
-    if((ret < 0) || (bl == false))
+    int sName[32] = {0};
+    int ret = mrgGetRobotName(visa, sName);
+    if(ret <= 0)
     {
-        qDebug() << "mrhtRobotName_Query error" << ret << bl;
+        qDebug() << "mrhtRobotName_Query error" << ret;
         return -1;
     }
+    int iName = sName[0];//默认选择第一个
 
     foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs())
     {    pCfg->attachHandle( visa, iName);  }

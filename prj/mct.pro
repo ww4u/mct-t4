@@ -73,7 +73,8 @@ SOURCES += \
     ../source/device/bus.cpp \
     ../source/device/device.cpp \
     ../source/device/MegaRobot.cpp \
-    ../source/device/mrqDevice.cpp
+    ../source/device/mrqDevice.cpp \
+    ../source/device/storage.cpp
 
 
 HEADERS += \
@@ -116,7 +117,8 @@ HEADERS += \
     ../source/device/device.h \
     ../source/device/MegaGateway.h \
     ../source/device/MegaRobot.h \
-    ../source/device/mrqDevice.h
+    ../source/device/mrqDevice.h \
+    ../source/device/storage.h
 
 
 RESOURCES += ../source/res/res.qrc

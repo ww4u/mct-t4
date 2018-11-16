@@ -28,7 +28,6 @@ H2Ops::H2Ops(QWidget *parent) :
     setupModel();
 
 
-
     qsrand((uint) QTime::currentTime().msec());
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(slot_handle_timeout()));
     m_timer.setInterval(1000 * 2); //轮询时间周期
@@ -387,7 +386,7 @@ void H2Ops::on_tabWidget_tabBarClicked(int index)
 ////////////////////////////////////// 点击发送指令
 void H2Ops::on_pushButton_starting_home_clicked()
 {
-   qDebug() << "mrgSetRobotHomeWavetable()" << mrgSetRobotHomeWavetable(m_ViHandle, m_RoboName, -1);
+   qDebug() << "mrgRobotGoHome" << mrgRobotGoHome(m_ViHandle, m_RoboName, 0);
 }
 
 
@@ -435,8 +434,8 @@ void H2Ops::on_toolButton_jogmode_x_dec_pressed()
     double cr_time = m_Data["CrawlingTime"].toDouble();
     double speed = m_Data["MaximumVelocity"].toDouble();
 
-//    qDebug() << QString("mrhtRobotMoveJog(%1,%2,%3,%4,%5)").arg(0).arg(cr_time).arg(0-cr_speed).arg(speed).arg(-1)
-//             << mrhtRobotMoveJog(m_ViHandle, m_RoboName, 0, cr_time, 0-cr_speed, speed, -1);
+    qDebug() << "mrhtRobotMoveJog"
+             << mrgRobotMoveJog(m_ViHandle, m_RoboName, -1, 0, cr_time, cr_speed, 0-speed);
 }
 
 void H2Ops::on_toolButton_jogmode_x_inc_pressed()
@@ -445,8 +444,8 @@ void H2Ops::on_toolButton_jogmode_x_inc_pressed()
     double cr_time = m_Data["CrawlingTime"].toDouble();
     double speed = m_Data["MaximumVelocity"].toDouble();
 
-//    qDebug() << "mrhtRobotMoveJog"
-//             << mrhtRobotMoveJog(m_ViHandle, m_RoboName, 0, cr_time, cr_speed, speed, -1);
+    qDebug() << "mrhtRobotMoveJog"
+             << mrgRobotMoveJog(m_ViHandle, m_RoboName, -1, 0, cr_time, cr_speed, speed);
 }
 
 void H2Ops::on_toolButton_jogmode_y_dec_pressed()
@@ -455,8 +454,8 @@ void H2Ops::on_toolButton_jogmode_y_dec_pressed()
     double cr_time = m_Data["CrawlingTime"].toDouble();
     double speed = m_Data["MaximumVelocity"].toDouble();
 
-//    qDebug() << "mrhtRobotMoveJog"
-//             << mrhtRobotMoveJog(m_ViHandle, m_RoboName, 1, cr_time, 0-cr_speed, speed, -1);
+    qDebug() << "mrhtRobotMoveJog"
+             << mrgRobotMoveJog(m_ViHandle, m_RoboName, -1, 1, cr_time, cr_speed, 0-speed);
 }
 
 void H2Ops::on_toolButton_jogmode_y_inc_pressed()
@@ -465,8 +464,8 @@ void H2Ops::on_toolButton_jogmode_y_inc_pressed()
     double cr_time = m_Data["CrawlingTime"].toDouble();
     double speed = m_Data["MaximumVelocity"].toDouble();
 
-//    qDebug() << "mrhtRobotMoveJog"
-//             << mrhtRobotMoveJog(m_ViHandle, m_RoboName, 1, cr_time, cr_speed, speed, -1);
+    qDebug() << "mrhtRobotMoveJog"
+             << mrgRobotMoveJog(m_ViHandle, m_RoboName, -1, 1, cr_time, cr_speed, speed);
 }
 
 
@@ -567,12 +566,12 @@ void H2Ops::updateHoming()
 
 void H2Ops::updateManual()
 {
+    float position_x = 0.0f, position_y = 0.0f, position_z = 0.0f;
 
-    double rand = qrand() % 101;
-    ui->doubleSpinBox_currentPos_x->setValue(rand);
+    mrgGetRobotCurrentPosition(m_ViHandle, m_RoboName, &position_x, &position_y, &position_z);
 
-    rand = qrand() % 101;
-    ui->doubleSpinBox_currentPos_y->setValue(rand);
+    ui->doubleSpinBox_currentPos_x->setValue(position_x);
+    ui->doubleSpinBox_currentPos_y->setValue(position_y);
 }
 
 

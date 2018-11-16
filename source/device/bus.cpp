@@ -103,7 +103,7 @@ int busFindDevice(char * bus, char *output, int len,int method)
         status = socketFindResources(ip_list, 256, 500);
         for (int i = 0; i < status; i++)
         {
-            sprintf_s(&output[r], len - r, "TCPIP0::%s::inst0::INSTR,", ip_list[i]);
+            snprintf(&output[r], len - r, "TCPIP0::%s::inst0::INSTR,", ip_list[i]);
             r = strlen(output);
         }
     } 
@@ -358,7 +358,7 @@ ViSession busOpenSocket(const char *pName, const char *addr, unsigned int port)
 
     //! cat name
     char rsrc[64];
-    sprintf_s(rsrc, 64, "TCPIP::%s::%d::SOCKET", addr, port);
+    snprintf(rsrc, 64, "TCPIP::%s::%d::SOCKET", addr, port);
 
     viSta = viOpen(viDef, rsrc, 0, 2000, &viDev);
     if (viSta != VI_SUCCESS)

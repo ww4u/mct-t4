@@ -5,9 +5,8 @@
 #include <QDebug>
 #include <QMessageBox>
 
-#include "lanfinddevice.h"
-#include "visa.h"
-#include "mrht.h"
+#include "MegaGateway.h"
+
 #include "megaxml.h"
 
 class XConfig : public QWidget

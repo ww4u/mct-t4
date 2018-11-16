@@ -33,13 +33,11 @@ int H2Measurement::setApply()
 #if 1
     //ZeroPoint=[0,1,2,3]
     int value = ui->comboBox_AxesZeroPoint->currentIndex();
-    ret = mrhtRobotCoordinate(mViHandle, mRobotName, value);
+    ret = mrgSetRobotCoordinateSystem(mViHandle, mRobotName, value);
 
     //ProjectZeroPointX=0.00
     //ProjectZeroPointY=0.00
-    ret = mrhtRobotZeroProject(mViHandle, mRobotName, m_ProjectZeroPointX, m_ProjectZeroPointY, 0);
-
-
+    ret = mrgSetRobotProjectZero(mViHandle, mRobotName, m_ProjectZeroPointX, m_ProjectZeroPointY, 0);
 
     //SWLimitPositiveX=0.00
     //SWLimitPositiveY=0.00

@@ -296,16 +296,16 @@ void RoboConfig::slot_open_close(QString strIP)
 int RoboConfig::deviceOpen(QString strIP)
 {
     if(mIndex < 0) return -1;
-    int visa = mrhtOpenDevice(strIP.toLatin1().data(), 2000);
+    int visa = mrgOpenGateWay(strIP.toLatin1().data(), 2000);
     if(visa <= 0)
     {
         qDebug() << "mrhtOpenDevice error" << visa;
         return -1;
     }
 
-    char sName[8] = "";
+    char sName[32] = "";
     bool bl = false;
-    int ret = mrhtRobotName_Query(visa, sName, sizeof(sName));
+    int ret = mrgGetRobotName(visa, sName, sizeof(sName));
     int iName = QString("%1").arg(sName).toInt(&bl);
     if((ret < 0) || (bl == false))
     {
@@ -316,7 +316,7 @@ int RoboConfig::deviceOpen(QString strIP)
     foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs())
     {    pCfg->attachHandle( visa, iName);  }
 
-    mrhtSystemIdentify(visa, 1);
+    mrgIdentify(visa, 1);
 
 //    qDebug() << "device open" << strIP << visa;
     m_RobotList[mIndex].m_Visa = visa;
@@ -327,8 +327,8 @@ int RoboConfig::deviceOpen(QString strIP)
 int RoboConfig::deviceClose()
 {
     if(mIndex < 0) return -1;
-    mrhtSystemIdentify(m_RobotList[mIndex].m_Visa, 0);
-    int ret = mrhtCloseDevice(m_RobotList[mIndex].m_Visa);
+    mrgIdentify(m_RobotList[mIndex].m_Visa, 0);
+    int ret = mrgCloseGateWay(m_RobotList[mIndex].m_Visa);
 
 //    qDebug() << "device close" << m_RobotList[mIndex].m_Visa << ret;
 

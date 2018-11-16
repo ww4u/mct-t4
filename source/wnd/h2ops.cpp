@@ -387,76 +387,114 @@ void H2Ops::on_tabWidget_tabBarClicked(int index)
 ////////////////////////////////////// 点击发送指令
 void H2Ops::on_pushButton_starting_home_clicked()
 {
-//    qDebug() << m_ViHandle << m_RoboName;
-
+   qDebug() << "mrgSetRobotHomeWavetable()" << mrgSetRobotHomeWavetable(m_ViHandle, m_RoboName, -1);
 }
 
+
+//! single move
 void H2Ops::on_toolButton_singlestep_x_dec_clicked()
 {
-    int speed = ui->doubleSpinBox_Velocity->value();
-    qDebug() << mrhtRobotMoveRelative(m_ViHandle, m_RoboName, 0, speed, -1, -1);
+    double offset = ui->doubleSpinBox_Increament->value();
+    double speed = ui->doubleSpinBox_Velocity->value();
+    double time = offset/speed;
+
+    qDebug() << "mrgRobotRelMove" << mrgRobotRelMove(m_ViHandle, m_RoboName, -1, 0-offset, 0, 0, time, -1);
 }
 
 void H2Ops::on_toolButton_singlestep_x_inc_clicked()
 {
-    int speed = ui->doubleSpinBox_Velocity->value();
-    qDebug() << mrhtRobotMoveHold(m_ViHandle, m_RoboName, 0, speed, 1, -1);
+    double offset = ui->doubleSpinBox_Increament->value();
+    double speed = ui->doubleSpinBox_Velocity->value();
+    double time = offset/speed;
+
+    qDebug() << "mrgRobotRelMove" << mrgRobotRelMove(m_ViHandle, m_RoboName, -1, offset, 0, 0, time, -1);
 }
 
 void H2Ops::on_toolButton_singlestep_y_dec_clicked()
 {
-    int speed = ui->doubleSpinBox_Velocity->value();
-    qDebug() << mrhtRobotMoveHold(m_ViHandle, m_RoboName, 1, speed, -1, -1);
+    double offset = ui->doubleSpinBox_Increament->value();
+    double speed = ui->doubleSpinBox_Velocity->value();
+    double time = offset/speed;
+
+    qDebug() << "mrgRobotRelMove" << mrgRobotRelMove(m_ViHandle, m_RoboName, -1, 0, 0-offset, 0, time, -1);
 }
 
 void H2Ops::on_toolButton_singlestep_y_inc_clicked()
 {
-    int speed = ui->doubleSpinBox_Velocity->value();
-    qDebug() << mrhtRobotMoveHold(m_ViHandle, m_RoboName, 1, speed, 1, -1);
+    double offset = ui->doubleSpinBox_Increament->value();
+    double speed = ui->doubleSpinBox_Velocity->value();
+    double time = offset/speed;
+
+    qDebug() << "mrgRobotRelMove" << mrgRobotRelMove(m_ViHandle, m_RoboName, -1, 0, offset, 0, time, -1);
 }
 
-
-void H2Ops::on_toolButton_jogmode_x_dec_clicked()
+//! jog move
+void H2Ops::on_toolButton_jogmode_x_dec_pressed()
 {
-    int speed = ui->doubleSpinBox_Velocity->value();
     double cr_speed = m_Data["CrawlingVelocity"].toDouble();
     double cr_time = m_Data["CrawlingTime"].toDouble();
-    qDebug() << mrhtRobotMoveJog(m_ViHandle, m_RoboName, 0, cr_time, cr_speed * -1, speed, -1);
+    double speed = m_Data["MaximumVelocity"].toDouble();
+
+//    qDebug() << QString("mrhtRobotMoveJog(%1,%2,%3,%4,%5)").arg(0).arg(cr_time).arg(0-cr_speed).arg(speed).arg(-1)
+//             << mrhtRobotMoveJog(m_ViHandle, m_RoboName, 0, cr_time, 0-cr_speed, speed, -1);
 }
 
-void H2Ops::on_toolButton_jogmode_x_inc_clicked()
+void H2Ops::on_toolButton_jogmode_x_inc_pressed()
 {
-    int speed = ui->doubleSpinBox_Velocity->value();
     double cr_speed = m_Data["CrawlingVelocity"].toDouble();
     double cr_time = m_Data["CrawlingTime"].toDouble();
-    qDebug() << mrhtRobotMoveJog(m_ViHandle, m_RoboName, 0, cr_time, cr_speed, speed, -1);
+    double speed = m_Data["MaximumVelocity"].toDouble();
+
+//    qDebug() << "mrhtRobotMoveJog"
+//             << mrhtRobotMoveJog(m_ViHandle, m_RoboName, 0, cr_time, cr_speed, speed, -1);
 }
 
-void H2Ops::on_toolButton_jogmode_y_dec_clicked()
+void H2Ops::on_toolButton_jogmode_y_dec_pressed()
 {
-    int speed = ui->doubleSpinBox_Velocity->value();
     double cr_speed = m_Data["CrawlingVelocity"].toDouble();
     double cr_time = m_Data["CrawlingTime"].toDouble();
-    qDebug() << mrhtRobotMoveJog(m_ViHandle, m_RoboName, 1, cr_time, cr_speed * -1, speed, -1);
+    double speed = m_Data["MaximumVelocity"].toDouble();
+
+//    qDebug() << "mrhtRobotMoveJog"
+//             << mrhtRobotMoveJog(m_ViHandle, m_RoboName, 1, cr_time, 0-cr_speed, speed, -1);
 }
 
-void H2Ops::on_toolButton_jogmode_y_inc_clicked()
+void H2Ops::on_toolButton_jogmode_y_inc_pressed()
 {
-    int speed = ui->doubleSpinBox_Velocity->value();
     double cr_speed = m_Data["CrawlingVelocity"].toDouble();
     double cr_time = m_Data["CrawlingTime"].toDouble();
-    qDebug() << mrhtRobotMoveJog(m_ViHandle, m_RoboName, 1, cr_time, cr_speed, speed, -1);
+    double speed = m_Data["MaximumVelocity"].toDouble();
+
+//    qDebug() << "mrhtRobotMoveJog"
+//             << mrhtRobotMoveJog(m_ViHandle, m_RoboName, 1, cr_time, cr_speed, speed, -1);
 }
+
+
+void H2Ops::on_toolButton_jogmode_x_dec_released()
+{   on_pushButton_stop_clicked();   }
+
+void H2Ops::on_toolButton_jogmode_x_inc_released()
+{   on_pushButton_stop_clicked();   }
+
+void H2Ops::on_toolButton_jogmode_y_dec_released()
+{   on_pushButton_stop_clicked();   }
+
+void H2Ops::on_toolButton_jogmode_y_inc_released()
+{   on_pushButton_stop_clicked();   }
+
+
+void H2Ops::on_pushButton_stop_clicked()
+{
+    qDebug() << "mrgRobotStop:" << mrgRobotStop(m_ViHandle, m_RoboName, -1);
+}
+
+
 
 void H2Ops::on_pushButton_apply_clicked()
 {
 
 }
 
-void H2Ops::on_pushButton_stop_clicked()
-{
-    mrhtRobotStop(m_ViHandle, m_RoboName, -1);
-}
 
 
 /////////////////////////////////////////////////////////////

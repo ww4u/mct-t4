@@ -63,15 +63,17 @@ SOURCES += \
     ../source/wnd/helppanel.cpp \
     ../source/wnd/xconfig.cpp \
     ../source/wnd/h2measurement.cpp \
-    ../source/device/lanfinddevice.cpp \
-    ../source/device/mrht.cpp \
     ../source/widget/megainterface.cpp \
     ../source/mrp/mdatarow.cpp \
     ../source/mrp/mdataset.cpp \
     ../source/wnd/h2product.cpp \
     ../source/wnd/roboconfig.cpp \
     ../source/wnd/xrobo.cpp \
-    ../source/wnd/h2robo.cpp
+    ../source/wnd/h2robo.cpp \
+    ../source/device/bus.cpp \
+    ../source/device/device.cpp \
+    ../source/device/MegaRobot.cpp \
+    ../source/device/mrqDevice.cpp
 
 
 HEADERS += \
@@ -103,15 +105,18 @@ HEADERS += \
     ../source/wnd/helppanel.h \
     ../source/wnd/xconfig.h \
     ../source/wnd/h2measurement.h \
-    ../source/device/mrht.h \
-    ../source/device/lanfinddevice.h \
     ../source/widget/megainterface.h \
     ../source/mrp/mdatarow.h \
     ../source/mrp/mdataset.h \
     ../source/wnd/h2product.h \
     ../source/wnd/roboconfig.h \
     ../source/wnd/xrobo.h \
-    ../source/wnd/h2robo.h
+    ../source/wnd/h2robo.h \
+    ../source/device/bus.h \
+    ../source/device/device.h \
+    ../source/device/MegaGateway.h \
+    ../source/device/MegaRobot.h \
+    ../source/device/mrqDevice.h
 
 
 RESOURCES += ../source/res/res.qrc

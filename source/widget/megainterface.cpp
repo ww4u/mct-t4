@@ -5,8 +5,7 @@
 #include <QDebug>
 #include <QMessageBox>
 
-#include <lanfinddevice.h>
-#include <mrht.h>
+#include "MegaGateway.h"
 
 MegaInterface::MegaInterface(QWidget *parent) :
     QWidget(parent),
@@ -122,8 +121,8 @@ void MegaInterface::soltActionOpen()
     if(visa < 0)
         return;
 
-    mrhtSystemIdentify(visa, 1);
-    mrhtCloseDevice(visa);
+    mrgIdentify(visa, 1);
+    mrgCloseGateWay(visa);
 }
 
 void MegaInterface::soltActionClose()
@@ -132,15 +131,15 @@ void MegaInterface::soltActionClose()
     if(visa < 0)
         return;
 
-    mrhtSystemIdentify(visa, 0);
-    mrhtCloseDevice(visa);
+    mrgIdentify(visa, 0);
+    mrgCloseGateWay(visa);
 }
 
 int MegaInterface::deviceOpen()
 {
     QModelIndex index = ui->tableView->selectionModel()->selectedIndexes().at(0);
     QString strIP = m_model->data(index,Qt::DisplayRole).toString();
-    int visa =  mrhtOpenDevice(strIP.toLatin1().data(), 2000);
+    int visa =  mrgOpenGateWay(strIP.toLatin1().data(), 2000);
     if(visa < 0)
         QMessageBox::warning(this,tr("error"),tr("open device error"));
 
@@ -177,7 +176,7 @@ void DeviceSearchThread::run()
     if(m_type == TYPE_LAN)
     {
         char buff[4096] = "";
-        findResources(buff, 1);
+        busFindDevice("", buff, sizeof(buff), 1);
         strDevices = QString("%1").arg(buff);
         if(strDevices.length() == 0)
         {   return; }
@@ -192,15 +191,15 @@ void DeviceSearchThread::run()
     QStringList devList = strDevices.split(';', QString::SkipEmptyParts);
     for(int devIndex=0; devIndex<devList.count(); devIndex++)
     {
-        int visa =  mrhtOpenDevice(devList.at(devIndex).toLatin1().data(), 2000);
+        int visa =  mrgOpenGateWay(devList.at(devIndex).toLatin1().data(), 2000);
         if(visa < 0) {   return; }
 
         char IDN[1024] = "";
-        int ret = mrhtIdn_Query(visa,IDN,sizeof(IDN));
+        int ret = mrgGateWayIDNQuery(visa,IDN);
         if(ret != 0) {   return; }
 
 //        qDebug() << devList.at(devIndex) << IDN ;
-        mrhtCloseDevice(visa);
+        mrgCloseGateWay(visa);
 
         QString strDev = devList.at(devIndex) + QString(",%1").arg(IDN);
         emit resultReady(strDev);

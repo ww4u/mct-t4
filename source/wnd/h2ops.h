@@ -79,6 +79,7 @@ private slots:
 
     void on_toolButton_singlestep_y_inc_clicked();
 
+#if 0
     void on_toolButton_jogmode_x_dec_clicked();
 
     void on_toolButton_jogmode_x_inc_clicked();
@@ -86,10 +87,27 @@ private slots:
     void on_toolButton_jogmode_y_dec_clicked();
 
     void on_toolButton_jogmode_y_inc_clicked();
+#endif
 
     void on_pushButton_apply_clicked();
 
     void on_pushButton_stop_clicked();
+
+    void on_toolButton_jogmode_x_dec_pressed();
+
+    void on_toolButton_jogmode_x_dec_released();
+
+    void on_toolButton_jogmode_x_inc_pressed();
+
+    void on_toolButton_jogmode_x_inc_released();
+
+    void on_toolButton_jogmode_y_dec_pressed();
+
+    void on_toolButton_jogmode_y_dec_released();
+
+    void on_toolButton_jogmode_y_inc_pressed();
+
+    void on_toolButton_jogmode_y_inc_released();
 
 protected:
     void setupUi();

@@ -138,8 +138,8 @@ void MegaInterface::soltActionClose()
 int MegaInterface::deviceOpen()
 {
     QModelIndex index = ui->tableView->selectionModel()->selectedIndexes().at(0);
-    QString strIP = m_model->data(index,Qt::DisplayRole).toString();
-    int visa =  mrgOpenGateWay(strIP.toLatin1().data(), 2000);
+    QString strDesc = m_model->data(index,Qt::DisplayRole).toString();
+    int visa =  mrgOpenGateWay(strDesc.toLatin1().data(), 2000);
     if(visa < 0)
         QMessageBox::warning(this,tr("error"),tr("open device error"));
 

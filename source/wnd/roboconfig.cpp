@@ -304,10 +304,11 @@ void RoboConfig::slot_open_close(QString strIP)
 int RoboConfig::deviceOpen(QString strIP)
 {
     if(mIndex < 0) return -1;
-    int visa = mrgOpenGateWay(strIP.toLatin1().data(), 2000);
+    QString strDesc = QString("TCPIP0::%1::inst0::INSTR").arg(strIP);
+    int visa = mrgOpenGateWay(strDesc.toLatin1().data(), 2000);
     if(visa <= 0)
     {
-        qDebug() << "mrhtOpenDevice error" << visa;
+        qDebug() << "mrgOpenGateWay error" << visa;
         return -1;
     }
 

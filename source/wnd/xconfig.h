@@ -6,7 +6,6 @@
 #include <QMessageBox>
 
 #include "MegaGateway.h"
-
 #include "megaxml.h"
 
 class XConfig : public QWidget

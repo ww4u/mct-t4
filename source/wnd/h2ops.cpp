@@ -27,11 +27,14 @@ H2Ops::H2Ops(QWidget *parent) :
 
     setupModel();
 
+//    connect(&m_timer, SIGNAL(timeout()), this, SLOT(slot_handle_timeout()));
+//    m_timer.setInterval(1000 * 2); //轮询时间周期
 
-    qsrand((uint) QTime::currentTime().msec());
-    connect(&m_timer, SIGNAL(timeout()), this, SLOT(slot_handle_timeout()));
-    m_timer.setInterval(1000 * 2); //轮询时间周期
-//    m_timer.start();
+    connect(&m_timerCurrentPos, SIGNAL(timeout()), this, SLOT(updateDeviceCurrentPosition()));
+    m_timerCurrentPos.setInterval(500); //0.5S
+
+    connect(&m_timerSpline, SIGNAL(timeout()), this, SLOT(updateMonitor()));
+    m_timerSpline.setInterval(1000 * 60); //1min
 
 
 }
@@ -146,7 +149,7 @@ void H2Ops::slotSetCurrentRobot(QString strDevInfo, int visa, int name)
 {
     if( (m_strDevInfo == strDevInfo) && (m_ViHandle == visa) && (m_RoboName == name) )
     {
-        return;//没有切换机器人且机器人状态没有改变
+        return;//没有切换机器人且状态没有改变
     }
 
     m_strDevInfo = strDevInfo;
@@ -158,21 +161,32 @@ void H2Ops::slotSetCurrentRobot(QString strDevInfo, int visa, int name)
     if(m_ViHandle == 0)
     {
         ui->tabWidget->setEnabled(false);
-        if(m_timer.isActive())
-        {
-            qDebug() << "H2OPS timer stop";
-             m_timer.stop();
-        }
+//        if(m_timer.isActive())
+//        {
+//            qDebug() << "H2OPS timer stop";
+//             m_timer.stop();
+//        }
     }
     else
     {
         ui->tabWidget->setEnabled(true);
         slotLoadConfigAgain();
-        if( !m_timer.isActive())
-        {
-            qDebug() << "H2OPS timer start";
-            m_timer.start();
-        }
+
+        updateDeviceCurrentPosition();
+        updateDeviceStatus();
+        updateOperate();
+        updateDigitalIO();
+        updateHoming();
+        updateManual();
+        updateMonitor();
+        updateDebug();
+        updateDiagnosis();
+
+//        if( !m_timer.isActive())
+//        {
+//            qDebug() << "H2OPS timer start";
+//            m_timer.start();
+//        }
     }
 }
 
@@ -383,87 +397,177 @@ void H2Ops::on_tabWidget_tabBarClicked(int index)
 }
 
 
-////////////////////////////////////// 点击发送指令
-void H2Ops::on_pushButton_starting_home_clicked()
+void H2Ops::updateDeviceCurrentPosition()
 {
-   qDebug() << "mrgRobotGoHome" << mrgRobotGoHome(m_ViHandle, m_RoboName, 0);
+    int ret = -1;
+    float position_x = 0.0f, position_y = 0.0f, position_z = 0.0f;
+    ret = mrgGetRobotCurrentPosition(m_ViHandle, m_RoboName, &position_x, &position_y, &position_z);
+    if(ret != 0)
+    {
+        position_x = 0;
+        position_y = 0;
+        position_z = 0;
+    }
+
+    qDebug() << "mrgGetRobotCurrentPosition";
+
+    ui->doubleSpinBox_currentPos_x->setValue(position_x);
+    ui->doubleSpinBox_currentPos_y->setValue(position_y);
+
+    ui->doubleSpinBox_actual_position_x->setValue(position_x);
+    ui->doubleSpinBox_actual_position_y->setValue(position_y);
+
+    ui->doubleSpinBox_homing_actual_pos_x->setValue(position_x);
+    ui->doubleSpinBox_homing_actual_pos_y->setValue(position_y);
 }
 
+////////////////////////////////////// 点击发送指令
+#include <pthread.h>
+struct ThreadGoHomingArg{
+    QPushButton *btn;
+    int vi;
+    int roboname;
+    int timeout;
+};
+
+void* threadGoHoming(void *args)
+{
+    ThreadGoHomingArg *arg = (ThreadGoHomingArg *)args;
+    qDebug() << "mrgRobotGoHome" << mrgRobotGoHome(arg->vi, arg->roboname, arg->timeout);
+    arg->btn->setEnabled(true);
+    pthread_exit(NULL);
+}
+
+void H2Ops::on_pushButton_starting_home_clicked()
+{
+    pthread_t tid = 0;
+    ThreadGoHomingArg arg = {ui->pushButton_starting_home,
+                            m_ViHandle,
+                            m_RoboName,
+                            0};
+
+    ui->pushButton_starting_home->setEnabled(false);
+    if(0 != pthread_create(&tid, NULL, threadGoHoming, &arg))
+        qDebug() << "threadGoHoming is created failed";
+    else
+    {
+        while(1)
+        {
+            updateDeviceCurrentPosition();
+            if(ui->pushButton_starting_home->isEnabled())
+            {   break; }
+            else
+            {
+                //sleep 0.2s
+                QTime dieTime = QTime::currentTime().addMSecs(200);
+                while( QTime::currentTime() < dieTime )
+                    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+            }
+        }
+    }
+}
+
+void H2Ops::setButtonDisableTime(QToolButton *btn, int msec)
+{
+    btn->setEnabled(false);
+    //非阻塞延时
+    QTime dieTime = QTime::currentTime().addMSecs(msec);
+    while( QTime::currentTime() < dieTime )
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+
+    btn->setEnabled(true);
+}
 
 //! single move
 void H2Ops::on_toolButton_singlestep_x_dec_clicked()
 {
-    double offset = ui->doubleSpinBox_Increament->value();
-    double speed = ui->doubleSpinBox_Velocity->value();
-    double time = offset/speed;
+    float offset = ui->doubleSpinBox_Increament->value();
+    float speed = ui->doubleSpinBox_Velocity->value();
+    float time = offset/speed;
 
+    m_timerCurrentPos.start();
     qDebug() << "mrgRobotRelMove" << mrgRobotRelMove(m_ViHandle, m_RoboName, -1, 0-offset, 0, 0, time, -1);
+    setButtonDisableTime(ui->toolButton_singlestep_x_dec, time*1000);
+    m_timerCurrentPos.stop();
 }
 
 void H2Ops::on_toolButton_singlestep_x_inc_clicked()
 {
-    double offset = ui->doubleSpinBox_Increament->value();
-    double speed = ui->doubleSpinBox_Velocity->value();
-    double time = offset/speed;
+    float offset = ui->doubleSpinBox_Increament->value();
+    float speed = ui->doubleSpinBox_Velocity->value();
+    float time = offset/speed;
 
+    m_timerCurrentPos.start();
     qDebug() << "mrgRobotRelMove" << mrgRobotRelMove(m_ViHandle, m_RoboName, -1, offset, 0, 0, time, -1);
+    setButtonDisableTime(ui->toolButton_singlestep_x_inc, time*1000);
+    m_timerCurrentPos.stop();
 }
 
 void H2Ops::on_toolButton_singlestep_y_dec_clicked()
 {
-    double offset = ui->doubleSpinBox_Increament->value();
-    double speed = ui->doubleSpinBox_Velocity->value();
-    double time = offset/speed;
+    float offset = ui->doubleSpinBox_Increament->value();
+    float speed = ui->doubleSpinBox_Velocity->value();
+    float time = offset/speed;
 
+    m_timerCurrentPos.start();
     qDebug() << "mrgRobotRelMove" << mrgRobotRelMove(m_ViHandle, m_RoboName, -1, 0, 0-offset, 0, time, -1);
+    setButtonDisableTime(ui->toolButton_singlestep_y_dec, time*1000);
+    m_timerCurrentPos.stop();
 }
 
 void H2Ops::on_toolButton_singlestep_y_inc_clicked()
 {
-    double offset = ui->doubleSpinBox_Increament->value();
-    double speed = ui->doubleSpinBox_Velocity->value();
-    double time = offset/speed;
+    float offset = ui->doubleSpinBox_Increament->value();
+    float speed = ui->doubleSpinBox_Velocity->value();
+    float time = offset/speed;
 
+    m_timerCurrentPos.start();
     qDebug() << "mrgRobotRelMove" << mrgRobotRelMove(m_ViHandle, m_RoboName, -1, 0, offset, 0, time, -1);
+    setButtonDisableTime(ui->toolButton_singlestep_y_inc, time*1000);
+    m_timerCurrentPos.stop();
 }
 
 //! jog move
 void H2Ops::on_toolButton_jogmode_x_dec_pressed()
 {
-    double cr_speed = m_Data["CrawlingVelocity"].toDouble();
-    double cr_time = m_Data["CrawlingTime"].toDouble();
-    double speed = m_Data["MaximumVelocity"].toDouble();
+    float cr_speed = m_Data["CrawlingVelocity"].toFloat();
+    float cr_time = m_Data["CrawlingTime"].toFloat() / 1000; //ms --> s
+    float speed = m_Data["MaximumVelocity"].toFloat();
 
+    m_timerCurrentPos.start();
     qDebug() << "mrhtRobotMoveJog"
-             << mrgRobotMoveJog(m_ViHandle, m_RoboName, -1, 0, cr_time, cr_speed, 0-speed);
+             << mrgRobotMoveJog(m_ViHandle, m_RoboName, -1, 0, cr_time, 0-cr_speed, speed);
 }
 
 void H2Ops::on_toolButton_jogmode_x_inc_pressed()
 {
-    double cr_speed = m_Data["CrawlingVelocity"].toDouble();
-    double cr_time = m_Data["CrawlingTime"].toDouble();
-    double speed = m_Data["MaximumVelocity"].toDouble();
+    float cr_speed = m_Data["CrawlingVelocity"].toFloat();
+    float cr_time = m_Data["CrawlingTime"].toFloat() / 1000; //ms --> s
+    float speed = m_Data["MaximumVelocity"].toFloat();
 
+    m_timerCurrentPos.start();
     qDebug() << "mrhtRobotMoveJog"
              << mrgRobotMoveJog(m_ViHandle, m_RoboName, -1, 0, cr_time, cr_speed, speed);
 }
 
 void H2Ops::on_toolButton_jogmode_y_dec_pressed()
 {
-    double cr_speed = m_Data["CrawlingVelocity"].toDouble();
-    double cr_time = m_Data["CrawlingTime"].toDouble();
-    double speed = m_Data["MaximumVelocity"].toDouble();
+    float cr_speed = m_Data["CrawlingVelocity"].toFloat();
+    float cr_time = m_Data["CrawlingTime"].toFloat() / 1000; //ms --> s
+    float speed = m_Data["MaximumVelocity"].toFloat();
 
+    m_timerCurrentPos.start();
     qDebug() << "mrhtRobotMoveJog"
-             << mrgRobotMoveJog(m_ViHandle, m_RoboName, -1, 1, cr_time, cr_speed, 0-speed);
+             << mrgRobotMoveJog(m_ViHandle, m_RoboName, -1, 1, cr_time, 0-cr_speed, speed);
 }
 
 void H2Ops::on_toolButton_jogmode_y_inc_pressed()
 {
-    double cr_speed = m_Data["CrawlingVelocity"].toDouble();
-    double cr_time = m_Data["CrawlingTime"].toDouble();
-    double speed = m_Data["MaximumVelocity"].toDouble();
+    float cr_speed = m_Data["CrawlingVelocity"].toFloat();
+    float cr_time = m_Data["CrawlingTime"].toFloat() / 1000; //ms --> s
+    float speed = m_Data["MaximumVelocity"].toFloat();
 
+    m_timerCurrentPos.start();
     qDebug() << "mrhtRobotMoveJog"
              << mrgRobotMoveJog(m_ViHandle, m_RoboName, -1, 1, cr_time, cr_speed, speed);
 }
@@ -485,6 +589,14 @@ void H2Ops::on_toolButton_jogmode_y_inc_released()
 void H2Ops::on_pushButton_stop_clicked()
 {
     qDebug() << "mrgRobotStop:" << mrgRobotStop(m_ViHandle, m_RoboName, -1);
+
+    if(m_timerCurrentPos.isActive())
+        m_timerCurrentPos.stop();
+
+    ui->toolButton_singlestep_x_dec->setEnabled(true);
+    ui->toolButton_singlestep_x_inc->setEnabled(true);
+    ui->toolButton_singlestep_y_dec->setEnabled(true);
+    ui->toolButton_singlestep_y_inc->setEnabled(true);
 }
 
 
@@ -498,21 +610,20 @@ void H2Ops::on_pushButton_apply_clicked()
 
 /////////////////////////////////////////////////////////////
 //更新标签的实时数值
-void H2Ops::slot_handle_timeout()
-{
-    if(m_strDevInfo == "")
-        return;
+//void H2Ops::slot_handle_timeout()
+//{
+//    if(m_strDevInfo == "")
+//        return;
 
-    updateDeviceStatus();
-    updateOperate();
-    updateDigitalIO();
-    updateHoming();
-    updateManual();
-    updateMonitor();
-    updateDebug();
-    updateDiagnosis();
-
-}
+//    updateDeviceStatus();
+//    updateOperate();
+//    updateDigitalIO();
+//    updateHoming();
+//    updateManual();
+//    updateMonitor();
+//    updateDebug();
+//    updateDiagnosis();
+//}
 
 
 void H2Ops::updateDeviceStatus()
@@ -524,12 +635,12 @@ void H2Ops::updateDeviceStatus()
 
 void H2Ops::updateOperate()
 {
+    qsrand((uint) QTime::currentTime().msec());
     double rand = qrand() % 50;
     ui->doubleSpinBox_RecordNumber->setValue(rand);
     ui->doubleSpinBox_target_position_x->setValue(rand);
     ui->doubleSpinBox_target_position_y->setValue(rand);
-    ui->doubleSpinBox_actual_position_x->setValue(rand);
-    ui->doubleSpinBox_actual_position_y->setValue(rand);
+
     ui->doubleSpinBox_Mileage_x->setValue(rand);
     ui->doubleSpinBox_Mileage_y->setValue(rand);
 
@@ -548,35 +659,26 @@ void H2Ops::updateOperate()
 
 void H2Ops::updateDigitalIO()
 {
-
+    //!TODO
 }
 
 void H2Ops::updateHoming()
 {
+    //!DONE
     ui->label_homing_target->setText(m_Data["Target"]);
     ui->label_homing_direction->setText(m_Data["Direction"]);
-
-    double rand = qrand() % 101;
-    ui->doubleSpinBox_homing_actual_pos_x->setValue(rand);
-
-    rand = qrand() % 101;
-    ui->doubleSpinBox_homing_actual_pos_y->setValue(rand);
-
 }
 
 void H2Ops::updateManual()
 {
-    float position_x = 0.0f, position_y = 0.0f, position_z = 0.0f;
-
-    mrgGetRobotCurrentPosition(m_ViHandle, m_RoboName, &position_x, &position_y, &position_z);
-
-    ui->doubleSpinBox_currentPos_x->setValue(position_x);
-    ui->doubleSpinBox_currentPos_y->setValue(position_y);
+    //!NOTHING TODO
 }
 
 
 void H2Ops::updateMonitor()
 {
+    //!TODO
+    qsrand((uint) QTime::currentTime().msec());
     double rand = qrand() % 101;
     m_splineChart1->dataAppend(rand);
 
@@ -585,12 +687,14 @@ void H2Ops::updateMonitor()
 
 }
 
+
 void H2Ops::updateDebug()
 {
+    //!TODO
 
 }
 
 void H2Ops::updateDiagnosis()
 {
-
+    //!TODO
 }

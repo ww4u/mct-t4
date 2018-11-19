@@ -183,15 +183,16 @@ void RoboConfig::soltActionDelete()
 
 int RoboConfig::setApply()
 {
-    if(mIndex < 0) return -1;
+    if(mIndex < 0) return -100;
     if( m_RobotList[mIndex].m_Visa != 0)
     {
         foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
-            pCfg->setApply();
+            int ret = pCfg->setApply();
+            if(ret != 0)  return -1;
         }
         emit signalApplyClicked();
     }else{
-        QMessageBox::information(this,tr("tips"),"Current Device In Offline");
+        return -2;//offline
     }
     return 0;
 }
@@ -222,13 +223,20 @@ void RoboConfig::on_buttonBox_clicked(QAbstractButton *button)
     {
         setReset();
     }
-    else if ( QDialogButtonBox::AcceptRole == role )
+    else if ( QDialogButtonBox::AcceptRole == role ||
+              QDialogButtonBox::ApplyRole == role )
     {
-        setOK();
-    }
-    else if ( QDialogButtonBox::ApplyRole == role )
-    {
-        setApply();
+        int ret = setApply();
+        if(ret == 0)
+        {
+            QMessageBox::information(this,tr("tips"),tr("Apply Success!"));
+        }
+        else if(ret == -1){
+            QMessageBox::information(this,tr("tips"),tr("Apply Failure"));
+        }
+        else if(ret == -2){
+            QMessageBox::information(this,tr("tips"),tr("Current Device In Offline"));
+        }
     }
     else
     {}

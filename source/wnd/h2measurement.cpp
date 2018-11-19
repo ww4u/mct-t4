@@ -28,23 +28,26 @@ H2Measurement::~H2Measurement()
 int H2Measurement::setApply()
 {
     int ret = -1;
-//    qDebug() << "H2Measurement:" << mViHandle << mRobotName;
 
-#if 1
     //ZeroPoint=[0,1,2,3]
     int value = ui->comboBox_AxesZeroPoint->currentIndex();
     ret = mrgSetRobotCoordinateSystem(mViHandle, mRobotName, value);
+    qDebug() << "mrgSetRobotCoordinateSystem" << ret;
 
     //ProjectZeroPointX=0.00
     //ProjectZeroPointY=0.00
     ret = mrgSetRobotProjectZero(mViHandle, mRobotName, m_ProjectZeroPointX, m_ProjectZeroPointY, 0);
+    qDebug() << "mrgSetRobotProjectZero" << ret;
 
     //SWLimitPositiveX=0.00
     //SWLimitPositiveY=0.00
+    ret = mrgSetRobotSoftWareLimit(mViHandle, mRobotName, 0, m_SWLimitPositiveX, m_SWLimitPositiveY, 0);
+    qDebug() << "mrgSetRobotSoftWareLimit Positive" << ret;
+
     //SWLimitNegativeX=0.00
     //SWLimitNegativeY=0.00
-
-#endif
+    ret = mrgSetRobotSoftWareLimit(mViHandle, mRobotName, 1, m_SWLimitNegativeX, m_SWLimitNegativeY, 0);
+    qDebug() << "mrgSetRobotSoftWareLimit Negative" << ret;
 
     MegaXML mXML;
     QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";

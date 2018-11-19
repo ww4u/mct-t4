@@ -70,11 +70,11 @@ void MegaInterface::slotScanFinished()
 
 void MegaInterface::insertOneRow(QString str)
 {
-//#if 1
-//    QStringList strListHeader;
-//    strListHeader << "IP" << "Manufacturer" << "Type" << "SN" << "Version";
-//    m_model->setHorizontalHeaderLabels(strListHeader);
-//#endif
+#if 1
+    QStringList strListHeader;
+    strListHeader << "IP" << "Manufacturer" << "Type" << "SN" << "Version";
+    m_model->setHorizontalHeaderLabels(strListHeader);
+#endif
 
     int maxRow = m_model->rowCount();
     QStringList strListInfo = str.split(',', QString::SkipEmptyParts);
@@ -172,14 +172,14 @@ void MegaInterface::on_buttonBox_clicked(QAbstractButton *button)
 /////////////////////////////////////////////////////////////
 void DeviceSearchThread::run()
 {
-    QString strDevices;
+    QString strFindDevices;
     if(m_type == TYPE_LAN)
     {
         char *bus = "";
         char buff[4096] = "";
         mrgFindGateWay(bus, buff, sizeof(buff), 1);
-        strDevices = QString("%1").arg(buff);
-        if(strDevices.length() == 0)
+        strFindDevices = QString("%1").arg(buff);
+        if(strFindDevices.length() == 0)
         {   return; }
     }
     else if(m_type == TYPE_USB)
@@ -188,11 +188,13 @@ void DeviceSearchThread::run()
 
 
     }
+    qDebug() << "mrgFindGateWay:" << strFindDevices; //"TCPIP0::192.168.1.9::inst0::INSTR,"
 
-    QStringList devList = strDevices.split(';', QString::SkipEmptyParts);
-    for(int devIndex=0; devIndex<devList.count(); devIndex++)
+    QStringList listFindDevices = strFindDevices.split(',', QString::SkipEmptyParts);
+    for(int devIndex=0; devIndex<listFindDevices.count(); devIndex++)
     {
-        int visa =  mrgOpenGateWay(devList.at(devIndex).toLatin1().data(), 2000);
+        QString strDevice = listFindDevices.at(devIndex);
+        int visa =  mrgOpenGateWay(strDevice.toLatin1().data(), 2000);
         if(visa < 0) {   return; }
 
         char IDN[1024] = "";
@@ -201,13 +203,15 @@ void DeviceSearchThread::run()
         {
             qDebug() << "mrgGateWayIDNQuery error" << ret;
             return;
+        }else{
+            int len = strlen(IDN);
+            IDN[len-1] = '\0';  // '\n' ===> '\0'
         }
-
-//        qDebug() << devList.at(devIndex) << IDN ;
         mrgCloseGateWay(visa);
 
-        QString strDev = devList.at(devIndex) + QString(",%1").arg(IDN);
-        emit resultReady(strDev);
+        qDebug() << strDevice << IDN ;
+        QStringList lst = strDevice.split("::", QString::SkipEmptyParts);
+        emit resultReady(lst.at(1) + QString(",%1").arg(IDN));
     }
 }
 

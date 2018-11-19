@@ -1,6 +1,7 @@
 #ifndef H2OPS_H
 #define H2OPS_H
 
+#include <QToolButton>
 #include <QWidget>
 
 #include "../model/diagnosismodel.h"
@@ -42,7 +43,7 @@ public slots:
     void slot_logClear_action();
 
 private slots:
-    void slot_handle_timeout();
+//    void slot_handle_timeout();
 
     void on_btnUp_clicked();
 
@@ -79,16 +80,6 @@ private slots:
 
     void on_toolButton_singlestep_y_inc_clicked();
 
-#if 0
-    void on_toolButton_jogmode_x_dec_clicked();
-
-    void on_toolButton_jogmode_x_inc_clicked();
-
-    void on_toolButton_jogmode_y_dec_clicked();
-
-    void on_toolButton_jogmode_y_inc_clicked();
-#endif
-
     void on_pushButton_apply_clicked();
 
     void on_pushButton_stop_clicked();
@@ -108,6 +99,18 @@ private slots:
     void on_toolButton_jogmode_y_inc_pressed();
 
     void on_toolButton_jogmode_y_inc_released();
+
+    void updateDeviceCurrentPosition();
+    void updateDeviceStatus();
+    void updateOperate();
+    void updateDigitalIO();
+    void updateHoming();
+    void updateManual();
+    void updateMonitor();
+    void updateDebug();
+    void updateDiagnosis();
+
+
 
 protected:
     void setupUi();
@@ -140,15 +143,14 @@ private:
     QString m_strDevInfo;
     QMap<QString,QString> m_Data;
 
+
+
     QTimer m_timer;
-    void updateDeviceStatus();
-    void updateOperate();
-    void updateDigitalIO();
-    void updateHoming();
-    void updateManual();
-    void updateMonitor();
-    void updateDebug();
-    void updateDiagnosis();
+    QTimer m_timerCurrentPos;   //更新实时位置显示的定时器
+    QTimer m_timerSpline;       //能效曲线添加新数值的定时器
+
+    QTimer m_timerButtonClick;
+    void setButtonDisableTime(QToolButton *btn, int msec);
 
 };
 

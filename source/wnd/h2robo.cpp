@@ -18,14 +18,11 @@ H2Robo::H2Robo(QStackedWidget *pWig, QString strDevInfo, QObject *pObj ) : XRobo
 {
     Q_ASSERT( NULL != pWig );
 
-    QString strDeviceName = getDeviceName(strDevInfo);
-    if("" == strDeviceName) return;
-
     //! roboNode
     m_pProduct = new H2Product(strDevInfo);
     Q_ASSERT( NULL != m_pProduct );
     m_pRoboNode = new QTreeWidgetItem();
-    m_pRoboNode->setText( 0, strDeviceName );
+    m_pRoboNode->setText( 0, getDeviceName(strDevInfo) );
     m_pRoboNode->setIcon( 0, QIcon( ":/res/image/icon/201.png" ) );
     m_pRoboNode->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(m_pProduct) ) );
     mSubConfigs.append( m_pProduct );
@@ -38,36 +35,8 @@ H2Robo::H2Robo(QStackedWidget *pWig, QString strDevInfo, QObject *pObj ) : XRobo
     new_widget( H2Action, m_pH2Action, tr("Record Table"), ":/res/image/icon/activity.png" );
     new_widget( H2ErrMgr, m_pH2ErrMgr, tr("Error Management"), ":/res/image/icon/remind.png" );
 
-    //! load data
-    loadDataSet();
-
-    //! apply data
-    m_pH2Action->setModel( &mActions );
-    m_pH2ErrMgr->setModel( &mErrManager );
-
     //! connection
     buildConnection();
-}
-
-QTreeWidgetItem *H2Robo::roboNode()
-{ return m_pRoboNode; }
-
-int H2Robo::loadDataSet()
-{
-    int ret;
-
-    //! load action
-    ret = mActions.input( QApplication::applicationDirPath() + "/dataset/mrx-h2_action.csv");
-    if ( ret != 0 )
-    { return ret; }
-
-    //! load event
-    //!
-    ret = mErrManager.load( QApplication::applicationDirPath() + "/dataset/mrx-h2_errmgr.xml");
-    if ( ret != 0 )
-    { return ret; }
-
-    return 0;
 }
 
 void H2Robo::buildConnection()
@@ -85,10 +54,11 @@ void H2Robo::buildConnection()
     }
 }
 
+QTreeWidgetItem *H2Robo::roboNode()
+{ return m_pRoboNode; }
+
 QList<XConfig *> H2Robo::subConfigs() const
-{
-    return mSubConfigs;
-}
+{   return mSubConfigs; }
 
 QString H2Robo::getDeviceName(QString strDevInfo)
 {

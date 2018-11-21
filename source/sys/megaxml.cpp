@@ -250,14 +250,10 @@ QMap<QString,QString> MegaXML::xmlNodeRead(QString fileName)
     file.close();
 
     QDomElement root = doc.documentElement(); //返回根节点
-    qDebug() << root.nodeName();
+//    qDebug() << root.nodeName();
 
     QDomNode node = root.firstChild(); //获得第一个子节点
 
-    
-    
-
-    
 #if 0    
     while(!node.isNull())  //如果节点不空
     {

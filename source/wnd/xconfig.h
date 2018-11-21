@@ -4,7 +4,9 @@
 #include <QWidget>
 #include <QDebug>
 #include <QMessageBox>
+#include <QFile>
 
+#include "../include/mystd.h"
 #include "MegaGateway.h"
 #include "megaxml.h"
 
@@ -18,15 +20,15 @@ public:
     void setName( const QString &name );
     QString name();
 
-    QString projectName() const;
     void setProjectName(const QString &projectName);
-
-    virtual int setApply();
-    virtual void loadXmlConfig();
-    virtual void slotOnModelChanged();
-
     int attachHandle( int handle, int robotName);
     int detachHandle();
+
+    virtual int  readDeviceConfig();    //从设备上读取数据设置到类成员
+    virtual int  writeDeviceConfig();   //将类成员数据设置到设备
+    virtual int  loadConfig();          //读取本地配置文件，将数据保存到类成员 启动软件或者添加新设备时调用 如果没用对应的配置就用默认的配置
+    virtual int  saveConfig();          //将类成员写入到本地配置文件
+    virtual void updateShow();          //将类成员更新到界面
 
 protected:
     virtual void focusInEvent(QFocusEvent *event);

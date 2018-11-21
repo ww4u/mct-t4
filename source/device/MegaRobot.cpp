@@ -1,11 +1,10 @@
 // MegaGateway.cpp : 定义 DLL 应用程序的导出函数。
 //
 
-//#include "stdafx.h"
+#include "stdafx.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <windows.h>
 #include "MegaRobot.h"
 
 #define  SEND_BUF   (100)
@@ -19,13 +18,13 @@
 * robotname :分配的机器人名子
 * 返回值：0表示执行成功，－1表示失败
 */
-MEGAGATEWAY_API int CALL mrgBuildRobot(ViSession vi, char * robotType, char * devList, int * robotname)
+EXPORT_API int CALL mrgBuildRobot(ViSession vi, char * robotType, char * devList, int * robotname)
 {
     char args[SEND_BUF];
     char name[8];
     int  id = 0;
     int retLen = 0;
-    if (_stricmp("MRX-RAW", robotType) == 0 && devList == NULL)
+    if (STRCASECMP("MRX-RAW", robotType) == 0 && devList == NULL)
     {
         snprintf(args, SEND_BUF, "ROBOT:ALLOC? %s\n", robotType);
     }
@@ -55,7 +54,7 @@ MEGAGATEWAY_API int CALL mrgBuildRobot(ViSession vi, char * robotType, char * de
 * 返回值：小于零表示出错。 0：MRX-T4;1:MRX-AS;2:MRX-H2,3:MRX-DELTA;4:MRX-RAW
 * 说明：此函数目前只对H2有效
 */
-MEGAGATEWAY_API int CALL mrgGetRobotType(ViSession vi, int name)
+EXPORT_API int CALL mrgGetRobotType(ViSession vi, int name)
 {
     char args[SEND_BUF];
     char ret[8];
@@ -67,23 +66,23 @@ MEGAGATEWAY_API int CALL mrgGetRobotType(ViSession vi, int name)
     else 
     {
         ret[retlen - 1] = 0;
-        if (_stricmp(ret, "MRX-T4") == 0)
+        if (STRCASECMP(ret, "MRX-T4") == 0)
         {
             return MRX_T4;
         }
-        else if (_stricmp(ret, "MRX-AS") == 0)
+        else if (STRCASECMP(ret, "MRX-AS") == 0)
         {
             return MRX_AS;
         }
-        else if (_stricmp(ret, "MRX-H2") == 0)
+        else if (STRCASECMP(ret, "MRX-H2") == 0)
         {
             return MRX_H2;
         }
-        else if (_stricmp(ret, "MRX-DELTA"))
+        else if (STRCASECMP(ret, "MRX-DELTA"))
         {
             return MRX_DELTA;
         }
-        else if (_stricmp(ret, "MRX-RAW"))
+        else if (STRCASECMP(ret, "MRX-RAW"))
         {
             return MRX_RAW;
         }
@@ -96,7 +95,7 @@ MEGAGATEWAY_API int CALL mrgGetRobotType(ViSession vi, int name)
 * 返回值：0表示执行成功，－1表示失败
 * 说明：
 */
-MEGAGATEWAY_API int CALL mrgSaveRobotConfig(ViSession vi)
+EXPORT_API int CALL mrgSaveRobotConfig(ViSession vi)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION:FILE:EXPort\n");
@@ -112,7 +111,7 @@ MEGAGATEWAY_API int CALL mrgSaveRobotConfig(ViSession vi)
 * 返回值：0表示执行成功，－1表示失败
 * 说明：
 */
-MEGAGATEWAY_API int CALL mrgRestoreRobotConfig(ViSession vi)
+EXPORT_API int CALL mrgRestoreRobotConfig(ViSession vi)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION:FILE:IMPort\n");
@@ -128,7 +127,7 @@ MEGAGATEWAY_API int CALL mrgRestoreRobotConfig(ViSession vi)
 * 返回值：0表示执行完成；1表示正在执行；－1表示执行过程中出错
 * 说明：
 */
-MEGAGATEWAY_API int CALL mrgGetRobotConfigState(ViSession vi)
+EXPORT_API int CALL mrgGetRobotConfigState(ViSession vi)
 {
     char args[SEND_BUF];
     char ret[8];
@@ -140,11 +139,11 @@ MEGAGATEWAY_API int CALL mrgGetRobotConfigState(ViSession vi)
     else 
     {
         ret[retlen - 1] = '\0';
-        if (_stricmp(ret, "BUSY") == 0)
+        if (STRCASECMP(ret, "BUSY") == 0)
         {
             return 1;
         }
-        else if(_stricmp(ret, "IDLE") == 0)
+        else if(STRCASECMP(ret, "IDLE") == 0)
         { 
             return 0;
         }
@@ -159,7 +158,7 @@ MEGAGATEWAY_API int CALL mrgGetRobotConfigState(ViSession vi)
 * 返回值：0表示执行成功，－1表示失败
 * 说明：此函数目前只对H2有效
 */
-MEGAGATEWAY_API int CALL mrgSetRobotSubType(ViSession vi,int name,int subtype)
+EXPORT_API int CALL mrgSetRobotSubType(ViSession vi,int name,int subtype)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:SUBTYPE %d,%d", name,subtype);
@@ -176,7 +175,7 @@ MEGAGATEWAY_API int CALL mrgSetRobotSubType(ViSession vi,int name,int subtype)
 * 返回值：子类型。 对于H2来说，0表示小H2（802x494）；1表示大H2（891x769）
 * 说明：此函数目前只对H2有效
 */
-MEGAGATEWAY_API int CALL mrgGetRobotSubType(ViSession vi, int name)
+EXPORT_API int CALL mrgGetRobotSubType(ViSession vi, int name)
 {
     char args[SEND_BUF];
     char ret[8];
@@ -198,7 +197,7 @@ MEGAGATEWAY_API int CALL mrgGetRobotSubType(ViSession vi, int name)
 * 返回值：0表示执行成功，－1表示失败
 * 说明：此函数目前只对H2有效
 */
-MEGAGATEWAY_API int CALL mrgSetRobotCoordinateSystem(ViSession vi, int name, int coord)
+EXPORT_API int CALL mrgSetRobotCoordinateSystem(ViSession vi, int name, int coord)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:COORDinate %d,%d", name, coord);
@@ -215,7 +214,7 @@ MEGAGATEWAY_API int CALL mrgSetRobotCoordinateSystem(ViSession vi, int name, int
 * 返回值：坐标系索引，（详情参考对应的命令系统）
 * 说明：此函数目前只对H2有效
 */
-MEGAGATEWAY_API int CALL mrgGetRobotCoordinateSystem(ViSession vi, int name)
+EXPORT_API int CALL mrgGetRobotCoordinateSystem(ViSession vi, int name)
 {
     char args[SEND_BUF];
     char ret[12];
@@ -234,7 +233,7 @@ MEGAGATEWAY_API int CALL mrgGetRobotCoordinateSystem(ViSession vi, int name)
 * vi :visa设备句柄
 * 返回值：返回机器人个数
 */
-MEGAGATEWAY_API int CALL mrgGetRobotCount(ViSession vi)
+EXPORT_API int CALL mrgGetRobotCount(ViSession vi)
 {
     char args[SEND_BUF];
     char ret[12];
@@ -254,7 +253,7 @@ MEGAGATEWAY_API int CALL mrgGetRobotCount(ViSession vi)
 * robotnames：输出参数，机器人名称集
 * 返回值：返回机器人个数
 */
-MEGAGATEWAY_API int CALL mrgGetRobotName(ViSession vi,int *robotnames)
+EXPORT_API int CALL mrgGetRobotName(ViSession vi,int *robotnames)
 {
     char args[SEND_BUF];
     char names[100];
@@ -268,11 +267,11 @@ MEGAGATEWAY_API int CALL mrgGetRobotName(ViSession vi,int *robotnames)
         names[retlen - 1] = '\0';
         
     }
-    p = strtok_r(names, ",", &pNext);
+    p = STRTOK_S(names, ",", &pNext);
     while (p)
     {
         *robotnames++ = atoi(p);
-        p = strtok_r(NULL, ",", &pNext);
+        p = STRTOK_S(NULL, ",", &pNext);
         count++;
     }
     return count;
@@ -284,7 +283,7 @@ MEGAGATEWAY_API int CALL mrgGetRobotName(ViSession vi,int *robotnames)
 * device：设备名称列表
 * 返回值：返回所使用的设备个数
 */
-MEGAGATEWAY_API int CALL mrgGetRobotDevice(ViSession vi,int robotname,int * device)
+EXPORT_API int CALL mrgGetRobotDevice(ViSession vi,int robotname,int * device)
 {
     char args[SEND_BUF];
     char devlist[100];
@@ -295,11 +294,11 @@ MEGAGATEWAY_API int CALL mrgGetRobotDevice(ViSession vi,int robotname,int * devi
         return 0;
     }
     devlist[retlen] = '\0';
-    p = strtok_r(devlist, ",", &pNext);
+    p = STRTOK_S(devlist, ",", &pNext);
     while (p)
     {
         *device++ = atoi(p);
-        p = strtok_r(NULL, ",", &pNext);
+        p = STRTOK_S(NULL, ",", &pNext);
         count++;
     }
     return count;
@@ -313,7 +312,7 @@ MEGAGATEWAY_API int CALL mrgGetRobotDevice(ViSession vi,int robotname,int * devi
 * 返回值：0表示执行成功，－1表示失败
 * 说明：此函数目前只对H2有效
 */
-MEGAGATEWAY_API int CALL mrgSetRobotProjectZero(ViSession vi, int name, double x,double y,double z)
+EXPORT_API int CALL mrgSetRobotProjectZero(ViSession vi, int name, double x,double y,double z)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:ZERO:PROJECT %d,%f,%f,%f", name, x,y,z);
@@ -331,7 +330,7 @@ MEGAGATEWAY_API int CALL mrgSetRobotProjectZero(ViSession vi, int name, double x
 * 返回值：0表示执行成功，－1表示失败
 * 说明：此函数目前只对H2有效
 */
-MEGAGATEWAY_API int CALL mrgGetRobotProjectZero(ViSession vi, int name,double * x,double *y,double *z)
+EXPORT_API int CALL mrgGetRobotProjectZero(ViSession vi, int name,double * x,double *y,double *z)
 {
     char args[SEND_BUF];
     char ret[100];
@@ -343,11 +342,11 @@ MEGAGATEWAY_API int CALL mrgGetRobotProjectZero(ViSession vi, int name,double * 
         return -1;
     }
     ret[retlen - 1] = '\0';
-    p = strtok_r(ret, ",", &pNext);
+    p = STRTOK_S(ret, ",", &pNext);
     while (p)
     {
         values[count++] = strtod(p, NULL);
-        p = strtok_r(NULL, ",", &pNext);
+        p = STRTOK_S(NULL, ",", &pNext);
     }
     *x = values[0];
     *y = values[1];
@@ -362,7 +361,7 @@ MEGAGATEWAY_API int CALL mrgGetRobotProjectZero(ViSession vi, int name,double * 
 * 返回值：0表示执行成功，－1表示失败
 * 说明：此函数目前只对H2有效
 */
-MEGAGATEWAY_API int CALL mrgSetRobotAxisZero(ViSession vi, int name, double x, double y, double z)
+EXPORT_API int CALL mrgSetRobotAxisZero(ViSession vi, int name, double x, double y, double z)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:ZERO:AXIS %d,%f,%f,%f", name, x, y, z);
@@ -380,7 +379,7 @@ MEGAGATEWAY_API int CALL mrgSetRobotAxisZero(ViSession vi, int name, double x, d
 * 返回值：0表示执行成功，－1表示失败
 * 说明：此函数目前只对H2有效
 */
-MEGAGATEWAY_API int CALL mrgGetRobotAxisZero(ViSession vi, int name, double * x, double *y, double *z)
+EXPORT_API int CALL mrgGetRobotAxisZero(ViSession vi, int name, double * x, double *y, double *z)
 {
     char args[SEND_BUF];
     char ret[100];
@@ -392,11 +391,11 @@ MEGAGATEWAY_API int CALL mrgGetRobotAxisZero(ViSession vi, int name, double * x,
         return -1;
     }
     ret[retlen - 1] = '\0';
-    p = strtok_r(ret, ",", &pNext);
+    p = STRTOK_S(ret, ",", &pNext);
     while (p)
     {
         values[count++] = strtod(p, NULL);
-        p = strtok_r(NULL, ",", &pNext);
+        p = STRTOK_S(NULL, ",", &pNext);
     }
     *x = values[0];
     *y = values[1];
@@ -412,7 +411,7 @@ MEGAGATEWAY_API int CALL mrgGetRobotAxisZero(ViSession vi, int name, double * x,
 * 返回值：0表示执行成功，－1表示失败
 * 说明：此函数目前只对H2有效
 */
-MEGAGATEWAY_API int CALL mrgSetRobotSoftWareLimit(ViSession vi, int name,int type,double x, double y, double z)
+EXPORT_API int CALL mrgSetRobotSoftWareLimit(ViSession vi, int name,int type,double x, double y, double z)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT::LIMIt:SOFT:%s %d,%f,%f,%f",type == 0?"POSITive":"NEGATive", name, x, y, z);
@@ -431,7 +430,7 @@ MEGAGATEWAY_API int CALL mrgSetRobotSoftWareLimit(ViSession vi, int name,int typ
 * 返回值：0表示执行成功，－1表示失败
 * 说明：此函数目前只对H2有效
 */
-MEGAGATEWAY_API int CALL mrgGetRobotSoftWareLimit(ViSession vi, int name,int type, double * x, double *y, double *z)
+EXPORT_API int CALL mrgGetRobotSoftWareLimit(ViSession vi, int name,int type, double * x, double *y, double *z)
 {
     char args[SEND_BUF];
     char ret[100];
@@ -443,11 +442,11 @@ MEGAGATEWAY_API int CALL mrgGetRobotSoftWareLimit(ViSession vi, int name,int typ
         return -1;
     }
     ret[retlen - 1] = '\0';
-    p = strtok_r(ret, ",", &pNext);
+    p = STRTOK_S(ret, ",", &pNext);
     while (p)
     {
         values[count++] = strtod(p, NULL);
-        p = strtok_r(NULL, ",", &pNext);
+        p = STRTOK_S(NULL, ",", &pNext);
     }
     *x = values[0];
     *y = values[1];
@@ -463,7 +462,7 @@ MEGAGATEWAY_API int CALL mrgGetRobotSoftWareLimit(ViSession vi, int name,int typ
 * wavetable:波表索引值，取值范围0~9
 * 返回值：0表示设置成功，否则表示设置失败
 */
-MEGAGATEWAY_API int CALL mrgSetRobotWavetable(ViSession vi, int name,int wavetable)
+EXPORT_API int CALL mrgSetRobotWavetable(ViSession vi, int name,int wavetable)
 {
     char args[SEND_BUF];
     if (wavetable < 0 || wavetable >= 10)
@@ -483,7 +482,7 @@ MEGAGATEWAY_API int CALL mrgSetRobotWavetable(ViSession vi, int name,int wavetab
 * wavetable:波表索引值，取值范围0~9
 * 返回值：大于0表示波表索引，小于零表示查询失败
 */
-MEGAGATEWAY_API int CALL mrgRobotWavetableQuery(ViSession vi, int name)
+EXPORT_API int CALL mrgRobotWavetableQuery(ViSession vi, int name)
 {
     char args[SEND_BUF];
     char wavetable[4];
@@ -524,7 +523,7 @@ MEGAGATEWAY_API int CALL mrgRobotWavetableQuery(ViSession vi, int name)
 * wavetable:波表索引，－1表示使用默认索引（调用mrgSetRobotWavetable设置的波表索引）
 * 返回值：0表示启动成功，否则表示启动失败
 */
-MEGAGATEWAY_API int CALL mrgRobotRun(ViSession vi,int name,int wavetable)
+EXPORT_API int CALL mrgRobotRun(ViSession vi,int name,int wavetable)
 {
     char args[SEND_BUF];
     if (wavetable == -1)
@@ -550,7 +549,7 @@ MEGAGATEWAY_API int CALL mrgRobotRun(ViSession vi,int name,int wavetable)
 * wavetable:波表索引，－1表示使用默认索引（调用mrgSetRobotWavetable设置的波表索引）
 * 返回值：0表示停止成功，否则表示停止失败
 */
-MEGAGATEWAY_API int CALL mrgRobotStop(ViSession vi, int name, int wavetable)
+EXPORT_API int CALL mrgRobotStop(ViSession vi, int name, int wavetable)
 {
     char args[SEND_BUF];
     if (wavetable == -1)
@@ -578,7 +577,7 @@ MEGAGATEWAY_API int CALL mrgRobotStop(ViSession vi, int name, int wavetable)
 * timeout_ms：等待超时时间
 * 返回值：0表示等待成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示等待超时
 */
-MEGAGATEWAY_API int CALL mrgRobotWaitReady(ViSession vi, int name,int wavetable, int timeout_ms)
+EXPORT_API int CALL mrgRobotWaitReady(ViSession vi, int name,int wavetable, int timeout_ms)
 {
     int ret = -3, error_count = 0;
     char args[SEND_BUF];
@@ -609,11 +608,11 @@ MEGAGATEWAY_API int CALL mrgRobotWaitReady(ViSession vi, int name,int wavetable,
             continue;
         }
         state[retlen - 1] = '\0';//去掉回车符
-        if (_stricmp(state, "READY") == 0 || _stricmp(state, "IDLE") == 0) //下发过程中停止会进入“IDLE”状态
+        if (STRCASECMP(state, "READY") == 0 || STRCASECMP(state, "IDLE") == 0) //下发过程中停止会进入“IDLE”状态
         {
             ret = 0; break;
         }
-        else if (_stricmp(state, "ERROR") == 0) {
+        else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
         Sleep(200);
@@ -635,7 +634,7 @@ MEGAGATEWAY_API int CALL mrgRobotWaitReady(ViSession vi, int name,int wavetable,
 * timeout_ms：等待超时时间
 * 返回值：0表示等待成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示等待超时;-4:参数出错
 */
-MEGAGATEWAY_API int CALL mrgRobotWaitEnd(ViSession vi, int name, char wavetable, int timeout_ms)
+EXPORT_API int CALL mrgRobotWaitEnd(ViSession vi, int name, char wavetable, int timeout_ms)
 {
     int ret = -3,error_count = 0;
     char args[SEND_BUF];
@@ -666,10 +665,10 @@ MEGAGATEWAY_API int CALL mrgRobotWaitEnd(ViSession vi, int name, char wavetable,
             continue;
         }
         state[retlen - 1] = '\0';//去掉回车符
-        if (_stricmp(state, "STOP") == 0 || _stricmp(state, "IDLE") == 0) {
+        if (STRCASECMP(state, "STOP") == 0 || STRCASECMP(state, "IDLE") == 0) {
             ret = 0; break;
         }
-        else if (_stricmp(state, "ERROR") == 0) {
+        else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
         Sleep(200);
@@ -693,7 +692,7 @@ MEGAGATEWAY_API int CALL mrgRobotWaitEnd(ViSession vi, int name, char wavetable,
 * 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示等待超时
 * 说明：绝对位置移动,末端保持不动
 */
-MEGAGATEWAY_API int CALL mrgRobotMove(ViSession vi, int name,int wavetable, float x, float y, float z, float time,int timeout_ms)
+EXPORT_API int CALL mrgRobotMove(ViSession vi, int name,int wavetable, float x, float y, float z, float time,int timeout_ms)
 {
     char args[SEND_BUF];
     if (wavetable == -1)
@@ -728,7 +727,7 @@ MEGAGATEWAY_API int CALL mrgRobotMove(ViSession vi, int name,int wavetable, floa
 * 返回值：0表示执行成功，否则表示过程中出错
 * 说明：非阻塞函数
 */
-MEGAGATEWAY_API int CALL mrgRobotMoveOn(ViSession vi, int name, int wavetable, int ax, float speed)
+EXPORT_API int CALL mrgRobotMoveOn(ViSession vi, int name, int wavetable, int ax, float speed)
 {
     char args[SEND_BUF];
     if (wavetable == -1)
@@ -760,7 +759,7 @@ MEGAGATEWAY_API int CALL mrgRobotMoveOn(ViSession vi, int name, int wavetable, i
 * 返回值：0表示执行成功，否则表示过程中出错
 * 说明：非阻塞函数
 */
-MEGAGATEWAY_API int CALL mrgRobotMoveJog(ViSession vi, int name, int wavetable, int ax,float cr_time,float cr_speed, float speed)
+EXPORT_API int CALL mrgRobotMoveJog(ViSession vi, int name, int wavetable, int ax,float cr_time,float cr_speed, float speed)
 {
     char args[SEND_BUF];
     if (wavetable == -1)
@@ -791,7 +790,7 @@ MEGAGATEWAY_API int CALL mrgRobotMoveJog(ViSession vi, int name, int wavetable, 
 * 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示等待超时
 * 说明：相对位置移动,末端保持不动
 */
-MEGAGATEWAY_API int CALL mrgRobotRelMove(ViSession vi, int name, int wavetable, float x, float y, float z, float time,int timeout_ms)
+EXPORT_API int CALL mrgRobotRelMove(ViSession vi, int name, int wavetable, float x, float y, float z, float time,int timeout_ms)
 {
     char args[SEND_BUF];
     if (wavetable == -1)
@@ -826,7 +825,7 @@ MEGAGATEWAY_API int CALL mrgRobotRelMove(ViSession vi, int name, int wavetable, 
 * 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示等待超时
 * 说明：绝对位置移动,末端保持不动
 */
-MEGAGATEWAY_API int CALL mrgRobotMoveL(ViSession vi, int name, int wavetable, float x, float y, float z, float time,int timeout_ms)
+EXPORT_API int CALL mrgRobotMoveL(ViSession vi, int name, int wavetable, float x, float y, float z, float time,int timeout_ms)
 {
     char args[SEND_BUF];
     if (wavetable == -1)
@@ -862,7 +861,7 @@ MEGAGATEWAY_API int CALL mrgRobotMoveL(ViSession vi, int name, int wavetable, fl
 * 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示等待超时
 * 说明：相对位置移动,末端保持不动
 */
-MEGAGATEWAY_API int CALL mrgRobotRelMoveL(ViSession vi, int name, int wavetable, float x, float y, float z, float time, int timeout_ms)
+EXPORT_API int CALL mrgRobotRelMoveL(ViSession vi, int name, int wavetable, float x, float y, float z, float time, int timeout_ms)
 {
     char args[SEND_BUF];
     if (wavetable == -1)
@@ -893,7 +892,7 @@ MEGAGATEWAY_API int CALL mrgRobotRelMoveL(ViSession vi, int name, int wavetable,
 * mode: 插值模式
 * 返回值：0表示执行成功，－1：表示出错，
 */
-MEGAGATEWAY_API int CALL mrgSetRobotInterPolateMode(ViSession vi, int name,int mode)
+EXPORT_API int CALL mrgSetRobotInterPolateMode(ViSession vi, int name,int mode)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:INTERPOLATE:MODE %d,%d\n", name, mode);
@@ -909,7 +908,7 @@ MEGAGATEWAY_API int CALL mrgSetRobotInterPolateMode(ViSession vi, int name,int m
 * mode: 插值模式
 * 返回值：0表示执行成功，－1：表示出错，
 */
-MEGAGATEWAY_API int CALL mrgGetRobotInterPolateMode(ViSession vi, int name, int* mode)
+EXPORT_API int CALL mrgGetRobotInterPolateMode(ViSession vi, int name, int* mode)
 {
     char args[SEND_BUF];
     char ret[8];
@@ -929,7 +928,7 @@ MEGAGATEWAY_API int CALL mrgGetRobotInterPolateMode(ViSession vi, int name, int*
 * step: 插值步长
 * 返回值：0表示执行成功，－1：表示出错，
 */
-MEGAGATEWAY_API int CALL mrgSetRobotInterPolateStep(ViSession vi, int name, int step)
+EXPORT_API int CALL mrgSetRobotInterPolateStep(ViSession vi, int name, int step)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:INTERPOLATE:STEP %d,%d\n", name, step);
@@ -945,7 +944,7 @@ MEGAGATEWAY_API int CALL mrgSetRobotInterPolateStep(ViSession vi, int name, int 
 * step: 插值步长
 * 返回值：0表示执行成功，－1：表示出错，
 */
-MEGAGATEWAY_API int CALL mrgGetRobotInterPolateStep(ViSession vi, int name, int* step)
+EXPORT_API int CALL mrgGetRobotInterPolateStep(ViSession vi, int name, int* step)
 {
     char args[SEND_BUF];
     char ret[8];
@@ -965,7 +964,7 @@ MEGAGATEWAY_API int CALL mrgGetRobotInterPolateStep(ViSession vi, int name, int*
 * wavetable:波表索引
 * 返回值：0表示执行成功，－1：表示出错
 */
-MEGAGATEWAY_API int CALL mrgSetRobotHomeWavetable(ViSession vi, int name, int wavetable)
+EXPORT_API int CALL mrgSetRobotHomeWavetable(ViSession vi, int name, int wavetable)
 {
     char args[SEND_BUF];
     if (wavetable < 0 || wavetable > 9)
@@ -985,7 +984,7 @@ MEGAGATEWAY_API int CALL mrgSetRobotHomeWavetable(ViSession vi, int name, int wa
 * wavetable:返回的波表索引
 * 返回值：大于等于0表示查询到的波表索引，小于零：表示出错
 */
-MEGAGATEWAY_API int CALL mrgGetRobotHomeWavetable(ViSession vi, int name)
+EXPORT_API int CALL mrgGetRobotHomeWavetable(ViSession vi, int name)
 {
     char args[SEND_BUF];
     char wavetable[8];
@@ -995,7 +994,7 @@ MEGAGATEWAY_API int CALL mrgGetRobotHomeWavetable(ViSession vi, int name)
         return -1;
     }
     wavetable[retlen - 1] = 0; //去掉回车符
-    if (_stricmp(wavetable, "MAIN") == 0) {
+    if (STRCASECMP(wavetable, "MAIN") == 0) {
         return 0;
     }
     else if (strcmp(wavetable, "SMALL") == 0) {
@@ -1037,7 +1036,7 @@ MEGAGATEWAY_API int CALL mrgGetRobotHomeWavetable(ViSession vi, int name)
 * 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示执行超时
 * 说明：末端保持不动
 */
-MEGAGATEWAY_API int CALL mrgRobotGoHome(ViSession vi, int name,int timeout_ms)
+EXPORT_API int CALL mrgRobotGoHome(ViSession vi, int name,int timeout_ms)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:HOME:RUN %d\n", name);
@@ -1056,7 +1055,7 @@ MEGAGATEWAY_API int CALL mrgRobotGoHome(ViSession vi, int name,int timeout_ms)
 * name: 机器人名称
 * 返回值：0表示执行成功，-1:表示失败
 */
-MEGAGATEWAY_API int CALL mrgRobotGoHomeStop(ViSession vi, int name)
+EXPORT_API int CALL mrgRobotGoHomeStop(ViSession vi, int name)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:HOME:STOP %d\n", name);
@@ -1072,7 +1071,7 @@ MEGAGATEWAY_API int CALL mrgRobotGoHomeStop(ViSession vi, int name)
 * timeout_ms：等待超时时间，为零表示无限等待
 * 返回值：0表示等待成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示等待超时
 */
-MEGAGATEWAY_API int CALL mrgRobotWaitHomeEnd(ViSession vi, int name, int timeout_ms)
+EXPORT_API int CALL mrgRobotWaitHomeEnd(ViSession vi, int name, int timeout_ms)
 {
     int ret = 0,error_count = 0;
     char args[SEND_BUF];
@@ -1089,10 +1088,10 @@ MEGAGATEWAY_API int CALL mrgRobotWaitHomeEnd(ViSession vi, int name, int timeout
             continue;
         }
         state[retlen - 1] = '\0';//去掉回车符
-        if (_stricmp(state, "STOP") == 0 || _stricmp(state, "IDLE") == 0) {
+        if (STRCASECMP(state, "STOP") == 0 || STRCASECMP(state, "IDLE") == 0) {
             ret = 0; break;
         }
-        else if (_stricmp(state, "ERROR") == 0) {
+        else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
         Sleep(200);
@@ -1112,7 +1111,7 @@ MEGAGATEWAY_API int CALL mrgRobotWaitHomeEnd(ViSession vi, int name, int timeout
 * 返回值：0表示执行成功，否则表示失败
 * 说明：angles是不安全的，请在外部确保angles的空间足够
 */
-MEGAGATEWAY_API int CALL mrgGetRobotHomeAngle(ViSession vi, int name,float * angles)
+EXPORT_API int CALL mrgGetRobotHomeAngle(ViSession vi, int name,float * angles)
 {
     int count = 0, retlen = 0;
     char args[SEND_BUF];
@@ -1124,11 +1123,11 @@ MEGAGATEWAY_API int CALL mrgGetRobotHomeAngle(ViSession vi, int name,float * ang
         return -1;
     }
     tmp[retlen] = 0;
-    p = strtok_r(tmp, ",", &pNext);
+    p = STRTOK_S(tmp, ",", &pNext);
     while (p)
     {
         *angles++ = strtof(p, NULL);
-        p = strtok_r(NULL, ",", &pNext);
+        p = STRTOK_S(NULL, ",", &pNext);
         count++;
     }
     return count;
@@ -1139,7 +1138,7 @@ MEGAGATEWAY_API int CALL mrgGetRobotHomeAngle(ViSession vi, int name,float * ang
 * name: 机器人名称
 * 返回值：0表示执行成功， －1：表示执行失败
 */
-MEGAGATEWAY_API int CALL mrgGetRobotHomePosition(ViSession vi, int name, float * x, float *y, float* z)
+EXPORT_API int CALL mrgGetRobotHomePosition(ViSession vi, int name, float * x, float *y, float* z)
 {
     int count = 0, retlen = 0;
     char args[SEND_BUF];
@@ -1152,11 +1151,11 @@ MEGAGATEWAY_API int CALL mrgGetRobotHomePosition(ViSession vi, int name, float *
         return -1;
     }
     tmp[retlen] = 0;
-    p = strtok_r(tmp, ",", &pNext);
+    p = STRTOK_S(tmp, ",", &pNext);
     while (p)
     {
         position[count] = strtof(p, NULL);
-        p = strtok_r(NULL, ",", &pNext);
+        p = STRTOK_S(NULL, ",", &pNext);
         count++;
     }
     *x = position[0];
@@ -1172,7 +1171,7 @@ MEGAGATEWAY_API int CALL mrgGetRobotHomePosition(ViSession vi, int name, float *
 * 返回值：0表示执行成功，－1：表示出错，
 * 说明：此命令目前只对H2有效
 */
-MEGAGATEWAY_API int CALL mrgSetRobotHomeMode(ViSession vi, int name, int mode)
+EXPORT_API int CALL mrgSetRobotHomeMode(ViSession vi, int name, int mode)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:HOME:MODE %d,%d\n", name, mode);
@@ -1188,7 +1187,7 @@ MEGAGATEWAY_API int CALL mrgSetRobotHomeMode(ViSession vi, int name, int mode)
 * 返回值：大于等于0表示回零方式，否则表示出错，
 * 说明：此命令目前只对H2有效
 */
-MEGAGATEWAY_API int CALL mrgGetRobotHomeMode(ViSession vi, int name)
+EXPORT_API int CALL mrgGetRobotHomeMode(ViSession vi, int name)
 {
     char args[SEND_BUF];
     char ret[8];
@@ -1209,7 +1208,7 @@ MEGAGATEWAY_API int CALL mrgGetRobotHomeMode(ViSession vi, int name)
 * 返回值：0表示执行成功，否则表示失败
 * 说明：在调 用mrgRobotPointLoad（）函数前，请使用此函数清空上次的坐标点
 */
-MEGAGATEWAY_API int CALL mrgRobotPointClear(ViSession vi, int name)
+EXPORT_API int CALL mrgRobotPointClear(ViSession vi, int name)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF,"ROBOT:POINT:CLEAR %d\n", name);
@@ -1229,7 +1228,7 @@ MEGAGATEWAY_API int CALL mrgRobotPointClear(ViSession vi, int name)
 * 说明：此函数只是将上位机的坐标点信息下载到MRG中，MRG并未开始解算.
 *  另，  在调用此函数开始下发坐标点前，务必使用mrgRobotPointClear()函数，通知机器人清空其缓存中的坐标点。
 */
-MEGAGATEWAY_API int CALL mrgRobotPointLoad(ViSession vi, int name, float x, float y, float z, float end, float time,int mod)
+EXPORT_API int CALL mrgRobotPointLoad(ViSession vi, int name, float x, float y, float z, float end, float time,int mod)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:POINT:LOAD %d,%f,%f,%f,%f,%f,%d\n", name,x,y,z,end,time,mod);
@@ -1246,7 +1245,7 @@ MEGAGATEWAY_API int CALL mrgRobotPointLoad(ViSession vi, int name, float x, floa
 * timeout_ms: 等待解算的超时时间,0表示无限等待，－1表示不等待，立即返回
 * 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示等待超时
 */
-MEGAGATEWAY_API int CALL mrgRobotPointResolve(ViSession vi, int name, int wavetable,int timeout_ms )
+EXPORT_API int CALL mrgRobotPointResolve(ViSession vi, int name, int wavetable,int timeout_ms )
 {
     char args[SEND_BUF];
     if (wavetable == -1)
@@ -1277,7 +1276,7 @@ MEGAGATEWAY_API int CALL mrgRobotPointResolve(ViSession vi, int name, int waveta
 * 返回值：0表示执行成功，否则表示失败
 * 说明：在调 用mrgRobotPvtLoad（）函数前，请使用此函数清空上次的PVT
 */
-MEGAGATEWAY_API int CALL mrgRobotPvtClear(ViSession vi, int name)
+EXPORT_API int CALL mrgRobotPvtClear(ViSession vi, int name)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:PVT:CLEAR %d\n", name);
@@ -1296,7 +1295,7 @@ MEGAGATEWAY_API int CALL mrgRobotPvtClear(ViSession vi, int name)
 * 说明：此函数只是将上位机的坐标点信息下载到MRG中，MRG并未开始解算.
 *  另，  在调用此函数开始下发坐标点前，务必使用mrgRobotPvtClear()函数，通知机器人清空其缓存中的坐标点。
 */
-MEGAGATEWAY_API int CALL mrgRobotPvtLoad(ViSession vi, int name, float p, float v, float t, int axle)
+EXPORT_API int CALL mrgRobotPvtLoad(ViSession vi, int name, float p, float v, float t, int axle)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:POINT:LOAD %d,%f,%f,%f,%d\n", name, p, v, t,axle);
@@ -1313,7 +1312,7 @@ MEGAGATEWAY_API int CALL mrgRobotPvtLoad(ViSession vi, int name, float p, float 
 * timeout_ms: 等待解算的超时时间,0表示无限等待，－1表示不等待，立即返回
 * 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示等待超时
 */
-MEGAGATEWAY_API int CALL mrgRobotPvtResolve(ViSession vi, int name, int wavetable,int timeout_ms)
+EXPORT_API int CALL mrgRobotPvtResolve(ViSession vi, int name, int wavetable,int timeout_ms)
 {
     char args[SEND_BUF];
     if (wavetable == -1)
@@ -1346,7 +1345,7 @@ MEGAGATEWAY_API int CALL mrgRobotPvtResolve(ViSession vi, int name, int wavetabl
 * filename: 点坐标文件名
 * 返回值：0表示执行成功，否则表示失败
 */
-MEGAGATEWAY_API int CALL mrgRobotFileImport(ViSession vi, char* filename)
+EXPORT_API int CALL mrgRobotFileImport(ViSession vi, char* filename)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:FILE:IMPORT %s\n", filename);
@@ -1367,7 +1366,7 @@ MEGAGATEWAY_API int CALL mrgRobotFileImport(ViSession vi, char* filename)
 * 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示等待超时
 *
 */
-MEGAGATEWAY_API int CALL mrgRobotFileResolve(ViSession vi, int name, int section, int line, int wavetable,int timeout_ms)
+EXPORT_API int CALL mrgRobotFileResolve(ViSession vi, int name, int section, int line, int wavetable,int timeout_ms)
 {
     char args[SEND_BUF];
     if (line == 0 || line < 0)
@@ -1395,7 +1394,7 @@ MEGAGATEWAY_API int CALL mrgRobotFileResolve(ViSession vi, int name, int section
 * filename：表示导出的文件名
 * 返回值：0表示执行正确，否则表示失败。
 */
-MEGAGATEWAY_API int CALL mrgRobotFileExport(ViSession vi, int name,int type, char* filename)
+EXPORT_API int CALL mrgRobotFileExport(ViSession vi, int name,int type, char* filename)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:FILE:EXPORT:%s %d,%s\n", type ? "LOCAL" : "EXTERNAL",name,filename);
@@ -1412,7 +1411,7 @@ MEGAGATEWAY_API int CALL mrgRobotFileExport(ViSession vi, int name,int type, cha
 * dev : 末端执行器对应的通道设备
 * 返回值：0表示执行成功，－1：表示出错
 */
-MEGAGATEWAY_API int CALL mrgRobotToolSet(ViSession vi, int robotname, char * type, char* dev)
+EXPORT_API int CALL mrgRobotToolSet(ViSession vi, int robotname, char * type, char* dev)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:EFFECTor:SET %d,%s,(%s)\n",robotname,type,dev);
@@ -1428,7 +1427,7 @@ MEGAGATEWAY_API int CALL mrgRobotToolSet(ViSession vi, int robotname, char * typ
 * timeout_ms : 末端执行器执行的超时时间, 0表示无限等待
 * 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示执行超时
 */
-MEGAGATEWAY_API int CALL mrgRobotWaitToolExeEnd(ViSession vi, int name,int timeout_ms)
+EXPORT_API int CALL mrgRobotWaitToolExeEnd(ViSession vi, int name,int timeout_ms)
 {
     int ret = 0,error_count = 0;
     char args[SEND_BUF];
@@ -1445,10 +1444,10 @@ MEGAGATEWAY_API int CALL mrgRobotWaitToolExeEnd(ViSession vi, int name,int timeo
             continue;
         }
         state[retlen - 1] = '\0';//去掉回车符
-        if (_stricmp(state, "STOP") == 0 || _stricmp(state, "IDLE") == 0) {
+        if (STRCASECMP(state, "STOP") == 0 || STRCASECMP(state, "IDLE") == 0) {
             ret = 0; break;
         }
-        else if (_stricmp(state, "ERROR") == 0) {
+        else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
         Sleep(200);
@@ -1471,7 +1470,7 @@ MEGAGATEWAY_API int CALL mrgRobotWaitToolExeEnd(ViSession vi, int name,int timeo
 * timeout_ms : 末端执行器执行的超时时间, 0表示无限等待; -1表示不等待
 * 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示执行超时
 */
-MEGAGATEWAY_API int CALL mrgRobotToolExe(ViSession vi, int name, float position,float time,int timeout_ms)
+EXPORT_API int CALL mrgRobotToolExe(ViSession vi, int name, float position,float time,int timeout_ms)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:EFFECTor:EXEC %d,%f,%f\n",name,position,time);
@@ -1490,7 +1489,7 @@ MEGAGATEWAY_API int CALL mrgRobotToolExe(ViSession vi, int name, float position,
 * name: 机器人名称
 * 返回值：0表示执行成功，否则表示失败
 */
-MEGAGATEWAY_API int CALL mrgRobotToolStop(ViSession vi, int name)
+EXPORT_API int CALL mrgRobotToolStop(ViSession vi, int name)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:EFFECTor:STOP %d\n", name);
@@ -1505,7 +1504,7 @@ MEGAGATEWAY_API int CALL mrgRobotToolStop(ViSession vi, int name)
 * name: 机器人名称
 * 返回值：0表示执行成功，否则表示失败
 */
-MEGAGATEWAY_API int CALL mrgRobotToolStopGoHome(ViSession vi, int name)
+EXPORT_API int CALL mrgRobotToolStopGoHome(ViSession vi, int name)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:EFFECTor:HOME:STOP %d\n", name);
@@ -1521,7 +1520,7 @@ MEGAGATEWAY_API int CALL mrgRobotToolStopGoHome(ViSession vi, int name)
 * timeout_ms : 回零位的等待超时时间
 * 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示执行超时
 */
-MEGAGATEWAY_API int CALL mrgRobotWaitToolHomeEnd(ViSession vi, int name, int timeout_ms)
+EXPORT_API int CALL mrgRobotWaitToolHomeEnd(ViSession vi, int name, int timeout_ms)
 {
     int ret = 0,error_count = 0;
     char args[SEND_BUF];
@@ -1538,10 +1537,10 @@ MEGAGATEWAY_API int CALL mrgRobotWaitToolHomeEnd(ViSession vi, int name, int tim
             continue;
         }
         state[retlen - 1] = '\0';//去掉回车符
-        if (_stricmp(state, "STOP") == 0 || _stricmp(state, "IDLE") == 0) {
+        if (STRCASECMP(state, "STOP") == 0 || STRCASECMP(state, "IDLE") == 0) {
             ret = 0; break;
         }
-        else if (_stricmp(state, "ERROR") == 0) {
+        else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
         Sleep(200);
@@ -1561,7 +1560,7 @@ MEGAGATEWAY_API int CALL mrgRobotWaitToolHomeEnd(ViSession vi, int name, int tim
 * timeout_ms: 等待的超时时间, 0表示无限等待; -1表示不等待
 * 返回值：0表示执行成功，否则表示失败
 */
-MEGAGATEWAY_API int CALL mrgRobotToolGoHome(ViSession vi, int name,int timeout_ms)
+EXPORT_API int CALL mrgRobotToolGoHome(ViSession vi, int name,int timeout_ms)
 {
     char args[SEND_BUF];
     int ret = 0;
@@ -1582,7 +1581,7 @@ MEGAGATEWAY_API int CALL mrgRobotToolGoHome(ViSession vi, int name,int timeout_m
 * name: 机器人名称
 * 返回值：大于零 表示返回角度值的个数，小于等于零表示出错
 */
-MEGAGATEWAY_API int CALL mrgGetRobotCurrentAngle(ViSession vi, int name,float * angles)
+EXPORT_API int CALL mrgGetRobotCurrentAngle(ViSession vi, int name,float * angles)
 {
     int count = 0, retlen = 0;
     char args[SEND_BUF];
@@ -1594,11 +1593,11 @@ MEGAGATEWAY_API int CALL mrgGetRobotCurrentAngle(ViSession vi, int name,float * 
         return -1;
     }
     tmp[retlen] = 0;
-    p = strtok_r(tmp, ",", &pNext);
+    p = STRTOK_S(tmp, ",", &pNext);
     while (p)
     {
         *angles++ = strtof(p,NULL);
-        p = strtok_r(NULL, ",", &pNext);
+        p = STRTOK_S(NULL, ",", &pNext);
         count++;
     }
     return count;
@@ -1609,7 +1608,7 @@ MEGAGATEWAY_API int CALL mrgGetRobotCurrentAngle(ViSession vi, int name,float * 
 * name: 机器人名称
 * 返回值：0表示执行成功， －1：表示执行失败
 */
-MEGAGATEWAY_API int CALL mrgGetRobotCurrentPosition(ViSession vi, int name, float * x,float *y ,float* z)
+EXPORT_API int CALL mrgGetRobotCurrentPosition(ViSession vi, int name, float * x,float *y ,float* z)
 {
     int count = 0, retlen = 0;
     char args[SEND_BUF];
@@ -1622,11 +1621,11 @@ MEGAGATEWAY_API int CALL mrgGetRobotCurrentPosition(ViSession vi, int name, floa
         return -1;
     }
     tmp[retlen] = 0;
-    p = strtok_r(tmp, ",", &pNext);
+    p = STRTOK_S(tmp, ",", &pNext);
     while (p)
     {
         position[count] = strtof(p, NULL);
-        p = strtok_r(NULL, ",", &pNext);
+        p = STRTOK_S(NULL, ",", &pNext);
         count++;
     }
     *x = position[0];

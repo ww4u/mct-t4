@@ -13,7 +13,6 @@ class MainWindow;
 #include "aboutdlg.h"
 #include "h2ops.h"
 #include "roboconfig.h"
-#include "megainterface.h"
 
 class MainWindow : public QMainWindow
 {
@@ -41,7 +40,6 @@ protected Q_SLOTS:
     void slot_post_startup();
     void slot_logout( const QString &str, log_level lev = e_log_info );
     void slot_focus_in( const QString &name );
-    void slot_action_search();
 
 private slots:
     void on_actionAbout_triggered();
@@ -59,8 +57,6 @@ private:
 
     H2Ops *m_pOps;
     RoboConfig *m_roboConfig;
-
-    MegaInterface *m_megaSerachWidget;
 };
 
 #endif // MAINWINDOW_H

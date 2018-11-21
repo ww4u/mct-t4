@@ -196,10 +196,18 @@ void H2Ops::slotLoadConfigAgain()
     MegaXML mXML;
     QString deviceName = m_strDevInfo.split(',').at(3);
     QString fileName = QApplication::applicationDirPath() + "/robots/" + deviceName + ".xml";
+    QFile file(fileName);
+    if( !file.exists() )
+        fileName = QApplication::applicationDirPath() + "/robots/default.xml";
 
-    qDebug() << "slotLoadConfigAgain:" << fileName;
+//    qDebug() << "slotLoadConfigAgain:" << fileName;
     QMap<QString,QString> map = mXML.xmlRead(fileName);
-    if(map.isEmpty()) return;
+    if(map.isEmpty())
+    {
+        qDebug() << "slotLoadConfigAgain error";
+        return;
+    }
+
     m_Data = map;
 }
 
@@ -409,7 +417,7 @@ void H2Ops::updateDeviceCurrentPosition()
         position_z = 0;
     }
 
-    qDebug() << "mrgGetRobotCurrentPosition";
+    qDebug() << "mrgGetRobotCurrentPosition:" << ret << "(x,y):" << position_x << position_y;
 
     ui->doubleSpinBox_currentPos_x->setValue(position_x);
     ui->doubleSpinBox_currentPos_y->setValue(position_y);
@@ -588,6 +596,7 @@ void H2Ops::on_toolButton_jogmode_y_inc_released()
 
 void H2Ops::on_pushButton_stop_clicked()
 {
+    if(m_ViHandle <= 0) return;
     qDebug() << "mrgRobotStop:" << mrgRobotStop(m_ViHandle, m_RoboName, -1);
 
     if(m_timerCurrentPos.isActive())
@@ -635,6 +644,7 @@ void H2Ops::updateDeviceStatus()
 
 void H2Ops::updateOperate()
 {
+#if 0
     qsrand((uint) QTime::currentTime().msec());
     double rand = qrand() % 50;
     ui->doubleSpinBox_RecordNumber->setValue(rand);
@@ -654,7 +664,7 @@ void H2Ops::updateOperate()
         ui->radHome->setChecked(false);
         ui->radES->setChecked(true);
     }
-
+#endif
 }
 
 void H2Ops::updateDigitalIO()
@@ -678,12 +688,12 @@ void H2Ops::updateManual()
 void H2Ops::updateMonitor()
 {
     //!TODO
-    qsrand((uint) QTime::currentTime().msec());
-    double rand = qrand() % 101;
-    m_splineChart1->dataAppend(rand);
+//    qsrand((uint) QTime::currentTime().msec());
+//    double rand = qrand() % 101;
+//    m_splineChart1->dataAppend(rand);
 
-    rand = qrand() % 101;
-    m_splineChart2->dataAppend(rand);
+//    rand = qrand() % 101;
+//    m_splineChart2->dataAppend(rand);
 
 }
 

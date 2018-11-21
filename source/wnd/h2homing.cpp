@@ -7,10 +7,7 @@ H2Homing::H2Homing(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setName( "homing" );
-
-    connect(ui->doubleSpinBox_SearchVelocity,SIGNAL(valueChanged(double)), this, SLOT(slotOnModelChanged()));
-    connect(ui->doubleSpinBox_ForceLimit,    SIGNAL(valueChanged(double)), this, SLOT(slotOnModelChanged()));
+    setName( "Homing" );
 }
 
 H2Homing::~H2Homing()
@@ -18,9 +15,40 @@ H2Homing::~H2Homing()
     delete ui;
 }
 
-int H2Homing::setApply()
+int H2Homing::readDeviceConfig()
 {
-//    qDebug() << "H2Homing:" << mViHandle << mRobotName;
+    return 0;
+}
+
+int H2Homing::writeDeviceConfig()
+{
+
+    return 0;
+}
+
+int H2Homing::loadConfig()
+{
+    //! load xml
+    MegaXML mXML;
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QFile file(fileName);
+    if( !file.exists() )
+        fileName = QApplication::applicationDirPath() + "/robots/default.xml";
+
+    QMap<QString,QString> map = mXML.xmlRead(fileName);
+    if(map.isEmpty()) return -1;
+
+    m_Target        = map["Target"];
+    m_Movement      = map["Movement"];
+    m_Direction     = map["Direction"];
+    m_SearchVelocity = map["SearchVelocity"].toDouble();
+    m_ForceLimit     = map["ForceLimit"].toDouble();
+
+    return 0;
+}
+
+int H2Homing::saveConfig()
+{
     MegaXML mXML;
     QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
     QMap<QString,QString> map;
@@ -37,30 +65,37 @@ int H2Homing::setApply()
     return 0;
 }
 
-void H2Homing::loadXmlConfig()
+void H2Homing::updateShow()
 {
-    //! load xml
-    MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
-    QMap<QString,QString> map = mXML.xmlRead(fileName);
-    if(map.isEmpty()) return;
+    ui->comboBox_target->setCurrentText(this->m_Target);
+    ui->label_direction->setText(this->m_Direction);
+    ui->comboBox_movement->setCurrentText(this->m_Movement);
+    ui->doubleSpinBox_SearchVelocity->setValue(m_SearchVelocity);
+    ui->doubleSpinBox_ForceLimit->setValue(m_ForceLimit);
+}
 
-    ui->doubleSpinBox_SearchVelocity->setValue(map["SearchVelocity"].toDouble());
-    ui->doubleSpinBox_ForceLimit->setValue(map["ForceLimit"].toDouble());
+void H2Homing::on_comboBox_target_currentIndexChanged(const QString &arg1)
+{
+    m_Target = arg1;
 }
 
 void H2Homing::slot_set_direction(QString text)
 {
     ui->label_direction->setText(text);
+    m_Direction = text;
 }
 
-void H2Homing::slotOnModelChanged()
+void H2Homing::on_comboBox_movement_currentIndexChanged(const QString &arg1)
 {
-    m_SearchVelocity = ui->doubleSpinBox_SearchVelocity->value();
-    m_ForceLimit     = ui->doubleSpinBox_ForceLimit->value();
-
-//    qDebug() << m_SearchVelocity;
-//    qDebug() << m_ForceLimit    ;
+    m_Movement = arg1;
 }
 
+void H2Homing::on_doubleSpinBox_SearchVelocity_valueChanged(double arg1)
+{
+    m_SearchVelocity = arg1;
+}
 
+void H2Homing::on_doubleSpinBox_ForceLimit_valueChanged(double arg1)
+{
+    m_ForceLimit = arg1;
+}

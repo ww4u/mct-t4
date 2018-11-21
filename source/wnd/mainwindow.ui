@@ -44,7 +44,6 @@
     <addaction name="actionStore"/>
     <addaction name="actionSync"/>
     <addaction name="separator"/>
-    <addaction name="actionConnect"/>
     <addaction name="actionSearch"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -135,11 +134,6 @@
   <action name="actionSync">
    <property name="text">
     <string>Sync</string>
-   </property>
-  </action>
-  <action name="actionConnect">
-   <property name="text">
-    <string>Connect</string>
    </property>
   </action>
   <action name="actionChinese">

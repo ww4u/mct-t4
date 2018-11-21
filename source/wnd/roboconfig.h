@@ -3,6 +3,7 @@
 
 #include <QtWidgets>
 #include "xrobo.h"
+#include "megainterface.h"
 
 namespace Ui {
 class RoboConfig;
@@ -24,6 +25,12 @@ public:
 public slots:
     void slotAddNewRobot(QString strDevInfo );
 
+    void slotDownload();
+    void slotUpload();
+    void slotStore();
+    void slotSync();
+    void slotSearch();
+
 private slots:
     void on_buttonBox_clicked(QAbstractButton *button);
     void slot_current_changed( QTreeWidgetItem* pre,QTreeWidgetItem* nxt );
@@ -34,6 +41,7 @@ private slots:
 
 private:
     Ui::RoboConfig *ui;
+    MegaInterface *m_megaSerachWidget;
 
     class RobotInfo
     {
@@ -49,7 +57,7 @@ private:
     int mIndex;
 
     void loadXmlConfig();
-    void createNewRobot(QString strDevInfo);
+    void createRobot(QString strDevInfo);
     int  deviceOpen(QString strIP);
     int  deviceClose();
     int  setApply();
@@ -57,6 +65,7 @@ private:
     int  setOK();
 
     QMenu *m_menu;
+    bool copyFileToPath(QString sourceDir, QString toDir, bool coverFileIfExist);
 };
 
 #endif // H2CONFIG_H

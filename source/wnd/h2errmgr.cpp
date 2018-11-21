@@ -7,7 +7,7 @@ H2ErrMgr::H2ErrMgr(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setName( "error_mgr" );
+    setName( "Error_management" );
 
     //! delegate
     m_pCheckDelegate = new checkDelegate( shape_check, this );
@@ -20,7 +20,52 @@ H2ErrMgr::H2ErrMgr(QWidget *parent) :
               <<tr("QS deceleration")
               <<tr("Record deceleration")
               <<tr("Finish Record");
+
     m_pErrActionDelegate->setItems( errActions );
+
+}
+
+H2ErrMgr::~H2ErrMgr()
+{
+    delete ui;
+}
+
+
+int H2ErrMgr::readDeviceConfig()
+{
+    return 0;
+}
+
+int H2ErrMgr::writeDeviceConfig()
+{
+
+    return 0;
+}
+
+int H2ErrMgr::loadConfig()
+{
+    QString fileName = QApplication::applicationDirPath() + "/dataset/" + mProjectName + ".xml";
+    QFile file(fileName);
+    if( !file.exists() )
+        fileName = QApplication::applicationDirPath() + "/dataset/errmgr_default.xml";
+
+    //! load event from xml
+    int ret = mErrManager.load( fileName );
+
+    return ret;
+}
+
+int H2ErrMgr::saveConfig()
+{
+    //! save event to xml
+    QString fileName = QApplication::applicationDirPath() + "/dataset/" + mProjectName + ".xml";
+    int ret = mErrManager.save( fileName );
+    return ret;
+}
+
+void H2ErrMgr::updateShow()
+{
+    ui->tvErr->setModel( &mErrManager );
 
     ui->tvErr->setItemDelegateForColumn( 2, m_pRadioDelegate );
     ui->tvErr->setItemDelegateForColumn( 3, m_pRadioDelegate );
@@ -33,26 +78,3 @@ H2ErrMgr::H2ErrMgr(QWidget *parent) :
 
 }
 
-H2ErrMgr::~H2ErrMgr()
-{
-    delete ui;
-
-}
-
-int H2ErrMgr::setApply()
-{
-//    qDebug() << "H2ErrMgr:" << mViHandle << mRobotName;
-    return 0;
-}
-
-void H2ErrMgr::loadXmlConfig()
-{
-
-}
-
-void H2ErrMgr::setModel( ErrMgrModel *pModel )
-{
-    Q_ASSERT( NULL != pModel );
-
-    ui->tvErr->setModel( pModel );
-}

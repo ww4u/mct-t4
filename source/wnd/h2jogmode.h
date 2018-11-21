@@ -14,11 +14,19 @@ class H2JogMode : public XConfig
 public:
     explicit H2JogMode(QWidget *parent = 0);
     ~H2JogMode();
-    int setApply();
-    void loadXmlConfig();
 
-protected slots:
-    void slotOnModelChanged();
+    int readDeviceConfig(); //从设备上读取配置数据
+    int writeDeviceConfig();//将软件界面的数据配置设置到设备
+    int loadConfig();       //读取本地配置文件 启动软件或者添加新设备时调用
+    int saveConfig();       //将软件界面的数据配置写入到本地配置文件
+    void updateShow();      //更新界面
+
+private slots:
+    void on_doubleSpinBox_CrawlingVelocity_valueChanged(double arg1);
+
+    void on_doubleSpinBox_CrawlingTime_valueChanged(double arg1);
+
+    void on_doubleSpinBox_MaximumVelocity_valueChanged(double arg1);
 
 private:
     Ui::H2JogMode *ui;

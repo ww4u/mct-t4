@@ -41,6 +41,7 @@ public slots:
     void slot_logSelectAll_action();
     void slot_logCopy_action();
     void slot_logClear_action();
+    void on_pushButton_stop_clicked();
 
 private slots:
 //    void slot_handle_timeout();
@@ -81,8 +82,6 @@ private slots:
     void on_toolButton_singlestep_y_inc_clicked();
 
     void on_pushButton_apply_clicked();
-
-    void on_pushButton_stop_clicked();
 
     void on_toolButton_jogmode_x_dec_pressed();
 

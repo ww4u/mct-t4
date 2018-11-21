@@ -138,7 +138,8 @@ void MegaInterface::soltActionClose()
 int MegaInterface::deviceOpen()
 {
     QModelIndex index = ui->tableView->selectionModel()->selectedIndexes().at(0);
-    QString strDesc = m_model->data(index,Qt::DisplayRole).toString();
+    QString strIP = m_model->data(index,Qt::DisplayRole).toString();
+    QString strDesc = QString("TCPIP0::%1::inst0::INSTR").arg(strIP);
     int visa =  mrgOpenGateWay(strDesc.toLatin1().data(), 2000);
     if(visa < 0)
         QMessageBox::warning(this,tr("error"),tr("open device error"));
@@ -175,20 +176,27 @@ void DeviceSearchThread::run()
     QString strFindDevices;
     if(m_type == TYPE_LAN)
     {
-        char *bus = "";
         char buff[4096] = "";
-        mrgFindGateWay(bus, buff, sizeof(buff), 1);
+        mrgFindGateWay(0, buff, sizeof(buff), 1);
         strFindDevices = QString("%1").arg(buff);
         if(strFindDevices.length() == 0)
-        {   return; }
+        {
+            qDebug() << "mrgFindGateWay LAN error!";
+            return;
+        }
     }
     else if(m_type == TYPE_USB)
     {
-        //FILL strDevices
-
-
+        char buff[4096] = "";
+        mrgFindGateWay(1, buff, sizeof(buff), 1);
+        strFindDevices = QString("%1").arg(buff);
+        if(strFindDevices.length() == 0)
+        {
+            qDebug() << "mrgFindGateWay USB error!";
+            return;
+        }
     }
-    qDebug() << "mrgFindGateWay:" << strFindDevices; //"TCPIP0::192.168.1.9::inst0::INSTR,"
+    qDebug() << "find devices:" << strFindDevices;
 
     QStringList listFindDevices = strFindDevices.split(',', QString::SkipEmptyParts);
     for(int devIndex=0; devIndex<listFindDevices.count(); devIndex++)
@@ -209,7 +217,6 @@ void DeviceSearchThread::run()
         }
         mrgCloseGateWay(visa);
 
-        qDebug() << strDevice << IDN ;
         QStringList lst = strDevice.split("::", QString::SkipEmptyParts);
         emit resultReady(lst.at(1) + QString(",%1").arg(IDN));
     }

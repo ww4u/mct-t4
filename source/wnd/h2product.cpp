@@ -9,7 +9,7 @@ H2Product::H2Product(QString strDevInfo, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setName( "product" );
+    setName( "Product" );
 
     QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
     this->m_IP      = strListDev.at(0);
@@ -30,18 +30,9 @@ H2Product::~H2Product()
     delete ui;
 }
 
-int H2Product::setApply()
+void H2Product::on_toolButton_status_clicked()
 {
-//    int ret = -1;
-//    char strIDN[1024] = "";
-//    ret = mrhtIdn_Query(mViHandle,strIDN,sizeof(strIDN));
-//    qDebug() << "H2Product" << m_IP << mViHandle << strIDN;
-    return 0;
-}
-
-void H2Product::loadXmlConfig()
-{
-
+    emit signal_online_clicked(m_IP);
 }
 
 void H2Product::change_online_status(bool bl)
@@ -49,18 +40,41 @@ void H2Product::change_online_status(bool bl)
     if(bl)
     {
         ui->toolButton_status->setIcon(QIcon(":/res/image/h2product/online.png"));
-        ui->toolButton_status->setText(tr("online"));
+        ui->toolButton_status->setText(tr("    online    "));
         ui->toolButton_status->setToolTip(tr("click here to close device"));
     }
     else
     {
         ui->toolButton_status->setIcon(QIcon(":/res/image/h2product/offline.png"));
-        ui->toolButton_status->setText(tr("offline"));
+        ui->toolButton_status->setText(tr("    offline    "));
         ui->toolButton_status->setToolTip(tr("click here to open device"));
     }
 }
 
-void H2Product::on_toolButton_status_clicked()
+int H2Product::readDeviceConfig()
 {
-    emit signal_online_clicked(m_IP);
+    return 0;
+}
+
+int H2Product::writeDeviceConfig()
+{
+
+    return 0;
+}
+
+int H2Product::loadConfig()
+{
+
+    return 0;
+}
+
+int H2Product::saveConfig()
+{
+
+    return 0;
+}
+
+void H2Product::updateShow()
+{
+
 }

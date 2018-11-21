@@ -21,10 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(ui->actionSearch,SIGNAL(triggered(bool)),this,SLOT(slot_action_search()));
-
     m_pHelpPanel = NULL;
-    m_megaSerachWidget = NULL;
 
     setupWorkArea();
 
@@ -95,7 +92,14 @@ void MainWindow::setupToolBar()
     ui->mainToolBar->addAction( ui->actionStore );
     ui->mainToolBar->addAction( ui->actionSync );
     ui->mainToolBar->addSeparator();
-    ui->mainToolBar->addAction( ui->actionConnect );
+    ui->mainToolBar->addAction( ui->actionSearch );
+
+    connect(ui->actionStop,SIGNAL(triggered(bool)), m_pOps, SLOT(on_pushButton_stop_clicked()));
+    connect(ui->actionDownload,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotDownload()));
+    connect(ui->actionUpload,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotUpload()));
+    connect(ui->actionStore,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotStore()));
+    connect(ui->actionSync,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotSync()));
+    connect(ui->actionSearch,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotSearch()));
 }
 
 void MainWindow::setupStatusBar()
@@ -139,17 +143,6 @@ void MainWindow::slot_focus_in( const QString &name )
     { return; }
 
     m_pHelpPanel->setFile( "./" + name + ".html" );
-}
-
-void MainWindow::slot_action_search()
-{
-    if(m_megaSerachWidget != NULL)
-        delete m_megaSerachWidget;
-
-    m_megaSerachWidget = new MegaInterface;
-    m_megaSerachWidget->move(x()+100,y()+100);
-    m_megaSerachWidget->show();
-    connect(m_megaSerachWidget, SIGNAL(signal_selected_info(QString)), m_roboConfig, SLOT(slotAddNewRobot(QString)));
 }
 
 void MainWindow::on_actionAbout_triggered()

@@ -18,18 +18,21 @@ class H2ErrMgr : public XConfig
 public:
     explicit H2ErrMgr(QWidget *parent = 0);
     ~H2ErrMgr();
-    int setApply();
-    void loadXmlConfig();
 
-public:
     void setModel( ErrMgrModel *pModel );
+
+    int readDeviceConfig(); //从设备上读取配置数据
+    int writeDeviceConfig();//将软件界面的数据配置设置到设备
+    int loadConfig();       //读取本地配置文件 启动软件或者添加新设备时调用
+    int saveConfig();       //将软件界面的数据配置写入到本地配置文件
+    void updateShow();      //更新界面
 
 private:
     Ui::H2ErrMgr *ui;
+    ErrMgrModel     mErrManager;
 
     checkDelegate *m_pCheckDelegate;
     checkDelegate *m_pRadioDelegate;
-
     comboxDelegate *m_pErrActionDelegate;
 };
 

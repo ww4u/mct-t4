@@ -8,9 +8,6 @@
 
 #include "xconfig.h"
 
-#include "../model/h2actionmodel.h"
-#include "../model/errmgrmodel.h"
-
 #include "h2product.h"
 #include "h2configuration.h"
 #include "h2jogmode.h"
@@ -22,7 +19,6 @@
 class H2Robo : public XRobo
 {
     Q_OBJECT
-
 public:
     H2Robo( QStackedWidget *pWig, QString strDevInfo = "", QObject *pObj = Q_NULLPTR );
 
@@ -33,7 +29,7 @@ public:
     QString getDeviceName(QString strDevInfo);
 
 protected:
-    int loadDataSet();
+    int loadDataSet(QString deviceName);
     void buildConnection();
 
 signals:
@@ -42,9 +38,6 @@ signals:
 private:
     QTreeWidgetItem *m_pRoboNode;
     QList<XConfig*> mSubConfigs;
-
-    H2ActionModel   mActions;
-    ErrMgrModel     mErrManager;
 
     H2Product       *m_pProduct         ;
     H2Configuration *m_pH2Configuration ;

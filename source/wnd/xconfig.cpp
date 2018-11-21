@@ -1,5 +1,4 @@
 #include "xconfig.h"
-#include "../include/mystd.h"
 
 XConfig::XConfig(QWidget *parent) : QWidget(parent)
 {
@@ -12,13 +11,19 @@ void XConfig::setName( const QString &name )
 QString XConfig::name()
 { return mName; }
 
-int XConfig::setApply()
+int XConfig::readDeviceConfig()
 { return 0; }
 
-void XConfig::loadXmlConfig()
-{}
+int XConfig::writeDeviceConfig()
+{ return 0; }
 
-void XConfig::slotOnModelChanged()
+int XConfig::loadConfig()
+{ return 0; }
+
+int XConfig::saveConfig()
+{ return 0; }
+
+void XConfig::updateShow()
 {}
 
 int XConfig::attachHandle(int handle , int robotName)
@@ -38,11 +43,6 @@ void XConfig::focusInEvent(QFocusEvent *event)
 {
     QWidget::focusInEvent( event );
     emit signal_focus_in( mName );
-}
-
-QString XConfig::projectName() const
-{
-    return mProjectName;
 }
 
 void XConfig::setProjectName(const QString &projectName)

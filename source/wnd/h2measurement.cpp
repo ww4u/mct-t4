@@ -8,81 +8,15 @@ H2Measurement::H2Measurement(QWidget *parent) :
     ui->setupUi(this);
     m_ZeroPoint = 0;
 
-    connect(ui->comboBox_AxesZeroPoint,SIGNAL(currentIndexChanged(int)),this,SLOT(slotChangeCornerPicture(int)));
+    setName("Measurement");
 
-    connect(ui->comboBox_AxesZeroPoint,SIGNAL(currentIndexChanged(int)),this,SLOT(slotOnModelChanged()));
-    connect(ui->doubleSpinBox_pzpX, SIGNAL(valueChanged(double)), this, SLOT(slotOnModelChanged()));
-    connect(ui->doubleSpinBox_pzpY, SIGNAL(valueChanged(double)), this, SLOT(slotOnModelChanged()));
-    connect(ui->doubleSpinBox_swlp_X, SIGNAL(valueChanged(double)), this, SLOT(slotOnModelChanged()));
-    connect(ui->doubleSpinBox_swlp_Y, SIGNAL(valueChanged(double)), this, SLOT(slotOnModelChanged()));
-    connect(ui->doubleSpinBox_swln_X, SIGNAL(valueChanged(double)), this, SLOT(slotOnModelChanged()));
-    connect(ui->doubleSpinBox_swln_Y, SIGNAL(valueChanged(double)), this, SLOT(slotOnModelChanged()));
+    connect(ui->comboBox_AxesZeroPoint,SIGNAL(currentIndexChanged(int)),this,SLOT(slotChangeCornerPicture(int)));
 
 }
 
 H2Measurement::~H2Measurement()
 {
     delete ui;
-}
-
-int H2Measurement::setApply()
-{
-    int ret = -1;
-
-    //ZeroPoint=[0,1,2,3]
-    int value = ui->comboBox_AxesZeroPoint->currentIndex();
-    ret = mrgSetRobotCoordinateSystem(mViHandle, mRobotName, value);
-    qDebug() << "mrgSetRobotCoordinateSystem" << ret;
-
-    //ProjectZeroPointX=0.00
-    //ProjectZeroPointY=0.00
-    ret = mrgSetRobotProjectZero(mViHandle, mRobotName, m_ProjectZeroPointX, m_ProjectZeroPointY, 0);
-    qDebug() << "mrgSetRobotProjectZero" << ret;
-
-    //SWLimitPositiveX=0.00
-    //SWLimitPositiveY=0.00
-    ret = mrgSetRobotSoftWareLimit(mViHandle, mRobotName, 0, m_SWLimitPositiveX, m_SWLimitPositiveY, 0);
-    qDebug() << "mrgSetRobotSoftWareLimit Positive" << ret;
-
-    //SWLimitNegativeX=0.00
-    //SWLimitNegativeY=0.00
-    ret = mrgSetRobotSoftWareLimit(mViHandle, mRobotName, 1, m_SWLimitNegativeX, m_SWLimitNegativeY, 0);
-    qDebug() << "mrgSetRobotSoftWareLimit Negative" << ret;
-
-    MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
-    QMap<QString,QString> map;
-
-    map.insert("ZeroPoint"  , QString::number(m_ZeroPoint));
-    map.insert("ProjectZeroPointX"  , QString::number(m_ProjectZeroPointX,10,2));
-    map.insert("ProjectZeroPointY"  , QString::number(m_ProjectZeroPointY,10,2));
-    map.insert("SWLimitPositiveX"  , QString::number(m_SWLimitPositiveX,10,2 ));
-    map.insert("SWLimitPositiveY"  , QString::number(m_SWLimitPositiveY,10,2 ));
-    map.insert("SWLimitNegativeX"  , QString::number(m_SWLimitNegativeX,10,2 ));
-    map.insert("SWLimitNegativeY"  , QString::number(m_SWLimitNegativeY,10,2 ));
-
-    mXML.xmlNodeRemove(fileName,"H2Measurement");
-    mXML.xmlNodeAppend(fileName, "H2Measurement", map);
-
-    return 0;
-}
-
-void H2Measurement::loadXmlConfig()
-{
-    //! load xml
-    MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
-    QMap<QString,QString> map = mXML.xmlRead(fileName);
-    if(map.isEmpty()) return;
-
-    ui->comboBox_AxesZeroPoint->setCurrentIndex(map["ZeroPoint"].toInt());
-    ui->doubleSpinBox_pzpX->setValue(map["ProjectZeroPointX"].toDouble());
-    ui->doubleSpinBox_pzpY->setValue(map["ProjectZeroPointY"].toDouble());
-    ui->doubleSpinBox_swlp_X->setValue(map["SWLimitPositiveX"].toDouble());
-    ui->doubleSpinBox_swlp_Y->setValue(map["SWLimitPositiveY"].toDouble());
-    ui->doubleSpinBox_swln_X->setValue(map["SWLimitNegativeX"].toDouble());
-    ui->doubleSpinBox_swln_Y->setValue(map["SWLimitNegativeY"].toDouble());
-
 }
 
 void H2Measurement::slotChangeCornerPicture(int index)
@@ -95,22 +29,148 @@ void H2Measurement::slotChangeCornerPicture(int index)
     emit signal_AxesZeroPoint_currentTextChanged(ui->comboBox_AxesZeroPoint->currentText());
 }
 
-void H2Measurement::slotOnModelChanged()
+int H2Measurement::readDeviceConfig()
 {
-    m_ZeroPoint = ui->comboBox_AxesZeroPoint->currentIndex();
-    m_ProjectZeroPointX = ui->doubleSpinBox_pzpX->value();
-    m_ProjectZeroPointY = ui->doubleSpinBox_pzpY->value();
-    m_SWLimitPositiveX  = ui->doubleSpinBox_swlp_X->value();
-    m_SWLimitPositiveY  = ui->doubleSpinBox_swlp_Y->value();
-    m_SWLimitNegativeX  = ui->doubleSpinBox_swln_X->value();
-    m_SWLimitNegativeY  = ui->doubleSpinBox_swln_Y->value();
+    m_ZeroPoint = mrgGetRobotCoordinateSystem(mViHandle, mRobotName);
 
-//    qDebug() << "m_ZeroPoint        " << m_ZeroPoint         ;
-//    qDebug() << "m_ProjectZeroPointX" << m_ProjectZeroPointX ;
-//    qDebug() << "m_ProjectZeroPointY" << m_ProjectZeroPointY ;
-//    qDebug() << "m_SWLimitPositiveX " << m_SWLimitPositiveX  ;
-//    qDebug() << "m_SWLimitPositiveY " << m_SWLimitPositiveY  ;
-//    qDebug() << "m_SWLimitNegativeX " << m_SWLimitNegativeX  ;
-//    qDebug() << "m_SWLimitNegativeY " << m_SWLimitNegativeY  ;
+    double x, y, z;
+    if(0 == mrgGetRobotProjectZero(mViHandle, mRobotName, &x, &y, &z) )
+    {
+        m_ProjectZeroPointX = x;
+        m_ProjectZeroPointY = y;
+        qDebug() << "mrgGetRobotProjectZero" << x << y;
+    }
+
+    if(0 == mrgGetRobotSoftWareLimit(mViHandle, mRobotName, 0, &x, &y, &z) )
+    {
+        m_SWLimitPositiveX = x;
+        m_SWLimitPositiveY = y;
+        qDebug() << "mrgGetRobotSoftWareLimit Positive" << x << y;
+    }
+
+    if(0 == mrgGetRobotSoftWareLimit(mViHandle, mRobotName, 1, &x, &y, &z) )
+    {
+        m_SWLimitNegativeX  = x;
+        m_SWLimitNegativeY  = y;
+        qDebug() << "mrgGetRobotSoftWareLimit Negative" << x << y;
+    }
+
+    return 0;
 }
 
+int H2Measurement::writeDeviceConfig()
+{
+    int ret = 0;
+
+    qDebug() << "m_ZeroPoint         " << m_ZeroPoint         ;
+    qDebug() << "m_ProjectZeroPointX " << m_ProjectZeroPointX ;
+    qDebug() << "m_ProjectZeroPointY " << m_ProjectZeroPointY ;
+    qDebug() << "m_SWLimitPositiveX  " << m_SWLimitPositiveX  ;
+    qDebug() << "m_SWLimitPositiveY  " << m_SWLimitPositiveY  ;
+    qDebug() << "m_SWLimitNegativeX  " << m_SWLimitNegativeX  ;
+    qDebug() << "m_SWLimitNegativeY  " << m_SWLimitNegativeY  ;
+
+    int value = ui->comboBox_AxesZeroPoint->currentIndex();
+    ret = mrgSetRobotCoordinateSystem(mViHandle, mRobotName, value);
+    qDebug() << "mrgSetRobotCoordinateSystem" << ret;
+
+    ret = mrgSetRobotProjectZero(mViHandle, mRobotName, m_ProjectZeroPointX, m_ProjectZeroPointY, 0);
+    qDebug() << "mrgSetRobotProjectZero" << ret;
+
+    ret = mrgSetRobotSoftWareLimit(mViHandle, mRobotName, 0, m_SWLimitPositiveX, m_SWLimitPositiveY, 0);
+    qDebug() << "mrgSetRobotSoftWareLimit Positive" << ret;
+
+    ret = mrgSetRobotSoftWareLimit(mViHandle, mRobotName, 1, m_SWLimitNegativeX, m_SWLimitNegativeY, 0);
+    qDebug() << "mrgSetRobotSoftWareLimit Negative" << ret;
+
+    return ret;
+}
+
+int H2Measurement::loadConfig()
+{
+    //! load xml
+    MegaXML mXML;
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QFile file(fileName);
+    if( !file.exists() )
+        fileName = QApplication::applicationDirPath() + "/robots/default.xml";
+
+    QMap<QString,QString> map = mXML.xmlRead(fileName);
+    if(map.isEmpty()) return -1;
+
+    m_ZeroPoint         = map["ZeroPoint"].toInt();
+    m_ProjectZeroPointX = map["ProjectZeroPointX"].toDouble();
+    m_ProjectZeroPointY = map["ProjectZeroPointY"].toDouble();
+    m_SWLimitPositiveX  = map["SWLimitPositiveX"].toDouble();
+    m_SWLimitPositiveY  = map["SWLimitPositiveY"].toDouble();
+    m_SWLimitNegativeX  = map["SWLimitNegativeX"].toDouble();
+    m_SWLimitNegativeY  = map["SWLimitNegativeY"].toDouble();
+
+    return 0;
+}
+
+int H2Measurement::saveConfig()
+{
+    MegaXML mXML;
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QMap<QString,QString> map;
+
+    map.insert("ZeroPoint"  , QString::number(m_ZeroPoint));
+    map.insert("ProjectZeroPointX" , QString::number( m_ProjectZeroPointX, 10, 2));
+    map.insert("ProjectZeroPointY" , QString::number( m_ProjectZeroPointY, 10, 2));
+    map.insert("SWLimitPositiveX"  , QString::number( m_SWLimitPositiveX, 10, 2 ));
+    map.insert("SWLimitPositiveY"  , QString::number( m_SWLimitPositiveY, 10, 2 ));
+    map.insert("SWLimitNegativeX"  , QString::number( m_SWLimitNegativeX, 10, 2 ));
+    map.insert("SWLimitNegativeY"  , QString::number( m_SWLimitNegativeY, 10, 2 ));
+
+    mXML.xmlNodeRemove(fileName,"H2Measurement");
+    mXML.xmlNodeAppend(fileName, "H2Measurement", map);
+
+    return 0;
+}
+
+void H2Measurement::updateShow()
+{
+    ui->comboBox_AxesZeroPoint->setCurrentIndex(m_ZeroPoint);
+    ui->doubleSpinBox_pzpX->setValue( m_ProjectZeroPointX );
+    ui->doubleSpinBox_pzpY->setValue( m_ProjectZeroPointY );
+    ui->doubleSpinBox_swlp_X->setValue( m_SWLimitPositiveX );
+    ui->doubleSpinBox_swlp_Y->setValue( m_SWLimitPositiveY );
+    ui->doubleSpinBox_swln_X->setValue( m_SWLimitNegativeX );
+    ui->doubleSpinBox_swln_Y->setValue( m_SWLimitNegativeY );
+}
+
+void H2Measurement::on_comboBox_AxesZeroPoint_currentIndexChanged(int index)
+{
+    m_ZeroPoint = index;
+}
+
+void H2Measurement::on_doubleSpinBox_pzpX_valueChanged(double arg1)
+{
+    m_ProjectZeroPointX = arg1;
+}
+
+void H2Measurement::on_doubleSpinBox_pzpY_valueChanged(double arg1)
+{
+    m_ProjectZeroPointY = arg1;
+}
+
+void H2Measurement::on_doubleSpinBox_swlp_X_valueChanged(double arg1)
+{
+    m_SWLimitPositiveX = arg1;
+}
+
+void H2Measurement::on_doubleSpinBox_swlp_Y_valueChanged(double arg1)
+{
+    m_SWLimitPositiveY = arg1;
+}
+
+void H2Measurement::on_doubleSpinBox_swln_X_valueChanged(double arg1)
+{
+    m_SWLimitNegativeX = arg1;
+}
+
+void H2Measurement::on_doubleSpinBox_swln_Y_valueChanged(double arg1)
+{
+    m_SWLimitNegativeY = arg1;
+}

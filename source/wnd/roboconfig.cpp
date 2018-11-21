@@ -13,6 +13,7 @@ RoboConfig::RoboConfig(QWidget *parent) :
 
     mIndex = -1;
     m_menu = NULL;
+    m_megaSerachWidget = NULL;
 
     m_pRootNode = new QTreeWidgetItem();
     m_pRootNode->setText( 0, tr("Project") );
@@ -52,12 +53,12 @@ void RoboConfig::loadXmlConfig()
     QMap<QString,QString>::iterator itMap;
     for ( itMap=mapItems.begin(); itMap != mapItems.end(); ++itMap ) {
         if( "RobotDevice_" == itMap.key().left(QString("RobotDevice_").length()) )
-            createNewRobot(itMap.value());
+            createRobot(itMap.value());
     }
     ui->treeWidget->setCurrentItem(m_pRootNode);
 }
 
-void RoboConfig::createNewRobot(QString strDevInfo)
+void RoboConfig::createRobot(QString strDevInfo)
 {
     RobotInfo robotInfo;
     robotInfo.m_Robo = new H2Robo( ui->stackedWidget, strDevInfo );
@@ -73,9 +74,11 @@ void RoboConfig::createNewRobot(QString strDevInfo)
     m_pRootNode->setExpanded(true);
 
     foreach (XConfig *pCfg, ((H2Robo *)(robotInfo.m_Robo))->subConfigs()){
-        pCfg->setProjectName(robotInfo.m_strDevInfo.split(',').at(3));
-        pCfg->loadXmlConfig();
-        pCfg->slotOnModelChanged();
+        QString configFileName = robotInfo.m_strDevInfo.split(',').at(3);
+        pCfg->setProjectName(configFileName);
+        pCfg->loadConfig();
+        pCfg->saveConfig();
+        pCfg->updateShow();
     }
 
     connect( robotInfo.m_Robo, SIGNAL(signal_focus_in( const QString &)),
@@ -89,9 +92,14 @@ void RoboConfig::slotAddNewRobot(QString strDevInfo)
     for(int i=0; i< m_RobotList.count(); i++)
     {
         if( m_RobotList[i].m_strDevInfo == strDevInfo)
-        {   return;    }
+        {
+            QMessageBox::information(this,tr("tips"),tr("The device already exists in the project."));
+            return;
+        }
     }
     qDebug() << "slotAddNewRobot" << strDevInfo;
+
+    createRobot(strDevInfo);
 
     //添加到project.xml中
     MegaXML mXML;
@@ -107,11 +115,57 @@ void RoboConfig::slotAddNewRobot(QString strDevInfo)
     mapWrite.insert(proName ,strDevInfo );
     mXML.xmlNodeRemove(fileName, "RobotConfigs");
     mXML.xmlNodeAppend(fileName, "RobotConfigs", mapWrite);
-    createNewRobot(strDevInfo);
+}
 
-    QString strIP = strDevInfo.split(',').at(0);
-    slot_open_close(strIP); //default open device
-    setApply(); //create xml file
+
+void RoboConfig::slotDownload()
+{
+
+}
+
+void RoboConfig::slotUpload()
+{
+
+}
+
+void RoboConfig::slotStore()
+{
+
+}
+
+void RoboConfig::slotSync()
+{
+    if(mIndex < 0) return;
+    if( m_RobotList[mIndex].m_Visa != 0)
+    {
+        bool ok = true;
+        foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
+            int ret = pCfg->readDeviceConfig();
+            if(ret != 0)
+            {
+                ok = false;
+                QMessageBox::information(this,tr("tips"), pCfg->name() + tr("\tSync Faiured"));
+            }
+            pCfg->updateShow();
+            pCfg->saveConfig();
+        }
+        if(ok)
+        {   QMessageBox::information(this,tr("tips"),tr("Sync Succeed!"));  }
+    }else{
+        QMessageBox::information(this,tr("tips"),tr("Current Device In Offline"));
+        return;
+    }
+}
+
+void RoboConfig::slotSearch()
+{
+    if(m_megaSerachWidget != NULL)
+        delete m_megaSerachWidget;
+
+    m_megaSerachWidget = new MegaInterface;
+    m_megaSerachWidget->move(pos().x() +100, pos().x()+100);
+    m_megaSerachWidget->show();
+    connect(m_megaSerachWidget, SIGNAL(signal_selected_info(QString)), this, SLOT(slotAddNewRobot(QString)));
 }
 
 void RoboConfig::slotShowContextmenu(const QPoint& pos)
@@ -151,7 +205,7 @@ void RoboConfig::soltActionClose()
 
     ui->treeWidget->setCurrentItem(m_pRootNode);
 
-    qDebug() << "after close:" << m_RobotList.count() << mIndex;
+//    qDebug() << "after close:" << m_RobotList.count() << mIndex;
 }
 
 void RoboConfig::soltActionDelete()
@@ -184,24 +238,101 @@ void RoboConfig::soltActionDelete()
 int RoboConfig::setApply()
 {
     if(mIndex < 0) return -100;
+    bool ok = true;
     if( m_RobotList[mIndex].m_Visa != 0)
     {
         foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
-            int ret = pCfg->setApply();
-            if(ret != 0)  return -1;
+            pCfg->saveConfig();
+            int ret = pCfg->writeDeviceConfig();
+            if(ret != 0)
+            {
+                ok = false;
+                QMessageBox::information(this,tr("tips"), pCfg->name() + tr("\tApply Failure"));
+            }
         }
         emit signalApplyClicked();
     }else{
+        QMessageBox::information(this,tr("tips"),tr("Current Device In Offline"));
         return -2;//offline
     }
-    return 0;
+
+    if(ok)
+    {
+        QMessageBox::information(this,tr("tips"),tr("Apply Success!"));
+        return 0;
+    }
+    else{
+        return -1;
+    }
+}
+
+bool RoboConfig::copyFileToPath(QString sourceDir ,QString toDir, bool coverFileIfExist)
+{
+    toDir.replace("\\","/");
+    if (sourceDir == toDir){
+        return true;
+    }
+    if (!QFile::exists(sourceDir)){
+        return false;
+    }
+    QDir *createfile     = new QDir;
+    bool exist = createfile->exists(toDir);
+    if (exist){
+        if(coverFileIfExist){
+            createfile->remove(toDir);
+        }
+    }//end if
+
+    if(!QFile::copy(sourceDir, toDir))
+    {
+        return false;
+    }
+    return true;
 }
 
 int RoboConfig::setReset()
 {
-    //! \todo for each prop
+    if(mIndex < 0) return -100;
+    bool ok = true;
+    if( m_RobotList[mIndex].m_Visa != 0)
+    {
+        //将默认的配置文件替换掉对应的配置文件，更新界面，写入设备
+        QString strIDN = m_RobotList[mIndex].m_strDevInfo.split(',').at(3);
+        copyFileToPath(QApplication::applicationDirPath() + "/robots/default.xml",
+                       QApplication::applicationDirPath() + "/robots/" + strIDN + ".xml",
+                       true);
 
-    return 0;
+        copyFileToPath(QApplication::applicationDirPath() + "/dataset/action_default.mrp",
+                       QApplication::applicationDirPath() + "/dataset/" + strIDN + ".mrp",
+                       true);
+
+        copyFileToPath(QApplication::applicationDirPath() + "/dataset/errmgr_default.xml",
+                       QApplication::applicationDirPath() + "/dataset/" + strIDN + ".xml",
+                       true);
+
+        foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs())
+        {
+            pCfg->loadConfig();
+            pCfg->updateShow();
+            int ret = pCfg->writeDeviceConfig();
+            if(ret != 0)
+            {
+                ok = false;
+                QMessageBox::information(this,tr("tips"), pCfg->name() + tr("\tReset Failure"));
+            }
+        }
+        emit signalApplyClicked();
+    }else{
+        QMessageBox::information(this,tr("tips"),tr("Current Device In Offline"));
+        return -2;//offline
+    }
+    if(ok)
+    {
+        QMessageBox::information(this,tr("tips"),tr("Reset Success!"));
+        return 0;
+    }else{
+        return -1;
+    }
 }
 
 int RoboConfig::setOK()
@@ -226,17 +357,7 @@ void RoboConfig::on_buttonBox_clicked(QAbstractButton *button)
     else if ( QDialogButtonBox::AcceptRole == role ||
               QDialogButtonBox::ApplyRole == role )
     {
-        int ret = setApply();
-        if(ret == 0)
-        {
-            QMessageBox::information(this,tr("tips"),tr("Apply Success!"));
-        }
-        else if(ret == -1){
-            QMessageBox::information(this,tr("tips"),tr("Apply Failure"));
-        }
-        else if(ret == -2){
-            QMessageBox::information(this,tr("tips"),tr("Current Device In Offline"));
-        }
+        setApply();
     }
     else
     {}
@@ -254,7 +375,7 @@ void RoboConfig::slot_current_changed( QTreeWidgetItem* cur,QTreeWidgetItem* prv
     if(-1 != index)
     {
         mIndex = index;
-        qDebug() << "slot_current_changed" << cur->text(0) << index;
+//        qDebug() << "slot_current_changed" << cur->text(0) << index;
         emit signalCurrentRobotChanged(m_RobotList[mIndex].m_strDevInfo,
                                        m_RobotList[mIndex].m_Visa,
                                        m_RobotList[mIndex].m_RoboName);

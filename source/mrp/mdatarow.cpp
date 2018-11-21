@@ -283,6 +283,5 @@ void MDataSection::dbgShow()
     foreach( MDataRow *pRow, mRows )
     {
         pRow->dbgShow();
-
     }
 }

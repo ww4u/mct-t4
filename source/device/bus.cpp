@@ -40,10 +40,13 @@ ViSession defaultRM;
 * 当method=0时，按照VISA的规范，需要指定总线类型，所以使用bus来传入总线类型。
 * output为输出参数，输出找到的设备信息
 */
-int busFindDevice(char * bus, char *output, int len,int method)
+int busFindDevice(int bus, char *output, int len,int method)
 {
     ViStatus status;
     int r = 0;
+    static ViUInt32 numInstrs;
+    static ViFindList findList;
+    char instrDescriptor[VI_FIND_BUFLEN];
     /* First we will need to open the default resource manager. */
     status = viOpenDefaultRM(&defaultRM);
     if (status < VI_SUCCESS)
@@ -55,7 +58,6 @@ int busFindDevice(char * bus, char *output, int len,int method)
     * Find all the VISA resources in our system and store the number of resources
     * in the system in numInstrs.  Notice the different query descriptions a
     * that are available.
-
     Interface         Expression
     --------------------------------------
     GPIB              "GPIB[0-9]*::?*INSTR"
@@ -67,12 +69,44 @@ int busFindDevice(char * bus, char *output, int len,int method)
     All instruments   "?*INSTR"
     All resources     "?*"
     */
-    if (method == 0)
+    if (bus == 0)
     {
-        static ViUInt32 numInstrs;
-        static ViFindList findList;
-        char instrDescriptor[VI_FIND_BUFLEN];
-        status = viFindRsrc(defaultRM, bus, &findList, &numInstrs, instrDescriptor);
+        if (method == 0)
+        {
+            status = viFindRsrc(defaultRM, "TCPIP[0-9]*::?*INSTR", &findList, &numInstrs, instrDescriptor);
+            if (status < VI_SUCCESS)
+            {
+                viClose(defaultRM);
+                return 0;
+            }
+            strcpy(&output[r], instrDescriptor);
+            while (--numInstrs)
+            {
+                /* stay in this loop until we find all instruments */
+                status = viFindNext(findList, instrDescriptor);  /* find next desriptor */
+                if (status < VI_SUCCESS)
+                {
+                    goto END;
+                }
+                strcat(&output[r], ",");
+                strcat(output, instrDescriptor);
+            }    /* end while */
+        }
+        else if (method == 1)
+        {
+            char ip_list[256][100];
+            char * ptr = NULL;
+            status = socketFindResources(ip_list, 256, 500);
+            for (int i = 0; i < status; i++)
+            {
+                snprintf(&output[r], len - r, "TCPIP0::%s::inst0::INSTR,", ip_list[i]);
+                r = strlen(output);
+            }
+        }
+    }
+    else if (bus == 1) //USBTMC
+    {
+        status = viFindRsrc(defaultRM, "USB0::?*::INSTR", &findList, &numInstrs, instrDescriptor);
         if (status < VI_SUCCESS)
         {
             viClose(defaultRM);
@@ -87,25 +121,11 @@ int busFindDevice(char * bus, char *output, int len,int method)
             {
                 goto END;
             }
-            /* Now we will open a session to the instrument we just found */
-            //if (lanTryConnectDev(instrDescriptor))
-            {
-                strcat(&output[r], ",");
-                strcat(output, instrDescriptor);
-            }
+            strcat(&output[r], ",");
+            strcat(output, instrDescriptor);
         }    /* end while */
     }
-    else if (method == 1)
-    {
-        char ip_list[256][100];
-        char * ptr = NULL;
-        status = socketFindResources(ip_list, 256, 500);
-        for (int i = 0; i < status; i++)
-        {
-            snprintf(&output[r], len - r, "TCPIP0::%s::inst0::INSTR,", ip_list[i]);
-            r = strlen(output);
-        }
-    } 
+    
 END:
     return 0;
 }
@@ -114,20 +134,32 @@ int busOpenDevice(char * ip, int timeout)
 {
     ViStatus status;
     ViSession vi;
+    status = viOpenDefaultRM(&defaultRM);
+    if (status < VI_SUCCESS)
+    {
+        printf("Could not open a session to the VISA Resource Manager!\n");
+        return 0;
+    }
     status = viOpen(defaultRM, ip, VI_NO_LOCK, VI_TMO_IMMEDIATE, &vi);
     if (status < VI_SUCCESS)
     {
         vi = -1;
+        printf("viOpen failured:%d\n",status);
         return status;
     }
-    viSetAttribute(vi, VI_ATTR_TCPIP_NODELAY, VI_TRUE);
-    //viSetAttribute(vi, VI_ATTR_SEND_END_EN, VI_TRUE);
-    viSetAttribute(vi, VI_ATTR_TCPIP_KEEPALIVE, VI_TRUE);
-    //viSetAttribute(g_stLanInfo.instr_list[DevIndex], VI_ATTR_TERMCHAR, 0X0A);
+    if (_strnicmp(ip, "USB",3)== 0)
+    {
+        viSetAttribute(vi, VI_ATTR_TERMCHAR, 0x0D);
+        viSetAttribute(vi, VI_ATTR_TERMCHAR_EN, VI_TRUE);
+    }
+    else if (_strnicmp(ip, "TCPIP", 5) == 0)
+    {
+        viSetAttribute(vi, VI_ATTR_TCPIP_NODELAY, VI_TRUE);
+        viSetAttribute(vi, VI_ATTR_TCPIP_KEEPALIVE, VI_TRUE);
+    }
     viSetAttribute(vi, VI_ATTR_TMO_VALUE, timeout);
     return vi;
 }
-
 ViSession busOpenSocket(const char *pName, const char *addr, unsigned int port)
 {
     ViStatus viSta;
@@ -176,13 +208,9 @@ unsigned int busWrite(ViSession vi, char * buf, unsigned int len)
 
 unsigned int busRead(ViSession vi, char * buf, unsigned int len)
 {
-    ViUInt32 retCount;
+    ViUInt32 retCount = 0;
     LOCK();
-    if (viRead(vi, (ViBuf)buf, len, &retCount) != VI_SUCCESS)
-    {
-        UNLOCK();
-        return 0;
-    }
+    viRead(vi, (ViBuf)buf, len, &retCount); //有可能返回错误码，但读到了数据，只是数据 还没有读完！！！！
     UNLOCK();
     return retCount;
 }
@@ -196,11 +224,7 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen,char* ou
         UNLOCK();
         return 0;
     }
-    if (viRead(vi, (ViBuf)output, wantlen, &retCount) != VI_SUCCESS)
-    {
-        UNLOCK();
-        return 0;
-    }
+    viRead(vi, (ViBuf)output, wantlen, &retCount);
     UNLOCK();
     return retCount;
 }

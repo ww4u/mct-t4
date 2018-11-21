@@ -7,7 +7,7 @@ extern "C" {
 #endif
 
 #include "visa.h"
-int busFindDevice(char * bus, char *output, int len,int method);
+int busFindDevice(int bus, char *output, int len,int method);
 int busOpenDevice(char * ip, int timeout);
 ViSession busOpenSocket(const char *pName, const char *addr, unsigned int port);
 int busCloseDevice(ViSession vi);

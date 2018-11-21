@@ -29,13 +29,13 @@
          <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
         <property name="suffix">
-         <string>mm/s</string>
+         <string> mm/s</string>
         </property>
         <property name="minimum">
          <double>0.100000000000000</double>
         </property>
         <property name="maximum">
-         <double>500.000000000000000</double>
+         <double>10000.000000000000000</double>
         </property>
         <property name="value">
          <double>10.000000000000000</double>
@@ -77,13 +77,13 @@
          <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
         <property name="suffix">
-         <string>ms</string>
+         <string> ms</string>
         </property>
         <property name="decimals">
          <number>0</number>
         </property>
         <property name="maximum">
-         <double>65535.000000000000000</double>
+         <double>10000.000000000000000</double>
         </property>
         <property name="value">
          <double>1000.000000000000000</double>
@@ -99,13 +99,13 @@
          <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
         <property name="suffix">
-         <string>mm/s</string>
+         <string> mm/s</string>
         </property>
         <property name="minimum">
          <double>0.100000000000000</double>
         </property>
         <property name="maximum">
-         <double>500.000000000000000</double>
+         <double>10000.000000000000000</double>
         </property>
         <property name="value">
          <double>50.000000000000000</double>

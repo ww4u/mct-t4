@@ -7,14 +7,7 @@ H2JogMode::H2JogMode(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setName( "jog" );
-
-    connect(ui->doubleSpinBox_CrawlingVelocity, SIGNAL(valueChanged(double)),
-            this,SLOT(slotOnModelChanged()));
-    connect(ui->doubleSpinBox_CrawlingTime,     SIGNAL(valueChanged(double)),
-            this,SLOT(slotOnModelChanged()));
-    connect(ui->doubleSpinBox_MaximumVelocity,  SIGNAL(valueChanged(double)),
-            this,SLOT(slotOnModelChanged()));
+    setName( "Jogmode" );
 }
 
 H2JogMode::~H2JogMode()
@@ -22,29 +15,45 @@ H2JogMode::~H2JogMode()
     delete ui;
 }
 
-int H2JogMode::setApply()
+int H2JogMode::readDeviceConfig()
 {
-//    qDebug() << "H2JogMode:" << mViHandle << mRobotName;
-#if 0
+    return 0;
+}
 
-    //CrawlingVelocity=10.00
+int H2JogMode::writeDeviceConfig()
+{
 
+    return 0;
+}
 
-    //CrawlingTime=1000
+int H2JogMode::loadConfig()
+{
+    //! load xml
+    MegaXML mXML;
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QFile file(fileName);
+    if( !file.exists() )
+        fileName = QApplication::applicationDirPath() + "/robots/default.xml";
 
+    QMap<QString,QString> map = mXML.xmlRead(fileName);
+    if(map.isEmpty()) return -1;
 
-    //MaximumVelocity=50.00
+    m_CrawlingVelocity = map["CrawlingVelocity"].toDouble();
+    m_CrawlingTime     = map["CrawlingTime"].toDouble();
+    m_MaximumVelocity  = map["MaximumVelocity"].toDouble();
 
+    return 0;
+}
 
-#endif
-
+int H2JogMode::saveConfig()
+{
     MegaXML mXML;
     QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
     QMap<QString,QString> map;
 
-    map.insert("CrawlingVelocity", QString::number(m_CrawlingVelocity,10,2));
-    map.insert("CrawlingTime", QString::number(m_CrawlingTime,10,2));
-    map.insert("MaximumVelocity", QString::number(m_MaximumVelocity,10,2));
+    map.insert("CrawlingVelocity",  QString::number(m_CrawlingVelocity,10,2));
+    map.insert("CrawlingTime",      QString::number(m_CrawlingTime,10,2));
+    map.insert("MaximumVelocity",   QString::number(m_MaximumVelocity,10,2));
 
     mXML.xmlNodeRemove(fileName,"H2JogMode");
     mXML.xmlNodeAppend(fileName, "H2JogMode", map);
@@ -52,26 +61,24 @@ int H2JogMode::setApply()
     return 0;
 }
 
-void H2JogMode::loadXmlConfig()
+void H2JogMode::updateShow()
 {
-    //! load xml
-    MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
-    QMap<QString,QString> map = mXML.xmlRead(fileName);
-    if(map.isEmpty()) return;
-
-    ui->doubleSpinBox_CrawlingVelocity->setValue(map["CrawlingVelocity"].toDouble());
-    ui->doubleSpinBox_CrawlingTime->setValue(map["CrawlingTime"].toDouble());
-    ui->doubleSpinBox_MaximumVelocity->setValue(map["MaximumVelocity"].toDouble());
+    ui->doubleSpinBox_CrawlingVelocity->setValue(m_CrawlingVelocity);
+    ui->doubleSpinBox_CrawlingTime->setValue(m_CrawlingTime);
+    ui->doubleSpinBox_MaximumVelocity->setValue(m_MaximumVelocity);
 }
 
-void H2JogMode::slotOnModelChanged()
+void H2JogMode::on_doubleSpinBox_CrawlingVelocity_valueChanged(double arg1)
 {
-    m_CrawlingVelocity = ui->doubleSpinBox_CrawlingVelocity->value();
-    m_CrawlingTime     = ui->doubleSpinBox_CrawlingTime->value()    ;
-    m_MaximumVelocity  = ui->doubleSpinBox_MaximumVelocity->value() ;
+    m_CrawlingVelocity = arg1;
+}
 
-//    qDebug() << m_CrawlingVelocity;
-//    qDebug() << m_CrawlingTime    ;
-//    qDebug() << m_MaximumVelocity ;
+void H2JogMode::on_doubleSpinBox_CrawlingTime_valueChanged(double arg1)
+{
+    m_CrawlingTime     = arg1;
+}
+
+void H2JogMode::on_doubleSpinBox_MaximumVelocity_valueChanged(double arg1)
+{
+    m_MaximumVelocity  =arg1;
 }

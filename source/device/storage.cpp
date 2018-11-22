@@ -85,7 +85,7 @@ EXPORT_API int CALL mrgStorageMotionFileContextRead(ViSession vi, char* filename
         memcpy(&context[count], as8Ret, retlen + 1);
         count += retlen + 1;
     }
-    return 0;
+    return count;
 }
 /*
 * 保存运动文件内容到本地存储器

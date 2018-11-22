@@ -14,7 +14,7 @@ class RoboConfig : public QWidget
     Q_OBJECT
 
 signals:
-    void signalCurrentRobotChanged(QString,int,int);
+    void signalCurrentRobotChanged(QString,int,int,int);
     void signal_focus_in( const QString &);
     void signalApplyClicked();
 
@@ -48,6 +48,7 @@ private:
     public:
         XRobo*  m_Robo;
         int     m_Visa;
+        int     m_DeviceName;
         int     m_RoboName;
         QString m_strDevInfo;
     };

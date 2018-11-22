@@ -64,6 +64,7 @@ void RoboConfig::createRobot(QString strDevInfo)
     robotInfo.m_Robo = new H2Robo( ui->stackedWidget, strDevInfo );
     robotInfo.m_strDevInfo = strDevInfo;
     robotInfo.m_Visa = 0;
+    robotInfo.m_DeviceName = 0;
     robotInfo.m_RoboName = 0;
     m_RobotList.insert(m_RobotList.count(), robotInfo);
 
@@ -381,6 +382,7 @@ void RoboConfig::slot_current_changed( QTreeWidgetItem* cur,QTreeWidgetItem* prv
 //        qDebug() << "slot_current_changed" << cur->text(0) << index;
         emit signalCurrentRobotChanged(m_RobotList[mIndex].m_strDevInfo,
                                        m_RobotList[mIndex].m_Visa,
+                                       m_RobotList[mIndex].m_DeviceName,
                                        m_RobotList[mIndex].m_RoboName);
     }
 
@@ -422,12 +424,14 @@ void RoboConfig::slot_open_close(QString strIP)
     //通知OPS
     emit signalCurrentRobotChanged(m_RobotList[mIndex].m_strDevInfo,
                                    m_RobotList[mIndex].m_Visa,
+                                   m_RobotList[mIndex].m_DeviceName,
                                    m_RobotList[mIndex].m_RoboName);
 }
 
 int RoboConfig::deviceOpen(QString strIP)
 {
     if(mIndex < 0) return -1;
+    int ret = -1;
     QString strDesc = QString("TCPIP0::%1::inst0::INSTR").arg(strIP);
     int visa = mrgOpenGateWay(strDesc.toLatin1().data(), 2000);
     if(visa <= 0)
@@ -436,23 +440,36 @@ int RoboConfig::deviceOpen(QString strIP)
         return -1;
     }
 
-    int sName[32] = {0};
-    int ret = mrgGetRobotName(visa, sName);
+    int deviceNames[32] = {0};
+    int roboNames[32] = {0};
+    int deviceName = -1;
+    int roboName = -1;
+
+    ret = mrgGetRobotName(visa, roboNames);
     if(ret <= 0)
     {
         qDebug() << "mrhtRobotName_Query error" << ret;
-        return -1;
+        return -2;
     }
-    int iName = sName[0];//默认选择第一个
+    roboName = roboNames[0];//默认选择第一个机器人
+
+    ret = mrgGetRobotDevice(visa, roboName, deviceNames);
+    if(ret <= 0)
+    {
+        qDebug() << "mrgGetRobotDevice error" << ret;
+        return -3;
+    }
+    deviceName = deviceNames[0];//默认选择第一个驱控器
 
     foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs())
-    {    pCfg->attachHandle( visa, iName);  }
+    {    pCfg->attachHandle( visa, deviceName, roboName);  }
 
     mrgIdentify(visa, 1);
 
 //    qDebug() << "device open" << strIP << visa;
     m_RobotList[mIndex].m_Visa = visa;
-    m_RobotList[mIndex].m_RoboName = iName;
+    m_RobotList[mIndex].m_DeviceName = deviceName;
+    m_RobotList[mIndex].m_RoboName = roboName;
     return visa;
 }
 
@@ -468,6 +485,7 @@ int RoboConfig::deviceClose()
     {    pCfg->detachHandle();  }
 
     m_RobotList[mIndex].m_Visa = 0;
+    m_RobotList[mIndex].m_DeviceName = 0;
     m_RobotList[mIndex].m_RoboName = 0;
     return ret;
 }

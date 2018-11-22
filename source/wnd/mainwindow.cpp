@@ -66,10 +66,10 @@ void MainWindow::setupWorkArea()
     connect( m_pOps, SIGNAL(signal_focus_in( const QString &)),
              this, SLOT(slot_focus_in(const QString &)) );
 
-    connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int)),m_pOps,SLOT(slotSetCurrentRobot(QString,int,int)));
+    connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int,int)),m_pOps,SLOT(slotSetCurrentRobot(QString,int,int,int)));
     connect(m_roboConfig,SIGNAL(signalApplyClicked()),m_pOps,SLOT(slotLoadConfigAgain()));
 
-    connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int)),this,SLOT(slotSetDockOpsName(QString,int,int)));
+    connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int,int)),this,SLOT(slotSetDockOpsName(QString,int,int,int)));
 
     ui->menuView->addAction( m_pDockOps->toggleViewAction() );
 
@@ -151,7 +151,7 @@ void MainWindow::on_actionAbout_triggered()
     dlg.exec();
 }
 
-void MainWindow::slotSetDockOpsName(QString strDevInfo, int visa, int name)
+void MainWindow::slotSetDockOpsName(QString strDevInfo, int visa, int deviceName,int roboName)
 {
     QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
     QString strDeviceName = strListDev.at(2) + "[" + strListDev.at(0) + "]";

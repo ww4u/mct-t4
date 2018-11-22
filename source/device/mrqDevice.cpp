@@ -1729,7 +1729,7 @@ EXPORT_API int CALL mrgMRQLostStepLineConfig(ViSession vi, int name,
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:CONFig %d,%d,%s,%s,%f,%s\n", 
 				name, ch, wavetableToString(wavetable), 
-				state ? "OFF" : "ON", 
+				state ? "ON" : "OFF",
 				threshold, changeResponseToString(resp));
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1749,7 +1749,7 @@ EXPORT_API int CALL mrgMRQLostStepState(ViSession vi, int name, int ch, int wave
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:STATe %d,%d,%d,%s\n", 
-						name, ch, wavetable, state ? "OFF" : "ON");
+						name, ch, wavetable, state ? "ON" : "OFF");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1957,7 +1957,7 @@ EXPORT_API int CALL mrgMRQReportConfig(ViSession vi, int name, int ch, int funs,
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:CONFig %d,%d,%s,%s,%f\n", 
-						name, ch, changeReportFuncToString(funs), state ? "OFF" : "ON", period);
+						name, ch, changeReportFuncToString(funs), state ? "ON" : "OFF", period);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1976,7 +1976,7 @@ EXPORT_API int CALL mrgMRQReportState(ViSession vi, int name, int ch, int funs, 
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:STATe %d,%d,%s,%s\n", 
-					name, ch, changeReportFuncToString(funs), state ? "OFF" : "ON");
+                    name, ch, changeReportFuncToString(funs), state? "ON" : "OFF");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -2092,7 +2092,7 @@ EXPORT_API int CALL mrgMRQReportQueue_Query(ViSession vi, int name, int ch, int 
     char args[SEND_BUF];
     char buff[1024];
     char strLen[12];
-    int retLen = 0, lenOfLen = 0,len = 0;
+    int retLen = 0, lenOfLen = 0,len = 0,count = 0;
     snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:DATA:Queue? %d,%d,%s\n", 
 					name, ch, changeReportFuncToString(func));
     if (busWrite(vi, args, strlen(args)) == 0)
@@ -2103,7 +2103,7 @@ EXPORT_API int CALL mrgMRQReportQueue_Query(ViSession vi, int name, int ch, int 
     {
         if (buff[0] != '#')//格式错误
         {
-            return 0;
+            return count;
         }
         lenOfLen = buff[1] - 0x30;
         memcpy(strLen, &buff[2], lenOfLen);//取出长度字符串
@@ -2113,9 +2113,14 @@ EXPORT_API int CALL mrgMRQReportQueue_Query(ViSession vi, int name, int ch, int 
             buff[0] = buff[11];
             retLen = busRead(vi, &buff[1], len);
         }
-        memcpy((char*)data, buff, retLen);
+        else
+        {
+            return count;
+        }
+        memcpy((char*)&data[count], buff, retLen);
+        count += retLen / 4;
     }
-    return (retLen + 1)/4;
+    return count;
 }
 /*
 *设置触发输入的模式,码型触发或电平触发

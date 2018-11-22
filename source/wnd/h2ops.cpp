@@ -16,6 +16,7 @@ H2Ops::H2Ops(QWidget *parent) :
     ui->setupUi(this);
 
     m_ViHandle = 0;
+    m_DeviceName = 0;
     m_RoboName = 0;
     m_strDevInfo = "";
 
@@ -28,14 +29,15 @@ H2Ops::H2Ops(QWidget *parent) :
     setupModel();
 
     connect(&m_timerGlobal, SIGNAL(timeout()), this, SLOT(updateDeviceAllStatus()));
-    m_timerGlobal.setInterval(1000 * 2); //所有状态信息的轮询间隔时间
+    m_timerGlobal.setInterval(1000 * 1); //所有状态信息的轮询间隔时间
 
     connect(&m_timerCurrentPos, SIGNAL(timeout()), this, SLOT(updateDeviceCurrentPosition()));
-    m_timerCurrentPos.setInterval(200); //0.2S
+    m_timerCurrentPos.setInterval(100); //0.1S
 
     connect(&m_timerSpline, SIGNAL(timeout()), this, SLOT(updateMonitor()));
-    m_timerSpline.setInterval(1000 * 60); //1min
+    m_timerSpline.setInterval(1000); //1s
 
+    ui->tabWidget->setCurrentIndex(0);
 //    ui->tabWidget->setEnabled(false);
 }
 
@@ -63,8 +65,11 @@ void H2Ops::setupUi()
     m_splineChart1 = new MegaSplineChart(tr("Energy1"));
     m_splineChart2 = new MegaSplineChart(tr("Energy2"));
 
-    m_splineChart1->chart()->series()->setPen(QPen(Qt::blue));
-    m_splineChart2->chart()->series()->setPen(QPen(Qt::red));
+    m_splineChart1->chart()->series1()->setPen(QPen(Qt::blue));
+    m_splineChart1->chart()->series2()->setPen(QPen(Qt::red));
+
+    m_splineChart2->chart()->series1()->setPen(QPen(Qt::blue));
+    m_splineChart2->chart()->series2()->setPen(QPen(Qt::red));
 
     ui->horizontalLayout_3->addWidget(m_splineChart1);
     ui->horizontalLayout_3->addWidget(m_splineChart2);
@@ -145,25 +150,28 @@ void H2Ops::outError( const QString &str )
     ui->lstLogout->addItem( pItem );
 }
 
-void H2Ops::slotSetCurrentRobot(QString strDevInfo, int visa, int name)
+void H2Ops::slotSetCurrentRobot(QString strDevInfo, int visa, int deviceName, int roboName)
 {
-    if( (m_strDevInfo == strDevInfo) && (m_ViHandle == visa) && (m_RoboName == name) )
+    if( (m_strDevInfo == strDevInfo) && (m_ViHandle == visa) && (m_RoboName == roboName) )
     {
         return;//没有切换机器人且状态没有改变
     }
 
     m_strDevInfo = strDevInfo;
     m_ViHandle = visa;
-    m_RoboName = name;
+    m_DeviceName = deviceName;
+    m_RoboName = roboName;
     m_Data.clear();
 
-    qDebug() << "H2OPS " << "m_ViHandle:"  << m_ViHandle << "m_RoboName:" << m_RoboName;
+    qDebug() << "H2OPS " << "m_ViHandle:"  << m_ViHandle
+             << "m_DeviceName:" << m_DeviceName
+             << "m_RoboName:" << m_RoboName;
     if(m_ViHandle == 0)
     {
         ui->tabWidget->setEnabled(false);
 
         this->setTimerStop(m_timerGlobal);
-        this->setTimerStop(m_timerSpline);
+        this->setTimerSplineStop();
     }
     else
     {
@@ -171,7 +179,6 @@ void H2Ops::slotSetCurrentRobot(QString strDevInfo, int visa, int name)
         slotLoadConfigAgain();
 
         this->setTimerStart(m_timerGlobal);
-        this->setTimerStart(m_timerSpline);
     }
 }
 
@@ -381,7 +388,17 @@ void H2Ops::on_btnExport_2_clicked()
 
 void H2Ops::on_tabWidget_currentChanged(int index)
 {
-    emit signal_focus_in( ui->tabWidget->tabText( index ) );
+    QString strName = ui->tabWidget->tabText( index );
+    emit signal_focus_in( strName );
+
+    if(m_ViHandle == 0)
+    {   return;     }
+    //进入到Monitor就查询绘制曲线,离开就停止
+    if( strName == "Monitor" && ui->tab_Monitor->isEnabled() ){
+        this->setTimerSplineStart();
+    }else{
+        this->setTimerSplineStop();
+    }
 }
 
 void H2Ops::on_tabWidget_tabBarClicked(int index)
@@ -481,6 +498,28 @@ void H2Ops::setTimerStart(QTimer &timer)
 {
     if( !timer.isActive() )
         timer.start();
+}
+
+void H2Ops::setTimerSplineStop()
+{
+    if( m_timerSpline.isActive() )
+    {
+        m_timerSpline.stop();
+        //关闭上报状态
+        mrgMRQReportState(this->m_ViHandle,this->m_DeviceName, 0, 0, 0);
+        mrgMRQReportState(this->m_ViHandle,this->m_DeviceName, 1, 0, 0);
+    }
+}
+
+void H2Ops::setTimerSplineStart()
+{
+    if( !m_timerSpline.isActive() )
+    {
+        //打开上报状态
+        mrgMRQReportState(this->m_ViHandle,this->m_DeviceName, 0, 0, 1);
+        mrgMRQReportState(this->m_ViHandle,this->m_DeviceName, 1, 0, 1);
+        m_timerSpline.start();
+    }
 }
 
 
@@ -631,8 +670,7 @@ void H2Ops::updateDeviceAllStatus()
 
 void H2Ops::updateDeviceStatus()
 {
-//    ui->H2Status_1
-//    ui->H2Status_2
+
 
 }
 
@@ -658,8 +696,7 @@ void H2Ops::updateOperate()
 
         ui->tab_Manual->setEnabled(true);
         ui->tab_Debug->setEnabled(true);
-
-//        setTimerStart(m_timerSpline);
+        ui->tab_Monitor->setEnabled(true);
     }
     else if(homeVaild == 1)
     {//表示需要回零
@@ -668,13 +705,14 @@ void H2Ops::updateOperate()
 
         ui->tab_Manual->setEnabled(false);
         ui->tab_Debug->setEnabled(false);
+        ui->tab_Monitor->setEnabled(false);
 
-        setTimerStop(m_timerSpline);
+        this->setTimerSplineStop();
         setTimerStop(m_timerCurrentPos);
     }
     else
     {
-        qDebug() << "mrgGetRobotHomeRequire error";
+        qDebug() << "mrgGetRobotHomeRequire error" << homeVaild;
     }
 
 #if 0
@@ -695,7 +733,7 @@ void H2Ops::updateOperate()
         ui->tab_Manual->setEnabled(false);
         ui->tab_Debug->setEnabled(false);
 
-        setTimerStop(m_timerSpline);
+        this->setTimerSplineStop();
         setTimerStop(m_timerCurrentPos);
     }
     else
@@ -727,16 +765,34 @@ void H2Ops::updateManual()
 
 void H2Ops::updateMonitor()
 {
-    //!TODO
-    qsrand((uint) QTime::currentTime().msec());
+    unsigned int array[4096] = {0};
+    int count = -1;
 
-    double rand = qrand() % 101;
-    m_splineChart1->dataAppend(rand);
+    //查询第一个电机
+    memset(array, 0, sizeof(array));
+    count = mrgMRQReportQueue_Query(m_ViHandle, m_DeviceName, 0, 0, array);
+    if(count <= 0)
+        return;
 
+    for(int i=0; i<count; i++)
+    {
+        int v1 = array[i] & 0xFF00;
+        int v2 = array[i] & 0x00FF;
+        m_splineChart1->dataAppend(v1,v2);
+    }
 
-    rand = qrand() % 101;
-    m_splineChart2->dataAppend(rand);
+    //查询第二个电机
+    memset(array, 0, sizeof(array));
+    count = mrgMRQReportQueue_Query(m_ViHandle, m_DeviceName, 1, 0, array);
+    if(count <= 0)
+        return;
 
+    for(int i=0; i<count; i++)
+    {
+        int v1 = array[i] & 0xFF00;
+        int v2 = array[i] & 0x00FF;
+        m_splineChart2->dataAppend(v1,v2);
+    }
 }
 
 

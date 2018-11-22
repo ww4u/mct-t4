@@ -26,9 +26,10 @@ int XConfig::saveConfig()
 void XConfig::updateShow()
 {}
 
-int XConfig::attachHandle(int handle , int robotName)
+int XConfig::attachHandle(int handle , int deviceName, int robotName)
 {
     mViHandle = handle;
+    mDeviceName = deviceName;
     mRobotName = robotName;
     return 0;
 }
@@ -36,6 +37,8 @@ int XConfig::attachHandle(int handle , int robotName)
 int XConfig::detachHandle()
 {
     mViHandle = 0;
+    mDeviceName = 0;
+    mRobotName = 0;
     return 0;
 }
 

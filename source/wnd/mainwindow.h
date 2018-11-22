@@ -43,7 +43,7 @@ protected Q_SLOTS:
 
 private slots:
     void on_actionAbout_triggered();
-    void slotSetDockOpsName(QString strDevInfo,int visa,int name);
+    void slotSetDockOpsName(QString strDevInfo, int visa, int deviceName, int roboName);
 
 private:
     Ui::MainWindow *ui;

@@ -21,7 +21,7 @@ public:
     QString name();
 
     void setProjectName(const QString &projectName);
-    int attachHandle( int handle, int robotName);
+    int attachHandle(int handle, int deviceName, int robotName);
     int detachHandle();
 
     virtual int  readDeviceConfig();    //从设备上读取数据设置到类成员
@@ -40,6 +40,7 @@ protected:
     QString mName;
     int mViHandle;
     int mRobotName;
+    int mDeviceName;
 
     QString mProjectName;
 };

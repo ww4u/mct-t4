@@ -35,7 +35,7 @@ public:
     void outError( const QString &str );
 
 public slots:
-    void slotSetCurrentRobot(QString strDevInfo, int visa, int name);
+    void slotSetCurrentRobot(QString strDevInfo, int visa, int deviceName, int roboName);
     void slotLoadConfigAgain();
 
     void slot_logSelectAll_action();
@@ -138,6 +138,7 @@ private:
     MegaSplineChart *m_splineChart2;
 
     int m_ViHandle;
+    int m_DeviceName;
     int m_RoboName;
     QString m_strDevInfo;
     QMap<QString,QString> m_Data;
@@ -149,6 +150,8 @@ private:
     void setButtonDisableTime(QToolButton *btn, int msec);
     void setTimerStop(QTimer &timer);
     void setTimerStart(QTimer &timer);
+    void setTimerSplineStop();  //关闭动态曲线的定时器
+    void setTimerSplineStart(); //打开动态曲线的定时器
 };
 
 #endif // H2OPS_H

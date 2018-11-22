@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>754</width>
-    <height>273</height>
+    <height>275</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -24,12 +24,15 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>
+    <widget class="H2Status" name="h2Status" native="true"/>
+   </item>
+   <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="tabPosition">
       <enum>QTabWidget::South</enum>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>7</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -59,9 +62,6 @@
        <string>Operate</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_9">
-       <item row="0" column="0">
-        <widget class="H2Status" name="H2Status_1" native="true"/>
-       </item>
        <item row="0" column="1">
         <widget class="QGroupBox" name="groupBox_9">
          <property name="title">
@@ -419,9 +419,6 @@
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <widget class="H2Status" name="H2Status_2" native="true"/>
-       </item>
-       <item>
         <widget class="QGroupBox" name="groupBox">
          <property name="enabled">
           <bool>false</bool>
@@ -634,6 +631,19 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_13">
        <item row="0" column="1">
+        <spacer name="horizontalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="0">
         <widget class="QGroupBox" name="groupBox_11">
          <property name="title">
           <string>Homing</string>
@@ -641,11 +651,17 @@
          <layout class="QGridLayout" name="gridLayout_14">
           <item row="2" column="0" colspan="2">
            <widget class="QRadioButton" name="radioButton_homing_valid">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="layoutDirection">
              <enum>Qt::RightToLeft</enum>
             </property>
             <property name="text">
              <string>Homing Valid</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -792,11 +808,15 @@
          </layout>
         </widget>
        </item>
-       <item row="0" column="0">
-        <widget class="H2Status" name="H2Status_3" native="true"/>
-       </item>
-       <item row="0" column="2">
-        <spacer name="horizontalSpacer_4">
+      </layout>
+     </widget>
+     <widget class="XConfig" name="tab_Manual">
+      <attribute name="title">
+       <string>Manual</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_7">
+       <item row="0" column="1">
+        <spacer name="horizontalSpacer_5">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -808,17 +828,7 @@
          </property>
         </spacer>
        </item>
-      </layout>
-     </widget>
-     <widget class="XConfig" name="tab_Manual">
-      <attribute name="title">
-       <string>Manual</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout_7">
        <item row="0" column="0">
-        <widget class="H2Status" name="H2Status_4" native="true"/>
-       </item>
-       <item row="0" column="1">
         <widget class="QGroupBox" name="groupBox_3">
          <property name="title">
           <string>Manual Control</string>
@@ -847,10 +857,10 @@
                <double>0.010000000000000</double>
               </property>
               <property name="maximum">
-               <double>500.000000000000000</double>
+               <double>10000.000000000000000</double>
               </property>
               <property name="value">
-               <double>1.000000000000000</double>
+               <double>500.000000000000000</double>
               </property>
              </widget>
             </item>
@@ -878,10 +888,10 @@
                <double>0.010000000000000</double>
               </property>
               <property name="maximum">
-               <double>1000.000000000000000</double>
+               <double>10000.000000000000000</double>
               </property>
               <property name="value">
-               <double>5.000000000000000</double>
+               <double>1.000000000000000</double>
               </property>
              </widget>
             </item>
@@ -1231,32 +1241,15 @@
          </layout>
         </widget>
        </item>
-       <item row="0" column="2">
-        <spacer name="horizontalSpacer_5">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
       </layout>
      </widget>
      <widget class="XConfig" name="tab_Monitor">
       <attribute name="title">
        <string>Monitor</string>
       </attribute>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <item>
-        <widget class="H2Status" name="H2Status_5" native="true"/>
-       </item>
-      </layout>
+      <layout class="QHBoxLayout" name="horizontalLayout_3"/>
      </widget>
-     <widget class="XConfig" name="Debug">
+     <widget class="XConfig" name="tab_Debug">
       <attribute name="title">
        <string>Debug</string>
       </attribute>

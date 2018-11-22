@@ -404,6 +404,26 @@ EXPORT_API int CALL mrgMRQPVTTimeScale(ViSession vi, int name, int ch, int wavet
 */
 EXPORT_API int CALL mrgMRQPVTTimeScale_Query(ViSession vi, int name, int ch, int wavetable, int* speedup, int* speedcut);
 /*
+*设置循环模式下，PVT的循环次数
+*vi :visa设备句柄
+*name: 机器人名称
+*ch：通道号
+*wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+*cycle:循环次数
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQPVTCycle(ViSession vi, int name, int ch, int wavetable, unsigned int cycle);
+/*
+*查询循环模式下，PVT的循环次数
+*vi :visa设备句柄
+*name: 机器人名称
+*ch：通道号
+*wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+*cycle:循环次数
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQPVTCycle_Query(ViSession vi, int name, int ch, int wavetable, unsigned int *cycle);
+/*
 *查询模式,包括执行模式,规划模式,运动模式
 *vi :visa设备句柄
 *name: 机器人名称

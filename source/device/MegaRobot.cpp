@@ -1199,7 +1199,25 @@ EXPORT_API int CALL mrgGetRobotHomeMode(ViSession vi, int name)
     ret[retlen] = '\0';
     return atoi(ret);
 }
-
+/*
+* 查询机器人的是否需要回零
+* vi :visa设备句柄
+* name: 机器人名称
+* 返回值：1表示需要回零 ，0表示不需要回零，小于零表示出错，
+* 说明：
+*/
+EXPORT_API int CALL mrgGetRobotHomeRequire(ViSession vi, int name)
+{
+    char args[SEND_BUF];
+    char ret[8];
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "ROBOT:HOME:REQUIRE? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, 8)) == 0) {
+        return -1;
+    }
+    ret[retlen] = '\0';
+    return atoi(ret);
+}
 
 /*
 * 给指定的机器人加载坐标点
@@ -1345,10 +1363,10 @@ EXPORT_API int CALL mrgRobotPvtResolve(ViSession vi, int name, int wavetable,int
 * filename: 点坐标文件名
 * 返回值：0表示执行成功，否则表示失败
 */
-EXPORT_API int CALL mrgRobotFileImport(ViSession vi, char* filename)
+EXPORT_API int CALL mrgRobotFileImport(ViSession vi,int name,char* filename)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:FILE:IMPORT %s\n", filename);
+    snprintf(args, SEND_BUF, "ROBOT:FILE:IMPORT %d,%s\n",name, filename);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }

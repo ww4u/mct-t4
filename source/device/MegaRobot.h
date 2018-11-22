@@ -363,6 +363,14 @@ EXPORT_API int CALL mrgSetRobotHomeMode(ViSession vi, int name, int mode);
 */
 EXPORT_API int CALL mrgGetRobotHomeMode(ViSession vi, int name);
 /*
+* 查询机器人的是否需要回零
+* vi :visa设备句柄
+* name: 机器人名称
+* 返回值：1表示需要回零 ，0表示不需要回零，小于零表示出错，
+* 说明：
+*/
+EXPORT_API int CALL mrgGetRobotHomeRequire(ViSession vi, int name);
+/*
 * 给指定的机器人加载坐标点
 * vi :visa设备句柄
 * name: 机器人名称
@@ -427,7 +435,7 @@ EXPORT_API int CALL mrgRobotPvtResolve(ViSession vi, int name, int wavetable, in
 * filename: 点坐标文件名
 * 返回值：0表示执行成功，否则表示失败
 */
-EXPORT_API int CALL mrgRobotFileImport(ViSession vi, char* filename);
+EXPORT_API int CALL mrgRobotFileImport(ViSession vi, int name, char* filename);
 /*
 * 解算当前运动文件内容到模块中
 * vi :visa设备句柄
@@ -444,11 +452,11 @@ EXPORT_API int CALL mrgRobotFileResolve(ViSession vi, int name, int section, int
 * 将系统中的运动数据，导出成文件
 * vi :visa设备句柄
 * name: 机器人名称
-* type:0表示导出到本地存储（本地文件系统）；1表示导出到外部存储（U盘之类）
+* location:0表示导出到本地存储（本地文件系统）；1表示导出到外部存储（U盘之类）
 * filename：表示导出的文件名
 * 返回值：0表示执行正确，否则表示失败。
 */
-EXPORT_API int CALL mrgRobotFileExport(ViSession vi, int name, int type, char* filename);
+EXPORT_API int CALL mrgRobotFileExport(ViSession vi, int name, int location, char* filename);
 /*
 * 设置末端执行器类型及相应的设备
 * vi :visa设备句柄

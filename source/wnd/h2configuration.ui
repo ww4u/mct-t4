@@ -58,14 +58,30 @@
       <string>Mechanics</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="5" column="0">
+      <property name="verticalSpacing">
+       <number>16</number>
+      </property>
+      <item row="4" column="0">
        <widget class="QLabel" name="workSpaceStrokeXLabel">
         <property name="text">
          <string>WorkSpace X-Stroke</string>
         </property>
        </widget>
       </item>
-      <item row="6" column="0">
+      <item row="2" column="1">
+       <widget class="QLabel" name="label_family">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>label</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
        <widget class="QLabel" name="workSpaceStrokeYLabel">
         <property name="text">
          <string>WorkSpace Y-Stroke</string>
@@ -73,6 +89,13 @@
        </widget>
       </item>
       <item row="3" column="0">
+       <widget class="QLabel" name="sizeLabel">
+        <property name="text">
+         <string>Size</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
        <widget class="QLabel" name="label_2">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -85,10 +108,10 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="2">
+      <item row="0" column="0" colspan="2">
        <widget class="QLabel" name="label_model">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -105,33 +128,16 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="sizeLabel">
-        <property name="text">
-         <string>Size</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QLabel" name="label_family">
-        <property name="font">
-         <font>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>label</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1" colspan="2">
+      <item row="4" column="1" colspan="2">
        <widget class="QSpinBox" name="spinBox_X">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::TabFocus</enum>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -146,7 +152,7 @@
          <number>0</number>
         </property>
         <property name="maximum">
-         <number>494</number>
+         <number>10000</number>
         </property>
         <property name="singleStep">
          <number>10</number>
@@ -156,13 +162,16 @@
         </property>
        </widget>
       </item>
-      <item row="6" column="1" colspan="2">
+      <item row="5" column="1" colspan="2">
        <widget class="QSpinBox" name="spinBox_Y">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::TabFocus</enum>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -177,7 +186,7 @@
          <number>0</number>
         </property>
         <property name="maximum">
-         <number>770</number>
+         <number>10000</number>
         </property>
         <property name="singleStep">
          <number>10</number>
@@ -187,42 +196,25 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0" colspan="2">
-       <spacer name="verticalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="0" column="0" colspan="2">
-       <spacer name="verticalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="4" column="1">
+      <item row="3" column="1" colspan="2">
        <widget class="QComboBox" name="sizeComboBox">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
+        </property>
         <property name="editable">
          <bool>false</bool>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
         </property>
         <item>
          <property name="text">
@@ -235,6 +227,19 @@
          </property>
         </item>
        </widget>
+      </item>
+      <item row="6" column="0" colspan="2">
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </widget>

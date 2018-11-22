@@ -14,10 +14,10 @@ H2Action::H2Action(QWidget *parent) :
     m_strDeviceFileName = "MCT_motion.mrp";
     m_fileContext = "";
 
-    m_pDelegate1 = new comboxDelegate(this);
+    m_pDelegate = new comboxDelegate(this);
     QStringList prxs;
     prxs << tr("PA") << tr("PRN") << tr("PRA");
-    m_pDelegate1->setItems( prxs );
+    m_pDelegate->setItems( prxs );
 
 }
 
@@ -40,7 +40,7 @@ int H2Action::readDeviceConfig()
     {
         m_fileContext = QString("%1").arg(pData);//保存到类中
         writeFile(m_strLocalFileName, m_fileContext); //保存到本地文件
-        mActions.input(m_strLocalFileName); //保存到action
+        m_actionModel.input(m_strLocalFileName); //保存到action
 
         qDebug() << "mrgStorageMotionFileContextRead" << ret;
         ret = 0;
@@ -72,7 +72,7 @@ int H2Action::loadConfig()
         m_strLocalFileName = QApplication::applicationDirPath() + "/dataset/action_default.mrp";
 
     //! load action from csv
-    int ret = mActions.input(m_strLocalFileName);//保存到action
+    int ret = m_actionModel.input(m_strLocalFileName);//保存到action
     m_fileContext = readFile(m_strLocalFileName);//保存到类中
 
     return ret;
@@ -82,14 +82,14 @@ int H2Action::saveConfig()
 {
     //! save action to csv
     m_strLocalFileName = QApplication::applicationDirPath() + "/dataset/" + mProjectName + ".mrp";
-    int ret = mActions.output( m_strLocalFileName );//将界面数据保存到本地文件
+    int ret = m_actionModel.output( m_strLocalFileName );//将界面数据保存到本地文件
     return ret;
 }
 
 void H2Action::updateShow()
 {
-    ui->tableView->setModel( &mActions );
-    ui->tableView->setItemDelegateForColumn( 0, m_pDelegate1 );
+    ui->tableView->setModel( &m_actionModel );
+    ui->tableView->setItemDelegateForColumn( 0, m_pDelegate );
 }
 
 QString H2Action::readFile(QString fileName)

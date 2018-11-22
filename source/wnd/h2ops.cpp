@@ -27,16 +27,16 @@ H2Ops::H2Ops(QWidget *parent) :
 
     setupModel();
 
-//    connect(&m_timer, SIGNAL(timeout()), this, SLOT(slot_handle_timeout()));
-//    m_timer.setInterval(1000 * 2); //轮询时间周期
+    connect(&m_timerGlobal, SIGNAL(timeout()), this, SLOT(updateDeviceAllStatus()));
+    m_timerGlobal.setInterval(1000 * 2); //所有状态信息的轮询间隔时间
 
     connect(&m_timerCurrentPos, SIGNAL(timeout()), this, SLOT(updateDeviceCurrentPosition()));
-    m_timerCurrentPos.setInterval(500); //0.5S
+    m_timerCurrentPos.setInterval(200); //0.2S
 
     connect(&m_timerSpline, SIGNAL(timeout()), this, SLOT(updateMonitor()));
     m_timerSpline.setInterval(1000 * 60); //1min
 
-
+//    ui->tabWidget->setEnabled(false);
 }
 
 H2Ops::~H2Ops()
@@ -81,7 +81,7 @@ void H2Ops::setupName()
     set_name( ui->tab_Homing,   "tab_Homing");
     set_name( ui->tab_Manual,   "tab_Manual");
     set_name( ui->tab_Monitor,  "tab_Monitor");
-    set_name( ui->Debug,        "tab_Debug");
+    set_name( ui->tab_Debug,    "tab_Debug");
     set_name( ui->tab_Diagnosis,"tab_Diagnosis");
 }
 
@@ -161,32 +161,17 @@ void H2Ops::slotSetCurrentRobot(QString strDevInfo, int visa, int name)
     if(m_ViHandle == 0)
     {
         ui->tabWidget->setEnabled(false);
-//        if(m_timer.isActive())
-//        {
-//            qDebug() << "H2OPS timer stop";
-//             m_timer.stop();
-//        }
+
+        this->setTimerStop(m_timerGlobal);
+        this->setTimerStop(m_timerSpline);
     }
     else
     {
         ui->tabWidget->setEnabled(true);
         slotLoadConfigAgain();
 
-        updateDeviceCurrentPosition();
-        updateDeviceStatus();
-        updateOperate();
-        updateDigitalIO();
-        updateHoming();
-        updateManual();
-        updateMonitor();
-        updateDebug();
-        updateDiagnosis();
-
-//        if( !m_timer.isActive())
-//        {
-//            qDebug() << "H2OPS timer start";
-//            m_timer.start();
-//        }
+        this->setTimerStart(m_timerGlobal);
+        this->setTimerStart(m_timerSpline);
     }
 }
 
@@ -486,6 +471,19 @@ void H2Ops::setButtonDisableTime(QToolButton *btn, int msec)
     btn->setEnabled(true);
 }
 
+void H2Ops::setTimerStop(QTimer &timer)
+{
+    if( timer.isActive() )
+        timer.stop();
+}
+
+void H2Ops::setTimerStart(QTimer &timer)
+{
+    if( !timer.isActive() )
+        timer.start();
+}
+
+
 //! single move
 void H2Ops::on_toolButton_singlestep_x_dec_clicked()
 {
@@ -599,8 +597,7 @@ void H2Ops::on_pushButton_stop_clicked()
     if(m_ViHandle <= 0) return;
     qDebug() << "mrgRobotStop:" << mrgRobotStop(m_ViHandle, m_RoboName, -1);
 
-    if(m_timerCurrentPos.isActive())
-        m_timerCurrentPos.stop();
+    this->setTimerStop(m_timerCurrentPos);
 
     ui->toolButton_singlestep_x_dec->setEnabled(true);
     ui->toolButton_singlestep_x_inc->setEnabled(true);
@@ -619,20 +616,17 @@ void H2Ops::on_pushButton_apply_clicked()
 
 /////////////////////////////////////////////////////////////
 //更新标签的实时数值
-//void H2Ops::slot_handle_timeout()
-//{
-//    if(m_strDevInfo == "")
-//        return;
-
-//    updateDeviceStatus();
-//    updateOperate();
-//    updateDigitalIO();
-//    updateHoming();
-//    updateManual();
+void H2Ops::updateDeviceAllStatus()
+{
+    updateDeviceStatus();
+    updateOperate();
+    updateDigitalIO();
+    updateHoming();
+    updateManual();
 //    updateMonitor();
-//    updateDebug();
-//    updateDiagnosis();
-//}
+    updateDebug();
+    updateDiagnosis();
+}
 
 
 void H2Ops::updateDeviceStatus()
@@ -646,24 +640,69 @@ void H2Ops::updateOperate()
 {
 #if 0
     qsrand((uint) QTime::currentTime().msec());
-    double rand = qrand() % 50;
-    ui->doubleSpinBox_RecordNumber->setValue(rand);
-    ui->doubleSpinBox_target_position_x->setValue(rand);
-    ui->doubleSpinBox_target_position_y->setValue(rand);
 
-    ui->doubleSpinBox_Mileage_x->setValue(rand);
-    ui->doubleSpinBox_Mileage_y->setValue(rand);
+    ui->doubleSpinBox_RecordNumber->setValue(qrand() % 50);
 
-    if( qrand()%2 )
-    {
+    ui->doubleSpinBox_target_position_x->setValue(qrand() % 50);
+    ui->doubleSpinBox_target_position_y->setValue(qrand() % 50);
+
+    ui->doubleSpinBox_Mileage_x->setValue(qrand() % 50);
+    ui->doubleSpinBox_Mileage_y->setValue(qrand() % 50);
+#endif
+
+    int homeVaild = mrgGetRobotHomeRequire(m_ViHandle, m_RoboName);
+    if(homeVaild == 0)
+    {//表示不需要回零
         ui->radHome->setChecked(true);
-        ui->radES->setChecked(false);
+        ui->radioButton_homing_valid->setChecked(true);
+
+        ui->tab_Manual->setEnabled(true);
+        ui->tab_Debug->setEnabled(true);
+
+//        setTimerStart(m_timerSpline);
+    }
+    else if(homeVaild == 1)
+    {//表示需要回零
+        ui->radHome->setChecked(false);
+        ui->radioButton_homing_valid->setChecked(false);
+
+        ui->tab_Manual->setEnabled(false);
+        ui->tab_Debug->setEnabled(false);
+
+        setTimerStop(m_timerSpline);
+        setTimerStop(m_timerCurrentPos);
     }
     else
     {
-        ui->radHome->setChecked(false);
-        ui->radES->setChecked(true);
+        qDebug() << "mrgGetRobotHomeRequire error";
     }
+
+#if 0
+    //! 如果外部停止按钮被按下，禁止所有可用操作
+    int isStop = 0;
+
+    if(isStop == 0)
+    {//表示不需要回零
+        ui->radES->setChecked(true);
+        ui->tab_Homing->setEnabled(true);
+        ui->tab_Manual->setEnabled(true);
+        ui->tab_Debug->setEnabled(true);
+    }
+    else if(isStop == 1)
+    {//表示需要回零
+        ui->radES->setChecked(false);
+        ui->tab_Homing->setEnabled(false);
+        ui->tab_Manual->setEnabled(false);
+        ui->tab_Debug->setEnabled(false);
+
+        setTimerStop(m_timerSpline);
+        setTimerStop(m_timerCurrentPos);
+    }
+    else
+    {
+        qDebug() << "query stop status error";
+    }
+
 #endif
 }
 
@@ -677,6 +716,7 @@ void H2Ops::updateHoming()
     //!DONE
     ui->label_homing_target->setText(m_Data["Target"]);
     ui->label_homing_direction->setText(m_Data["Direction"]);
+    //radioButton_homing_valid 的状态在updateOperate同步更新
 }
 
 void H2Ops::updateManual()
@@ -688,12 +728,14 @@ void H2Ops::updateManual()
 void H2Ops::updateMonitor()
 {
     //!TODO
-//    qsrand((uint) QTime::currentTime().msec());
-//    double rand = qrand() % 101;
-//    m_splineChart1->dataAppend(rand);
+    qsrand((uint) QTime::currentTime().msec());
 
-//    rand = qrand() % 101;
-//    m_splineChart2->dataAppend(rand);
+    double rand = qrand() % 101;
+    m_splineChart1->dataAppend(rand);
+
+
+    rand = qrand() % 101;
+    m_splineChart2->dataAppend(rand);
 
 }
 

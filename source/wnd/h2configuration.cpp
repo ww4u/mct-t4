@@ -87,6 +87,8 @@ void H2Configuration::updateShow()
     ui->spinBox_X->setValue(m_WorkStrokeX);
     ui->spinBox_Y->setValue(m_WorkStrokeY);
 
+    on_sizeComboBox_currentIndexChanged(m_Size);
+
     if(0 == m_MotorPosition)
     {
         ui->radioButton_b->setChecked(true);
@@ -162,21 +164,21 @@ void H2Configuration::on_sizeComboBox_currentIndexChanged(int index)
 
     if(index == 0)
     {
-        ui->spinBox_X->setMaximum(494);
+        ui->spinBox_X->setRange(0, 494);
         ui->spinBox_X->setValue(494);
         ui->spinBox_X->setToolTip("0-494");
 
-        ui->spinBox_Y->setMaximum(802);
+        ui->spinBox_Y->setRange(0, 802);
         ui->spinBox_Y->setValue(802);
         ui->spinBox_Y->setToolTip("0-820");
     }
     else if(index == 1)
     {
-        ui->spinBox_X->setMaximum(770);
+        ui->spinBox_X->setRange(0, 770);
         ui->spinBox_X->setValue(770);
         ui->spinBox_X->setToolTip("0-770");
 
-        ui->spinBox_Y->setMaximum(890);
+        ui->spinBox_Y->setRange(0, 890);
         ui->spinBox_Y->setValue(890);
         ui->spinBox_Y->setToolTip("0-890");
     }

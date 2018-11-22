@@ -44,7 +44,7 @@ public slots:
     void on_pushButton_stop_clicked();
 
 private slots:
-//    void slot_handle_timeout();
+    void updateDeviceAllStatus();
 
     void on_btnUp_clicked();
 
@@ -142,15 +142,13 @@ private:
     QString m_strDevInfo;
     QMap<QString,QString> m_Data;
 
-
-
-    QTimer m_timer;
     QTimer m_timerCurrentPos;   //更新实时位置显示的定时器
     QTimer m_timerSpline;       //能效曲线添加新数值的定时器
+    QTimer m_timerGlobal;       //其他所有动态更新的数据
 
-    QTimer m_timerButtonClick;
     void setButtonDisableTime(QToolButton *btn, int msec);
-
+    void setTimerStop(QTimer &timer);
+    void setTimerStart(QTimer &timer);
 };
 
 #endif // H2OPS_H

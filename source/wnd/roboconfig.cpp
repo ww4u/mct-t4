@@ -77,8 +77,11 @@ void RoboConfig::createRobot(QString strDevInfo)
         QString configFileName = robotInfo.m_strDevInfo.split(',').at(3);
         pCfg->setProjectName(configFileName);
         pCfg->loadConfig();
-        pCfg->saveConfig();
         pCfg->updateShow();
+    }
+
+    foreach (XConfig *pCfg, ((H2Robo *)(robotInfo.m_Robo))->subConfigs()){
+        pCfg->saveConfig();
     }
 
     connect( robotInfo.m_Robo, SIGNAL(signal_focus_in( const QString &)),

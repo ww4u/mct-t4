@@ -118,10 +118,10 @@ bool MDataSection::lineIn( QString &ary )
 bool MDataSection::lineOut( QTextStream &stream )
 {
     //! section name
-    stream<<"[section]"<<line_seperator;
+    stream << "[section]" << line_seperator;
     for ( int i = 0; i < mRows.size(); i++ )
     {
-        stream<<mRows[i]->join(',')<<line_seperator;
+        stream << mRows[i]->join(",\t\t") << line_seperator;
     }
 
     return true;

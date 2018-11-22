@@ -28,8 +28,8 @@ public:
 
 private:
     Ui::H2Action *ui;
-    H2ActionModel   mActions;
-    comboxDelegate *m_pDelegate1;
+    H2ActionModel   m_actionModel;
+    comboxDelegate *m_pDelegate;
 
     QString m_strLocalFileName;
     QString m_strDeviceFileName;

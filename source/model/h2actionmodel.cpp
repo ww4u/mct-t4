@@ -257,9 +257,9 @@ int H2ActionModel::output( const QString &fileName )
 {
     MDataSet dataSet;
 
-    dataSet.setModel( "MRX-H2");
+    dataSet.setModel( "MRX-H2-M");
     QStringList headers;
-    headers<<"type"<<"x"<<"y"<<"v"<<"a"<<"comment";
+    headers << "type" << "x" << "y" << "v" << "a" << "comment";
     dataSet.setHeaders( headers );
 
     MDataSection *pSection;

@@ -321,8 +321,8 @@ int MDataSet::doSave( QFile &file )
 {
     QTextStream stream( &file );
 
-    stream<<"["<<mModel<<"]"<<line_seperator;
-    stream<<"["<<mHeaders.join(',')<<"]"<<line_seperator;
+    stream << "[" << mModel << "]" <<line_seperator;
+    stream << "[" << mHeaders.join(",\t\t") << "]" << line_seperator;
 
     for ( int i = 0; i < mSections.size(); i++ )
     {

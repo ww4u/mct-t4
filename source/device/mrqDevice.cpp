@@ -1083,6 +1083,49 @@ EXPORT_API int CALL mrgMRQPVTTimeScale_Query(ViSession vi, int name, int ch, int
     return 0;
 }
 /*
+*设置循环模式下，PVT的循环次数
+*vi :visa设备句柄
+*name: 机器人名称
+*ch：通道号
+*wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+*cycle:循环次数
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQPVTCycle(ViSession vi, int name, int ch, int wavetable, unsigned int cycle)
+{
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:CYCLE %d,%d,%s,%ul\n",
+        name, ch, wavetableToString(wavetable), cycle);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+        return -1;
+    }
+    return 0;
+}
+/*
+*查询循环模式下，PVT的循环次数
+*vi :visa设备句柄
+*name: 机器人名称
+*ch：通道号
+*wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+*cycle:循环次数
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQPVTCycle_Query(ViSession vi, int name, int ch, int wavetable, unsigned int *cycle)
+{
+    char args[SEND_BUF];
+    char as8Ret[100];
+    char *p, *pNext;
+    int retLen = 0;
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:CYCLE? %d,%d,%s\n",
+        name, ch, wavetableToString(wavetable));
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+        return -1;
+    }
+    as8Ret[retLen - 1] = '\0';
+    strtoul(as8Ret, NULL, 10);
+    return 0;
+}
+/*
 *查询模式,包括执行模式,规划模式,运动模式
 *vi :visa设备句柄
 *name: 机器人名称
@@ -2032,7 +2075,7 @@ EXPORT_API int CALL mrgMRQReportData_Query(ViSession vi, int name, int ch, int f
     {
         buff[retLen - 1] = '\0';
     }
-    *data = strtoul(buff, NULL, 0);
+    *data = strtoul(buff, NULL, 10);
     return 1;
 }
 /*
@@ -2050,13 +2093,13 @@ EXPORT_API int CALL mrgMRQReportQueue_Query(ViSession vi, int name, int ch, int 
     char buff[1024];
     char strLen[12];
     int retLen = 0, lenOfLen = 0,len = 0;
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:DATA:Queue? %d,%d,%s,%d\n", 
-					name, ch, changeReportFuncToString(func),250);
-
-    if ((retLen = busQuery(vi, args, strlen(args), buff, 12)) == 0) {
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:DATA:Queue? %d,%d,%s\n", 
+					name, ch, changeReportFuncToString(func));
+    if (busWrite(vi, args, strlen(args)) == 0)
+    {
         return 0;
     }
-    else
+    while ((retLen = busRead(vi, buff, 12)) > 0)
     {
         if (buff[0] != '#')//格式错误
         {
@@ -2064,13 +2107,13 @@ EXPORT_API int CALL mrgMRQReportQueue_Query(ViSession vi, int name, int ch, int 
         }
         lenOfLen = buff[1] - 0x30;
         memcpy(strLen, &buff[2], lenOfLen);//取出长度字符串
-        len = strtoul(strLen, NULL, 0);
-        if (lenOfLen != 0)
+        len = strtoul(strLen, NULL, 10);
+        if (len != 0)
         {
             buff[0] = buff[11];
-            retLen = busRead(vi, &buff[1], len -1);
+            retLen = busRead(vi, &buff[1], len);
         }
-        memcpy((char*)data, buff, retLen + 1);
+        memcpy((char*)data, buff, retLen);
     }
     return (retLen + 1)/4;
 }

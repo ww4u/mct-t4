@@ -243,20 +243,12 @@ int MDataSet::doLoad( QFile &file )
         if ( varLine.startsWith( "[") )
         {
             extractDescription( varLine );
-
             do
             {
                 //! model
                 if ( mModel.isEmpty() )
                 {
                     mModel = varLine;
-                    break;
-                }
-
-                //! header
-                if ( mHeaders.isEmpty() )
-                {
-                    mHeaders = extractStringList( varLine );
                     break;
                 }
 
@@ -273,14 +265,23 @@ int MDataSet::doLoad( QFile &file )
                         if ( NULL == m_pNowSection )
                         { return -1; }
 
+                    }while ( 0 );
+                    break;
+                }
+                else
+                {
+                    //! header
+                    if ( mHeaders.isEmpty() )
+                    {
+                        mHeaders = extractStringList( varLine );
+
                         m_pNowSection->setModel( mModel );
                         m_pNowSection->setHeaders( mHeaders );
                         mSections.append( m_pNowSection );
-                    }while ( 0 );
 
-                    break;
+                        break;
+                    }
                 }
-
             }while( 0 );
 
         }
@@ -322,7 +323,8 @@ int MDataSet::doSave( QFile &file )
     QTextStream stream( &file );
 
     stream << "[" << mModel << "]" <<line_seperator;
-    stream << "[" << mHeaders.join(",\t\t") << "]" << line_seperator;
+    stream << "[section]" << line_seperator;
+    stream << "[" << mHeaders.join(data_seperator) << "]" << line_seperator;
 
     for ( int i = 0; i < mSections.size(); i++ )
     {

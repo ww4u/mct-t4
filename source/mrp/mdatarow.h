@@ -4,6 +4,7 @@
 #include <QtCore>
 
 #define line_seperator    "\r\n"
+#define data_seperator    ",\t\t"
 
 class MDataRow : public QStringList
 {

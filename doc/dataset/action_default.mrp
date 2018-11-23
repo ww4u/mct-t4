@@ -1,6 +1,6 @@
 [MRX-H2-M]
-[type,		x,		y,		v,		a,		comment]
 [section]
+[type,		x,		y,		v,		a,		comment]
 pa,		1,		0,		1,		1,		
 pa,		2,		0,		1,		1,		
 pa,		3,		0,		1,		1,		

@@ -28,8 +28,10 @@ public:
 
     QString getDeviceName(QString strDevInfo);
 
+    bool applyEnabled() const;
+    void setApplyEnabled(bool applyEnabled);
+
 protected:
-    int loadDataSet(QString deviceName);
     void buildConnection();
 
 signals:
@@ -46,6 +48,8 @@ private:
     H2JogMode       *m_pH2JogMode       ;
     H2Action        *m_pH2Action        ;
     H2ErrMgr        *m_pH2ErrMgr        ;
+
+    bool m_applyEnabled;
 };
 
 #endif // H2ROBO_H

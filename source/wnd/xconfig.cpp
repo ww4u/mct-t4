@@ -6,10 +6,14 @@ XConfig::XConfig(QWidget *parent) : QWidget(parent)
     setFocusPolicy( Qt::StrongFocus );
 }
 
-void XConfig::setName( const QString &name )
-{ mName = name; }
-QString XConfig::name()
-{ return mName; }
+QString XConfig::focusName() const
+{
+    return mFocusName;
+}
+void XConfig::setFocusName(const QString &focusName)
+{
+    mFocusName = focusName;
+}
 
 int XConfig::readDeviceConfig()
 { return 0; }
@@ -26,9 +30,9 @@ int XConfig::saveConfig()
 void XConfig::updateShow()
 {}
 
-int XConfig::attachHandle(int handle , int deviceName, int robotName)
+int XConfig::attachHandle(int vihandle , int deviceName, int robotName)
 {
-    mViHandle = handle;
+    mViHandle = vihandle;
     mDeviceName = deviceName;
     mRobotName = robotName;
     return 0;
@@ -45,7 +49,7 @@ int XConfig::detachHandle()
 void XConfig::focusInEvent(QFocusEvent *event)
 {
     QWidget::focusInEvent( event );
-    emit signal_focus_in( mName );
+    emit signal_focus_in( mFocusName );
 }
 
 void XConfig::setProjectName(const QString &projectName)

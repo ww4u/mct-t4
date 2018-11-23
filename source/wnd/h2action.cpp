@@ -8,7 +8,7 @@ H2Action::H2Action(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setName( "Record_table" );
+    setFocusName( "Record_table" );
 
     m_strLocalFileName = "";
     m_strDeviceFileName = "MCT_motion.mrp";
@@ -18,6 +18,9 @@ H2Action::H2Action(QWidget *parent) :
     QStringList prxs;
     prxs << tr("PA") << tr("PRN") << tr("PRA");
     m_pDelegate->setItems( prxs );
+
+    connect(&m_actionModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+            this, SLOT(slotModelChanged(QModelIndex,QModelIndex,QVector<int>)));
 
 }
 
@@ -72,7 +75,7 @@ int H2Action::loadConfig()
         m_strLocalFileName = QApplication::applicationDirPath() + "/dataset/action_default.mrp";
 
     //! load action from csv
-    int ret = m_actionModel.input(m_strLocalFileName);//保存到action
+    int ret = m_actionModel.input(m_strLocalFileName);//保存到model
     m_fileContext = readFile(m_strLocalFileName);//保存到类中
 
     return ret;
@@ -90,6 +93,12 @@ void H2Action::updateShow()
 {
     ui->tableView->setModel( &m_actionModel );
     ui->tableView->setItemDelegateForColumn( 0, m_pDelegate );
+}
+
+void H2Action::slotModelChanged(QModelIndex index1, QModelIndex index2, QVector<int> vector)
+{
+//    qDebug() << "slotModelChanged:" << index1 << index2 << vector;
+    emit signal_data_changed(true);
 }
 
 QString H2Action::readFile(QString fileName)

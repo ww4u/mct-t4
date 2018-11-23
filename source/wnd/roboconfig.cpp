@@ -79,14 +79,19 @@ void RoboConfig::createRobot(QString strDevInfo)
         pCfg->setProjectName(configFileName);
         pCfg->loadConfig();
         pCfg->updateShow();
+
+        connect( pCfg, SIGNAL(signal_focus_in( const QString &)),
+                 this, SIGNAL(signal_focus_in( const QString &)) );
+
+        connect( pCfg, SIGNAL(signal_data_changed(bool)),
+                 this, SLOT(setApplyButtonEnabled(bool)) );
     }
 
     foreach (XConfig *pCfg, ((H2Robo *)(robotInfo.m_Robo))->subConfigs()){
         pCfg->saveConfig();
     }
 
-    connect( robotInfo.m_Robo, SIGNAL(signal_focus_in( const QString &)),
-             this, SIGNAL(signal_focus_in( const QString &)) );
+    setApplyButtonEnabled(false);
     connect(robotInfo.m_Robo,SIGNAL(signal_online_request(QString)),
             this,SLOT(slot_open_close(QString)));
 }
@@ -148,7 +153,7 @@ void RoboConfig::slotSync()
             if(ret != 0)
             {
                 ok = false;
-                QMessageBox::information(this,tr("tips"), pCfg->name() + tr("\tSync Faiured"));
+                QMessageBox::information(this,tr("tips"), pCfg->focusName() + tr("\tSync Faiured"));
             }
             pCfg->updateShow();
             pCfg->saveConfig();
@@ -167,9 +172,16 @@ void RoboConfig::slotSearch()
         delete m_megaSerachWidget;
 
     m_megaSerachWidget = new MegaInterface;
-    m_megaSerachWidget->move(pos().x() +100, pos().x()+100);
+    m_megaSerachWidget->move( x()+100, y()+100);
     m_megaSerachWidget->show();
     connect(m_megaSerachWidget, SIGNAL(signal_selected_info(QString)), this, SLOT(slotAddNewRobot(QString)));
+}
+
+void RoboConfig::setApplyButtonEnabled(bool bl)
+{
+    if(mIndex < 0) return;
+    ((H2Robo *)(m_RobotList[mIndex].m_Robo))->setApplyEnabled(bl);
+    ui->buttonBox->button((QDialogButtonBox::Apply))->setEnabled(bl);
 }
 
 void RoboConfig::slotShowContextmenu(const QPoint& pos)
@@ -197,15 +209,16 @@ void RoboConfig::slotShowContextmenu(const QPoint& pos)
 
 void RoboConfig::soltActionClose()
 {
-    QString strIP = m_RobotList[mIndex].m_strDevInfo.split(',').at(0);
-    if(m_RobotList[mIndex].m_Visa != 0)
+    int index = mIndex;
+    QString strIP = m_RobotList[index].m_strDevInfo.split(',').at(0);
+    if(m_RobotList[index].m_Visa != 0)
     {   //如果没有关闭就关闭设备
         slot_open_close(strIP);
     }
 
-    m_pRootNode->removeChild(((H2Robo *)m_RobotList[mIndex].m_Robo)->roboNode());
-    delete (H2Robo *)m_RobotList[mIndex].m_Robo;
-    m_RobotList.removeAt(mIndex);
+    m_pRootNode->removeChild(((H2Robo *)m_RobotList[index].m_Robo)->roboNode());
+    delete (H2Robo *)m_RobotList[index].m_Robo;
+    m_RobotList.removeAt(index);
 
     ui->treeWidget->setCurrentItem(m_pRootNode);
 
@@ -219,7 +232,8 @@ void RoboConfig::soltActionDelete()
     QString fileName = QApplication::applicationDirPath() + "/robots/" + m_pRootNode->text(0) + ".xml";
     QMap<QString,QString> mapRead = mXML.xmlRead(fileName);
     QMap<QString,QString> mapWrite;
-    for (QMap<QString,QString>::iterator itMap=mapRead.begin(); itMap != mapRead.end(); ++itMap ) {
+    for (QMap<QString,QString>::iterator itMap=mapRead.begin(); itMap != mapRead.end(); ++itMap )
+    {
         if( "RobotDevice_" == itMap.key().left(QString("RobotDevice_").length())
                 && m_RobotList[mIndex].m_strDevInfo != itMap.value() )
         {
@@ -251,7 +265,7 @@ int RoboConfig::setApply()
             if(ret != 0)
             {
                 ok = false;
-                QMessageBox::information(this,tr("tips"), pCfg->name() + tr("\tApply Failure"));
+                QMessageBox::information(this,tr("tips"), pCfg->focusName() + tr("\tApply Failure"));
             }
         }
         emit signalApplyClicked();
@@ -262,36 +276,13 @@ int RoboConfig::setApply()
 
     if(ok)
     {
+        setApplyButtonEnabled(false);
         QMessageBox::information(this,tr("tips"),tr("Apply Success!"));
         return 0;
     }
     else{
         return -1;
     }
-}
-
-bool RoboConfig::copyFileToPath(QString sourceDir ,QString toDir, bool coverFileIfExist)
-{
-    toDir.replace("\\","/");
-    if (sourceDir == toDir){
-        return true;
-    }
-    if (!QFile::exists(sourceDir)){
-        return false;
-    }
-    QDir *createfile     = new QDir;
-    bool exist = createfile->exists(toDir);
-    if (exist){
-        if(coverFileIfExist){
-            createfile->remove(toDir);
-        }
-    }//end if
-
-    if(!QFile::copy(sourceDir, toDir))
-    {
-        return false;
-    }
-    return true;
 }
 
 int RoboConfig::setReset()
@@ -322,7 +313,7 @@ int RoboConfig::setReset()
             if(ret != 0)
             {
                 ok = false;
-                QMessageBox::information(this,tr("tips"), pCfg->name() + tr("\tReset Failure"));
+                QMessageBox::information(this,tr("tips"), pCfg->focusName() + tr("\tReset Failure"));
             }
         }
         emit signalApplyClicked();
@@ -339,32 +330,17 @@ int RoboConfig::setReset()
     }
 }
 
-int RoboConfig::setOK()
-{
-    //! setApply
-    setApply();
-
-    //! close
-
-    return 0;
-}
-
 void RoboConfig::on_buttonBox_clicked(QAbstractButton *button)
 {
-    Q_ASSERT( NULL != button );
-
     QDialogButtonBox::ButtonRole role = ui->buttonBox->buttonRole( button );
     if ( QDialogButtonBox::ResetRole == role )
     {
         setReset();
     }
-    else if ( QDialogButtonBox::AcceptRole == role ||
-              QDialogButtonBox::ApplyRole == role )
+    else if (QDialogButtonBox::ApplyRole == role )
     {
         setApply();
     }
-    else
-    {}
 }
 
 void RoboConfig::slot_current_changed( QTreeWidgetItem* cur,QTreeWidgetItem* prv )
@@ -379,12 +355,15 @@ void RoboConfig::slot_current_changed( QTreeWidgetItem* cur,QTreeWidgetItem* prv
     if(-1 != index)
     {
         mIndex = index;
-//        qDebug() << "slot_current_changed" << cur->text(0) << index;
+        qDebug() << "slot_current_changed" << index << cur->text(0) ;
         emit signalCurrentRobotChanged(m_RobotList[mIndex].m_strDevInfo,
                                        m_RobotList[mIndex].m_Visa,
                                        m_RobotList[mIndex].m_DeviceName,
                                        m_RobotList[mIndex].m_RoboName);
     }
+
+    bool bl = ((H2Robo *)(m_RobotList[mIndex].m_Robo))->applyEnabled();
+    setApplyButtonEnabled(bl);
 
     QVariant var;
     QObject *pObj;
@@ -488,4 +467,28 @@ int RoboConfig::deviceClose()
     m_RobotList[mIndex].m_DeviceName = 0;
     m_RobotList[mIndex].m_RoboName = 0;
     return ret;
+}
+
+bool RoboConfig::copyFileToPath(QString sourceDir ,QString toDir, bool coverFileIfExist)
+{
+    toDir.replace("\\","/");
+    if (sourceDir == toDir){
+        return true;
+    }
+    if (!QFile::exists(sourceDir)){
+        return false;
+    }
+    QDir *createfile     = new QDir;
+    bool exist = createfile->exists(toDir);
+    if (exist){
+        if(coverFileIfExist){
+            createfile->remove(toDir);
+        }
+    }//end if
+
+    if(!QFile::copy(sourceDir, toDir))
+    {
+        return false;
+    }
+    return true;
 }

@@ -27,6 +27,9 @@ public:
     int saveConfig();       //将软件界面的数据配置写入到本地配置文件
     void updateShow();      //更新界面
 
+private slots:
+    void slotModelChanged(QModelIndex index1, QModelIndex index2, QVector<int> vector);
+
 private:
     Ui::H2ErrMgr *ui;
     ErrMgrModel     mErrManager;

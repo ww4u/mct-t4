@@ -32,6 +32,7 @@ public slots:
     void slotSearch();
 
 private slots:
+    void setApplyButtonEnabled(bool bl);
     void on_buttonBox_clicked(QAbstractButton *button);
     void slot_current_changed( QTreeWidgetItem* pre,QTreeWidgetItem* nxt );
     void slot_open_close(QString strIP);
@@ -63,7 +64,6 @@ private:
     int  deviceClose();
     int  setApply();
     int  setReset();
-    int  setOK();
 
     QMenu *m_menu;
     bool copyFileToPath(QString sourceDir, QString toDir, bool coverFileIfExist);

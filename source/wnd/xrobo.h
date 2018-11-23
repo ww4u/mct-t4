@@ -13,11 +13,6 @@ public:
     QString addr() const;
     void setAddr(const QString &addr);
 
-signals:
-    void signal_focus_in( const QString & );
-
-public slots:
-
 protected:
     QString m_addr;
 };

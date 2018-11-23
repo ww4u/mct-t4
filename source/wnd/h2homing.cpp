@@ -7,7 +7,7 @@ H2Homing::H2Homing(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setName( "Homing" );
+    setFocusName( "Homing" );
 }
 
 H2Homing::~H2Homing()
@@ -40,7 +40,7 @@ int H2Homing::loadConfig()
 
     m_Target        = map["Target"];
     m_Movement      = map["Movement"];
-    m_Direction     = map["Direction"];
+
     m_SearchVelocity = map["SearchVelocity"].toDouble();
     m_ForceLimit     = map["ForceLimit"].toDouble();
 
@@ -54,7 +54,7 @@ int H2Homing::saveConfig()
     QMap<QString,QString> map;
 
     map.insert("Target", ui->comboBox_target->currentText() );
-    map.insert("Direction", ui->label_direction->text() );
+
     map.insert("Movement", ui->comboBox_movement->currentText() );
     map.insert("SearchVelocity", QString::number(m_SearchVelocity,10,2));
     map.insert("ForceLimit", QString::number(m_ForceLimit,10,2));
@@ -68,7 +68,6 @@ int H2Homing::saveConfig()
 void H2Homing::updateShow()
 {
     ui->comboBox_target->setCurrentText(this->m_Target);
-    ui->label_direction->setText(this->m_Direction);
     ui->comboBox_movement->setCurrentText(this->m_Movement);
     ui->doubleSpinBox_SearchVelocity->setValue(m_SearchVelocity);
     ui->doubleSpinBox_ForceLimit->setValue(m_ForceLimit);
@@ -77,25 +76,29 @@ void H2Homing::updateShow()
 void H2Homing::on_comboBox_target_currentIndexChanged(const QString &arg1)
 {
     m_Target = arg1;
+    emit signal_data_changed(true);
 }
 
 void H2Homing::slot_set_direction(QString text)
 {
     ui->label_direction->setText(text);
-    m_Direction = text;
+    emit signal_data_changed(true);
 }
 
 void H2Homing::on_comboBox_movement_currentIndexChanged(const QString &arg1)
 {
     m_Movement = arg1;
+    emit signal_data_changed(true);
 }
 
 void H2Homing::on_doubleSpinBox_SearchVelocity_valueChanged(double arg1)
 {
     m_SearchVelocity = arg1;
+    emit signal_data_changed(true);
 }
 
 void H2Homing::on_doubleSpinBox_ForceLimit_valueChanged(double arg1)
 {
     m_ForceLimit = arg1;
+    emit signal_data_changed(true);
 }

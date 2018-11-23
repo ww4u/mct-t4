@@ -8,7 +8,7 @@ H2Measurement::H2Measurement(QWidget *parent) :
     ui->setupUi(this);
     m_ZeroPoint = 0;
 
-    setName("Measurement");
+    setFocusName("Measurement");
 
     connect(ui->comboBox_AxesZeroPoint,SIGNAL(currentIndexChanged(int)),this,SLOT(slotChangeCornerPicture(int)));
 
@@ -62,14 +62,6 @@ int H2Measurement::writeDeviceConfig()
 {
     int ret = 0;
 
-    qDebug() << "m_ZeroPoint         " << m_ZeroPoint         ;
-    qDebug() << "m_ProjectZeroPointX " << m_ProjectZeroPointX ;
-    qDebug() << "m_ProjectZeroPointY " << m_ProjectZeroPointY ;
-    qDebug() << "m_SWLimitPositiveX  " << m_SWLimitPositiveX  ;
-    qDebug() << "m_SWLimitPositiveY  " << m_SWLimitPositiveY  ;
-    qDebug() << "m_SWLimitNegativeX  " << m_SWLimitNegativeX  ;
-    qDebug() << "m_SWLimitNegativeY  " << m_SWLimitNegativeY  ;
-
     int value = ui->comboBox_AxesZeroPoint->currentIndex();
     ret = mrgSetRobotCoordinateSystem(mViHandle, mRobotName, value);
     qDebug() << "mrgSetRobotCoordinateSystem" << ret;
@@ -116,6 +108,7 @@ int H2Measurement::saveConfig()
     QMap<QString,QString> map;
 
     map.insert("ZeroPoint"  , QString::number(m_ZeroPoint));
+    map.insert("Direction"  , ui->comboBox_AxesZeroPoint->currentText() );
     map.insert("ProjectZeroPointX" , QString::number( m_ProjectZeroPointX, 10, 2));
     map.insert("ProjectZeroPointY" , QString::number( m_ProjectZeroPointY, 10, 2));
     map.insert("SWLimitPositiveX"  , QString::number( m_SWLimitPositiveX, 10, 2 ));
@@ -143,34 +136,41 @@ void H2Measurement::updateShow()
 void H2Measurement::on_comboBox_AxesZeroPoint_currentIndexChanged(int index)
 {
     m_ZeroPoint = index;
+    emit signal_data_changed(true);
 }
 
 void H2Measurement::on_doubleSpinBox_pzpX_valueChanged(double arg1)
 {
     m_ProjectZeroPointX = arg1;
+    emit signal_data_changed(true);
 }
 
 void H2Measurement::on_doubleSpinBox_pzpY_valueChanged(double arg1)
 {
     m_ProjectZeroPointY = arg1;
+    emit signal_data_changed(true);
 }
 
 void H2Measurement::on_doubleSpinBox_swlp_X_valueChanged(double arg1)
 {
     m_SWLimitPositiveX = arg1;
+    emit signal_data_changed(true);
 }
 
 void H2Measurement::on_doubleSpinBox_swlp_Y_valueChanged(double arg1)
 {
     m_SWLimitPositiveY = arg1;
+    emit signal_data_changed(true);
 }
 
 void H2Measurement::on_doubleSpinBox_swln_X_valueChanged(double arg1)
 {
     m_SWLimitNegativeX = arg1;
+    emit signal_data_changed(true);
 }
 
 void H2Measurement::on_doubleSpinBox_swln_Y_valueChanged(double arg1)
 {
     m_SWLimitNegativeY = arg1;
+    emit signal_data_changed(true);
 }

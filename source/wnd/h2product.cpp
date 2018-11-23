@@ -9,7 +9,7 @@ H2Product::H2Product(QString strDevInfo, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setName( "Product" );
+    setFocusName( "Product" );
 
     QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
     this->m_IP      = strListDev.at(0);

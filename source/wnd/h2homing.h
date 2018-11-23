@@ -36,8 +36,7 @@ private slots:
 private:
     Ui::H2Homing *ui;
 
-    QString m_Target;
-    QString m_Direction;
+    QString m_Target;    
     QString m_Movement;
 
     double m_SearchVelocity;

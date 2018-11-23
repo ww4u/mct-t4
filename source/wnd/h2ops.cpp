@@ -38,7 +38,7 @@ H2Ops::H2Ops(QWidget *parent) :
     m_timerSpline.setInterval(1000); //1s
 
     ui->tabWidget->setCurrentIndex(0);
-//    ui->tabWidget->setEnabled(false);
+    ui->tabWidget->setEnabled(false);
 }
 
 H2Ops::~H2Ops()
@@ -76,7 +76,7 @@ void H2Ops::setupUi()
     ui->horizontalLayout_3->addStretch();
 }
 
-#define set_name( the, name )   the->setName( name );\
+#define set_name( the, name )   the->setFocusName( name );\
                                 mSubTabs.append( the );
 void H2Ops::setupName()
 {

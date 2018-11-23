@@ -7,7 +7,7 @@ H2ErrMgr::H2ErrMgr(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setName( "Error_management" );
+    setFocusName( "Error_management" );
 
     //! delegate
     m_pCheckDelegate = new checkDelegate( shape_check, this );
@@ -16,13 +16,15 @@ H2ErrMgr::H2ErrMgr(QWidget *parent) :
 
     //! opt
     QStringList errActions;
-    errActions<<tr("Free-wheeling")
-              <<tr("QS deceleration")
-              <<tr("Record deceleration")
-              <<tr("Finish Record");
+    errActions << tr("Free-wheeling")
+               << tr("QS deceleration")
+               << tr("Record deceleration")
+               << tr("Finish Record");
 
     m_pErrActionDelegate->setItems( errActions );
 
+    connect(&mErrManager, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+            this,SLOT(slotModelChanged(QModelIndex,QModelIndex,QVector<int>)));
 }
 
 H2ErrMgr::~H2ErrMgr()
@@ -30,6 +32,10 @@ H2ErrMgr::~H2ErrMgr()
     delete ui;
 }
 
+void H2ErrMgr::slotModelChanged(QModelIndex index1, QModelIndex index2, QVector<int> vector)
+{
+    emit signal_data_changed(true);
+}
 
 int H2ErrMgr::readDeviceConfig()
 {

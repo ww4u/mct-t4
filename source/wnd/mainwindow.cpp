@@ -134,7 +134,7 @@ void MainWindow::slot_logout( const QString &str, log_level lev )
 
 void MainWindow::slot_focus_in( const QString &name )
 {
-//    logDbg() << name;
+    logDbg() << name;
 
     if ( name.length() <= 0 )
     { return; }

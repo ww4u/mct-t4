@@ -15,10 +15,10 @@
         <SWLimitNegativeY>0.00</SWLimitNegativeY>
         <SWLimitPositiveX>494.00</SWLimitPositiveX>
         <SWLimitPositiveY>820.00</SWLimitPositiveY>
+		<Direction>Comer Point 1</Direction>
         <ZeroPoint>0</ZeroPoint>
     </H2Measurement>
     <H2Homing id="H2Homing">
-        <Direction>Comer Point 1</Direction>
         <ForceLimit>75.00</ForceLimit>
         <Movement>First in direction of X,then Y</Movement>
         <SearchVelocity>50.00</SearchVelocity>

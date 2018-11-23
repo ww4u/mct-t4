@@ -4,8 +4,8 @@
 #include <QWidget>
 #include <QAbstractTableModel>
 #include "xconfig.h"
-#include "../model/comboxdelegate.h"
 
+#include "../model/comboxdelegate.h"
 #include "../model/h2actionmodel.h"
 
 namespace Ui {
@@ -25,6 +25,9 @@ public:
     int loadConfig();       //读取本地配置文件 启动软件或者添加新设备时调用
     int saveConfig();       //将软件界面的数据配置写入到本地配置文件
     void updateShow();      //更新界面
+
+private slots:
+    void slotModelChanged(QModelIndex index1, QModelIndex index2, QVector<int> vector);
 
 private:
     Ui::H2Action *ui;

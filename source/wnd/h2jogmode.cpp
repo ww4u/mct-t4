@@ -7,7 +7,7 @@ H2JogMode::H2JogMode(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setName( "Jogmode" );
+    setFocusName( "Jogmode" );
 }
 
 H2JogMode::~H2JogMode()
@@ -71,14 +71,17 @@ void H2JogMode::updateShow()
 void H2JogMode::on_doubleSpinBox_CrawlingVelocity_valueChanged(double arg1)
 {
     m_CrawlingVelocity = arg1;
+    emit signal_data_changed(true);
 }
 
 void H2JogMode::on_doubleSpinBox_CrawlingTime_valueChanged(double arg1)
 {
     m_CrawlingTime     = arg1;
+    emit signal_data_changed(true);
 }
 
 void H2JogMode::on_doubleSpinBox_MaximumVelocity_valueChanged(double arg1)
 {
     m_MaximumVelocity  =arg1;
+    emit signal_data_changed(true);
 }

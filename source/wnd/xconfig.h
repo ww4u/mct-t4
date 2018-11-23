@@ -17,11 +17,12 @@ public:
     explicit XConfig(QWidget *parent = nullptr);
 
 public:
-    void setName( const QString &name );
-    QString name();
+    QString focusName() const;
+    void setFocusName(const QString &focusName);
 
     void setProjectName(const QString &projectName);
-    int attachHandle(int handle, int deviceName, int robotName);
+
+    int attachHandle(int vihandle, int deviceName, int robotName);
     int detachHandle();
 
     virtual int  readDeviceConfig();    //从设备上读取数据设置到类成员
@@ -35,14 +36,16 @@ protected:
 
 signals:
     void signal_focus_in( const QString &name );
+    void signal_data_changed(const bool &bl);
 
 protected:
-    QString mName;
-    int mViHandle;
-    int mRobotName;
-    int mDeviceName;
+    QString mFocusName;
 
     QString mProjectName;
+
+    int mViHandle;
+    int mDeviceName;
+    int mRobotName;
 };
 
 #endif // XCONFIG_H

@@ -348,34 +348,37 @@ void RoboConfig::slot_current_changed( QTreeWidgetItem* cur,QTreeWidgetItem* prv
     if ( cur == NULL )
     { return; }
 
-    int index = m_pRootNode->indexOfChild(cur);
-    if(-1 == index)
-    {   index = m_pRootNode->indexOfChild(cur->parent()); }
-
-    if(-1 != index)
-    {
-        mIndex = index;
-        qDebug() << "slot_current_changed" << index << cur->text(0) ;
-        emit signalCurrentRobotChanged(m_RobotList[mIndex].m_strDevInfo,
-                                       m_RobotList[mIndex].m_Visa,
-                                       m_RobotList[mIndex].m_DeviceName,
-                                       m_RobotList[mIndex].m_RoboName);
-    }
-
-    bool bl = ((H2Robo *)(m_RobotList[mIndex].m_Robo))->applyEnabled();
-    setApplyButtonEnabled(bl);
-
-    QVariant var;
-    QObject *pObj;
-    var = cur->data( 0, Qt::UserRole );
-    if ( var.isValid() )
-    {
-        pObj = var.value<QObject*>();
-        if ( NULL != pObj )
-        {
+    QVariant var = QVariant(cur->data( 0, Qt::UserRole) );
+    if ( var.isValid() ){
+        QObject *pObj = var.value<QObject*>();
+        if ( NULL != pObj ){
             ui->stackedWidget->setCurrentWidget( (QWidget*)pObj );
         }
     }
+
+    int index = -1, row = -1;
+    if(NULL == cur->parent() ){// 根节点-1,0
+        return;
+    }
+    else if( NULL == cur->parent()->parent() ) { //子节点 x,0
+        index = cur->parent()->indexOfChild(cur);
+        row = 0;
+    } else { //孙节点 x,y
+        index = cur->parent()->parent()->indexOfChild(cur->parent());
+        row = cur->parent()->indexOfChild(cur) + 1;
+    }
+    if(mIndex == index) return;
+
+    mIndex = index;
+    qDebug() << "slot_current_changed" << mIndex;
+
+    emit signalCurrentRobotChanged(m_RobotList[mIndex].m_strDevInfo,
+                                   m_RobotList[mIndex].m_Visa,
+                                   m_RobotList[mIndex].m_DeviceName,
+                                   m_RobotList[mIndex].m_RoboName);
+
+    bool bl = ((H2Robo *)(m_RobotList[mIndex].m_Robo))->applyEnabled();
+    setApplyButtonEnabled(bl);
 }
 
 void RoboConfig::slot_open_close(QString strIP)

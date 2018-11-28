@@ -21,6 +21,7 @@ signals:
 public:
     explicit RoboConfig(QWidget *parent = 0);
     ~RoboConfig();
+    void changeLanguage(QString qmFile);
 
 public slots:
     void slotAddNewRobot(QString strDevInfo );
@@ -67,6 +68,7 @@ private:
 
     QMenu *m_menu;
     bool copyFileToPath(QString sourceDir, QString toDir, bool coverFileIfExist);
+    QTranslator m_translator;
 };
 
 #endif // H2CONFIG_H

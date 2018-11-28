@@ -190,3 +190,8 @@ void H2Configuration::on_sizeComboBox_currentIndexChanged(int index)
     changeModelLabel();
     emit signal_data_changed(true);
 }
+
+void H2Configuration::translateUI()
+{
+    ui->retranslateUi(this);
+}

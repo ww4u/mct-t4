@@ -32,7 +32,7 @@
       <enum>QTabWidget::South</enum>
      </property>
      <property name="currentIndex">
-      <number>5</number>
+      <number>0</number>
      </property>
      <property name="movable">
       <bool>false</bool>
@@ -46,6 +46,15 @@
         <widget class="QListWidget" name="lstLogout">
          <property name="contextMenuPolicy">
           <enum>Qt::ActionsContextMenu</enum>
+         </property>
+         <property name="accessibleName">
+          <string notr="true"/>
+         </property>
+         <property name="accessibleDescription">
+          <string notr="true"/>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::NoFrame</enum>
          </property>
          <property name="selectionMode">
           <enum>QAbstractItemView::MultiSelection</enum>
@@ -88,8 +97,14 @@
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
+            <property name="specialValueText">
+             <string notr="true"/>
+            </property>
+            <property name="prefix">
+             <string notr="true"/>
+            </property>
             <property name="suffix">
-             <string> mm</string>
+             <string notr="true"> mm</string>
             </property>
             <property name="minimum">
              <double>-10000.000000000000000</double>
@@ -119,8 +134,14 @@
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
+            <property name="specialValueText">
+             <string notr="true"/>
+            </property>
+            <property name="prefix">
+             <string notr="true"/>
+            </property>
             <property name="suffix">
-             <string> m</string>
+             <string notr="true"> m</string>
             </property>
             <property name="minimum">
              <double>-10000.000000000000000</double>
@@ -171,8 +192,14 @@
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
+            <property name="specialValueText">
+             <string notr="true"/>
+            </property>
+            <property name="prefix">
+             <string notr="true"/>
+            </property>
             <property name="suffix">
-             <string> mm</string>
+             <string notr="true"> mm</string>
             </property>
             <property name="minimum">
              <double>-10000.000000000000000</double>
@@ -202,8 +229,14 @@
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
+            <property name="specialValueText">
+             <string notr="true"/>
+            </property>
+            <property name="prefix">
+             <string notr="true"/>
+            </property>
             <property name="suffix">
-             <string> mm</string>
+             <string notr="true"> mm</string>
             </property>
             <property name="minimum">
              <double>-10000.000000000000000</double>
@@ -247,8 +280,14 @@
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
+            <property name="specialValueText">
+             <string notr="true"/>
+            </property>
+            <property name="prefix">
+             <string notr="true"/>
+            </property>
             <property name="suffix">
-             <string> m</string>
+             <string notr="true"> m</string>
             </property>
             <property name="minimum">
              <double>-10000.000000000000000</double>
@@ -292,8 +331,14 @@
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
+            <property name="specialValueText">
+             <string notr="true"/>
+            </property>
+            <property name="prefix">
+             <string notr="true"/>
+            </property>
             <property name="suffix">
-             <string> mm</string>
+             <string notr="true"> mm</string>
             </property>
             <property name="minimum">
              <double>-10000.000000000000000</double>
@@ -323,8 +368,14 @@
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
+            <property name="specialValueText">
+             <string notr="true"/>
+            </property>
+            <property name="prefix">
+             <string notr="true"/>
+            </property>
             <property name="suffix">
-             <string> mm</string>
+             <string notr="true"> mm</string>
             </property>
             <property name="minimum">
              <double>-10000.000000000000000</double>
@@ -478,7 +529,7 @@
              </font>
             </property>
             <property name="text">
-             <string>0</string>
+             <string notr="true">0</string>
             </property>
            </widget>
           </item>
@@ -711,8 +762,14 @@
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
+            <property name="specialValueText">
+             <string notr="true"/>
+            </property>
+            <property name="prefix">
+             <string notr="true"/>
+            </property>
             <property name="suffix">
-             <string> mm</string>
+             <string notr="true"> mm</string>
             </property>
             <property name="minimum">
              <double>-10000.000000000000000</double>
@@ -767,8 +824,14 @@
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
+            <property name="specialValueText">
+             <string notr="true"/>
+            </property>
+            <property name="prefix">
+             <string notr="true"/>
+            </property>
             <property name="suffix">
-             <string> mm</string>
+             <string notr="true"> mm</string>
             </property>
             <property name="minimum">
              <double>-10000.000000000000000</double>
@@ -844,14 +907,23 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="cursor">
+               <cursorShape>IBeamCursor</cursorShape>
+              </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
               </property>
               <property name="buttonSymbols">
                <enum>QAbstractSpinBox::NoButtons</enum>
               </property>
+              <property name="specialValueText">
+               <string notr="true"/>
+              </property>
+              <property name="prefix">
+               <string notr="true"/>
+              </property>
               <property name="suffix">
-               <string> mm/s</string>
+               <string notr="true"> mm/s</string>
               </property>
               <property name="minimum">
                <double>0.010000000000000</double>
@@ -860,7 +932,7 @@
                <double>10000.000000000000000</double>
               </property>
               <property name="value">
-               <double>500.000000000000000</double>
+               <double>50.000000000000000</double>
               </property>
              </widget>
             </item>
@@ -872,14 +944,23 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="cursor">
+               <cursorShape>IBeamCursor</cursorShape>
+              </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
               </property>
               <property name="buttonSymbols">
                <enum>QAbstractSpinBox::NoButtons</enum>
               </property>
+              <property name="specialValueText">
+               <string notr="true"/>
+              </property>
+              <property name="prefix">
+               <string notr="true"/>
+              </property>
               <property name="suffix">
-               <string> mm</string>
+               <string notr="true"> mm</string>
               </property>
               <property name="decimals">
                <number>2</number>
@@ -891,7 +972,7 @@
                <double>10000.000000000000000</double>
               </property>
               <property name="value">
-               <double>1.000000000000000</double>
+               <double>10.000000000000000</double>
               </property>
              </widget>
             </item>
@@ -928,8 +1009,14 @@
               <property name="buttonSymbols">
                <enum>QAbstractSpinBox::NoButtons</enum>
               </property>
+              <property name="specialValueText">
+               <string notr="true"/>
+              </property>
+              <property name="prefix">
+               <string notr="true"/>
+              </property>
               <property name="suffix">
-               <string> mm</string>
+               <string notr="true"> mm</string>
               </property>
               <property name="minimum">
                <double>-10000.000000000000000</double>
@@ -958,7 +1045,7 @@
             <item row="6" column="2" colspan="3">
              <widget class="QPushButton" name="pushButton_apply">
               <property name="text">
-               <string>Apply as...</string>
+               <string>Apply as</string>
               </property>
              </widget>
             </item>
@@ -982,8 +1069,14 @@
               <property name="buttonSymbols">
                <enum>QAbstractSpinBox::NoButtons</enum>
               </property>
+              <property name="specialValueText">
+               <string notr="true"/>
+              </property>
+              <property name="prefix">
+               <string notr="true"/>
+              </property>
               <property name="suffix">
-               <string> mm</string>
+               <string notr="true"> mm</string>
               </property>
               <property name="minimum">
                <double>-10000.000000000000000</double>
@@ -1002,7 +1095,7 @@
                </sizepolicy>
               </property>
               <property name="text">
-               <string>...</string>
+               <string/>
               </property>
               <property name="icon">
                <iconset resource="../res/res.qrc">
@@ -1028,7 +1121,7 @@
                <enum>Qt::LeftToRight</enum>
               </property>
               <property name="text">
-               <string>...</string>
+               <string/>
               </property>
               <property name="icon">
                <iconset resource="../res/res.qrc">
@@ -1068,7 +1161,7 @@
             <item row="3" column="4">
              <widget class="QToolButton" name="toolButton_singlestep_y_dec">
               <property name="text">
-               <string>...</string>
+               <string/>
               </property>
               <property name="icon">
                <iconset resource="../res/res.qrc">
@@ -1085,7 +1178,7 @@
             <item row="4" column="4">
              <widget class="QToolButton" name="toolButton_jogmode_y_dec">
               <property name="text">
-               <string>...</string>
+               <string/>
               </property>
               <property name="icon">
                <iconset resource="../res/res.qrc">
@@ -1102,7 +1195,7 @@
             <item row="3" column="5">
              <widget class="QToolButton" name="toolButton_singlestep_y_inc">
               <property name="text">
-               <string>...</string>
+               <string/>
               </property>
               <property name="icon">
                <iconset resource="../res/res.qrc">
@@ -1125,7 +1218,7 @@
                </sizepolicy>
               </property>
               <property name="text">
-               <string>...</string>
+               <string/>
               </property>
               <property name="icon">
                <iconset resource="../res/res.qrc">
@@ -1162,7 +1255,7 @@
                </sizepolicy>
               </property>
               <property name="text">
-               <string>...</string>
+               <string/>
               </property>
               <property name="icon">
                <iconset resource="../res/res.qrc">
@@ -1209,7 +1302,7 @@
             <item row="4" column="5">
              <widget class="QToolButton" name="toolButton_jogmode_y_inc">
               <property name="text">
-               <string>...</string>
+               <string/>
               </property>
               <property name="icon">
                <iconset resource="../res/res.qrc">
@@ -1260,7 +1353,7 @@
           <string>Delete all</string>
          </property>
          <property name="text">
-          <string>...</string>
+          <string/>
          </property>
          <property name="icon">
           <iconset resource="../res/res.qrc">
@@ -1281,7 +1374,7 @@
           <string>Up</string>
          </property>
          <property name="text">
-          <string>...</string>
+          <string/>
          </property>
          <property name="icon">
           <iconset resource="../res/res.qrc">
@@ -1302,7 +1395,7 @@
           <string>Remove the current record</string>
          </property>
          <property name="text">
-          <string>...</string>
+          <string/>
          </property>
          <property name="icon">
           <iconset resource="../res/res.qrc">
@@ -1316,7 +1409,7 @@
           <string>Import</string>
          </property>
          <property name="text">
-          <string>...</string>
+          <string/>
          </property>
          <property name="icon">
           <iconset resource="../res/res.qrc">
@@ -1343,7 +1436,7 @@
           <string>Export</string>
          </property>
          <property name="text">
-          <string>...</string>
+          <string/>
          </property>
          <property name="icon">
           <iconset resource="../res/res.qrc">
@@ -1357,7 +1450,7 @@
           <string>Down</string>
          </property>
          <property name="text">
-          <string>...</string>
+          <string/>
          </property>
          <property name="icon">
           <iconset resource="../res/res.qrc">
@@ -1380,8 +1473,17 @@
        </item>
        <item row="8" column="4">
         <widget class="QDoubleSpinBox" name="spinDly">
+         <property name="cursor">
+          <cursorShape>ArrowCursor</cursorShape>
+         </property>
+         <property name="specialValueText">
+          <string notr="true"/>
+         </property>
+         <property name="prefix">
+          <string notr="true"/>
+         </property>
          <property name="suffix">
-          <string>s</string>
+          <string notr="true">s</string>
          </property>
          <property name="minimum">
           <double>0.010000000000000</double>
@@ -1404,7 +1506,7 @@
        <item row="0" column="0">
         <widget class="QToolButton" name="btnAdd">
          <property name="text">
-          <string>...</string>
+          <string/>
          </property>
          <property name="icon">
           <iconset resource="../res/res.qrc">
@@ -1425,7 +1527,7 @@
           <string>Read from the controller</string>
          </property>
          <property name="text">
-          <string>...</string>
+          <string/>
          </property>
          <property name="icon">
           <iconset resource="../res/res.qrc">
@@ -1439,7 +1541,7 @@
           <string>Deleta all</string>
          </property>
          <property name="text">
-          <string>...</string>
+          <string/>
          </property>
          <property name="icon">
           <iconset resource="../res/res.qrc">
@@ -1476,7 +1578,7 @@
           <string>Export</string>
          </property>
          <property name="text">
-          <string>...</string>
+          <string/>
          </property>
          <property name="icon">
           <iconset resource="../res/res.qrc">

@@ -30,6 +30,21 @@ int XConfig::saveConfig()
 void XConfig::updateShow()
 {}
 
+void XConfig::changeLanguage(QString qmFile)
+{
+    //  翻译文件
+    qApp->removeTranslator(&m_translator);
+    m_translator.load(qmFile);
+    qApp->installTranslator(&m_translator);
+
+    translateUI();
+}
+
+void XConfig::translateUI()
+{
+//    ui->retranslateUi(this);
+}
+
 int XConfig::attachHandle(int vihandle , int deviceName, int robotName)
 {
     mViHandle = vihandle;

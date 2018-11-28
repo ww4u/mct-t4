@@ -35,7 +35,9 @@ private:
 #include <QWidget>
 #include <QHBoxLayout>
 #include <QGridLayout>
+#include <QTranslator>
 #include <QtCharts/QChartView>
+#include <QApplication>
 
 class MegaSplineChart : public QWidget
 {
@@ -53,10 +55,16 @@ public:
 public:
     virtual QSize sizeHint() const;
 
+    void changeLanguage(QString qmFile);
+
 private:
+    QString m_tittle;
+
     QChartView *m_chartView;
     QGridLayout *m_layout;
     Chart *m_chart;
+
+    QTranslator m_translator;
 };
 
 #endif // MEGASPLINECHART_H

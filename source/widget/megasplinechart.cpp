@@ -93,7 +93,8 @@ MegaSplineChart::MegaSplineChart(const QString &tittle, QWidget *parent) : QWidg
 
     setLayout(m_layout);
 
-    m_chart->setTitle(tittle);
+    m_tittle = tittle;
+    m_chart->setTitle(m_tittle);
 }
 
 MegaSplineChart::~MegaSplineChart()
@@ -119,4 +120,14 @@ QSize MegaSplineChart::sizeHint() const
 void MegaSplineChart::dataAppend(double v1, double v2)
 {
     m_chart->dataAppend(v1, v2);
+}
+
+
+void MegaSplineChart::changeLanguage(QString qmFile)
+{
+    //  翻译文件
+    qApp->removeTranslator(&m_translator);
+    m_translator.load(qmFile);
+    qApp->installTranslator(&m_translator);
+    m_chart->setTitle(m_tittle);
 }

@@ -85,3 +85,8 @@ void H2JogMode::on_doubleSpinBox_MaximumVelocity_valueChanged(double arg1)
     m_MaximumVelocity  =arg1;
     emit signal_data_changed(true);
 }
+
+void H2JogMode::translateUI()
+{
+    ui->retranslateUi(this);
+}

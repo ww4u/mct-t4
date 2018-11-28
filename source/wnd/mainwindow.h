@@ -18,11 +18,22 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+    enum {
+        LANG_EN,
+        LANG_CN,
+    };
+
+    enum {
+        STYLE_MEGAROBO,
+        STYLE_CLASSIC,
+    };
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
     static void requestLogout( const QString &str, log_level lev );
+    void setUiStyle(const QString &styleFile);
 
 protected:
     static MainWindow *_pBackendProxy;
@@ -45,8 +56,19 @@ private slots:
     void on_actionAbout_triggered();
     void slotSetDockOpsName(QString strDevInfo, int visa, int deviceName, int roboName);
 
+    void on_actionChinese_triggered();
+    void on_actionEnglish_triggered();
+
+    void on_actionMega_triggered();
+
+    void on_actionClassic_triggered();
+
 private:
     Ui::MainWindow *ui;
+
+    int m_style;
+    int m_language;
+    void loadConfig();
 
     QLabel *m_pLabStatus, *m_pLabMctVer, *m_pLabConVer;
 
@@ -57,6 +79,10 @@ private:
 
     H2Ops *m_pOps;
     RoboConfig *m_roboConfig;
+
+    QTranslator m_translator;
+    void changeLanguage();
+    int writeFile(QString fileName, QString text);
 };
 
 #endif // MAINWINDOW_H

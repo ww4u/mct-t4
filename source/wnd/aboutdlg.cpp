@@ -8,7 +8,7 @@ aboutDlg::aboutDlg(
 {
     ui->setupUi(this);
     ui->label_3->setText( qApp->applicationVersion() );
-    ui->label_5->setText( tr("Build:") + __DATE__ + " " +  __TIME__ );
+    ui->label_5->setText( "Build:" __DATE__  " "  __TIME__ );
 
     //! admin
 //    if ( m_pPara->mSysMode == sys_admin )

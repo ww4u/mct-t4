@@ -22,14 +22,20 @@
      <layout class="QGridLayout" name="gridLayout_3">
       <item row="0" column="1">
        <widget class="QDoubleSpinBox" name="doubleSpinBox_CrawlingVelocity">
+        <property name="cursor">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
+        <property name="specialValueText">
+         <string notr="true"/>
+        </property>
         <property name="suffix">
-         <string> mm/s</string>
+         <string notr="true"> mm/s</string>
         </property>
         <property name="minimum">
          <double>0.100000000000000</double>
@@ -70,14 +76,20 @@
       </item>
       <item row="1" column="1">
        <widget class="QDoubleSpinBox" name="doubleSpinBox_CrawlingTime">
+        <property name="cursor">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
+        <property name="specialValueText">
+         <string notr="true"/>
+        </property>
         <property name="suffix">
-         <string> ms</string>
+         <string notr="true"> ms</string>
         </property>
         <property name="decimals">
          <number>0</number>
@@ -92,14 +104,20 @@
       </item>
       <item row="2" column="1">
        <widget class="QDoubleSpinBox" name="doubleSpinBox_MaximumVelocity">
+        <property name="cursor">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
+        <property name="specialValueText">
+         <string notr="true"/>
+        </property>
         <property name="suffix">
-         <string> mm/s</string>
+         <string notr="true"> mm/s</string>
         </property>
         <property name="minimum">
          <double>0.100000000000000</double>

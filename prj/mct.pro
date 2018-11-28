@@ -24,6 +24,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 VERSION = 0.0.0.0
 
+QMAKE_CXXFLAGS += "-std=c++11"
+
+TRANSLATIONS += ../source/res/ts/qt_CN.ts
+TRANSLATIONS += ../source/res/ts/qt_EN.ts
+
 INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include"
 
 INCLUDEPATH += ../include

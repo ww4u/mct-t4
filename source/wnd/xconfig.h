@@ -1,10 +1,12 @@
 #ifndef XCONFIG_H
 #define XCONFIG_H
 
+#include <QApplication>
 #include <QWidget>
 #include <QDebug>
 #include <QMessageBox>
 #include <QFile>
+#include <QTranslator>
 
 #include "../include/mystd.h"
 #include "MegaGateway.h"
@@ -31,6 +33,9 @@ public:
     virtual int  saveConfig();          //将类成员写入到本地配置文件
     virtual void updateShow();          //将类成员更新到界面
 
+    virtual void changeLanguage(QString qmFile);
+    virtual void translateUI();
+
 protected:
     virtual void focusInEvent(QFocusEvent *event);
 
@@ -46,6 +51,9 @@ protected:
     int mViHandle;
     int mDeviceName;
     int mRobotName;
+
+    QTranslator m_translator;
+
 };
 
 #endif // XCONFIG_H

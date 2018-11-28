@@ -5,6 +5,7 @@
 
 class MegaMessageBox : public QMessageBox
 {
+    Q_OBJECT
 public:
     static void setZeroAffirm( bool b);
     bool zeroAffirm();
@@ -32,6 +33,7 @@ public:
 
 class MegaDeleteAffirmMessageBox : public MegaMessageBox
 {
+    Q_OBJECT
 public:
     MegaDeleteAffirmMessageBox( QWidget *parent = Q_NULLPTR );
 

@@ -23,3 +23,12 @@ void H2Status::on_chkMct_clicked()
         ui->chkPwr->setCheckable( false );
     }
 }
+
+void H2Status::changeLanguage(QString qmFile)
+{
+    //  翻译文件
+    qApp->removeTranslator(&m_translator);
+    m_translator.load(qmFile);
+    qApp->installTranslator(&m_translator);
+    ui->retranslateUi(this);
+}

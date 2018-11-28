@@ -16,7 +16,7 @@ RoboConfig::RoboConfig(QWidget *parent) :
     m_megaSerachWidget = NULL;
 
     m_pRootNode = new QTreeWidgetItem();
-    m_pRootNode->setText( 0, tr("Project") );
+    m_pRootNode->setText( 0, "Project");
     ui->treeWidget->addTopLevelItem( m_pRootNode );
 
     QWidget *pWidget = new QWidget;
@@ -42,11 +42,11 @@ void RoboConfig::loadXmlConfig()
 {
     //! load xml
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/robots/";
+    QString fileName = QApplication::applicationDirPath();
     QDir dir(fileName);
     if(!dir.exists()){dir.mkdir(fileName);}
 
-    fileName += m_pRootNode->text(0) + ".xml";
+    fileName += "/config.xml";
     mXML.xmlCreate(fileName);
 
     QMap<QString,QString> mapItems = mXML.xmlRead(fileName);
@@ -110,9 +110,9 @@ void RoboConfig::slotAddNewRobot(QString strDevInfo)
 
     createRobot(strDevInfo);
 
-    //添加到project.xml中
+    //添加到config.xml中
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/robots/" + m_pRootNode->text(0) + ".xml";
+    QString fileName = QApplication::applicationDirPath() + "/config.xml";
 
     QMap<QString,QString> mapRead = mXML.xmlRead(fileName);
     QMap<QString,QString> mapWrite;
@@ -229,7 +229,7 @@ void RoboConfig::soltActionDelete()
 {
     //! delete from xml file
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/robots/" + m_pRootNode->text(0) + ".xml";
+    QString fileName = QApplication::applicationDirPath() + "/config.xml";
     QMap<QString,QString> mapRead = mXML.xmlRead(fileName);
     QMap<QString,QString> mapWrite;
     for (QMap<QString,QString>::iterator itMap=mapRead.begin(); itMap != mapRead.end(); ++itMap )
@@ -241,7 +241,7 @@ void RoboConfig::soltActionDelete()
         }
     }
     mXML.xmlNodeRemove(fileName, "RobotConfigs");
-    mXML.xmlNodeAppend(fileName, "RobotConfigs", mapWrite); //update project.xml
+    mXML.xmlNodeAppend(fileName, "RobotConfigs", mapWrite); //update config.xml
 
     //delete device.xml
     fileName = QApplication::applicationDirPath() + "/robots/" + m_RobotList[mIndex].m_strDevInfo.split(',').at(3) + ".xml";
@@ -260,13 +260,13 @@ int RoboConfig::setApply()
     if( m_RobotList[mIndex].m_Visa != 0)
     {
         foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
-            pCfg->saveConfig();
             int ret = pCfg->writeDeviceConfig();
             if(ret != 0)
             {
                 ok = false;
                 QMessageBox::information(this,tr("tips"), pCfg->focusName() + tr("\tApply Failure"));
             }
+            pCfg->saveConfig();
         }
         emit signalApplyClicked();
     }else{
@@ -494,4 +494,19 @@ bool RoboConfig::copyFileToPath(QString sourceDir ,QString toDir, bool coverFile
         return false;
     }
     return true;
+}
+
+void RoboConfig::changeLanguage(QString qmFile)
+{
+    for(int index=0; index<m_RobotList.size(); index++)
+    {
+        foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[index].m_Robo)->subConfigs()){
+            pCfg->changeLanguage(qmFile);
+        }
+    }
+
+    qApp->removeTranslator(&m_translator);
+    m_translator.load(qmFile);
+    qApp->installTranslator(&m_translator);
+    ui->retranslateUi(this);
 }

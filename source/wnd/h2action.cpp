@@ -128,3 +128,8 @@ int H2Action::writeFile(QString fileName, QString text)
     file.close();
     return 0;
 }
+
+void H2Action::translateUI()
+{
+    ui->retranslateUi(this);
+}

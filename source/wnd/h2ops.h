@@ -34,6 +34,8 @@ public:
     void outWarning( const QString &str );
     void outError( const QString &str );
 
+    void changeLanguage(QString qmFile)  override;
+
 public slots:
     void slotSetCurrentRobot(QString strDevInfo, int visa, int deviceName, int roboName);
     void slotLoadConfigAgain();
@@ -72,6 +74,7 @@ private slots:
 
 
     void on_pushButton_starting_home_clicked();
+    void slot_starting_home_over(int ret);
 
     void on_toolButton_singlestep_x_dec_clicked();
 
@@ -108,7 +111,6 @@ private slots:
     void updateMonitor();
     void updateDebug();
     void updateDiagnosis();
-
 
 
 protected:
@@ -152,6 +154,34 @@ private:
     void setTimerStart(QTimer &timer);
     void setTimerSplineStop();  //关闭动态曲线的定时器
     void setTimerSplineStart(); //打开动态曲线的定时器
+};
+
+
+struct ThreadGoHomingArg{
+    int vi;
+    int roboname;
+    int timeout;
+};
+
+class ThreadGoHoming: public QThread
+{
+    Q_OBJECT
+public:
+    void setArgs(const ThreadGoHomingArg &args)
+    {   m_args = args; }
+
+signals:
+    void signalThreadGoHomeEnd(int);
+
+protected:
+    void run() {
+        int ret = mrgRobotGoHome(m_args.vi, m_args.roboname, m_args.timeout);
+        qDebug() << "mrgRobotGoHome" << ret;
+        emit signalThreadGoHomeEnd(ret);
+    }
+
+private:
+    ThreadGoHomingArg m_args;
 };
 
 #endif // H2OPS_H

@@ -42,5 +42,8 @@
         <file>image/h2product/online.png</file>
         <file>image/h2product/product.png</file>
         <file>image/icon/201.png</file>
+        <file>ts/qt_CN.qm</file>
+        <file>ts/qt_EN.qm</file>
+        <file>qss/classic.qss</file>
     </qresource>
 </RCC>

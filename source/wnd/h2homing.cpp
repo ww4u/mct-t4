@@ -102,3 +102,8 @@ void H2Homing::on_doubleSpinBox_ForceLimit_valueChanged(double arg1)
     m_ForceLimit = arg1;
     emit signal_data_changed(true);
 }
+
+void H2Homing::translateUI()
+{
+    ui->retranslateUi(this);
+}

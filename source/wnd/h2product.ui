@@ -82,7 +82,7 @@
          </font>
         </property>
         <property name="text">
-         <string/>
+         <string notr="true"/>
         </property>
         <property name="scaledContents">
          <bool>false</bool>
@@ -149,7 +149,7 @@
          </font>
         </property>
         <property name="text">
-         <string/>
+         <string notr="true"/>
         </property>
         <property name="scaledContents">
          <bool>false</bool>
@@ -180,7 +180,7 @@
          </font>
         </property>
         <property name="text">
-         <string/>
+         <string notr="true"/>
         </property>
         <property name="scaledContents">
          <bool>false</bool>
@@ -242,7 +242,7 @@
          </font>
         </property>
         <property name="text">
-         <string/>
+         <string notr="true"/>
         </property>
         <property name="scaledContents">
          <bool>false</bool>
@@ -283,6 +283,9 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="styleSheet">
          <string notr="true">background-color: rgba(0, 85, 255, 0);</string>

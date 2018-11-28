@@ -95,7 +95,7 @@
      <item>
       <widget class="QLabel" name="label_4">
        <property name="text">
-        <string>www.megarobo.tech</string>
+        <string notr="true">www.megarobo.tech</string>
        </property>
       </widget>
      </item>

@@ -174,3 +174,8 @@ void H2Measurement::on_doubleSpinBox_swln_Y_valueChanged(double arg1)
     m_SWLimitNegativeY = arg1;
     emit signal_data_changed(true);
 }
+
+void H2Measurement::translateUI()
+{
+    ui->retranslateUi(this);
+}

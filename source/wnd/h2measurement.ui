@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="inputMethodHints">
+   <set>Qt::ImhFormattedNumbersOnly</set>
+  </property>
   <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="2">
     <spacer name="horizontalSpacer">
@@ -129,8 +132,11 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="cursor">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
         <property name="focusPolicy">
-         <enum>Qt::TabFocus</enum>
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="styleSheet">
          <string notr="true"/>
@@ -141,6 +147,9 @@
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
+        <property name="specialValueText">
+         <string notr="true"/>
+        </property>
         <property name="accelerated">
          <bool>false</bool>
         </property>
@@ -148,7 +157,7 @@
          <bool>false</bool>
         </property>
         <property name="suffix">
-         <string> mm</string>
+         <string notr="true"> mm</string>
         </property>
         <property name="maximum">
          <double>10000.000000000000000</double>
@@ -163,8 +172,11 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="cursor">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
         <property name="focusPolicy">
-         <enum>Qt::TabFocus</enum>
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="styleSheet">
          <string notr="true"/>
@@ -175,6 +187,9 @@
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
+        <property name="specialValueText">
+         <string notr="true"/>
+        </property>
         <property name="accelerated">
          <bool>false</bool>
         </property>
@@ -182,7 +197,7 @@
          <bool>false</bool>
         </property>
         <property name="suffix">
-         <string> mm</string>
+         <string notr="true"> mm</string>
         </property>
         <property name="maximum">
          <double>10000.000000000000000</double>
@@ -197,17 +212,26 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="cursor">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
         <property name="focusPolicy">
-         <enum>Qt::TabFocus</enum>
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="styleSheet">
          <string notr="true"/>
+        </property>
+        <property name="inputMethodHints">
+         <set>Qt::ImhNone</set>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::NoButtons</enum>
+        </property>
+        <property name="specialValueText">
+         <string notr="true"/>
         </property>
         <property name="accelerated">
          <bool>false</bool>
@@ -216,7 +240,7 @@
          <bool>false</bool>
         </property>
         <property name="suffix">
-         <string> mm</string>
+         <string notr="true"> mm</string>
         </property>
         <property name="maximum">
          <double>10000.000000000000000</double>
@@ -231,8 +255,11 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="cursor">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
         <property name="focusPolicy">
-         <enum>Qt::TabFocus</enum>
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="styleSheet">
          <string notr="true"/>
@@ -243,6 +270,9 @@
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
+        <property name="specialValueText">
+         <string notr="true"/>
+        </property>
         <property name="accelerated">
          <bool>false</bool>
         </property>
@@ -250,7 +280,7 @@
          <bool>false</bool>
         </property>
         <property name="suffix">
-         <string> mm</string>
+         <string notr="true"> mm</string>
         </property>
         <property name="maximum">
          <double>10000.000000000000000</double>
@@ -307,8 +337,11 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="cursor">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
         <property name="focusPolicy">
-         <enum>Qt::TabFocus</enum>
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="styleSheet">
          <string notr="true"/>
@@ -319,6 +352,9 @@
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
+        <property name="specialValueText">
+         <string notr="true"/>
+        </property>
         <property name="accelerated">
          <bool>false</bool>
         </property>
@@ -326,7 +362,7 @@
          <bool>false</bool>
         </property>
         <property name="suffix">
-         <string> mm</string>
+         <string notr="true"> mm</string>
         </property>
         <property name="maximum">
          <double>10000.000000000000000</double>
@@ -357,8 +393,11 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="cursor">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
         <property name="focusPolicy">
-         <enum>Qt::TabFocus</enum>
+         <enum>Qt::ClickFocus</enum>
         </property>
         <property name="styleSheet">
          <string notr="true"/>
@@ -369,6 +408,9 @@
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
+        <property name="specialValueText">
+         <string notr="true"/>
+        </property>
         <property name="accelerated">
          <bool>false</bool>
         </property>
@@ -376,7 +418,7 @@
          <bool>false</bool>
         </property>
         <property name="suffix">
-         <string> mm</string>
+         <string notr="true"> mm</string>
         </property>
         <property name="maximum">
          <double>10000.000000000000000</double>

@@ -84,3 +84,7 @@ void H2ErrMgr::updateShow()
 
 }
 
+void H2ErrMgr::translateUI()
+{
+    ui->retranslateUi(this);
+}

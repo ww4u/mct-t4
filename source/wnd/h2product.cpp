@@ -78,3 +78,8 @@ void H2Product::updateShow()
 {
 
 }
+
+void H2Product::translateUI()
+{
+    ui->retranslateUi(this);
+}

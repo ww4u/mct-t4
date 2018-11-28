@@ -76,6 +76,18 @@ void H2Ops::setupUi()
     ui->horizontalLayout_3->addStretch();
 }
 
+void H2Ops:: changeLanguage(QString qmFile)
+{
+    ui->h2Status->changeLanguage(qmFile);
+    m_splineChart1->changeLanguage(qmFile);
+    m_splineChart2->changeLanguage(qmFile);
+
+    qApp->removeTranslator(&m_translator);
+    m_translator.load(qmFile);
+    qApp->installTranslator(&m_translator);
+    ui->retranslateUi(this);
+}
+
 #define set_name( the, name )   the->setFocusName( name );\
                                 mSubTabs.append( the );
 void H2Ops::setupName()
@@ -163,9 +175,9 @@ void H2Ops::slotSetCurrentRobot(QString strDevInfo, int visa, int deviceName, in
     m_RoboName = roboName;
     m_Data.clear();
 
-    qDebug() << "H2OPS " << "m_ViHandle:"  << m_ViHandle
-             << "m_DeviceName:" << m_DeviceName
-             << "m_RoboName:" << m_RoboName;
+//    qDebug() << "H2OPS " << "m_ViHandle:"  << m_ViHandle
+//             << "m_DeviceName:" << m_DeviceName
+//             << "m_RoboName:" << m_RoboName;
     if(m_ViHandle == 0)
     {
         ui->tabWidget->setEnabled(false);
@@ -328,7 +340,7 @@ void H2Ops::on_btnImport_clicked()
     QFileDialog fDlg;
 
     fDlg.setAcceptMode( QFileDialog::AcceptOpen );
-    fDlg.setNameFilter( tr("Debug (*.xml)") );
+    fDlg.setNameFilter( "Debug (*.xml)" );
 
     if ( QDialog::Accepted != fDlg.exec() )
     { return; }
@@ -343,7 +355,7 @@ void H2Ops::on_btnExport_clicked()
     QFileDialog fDlg;
 
     fDlg.setAcceptMode( QFileDialog::AcceptSave );
-    fDlg.setNameFilter( tr("Debug (*.xml)") );
+    fDlg.setNameFilter( "Debug (*.xml)" );
 
     if ( QDialog::Accepted != fDlg.exec() )
     { return; }
@@ -376,7 +388,7 @@ void H2Ops::on_btnExport_2_clicked()
     QFileDialog fDlg;
 
     fDlg.setAcceptMode( QFileDialog::AcceptSave );
-    fDlg.setNameFilter( tr("Diagnosis (*.xml)") );
+    fDlg.setNameFilter( "Diagnosis (*.xml)" );
 
     if ( QDialog::Accepted != fDlg.exec() )
     { return; }
@@ -432,49 +444,24 @@ void H2Ops::updateDeviceCurrentPosition()
 }
 
 ////////////////////////////////////// 点击发送指令
-#include <pthread.h>
-struct ThreadGoHomingArg{
-    QPushButton *btn;
-    int vi;
-    int roboname;
-    int timeout;
-};
-
-void* threadGoHoming(void *args)
-{
-    ThreadGoHomingArg *arg = (ThreadGoHomingArg *)args;
-    qDebug() << "mrgRobotGoHome" << mrgRobotGoHome(arg->vi, arg->roboname, arg->timeout);
-    arg->btn->setEnabled(true);
-    pthread_exit(NULL);
-}
-
 void H2Ops::on_pushButton_starting_home_clicked()
 {
-    pthread_t tid = 0;
-    ThreadGoHomingArg arg = {ui->pushButton_starting_home,
-                            m_ViHandle,
-                            m_RoboName,
-                            0};
-
+    ThreadGoHomingArg arg = {m_ViHandle, m_RoboName, 0};
+    ThreadGoHoming *thread = new ThreadGoHoming;
+    thread->setArgs(arg);
+    connect(thread, SIGNAL(signalThreadGoHomeEnd(int)),this,SLOT(slot_starting_home_over(int)));
+    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     ui->pushButton_starting_home->setEnabled(false);
-    if(0 != pthread_create(&tid, NULL, threadGoHoming, &arg))
-        qDebug() << "threadGoHoming is created failed";
-    else
-    {
-        while(1)
-        {
-            updateDeviceCurrentPosition();
-            if(ui->pushButton_starting_home->isEnabled())
-            {   break; }
-            else
-            {
-                //sleep 0.2s
-                QTime dieTime = QTime::currentTime().addMSecs(200);
-                while( QTime::currentTime() < dieTime )
-                    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
-            }
-        }
+    m_timerCurrentPos.start();
+    thread->start();
+}
+void H2Ops::slot_starting_home_over(int ret)
+{
+    if(ret != 0){
+        QMessageBox::information(this,tr("tips"),tr("Starting Home failure"));
     }
+    m_timerCurrentPos.stop();
+    ui->pushButton_starting_home->setEnabled(true);
 }
 
 void H2Ops::setButtonDisableTime(QToolButton *btn, int msec)

@@ -29,13 +29,13 @@
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>&amp;File</string>
     </property>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuOperate">
     <property name="title">
-     <string>Operate</string>
+     <string>&amp;Operate</string>
     </property>
     <addaction name="actionStop"/>
     <addaction name="separator"/>
@@ -48,29 +48,29 @@
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>Help</string>
+     <string>&amp;Help</string>
     </property>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuToo">
     <property name="title">
-     <string>Tool</string>
+     <string>&amp;Tool</string>
     </property>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>View</string>
+     <string>&amp;View</string>
     </property>
     <widget class="QMenu" name="menuLanguage">
      <property name="title">
-      <string>Language</string>
+      <string>&amp;Language</string>
      </property>
      <addaction name="actionChinese"/>
      <addaction name="actionEnglish"/>
     </widget>
     <widget class="QMenu" name="menuStyle">
      <property name="title">
-      <string>Style</string>
+      <string>&amp;Style</string>
      </property>
      <addaction name="actionMega"/>
      <addaction name="actionClassic"/>
@@ -95,73 +95,118 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionStop">
    <property name="text">
-    <string>Stop</string>
+    <string>&amp;Stop</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
    </property>
   </action>
   <action name="actionExit">
    <property name="text">
-    <string>Exit</string>
+    <string>&amp;Exit</string>
    </property>
    <property name="shortcut">
-    <string>Alt+X</string>
+    <string>Ctrl+Q</string>
    </property>
   </action>
   <action name="actionAbout">
    <property name="text">
-    <string>About(&amp;A)</string>
+    <string>&amp;About</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
    </property>
   </action>
   <action name="actionHelp">
    <property name="text">
-    <string>Help</string>
+    <string>&amp;Help</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+H</string>
    </property>
   </action>
   <action name="actionUpload">
    <property name="text">
-    <string>Upload</string>
+    <string>&amp;Upload</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+U</string>
    </property>
   </action>
   <action name="actionDownload">
    <property name="text">
-    <string>Download</string>
+    <string>&amp;Download</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
    </property>
   </action>
   <action name="actionStore">
    <property name="text">
-    <string>Store</string>
+    <string>S&amp;tore</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
    </property>
   </action>
   <action name="actionSync">
    <property name="text">
-    <string>Sync</string>
+    <string>S&amp;ync</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
    </property>
   </action>
   <action name="actionChinese">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
-    <string>Chinese</string>
+    <string>&amp;Chinese</string>
    </property>
   </action>
   <action name="actionEnglish">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
    <property name="text">
-    <string>English</string>
+    <string>&amp;English</string>
    </property>
   </action>
   <action name="actionMega">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
    <property name="text">
-    <string>MEGAROBO</string>
+    <string>&amp;MEGAROBO</string>
    </property>
   </action>
   <action name="actionClassic">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
    <property name="text">
-    <string>Classic</string>
+    <string>&amp;Classic</string>
    </property>
   </action>
   <action name="actionSearch">
    <property name="text">
-    <string>Search</string>
+    <string>&amp;Search</string>
    </property>
    <property name="toolTip">
     <string>SearchDevice</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
    </property>
   </action>
  </widget>

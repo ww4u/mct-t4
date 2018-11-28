@@ -21,6 +21,8 @@ public:
     int saveConfig();       //将软件界面的数据配置写入到本地配置文件
     void updateShow();      //更新界面
 
+    void translateUI() override;
+
 public slots:
     void slot_set_direction(QString text);
 

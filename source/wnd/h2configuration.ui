@@ -64,7 +64,7 @@
       <item row="4" column="0">
        <widget class="QLabel" name="workSpaceStrokeXLabel">
         <property name="text">
-         <string>WorkSpace X-Stroke</string>
+         <string>WorkSpace X-Stroke:</string>
         </property>
        </widget>
       </item>
@@ -77,21 +77,21 @@
          </font>
         </property>
         <property name="text">
-         <string>label</string>
+         <string notr="true">label</string>
         </property>
        </widget>
       </item>
       <item row="5" column="0">
        <widget class="QLabel" name="workSpaceStrokeYLabel">
         <property name="text">
-         <string>WorkSpace Y-Stroke</string>
+         <string>WorkSpace Y-Stroke:</string>
         </property>
        </widget>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="sizeLabel">
         <property name="text">
-         <string>Size</string>
+         <string>Size:</string>
         </property>
        </widget>
       </item>
@@ -124,7 +124,7 @@
          </font>
         </property>
         <property name="text">
-         <string>MRX-H2-30-100-1100-KF-SB-B</string>
+         <string notr="true">MRX-H2-30-100-1100-KF-SB-B</string>
         </property>
        </widget>
       </item>
@@ -136,8 +136,14 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="cursor">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
         <property name="focusPolicy">
-         <enum>Qt::TabFocus</enum>
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="inputMethodHints">
+         <set>Qt::ImhFormattedNumbersOnly</set>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -145,8 +151,14 @@
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
+        <property name="specialValueText">
+         <string notr="true"/>
+        </property>
         <property name="suffix">
-         <string> mm</string>
+         <string notr="true"> mm</string>
+        </property>
+        <property name="prefix">
+         <string notr="true"/>
         </property>
         <property name="minimum">
          <number>0</number>
@@ -170,8 +182,14 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="cursor">
+         <cursorShape>IBeamCursor</cursorShape>
+        </property>
         <property name="focusPolicy">
-         <enum>Qt::TabFocus</enum>
+         <enum>Qt::ClickFocus</enum>
+        </property>
+        <property name="inputMethodHints">
+         <set>Qt::ImhFormattedNumbersOnly</set>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -179,8 +197,17 @@
         <property name="buttonSymbols">
          <enum>QAbstractSpinBox::NoButtons</enum>
         </property>
+        <property name="specialValueText">
+         <string notr="true"/>
+        </property>
+        <property name="showGroupSeparator" stdset="0">
+         <bool>false</bool>
+        </property>
         <property name="suffix">
-         <string> mm</string>
+         <string notr="true"> mm</string>
+        </property>
+        <property name="prefix">
+         <string notr="true"/>
         </property>
         <property name="minimum">
          <number>0</number>

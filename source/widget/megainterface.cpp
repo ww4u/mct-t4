@@ -6,6 +6,7 @@
 #include <QMessageBox>
 
 #include "MegaGateway.h"
+#include "sysapi.h"
 
 MegaInterface::MegaInterface(QWidget *parent) :
     QWidget(parent),
@@ -181,7 +182,7 @@ void DeviceSearchThread::run()
         strFindDevices = QString("%1").arg(buff);
         if(strFindDevices.length() == 0)
         {
-            qDebug() << "mrgFindGateWay LAN error!";
+            sysError("mrgFindGateWay LAN Null!");
             return;
         }
     }
@@ -192,7 +193,7 @@ void DeviceSearchThread::run()
         strFindDevices = QString("%1").arg(buff);
         if(strFindDevices.length() == 0)
         {
-            qDebug() << "mrgFindGateWay USB error!";
+            sysError("mrgFindGateWay USB error!");
             return;
         }
     }
@@ -209,7 +210,7 @@ void DeviceSearchThread::run()
         int ret = mrgGateWayIDNQuery(visa,IDN);
         if(ret != 0)
         {
-            qDebug() << "mrgGateWayIDNQuery error" << ret;
+            sysError("mrgGateWayIDNQuery error");
             return;
         }else{
             int len = strlen(IDN);

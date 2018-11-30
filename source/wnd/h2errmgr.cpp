@@ -34,7 +34,7 @@ H2ErrMgr::~H2ErrMgr()
 
 void H2ErrMgr::slotModelChanged(QModelIndex index1, QModelIndex index2, QVector<int> vector)
 {
-    emit signal_data_changed(true);
+    emit signalModelDataChanged(true);
 }
 
 int H2ErrMgr::readDeviceConfig()

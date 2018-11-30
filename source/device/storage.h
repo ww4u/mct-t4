@@ -21,6 +21,22 @@ EXPORT_API int CALL mrgStorageMotionFileQuery(ViSession vi, int type, char* file
 */
 EXPORT_API int CALL mrgStorageMotionFileContextRead(ViSession vi, char* filename, char* context, int wantlen);
 
-
+/*
+* 保存运动文件内容到本地存储器,
+* vi :visa设备句柄
+* srcFileName: 源文件名
+* saveFileName：目的文件名
+* 返回值：  0：写入成功；1：写入失败
+*/
 EXPORT_API int CALL mrgStorageMotionFileSave(ViSession vi, char* srcFileName,char* saveFileName);
+
+/*
+* 保存运动文件内容到本地存储器
+* vi :visa设备句柄
+* context: 文件内容
+* len:文件内容长度
+* saveFileName：目的文件名
+* 返回值：  0：写入成功；1：写入失败
+*/
+EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context,int len, char * saveFileName);
 #endif // !MR_SYSTEM_H

@@ -3,6 +3,5 @@
 
 #include "mydef.h"
 #include "mydebug.h"
-#include "megaxml.h"
 
 #endif

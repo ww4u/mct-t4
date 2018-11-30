@@ -3,9 +3,9 @@
 
 #include <QWidget>
 #include "xconfig.h"
-#include "../model/comboxdelegate.h"
-#include "../model/checkdelegate.h"
-#include "../model/errmgrmodel.h"
+#include "comboxdelegate.h"
+#include "checkdelegate.h"
+#include "errmgrmodel.h"
 
 namespace Ui {
 class H2ErrMgr;

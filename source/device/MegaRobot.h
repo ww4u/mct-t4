@@ -289,7 +289,38 @@ EXPORT_API int CALL mrgRobotMoveL(ViSession vi, int name, int wavetable, float x
 * 说明：相对位置移动,末端保持不动
 */
 EXPORT_API int CALL mrgRobotRelMoveL(ViSession vi, int name, int wavetable, float x, float y, float z, float time, int timeout_ms);
-
+/*
+* 设置机器人当前插值模式
+* vi :visa设备句柄
+* name: 机器人名称
+* mode: 插值模式
+* 返回值：0表示执行成功，－1：表示出错，
+*/
+EXPORT_API int CALL mrgSetRobotInterPolateMode(ViSession vi, int name, int mode);
+/*
+* 查询机器人当前插值模式
+* vi :visa设备句柄
+* name: 机器人名称
+* mode: 插值模式
+* 返回值：0表示执行成功，－1：表示出错，
+*/
+EXPORT_API int CALL mrgGetRobotInterPolateMode(ViSession vi, int name, int* mode);
+/*
+* 设置机器人当前插值步长
+* vi :visa设备句柄
+* name: 机器人名称
+* step: 插值步长
+* 返回值：0表示执行成功，－1：表示出错，
+*/
+EXPORT_API int CALL mrgSetRobotInterPolateStep(ViSession vi, int name, double step);
+/*
+* 查询机器人当前插值步长
+* vi :visa设备句柄
+* name: 机器人名称
+* step: 插值步长
+* 返回值：0表示执行成功，－1：表示出错，
+*/
+EXPORT_API int CALL mrgGetRobotInterPolateStep(ViSession vi, int name, double* step);
 /*
 * 设置机器人回零位时使用的波表
 * vi :visa设备句柄
@@ -315,6 +346,16 @@ EXPORT_API int CALL mrgGetRobotHomeWavetable(ViSession vi, int name);
 * 说明：末端保持不动
 */
 EXPORT_API int CALL mrgRobotGoHome(ViSession vi, int name, int timeout_ms);
+/*
+* 机器人回零位操作
+* vi :visa设备句柄
+* name: 机器人名称
+* param: 参数，对于T4来说，指的是时间，即在多秒时间内回到零位。对于H2来说，指的是回零位的速度，度/秒
+* timeout_ms:表示等待超时时间,0表示无限等待，－1表示不等待，立即返回
+* 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示执行超时
+* 说明：末端保持不动
+*/
+EXPORT_API int CALL mrgRobotGoHomeWithParam(ViSession vi, int name, double param, int timeout_ms);
 /*
 * 停止机器人回零位操作
 * vi :visa设备句柄
@@ -435,7 +476,7 @@ EXPORT_API int CALL mrgRobotPvtResolve(ViSession vi, int name, int wavetable, in
 * filename: 点坐标文件名
 * 返回值：0表示执行成功，否则表示失败
 */
-EXPORT_API int CALL mrgRobotFileImport(ViSession vi, int name, char* filename);
+EXPORT_API int CALL mrgRobotMotionFileImport(ViSession vi, int name, char* filename);
 /*
 * 解算当前运动文件内容到模块中
 * vi :visa设备句柄
@@ -456,7 +497,7 @@ EXPORT_API int CALL mrgRobotFileResolve(ViSession vi, int name, int section, int
 * filename：表示导出的文件名
 * 返回值：0表示执行正确，否则表示失败。
 */
-EXPORT_API int CALL mrgRobotFileExport(ViSession vi, int name, int location, char* filename);
+EXPORT_API int CALL mrgRobotMotionFileExport(ViSession vi, int name, int location, char* filename);
 /*
 * 设置末端执行器类型及相应的设备
 * vi :visa设备句柄
@@ -521,8 +562,22 @@ EXPORT_API int CALL mrgGetRobotCurrentAngle(ViSession vi, int name, float * angl
 * 返回值：0表示执行成功， －1：表示执行失败
 */
 EXPORT_API int CALL mrgGetRobotCurrentPosition(ViSession vi, int name, float * x, float *y, float* z);
-
-
+/*
+* 机器人当前的里程数，单位 ：毫米
+* vi :visa设备句柄
+* name: 机器人名称
+* x,y,z ：各坐标轴方向上的里程
+* 返回值：0表示执行成功， －1：表示执行失败
+*/
+EXPORT_API int CALL mrgGetRobotCurrentMileage(ViSession vi, int name, long long * x, long long *y, long long* z);
+/*
+* 获取机器人的目标位置
+* vi :visa设备句柄
+* name: 机器人名称
+* x,y,z ：各坐标轴方向上的点
+* 返回值：0表示执行成功， －1：表示执行失败
+*/
+EXPORT_API int CALL mrgGetRobotTargetPosition(ViSession vi, int name, double * x, double *y, double* z);
 #endif // ! _MEGA_ROBOT_H_
 
 

@@ -1,5 +1,5 @@
 #include "mdataset.h"
-#include "../../include/mystd.h"
+#include "mystd.h"
 
 MDataSet::MDataSet()
 {

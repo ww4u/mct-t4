@@ -1,18 +1,31 @@
 #include "sysapi.h"
 
-#include "../wnd/mainwindow.h"
+#include <QtCore>
+#include "mainwindow.h"
 
 void sysInfo( const QString &str )
-{ MainWindow::requestLogout( str, e_log_info ); }
+{ MainWindow::requestLogout( str, eLogInfo ); }
 
-void sysInfo( const QString &str1, const QString &str2 )
+void sysInfo( const QString &info, const QString &str2 )
 {
-    QString str = QString("%1 %2").arg(str1).arg(str2);
-    MainWindow::requestLogout( str, e_log_info );
+    QString str = QString("%1 %2").arg(info).arg(str2);
+    MainWindow::requestLogout( str, eLogInfo );
+}
+
+void sysInfo( const QString &info, const int &val )
+{
+    QString str = QString("%1 : %2").arg(info).arg(val);
+    MainWindow::requestLogout( str, eLogInfo );
 }
 
 void sysWarning( const QString &str )
-{ MainWindow::requestLogout( str, e_log_warning ); }
+{ MainWindow::requestLogout( str, eLogWarning ); }
 
 void sysError( const QString &str )
-{ MainWindow::requestLogout( str, e_log_error ); }
+{ MainWindow::requestLogout( str, eLogError ); }
+
+void sysError( const QString &info , const int &val)
+{
+    QString str = QString("%1 : %2").arg(info).arg(val);
+    MainWindow::requestLogout( str, eLogError );
+}

@@ -42,8 +42,7 @@ EXPORT_API int CALL mrgStorageMotionFileQuery(ViSession vi, int type, char* file
 */
 EXPORT_API int CALL mrgStorageMotionFileContextRead(ViSession vi, char* filename, char* context, int wantlen)
 {
-    int retlen = 0,count = 0,lenOfLen = 0,readLen = 0;
-    int start = 0;
+    int retlen = 0, count = 0, lenOfLen = 0, readLen = 0, left = 0;
     char args[SEND_BUF];
     char as8Ret[1024],as8StrLen[20];
     snprintf(args, SEND_BUF, "STORage:FILe:MOTion:CONTEXT:READ? %s\n", filename);
@@ -52,45 +51,43 @@ EXPORT_API int CALL mrgStorageMotionFileContextRead(ViSession vi, char* filename
         return 0;
     }
     // 1. 先读回一个#9的头。
-    while ((retlen = busRead(vi, as8Ret, 12)) > 0)
+    retlen = busRead(vi, as8Ret, 12);
+    if (retlen <= 0)
     {
-        start = -1;
-        for (int i = 0; i < 12; i++)
+        return 0;
+    }
+    if (as8Ret[0] != '#')//格式错误
+    {
+        return count;
+    }
+    lenOfLen = as8Ret[1] - 0x30;
+    memcpy(as8StrLen, &as8Ret[2], lenOfLen);//取出长度字符串
+    left = strtoul(as8StrLen, NULL, 10);
+    if (left == 0)
+    {
+        return 0;
+    }
+    context[0] = as8Ret[11];
+    count = 1;
+    while (left >0)
+    {
+        readLen = (left > 512) ? 512 : left;
+        //返回的#9数据最后，会有一个分号，所以这里多读一个字节。
+        if ((retlen = busRead(vi, as8Ret, readLen)) == 0)
         {
-            if (as8Ret[i] == '#')
-            {
-                start = i;
-                break;
-            }
+            break;
         }
-        if (start == -1)//格式错误
-        {
-            return count;
-        }
-        lenOfLen = as8Ret[start + 1] - 0x30;
-        memcpy(as8StrLen, &as8Ret[start + 2], lenOfLen);//取出长度字符串
-        readLen = strtoul(as8StrLen, NULL, 10);
-        if (readLen != 0)
-        {
-            as8Ret[0] = as8Ret[start + 11];
-            if ((retlen = busRead(vi, &as8Ret[1], readLen - 1)) == 0)
-            {
-                return count;
-            }
-        }
-        else //长度为零，认为文件结束
-        {
-            return count;
-        }
-        memcpy(&context[count], as8Ret, retlen + 1);
-        count += retlen + 1;
+        memcpy(&context[count], as8Ret, retlen);
+        count += retlen;
+        left -= retlen;
     }
     return count;
 }
 /*
-* 保存运动文件内容到本地存储器
+* 保存运动文件内容到本地存储器,
 * vi :visa设备句柄
-* filename: 文件名
+* srcFileName: 源文件名
+* saveFileName：目的文件名
 * 返回值：  0：写入成功；1：写入失败
 */
 EXPORT_API int CALL mrgStorageMotionFileSave(ViSession vi, char* srcFileName, char * saveFileName)
@@ -133,6 +130,46 @@ EXPORT_API int CALL mrgStorageMotionFileSave(ViSession vi, char* srcFileName, ch
         return -1;
     }
     fclose(pFile);
+    return 0;
+}
+/*
+* 保存运动文件内容到本地存储器
+* vi :visa设备句柄
+* context: 文件内容
+* len:文件内容长度
+* saveFileName：目的文件名
+* 返回值：  0：写入成功；1：写入失败
+*/
+EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context,int len, char * saveFileName)
+{
+    int retlen = 0, count = 0, writeLen = 0, cmdLen = 0;
+    char args[SEND_BUF];
+    char as8Ret[1024], as8StrLen[20];
+    snprintf(args, SEND_BUF, "STORage:FILe:MOTion:CONTEXT:WRITe:NAMe %s\n", saveFileName);
+    
+    if (busWrite(vi, args, strlen(args)) == 0)//写入文件名
+    {
+        return -1;
+    }
+    //写入文件内容
+    while (len > 0)
+    {
+        writeLen = len > 512 ? 512 : len;
+        snprintf(as8Ret, 1024, "STORage:FILe:MOTion:CONText:WRITe:DATa #9%09d", writeLen);
+        cmdLen = strlen(as8Ret);
+        memcpy(&as8Ret[cmdLen],&context[count], writeLen);
+        if (busWrite(vi, as8Ret, writeLen + cmdLen) == 0)
+        {
+            return -1;
+        }
+        len -= writeLen;
+        count += writeLen;
+    }
+    snprintf(args, SEND_BUF, "STORage:FILe:MOTion:CONTEXT:WRITe:END\n");
+    if (busWrite(vi, args, strlen(args)) == 0)//写入文件结束
+    {
+        return -1;
+    }
     return 0;
 }
 

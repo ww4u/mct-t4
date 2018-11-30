@@ -4,8 +4,8 @@
 #include <QToolButton>
 #include <QWidget>
 
-#include "../model/diagnosismodel.h"
-#include "../model/debugmodel.h"
+#include "diagnosismodel.h"
+#include "debugmodel.h"
 #include "xconfig.h"
 #include "megasplinechart.h"
 
@@ -14,22 +14,21 @@ namespace Ui {
 class H2Ops;
 }
 
-enum log_level
+enum LogLevel
 {
-    e_log_info,
-    e_log_warning,
-    e_log_error,
+    eLogInfo,
+    eLogWarning,
+    eLogError,
 };
 
 class H2Ops : public XConfig
 {
     Q_OBJECT
-
 public:
     explicit H2Ops(QWidget *parent = 0);
     ~H2Ops();
 
-    void outConsole( const QString &str, log_level e );
+    void outConsole( const QString &str, LogLevel e );
     void outInfo( const QString &str );
     void outWarning( const QString &str );
     void outError( const QString &str );
@@ -102,12 +101,15 @@ private slots:
 
     void on_toolButton_jogmode_y_inc_released();
 
-    void updateDeviceCurrentPosition();
+    void updateCurrentPosition();
+    void updateCurrentMileage();
+    void updateTargetPosition();
+
+    void updateRecordNumber();
+
     void updateDeviceStatus();
-    void updateOperate();
     void updateDigitalIO();
     void updateHoming();
-    void updateManual();
     void updateMonitor();
     void updateDebug();
     void updateDiagnosis();
@@ -177,6 +179,7 @@ protected:
     void run() {
         int ret = mrgRobotGoHome(m_args.vi, m_args.roboname, m_args.timeout);
         qDebug() << "mrgRobotGoHome" << ret;
+        sysInfo("mrgRobotGoHome", ret);
         emit signalThreadGoHomeEnd(ret);
     }
 

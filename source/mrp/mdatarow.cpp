@@ -1,5 +1,5 @@
 #include "mdatarow.h"
-#include "../include/mystd.h"
+#include "mystd.h"
 MDataRow::MDataRow() : QStringList()
 {
 
@@ -119,7 +119,11 @@ bool MDataSection::lineOut( QTextStream &stream )
 {
     for ( int i = 0; i < mRows.size(); i++ )
     {
-        stream << mRows[i]->join(data_seperator) << line_seperator;
+        QStringList lst;
+        foreach (QString str, *mRows[i]) {
+            lst << QString("%1").arg(str, 8, ' ');
+        }
+        stream << lst.join(data_seperator) << line_seperator;
     }
 
     return true;

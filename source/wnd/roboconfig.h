@@ -31,6 +31,7 @@ public slots:
     void slotStore();
     void slotSync();
     void slotSearch();
+    void slotExit();
 
 private slots:
     void setApplyButtonEnabled(bool bl);
@@ -59,6 +60,7 @@ private:
     QList<RobotInfo> m_RobotList;
     int mIndex;
 
+    void initRootNodeWidget();
     void loadXmlConfig();
     void createRobot(QString strDevInfo);
     int  deviceOpen(QString strIP);

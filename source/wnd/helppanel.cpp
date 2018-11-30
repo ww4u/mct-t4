@@ -2,7 +2,8 @@
 #include "ui_helppanel.h"
 #include <QFile>
 
-#include "../include/mystd.h"
+#include "mystd.h"
+
 HelpPanel::HelpPanel(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::HelpPanel)

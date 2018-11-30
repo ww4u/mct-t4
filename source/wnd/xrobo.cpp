@@ -1,5 +1,4 @@
 #include "xrobo.h"
-#include "megaxml.h"
 
 XRobo::XRobo( QStackedWidget *pWig, QObject *parent) : QObject(parent)
 {

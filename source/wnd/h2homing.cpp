@@ -76,31 +76,31 @@ void H2Homing::updateShow()
 void H2Homing::on_comboBox_target_currentIndexChanged(const QString &arg1)
 {
     m_Target = arg1;
-    emit signal_data_changed(true);
+    emit signalModelDataChanged(true);
 }
 
 void H2Homing::slot_set_direction(QString text)
 {
     ui->label_direction->setText(text);
-    emit signal_data_changed(true);
+    emit signalModelDataChanged(true);
 }
 
 void H2Homing::on_comboBox_movement_currentIndexChanged(const QString &arg1)
 {
     m_Movement = arg1;
-    emit signal_data_changed(true);
+    emit signalModelDataChanged(true);
 }
 
 void H2Homing::on_doubleSpinBox_SearchVelocity_valueChanged(double arg1)
 {
     m_SearchVelocity = arg1;
-    emit signal_data_changed(true);
+    emit signalModelDataChanged(true);
 }
 
 void H2Homing::on_doubleSpinBox_ForceLimit_valueChanged(double arg1)
 {
     m_ForceLimit = arg1;
-    emit signal_data_changed(true);
+    emit signalModelDataChanged(true);
 }
 
 void H2Homing::translateUI()

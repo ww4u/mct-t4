@@ -4,7 +4,7 @@
 #include <QTreeWidgetItem>
 #include "xrobo.h"
 
-#include "../include/mystd.h"
+#include "mystd.h"
 
 #include "xconfig.h"
 

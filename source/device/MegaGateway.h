@@ -3,15 +3,12 @@
 #define _MR_GATEWAY_
 #include "export.h"
 
-#include "device.h"       /* Í¨ÓÃÉè±¸ */
-#include "mrqDevice.h"    /* MRQÉè±¸ */
-#include "megaRobot.h"    /* »úÆ÷ÈË  */
+#include "device.h"
+#include "mrqDevice.h"
+#include "megaRobot.h"
 #include "system.h"
 #include "storage.h"
 
-
-
-/********************** ¼æÈÝ MiSA ½Ó¿Úº¯Êý ************************************/
 EXPORT_API int CALL robo_getIdn(int vi, char* val);
 EXPORT_API int CALL robo_program(int vi, int ax, int page, char *name);
 EXPORT_API int CALL robo_call(int vi, int ax, int page, int cycle, int mode);

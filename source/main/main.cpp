@@ -6,15 +6,16 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    //! style
-//    if ( QFile::exists(a.applicationDirPath() + "/style/mega.qss") )
-//    { MainWindow::setUiStyle( a.applicationDirPath() + "/style/mega.qss" ); }
-//    else
-//    { MainWindow::setUiStyle( ":/res/qss/mega.qss" ); }
+
+
+//    QString str1 = "shi";
+//    QString str2 = "zhong";
+
+//    qDebug() << QString("%1,%2").arg(str1, 8, 'x').arg(str2, 8, 'x');
+
 
     MainWindow w;
-    w.showMaximized();
-
+    w.showNormal();
     return a.exec();
 }
 

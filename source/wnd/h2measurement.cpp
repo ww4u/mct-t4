@@ -39,6 +39,8 @@ int H2Measurement::readDeviceConfig()
         m_ProjectZeroPointX = x;
         m_ProjectZeroPointY = y;
         qDebug() << "mrgGetRobotProjectZero" << x << y;
+    }else{
+        return -1;
     }
 
     if(0 == mrgGetRobotSoftWareLimit(mViHandle, mRobotName, 0, &x, &y, &z) )
@@ -46,6 +48,8 @@ int H2Measurement::readDeviceConfig()
         m_SWLimitPositiveX = x;
         m_SWLimitPositiveY = y;
         qDebug() << "mrgGetRobotSoftWareLimit Positive" << x << y;
+    }else{
+        return -1;
     }
 
     if(0 == mrgGetRobotSoftWareLimit(mViHandle, mRobotName, 1, &x, &y, &z) )
@@ -53,6 +57,8 @@ int H2Measurement::readDeviceConfig()
         m_SWLimitNegativeX  = x;
         m_SWLimitNegativeY  = y;
         qDebug() << "mrgGetRobotSoftWareLimit Negative" << x << y;
+    }else{
+        return -1;
     }
 
     return 0;
@@ -65,15 +71,19 @@ int H2Measurement::writeDeviceConfig()
     int value = ui->comboBox_AxesZeroPoint->currentIndex();
     ret = mrgSetRobotCoordinateSystem(mViHandle, mRobotName, value);
     qDebug() << "mrgSetRobotCoordinateSystem" << ret;
+    if( 0 != ret) return -1;
 
     ret = mrgSetRobotProjectZero(mViHandle, mRobotName, m_ProjectZeroPointX, m_ProjectZeroPointY, 0);
     qDebug() << "mrgSetRobotProjectZero" << ret;
+    if( 0 != ret) return -1;
 
     ret = mrgSetRobotSoftWareLimit(mViHandle, mRobotName, 0, m_SWLimitPositiveX, m_SWLimitPositiveY, 0);
     qDebug() << "mrgSetRobotSoftWareLimit Positive" << ret;
+    if( 0 != ret) return -1;
 
     ret = mrgSetRobotSoftWareLimit(mViHandle, mRobotName, 1, m_SWLimitNegativeX, m_SWLimitNegativeY, 0);
     qDebug() << "mrgSetRobotSoftWareLimit Negative" << ret;
+    if( 0 != ret) return -1;
 
     return ret;
 }
@@ -136,43 +146,43 @@ void H2Measurement::updateShow()
 void H2Measurement::on_comboBox_AxesZeroPoint_currentIndexChanged(int index)
 {
     m_ZeroPoint = index;
-    emit signal_data_changed(true);
+    emit signalModelDataChanged(true);
 }
 
 void H2Measurement::on_doubleSpinBox_pzpX_valueChanged(double arg1)
 {
     m_ProjectZeroPointX = arg1;
-    emit signal_data_changed(true);
+    emit signalModelDataChanged(true);
 }
 
 void H2Measurement::on_doubleSpinBox_pzpY_valueChanged(double arg1)
 {
     m_ProjectZeroPointY = arg1;
-    emit signal_data_changed(true);
+    emit signalModelDataChanged(true);
 }
 
 void H2Measurement::on_doubleSpinBox_swlp_X_valueChanged(double arg1)
 {
     m_SWLimitPositiveX = arg1;
-    emit signal_data_changed(true);
+    emit signalModelDataChanged(true);
 }
 
 void H2Measurement::on_doubleSpinBox_swlp_Y_valueChanged(double arg1)
 {
     m_SWLimitPositiveY = arg1;
-    emit signal_data_changed(true);
+    emit signalModelDataChanged(true);
 }
 
 void H2Measurement::on_doubleSpinBox_swln_X_valueChanged(double arg1)
 {
     m_SWLimitNegativeX = arg1;
-    emit signal_data_changed(true);
+    emit signalModelDataChanged(true);
 }
 
 void H2Measurement::on_doubleSpinBox_swln_Y_valueChanged(double arg1)
 {
     m_SWLimitNegativeY = arg1;
-    emit signal_data_changed(true);
+    emit signalModelDataChanged(true);
 }
 
 void H2Measurement::translateUI()

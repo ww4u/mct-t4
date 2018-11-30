@@ -1,18 +1,128 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "../include/mystd.h"
-
 MainWindow *MainWindow::_pBackendProxy = NULL;
 
-void MainWindow::requestLogout( const QString &str, log_level lev )
+void MainWindow::requestLogout( const QString &str, LogLevel lev )
 {
-    if( NULL != MainWindow::_pBackendProxy )
-    {}
-    else
+    if( NULL == MainWindow::_pBackendProxy )
     { return; }
 
     MainWindow::_pBackendProxy->slot_logout( str, lev );
+}
+
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
+    ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+
+    m_pLabStatus    = NULL;
+    m_pLabMctVer    = NULL;
+    m_pLabConVer    = NULL;
+    m_roboConfig    = NULL;
+    m_pDockOps      = NULL;
+    m_pOps          = NULL;
+    m_pDockHelp     = NULL;
+    m_pHelpPanel    = NULL;
+
+    setupWorkArea();
+
+    setupToolBar();
+
+    setupStatusBar();
+
+    buildConnection();
+
+    loadConfig();
+
+    //! register the proxy
+    MainWindow::_pBackendProxy = this;
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+
+    if ( NULL != m_pHelpPanel )
+    { delete m_pHelpPanel; }
+}
+
+void MainWindow::setupWorkArea()
+{
+    //! pref
+    m_roboConfig = new RoboConfig(this);
+    ui->centralWidget->insertTab( 0, m_roboConfig, tr("Pref") );
+
+    //! dock
+    m_pDockOps = new QDockWidget( tr("Ops"), this );
+    m_pDockOps->setAllowedAreas(  Qt::BottomDockWidgetArea );
+    m_pDockOps->setFeatures( QDockWidget::DockWidgetVerticalTitleBar | m_pDockOps->features() );
+    addDockWidget( Qt::BottomDockWidgetArea, m_pDockOps );
+
+    m_pOps = new H2Ops();
+    m_pDockOps->setWidget( m_pOps );
+    ui->menuView->addAction( m_pDockOps->toggleViewAction() );
+
+    //! help
+    m_pDockHelp = new QDockWidget( tr("Help"), this  );
+    m_pDockHelp->setAllowedAreas(  Qt::RightDockWidgetArea );
+    addDockWidget( Qt::RightDockWidgetArea, m_pDockHelp );
+
+    m_pHelpPanel = new HelpPanel();
+    m_pDockHelp->setWidget( m_pHelpPanel );    
+    ui->menuHelp->addAction( m_pDockHelp->toggleViewAction() );
+    m_pDockHelp->hide();//默认不显示
+}
+
+void MainWindow::setupToolBar()
+{
+    ui->mainToolBar->addAction( ui->actionStop );
+    ui->mainToolBar->addSeparator();
+    ui->mainToolBar->addAction( ui->actionDownload );
+    ui->mainToolBar->addAction( ui->actionUpload );
+    ui->mainToolBar->addAction( ui->actionStore );
+    ui->mainToolBar->addAction( ui->actionSync );
+    ui->mainToolBar->addSeparator();
+    ui->mainToolBar->addAction( ui->actionSearch );
+}
+
+void MainWindow::setupStatusBar()
+{
+    m_pLabStatus = new QLabel();
+    m_pLabMctVer = new QLabel( QString("%1:%2").arg( ( qApp->applicationName() ) ).arg( qApp->applicationVersion() ) );
+    m_pLabConVer = new QLabel();
+
+    ui->statusBar->insertWidget( 0, m_pLabStatus, 1 );
+    ui->statusBar->insertWidget( 1, m_pLabMctVer, 0 );
+    ui->statusBar->insertWidget( 2, m_pLabConVer, 0 );
+}
+
+void MainWindow::buildConnection()
+{
+    connect( m_pOps, SIGNAL(signal_focus_in( const QString &)),
+             this, SLOT(slot_focus_in(const QString &)) );
+
+    connect( m_roboConfig, SIGNAL(signal_focus_in( const QString &)),
+             this, SLOT(slot_focus_in(const QString &)) );
+
+    connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int,int)),
+            m_pOps,SLOT(slotSetCurrentRobot(QString,int,int,int)));
+
+    connect(m_roboConfig,SIGNAL(signalApplyClicked()),
+            m_pOps,SLOT(slotLoadConfigAgain()));
+
+    connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int,int)),
+            this,SLOT(slotSetDockOpsName(QString,int,int,int)));
+
+    connect(ui->actionStop,SIGNAL(triggered(bool)), m_pOps, SLOT(on_pushButton_stop_clicked()));
+
+    connect(ui->actionDownload,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotDownload()));
+    connect(ui->actionUpload,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotUpload()));
+    connect(ui->actionStore,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotStore()));
+    connect(ui->actionSync,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotSync()));
+    connect(ui->actionSearch,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotSearch()));
+
+//    QTimer::singleShot( 0, this, SLOT(slot_post_startup()));
 }
 
 void MainWindow::loadConfig()
@@ -55,151 +165,12 @@ void MainWindow::loadConfig()
         on_actionClassic_triggered();
         on_actionClassic_triggered();
     }
-
-}
-
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
-    ui->setupUi(this);
-
-    m_pHelpPanel = NULL;
-
-    setupWorkArea();
-
-    setupToolBar();
-
-    setupStatusBar();
-
-    buildConnection();
-
-    //! register the proxy
-    MainWindow::_pBackendProxy = this;
-
-    loadConfig();
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
-
-    if ( NULL != m_pHelpPanel )
-    { delete m_pHelpPanel; }
-}
-
-void MainWindow::setupWorkArea()
-{
-    //! pref
-    m_roboConfig = new RoboConfig(this);
-    connect( m_roboConfig, SIGNAL(signal_focus_in( const QString &)),
-             this, SLOT(slot_focus_in(const QString &)) );
-
-    //! docks
-    ui->centralWidget->insertTab( 0, m_roboConfig, tr("Pref") );
-
-    //! dock
-    m_pDockOps = new QDockWidget( tr("Ops"), this );
-    m_pDockOps->setAllowedAreas(  Qt::BottomDockWidgetArea );
-    m_pDockOps->setFeatures( QDockWidget::DockWidgetVerticalTitleBar
-                           | m_pDockOps->features() );
-    addDockWidget( Qt::BottomDockWidgetArea, m_pDockOps );
-
-    m_pOps = new H2Ops();
-    m_pDockOps->setWidget( m_pOps );
-    connect( m_pOps, SIGNAL(signal_focus_in( const QString &)),
-             this, SLOT(slot_focus_in(const QString &)) );
-
-    connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int,int)),m_pOps,SLOT(slotSetCurrentRobot(QString,int,int,int)));
-    connect(m_roboConfig,SIGNAL(signalApplyClicked()),m_pOps,SLOT(slotLoadConfigAgain()));
-
-    connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int,int)),this,SLOT(slotSetDockOpsName(QString,int,int,int)));
-
-    ui->menuView->addAction( m_pDockOps->toggleViewAction() );
-
-    //! help
-    m_pDockHelp = new QDockWidget( tr("Help"), this  );
-    m_pDockHelp->setAllowedAreas(  Qt::RightDockWidgetArea );
-    addDockWidget( Qt::RightDockWidgetArea, m_pDockHelp );
-
-    m_pHelpPanel = new HelpPanel();
-    m_pDockHelp->setWidget( m_pHelpPanel );
-    ui->menuHelp->addAction( m_pDockHelp->toggleViewAction() );
-}
-
-void MainWindow::setupToolBar()
-{
-    ui->mainToolBar->addAction( ui->actionStop );
-    ui->mainToolBar->addSeparator();
-    ui->mainToolBar->addAction( ui->actionDownload );
-    ui->mainToolBar->addAction( ui->actionUpload );
-    ui->mainToolBar->addAction( ui->actionStore );
-    ui->mainToolBar->addAction( ui->actionSync );
-    ui->mainToolBar->addSeparator();
-    ui->mainToolBar->addAction( ui->actionSearch );
-
-    connect(ui->actionStop,SIGNAL(triggered(bool)), m_pOps, SLOT(on_pushButton_stop_clicked()));
-    connect(ui->actionDownload,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotDownload()));
-    connect(ui->actionUpload,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotUpload()));
-    connect(ui->actionStore,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotStore()));
-    connect(ui->actionSync,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotSync()));
-    connect(ui->actionSearch,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotSearch()));
-}
-
-void MainWindow::setupStatusBar()
-{
-    m_pLabStatus = new QLabel();
-    m_pLabMctVer = new QLabel( QString("%1:%2").arg( ( qApp->applicationName() ) ).arg( qApp->applicationVersion() ) );
-    m_pLabConVer = new QLabel();
-
-    ui->statusBar->insertWidget( 0, m_pLabStatus, 1 );
-    ui->statusBar->insertWidget( 1, m_pLabMctVer, 0 );
-    ui->statusBar->insertWidget( 2, m_pLabConVer, 0 );
-}
-
-void MainWindow::buildConnection()
-{
-    QTimer::singleShot( 0, this, SLOT(slot_post_startup()));
-}
-
-void MainWindow::slot_post_startup()
-{
-    slot_logout( "start completed" );
-    slot_logout( "start warning", e_log_warning );
-    slot_logout( "start error", e_log_error );
-}
-
-void MainWindow::slot_logout( const QString &str, log_level lev )
-{
-    Q_ASSERT( NULL != m_pOps );
-
-    m_pOps->outConsole( str, lev );
-}
-
-void MainWindow::slot_focus_in( const QString &name )
-{
-//    logDbg() << name;
-
-    if ( name.length() <= 0 )
-    { return; }
-
-    if ( m_pHelpPanel == NULL )
-    { return; }
-
-    m_pHelpPanel->setFile( "./" + name + ".html" );
 }
 
 void MainWindow::on_actionAbout_triggered()
 {
     aboutDlg dlg(this);
     dlg.exec();
-}
-
-void MainWindow::slotSetDockOpsName(QString strDevInfo, int visa, int deviceName,int roboName)
-{
-    QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
-    QString strDeviceName = strListDev.at(2) + "[" + strListDev.at(0) + "]";
-    m_pDockOps->setWindowTitle("Ops: " + strDeviceName);
 }
 
 void MainWindow::on_actionChinese_triggered()
@@ -249,6 +220,8 @@ void MainWindow::changeLanguage()
     }
 
     qDebug() << "changeLanguage:" << qmFile;
+    sysInfo("changeLanguage:", qmFile);
+
     m_roboConfig->changeLanguage(qmFile);
     m_pOps->changeLanguage(qmFile);
 
@@ -285,12 +258,8 @@ void MainWindow::on_actionClassic_triggered()
     ui->actionMega->setChecked(false);
     m_style = STYLE_CLASSIC;
 
-//    QString qssText = qApp->styleSheet();
-//    writeFile(QApplication::applicationDirPath() + "/style/111.qss",qssText);
-
     setUiStyle(":/res/qss/classic.qss");
 }
-
 
 void MainWindow::setUiStyle(const QString &styleFile)
 {
@@ -309,29 +278,66 @@ void MainWindow::setUiStyle(const QString &styleFile)
     if( ! QFile::exists(styleFile) )
     {
         qDebug() << "setStyleSheet file not exists!";
+        sysError("setStyleSheet file not exists!" + styleFile);
         return;
     }
-
 
     QFile qss(styleFile);
     if( qss.open(QFile::ReadOnly) ){
         qApp->setStyleSheet(qss.readAll());
-        qDebug() << "setStyleSheet:" << styleFile;
         qss.close();
+
+        qDebug() << "setStyleSheet:" << styleFile;
+        sysInfo("setStyleSheet", styleFile);
     }
 }
 
-int MainWindow::writeFile(QString fileName, QString text)
+void MainWindow::slotSetDockOpsName(QString strDevInfo, int visa, int deviceName,int roboName)
 {
-    QFile file(fileName);
-    if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        qDebug() << QString("Can't WriteOnly open the file: %1").arg(fileName);
-        return -1;
-    }
-
-    file.write(text.toUtf8());
-    file.close();
-    return 0;
+    QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
+    QString strDeviceName = strListDev.at(2) + "[" + strListDev.at(0) + "]";
+    m_pDockOps->setWindowTitle("Ops: " + strDeviceName);
 }
 
+void MainWindow::slot_logout( const QString &str, LogLevel lev )
+{
+    Q_ASSERT( NULL != m_pOps );
+    m_pOps->outConsole( str, lev );
+}
+
+void MainWindow::slot_focus_in( const QString &name )
+{
+//    logDbg() << name;
+
+    if ( name.length() <= 0 )
+    { return; }
+
+    if ( m_pHelpPanel == NULL )
+    { return; }
+
+    m_pHelpPanel->setFile( QApplication::applicationDirPath() + "/doc/" + name + ".html" );
+}
+
+//void MainWindow::slot_post_startup()
+//{
+//    slot_logout( "start completed" );
+//    slot_logout( "start warning", eLogWarning );
+//    slot_logout( "start error", eLogError );
+//}
+
+
+void MainWindow::on_actionExit_triggered()
+{
+    this->closeEvent(NULL);
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    m_roboConfig->slotExit();
+    close();
+}
+
+//void MainWindow::showEvent(QShowEvent *event)
+//{
+//    this->showMaximized();
+//}

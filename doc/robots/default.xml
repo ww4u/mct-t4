@@ -21,12 +21,12 @@
     <H2Homing id="H2Homing">
         <ForceLimit>75.00</ForceLimit>
         <Movement>First in direction of X,then Y</Movement>
-        <SearchVelocity>50.00</SearchVelocity>
+        <SearchVelocity>100.00</SearchVelocity>
         <Target>Block</Target>
     </H2Homing>
     <H2JogMode id="H2JogMode">
         <CrawlingTime>1000.00</CrawlingTime>
-        <CrawlingVelocity>10.00</CrawlingVelocity>
-        <MaximumVelocity>100.00</MaximumVelocity>
+        <CrawlingVelocity>50.00</CrawlingVelocity>
+        <MaximumVelocity>200.00</MaximumVelocity>
     </H2JogMode>
 </root>

@@ -1,5 +1,4 @@
 #include "megamessagebox.h"
-#include "../../source/sys/sysapi.h"
 
 bool MegaMessageBox::_bZeroAffirm = false;
 

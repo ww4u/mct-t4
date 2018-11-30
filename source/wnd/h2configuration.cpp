@@ -137,7 +137,7 @@ void H2Configuration::on_radioButton_b_toggled(bool checked)
     if(checked)
         m_MotorPosition = 0;
     changeModelLabel();
-    emit signal_data_changed(true);
+    emit signalModelDataChanged(true);
 }
 
 void H2Configuration::on_radioButton_t_toggled(bool checked)
@@ -145,21 +145,21 @@ void H2Configuration::on_radioButton_t_toggled(bool checked)
     if(checked)
         m_MotorPosition = 1;
     changeModelLabel();
-    emit signal_data_changed(true);
+    emit signalModelDataChanged(true);
 }
 
 void H2Configuration::on_spinBox_X_valueChanged(int arg1)
 {
     m_WorkStrokeX = arg1;
     changeModelLabel();
-    emit signal_data_changed(true);
+    emit signalModelDataChanged(true);
 }
 
 void H2Configuration::on_spinBox_Y_valueChanged(int arg1)
 {
     m_WorkStrokeY = arg1;
     changeModelLabel();
-    emit signal_data_changed(true);
+    emit signalModelDataChanged(true);
 }
 
 void H2Configuration::on_sizeComboBox_currentIndexChanged(int index)
@@ -188,7 +188,7 @@ void H2Configuration::on_sizeComboBox_currentIndexChanged(int index)
     }
 
     changeModelLabel();
-    emit signal_data_changed(true);
+    emit signalModelDataChanged(true);
 }
 
 void H2Configuration::translateUI()

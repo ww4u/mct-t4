@@ -1,8 +1,7 @@
 #include "roboconfig.h"
 #include "ui_roboconfig.h"
 
-#include "../include/mystd.h"
-
+#include "mystd.h"
 #include "h2robo.h"
 
 RoboConfig::RoboConfig(QWidget *parent) :
@@ -19,9 +18,7 @@ RoboConfig::RoboConfig(QWidget *parent) :
     m_pRootNode->setText( 0, "Project");
     ui->treeWidget->addTopLevelItem( m_pRootNode );
 
-    QWidget *pWidget = new QWidget;
-    m_pRootNode->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(pWidget) ) );
-    ui->stackedWidget->addWidget( pWidget );
+    initRootNodeWidget();
 
     loadXmlConfig();
 
@@ -31,6 +28,23 @@ RoboConfig::RoboConfig(QWidget *parent) :
     ui->treeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->treeWidget, SIGNAL(customContextMenuRequested(const QPoint&)),
             this, SLOT(slotShowContextmenu(const QPoint&)));
+}
+
+void RoboConfig::initRootNodeWidget()
+{
+    QWidget *pWidget = new QWidget;
+    QVBoxLayout *t_layout = new QVBoxLayout(pWidget);
+    QLabel *t_label = new QLabel;
+    t_label->setPixmap(QPixmap(":/res/image/m.png"));
+    t_label->setAlignment(Qt::AlignHCenter);
+    QLabel *t_label2 = new QLabel("www.megarobo.tech");
+    t_label2->setAlignment(Qt::AlignHCenter);
+
+    t_layout->addWidget(t_label);
+    t_layout->addWidget(t_label2);
+    m_pRootNode->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(pWidget) ) );
+    pWidget->setEnabled(false);
+    ui->stackedWidget->addWidget( pWidget );
 }
 
 RoboConfig::~RoboConfig()
@@ -79,16 +93,16 @@ void RoboConfig::createRobot(QString strDevInfo)
         pCfg->setProjectName(configFileName);
         pCfg->loadConfig();
         pCfg->updateShow();
-
-        connect( pCfg, SIGNAL(signal_focus_in( const QString &)),
-                 this, SIGNAL(signal_focus_in( const QString &)) );
-
-        connect( pCfg, SIGNAL(signal_data_changed(bool)),
-                 this, SLOT(setApplyButtonEnabled(bool)) );
     }
 
     foreach (XConfig *pCfg, ((H2Robo *)(robotInfo.m_Robo))->subConfigs()){
         pCfg->saveConfig();
+
+        connect( pCfg, SIGNAL(signal_focus_in( const QString &)),
+                 this, SIGNAL(signal_focus_in( const QString &)) );
+
+        connect( pCfg, SIGNAL(signalModelDataChanged(bool)),
+                 this, SLOT(setApplyButtonEnabled(bool)) );
     }
 
     setApplyButtonEnabled(false);
@@ -126,7 +140,6 @@ void RoboConfig::slotAddNewRobot(QString strDevInfo)
     mXML.xmlNodeAppend(fileName, "RobotConfigs", mapWrite);
 }
 
-
 void RoboConfig::slotDownload()
 {
 
@@ -153,7 +166,7 @@ void RoboConfig::slotSync()
             if(ret != 0)
             {
                 ok = false;
-                QMessageBox::information(this,tr("tips"), pCfg->focusName() + tr("\tSync Faiured"));
+                QMessageBox::information(this,tr("tips"), pCfg->focusName() + tr("\nSync Faiured"));
             }
             pCfg->updateShow();
             pCfg->saveConfig();
@@ -175,6 +188,16 @@ void RoboConfig::slotSearch()
     m_megaSerachWidget->move( x()+100, y()+100);
     m_megaSerachWidget->show();
     connect(m_megaSerachWidget, SIGNAL(signal_selected_info(QString)), this, SLOT(slotAddNewRobot(QString)));
+}
+
+void RoboConfig::slotExit()
+{
+    foreach (RobotInfo robo, m_RobotList ){
+        QString strIP = robo.m_strDevInfo.split(',').at(0);
+        if(robo.m_Visa != 0){ //如果没有关闭就关闭设备
+            slot_open_close(strIP);
+        }
+    }
 }
 
 void RoboConfig::setApplyButtonEnabled(bool bl)
@@ -243,12 +266,30 @@ void RoboConfig::soltActionDelete()
     mXML.xmlNodeRemove(fileName, "RobotConfigs");
     mXML.xmlNodeAppend(fileName, "RobotConfigs", mapWrite); //update config.xml
 
+    QString strIDn = m_RobotList[mIndex].m_strDevInfo.split(',').at(3);
+
     //delete device.xml
-    fileName = QApplication::applicationDirPath() + "/robots/" + m_RobotList[mIndex].m_strDevInfo.split(',').at(3) + ".xml";
-    QFile file(fileName);
-    if(file.exists())
-    {   file.remove();  }
+    fileName = QApplication::applicationDirPath() + "/robots/" + strIDn + ".xml";
+    {
+        QFile file(fileName);
+        if(file.exists())
+        {   file.remove();  }
+    }
     //!
+
+    fileName = QApplication::applicationDirPath() + "/dataset/" + strIDn + ".mrp";
+    {
+        QFile file(fileName);
+        if(file.exists())
+        {   file.remove();  }
+    }
+
+    fileName = QApplication::applicationDirPath() + "/dataset/" + strIDn + ".xml";
+    {
+        QFile file(fileName);
+        if(file.exists())
+        {   file.remove();  }
+    }
 
     soltActionClose();
 }
@@ -358,6 +399,7 @@ void RoboConfig::slot_current_changed( QTreeWidgetItem* cur,QTreeWidgetItem* prv
 
     int index = -1, row = -1;
     if(NULL == cur->parent() ){// 根节点-1,0
+        ui->buttonBox->button((QDialogButtonBox::Apply))->setEnabled(false);
         return;
     }
     else if( NULL == cur->parent()->parent() ) { //子节点 x,0
@@ -367,7 +409,10 @@ void RoboConfig::slot_current_changed( QTreeWidgetItem* cur,QTreeWidgetItem* prv
         index = cur->parent()->parent()->indexOfChild(cur->parent());
         row = cur->parent()->indexOfChild(cur) + 1;
     }
-    if(mIndex == index) return;
+
+    if(mIndex != index){
+        sysInfo("Current Robot Changed: ", mIndex);
+    }
 
     mIndex = index;
     qDebug() << "slot_current_changed" << mIndex;
@@ -419,6 +464,7 @@ int RoboConfig::deviceOpen(QString strIP)
     if(visa <= 0)
     {
         qDebug() << "mrgOpenGateWay error" << visa;
+        sysError("mrgOpenGateWay error");
         return -1;
     }
 
@@ -431,6 +477,7 @@ int RoboConfig::deviceOpen(QString strIP)
     if(ret <= 0)
     {
         qDebug() << "mrhtRobotName_Query error" << ret;
+        sysError("mrhtRobotName_Query error");
         return -2;
     }
     roboName = roboNames[0];//默认选择第一个机器人
@@ -439,6 +486,7 @@ int RoboConfig::deviceOpen(QString strIP)
     if(ret <= 0)
     {
         qDebug() << "mrgGetRobotDevice error" << ret;
+        sysError("mrgGetRobotDevice error");
         return -3;
     }
     deviceName = deviceNames[0];//默认选择第一个驱控器
@@ -448,7 +496,9 @@ int RoboConfig::deviceOpen(QString strIP)
 
     mrgIdentify(visa, 1);
 
-//    qDebug() << "device open" << strIP << visa;
+    qDebug() << "device open" << strIP << visa;
+    sysInfo("Device Open", visa);
+
     m_RobotList[mIndex].m_Visa = visa;
     m_RobotList[mIndex].m_DeviceName = deviceName;
     m_RobotList[mIndex].m_RoboName = roboName;
@@ -461,7 +511,8 @@ int RoboConfig::deviceClose()
     mrgIdentify(m_RobotList[mIndex].m_Visa, 0);
     int ret = mrgCloseGateWay(m_RobotList[mIndex].m_Visa);
 
-//    qDebug() << "device close" << m_RobotList[mIndex].m_Visa << ret;
+    qDebug() << "device close" << m_RobotList[mIndex].m_Visa << ret;
+    sysInfo("Device Close");
 
     foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs())
     {    pCfg->detachHandle();  }

@@ -2,6 +2,7 @@
 #define MEGAMESSAGEBOX_H
 
 #include <QMessageBox>
+#include "sysapi.h"
 
 class MegaMessageBox : public QMessageBox
 {

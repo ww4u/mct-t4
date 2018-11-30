@@ -1,7 +1,6 @@
 #include "checkdelegate.h"
 #include <QtWidgets>
-#include "../include/mystd.h"
-//#define CHECK_WIDGET    myInvertButton
+#include "mystd.h"
 
 #define CHECK_WIDGET    QCheckBox
 

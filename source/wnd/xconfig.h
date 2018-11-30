@@ -8,9 +8,10 @@
 #include <QFile>
 #include <QTranslator>
 
-#include "../include/mystd.h"
-#include "MegaGateway.h"
+#include "mystd.h"
+#include "sysapi.h"
 #include "megaxml.h"
+#include "MegaGateway.h"
 
 class XConfig : public QWidget
 {
@@ -41,7 +42,7 @@ protected:
 
 signals:
     void signal_focus_in( const QString &name );
-    void signal_data_changed(const bool &bl);
+    void signalModelDataChanged(const bool &bl);
 
 protected:
     QString mFocusName;

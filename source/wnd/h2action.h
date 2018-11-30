@@ -5,8 +5,8 @@
 #include <QAbstractTableModel>
 #include "xconfig.h"
 
-#include "../model/comboxdelegate.h"
-#include "../model/h2actionmodel.h"
+#include "comboxdelegate.h"
+#include "h2actionmodel.h"
 
 namespace Ui {
 class H2Action;

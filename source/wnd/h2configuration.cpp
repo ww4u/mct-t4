@@ -19,23 +19,40 @@ H2Configuration::~H2Configuration()
 
 int H2Configuration::readDeviceConfig()
 {
+    m_Size = mrgGetRobotSubType(mViHandle, mRobotName);
+
+
+    int val = 0;
+    int ret = mrgMRQMotionReverse_Query(mViHandle, mDeviceName, &val);
+    if(ret < 0)
+        return -1;
+
+    m_MotorPosition = val;
+
+
+
     return 0;
 }
 
 int H2Configuration::writeDeviceConfig()
 {
     int ret = 0;
-#if 0
+#if 1
     //type:0==>small, 1==>big
-    ret += mrhtRobotSubtype(mViHandle, mRobotName, m_Size);
+    ret = mrgSetRobotSubType(mViHandle, mRobotName, m_Size);
+    if(ret != 0)
+        return -1;
 
     //WorkStrokeX
 
+
     //WorkStrokeY
 
-    //states:OFF==>bottom, ON==>top
-    ret += mrqDeviceMrqMotionReverse(mViHandle, mRobotName, m_MotorPosition);
 
+    //states:OFF==>bottom, ON==>top
+    ret = mrgMRQMotionReverse(mViHandle, mDeviceName, m_MotorPosition);
+    if(ret != 0)
+        return -1;
 #endif
 
     return ret;

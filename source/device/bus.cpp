@@ -667,7 +667,7 @@ int socketFindResources(char ip[][100], int ip_len,int timeout_ms)
 		int bOpt = 1;
 #endif
         //设置该套接字为广播类型
-        ret = setsockopt(sock[i], SOL_SOCKET, SO_BROADCAST | SO_REUSEADDR, (char*)&bOpt, sizeof(bOpt));
+        ret = setsockopt(sock[i], SOL_SOCKET, SO_BROADCAST, (char*)&bOpt, sizeof(bOpt));
         if(ret != 0)
             return -1;
     }

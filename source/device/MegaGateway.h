@@ -5,7 +5,7 @@
 
 #include "device.h"
 #include "mrqDevice.h"
-#include "megaRobot.h"
+#include "MegaRobot.h"
 #include "system.h"
 #include "storage.h"
 

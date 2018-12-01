@@ -267,7 +267,10 @@ EXPORT_API int CALL mrgGetRobotName(ViSession vi,int *robotnames)
     if ((retlen = busQuery(vi, args, strlen(args), names, 100)) == 0) {
         return 0;
     }
-    else {
+    else if( 0 == (strcmp( names, "Command error")) ){
+        return -1;
+    }
+    else{
         names[retlen - 1] = '\0';
     }
     p = STRTOK_S(names, ",", &pNext);

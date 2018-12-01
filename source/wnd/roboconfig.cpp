@@ -474,7 +474,7 @@ int RoboConfig::deviceOpen(QString strIP)
     int roboName = -1;
 
     ret = mrgGetRobotName(visa, roboNames);
-    if(ret <= 0)
+    if( (ret <= 0) || (roboNames[0] == 0) )
     {
         qDebug() << "mrhtRobotName_Query error" << ret;
         sysError("mrhtRobotName_Query error");
@@ -483,7 +483,7 @@ int RoboConfig::deviceOpen(QString strIP)
     roboName = roboNames[0];//默认选择第一个机器人
 
     ret = mrgGetRobotDevice(visa, roboName, deviceNames);
-    if(ret <= 0)
+    if( (ret <= 0) || (deviceNames[0] == 0) )
     {
         qDebug() << "mrgGetRobotDevice error" << ret;
         sysError("mrgGetRobotDevice error");

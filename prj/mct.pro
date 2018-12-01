@@ -138,15 +138,15 @@ INCLUDEPATH += ../source/device
 INCLUDEPATH += ../source/model
 INCLUDEPATH += ../source/wnd
 INCLUDEPATH += ../source/widget
-INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include"
-
-LIBS += -L"C:/Program Files (x86)/IVI Foundation/VISA/WinNT/lib/msc"
-LIBS += -lvisa32
-
-LIBS += -L"../3rdlib"
-LIBS += -llibws2_32 -llibiphlpapi
 
 
+win32:INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include"
+
+win32:LIBS += -L"C:/Program Files (x86)/IVI Foundation/VISA/WinNT/lib/msc"
+win32:LIBS += -lvisa32
+
+win32:LIBS += -L"../3rdlib"
+win32:LIBS += -llibws2_32 -llibiphlpapi
 
 RESOURCES += ../res/res.qrc \
     ../res/res.qrc \
@@ -160,5 +160,3 @@ RC_ICONS = ../res/image/megarobo.ico
 
 TRANSLATIONS += ../res/ts/qt_CN.ts
 TRANSLATIONS += ../res/ts/qt_EN.ts
-
-

@@ -4,10 +4,52 @@
 #include <QtWidgets>
 #include "xrobo.h"
 #include "megainterface.h"
+#include "MegaGateway.h"
 
 namespace Ui {
 class RoboConfig;
 }
+
+class ThreadExport: public QThread
+{
+    Q_OBJECT
+public:
+    void setVisa(int vi){
+        this->m_visa = vi;
+    }
+
+signals:
+    void signalThreadEnd(int);
+
+protected:
+    void run() {
+        int timeout = 10000;
+        int state = 0;
+        mrgSaveRobotConfig(m_visa);
+        while (timeout > 0)
+        {
+            QThread::msleep(500);
+            qDebug() << "mrgSaveRobotConfig";
+            state = mrgGetRobotConfigState(m_visa);
+            if (state != 1) { break;}
+            timeout -= 500;
+        }
+
+        if(timeout <= 0){
+            emit signalThreadEnd(-1);
+        }
+        else{
+            if (state == 0){
+                emit signalThreadEnd(0);
+            }
+            else{
+                emit signalThreadEnd(-2);
+            }
+        }
+    }
+private:
+    int m_visa = 0;
+};
 
 class RoboConfig : public QWidget
 {
@@ -16,7 +58,7 @@ class RoboConfig : public QWidget
 signals:
     void signalCurrentRobotChanged(QString,int,int,int);
     void signal_focus_in( const QString &);
-    void signalApplyClicked();
+    void signalDataChanged();
 
 public:
     explicit RoboConfig(QWidget *parent = 0);
@@ -34,13 +76,13 @@ public slots:
     void slotExit();
 
 private slots:
-    void setApplyButtonEnabled(bool bl);
     void on_buttonBox_clicked(QAbstractButton *button);
     void slot_current_changed( QTreeWidgetItem* pre,QTreeWidgetItem* nxt );
     void slot_open_close(QString strIP);
     void slotShowContextmenu(const QPoint &pos);
     void soltActionClose();
     void soltActionDelete();
+    void slotStoreEnd(int ret);
 
 private:
     Ui::RoboConfig *ui;

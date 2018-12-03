@@ -18,8 +18,6 @@ H2Robo::H2Robo(QStackedWidget *pWig, QString strDevInfo, QObject *pObj ) : XRobo
 {
     Q_ASSERT( NULL != pWig );
 
-    m_applyEnabled = false;
-
     //! roboNode
     m_pProduct = new H2Product(strDevInfo);
     Q_ASSERT( NULL != m_pProduct );
@@ -47,16 +45,6 @@ void H2Robo::buildConnection()
 
     connect(m_pH2Measurement,SIGNAL(signal_AxesZeroPoint_currentTextChanged(QString)),
             m_pH2Homing,SLOT(slot_set_direction(QString)));
-}
-
-bool H2Robo::applyEnabled() const
-{
-    return m_applyEnabled;
-}
-
-void H2Robo::setApplyEnabled(bool applyEnabled)
-{
-    m_applyEnabled = applyEnabled;
 }
 
 QTreeWidgetItem *H2Robo::roboNode()

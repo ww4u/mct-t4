@@ -31,7 +31,7 @@ H2Ops::H2Ops(QWidget *parent) :
     setupModel();
 
     connect(&m_timerGlobal, SIGNAL(timeout()), this, SLOT(updateDeviceAllStatus()));
-    m_timerGlobal.setInterval(1000 * 1); //所有状态信息的轮询间隔时间
+    m_timerGlobal.setInterval(2000 * 1); //所有状态信息的轮询间隔时间
 
     connect(&m_timerCurrentPos, SIGNAL(timeout()), this, SLOT(updateCurrentPosition()));
     m_timerCurrentPos.setInterval(100); //0.1S
@@ -702,6 +702,9 @@ void H2Ops::updateDeviceAllStatus()
     }
 #endif
 
+    updateCurrentMileage();
+    updateTargetPosition();
+
     updateDeviceStatus();
 
     updateRecordNumber();
@@ -741,10 +744,10 @@ void H2Ops::updateCurrentMileage()
     long long llx, lly, llz;
     int ret = mrgGetRobotCurrentMileage(m_ViHandle, m_RoboName, &llx, &lly, &llz);
     qDebug() << "mrgGetRobotCurrentMileage:" << llx << lly;
-    sysInfo("mrgGetRobotCurrentMileage", ret);
-
-    ui->doubleSpinBox_Mileage_x->setValue( llx/1000.0 );
-    ui->doubleSpinBox_Mileage_y->setValue( lly/1000.0 );
+    if(ret == 0){
+        ui->doubleSpinBox_Mileage_x->setValue( llx );
+        ui->doubleSpinBox_Mileage_y->setValue( lly );
+    }
 }
 
 //! 更新目标位置
@@ -752,10 +755,11 @@ void H2Ops::updateTargetPosition()
 {
     double dx, dy, dz;
     int ret =  mrgGetRobotTargetPosition(m_ViHandle, m_RoboName, &dx, &dy, &dz);
-    sysInfo("mrgGetRobotTargetPosition", ret);
-
-    ui->doubleSpinBox_target_position_x->setValue( dx );
-    ui->doubleSpinBox_target_position_y->setValue( dy );
+    qDebug() << "mrgGetRobotTargetPosition" << ret;
+    if(ret == 0){
+        ui->doubleSpinBox_target_position_x->setValue( dx );
+        ui->doubleSpinBox_target_position_y->setValue( dy );
+    }
 }
 
 //! 更新记录编号
@@ -783,36 +787,39 @@ void H2Ops::updateDeviceStatus()
 
 void H2Ops::updateMonitor()
 {
-    unsigned int array[4096] = {0};
+    unsigned int array1[4096] = {0};
+    unsigned int array2[4096] = {0};
     int count = -1;
 
     //查询第一个电机
-    memset(array, 0, sizeof(array));
-    count = mrgMRQReportQueue_Query(m_ViHandle, m_DeviceName, 0, 0, array);
+    memset(array1, 0, sizeof(array1));
+    count = mrgMRQReportQueue_Query(m_ViHandle, m_DeviceName, 0, 0, array1);
     if(count <= 0)
         return;
-
-    for(int i=0; i<count; i++)
-    {
-        int v1 = (array[i] >> 8) & 0xFF;
-        int v2 = array[i] & 0xFF;
-        m_splineChart1->dataAppend(v1,v2);
-        qDebug() << "m_splineChart1" << i << v1 << v2;
-    }
 
     //查询第二个电机
-    memset(array, 0, sizeof(array));
-    count = mrgMRQReportQueue_Query(m_ViHandle, m_DeviceName, 1, 0, array);
+    memset(array2, 0, sizeof(array2));
+    count = mrgMRQReportQueue_Query(m_ViHandle, m_DeviceName, 1, 0, array2);
     if(count <= 0)
-        return;
+        goto LAB1;
 
     for(int i=0; i<count; i++)
     {
-        int v1 = (array[i] >> 8) & 0xFF;
-        int v2 = array[i] & 0xFF;
+        int v1 = (array2[i] >> 8) & 0xFF;
+        int v2 = array2[i] & 0xFF;
         m_splineChart2->dataAppend(v1,v2);
-        qDebug() << "m_splineChart2" << i << v1 << v2;
+//        qDebug() << "m_splineChart2" << i << v1 << v2;
     }
+
+LAB1:
+    for(int i=0; i<count; i++)
+    {
+        int v1 = (array1[i] >> 8) & 0xFF;
+        int v2 = array1[i] & 0xFF;
+        m_splineChart1->dataAppend(v1,v2);
+//        qDebug() << "m_splineChart1" << i << v1 << v2;
+    }
+
 }
 
 

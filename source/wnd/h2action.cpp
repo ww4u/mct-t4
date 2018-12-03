@@ -35,6 +35,20 @@ int H2Action::readDeviceConfig()
     int ret = -1;
     m_strLocalFileName = QApplication::applicationDirPath() + "/dataset/" + mProjectName + ".mrp";
 
+    //! 查找文件
+    char filenames[1024] = "";
+    if (mrgStorageMotionFileQuery(mViHandle, 0, filenames, sizeof(filenames)) > 0)
+    {
+        QStringList lst = QString("%1").arg(filenames).split(',');
+        if( !lst.contains(m_strDeviceFileName) )
+        {
+            qDebug() << m_strDeviceFileName + " not exist in device";
+            sysError(m_strDeviceFileName + " not exist in device");
+            return -1;
+        }
+    }
+
+    //! 读文件
     int len = 4096 * 1024;
     char *pData = (char *)malloc(len);
     memset(pData, 0, len);
@@ -50,15 +64,13 @@ int H2Action::readDeviceConfig()
         qDebug() << "mrgStorageMotionFileContextRead" << ret << m_fileContext;
 
         //保存到本地文件
-        if(0 != writeFile(m_strLocalFileName, m_fileContext) )
-        {
+        if(0 != writeFile(m_strLocalFileName, m_fileContext) ){
             sysError("H2Action:readDeviceConfig:writeFile error");
             goto ERR;
         }
 
         //保存到model
-        if(0 != m_actionModel.input(m_strLocalFileName) )
-        {
+        if(0 != m_actionModel.input(m_strLocalFileName) ){
             sysError("H2Action:readDeviceConfig:input error");
             goto ERR;
         }

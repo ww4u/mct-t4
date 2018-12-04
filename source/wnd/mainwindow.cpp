@@ -88,6 +88,7 @@ void MainWindow::setupToolBar()
 
 void MainWindow::setupStatusBar()
 {
+    qDebug() << "version" << qApp->applicationVersion();
     m_pLabStatus = new QLabel();
     m_pLabMctVer = new QLabel( QString("%1:%2").arg( ( qApp->applicationName() ) ).arg( qApp->applicationVersion() ) );
     m_pLabConVer = new QLabel();
@@ -108,7 +109,7 @@ void MainWindow::buildConnection()
     connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int,int)),
             m_pOps,SLOT(slotSetCurrentRobot(QString,int,int,int)));
 
-    connect(m_roboConfig,SIGNAL(signalApplyClicked()),
+    connect(m_roboConfig,SIGNAL(signalDataChanged()),
             m_pOps,SLOT(slotLoadConfigAgain()));
 
     connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int,int)),

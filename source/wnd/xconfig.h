@@ -12,6 +12,7 @@
 #include "sysapi.h"
 #include "megaxml.h"
 #include "MegaGateway.h"
+#include "xthread.h"
 
 class XConfig : public QWidget
 {

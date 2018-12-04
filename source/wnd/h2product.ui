@@ -277,7 +277,7 @@
        </widget>
       </item>
       <item row="5" column="0" colspan="2">
-       <widget class="QToolButton" name="toolButton_status">
+       <widget class="QPushButton" name="pushButton_status">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -288,10 +288,12 @@
          <enum>Qt::ClickFocus</enum>
         </property>
         <property name="styleSheet">
-         <string notr="true">background-color: rgba(0, 85, 255, 0);</string>
+         <string notr="true">border-color: rgba(255, 255, 255, 0);
+background-color: rgba(255, 255, 255, 10);
+</string>
         </property>
         <property name="text">
-         <string>   offline</string>
+         <string/>
         </property>
         <property name="icon">
          <iconset resource="../../res/res.qrc">
@@ -299,17 +301,17 @@
         </property>
         <property name="iconSize">
          <size>
-          <width>48</width>
-          <height>48</height>
+          <width>72</width>
+          <height>36</height>
          </size>
         </property>
         <property name="shortcut">
          <string/>
         </property>
-        <property name="toolButtonStyle">
-         <enum>Qt::ToolButtonTextBesideIcon</enum>
+        <property name="autoRepeatInterval">
+         <number>800</number>
         </property>
-        <property name="autoRaise">
+        <property name="flat">
          <bool>true</bool>
         </property>
        </widget>

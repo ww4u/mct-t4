@@ -30,7 +30,7 @@ signals:
     void signal_online_clicked(QString);
 
 private slots:
-    void on_toolButton_status_clicked();
+    void on_pushButton_status_clicked();
 
 private:
     Ui::H2Product *ui;

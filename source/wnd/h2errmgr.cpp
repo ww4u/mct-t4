@@ -23,18 +23,16 @@ H2ErrMgr::H2ErrMgr(QWidget *parent) :
 
     m_pErrActionDelegate->setItems( errActions );
 
-    connect(&mErrManager, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
-            this,SLOT(slotModelChanged(QModelIndex,QModelIndex,QVector<int>)));
+    connect(&mErrManager, &ErrMgrModel::dataChanged,
+            [=](){
+        emit signalModelDataChanged(true);
+    } );
+
 }
 
 H2ErrMgr::~H2ErrMgr()
 {
     delete ui;
-}
-
-void H2ErrMgr::slotModelChanged(QModelIndex index1, QModelIndex index2, QVector<int> vector)
-{
-    emit signalModelDataChanged(true);
 }
 
 int H2ErrMgr::readDeviceConfig()

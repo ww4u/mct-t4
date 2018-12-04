@@ -30,24 +30,27 @@ H2Product::~H2Product()
     delete ui;
 }
 
-void H2Product::on_toolButton_status_clicked()
+void H2Product::on_pushButton_status_clicked()
 {
     emit signal_online_clicked(m_IP);
 }
 
 void H2Product::change_online_status(bool bl)
 {
+
     if(bl)
     {
-        ui->toolButton_status->setIcon(QIcon(":/res/image/h2product/online.png"));
-        ui->toolButton_status->setText(tr("    online    "));
-        ui->toolButton_status->setToolTip(tr("click here to close device"));
+//        ui->pushButton_status->setStyleSheet("border-image: url(:/res/image/h2product/offline.png);");
+        ui->pushButton_status->setIcon(QIcon(":/res/image/h2product/online.png"));
+//        ui->pushButton_status->setText(tr("    online    "));
+        ui->pushButton_status->setToolTip(tr("click here to close device"));
     }
     else
     {
-        ui->toolButton_status->setIcon(QIcon(":/res/image/h2product/offline.png"));
-        ui->toolButton_status->setText(tr("    offline    "));
-        ui->toolButton_status->setToolTip(tr("click here to open device"));
+//        ui->pushButton_status->setStyleSheet("border-image: url(:/res/image/h2product/offline.png);");
+        ui->pushButton_status->setIcon(QIcon(":/res/image/h2product/offline.png"));
+//        ui->pushButton_status->setText(tr("    offline    "));
+        ui->pushButton_status->setToolTip(tr("click here to open device"));
     }
 }
 

@@ -28,8 +28,6 @@ public:
     void updateShow();      //更新界面
 
     void translateUI() override;
-private slots:
-    void slotModelChanged(QModelIndex index1, QModelIndex index2, QVector<int> vector);
 
 private:
     Ui::H2ErrMgr *ui;

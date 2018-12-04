@@ -45,5 +45,13 @@
         <file>ts/qt_CN.qm</file>
         <file>ts/qt_EN.qm</file>
         <file>qss/classic.qss</file>
+        <file>image/icon/stop.png</file>
+        <file>image/icon/download.png</file>
+        <file>image/icon/upload.png</file>
+        <file>image/icon/sync.png</file>
+        <file>image/icon/store.png</file>
+        <file>image/icon/find.png</file>
+        <file>image/icon/china.png</file>
+        <file>image/icon/english.png</file>
     </qresource>
 </RCC>

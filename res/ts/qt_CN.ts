@@ -506,7 +506,7 @@
     <message>
         <location filename="../../source/wnd/h2ops.ui" line="1186"/>
         <source>Y-Axis</source>
-        <translation>坐标X</translation>
+        <translation>坐标Y</translation>
     </message>
     <message>
         <location filename="../../source/wnd/h2ops.ui" line="1216"/>
@@ -657,23 +657,23 @@
         <translation>能效曲线2</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="359"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="360"/>
         <source>load completed</source>
         <translation>完成加载</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="374"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="407"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="375"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="408"/>
         <source>save completed</source>
         <translation>完成保存</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="470"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="448"/>
         <source>tips</source>
         <translation>提示</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="470"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="448"/>
         <source>Starting Home failure</source>
         <translation>回零失败</translation>
     </message>
@@ -711,7 +711,7 @@
         <translation>版本号：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2product.ui" line="294"/>
+        <location filename="../../source/wnd/h2product.ui" line="295"/>
         <source>   offline</source>
         <translation>离线</translation>
     </message>
@@ -739,32 +739,32 @@
 <context>
     <name>H2Robo</name>
     <message>
-        <location filename="../../source/wnd/h2robo.cpp" line="33"/>
+        <location filename="../../source/wnd/h2robo.cpp" line="31"/>
         <source>Configuration</source>
         <translation>配置</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2robo.cpp" line="34"/>
+        <location filename="../../source/wnd/h2robo.cpp" line="32"/>
         <source>Measurements</source>
         <translation>测量</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2robo.cpp" line="35"/>
+        <location filename="../../source/wnd/h2robo.cpp" line="33"/>
         <source>Homing</source>
         <translation>回零</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2robo.cpp" line="36"/>
+        <location filename="../../source/wnd/h2robo.cpp" line="34"/>
         <source>Jog Mode</source>
         <translation>蹒跚模式</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2robo.cpp" line="37"/>
+        <location filename="../../source/wnd/h2robo.cpp" line="35"/>
         <source>Record Table</source>
         <translation>记录表</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2robo.cpp" line="38"/>
+        <location filename="../../source/wnd/h2robo.cpp" line="36"/>
         <source>Error Management</source>
         <translation>错误管理</translation>
     </message>
@@ -855,7 +855,7 @@
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="60"/>
-        <location filename="../../source/wnd/mainwindow.ui" line="131"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="160"/>
         <source>&amp;Help</source>
         <translation>帮助&amp;H</translation>
     </message>
@@ -880,107 +880,107 @@
         <translation>风格&amp;S</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="107"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="136"/>
         <source>&amp;Stop</source>
         <translation>停止&amp;S</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="110"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="139"/>
         <source>Ctrl+E</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="115"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="144"/>
         <source>&amp;Exit</source>
         <translation>退出&amp;E</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="118"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="147"/>
         <source>Ctrl+Q</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="123"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="152"/>
         <source>&amp;About</source>
         <translation>关于&amp;A</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="126"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="155"/>
         <source>Ctrl+I</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="134"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="163"/>
         <source>Ctrl+H</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="139"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="172"/>
         <source>&amp;Upload</source>
         <translation>上传&amp;U</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="142"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="175"/>
         <source>Ctrl+U</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="147"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="184"/>
         <source>&amp;Download</source>
         <translation>下载&amp;D</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="150"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="187"/>
         <source>Ctrl+D</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="155"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="196"/>
         <source>S&amp;tore</source>
         <translation>储存&amp;T</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="158"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="199"/>
         <source>Ctrl+T</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="163"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="208"/>
         <source>S&amp;ync</source>
         <translation>同步&amp;Y</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="166"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="211"/>
         <source>Ctrl+Y</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="174"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="219"/>
         <source>&amp;Chinese</source>
         <translation>中文&amp;C</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="185"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="230"/>
         <source>&amp;English</source>
         <translation>英语&amp;E</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="196"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="241"/>
         <source>&amp;MEGAROBO</source>
         <translation>镁伽&amp;M</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="207"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="252"/>
         <source>&amp;Classic</source>
         <translation>经典&amp;C</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="212"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="261"/>
         <source>&amp;Search</source>
         <translation>搜索&amp;S</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="218"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="267"/>
         <source>Ctrl+F</source>
         <translation></translation>
     </message>
@@ -1054,7 +1054,7 @@
         <translation type="vanished">搜索</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="215"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="264"/>
         <source>SearchDevice</source>
         <translation>搜索设备</translation>
     </message>
@@ -1142,74 +1142,122 @@
         <translation type="vanished">工程</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="119"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="169"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="175"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="177"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="290"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="296"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="303"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="339"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="344"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="349"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="424"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="116"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="153"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="159"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="164"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="182"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="189"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="191"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="200"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="225"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="229"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="245"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="384"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="389"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="394"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="464"/>
         <source>tips</source>
         <translation>提示</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="119"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="116"/>
         <source>The device already exists in the project.</source>
         <translation>设备已经存在于工程中.</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="169"/>
         <source>	Sync Faiured</source>
-        <translation>同步失败</translation>
+        <translation type="vanished">同步失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="175"/>
         <source>Sync Succeed!</source>
-        <translation>同步成功！</translation>
+        <translation type="vanished">同步成功！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="177"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="296"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="344"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="153"/>
+        <source>	
+Download Failure</source>
+        <translation>下载失败</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="159"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="191"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="200"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="389"/>
         <source>Current Device In Offline</source>
         <translation>当前设备处于离线状态</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="222"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="164"/>
+        <source>Download Success!</source>
+        <translation>下载成功！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="182"/>
+        <source>
+Upload Faiured</source>
+        <translation>上传失败</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="189"/>
+        <source>Upload Succeed!</source>
+        <translation>上传成功！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="225"/>
+        <source>Store timeout!</source>
+        <translation>存储超时！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="229"/>
+        <source>Store success!</source>
+        <translation>存储成功！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="232"/>
+        <source>Warning</source>
+        <translation>警告</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="232"/>
+        <source>Store error!</source>
+        <translation>存储失败！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="245"/>
+        <source>unable</source>
+        <translation>不可用</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="281"/>
         <source>close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="223"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="282"/>
         <source>delete</source>
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="290"/>
         <source>	Apply Failure</source>
-        <translation>应用失败</translation>
+        <translation type="vanished">应用失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="303"/>
         <source>Apply Success!</source>
-        <translation>应用成功！</translation>
+        <translation type="vanished">应用成功！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="339"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="384"/>
         <source>	Reset Failure</source>
         <translation>重置失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="349"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="394"/>
         <source>Reset Success!</source>
         <translation>重置成功！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="424"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="464"/>
         <source>Device Open Failure!!!</source>
         <translation>设备打开失败!!!!</translation>
     </message>

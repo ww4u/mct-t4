@@ -11,6 +11,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = mct
 TEMPLATE = app
 
+CONFIG += C++11 #use lambda
+
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
@@ -38,6 +40,7 @@ HEADERS += ../include/mystd.h           \
     ../source/device/system.h           \
     ../source/sys/sysapi.h              \
     ../source/sys/megaxml.h             \
+    ../source/sys/xthread.h             \
     ../source/mrp/mdatarow.h            \
     ../source/mrp/mdataset.h            \
     ../source/model/megatablemodel.h    \
@@ -82,6 +85,7 @@ SOURCES += ../source/main/main.cpp      \
     ../source/device/system.cpp         \
     ../source/sys/sysapi.cpp            \
     ../source/sys/megaxml.cpp           \
+    ../source/sys/xthread.cpp           \
     ../source/mrp/mdatarow.cpp          \
     ../source/mrp/mdataset.cpp          \
     ../source/model/diagnosisitem.cpp   \
@@ -116,6 +120,7 @@ SOURCES += ../source/main/main.cpp      \
     ../source/widget/megasplinechart.cpp\
     ../source/widget/megainterface.cpp
 
+
 FORMS += ../source/wnd/mainwindow.ui    \
     ../source/wnd/h2ops.ui              \
     ../source/wnd/h2action.ui           \
@@ -148,13 +153,7 @@ win32:LIBS += -lvisa32
 win32:LIBS += -L"../3rdlib"
 win32:LIBS += -llibws2_32 -llibiphlpapi
 
-RESOURCES += ../res/res.qrc \
-    ../res/res.qrc \
-    ../res/res.qrc \
-    ../res/res.qrc \
-    ../res/res.qrc \
-    ../res/res.qrc \
-    ../res/res.qrc
+RESOURCES += ../res/res.qrc
 
 RC_ICONS = ../res/image/megarobo.ico
 

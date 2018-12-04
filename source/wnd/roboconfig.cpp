@@ -3,6 +3,7 @@
 
 #include "mystd.h"
 #include "h2robo.h"
+#include "xthread.h"
 
 RoboConfig::RoboConfig(QWidget *parent) :
     QWidget(parent),
@@ -192,17 +193,6 @@ void RoboConfig::slotUpload()
     }
 }
 
-void RoboConfig::slotStoreEnd(int ret)
-{
-    if(ret == 0)
-        QMessageBox::information(this,tr("tips"),tr("Store success!"));
-    else if(ret == -1)
-        QMessageBox::information(this,tr("tips"),tr("Store timeout!"));
-    else if(ret == -2)
-        QMessageBox::warning(this,tr("Warning"),tr("Store error!"));
-    else{
-    }
-}
 void RoboConfig::slotStore()
 {
     if(mIndex < 0) return;
@@ -212,23 +202,72 @@ void RoboConfig::slotStore()
     }
     else{
         int visa = m_RobotList[mIndex].m_Visa;
-        if (mrgGetRobotConfigState(visa) == 1){
-            qDebug() << "mrgGetRobotConfigState == 1";
-            return;
-        }
+        auto func = [&](void)
+        {
+            qDebug() << "mrgGetRobotConfigState1";
+            if (mrgGetRobotConfigState(visa) == 1){
+                qDebug() << "mrgGetRobotConfigState == 1";
+                return;
+            }
+            qDebug() << "mrgGetRobotConfigState2";
 
-        ThreadExport *thread = new ThreadExport;
-        thread->setVisa(visa);
-        connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-        connect(thread,SIGNAL(signalThreadEnd(int)),this,SLOT(slotStoreEnd(int)));
+            int timeout = 10000;
+            int state = 0;
+            qDebug() << "mrgSaveRobotConfig";
+            mrgSaveRobotConfig(visa);
+            while (timeout > 0)
+            {
+                QThread::msleep(500);
+                qDebug() << "mrgGetRobotConfigState";
+                state = mrgGetRobotConfigState(visa);
+                if (state != 1) { break;}
+                timeout -= 500;
+            }
+
+            if(timeout <= 0){
+                m_retVal = -1;
+                qDebug() << "Store timeout!";
+            }
+            else{
+                if (state == 0){
+                    m_retVal = 0;
+                    qDebug() << "Store success!";
+                }
+                else{
+                    m_retVal = -2;
+                    qDebug() << "Store error!";
+                }
+            }
+        };
+
+        XThread *thread = new XThread(func);
+        connect(thread,&XThread::finished,this,
+                [=](){
+            slotStoreTips(m_retVal);
+        });
         thread->start();
     }
+}
+
+void RoboConfig::slotStoreTips(int val)
+{
+    if(val == -1){
+        QMessageBox::warning(this,tr("Warning"),tr("Store timeout!"));
+    }
+    else if(val == 0){
+        QMessageBox::information(this,tr("tips"),tr("Store success!"));
+    }
+    else if(val == -2){
+        QMessageBox::critical(this,tr("Error"),tr("Store error!"));
+    }
+    else
+    {}
 }
 
 void RoboConfig::slotSync()
 {
     //! TODO
-    QMessageBox::information(this,tr("提示"),tr("暂不可用"));
+    QMessageBox::information(this,tr("tips"),tr("unable"));
 }
 
 void RoboConfig::slotSearch()

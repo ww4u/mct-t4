@@ -10,47 +10,6 @@ namespace Ui {
 class RoboConfig;
 }
 
-class ThreadExport: public QThread
-{
-    Q_OBJECT
-public:
-    void setVisa(int vi){
-        this->m_visa = vi;
-    }
-
-signals:
-    void signalThreadEnd(int);
-
-protected:
-    void run() {
-        int timeout = 10000;
-        int state = 0;
-        mrgSaveRobotConfig(m_visa);
-        while (timeout > 0)
-        {
-            QThread::msleep(500);
-            qDebug() << "mrgSaveRobotConfig";
-            state = mrgGetRobotConfigState(m_visa);
-            if (state != 1) { break;}
-            timeout -= 500;
-        }
-
-        if(timeout <= 0){
-            emit signalThreadEnd(-1);
-        }
-        else{
-            if (state == 0){
-                emit signalThreadEnd(0);
-            }
-            else{
-                emit signalThreadEnd(-2);
-            }
-        }
-    }
-private:
-    int m_visa = 0;
-};
-
 class RoboConfig : public QWidget
 {
     Q_OBJECT
@@ -82,7 +41,7 @@ private slots:
     void slotShowContextmenu(const QPoint &pos);
     void soltActionClose();
     void soltActionDelete();
-    void slotStoreEnd(int ret);
+    void slotStoreTips(int val);
 
 private:
     Ui::RoboConfig *ui;
@@ -113,6 +72,7 @@ private:
     QMenu *m_menu;
     bool copyFileToPath(QString sourceDir, QString toDir, bool coverFileIfExist);
     QTranslator m_translator;
+    int m_retVal;
 };
 
 #endif // H2CONFIG_H

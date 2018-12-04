@@ -21,7 +21,6 @@ int H2Configuration::readDeviceConfig()
 {
     m_Size = mrgGetRobotSubType(mViHandle, mRobotName);
 
-
     int val = 0;
     int ret = mrgMRQMotionReverse_Query(mViHandle, mDeviceName, &val);
     if(ret < 0)
@@ -29,15 +28,13 @@ int H2Configuration::readDeviceConfig()
 
     m_MotorPosition = val;
 
-
-
     return 0;
 }
 
 int H2Configuration::writeDeviceConfig()
 {
     int ret = 0;
-#if 1
+
     //type:0==>small, 1==>big
     ret = mrgSetRobotSubType(mViHandle, mRobotName, m_Size);
     if(ret != 0)
@@ -53,7 +50,6 @@ int H2Configuration::writeDeviceConfig()
     ret = mrgMRQMotionReverse(mViHandle, mDeviceName, m_MotorPosition);
     if(ret != 0)
         return -1;
-#endif
 
     return ret;
 }

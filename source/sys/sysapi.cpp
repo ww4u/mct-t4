@@ -1,6 +1,4 @@
 #include "sysapi.h"
-
-#include <QtCore>
 #include "mainwindow.h"
 
 void sysInfo( const QString &str )
@@ -29,3 +27,5 @@ void sysError( const QString &info , const int &val)
     QString str = QString("%1 : %2").arg(info).arg(val);
     MainWindow::requestLogout( str, eLogError );
 }
+
+

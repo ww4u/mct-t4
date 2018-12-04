@@ -101,6 +101,7 @@ private slots:
 
     void on_toolButton_jogmode_y_inc_released();
 
+    void updatePositionOnceTimer(int msec);
     void updateCurrentPosition();
     void updateCurrentMileage();
     void updateTargetPosition();
@@ -147,13 +148,13 @@ private:
     QString m_strDevInfo;
     QMap<QString,QString> m_Data;
 
-    QTimer m_timerCurrentPos;   //更新实时位置显示的定时器
-    QTimer m_timerSpline;       //能效曲线添加新数值的定时器
-    QTimer m_timerGlobal;       //其他所有动态更新的数据
+    QTimer *m_timerCurrentPos;   //更新实时位置显示的定时器
+    QTimer *m_timerSpline;       //能效曲线添加新数值的定时器
+    QTimer *m_timerGlobal;       //其他所有动态更新的数据
 
     void setButtonDisableTime(QToolButton *btn, int msec);
-    void setTimerStop(QTimer &timer);
-    void setTimerStart(QTimer &timer);
+    void setTimerStop(QTimer *timer);
+    void setTimerStart(QTimer *timer);
     void setTimerSplineStop();  //关闭动态曲线的定时器
     void setTimerSplineStart(); //打开动态曲线的定时器
 };

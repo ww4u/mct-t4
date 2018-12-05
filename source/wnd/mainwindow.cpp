@@ -107,13 +107,19 @@ void MainWindow::buildConnection()
              this, SLOT(slot_focus_in(const QString &)) );
 
     connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int,int)),
+            this,SLOT(slotSetDockOpsName(QString,int,int,int)));
+
+    connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int,int)),
             m_pOps,SLOT(slotSetCurrentRobot(QString,int,int,int)));
 
     connect(m_roboConfig,SIGNAL(signalDataChanged()),
             m_pOps,SLOT(slotLoadConfigAgain()));
 
-    connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int,int)),
-            this,SLOT(slotSetDockOpsName(QString,int,int,int)));
+    connect(m_roboConfig,SIGNAL(signal_record_selected(int)),
+            m_pOps,SLOT(slotSetCurrentRecordNumber(int)));
+
+    connect(m_pOps,SIGNAL(signal_apply_point(int,QString,double,double,double,double)),
+            m_roboConfig,SLOT(slotSetOneRecord(int,QString,double,double,double,double)));
 
     connect(ui->actionStop,SIGNAL(triggered(bool)), m_pOps, SLOT(on_pushButton_stop_clicked()));
 

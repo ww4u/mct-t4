@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QAbstractTableModel>
+#include <QMenu>
 #include "xconfig.h"
 
 #include "comboxdelegate.h"
@@ -28,8 +29,17 @@ public:
 
     void translateUI() override;
 
+    void modfiyOneRecord(int row, QString type, double x, double y, double v, double a);
+
+signals:
+    void signalCurrentRowChanged(int index);
+
 private slots:
     void slotModelChanged(QModelIndex index1, QModelIndex index2, QVector<int> vector);
+    void slotCurrentRowChanged(QModelIndex index);
+
+    void slotShowContextmenu(const QPoint &pos);
+    void soltActionRun();
 
 private:
     Ui::H2Action *ui;
@@ -40,6 +50,8 @@ private:
     QString m_strDeviceFileName;
 
     QString m_fileContext;
+
+    QMenu *m_menu;
 
     QString readFile(QString fileName);
     int writeFile(QString fileName, QString text);

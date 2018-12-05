@@ -13,6 +13,7 @@ H2Action::H2Action(QWidget *parent) :
     m_strLocalFileName = "";
     m_strDeviceFileName = "MCT_motion.mrp";
     m_fileContext = "";
+    m_menu = NULL;
 
     m_pDelegate = new comboxDelegate(this);
     QStringList prxs;
@@ -22,6 +23,15 @@ H2Action::H2Action(QWidget *parent) :
     connect(&m_actionModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
             this, SLOT(slotModelChanged(QModelIndex,QModelIndex,QVector<int>)));
 
+    connect(ui->tableView, SIGNAL(customContextMenuRequested(const QPoint&)),
+            this, SLOT(slotShowContextmenu(const QPoint&)));
+
+    connect(ui->tableView,&QTableView::clicked,
+            this, [this](QModelIndex index)
+    {
+        emit signalCurrentRowChanged(index.row());
+    });
+
 }
 
 H2Action::~H2Action()
@@ -29,6 +39,22 @@ H2Action::~H2Action()
     delete ui;
 }
 
+void H2Action::slotCurrentRowChanged(QModelIndex index)
+{
+    int currentRow = index.row();
+
+    emit signalCurrentRowChanged(currentRow);
+    qDebug() << "slotCurrentRowChanged" << currentRow;
+
+//   QList<QModelIndex> modelList =  ui->tableView->selectionModel()->selectedIndexes();
+//   QString strInfo = "";
+//   for(int i=0;i<modelList.count(); i++)
+//   {
+//       strInfo += m_actionModel.data(modelList.at(i),Qt::DisplayRole).toString();
+//       strInfo += ",";
+//   }
+//   qDebug() << strInfo;
+}
 
 int H2Action::readDeviceConfig()
 {
@@ -94,6 +120,9 @@ int H2Action::writeDeviceConfig()
                                        m_strDeviceFileName.toLatin1().data());
 
     qDebug() << "mrgStorageMotionFileSave:" << ret;
+
+    ret = mrgRobotMotionFileImport(mViHandle, mRobotName, m_strDeviceFileName.toLatin1().data());
+    qDebug() << "mrgRobotMotionFileImport:" << ret;
 
     return ret;
 }
@@ -165,4 +194,72 @@ int H2Action::writeFile(QString fileName, QString text)
 void H2Action::translateUI()
 {
     ui->retranslateUi(this);
+}
+
+
+void H2Action::modfiyOneRecord(int row, QString type, double x, double y, double v, double a)
+{
+    if (row < 0)
+        return;
+
+    if(type != "")
+        m_actionModel.setData( m_actionModel.index( row, 0), QVariant( type), Qt::EditRole );
+
+    if(x >= 0)
+        m_actionModel.setData( m_actionModel.index( row, 1), QVariant( x ), Qt::EditRole );
+
+    if(y >= 0)
+        m_actionModel.setData( m_actionModel.index( row, 2), QVariant( y ), Qt::EditRole );
+
+    if(v >= 0)
+        m_actionModel.setData( m_actionModel.index( row, 3), QVariant( v ), Qt::EditRole );
+
+    if(a >= 0)
+        m_actionModel.setData( m_actionModel.index( row, 4), QVariant( a ), Qt::EditRole );
+}
+
+
+void H2Action::slotShowContextmenu(const QPoint& pos)
+{
+    if(!((ui->tableView->selectionModel()->selectedIndexes()).empty()))
+    {
+        if(m_menu != NULL)
+            delete m_menu;
+
+        m_menu = new QMenu(ui->tableView);
+        QAction *actionRun = m_menu->addAction(tr("Run"));
+        connect(actionRun, SIGNAL(triggered(bool)), this, SLOT(soltActionRun()));
+
+        m_menu->exec(QCursor::pos());
+        ui->tableView->selectionModel()->clear();
+    }
+}
+
+void H2Action::soltActionRun()
+{
+    int row = ui->tableView->selectionModel()->selectedIndexes().at(0).row();
+    qDebug() << "soltActionRun" << row;
+
+//    QModelIndex index = ui->tableView->selectionModel()->selectedIndexes().at(0);
+//    QString type = m_actionModel.data(index,Qt::DisplayRole).toString();
+
+    auto func = [=]()
+    {
+        int ret = -1;
+        qDebug() << "soltActionRun begin";
+        qDebug() << mViHandle << mRobotName;
+        ret = mrgRobotFileResolve(mViHandle, mRobotName, 0, row+1, 0, 20000);
+        qDebug() << "mrgRobotFileResolve" << ret;
+
+        ret = mrgRobotRun(mViHandle, mRobotName, 0);
+        qDebug() << "mrgRobotRun" << ret;
+
+        ret = mrgRobotWaitEnd(mViHandle, mRobotName, 0, 0);
+        qDebug() << "mrgRobotWaitEnd" << ret;
+
+        qDebug() << "soltActionRun end";
+    };
+
+    XThread *thread = new XThread(func);
+    thread->start();
 }

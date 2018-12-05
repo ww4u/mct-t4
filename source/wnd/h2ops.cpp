@@ -21,6 +21,7 @@ H2Ops::H2Ops(QWidget *parent) :
     m_DeviceName = 0;
     m_RoboName = 0;
     m_strDevInfo = "";
+    m_recordNumber = -1;
 
     setupUi();
 
@@ -30,6 +31,8 @@ H2Ops::H2Ops(QWidget *parent) :
 
     setupModel();
 
+    m_isDebugRun = false;
+    m_debugThread = NULL;
     m_timerCurrentPos = new QTimer;
     m_timerSpline = new QTimer;
     m_timerGlobal = new QTimer;
@@ -192,6 +195,7 @@ void H2Ops::slotSetCurrentRobot(QString strDevInfo, int visa, int deviceName, in
 
     if(m_ViHandle == 0)
     {
+        m_recordNumber = -1;
         ui->tabWidget->setEnabled(false);
 
         this->setTimerStop(m_timerGlobal);
@@ -204,6 +208,13 @@ void H2Ops::slotSetCurrentRobot(QString strDevInfo, int visa, int deviceName, in
 
         this->setTimerStart(m_timerGlobal);
     }
+}
+
+void H2Ops::slotSetCurrentRecordNumber(int number)
+{
+    m_recordNumber = number;
+//    qDebug() << "m_recordNumber" << m_recordNumber;
+    ui->pushButton_apply->setText(tr("Apply as point ") + QString::number(m_recordNumber));
 }
 
 void H2Ops::slotLoadConfigAgain()
@@ -312,21 +323,18 @@ void H2Ops::on_btnDown_clicked()
 
 void H2Ops::on_btnAdd_clicked()
 {
-    if ( ui->tvDebug->currentIndex().isValid() )
-    {
-        m_pDebugModel->insertRow( ui->tvDebug->currentIndex().row() + 1 );
-        m_pDebugModel->setData( m_pDebugModel->index( ui->tvDebug->currentIndex().row()+1, 1),
-                                QVariant( ui->spinDly->value()),
-                                Qt::EditRole );
-    }
-    else
-    {
-        m_pDebugModel->insertRow( 0 );
-        m_pDebugModel->setData( m_pDebugModel->index( 0, 1),
-                                QVariant( ui->spinDly->value()),
-                                Qt::EditRole );
+    if(m_recordNumber == -1)
         return;
-    }
+
+    int row = ui->tvDebug->model()->rowCount();
+    m_pDebugModel->insertRow( row );
+    m_pDebugModel->setData( m_pDebugModel->index( row, 0),
+                            QVariant( m_recordNumber),
+                            Qt::EditRole );
+
+    m_pDebugModel->setData( m_pDebugModel->index( row, 1),
+                            QVariant( ui->spinDly->value()),
+                            Qt::EditRole );
 }
 
 void H2Ops::on_btnDel_clicked()
@@ -453,6 +461,7 @@ void H2Ops::slot_starting_home_over(int ret)
     }
     setTimerStop(m_timerCurrentPos);
     ui->pushButton_starting_home->setEnabled(true);
+    updatePositionOnceTimer(100);
 }
 
 void H2Ops::setButtonDisableTime(QToolButton *btn, int msec)
@@ -541,7 +550,6 @@ void H2Ops::on_toolButton_singlestep_x_dec_clicked()
     thread->start();
 
 #else
-
     m_timerCurrentPos->start();
     int ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, 0-offset, 0, 0, time, -1);
     sysInfo("mrgRobotRelMoveL", ret);
@@ -674,7 +682,12 @@ void H2Ops::on_pushButton_stop_clicked()
 
 void H2Ops::on_pushButton_apply_clicked()
 {
+    //将速度 加速度 坐标点设置到record_table的第x行
+    double x = ui->doubleSpinBox_currentPos_x->value();
+    double y = ui->doubleSpinBox_currentPos_y->value();
+    double v = ui->doubleSpinBox_Velocity->value();
 
+    emit signal_apply_point(m_recordNumber,"PA",x,y,v,-1);
 }
 
 
@@ -887,4 +900,70 @@ void H2Ops::updateDebug()
 void H2Ops::updateDiagnosis()
 {
     //!TODO
+}
+
+void H2Ops::on_toolButton_debugRun_clicked()
+{
+    auto func = [this]()
+    {
+        int rowCount = ui->tvDebug->model()->rowCount();
+        bool isCyclic = ui->chkCyclic->isChecked();
+        bool noBreak = true;
+        do
+        {
+            for(int i=0; i<rowCount; i++)
+            {
+                int recordNumber = ui->tvDebug->model()->index(i, 0).data().toInt();
+                double time = ui->tvDebug->model()->index(i, 1).data().toDouble();
+                int ret = -1;
+
+                qDebug() << "------------------------------";
+                qDebug() << m_ViHandle << m_RoboName;
+                qDebug() << "Run Queue :" << recordNumber << "begin";
+
+                ret = mrgRobotFileResolve(m_ViHandle, m_RoboName, 0, recordNumber+1, 0, 20000);
+//                qDebug() << "mrgRobotFileResolve" << ret;
+
+                ret = mrgRobotRun(m_ViHandle, m_RoboName, 0);
+//                qDebug() << "mrgRobotRun" << ret;
+
+                ret = mrgRobotWaitEnd(m_ViHandle, m_RoboName, 0, 0);
+//                qDebug() << "mrgRobotWaitEnd" << ret;
+
+//                qDebug() << "Run Queue :" << recordNumber << "sleep" << time << "s";
+                QThread::msleep(time * 1000);
+
+                qDebug() << "Run Queue :" << recordNumber << "ending";
+
+                if ( m_debugThread->isInterruptionRequested() ){
+                    noBreak = false;
+                    break;
+                }
+            }
+        }while(isCyclic && noBreak);
+
+        ui->toolButton_debugRun->setText(tr("Run  Sequence"));
+        m_isDebugRun = false;
+    };
+
+    if(m_isDebugRun) //正在运行
+    {
+        m_isDebugRun = false;
+
+        if( m_debugThread != NULL ){
+            m_debugThread->requestInterruption();
+            m_debugThread->wait();
+        }
+        ui->toolButton_debugRun->setText(tr("Run  Sequence"));
+    }else{
+        m_isDebugRun = true;
+        ui->toolButton_debugRun->setText(tr("Stop Sequence"));
+
+
+        m_debugThread = new XThread(func);
+        connect(m_debugThread,&XThread::finished,
+                [&](){ m_debugThread = NULL; });
+        m_debugThread->start(QThread::LowestPriority);
+    }
+
 }

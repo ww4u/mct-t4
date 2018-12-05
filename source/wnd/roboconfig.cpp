@@ -103,8 +103,11 @@ void RoboConfig::createRobot(QString strDevInfo)
                  this, SIGNAL(signal_focus_in( const QString &)) );
     }
 
-    connect(robotInfo.m_Robo,SIGNAL(signal_online_request(QString)),
+    connect((H2Robo *)(robotInfo.m_Robo),SIGNAL(signal_online_request(QString)),
             this,SLOT(slot_open_close(QString)));
+
+    connect((H2Robo *)(robotInfo.m_Robo),SIGNAL(signal_action_selected(int)),
+            this,SIGNAL(signal_record_selected(int)));
 }
 
 void RoboConfig::slotAddNewRobot(QString strDevInfo)
@@ -658,4 +661,18 @@ void RoboConfig::changeLanguage(QString qmFile)
     m_translator.load(qmFile);
     qApp->installTranslator(&m_translator);
     ui->retranslateUi(this);
+}
+
+
+void RoboConfig::slotSetOneRecord(int row, QString type, double x, double y, double v, double a)
+{
+    if(mIndex < 0) return;
+    if(row < 0) return;
+
+    H2Robo *pRobo = (H2Robo *)(m_RobotList[mIndex].m_Robo);
+    H2Action *pAction = (H2Action *)(pRobo->subConfigs().at(5));
+
+    if(m_RobotList[mIndex].m_Visa > 0){
+        pAction->modfiyOneRecord(row, type, x, y, v, a);
+    }
 }

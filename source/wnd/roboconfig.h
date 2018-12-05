@@ -18,6 +18,7 @@ signals:
     void signalCurrentRobotChanged(QString,int,int,int);
     void signal_focus_in( const QString &);
     void signalDataChanged();
+    void signal_record_selected(int);
 
 public:
     explicit RoboConfig(QWidget *parent = 0);
@@ -25,14 +26,15 @@ public:
     void changeLanguage(QString qmFile);
 
 public slots:
-    void slotAddNewRobot(QString strDevInfo );
-
     void slotDownload();
     void slotUpload();
     void slotStore();
     void slotSync();
     void slotSearch();
     void slotExit();
+
+    void slotAddNewRobot(QString strDevInfo );
+    void slotSetOneRecord(int row,QString type,double x,double y,double v,double a);
 
 private slots:
     void on_buttonBox_clicked(QAbstractButton *button);

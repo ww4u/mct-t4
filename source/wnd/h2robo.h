@@ -33,6 +33,7 @@ protected:
 
 signals:
     void signal_online_request(QString);
+    void signal_action_selected(int);
 
 private:
     QTreeWidgetItem *m_pRoboNode;

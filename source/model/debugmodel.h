@@ -17,6 +17,7 @@ public:
     virtual QVariant data(const QModelIndex &index, int role) const;
 
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role);
+
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
     virtual bool insertRows(int position, int rows, const QModelIndex &parent);

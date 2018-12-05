@@ -45,6 +45,8 @@ void H2Robo::buildConnection()
 
     connect(m_pH2Measurement,SIGNAL(signal_AxesZeroPoint_currentTextChanged(QString)),
             m_pH2Homing,SLOT(slot_set_direction(QString)));
+
+    connect(m_pH2Action,SIGNAL(signalCurrentRowChanged(int)),this,SIGNAL(signal_action_selected(int)));
 }
 
 QTreeWidgetItem *H2Robo::roboNode()

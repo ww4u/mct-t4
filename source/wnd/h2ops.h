@@ -35,8 +35,14 @@ public:
 
     void changeLanguage(QString qmFile)  override;
 
+signals:
+    //    int row, QString type, double x, double y, double v, double a
+    void signal_apply_point(int, QString, double, double,double,double);
+
 public slots:
     void slotSetCurrentRobot(QString strDevInfo, int visa, int deviceName, int roboName);
+    void slotSetCurrentRecordNumber(int number);
+
     void slotLoadConfigAgain();
 
     void slot_logSelectAll_action();
@@ -115,6 +121,7 @@ private slots:
     void updateDebug();
     void updateDiagnosis();
 
+    void on_toolButton_debugRun_clicked();
 
 protected:
     void setupUi();
@@ -147,6 +154,11 @@ private:
     int m_RoboName;
     QString m_strDevInfo;
     QMap<QString,QString> m_Data;
+
+    int m_recordNumber;
+
+    bool m_isDebugRun;
+    XThread *m_debugThread;
 
     QTimer *m_timerCurrentPos;   //更新实时位置显示的定时器
     QTimer *m_timerSpline;       //能效曲线添加新数值的定时器

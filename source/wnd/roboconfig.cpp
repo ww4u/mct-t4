@@ -17,6 +17,7 @@ RoboConfig::RoboConfig(QWidget *parent) :
 
     m_pRootNode = new QTreeWidgetItem();
     m_pRootNode->setText( 0, "Project");
+    m_pRootNode->setIcon( 0, QIcon( ":/res/image/icon/201.png" ) );
     ui->treeWidget->addTopLevelItem( m_pRootNode );
 
     initRootNodeWidget();
@@ -216,8 +217,8 @@ void RoboConfig::slotStore()
 
             int timeout = 10000;
             int state = 0;
-            qDebug() << "mrgSaveRobotConfig";
-            mrgSaveRobotConfig(visa);
+            qDebug() << "mrgExportRobotConfig";
+            mrgExportRobotConfig(visa);
             while (timeout > 0)
             {
                 QThread::msleep(500);
@@ -594,7 +595,7 @@ END:
     foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs())
     {    pCfg->attachHandle( visa, deviceName, roboName);  }
 
-    mrgIdentify(visa, 1);
+//    mrgIdentify(visa, 1);
 
     qDebug() << "device open" << strIP << visa;
     sysInfo("Device Open", visa);
@@ -608,8 +609,17 @@ END:
 int RoboConfig::deviceClose()
 {
     if(mIndex < 0) return -1;
-    mrgIdentify(m_RobotList[mIndex].m_Visa, 0);
-    int ret = mrgCloseGateWay(m_RobotList[mIndex].m_Visa);
+
+//    mrgIdentify(m_RobotList[mIndex].m_Visa, 0);
+
+    //电机关闭
+    int ret = mrgMRQDriverState(m_RobotList[mIndex].m_Visa, m_RobotList[mIndex].m_DeviceName, 0, 0);
+    qDebug() << "mrgMRQDriverState0 OFF" << ret;
+
+    ret = mrgMRQDriverState(m_RobotList[mIndex].m_Visa, m_RobotList[mIndex].m_DeviceName, 1, 0);
+    qDebug() << "mrgMRQDriverState1 OFF" << ret;
+
+    ret = mrgCloseGateWay(m_RobotList[mIndex].m_Visa);
 
     qDebug() << "device close" << m_RobotList[mIndex].m_Visa << ret;
     sysInfo("Device Close");
@@ -620,6 +630,7 @@ int RoboConfig::deviceClose()
     m_RobotList[mIndex].m_Visa = 0;
     m_RobotList[mIndex].m_DeviceName = 0;
     m_RobotList[mIndex].m_RoboName = 0;
+
     return ret;
 }
 

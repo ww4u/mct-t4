@@ -11,6 +11,9 @@
 #include "megamessagebox.h"
 #include "megaxml.h"
 
+#define set_name( the, name )   the->setFocusName( name );\
+                                mSubTabs.append( the );
+
 H2Ops::H2Ops(QWidget *parent) :
     XConfig(parent),
     ui(new Ui::H2Ops)
@@ -21,33 +24,42 @@ H2Ops::H2Ops(QWidget *parent) :
     m_DeviceName = 0;
     m_RoboName = 0;
     m_strDevInfo = "";
+
     m_recordNumber = -1;
+    m_isDebugRunFlag = false;
+
+    set_name( ui->tab_LogOut,   "tab_LogOut");
+    set_name( ui->tab_Operate,  "tab_Operate");
+    set_name( ui->tab_DigitalIO,"tab_DigitalIO");
+    set_name( ui->tab_Homing,   "tab_Homing");
+    set_name( ui->tab_Manual,   "tab_Manual");
+    set_name( ui->tab_Monitor,  "tab_Monitor");
+    set_name( ui->tab_Debug,    "tab_Debug");
+    set_name( ui->tab_Diagnosis,"tab_Diagnosis");
 
     setupUi();
 
-    setupName();
+    m_timerOpsAll = new QTimer;
+    m_timerOpsAll->setInterval(2000);
+
+    m_timerOpsOpreate = new QTimer;
+    m_timerOpsOpreate->setInterval(500);
+
+    m_timerOpsIO      = new QTimer;
+    m_timerOpsIO->setInterval(500);
+
+    m_timerOpsHoming  = new QTimer;
+    m_timerOpsHoming->setInterval(500);
+
+    m_timerOpsManual  = new QTimer;
+    m_timerOpsManual->setInterval(500);
+
+    m_timerOpsMonitor = new QTimer;
+    m_timerOpsMonitor->setInterval(1000);
+
+    m_threadOpsDebug = NULL;
 
     buildConnection();
-
-    setupModel();
-
-    m_isDebugRun = false;
-    m_debugThread = NULL;
-    m_timerCurrentPos = new QTimer;
-    m_timerSpline = new QTimer;
-    m_timerGlobal = new QTimer;
-
-    connect(m_timerGlobal, SIGNAL(timeout()), this, SLOT(updateDeviceAllStatus()));
-    m_timerGlobal->setInterval(2000 * 1); //所有状态信息的轮询间隔时间
-
-    connect(m_timerCurrentPos, SIGNAL(timeout()), this, SLOT(updateCurrentPosition()));
-    m_timerCurrentPos->setInterval(100); //0.1S
-
-    connect(m_timerSpline, SIGNAL(timeout()), this, SLOT(updateMonitor()));
-    m_timerSpline->setInterval(1000); //1s
-
-    ui->tabWidget->setCurrentIndex(0);
-    ui->tabWidget->setEnabled(false);
 }
 
 H2Ops::~H2Ops()
@@ -74,7 +86,6 @@ void H2Ops::setupUi()
     m_splineChart1 = new MegaSplineChart(tr("Energy1"));
     m_splineChart2 = new MegaSplineChart(tr("Energy2"));
 
-
     m_splineChart1->chart()->series1()->setPen(QPen(Qt::red));
     m_splineChart1->chart()->series2()->setPen(QPen(Qt::blue));
 
@@ -84,9 +95,21 @@ void H2Ops::setupUi()
     ui->horizontalLayout_3->addWidget(m_splineChart1);
     ui->horizontalLayout_3->addWidget(m_splineChart2);
     ui->horizontalLayout_3->addStretch();
+
+    //! model
+    m_pDiagnosisModel= new DiagnosisModel();
+    ui->tvDiagnosis->setModel( m_pDiagnosisModel );
+
+    m_pDebugModel = new DebugModel();
+    ui->tvDebug->setModel( m_pDebugModel );
+
+
+    ui->tabWidget->setCurrentIndex(0);
+    ui->tabWidget->setEnabled(false);
+
 }
 
-void H2Ops:: changeLanguage(QString qmFile)
+void H2Ops::changeLanguage(QString qmFile)
 {
     ui->h2Status->changeLanguage(qmFile);
     m_splineChart1->changeLanguage(qmFile);
@@ -98,32 +121,14 @@ void H2Ops:: changeLanguage(QString qmFile)
     ui->retranslateUi(this);
 }
 
-#define set_name( the, name )   the->setFocusName( name );\
-                                mSubTabs.append( the );
-void H2Ops::setupName()
-{
-    set_name( ui->tab_LogOut,   "tab_LogOut");
-    set_name( ui->tab_Operate,  "tab_Operate");
-    set_name( ui->tab_DigitalIO,"tab_DigitalIO");
-    set_name( ui->tab_Homing,   "tab_Homing");
-    set_name( ui->tab_Manual,   "tab_Manual");
-    set_name( ui->tab_Monitor,  "tab_Monitor");
-    set_name( ui->tab_Debug,    "tab_Debug");
-    set_name( ui->tab_Diagnosis,"tab_Diagnosis");
-}
-
-void H2Ops::setupModel()
-{
-    //! model
-    m_pDiagnosisModel= new DiagnosisModel();
-    ui->tvDiagnosis->setModel( m_pDiagnosisModel );
-
-    m_pDebugModel = new DebugModel();
-    ui->tvDebug->setModel( m_pDebugModel );
-}
-
 void H2Ops::buildConnection()
 {
+    connect(ui->h2Status,SIGNAL(signal_mct_checked(bool)),
+            this,SLOT(slot_mct_checked(bool)));
+
+    connect(ui->h2Status,SIGNAL(signal_power_checked(bool)),
+            this,SLOT(slot_power_checked(bool)));
+
     //! connect
     connect( mp_logClearAction, SIGNAL(triggered(bool)),
              this, SLOT(slot_logClear_action()) );
@@ -133,17 +138,21 @@ void H2Ops::buildConnection()
              this, SLOT(slot_logCopy_action()) );
 
     //! option
-    foreach( XConfig *pCfg, mSubTabs )
-    {
-        connect( pCfg, SIGNAL(signal_focus_in( const QString &)),
-                 this, SIGNAL(signal_focus_in( const QString &)));
+    foreach( XConfig *pCfg, mSubTabs ){
+        connect( pCfg, SIGNAL(signal_focus_in(const QString &)),
+                 this, SIGNAL(signal_focus_in(const QString &)));
     }
+
+    connect(m_timerOpsAll, SIGNAL(timeout()), this, SLOT(updateBackgroundStatus()));
+    connect(m_timerOpsOpreate, SIGNAL(timeout()), this, SLOT(updateTabOpreate()));
+    connect(m_timerOpsIO, SIGNAL(timeout()), this, SLOT(updateTabIO()));
+    connect(m_timerOpsHoming, SIGNAL(timeout()), this, SLOT(updateTabHoming()));
+    connect(m_timerOpsManual, SIGNAL(timeout()), this, SLOT(updateTabManual()));
+    connect(m_timerOpsMonitor, SIGNAL(timeout()), this, SLOT(updateTabMonitor()));
 }
 
 void H2Ops::outConsole( const QString &str, LogLevel e )
 {
-//    QString fmtStr = QString("%1:%2").arg( QTime::currentTime().toString("yyyy:MM::dd hh:mm:ss.zzz") ).arg(str);
-//    QString fmtStr = QDateTime::currentDateTime().toString("yyyy/M/d h/m/s.z") + "   " + str;
     QString fmtStr = QDateTime::currentDateTime().toString("hh:mm:ss.zzz") + "   " + str;
 
     if ( e == eLogInfo )
@@ -157,7 +166,6 @@ void H2Ops::outConsole( const QString &str, LogLevel e )
 
     ui->lstLogout->scrollToBottom();
 }
-
 void H2Ops::outInfo( const QString &str )
 {
     QListWidgetItem *pItem = new QListWidgetItem( QIcon(":/res/image/icon/xiaoxi.png"), str );
@@ -175,10 +183,35 @@ void H2Ops::outError( const QString &str )
     ui->lstLogout->addItem( pItem );
 }
 
+void H2Ops::slot_logSelectAll_action()
+{
+    ui->lstLogout->selectAll();
+}
+void H2Ops::slot_logCopy_action()
+{
+    //! cat text
+    QString str;
+    for ( int i = 0; i < ui->lstLogout->count(); i++ )
+    {
+        if ( ui->lstLogout->item(i)->isSelected() )
+        {
+            str.append( ui->lstLogout->item( i )->text() );
+            str.append( '\n' );
+        }
+    }
+
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    clipboard->setText( str );
+}
+void H2Ops::slot_logClear_action()
+{
+    ui->lstLogout->clear();
+}
+
+
 void H2Ops::slotSetCurrentRobot(QString strDevInfo, int visa, int deviceName, int roboName)
 {
-    if( (m_strDevInfo == strDevInfo) && (m_ViHandle == visa) && (m_RoboName == roboName) )
-    {
+    if( (m_strDevInfo == strDevInfo) && (m_ViHandle == visa) && (m_RoboName == roboName) ){
         return;//没有切换机器人且状态没有改变
     }
 
@@ -193,20 +226,15 @@ void H2Ops::slotSetCurrentRobot(QString strDevInfo, int visa, int deviceName, in
              << "m_DeviceName:" << m_DeviceName
              << "m_RoboName:" << m_RoboName;
 
+    ui->tabWidget->setCurrentIndex(0);
     if(m_ViHandle == 0)
-    {
+    {   //device closed
         m_recordNumber = -1;
-        ui->tabWidget->setEnabled(false);
-
-        this->setTimerStop(m_timerGlobal);
-        this->setTimerSplineStop();
+        ui->h2Status->on_chkMct_toggled(false);
     }
     else
-    {
-        ui->tabWidget->setEnabled(true);
+    {   //device opened
         slotLoadConfigAgain();
-
-        this->setTimerStart(m_timerGlobal);
     }
 }
 
@@ -236,34 +264,118 @@ void H2Ops::slotLoadConfigAgain()
     }
 
     m_Data = map;
-    updateHoming();
+    updateTabHoming();
 }
 
-void H2Ops::slot_logSelectAll_action()
+void H2Ops::slot_mct_checked(bool checked)
 {
-    ui->lstLogout->selectAll();
+    qDebug() << "OPS:slot_mct_checked" << checked;
+    ui->tabWidget->setEnabled(checked);
+
+    if(!checked){
+        setTimerStop(m_timerOpsAll);
+    }else{
+        setTimerStart(m_timerOpsAll);
+    }
 }
 
-void H2Ops::slot_logCopy_action()
+void H2Ops::slot_power_checked(bool checked)
 {
-    //! cat text
-    QString str;
-    for ( int i = 0; i < ui->lstLogout->count(); i++ )
-    {
-        if ( ui->lstLogout->item(i)->isSelected() )
-        {
-            str.append( ui->lstLogout->item( i )->text() );
-            str.append( '\n' );
-        }
+    qDebug() << "OPS:slot_power_checked" << checked;
+    ui->tabWidget->setCurrentIndex(0);
+    if(m_ViHandle == 0) return;
+
+    int ret = -1;
+    if(checked){
+        //电机使能
+        ret = mrgMRQDriverState(m_ViHandle, m_DeviceName, 0, 1);
+        qDebug() << "mrgMRQDriverState0 ON" << ret;
+        ret = mrgMRQDriverState(m_ViHandle, m_DeviceName, 1, 1);
+        qDebug() << "mrgMRQDriverState1 ON" << ret;
+
+        ui->tabWidget->setTabEnabled(3, true);
+        ui->tabWidget->setTabEnabled(4, true);
+        ui->tabWidget->setTabEnabled(5, true);
+        ui->tabWidget->setTabEnabled(6, true);
+    }else{
+        //电机关闭
+        ret = mrgMRQDriverState(m_ViHandle, m_DeviceName, 0, 0);
+        qDebug() << "mrgMRQDriverState0 OFF" << ret;
+        ret = mrgMRQDriverState(m_ViHandle, m_DeviceName, 1, 0);
+        qDebug() << "mrgMRQDriverState1 OFF" << ret;
+
+        ui->tabWidget->setTabEnabled(3, false);
+        ui->tabWidget->setTabEnabled(4, false);
+        ui->tabWidget->setTabEnabled(5, false);
+        ui->tabWidget->setTabEnabled(6, false);
+
+        setAllTabStopWorking();
     }
 
-    QClipboard *clipboard = QGuiApplication::clipboard();
-    clipboard->setText( str );
 }
 
-void H2Ops::slot_logClear_action()
+void H2Ops::setAllTabStopWorking()
 {
-    ui->lstLogout->clear();
+    setTimerStop(m_timerOpsOpreate);
+    setTimerStop(m_timerOpsIO);
+    setTimerStop(m_timerOpsHoming);
+    setTimerStop(m_timerOpsManual);
+    setOpsMonitorTimerStop();
+
+    on_pushButton_stop_clicked();
+
+    if(m_isDebugRunFlag){
+        on_toolButton_debugRun_clicked();
+    }
+
+}
+
+void H2Ops::on_tabWidget_currentChanged(int index)
+{
+    QString strName = ui->tabWidget->tabText( index );
+    emit signal_focus_in( strName );
+
+    qDebug() << __func__ << index;
+
+    if(m_ViHandle == 0) return;
+
+    setAllTabStopWorking();
+
+    switch (index) {
+    case 0://Logout
+
+        break;
+    case 1://Operate
+        setTimerStart(m_timerOpsOpreate);
+        break;
+    case 2://IO
+        setTimerStart(m_timerOpsIO);
+        break;
+    case 3://Homing
+        setTimerStart(m_timerOpsHoming);
+        break;
+    case 4://Manual
+        setTimerStart(m_timerOpsManual);
+        break;
+    case 5://Monitor
+        setOpsMonitorTimerStart();
+        break;
+    case 6://Debug
+
+        break;
+    case 7://Diagnosis
+
+        break;
+
+    default:
+        break;
+    }
+
+}
+
+void H2Ops::on_tabWidget_tabBarClicked(int index)
+{
+    emit signal_focus_in( ui->tabWidget->tabText( index ) );
 }
 
 //! debug
@@ -420,26 +532,6 @@ void H2Ops::on_btnExport_2_clicked()
     sysInfo( fDlg.selectedFiles().first(), tr("save completed") );
 }
 
-void H2Ops::on_tabWidget_currentChanged(int index)
-{
-    QString strName = ui->tabWidget->tabText( index );
-    emit signal_focus_in( strName );
-
-    if(m_ViHandle == 0)
-    {   return;     }
-    //进入到Monitor就查询绘制曲线,离开就停止
-    if( strName == "Monitor" && ui->tab_Monitor->isEnabled() ){
-        this->setTimerSplineStart();
-    }else{
-        this->setTimerSplineStop();
-    }
-}
-
-void H2Ops::on_tabWidget_tabBarClicked(int index)
-{
-    emit signal_focus_in( ui->tabWidget->tabText( index ) );
-}
-
 ////////////////////////////////////// 点击发送指令
 void H2Ops::on_pushButton_starting_home_clicked()
 {
@@ -450,7 +542,6 @@ void H2Ops::on_pushButton_starting_home_clicked()
     connect(thread, SIGNAL(signalThreadGoHomeEnd(int)),this,SLOT(slot_starting_home_over(int)));
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
     ui->pushButton_starting_home->setEnabled(false);
-    setTimerStart(m_timerCurrentPos);
     thread->start();
 }
 
@@ -459,67 +550,45 @@ void H2Ops::slot_starting_home_over(int ret)
     if(ret != 0){
         QMessageBox::critical(this,tr("error"),tr("Starting Home failure"));
     }
-    setTimerStop(m_timerCurrentPos);
     ui->pushButton_starting_home->setEnabled(true);
-    updatePositionOnceTimer(100);
 }
 
 void H2Ops::setButtonDisableTime(QToolButton *btn, int msec)
 {
     btn->setEnabled(false);
     //非阻塞延时
-    updatePositionOnceTimer(msec+2000);
-    QTime dieTime = QTime::currentTime().addMSecs(msec+2000);
+    QTime dieTime = QTime::currentTime().addMSecs(msec);
     while( QTime::currentTime() < dieTime )
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 
     btn->setEnabled(true);
 }
 
-
-//void H2Ops::setButtonDisableTime(QToolButton *btn, int msec)
-//{
-//    btn->setEnabled(false);
-//    QTimer::singleShot(msec+500, this,
-//                       [=](void){
-//        btn->setEnabled(true);
-//    });
-//}
-
-void H2Ops::setTimerStop(QTimer *timer)
+void H2Ops::setOpsMonitorTimerStop()
 {
-    if( timer->isActive() )
-        timer->stop();
-}
-
-void H2Ops::setTimerStart(QTimer *timer)
-{
-    if( !timer->isActive() )
-        timer->start();
-}
-
-void H2Ops::setTimerSplineStop()
-{
-    if( m_timerSpline->isActive() )
+    if( m_timerOpsMonitor->isActive() )
     {
-        m_timerSpline->stop();
+        m_timerOpsMonitor->stop();
+        if(m_ViHandle <= 0) return;
         //关闭上报状态
         mrgMRQReportState(this->m_ViHandle,this->m_DeviceName, 0, 0, 0);
         mrgMRQReportState(this->m_ViHandle,this->m_DeviceName, 1, 0, 0);
     }
 }
 
-void H2Ops::setTimerSplineStart()
+void H2Ops::setOpsMonitorTimerStart()
 {
     if(m_ViHandle <= 0) return;
-    if( !m_timerSpline->isActive() )
+    if( !m_timerOpsMonitor->isActive() )
     {
+        if(m_ViHandle <= 0) return;
         //打开上报状态
         mrgMRQReportState(this->m_ViHandle,this->m_DeviceName, 0, 0, 1);
         mrgMRQReportState(this->m_ViHandle,this->m_DeviceName, 1, 0, 1);
-        m_timerSpline->start();
+        m_timerOpsMonitor->start();
     }
 }
+
 
 //! single move
 void H2Ops::on_toolButton_singlestep_x_dec_clicked()
@@ -529,34 +598,28 @@ void H2Ops::on_toolButton_singlestep_x_dec_clicked()
     float speed = ui->doubleSpinBox_Velocity->value();
     float time = offset/(0.7*speed);
 
-#if 0
-    auto funcRun = [=]()
-    {
-        int ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, 0-offset, 0, 0, time, 0);
-        sysInfo("mrgRobotRelMoveL", ret);
-    };
-
-    m_timerCurrentPos->start();
-    ui->toolButton_singlestep_x_dec->setEnabled(false);
-
-    XThread *thread = new XThread(funcRun);
-    connect(thread,&XThread::signalThreadExit,this,
-            [=]()
-    {
-        ui->toolButton_singlestep_x_dec->setEnabled(true);
-        m_timerCurrentPos->stop();
-    });
-
-    thread->start();
-
-#else
-    m_timerCurrentPos->start();
     int ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, 0-offset, 0, 0, time, -1);
     sysInfo("mrgRobotRelMoveL", ret);
     setButtonDisableTime(ui->toolButton_singlestep_x_dec, time*1000);
-    m_timerCurrentPos->stop();
-#endif
 }
+
+//void H2Ops::test(QToolButton *btn, int x,int y, int z)
+//{
+//    auto funcRun = [=]()
+//    {
+//        int ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, offset, 0, 0, time, 0);
+//        sysInfo("mrgRobotRelMoveL", ret);
+//    };
+
+//    ui->toolButton_singlestep_x_inc->setEnabled(false);
+
+//    XThread *thread = new XThread(funcRun,this);
+//    connect(thread,&XThread::finished,this,
+//            [this](){
+//        ui->toolButton_singlestep_x_inc->setEnabled(true);
+//    });
+//    thread->start();
+//}
 
 void H2Ops::on_toolButton_singlestep_x_inc_clicked()
 {
@@ -565,11 +628,25 @@ void H2Ops::on_toolButton_singlestep_x_inc_clicked()
     float speed = ui->doubleSpinBox_Velocity->value();
     float time = offset/(0.7*speed);
 
-    m_timerCurrentPos->start();
+#if 0
+    auto funcRun = [=]()
+    {
+        int ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, offset, 0, 0, time, 0);
+        sysInfo("mrgRobotRelMoveL", ret);
+    };
+
+    ui->toolButton_singlestep_x_inc->setEnabled(false);
+
+    XThread *thread = new XThread(funcRun,this);
+    connect(thread,&XThread::finished,this,
+            [this](){ui->toolButton_singlestep_x_inc->setEnabled(true);});
+
+    thread->start();
+#else
     int ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, offset, 0, 0, time, -1);
     sysInfo("mrgRobotRelMoveL", ret);
     setButtonDisableTime(ui->toolButton_singlestep_x_inc, time*1000);
-    m_timerCurrentPos->stop();
+#endif
 }
 
 void H2Ops::on_toolButton_singlestep_y_dec_clicked()
@@ -579,11 +656,9 @@ void H2Ops::on_toolButton_singlestep_y_dec_clicked()
     float speed = ui->doubleSpinBox_Velocity->value();
     float time = offset/(0.7*speed);
 
-    m_timerCurrentPos->start();
     int ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, 0, 0-offset, 0, time, -1);
     sysInfo("mrgRobotRelMoveL", ret);
     setButtonDisableTime(ui->toolButton_singlestep_y_dec, time*1000);
-    m_timerCurrentPos->stop();
 }
 
 void H2Ops::on_toolButton_singlestep_y_inc_clicked()
@@ -593,11 +668,9 @@ void H2Ops::on_toolButton_singlestep_y_inc_clicked()
     float speed = ui->doubleSpinBox_Velocity->value();
     float time = offset/(0.7*speed);    //s = (1 - (加速比 / 1000)) * t * v;
 
-    m_timerCurrentPos->start();
     int ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, 0, offset, 0, time, -1);
     sysInfo("mrgRobotRelMoveL", ret);
     setButtonDisableTime(ui->toolButton_singlestep_y_inc, time*1000);
-    m_timerCurrentPos->stop();
 }
 
 //! jog move
@@ -608,7 +681,6 @@ void H2Ops::on_toolButton_jogmode_x_dec_pressed()
     float cr_time = m_Data["CrawlingTime"].toFloat() / 1000; //ms --> s
     float speed = m_Data["MaximumVelocity"].toFloat();
 
-    m_timerCurrentPos->start();
     int ret = mrgRobotMoveJog(m_ViHandle, m_RoboName, -1, 0, cr_time, 0-cr_speed, speed);
     sysInfo("mrhtRobotMoveJog", ret);
 }
@@ -620,7 +692,6 @@ void H2Ops::on_toolButton_jogmode_x_inc_pressed()
     float cr_time = m_Data["CrawlingTime"].toFloat() / 1000; //ms --> s
     float speed = m_Data["MaximumVelocity"].toFloat();
 
-    m_timerCurrentPos->start();
     int ret = mrgRobotMoveJog(m_ViHandle, m_RoboName, -1, 0, cr_time, cr_speed, speed);
     sysInfo("mrhtRobotMoveJog", ret);
 }
@@ -632,7 +703,6 @@ void H2Ops::on_toolButton_jogmode_y_dec_pressed()
     float cr_time = m_Data["CrawlingTime"].toFloat() / 1000; //ms --> s
     float speed = m_Data["MaximumVelocity"].toFloat();
 
-    m_timerCurrentPos->start();
     int ret = mrgRobotMoveJog(m_ViHandle, m_RoboName, -1, 1, cr_time, 0-cr_speed, speed);
     sysInfo("mrhtRobotMoveJog", ret);
 }
@@ -644,7 +714,6 @@ void H2Ops::on_toolButton_jogmode_y_inc_pressed()
     float cr_time = m_Data["CrawlingTime"].toFloat() / 1000; //ms --> s
     float speed = m_Data["MaximumVelocity"].toFloat();
 
-    m_timerCurrentPos->start();
     int ret = mrgRobotMoveJog(m_ViHandle, m_RoboName, -1, 1, cr_time, cr_speed, speed);
     sysInfo("mrhtRobotMoveJog", ret);
 }
@@ -668,17 +737,14 @@ void H2Ops::on_pushButton_stop_clicked()
     if(m_ViHandle <= 0) return;
 
     int ret = mrgRobotStop(m_ViHandle, m_RoboName, -1);
-    sysInfo("mrgRobotStop", ret);
-
-    m_timerCurrentPos->stop();
+    qDebug() << "mrgRobotStop" << ret;
+//    sysInfo("mrgRobotStop", ret);
 
     ui->toolButton_singlestep_x_dec->setEnabled(true);
     ui->toolButton_singlestep_x_inc->setEnabled(true);
     ui->toolButton_singlestep_y_dec->setEnabled(true);
     ui->toolButton_singlestep_y_inc->setEnabled(true);
 }
-
-
 
 void H2Ops::on_pushButton_apply_clicked()
 {
@@ -688,218 +754,6 @@ void H2Ops::on_pushButton_apply_clicked()
     double v = ui->doubleSpinBox_Velocity->value();
 
     emit signal_apply_point(m_recordNumber,"PA",x,y,v,-1);
-}
-
-
-/////////////////////////////////////////////////////////////
-//更新标签的实时数值
-void H2Ops::updateDeviceAllStatus()
-{
-    int homeVaild = mrgGetRobotHomeRequire(m_ViHandle, m_RoboName);
-    if(homeVaild == 1)
-    {//表示需要回零
-        sysInfo("Robot Need Go Home");
-
-        ui->radHome->setChecked(false);
-        ui->radioButton_homing_valid->setChecked(false);
-
-        ui->tab_Manual->setEnabled(false);
-        ui->tab_Debug->setEnabled(false);
-        ui->tab_Monitor->setEnabled(false);
-
-        this->setTimerSplineStop();
-        setTimerStop(m_timerCurrentPos);
-        return;
-    }
-    else if(homeVaild == 0)
-    {//表示不需要回零
-        ui->radHome->setChecked(true);
-        ui->radioButton_homing_valid->setChecked(true);
-
-        ui->tab_Manual->setEnabled(true);
-        ui->tab_Debug->setEnabled(true);
-        ui->tab_Monitor->setEnabled(true);
-    }
-    else
-    {
-        sysError("mrgGetRobotHomeRequire error");
-        return;
-    }
-
-#if 0
-    //! 如果外部停止按钮被按下，禁止所有可用操作
-    int isStop = 0;
-
-    if(isStop == 1)
-    {//表示外部停止按钮被按下
-        ui->radES->setChecked(false);
-        ui->tab_Homing->setEnabled(false);
-        ui->tab_Manual->setEnabled(false);
-        ui->tab_Debug->setEnabled(false);
-
-        this->setTimerSplineStop();
-        setTimerStop(m_timerCurrentPos);
-        return;
-    }
-    else if(isStop == 0)
-    {//表示外部停止按钮没有被按下
-        ui->radES->setChecked(true);
-        ui->tab_Homing->setEnabled(true);
-        ui->tab_Manual->setEnabled(true);
-        ui->tab_Debug->setEnabled(true);
-    }
-    else
-    {
-        sysError("query stop status error");
-        return;
-    }
-#endif
-
-//    updateCurrentMileage();
-//    updateTargetPosition();
-//    updateCurrentPosition();
-
-    updateDeviceStatus();
-
-    updateRecordNumber();
-
-    updateDigitalIO();
-    updateDebug();
-    updateDiagnosis();
-}
-
-
-//! 定时一次更新位置
-void H2Ops::updatePositionOnceTimer(int msec)
-{
-    QTimer::singleShot(msec, this, SLOT(updateTargetPosition()) );
-    QTimer::singleShot(msec, this, SLOT(updateCurrentPosition()) );
-    QTimer::singleShot(msec, this, SLOT(updateCurrentMileage()) );
-}
-
-//! 更新当前位置
-void H2Ops::updateCurrentPosition()
-{
-    int ret = -1;
-    float fx = 0.0f, fy = 0.0f, fz = 0.0f;
-    ret = mrgGetRobotCurrentPosition(m_ViHandle, m_RoboName, &fx, &fy, &fz);
-    if(ret != 0)
-    {
-        fx = 0;
-        fy = 0;
-    }
-
-    qDebug() << "mrgGetRobotCurrentPosition:" << ret << fx << fy;
-
-    ui->doubleSpinBox_currentPos_x->setValue(fx);
-    ui->doubleSpinBox_currentPos_y->setValue(fy);
-
-    ui->doubleSpinBox_actual_position_x->setValue(fx);
-    ui->doubleSpinBox_actual_position_y->setValue(fy);
-
-    ui->doubleSpinBox_homing_actual_pos_x->setValue(fx);
-    ui->doubleSpinBox_homing_actual_pos_y->setValue(fy);
-}
-
-//! 更新当前里程
-void H2Ops::updateCurrentMileage()
-{
-    long long llx, lly, llz;
-    int ret = mrgGetRobotCurrentMileage(m_ViHandle, m_RoboName, &llx, &lly, &llz);
-    qDebug() << "mrgGetRobotCurrentMileage:" << ret << llx << lly;
-    if(ret == 0){
-        ui->doubleSpinBox_Mileage_x->setValue( llx );
-        ui->doubleSpinBox_Mileage_y->setValue( lly );
-    }
-}
-
-//! 更新目标位置
-void H2Ops::updateTargetPosition()
-{
-    double dx, dy, dz;
-    int ret =  mrgGetRobotTargetPosition(m_ViHandle, m_RoboName, &dx, &dy, &dz);
-    qDebug() << "mrgGetRobotTargetPosition" << ret << dx << dy;
-    if(ret == 0){
-        ui->doubleSpinBox_target_position_x->setValue( dx );
-        ui->doubleSpinBox_target_position_y->setValue( dy );
-    }
-}
-
-//! 更新记录编号
-void H2Ops::updateRecordNumber()
-{
-#if 0
-    qsrand((uint) QTime::currentTime().msec());
-
-    ui->doubleSpinBox_RecordNumber->setValue(qrand() % 50);
-#endif
-}
-
-void H2Ops::updateHoming()
-{
-    ui->label_homing_target->setText(m_Data["Target"]);
-    ui->label_homing_direction->setText(m_Data["Direction"]);
-}
-
-
-void H2Ops::updateDeviceStatus()
-{
-
-
-}
-
-void H2Ops::updateMonitor()
-{
-    unsigned int array1[4096] = {0};
-    unsigned int array2[4096] = {0};
-    int count = -1;
-
-    //查询第一个电机
-    memset(array1, 0, sizeof(array1));
-    count = mrgMRQReportQueue_Query(m_ViHandle, m_DeviceName, 0, 0, array1);
-    if(count <= 0)
-        return;
-
-    //查询第二个电机
-    memset(array2, 0, sizeof(array2));
-    count = mrgMRQReportQueue_Query(m_ViHandle, m_DeviceName, 1, 0, array2);
-    if(count <= 0)
-        goto LAB1;
-
-    for(int i=0; i<count; i++)
-    {
-        int v1 = (array2[i] >> 8) & 0xFF;
-        int v2 = array2[i] & 0xFF;
-        m_splineChart2->dataAppend(v1,v2);
-//        qDebug() << "m_splineChart2" << i << v1 << v2;
-    }
-
-LAB1:
-    for(int i=0; i<count; i++)
-    {
-        int v1 = (array1[i] >> 8) & 0xFF;
-        int v2 = array1[i] & 0xFF;
-        m_splineChart1->dataAppend(v1,v2);
-//        qDebug() << "m_splineChart1" << i << v1 << v2;
-    }
-
-}
-
-
-void H2Ops::updateDigitalIO()
-{
-    //!TODO
-}
-
-void H2Ops::updateDebug()
-{
-    //!TODO
-
-}
-
-void H2Ops::updateDiagnosis()
-{
-    //!TODO
 }
 
 void H2Ops::on_toolButton_debugRun_clicked()
@@ -935,7 +789,7 @@ void H2Ops::on_toolButton_debugRun_clicked()
 
                 qDebug() << "Run Queue :" << recordNumber << "ending";
 
-                if ( m_debugThread->isInterruptionRequested() ){
+                if ( m_threadOpsDebug->isInterruptionRequested() ){
                     noBreak = false;
                     break;
                 }
@@ -943,27 +797,228 @@ void H2Ops::on_toolButton_debugRun_clicked()
         }while(isCyclic && noBreak);
 
         ui->toolButton_debugRun->setText(tr("Run  Sequence"));
-        m_isDebugRun = false;
-    };
+        m_isDebugRunFlag = false;
+    }; //end func
 
-    if(m_isDebugRun) //正在运行
+
+    if(m_isDebugRunFlag) //正在运行
     {
-        m_isDebugRun = false;
+        m_isDebugRunFlag = false;
 
-        if( m_debugThread != NULL ){
-            m_debugThread->requestInterruption();
-            m_debugThread->wait();
+        if( m_threadOpsDebug != NULL ){
+            m_threadOpsDebug->requestInterruption();
+            m_threadOpsDebug->wait();
         }
         ui->toolButton_debugRun->setText(tr("Run  Sequence"));
     }else{
-        m_isDebugRun = true;
+        m_isDebugRunFlag = true;
         ui->toolButton_debugRun->setText(tr("Stop Sequence"));
 
-
-        m_debugThread = new XThread(func);
-        connect(m_debugThread,&XThread::finished,
-                [&](){ m_debugThread = NULL; });
-        m_debugThread->start(QThread::LowestPriority);
+        if(m_ViHandle <= 0) return;
+        m_threadOpsDebug = new XThread(func);
+        connect(m_threadOpsDebug,&XThread::finished,
+                [&](){ m_threadOpsDebug = NULL; });
+        m_threadOpsDebug->start(QThread::LowestPriority);
     }
 
 }
+
+/////////////////////////////////////////////////////////////
+//更新标签的实时数值
+void H2Ops::updateBackgroundStatus()
+{
+    if(m_ViHandle <= 0) return;
+    int homeVaild = mrgGetRobotHomeRequire(m_ViHandle, m_RoboName);
+    qDebug() << "mrgGetRobotHomeRequire" << homeVaild;
+    if(homeVaild == 1)
+    {//表示需要回零
+        sysInfo("Robot Need Go Home");
+
+        ui->radHome->setChecked(false);
+        ui->radioButton_homing_valid->setChecked(false);
+
+        ui->tab_Manual->setEnabled(false);
+        ui->tab_Debug->setEnabled(false);
+        ui->tab_Monitor->setEnabled(false);
+
+//        setAllTabStopWorking();
+        return;
+    }
+    else if(homeVaild == 0)
+    {//表示不需要回零
+        ui->radHome->setChecked(true);
+        ui->radioButton_homing_valid->setChecked(true);
+
+        ui->tab_Manual->setEnabled(true);
+        ui->tab_Debug->setEnabled(true);
+        ui->tab_Monitor->setEnabled(true);
+    }
+
+#if 0
+    //! 如果外部停止按钮被按下，禁止所有可用操作
+    int isStop = 0;
+
+    if(isStop == 1)
+    {//表示外部停止按钮被按下
+        ui->radES->setChecked(false);
+        ui->tab_Homing->setEnabled(false);
+        ui->tab_Manual->setEnabled(false);
+        ui->tab_Debug->setEnabled(false);
+
+        stopOpsAllUpdateShow();
+        return;
+    }
+    else if(isStop == 0)
+    {//表示外部停止按钮没有被按下
+        ui->radES->setChecked(true);
+        ui->tab_Homing->setEnabled(true);
+        ui->tab_Manual->setEnabled(true);
+        ui->tab_Debug->setEnabled(true);
+    }
+#endif
+
+
+}
+
+void H2Ops::updateOpsDeviceStatus()
+{
+    if(m_ViHandle <= 0) return;
+    //! TODO
+
+}
+
+void H2Ops::updateTabOpreate()
+{
+    if(m_ViHandle <= 0) return;
+    int ret = -1;
+
+    //! 更新记录编号
+    int record = -1;
+    ret = mrgGetRobotCurrentRecord(m_ViHandle, m_RoboName, &record);
+    qDebug() << "mrgGetRobotCurrentRecord" << ret << record;
+    ui->doubleSpinBox_RecordNumber->setValue( record );
+
+    //! 更新目标位置
+    double dx = -1, dy = -1, dz = -1;
+    ret =  mrgGetRobotTargetPosition(m_ViHandle, m_RoboName, &dx, &dy, &dz);
+    qDebug() << "mrgGetRobotTargetPosition" << ret << dx << dy;
+    ui->doubleSpinBox_target_position_x->setValue( dx );
+    ui->doubleSpinBox_target_position_y->setValue( dy );
+
+    //! 更新当前位置
+    float fx = -1, fy = -1, fz = -1;
+    ret = mrgGetRobotCurrentPosition(m_ViHandle, m_RoboName, &fx, &fy, &fz);
+    qDebug() << "mrgGetRobotCurrentPosition:" << ret << fx << fy;
+    ui->doubleSpinBox_actual_position_x->setValue(fx);
+    ui->doubleSpinBox_actual_position_y->setValue(fy);
+
+    //! 更新当前里程
+    ret = mrgGetRobotCurrentMileage(m_ViHandle, m_RoboName, &dx, &dy, &dz);
+    qDebug() << "mrgGetRobotCurrentMileage:" << ret << dx << dy;
+    ui->doubleSpinBox_Mileage_x->setValue( dx );
+    ui->doubleSpinBox_Mileage_y->setValue( dy );
+
+}
+
+void H2Ops::updateTabIO()
+{
+    if(m_ViHandle <= 0) return;
+    int ret = -1;
+
+    //!TODO
+
+    //! 更新记录编号
+    int record = -1;
+    ret = mrgGetRobotCurrentRecord(m_ViHandle, m_RoboName, &record);
+    qDebug() << "mrgGetRobotCurrentRecord" << ret << record;
+    ui->label_recordNumber->setText(QString::number( record ));
+
+
+
+
+}
+
+void H2Ops::updateTabHoming()
+{
+    if(m_ViHandle <= 0) return;
+
+    ui->label_homing_target->setText(m_Data["Target"]);
+    ui->label_homing_direction->setText(m_Data["Direction"]);
+
+    //! 更新当前位置
+    float fx = -1, fy = -1, fz = -1;
+    int ret = mrgGetRobotCurrentPosition(m_ViHandle, m_RoboName, &fx, &fy, &fz);
+    qDebug() << "mrgGetRobotCurrentPosition:" << ret << fx << fy;
+    ui->doubleSpinBox_homing_actual_pos_x->setValue(fx);
+    ui->doubleSpinBox_homing_actual_pos_y->setValue(fy);
+
+}
+
+void H2Ops::updateTabManual()
+{
+    if(m_ViHandle <= 0) return;
+
+    //! 更新当前位置
+    float fx = -1, fy = -1, fz = -1;
+    int ret = mrgGetRobotCurrentPosition(m_ViHandle, m_RoboName, &fx, &fy, &fz);
+    qDebug() << "mrgGetRobotCurrentPosition:" << ret << fx << fy;
+    ui->doubleSpinBox_currentPos_x->setValue(fx);
+    ui->doubleSpinBox_currentPos_y->setValue(fy);
+}
+
+void H2Ops::updateTabMonitor()
+{
+    if(m_ViHandle <= 0) return;
+
+    unsigned int array1[4096] = {0};
+    unsigned int array2[4096] = {0};
+    int count = -1;
+
+    //查询第一个电机
+    memset(array1, 0, sizeof(array1));
+    count = mrgMRQReportQueue_Query(m_ViHandle, m_DeviceName, 0, 0, array1);
+    if(count <= 0)
+        return;
+
+    //查询第二个电机
+    memset(array2, 0, sizeof(array2));
+    count = mrgMRQReportQueue_Query(m_ViHandle, m_DeviceName, 1, 0, array2);
+    if(count <= 0)
+        goto LAB1;
+
+    for(int i=0; i<count; i++)
+    {
+        int v1 = (array2[i] >> 8) & 0xFF;
+        int v2 = array2[i] & 0xFF;
+        m_splineChart2->dataAppend(v1,v2);
+        qDebug() << "m_splineChart2" << i << v1 << v2;
+    }
+
+LAB1:
+    for(int i=0; i<count; i++)
+    {
+        int v1 = (array1[i] >> 8) & 0xFF;
+        int v2 = array1[i] & 0xFF;
+        m_splineChart1->dataAppend(v1,v2);
+        qDebug() << "m_splineChart1" << i << v1 << v2;
+    }
+
+}
+
+void H2Ops::updateTabDebug()
+{
+    if(m_ViHandle <= 0) return;
+    //!TODO
+     qDebug() << "Debug";
+
+}
+
+void H2Ops::updateTabDiagnosis()
+{
+    if(m_ViHandle <= 0) return;
+
+    //!TODO
+    qDebug() << "Diagnosis";
+}
+
+

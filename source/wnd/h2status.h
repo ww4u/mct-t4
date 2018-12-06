@@ -18,8 +18,12 @@ public:
 
     void changeLanguage(QString qmFile);
 
-private slots:
-    void on_chkMct_clicked();
+signals:
+    void signal_mct_checked(bool);
+    void signal_power_checked(bool);
+
+public slots:
+    void on_chkMct_toggled(bool checked);
 
 private:
     Ui::H2Status *ui;

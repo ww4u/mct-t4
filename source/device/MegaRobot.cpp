@@ -24,7 +24,7 @@ EXPORT_API int CALL mrgBuildRobot(ViSession vi, char * robotType, char * devList
     char name[8];
     int  id = 0;
     int retLen = 0;
-    if (STRCASECMP("MRX-RAW", robotType) == 0 && devList == NULL)
+    if (STRCASECMP("MRX-RAW", robotType) == 0 || devList == NULL)
     {
         snprintf(args, SEND_BUF, "ROBOT:ALLOC? %s\n", robotType);
     }
@@ -57,10 +57,10 @@ EXPORT_API int CALL mrgBuildRobot(ViSession vi, char * robotType, char * devList
 EXPORT_API int CALL mrgGetRobotType(ViSession vi, int name)
 {
     char args[SEND_BUF];
-    char ret[8];
+    char ret[100];
     int retlen = 0;
     snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION? %d", name);
-    if ((retlen = busQuery(vi, args, strlen(args), ret, 8)) == 0) {
+    if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
         return -1;
     }
     else 
@@ -78,16 +78,16 @@ EXPORT_API int CALL mrgGetRobotType(ViSession vi, int name)
         {
             return MRX_H2;
         }
-        else if (STRCASECMP(ret, "MRX-DELTA"))
+        else if (STRCASECMP(ret, "MRX-DELTA") == 0)
         {
             return MRX_DELTA;
         }
-        else if (STRCASECMP(ret, "MRX-RAW"))
+        else if (STRCASECMP(ret, "MRX-RAW") == 0)
         {
             return MRX_RAW;
         }
     }
-    return -2;
+    return MRX_UNKOWN;
 }
 /*
 * 保存当前系统中所有机器人构形
@@ -95,10 +95,26 @@ EXPORT_API int CALL mrgGetRobotType(ViSession vi, int name)
 * 返回值：0表示执行成功，－1表示失败
 * 说明：
 */
-EXPORT_API int CALL mrgSaveRobotConfig(ViSession vi)
+EXPORT_API int CALL mrgExportRobotConfig(ViSession vi)
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION:FILE:EXPort\n");
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
+}
+/*
+* 保存当前系统中所有机器人构形为默认配置文件
+* vi :visa设备句柄
+* 返回值：0表示执行成功，－1表示失败
+* 说明：工程命令，不对外开放
+*/
+EXPORT_API int CALL mrgExportRobotConfig_default(ViSession vi)
+{
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION:FILE:EXPort::DEFault\n");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -150,15 +166,56 @@ EXPORT_API int CALL mrgGetRobotConfigState(ViSession vi)
             {
                 return 0;
             }
+            else if (STRCASECMP(ret, "ERROR") == 0)
+            {
+                return 2;
+            }
         }
     }
     return -1;
 }
 /*
+* 设置当前机器人所使用的机械结构的序列号
+* vi :visa设备句柄
+* name:机器人名称
+* serial:机械结构序列号
+* 返回值：0表示执行成功，－1表示失败
+* 说明：此函数目前只对H2有效
+*/
+EXPORT_API int CALL mrgSetRobotMachineSerialNum(ViSession vi, int name, char * sn)
+{
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:CONFIGuration:SN %d,%s", name, sn);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
+}
+/*
+* 查询当前机器人所使用的机械结构的序列号
+* vi :visa设备句柄
+* name:机器人名称
+* serial:机械结构序列号
+* 返回值：0表示执行正确，否则表示执行失败
+* 说明：此函数目前只对H2有效
+*/
+EXPORT_API int CALL mrgGetRobotMachineSerialNum(ViSession vi, int name,char*serial)
+{
+    char args[SEND_BUF];
+    int retlen = 0;
+    snprintf(args, SEND_BUF, "ROBOT:CONFIGuration:SN? %d", name);
+    if ((retlen = busQuery(vi, args, strlen(args), serial, 100)) == 0) {
+        return -1;
+    }
+    serial[retlen - 1] = 0;
+    return 0;
+}
+/*
 * 设置当前机器人构形下的子类型
 * vi :visa设备句柄
 * name:机器人名称
-* subtype:子类型。 对于H2来说，0表示小H2（802x494）；1表示大H2（891x769）
+* subtype:子类型。 对于H2来说，0表示小H2，1表示中H2（802x494）；2表示大H2（891x769）
 * 返回值：0表示执行成功，－1表示失败
 * 说明：此函数目前只对H2有效
 */
@@ -176,7 +233,7 @@ EXPORT_API int CALL mrgSetRobotSubType(ViSession vi,int name,int subtype)
 * 查询当前机器人构形下的子类型
 * vi :visa设备句柄
 * name:机器人名称
-* 返回值：子类型。 对于H2来说，0表示小H2（802x494）；1表示大H2（891x769）
+* 返回值：子类型。 对于H2来说，0表示小H2，1表示中H2（802x494）；2表示大H2（891x769）
 * 说明：此函数目前只对H2有效
 */
 EXPORT_API int CALL mrgGetRobotSubType(ViSession vi, int name)
@@ -267,10 +324,7 @@ EXPORT_API int CALL mrgGetRobotName(ViSession vi,int *robotnames)
     if ((retlen = busQuery(vi, args, strlen(args), names, 100)) == 0) {
         return 0;
     }
-    else if( 0 == (strcmp( names, "Command error")) ){
-        return -1;
-    }
-    else{
+    else {
         names[retlen - 1] = '\0';
     }
     p = STRTOK_S(names, ",", &pNext);
@@ -642,7 +696,7 @@ EXPORT_API int CALL mrgRobotWaitEnd(ViSession vi, int name, char wavetable, int 
 {
     int ret = -3,error_count = 0;
     char args[SEND_BUF];
-    char state[12];
+    char state[100];
     int time = 0, retlen = 0;
     if (wavetable == -1)
     {
@@ -658,7 +712,7 @@ EXPORT_API int CALL mrgRobotWaitEnd(ViSession vi, int name, char wavetable, int 
     }
     while (1)
     {
-        if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) 
+        if ((retlen = busQuery(vi, args, strlen(args), state, 100)) == 0) 
         {
             if (++error_count > 30)
             {
@@ -1296,7 +1350,7 @@ EXPORT_API int CALL mrgRobotPointResolve(ViSession vi, int name, int wavetable,i
     {
         snprintf(args, SEND_BUF, "ROBOT:POINT:RESOLVe %d\n", name);
     }
-    else if (wavetable > 0 && wavetable < 10)
+    else if (wavetable >= 0 && wavetable < 10)
     {
         snprintf(args, SEND_BUF, "ROBOT:POINT:RESOLVe %d,%d\n", name, wavetable);
     }
@@ -1363,7 +1417,7 @@ EXPORT_API int CALL mrgRobotPvtResolve(ViSession vi, int name, int wavetable,int
     {
         snprintf(args, SEND_BUF, "ROBOT:PVT:RESOLVe %d\n", name);
     }
-    else if (wavetable > 0 && wavetable < 10)
+    else if (wavetable >= 0 && wavetable < 10)
     {
         snprintf(args, SEND_BUF, "ROBOT:PVT:RESOLVe %d,%d\n", name, wavetable);
     }
@@ -1678,13 +1732,13 @@ EXPORT_API int CALL mrgGetRobotCurrentPosition(ViSession vi, int name, float * x
     return 0;
 }
 /*
-* 机器人当前的里程数，单位 ：毫米
+* 机器人当前的里程数，单位 ：米
 * vi :visa设备句柄
 * name: 机器人名称
 * x,y,z ：各坐标轴方向上的里程
 * 返回值：0表示执行成功， －1：表示执行失败
 */
-EXPORT_API int CALL mrgGetRobotCurrentMileage(ViSession vi, int name, long long *x, long long *y, long long* z)
+EXPORT_API int CALL mrgGetRobotCurrentMileage(ViSession vi, int name, double * x, double *y, double* z)
 {
     int count = 0, retlen = 0;
     char args[SEND_BUF];
@@ -1700,7 +1754,7 @@ EXPORT_API int CALL mrgGetRobotCurrentMileage(ViSession vi, int name, long long 
     p = STRTOK_S(tmp, ",", &pNext);
     while (p)
     {
-        position[count] = strtoul(p, NULL,0);
+        position[count] = strtof(p, NULL);
         p = STRTOK_S(NULL, ",", &pNext);
         count++;
     }
@@ -1739,6 +1793,29 @@ EXPORT_API int CALL mrgGetRobotTargetPosition(ViSession vi, int name, double * x
     *x = position[0];
     *y = position[1];
     *z = position[2];
+    return 0;
+}
+/*
+* 获取机器人的当前执行的指令索引
+* vi :visa设备句柄
+* name: 机器人名称
+* x,y,z ：各坐标轴方向上的点
+* 返回值：0表示执行成功， －1：表示执行失败
+* 此命令只对H2有效！！！！！
+*/
+EXPORT_API int CALL mrgGetRobotCurrentRecord(ViSession vi, int name, int *record)
+{
+    int count = 0, retlen = 0;
+    char args[SEND_BUF];
+    char as8Ret[100];
+    float position[3];
+    char * p, *pNext = NULL;
+    snprintf(args, SEND_BUF, "ROBOT:CURRENT:RECORD? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0)
+    {
+        return -1;
+    }
+    *record = atoi(as8Ret);
     return 0;
 }
 

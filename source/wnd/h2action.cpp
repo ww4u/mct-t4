@@ -240,8 +240,15 @@ void H2Action::soltActionRun()
     int row = ui->tableView->selectionModel()->selectedIndexes().at(0).row();
     qDebug() << "soltActionRun" << row;
 
-//    QModelIndex index = ui->tableView->selectionModel()->selectedIndexes().at(0);
-//    QString type = m_actionModel.data(index,Qt::DisplayRole).toString();
+    //查询点击使能状态
+    int ret = -1, v1 = 0, v2 = 0;
+    ret = mrgMRQDriverState_Query(mViHandle, mDeviceName, 0, &v1);
+    ret += mrgMRQDriverState_Query(mViHandle, mDeviceName, 0, &v2);
+    qDebug() << "mrgMRQDriverState_Query" << ret << ":" << v1 << v2;
+    if((ret != 0) || (v1 != 1) || (v2 != 1)){
+        QMessageBox::warning(this,tr("warning"),tr("Device motor uneable"));
+        return;
+    }
 
     auto func = [=]()
     {
@@ -250,12 +257,15 @@ void H2Action::soltActionRun()
         qDebug() << mViHandle << mRobotName;
         ret = mrgRobotFileResolve(mViHandle, mRobotName, 0, row+1, 0, 20000);
         qDebug() << "mrgRobotFileResolve" << ret;
+        if(ret != 0) return;
 
         ret = mrgRobotRun(mViHandle, mRobotName, 0);
         qDebug() << "mrgRobotRun" << ret;
+        if(ret != 0) return;
 
         ret = mrgRobotWaitEnd(mViHandle, mRobotName, 0, 0);
         qDebug() << "mrgRobotWaitEnd" << ret;
+        if(ret != 0) return;
 
         qDebug() << "soltActionRun end";
     };

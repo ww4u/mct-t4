@@ -30,7 +30,7 @@ Chart::Chart(QGraphicsItem *parent, Qt::WindowFlags wFlags):
 
     m_axis->setTickCount(6);
     axisX()->setRange(-10.0, 0);
-    axisY()->setRange(0, 120.0);
+    axisY()->setRange(0, 100.0);
 
     axisX()->setTitleText("[s]");
 

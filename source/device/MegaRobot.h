@@ -40,7 +40,14 @@ EXPORT_API int CALL mrgGetRobotType(ViSession vi, int name);
 * 返回值：0表示执行成功，－1表示失败
 * 说明：
 */
-EXPORT_API int CALL mrgSaveRobotConfig(ViSession vi);
+EXPORT_API int CALL mrgExportRobotConfig(ViSession vi);
+/*
+* 保存当前系统中所有机器人构形为默认配置文件
+* vi :visa设备句柄
+* 返回值：0表示执行成功，－1表示失败
+* 说明：工程命令，不对外开放
+*/
+EXPORT_API int CALL mrgExportRobotConfig_default(ViSession vi);
 /*
 * 恢复上次保存的配置
 * vi :visa设备句柄
@@ -56,10 +63,28 @@ EXPORT_API int CALL mrgRestoreRobotConfig(ViSession vi);
 */
 EXPORT_API int CALL mrgGetRobotConfigState(ViSession vi);
 /*
+* 设置当前机器人所使用的机械结构的序列号
+* vi :visa设备句柄
+* name:机器人名称
+* serial:机械结构序列号
+* 返回值：0表示执行成功，－1表示失败
+* 说明：此函数目前只对H2有效
+*/
+EXPORT_API int CALL mrgSetRobotMachineSerialNum(ViSession vi, int name, char * sn);
+/*
+* 查询当前机器人所使用的机械结构的序列号
+* vi :visa设备句柄
+* name:机器人名称
+* serial:机械结构序列号
+* 返回值：0表示执行正确，否则表示执行失败
+* 说明：此函数目前只对H2有效
+*/
+EXPORT_API int CALL mrgGetRobotMachineSerialNum(ViSession vi, int name, char*serial);
+/*
 * 设置当前机器人构形下的子类型
 * vi :visa设备句柄
 * name:机器人名称
-* subtype:子类型。 对于H2来说，0表示小H2（802x494）；1表示大H2（891x769）
+* subtype:子类型。 对于H2来说，0表示小H2，1表示中H2（802x494）；2表示大H2（891x769）
 * 返回值：0表示执行成功，－1表示失败
 * 说明：此函数目前只对H2有效
 */
@@ -68,7 +93,7 @@ EXPORT_API int CALL mrgSetRobotSubType(ViSession vi, int name, int subtype);
 * 查询当前机器人构形下的子类型
 * vi :visa设备句柄
 * name:机器人名称
-* 返回值：子类型。 对于H2来说，0表示小H2（802x494）；1表示大H2（891x769）
+* 返回值：子类型。 对于H2来说，0表示小H2，1表示中H2（802x494）；2表示大H2（891x769）
 * 说明：此函数目前只对H2有效
 */
 EXPORT_API int CALL mrgGetRobotSubType(ViSession vi, int name);
@@ -563,13 +588,13 @@ EXPORT_API int CALL mrgGetRobotCurrentAngle(ViSession vi, int name, float * angl
 */
 EXPORT_API int CALL mrgGetRobotCurrentPosition(ViSession vi, int name, float * x, float *y, float* z);
 /*
-* 机器人当前的里程数，单位 ：毫米
+* 机器人当前的里程数，单位 ：米
 * vi :visa设备句柄
 * name: 机器人名称
 * x,y,z ：各坐标轴方向上的里程
 * 返回值：0表示执行成功， －1：表示执行失败
 */
-EXPORT_API int CALL mrgGetRobotCurrentMileage(ViSession vi, int name, long long * x, long long *y, long long* z);
+EXPORT_API int CALL mrgGetRobotCurrentMileage(ViSession vi, int name, double * x, double *y, double* z);
 /*
 * 获取机器人的目标位置
 * vi :visa设备句柄
@@ -578,6 +603,15 @@ EXPORT_API int CALL mrgGetRobotCurrentMileage(ViSession vi, int name, long long 
 * 返回值：0表示执行成功， －1：表示执行失败
 */
 EXPORT_API int CALL mrgGetRobotTargetPosition(ViSession vi, int name, double * x, double *y, double* z);
+/*
+* 获取机器人的当前执行的指令索引
+* vi :visa设备句柄
+* name: 机器人名称
+* x,y,z ：各坐标轴方向上的点
+* 返回值：0表示执行成功， －1：表示执行失败
+* 此命令只对H2有效！！！！！
+*/
+EXPORT_API int CALL mrgGetRobotCurrentRecord(ViSession vi, int name, int *record);
 #endif // ! _MEGA_ROBOT_H_
 
 

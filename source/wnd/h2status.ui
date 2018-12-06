@@ -5,11 +5,14 @@
   <property name="windowModality">
    <enum>Qt::WindowModal</enum>
   </property>
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>332</width>
+    <width>342</width>
     <height>295</height>
    </rect>
   </property>
@@ -122,6 +125,9 @@
       </item>
       <item row="7" column="1">
        <widget class="QCheckBox" name="chkPwr">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>Enable</string>
         </property>
@@ -130,7 +136,7 @@
       <item row="7" column="0">
        <widget class="QCheckBox" name="chkMct">
         <property name="text">
-         <string>Config Tool</string>
+         <string>MCT</string>
         </property>
        </widget>
       </item>

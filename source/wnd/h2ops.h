@@ -36,92 +36,70 @@ public:
     void changeLanguage(QString qmFile)  override;
 
 signals:
-    //    int row, QString type, double x, double y, double v, double a
     void signal_apply_point(int, QString, double, double,double,double);
 
 public slots:
-    void slotSetCurrentRobot(QString strDevInfo, int visa, int deviceName, int roboName);
-    void slotSetCurrentRecordNumber(int number);
-
-    void slotLoadConfigAgain();
-
     void slot_logSelectAll_action();
     void slot_logCopy_action();
     void slot_logClear_action();
-    void on_pushButton_stop_clicked();
+
+    void slotSetCurrentRobot(QString strDevInfo, int visa, int deviceName, int roboName);
+    void slotSetCurrentRecordNumber(int number);
+    void slotLoadConfigAgain();
+    void slotRobotStop(){
+        this->on_pushButton_stop_clicked();
+    }
+
+    void slot_mct_checked(bool checked);
+    void slot_power_checked(bool checked);
 
 private slots:
-    void updateDeviceAllStatus();
-
     void on_btnUp_clicked();
-
     void on_btnDown_clicked();
-
     void on_btnAdd_clicked();
-
     void on_btnDel_clicked();
-
     void on_btnClr_clicked();
-
     void on_btnImport_clicked();
-
     void on_btnExport_clicked();
-
     void on_btnRead_clicked();
-
     void on_btnDelete_clicked();
-
     void on_btnExport_2_clicked();
 
     void on_tabWidget_currentChanged(int index);
-
     void on_tabWidget_tabBarClicked(int index);
-
 
     void on_pushButton_starting_home_clicked();
     void slot_starting_home_over(int ret);
 
     void on_toolButton_singlestep_x_dec_clicked();
-
     void on_toolButton_singlestep_x_inc_clicked();
-
     void on_toolButton_singlestep_y_dec_clicked();
-
     void on_toolButton_singlestep_y_inc_clicked();
-
+    void on_toolButton_jogmode_x_dec_pressed();
+    void on_toolButton_jogmode_x_dec_released();
+    void on_toolButton_jogmode_x_inc_pressed();
+    void on_toolButton_jogmode_x_inc_released();
+    void on_toolButton_jogmode_y_dec_pressed();
+    void on_toolButton_jogmode_y_dec_released();
+    void on_toolButton_jogmode_y_inc_pressed();
+    void on_toolButton_jogmode_y_inc_released();
+    void on_pushButton_stop_clicked();
     void on_pushButton_apply_clicked();
 
-    void on_toolButton_jogmode_x_dec_pressed();
-
-    void on_toolButton_jogmode_x_dec_released();
-
-    void on_toolButton_jogmode_x_inc_pressed();
-
-    void on_toolButton_jogmode_x_inc_released();
-
-    void on_toolButton_jogmode_y_dec_pressed();
-
-    void on_toolButton_jogmode_y_dec_released();
-
-    void on_toolButton_jogmode_y_inc_pressed();
-
-    void on_toolButton_jogmode_y_inc_released();
-
-    void updatePositionOnceTimer(int msec);
-    void updateCurrentPosition();
-    void updateCurrentMileage();
-    void updateTargetPosition();
-
-    void updateRecordNumber();
-
-    void updateDeviceStatus();
-    void updateDigitalIO();
-    void updateHoming();
-    void updateMonitor();
-    void updateDebug();
-    void updateDiagnosis();
-
     void on_toolButton_debugRun_clicked();
+
+    void updateBackgroundStatus();
+
+    void updateOpsDeviceStatus();
+    void updateTabOpreate();
+    void updateTabIO();
+    void updateTabHoming();
+    void updateTabManual();
+    void updateTabMonitor();
+    void updateTabDebug();
+    void updateTabDiagnosis();
+
+    void setAllTabStopWorking();
 
 protected:
     void setupUi();
@@ -140,10 +118,7 @@ private:
     QAction *mp_logCopyAction;
     QAction *mp_logSepAction;
 
-    //! diagnosis model
     DiagnosisModel *m_pDiagnosisModel;
-
-    //! debug
     DebugModel *m_pDebugModel;
 
     MegaSplineChart *m_splineChart1;
@@ -153,22 +128,35 @@ private:
     int m_DeviceName;
     int m_RoboName;
     QString m_strDevInfo;
+    int m_recordNumber;
     QMap<QString,QString> m_Data;
 
-    int m_recordNumber;
 
-    bool m_isDebugRun;
-    XThread *m_debugThread;
+    bool m_isDebugRunFlag;
 
-    QTimer *m_timerCurrentPos;   //更新实时位置显示的定时器
-    QTimer *m_timerSpline;       //能效曲线添加新数值的定时器
-    QTimer *m_timerGlobal;       //其他所有动态更新的数据
+    QTimer *m_timerOpsAll;
+
+    QTimer *m_timerOpsOpreate;
+    QTimer *m_timerOpsIO;
+    QTimer *m_timerOpsHoming;
+    QTimer *m_timerOpsManual;
+    QTimer *m_timerOpsMonitor;
+    XThread *m_threadOpsDebug;
+
 
     void setButtonDisableTime(QToolButton *btn, int msec);
-    void setTimerStop(QTimer *timer);
-    void setTimerStart(QTimer *timer);
-    void setTimerSplineStop();  //关闭动态曲线的定时器
-    void setTimerSplineStart(); //打开动态曲线的定时器
+
+    void setTimerStop(QTimer *timer){
+        if( timer->isActive() )
+            timer->stop();
+    }
+    void setTimerStart(QTimer *timer){
+        if( !timer->isActive() )
+            timer->start();
+    }
+
+    void setOpsMonitorTimerStop();  //关闭动态曲线的定时器
+    void setOpsMonitorTimerStart(); //打开动态曲线的定时器
 };
 
 

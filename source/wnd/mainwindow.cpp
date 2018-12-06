@@ -121,7 +121,7 @@ void MainWindow::buildConnection()
     connect(m_pOps,SIGNAL(signal_apply_point(int,QString,double,double,double,double)),
             m_roboConfig,SLOT(slotSetOneRecord(int,QString,double,double,double,double)));
 
-    connect(ui->actionStop,SIGNAL(triggered(bool)), m_pOps, SLOT(on_pushButton_stop_clicked()));
+    connect(ui->actionStop,SIGNAL(triggered(bool)), m_pOps, SLOT(slotRobotStop()));
 
     connect(ui->actionDownload,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotDownload()));
     connect(ui->actionUpload,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotUpload()));

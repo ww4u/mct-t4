@@ -35,7 +35,7 @@
       <enum>QTabWidget::South</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <property name="movable">
       <bool>false</bool>
@@ -384,7 +384,10 @@
              <string notr="true"/>
             </property>
             <property name="suffix">
-             <string notr="true"> mm</string>
+             <string notr="true"/>
+            </property>
+            <property name="decimals">
+             <number>0</number>
             </property>
             <property name="minimum">
              <double>-100000000000.000000000000000</double>
@@ -530,7 +533,7 @@
            </widget>
           </item>
           <item row="7" column="1">
-           <widget class="QLabel" name="label_11">
+           <widget class="QLabel" name="label_recordNumber">
             <property name="font">
              <font>
               <weight>75</weight>

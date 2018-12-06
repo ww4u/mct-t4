@@ -424,9 +424,29 @@ EXPORT_API int CALL mrgMRQPVTCycle(ViSession vi, int name, int ch, int wavetable
 */
 EXPORT_API int CALL mrgMRQPVTCycle_Query(ViSession vi, int name, int ch, int wavetable, unsigned int *cycle);
 /*
+*设置FIFO模式下，PVT的缓冲时间
+*vi :visa设备句柄
+*name: 设备名称（SEND_ID）
+*ch：通道号
+*wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+*time:缓冲时间，单位：ms
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQPVTFifoBufferTime(ViSession vi, int name, int ch, int wavetable, unsigned int time);
+/*
+*查询FIFO模式下，PVT的缓冲时间
+*vi :visa设备句柄
+*name:设备名称（SEND_ID）
+*ch：通道号
+*wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+*time:缓冲时间，单位：ms
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQPVTFifoBufferTime_Query(ViSession vi, int name, int ch, int wavetable, unsigned int *time);
+/*
 *查询模式,包括执行模式,规划模式,运动模式
 *vi :visa设备句柄
-*name: 机器人名称
+*name: 设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *exe:执行模式：0: CYCLE; 1: FIFO
@@ -439,7 +459,7 @@ EXPORT_API int CALL mrgMRQPVTModeConfig_Query(ViSession vi, int name, int ch,
 /*
 *设置模式,包括执行模式,规划模式,运动模式
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *exe:执行模式：0: CYCLE; 1: FIFO
@@ -452,7 +472,7 @@ EXPORT_API int CALL mrgMRQPVTModeConfig(ViSession vi, int name, int ch,
 /*
 *设置执行模式,循环或者FIFO
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *mode:执行模式  0－循环模式； 1：FIFO模式
@@ -462,7 +482,7 @@ EXPORT_API int CALL mrgMRQPVTModeExe(ViSession vi, int name, int ch, int wavetab
 /*
 *查询执行模式,循环或者FIFO
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *mode:执行模式; 0:循环模式；1：FIFO模式
@@ -472,7 +492,7 @@ EXPORT_API int CALL mrgMRQPVTModeExe_Query(ViSession vi, int name, int ch, int w
 /*
 *设置规划模式:三次插值,线性插值,梯形插值,或五次插值
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *mode:规划模式  0 - 2  CUBICPOLY|TRAPEZOID｜SCURVE
@@ -492,7 +512,7 @@ EXPORT_API int CALL mrgMRQPVTModePlan_Query(ViSession vi, int name, int ch, int 
 /*
 *设置运动模式:PVT或者LVT
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *pattern:模式
@@ -502,7 +522,7 @@ EXPORT_API int CALL mrgMRQPVTModeMotion(ViSession vi, int name, int ch, int wave
 /*
 *查询运动模式:PVT或者LVT
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *pattern:模式
@@ -512,7 +532,7 @@ EXPORT_API int CALL mrgMRQPVTModeMotion_Query(ViSession vi, int name, int ch, in
 /*
 *设置LVT模式下进行时间调整的占比
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *duty:占空比
@@ -522,7 +542,7 @@ EXPORT_API int CALL mrgMRQPVTModifyDuty(ViSession vi, int name, int ch, int wave
 /*
 *查询LVT模式下进行时间调整的占比
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *duty:占空比
@@ -532,7 +552,7 @@ EXPORT_API int CALL mrgMRQPVTModifyDuty_Query(ViSession vi, int name, int ch, in
 /*
 *设置是否为速度保持
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *pattern:模式
@@ -542,7 +562,7 @@ EXPORT_API int CALL mrgMRQPVTEndState(ViSession vi, int name, int ch, int waveta
 /*
 *查询是否为速度保持
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *pattern:模式
@@ -553,7 +573,7 @@ EXPORT_API int CALL mrgMRQPVTEndState_Query(ViSession vi, int name, int ch, int 
 /*
 *设置急停方式,立即停止或者减速停止
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *type:急停方式;  0:立即停止；1：减速停止
@@ -563,7 +583,7 @@ EXPORT_API int CALL mrgMRQPVTStopMode(ViSession vi, int name, int ch, int waveta
 /*
 *查询急停方式,立即停止或者减速停止
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *mode:急停方式,0:立即停止； 1：减速停止
@@ -573,7 +593,7 @@ EXPORT_API int CALL mrgMRQPVTStopMode_Query(ViSession vi, int name, int ch, int 
 /*
 *设置急停时间
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *time:急停的时间
@@ -583,7 +603,7 @@ EXPORT_API int CALL mrgMRQPVTStopTime(ViSession vi, int name, int ch, int waveta
 /*
 *查询急停时间
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *time:急停的时间
@@ -593,7 +613,7 @@ EXPORT_API int CALL mrgMRQPVTStopTime_Query(ViSession vi, int name, int ch, int 
 /*
 *设置减速停止时的减速距离
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *distance:减速距离
@@ -603,7 +623,7 @@ EXPORT_API int CALL mrgMRQPVTStopDistance(ViSession vi, int name, int ch, int wa
 /*
 *查询减速停止时的减速距离
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *distance:减速距离
@@ -613,7 +633,7 @@ EXPORT_API int CALL mrgMRQPVTStopDistance_Query(ViSession vi, int name, int ch, 
 /*
 *查询失步的状态,阈值及失步后的反应
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *state1:失步的状态
@@ -624,7 +644,7 @@ EXPORT_API int CALL mrgMRQLostStepLineConfig_Query(ViSession vi, int name,
 /*
 *设置失步的状态,阈值及失步后的反应
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *state:失步的告警状态 0:禁止 ；1：使能
@@ -637,7 +657,7 @@ EXPORT_API int CALL mrgMRQLostStepLineConfig(ViSession vi, int name,
 /*
 *设置线间失步告警状态
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *state:警告状态
@@ -647,7 +667,7 @@ EXPORT_API int CALL mrgMRQLostStepState(ViSession vi, int name, int ch, int wave
 /*
 *查询线间失步告警状态
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *state:警告状态  0:禁止 ；1：使能
@@ -657,7 +677,7 @@ EXPORT_API int CALL mrgMRQLostStepState_Query(ViSession vi, int name, int ch, in
 /*
 *设置线间失步阈值
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *value:线间失步阈值
@@ -667,7 +687,7 @@ EXPORT_API int CALL mrgMRQLostStepThreshold(ViSession vi, int name, int ch, int 
 /*
 *查询线间失步阈值
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *value:线间失步阈值
@@ -677,7 +697,7 @@ EXPORT_API int CALL mrgMRQLostStepThreshold_Query(ViSession vi, int name, int ch
 /*
 *设置当步数偏差超过LOSTNUM后的响应方式
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *resp: 0:NONE;1:ALARM;2:STOP;3:ALARM&STOP
@@ -687,7 +707,7 @@ EXPORT_API int CALL mrgMRQLostStepResponse(ViSession vi, int name, int ch, int w
 /*
 *查询当步数偏差超过LOSTNUM后的响应方式
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *resp : 0:NONE;1:ALARM;2:STOP;3:ALARM&STOP
@@ -697,7 +717,7 @@ EXPORT_API int mrgMRQLostStepResponse_Query(ViSession vi, int name, int ch, int 
 /*
 *查询上报功能配置
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *funs: 0 ~ 5 TORQUE|CYCLE|SGALL|SGSE|DIST|ABSEN
 *buf:返回的功能
@@ -707,7 +727,7 @@ EXPORT_API int CALL mrgMRQReportConfig_Query(ViSession vi, int name, int ch, int
 /*
 *设置上报功能配置
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *funs:功能
 *state:状态on/off
@@ -718,7 +738,7 @@ EXPORT_API int CALL mrgMRQReportConfig(ViSession vi, int name, int ch, int funs,
 /*
 *设置上报状态
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *funs:功能
 *state:状态on/off
@@ -728,7 +748,7 @@ EXPORT_API int CALL mrgMRQReportState(ViSession vi, int name, int ch, int funs, 
 /*
 *查询上报状态
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *funs:功能
 *state1状态on/off
@@ -738,27 +758,27 @@ EXPORT_API int CALL mrgMRQReportState_Query(ViSession vi, int name, int ch, int 
 /*
 *设置上报周期
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *funs:功能
-*period:指定类型数据的上报周期
+*period:指定类型数据的上报周期,单位：ms
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQReportPeriod(ViSession vi, int name, int ch, int funs, double period);
+EXPORT_API int CALL mrgMRQReportPeriod(ViSession vi, int name, int ch, int funs, int period);
 /*
 *查询上报周期
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *funs:功能
-*period:指定类型数据的上报周期
+*period:指定类型数据的上报周期,单位：ms
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQReportPeriod_Query(ViSession vi, int name, int ch, int funs, int *period);
 /*
 *查询自动上报数据
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *index:上报数据类型： TORQUE（能效曲线的百分比）、 CYCLE（循环模式下的循环次数）、 SGALL、SGSE 或 DIST（测距传感器的值）
 *返回值：返回读取到的数据个数
@@ -767,7 +787,7 @@ EXPORT_API int CALL mrgMRQReportData_Query(ViSession vi, int name, int ch, int i
 /*
 *查询自动上报数据队列中的数据
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *func: 0 ~ 5 TORQUE|CYCLE|SGALL|SGSE|DIST|ABSEN
 *data : 返回数据的存储区
@@ -777,7 +797,7 @@ EXPORT_API int CALL mrgMRQReportQueue_Query(ViSession vi, int name, int ch, int 
 /*
 *设置触发输入的模式,码型触发或电平触发
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *mode:触发输入的模式
 *返回值：0表示执行成功，－1表示失败
@@ -786,7 +806,7 @@ EXPORT_API int CALL mrgMRQTriggerMode(ViSession vi, int name, int ch, int mode);
 /*
 *查询触发输入的模式,码型触发或电平触发
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *mode:触发输入的模式. 0:码型触发；1：电平触发
 *返回值：0表示执行成功，－1表示失败
@@ -795,7 +815,7 @@ EXPORT_API int CALL mrgMRQTriggerMode_Query(ViSession vi, int name, int ch, int 
 /*
 *查询电平触发配置
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *trig:电平触发编号： TRIGL 或 TRIGR
 *state:开关状态
@@ -809,7 +829,7 @@ EXPORT_API int CALL mrgMRQTriggerLevelConfig_Query(ViSession vi, int name, int c
 /*
 *设置电平触发配置
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *trig:电平触发编号： TRIGL 或 TRIGR
 *state:开关状态
@@ -823,7 +843,7 @@ EXPORT_API int CALL mrgMRQTriggerLevelConfig(ViSession vi, int name, int ch, int
 /*
 *设置电平触发，打开或关闭
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *trig:电平触发编号： TRIGL 或 TRIGR
 *state:状态  0表示禁止；1表示使能
@@ -833,7 +853,7 @@ EXPORT_API int CALL mrgMRQTriggerLevelState(ViSession vi, int name, int ch, int 
 /*
 *查询电平触发，打开或关闭
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *trig:电平触发编号： TRIGL 或 TRIGR
 *state:状态. 0表示禁止；1表示使能
@@ -843,7 +863,7 @@ EXPORT_API int CALL mrgMRQTriggerLevelState_Query(ViSession vi, int name, int ch
 /*
 *设置触发电平类型
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *trig:电平触发编号： TRIGL 或 TRIGR
 *type:电平触发类型： RESERVE|LOW|RISE|FALL|HIGH
@@ -853,7 +873,7 @@ EXPORT_API int CALL mrgMRQTriggerLevelType(ViSession vi, int name, int ch, int t
 /*
 *查询触发电平类型
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *trig:电平触发编号： TRIGL 或 TRIGR
 *type:电平触发类型： 0:RESERVE; 1:LOW; 2: RISE; 3:FALL;4:HIGH
@@ -863,7 +883,7 @@ EXPORT_API int CALL mrgMRQTriggerLevelType_Query(ViSession vi, int name, int ch,
 /*
 *设置触发电平响应
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *trig:电平触发编号： TRIGL 或 TRIGR
 *resp:电平触发的响应方式： NONE|ALARM|STOP|ALARM&STOP
@@ -873,7 +893,7 @@ EXPORT_API int CALL mrgMRQTriggerLevelResponse(ViSession vi, int name, int ch, i
 /*
 *查询触发电平响应
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *trig:电平触发编号： TRIGL 或 TRIGR
 *resp:电平触发的响应方式：0: NONE; 1:ALARM;2:STOP; 3:ALARM&STOP
@@ -883,7 +903,7 @@ EXPORT_API int CALL mrgMRQTriggerLevelResponse_Query(ViSession vi, int name, int
 /*
 *设置触发电平采样周期
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *trig:电平触发编号： TRIGL 或 TRIGR
 *period:采样周期,单位：s
@@ -893,7 +913,7 @@ EXPORT_API int CALL mrgMRQTriggerLevelPeriod(ViSession vi, int name, int ch, int
 /*
 *查询触发电平采样周期
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *trig:电平触发编号： TRIGL 或 TRIGR
 *period:采样周期,单位：s
@@ -903,7 +923,7 @@ EXPORT_API int CALL mrgMRQTriggerLevelPeriod_Query(ViSession vi, int name, int c
 /*
 *查询驱动板配置
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *state:开关状态。 0：禁止；1：使能
 *microstep:微步 256,128,64,32,16,8,4,2,1
@@ -915,7 +935,7 @@ EXPORT_API int CALL mrgMRQDriverConfig_Query(ViSession vi, int name, int ch,
 /*
 *设置驱动板配置
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *state:开关状态。 0：禁止；1：使能
 *microstep:微步
@@ -927,7 +947,7 @@ EXPORT_API int CALL mrgMRQDriverConfig(ViSession vi, int name, int ch,
 /*
 *查询驱动板类型
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *type:驱动板的类型 0:D17  1：D23
 *返回值：0表示执行成功，－1表示失败
@@ -936,7 +956,7 @@ EXPORT_API int CALL mrgMRQDriverType_Query(ViSession vi, int name, int ch, int *
 /*
 *设置驱动板电流
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *current:驱动板电流
 *返回值：0表示执行成功，－1表示失败
@@ -945,16 +965,34 @@ EXPORT_API int CALL mrgMRQDriverCurrent(ViSession vi, int name, int ch, double c
 /*
 *查询驱动板电流
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *current:驱动板电流
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQDriverCurrent_Query(ViSession vi, int name, int ch, double *current);
 /*
+*设置驱动板空闲电流
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*current:驱动板空闲电流
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQDriverIdleCurrent(ViSession vi, int name, int ch, double current);
+/*
+*查询驱动板空闲电流
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*current:驱动板空闲电流
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQDriverIdleCurrent_Query(ViSession vi, int name, int ch, double *current);
+/*
 *设置电机微步数
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *microstep:电机的微步数 256,128,64,32,16,8,4,2,1
 *返回值：0表示执行成功，－1表示失败
@@ -963,7 +1001,7 @@ EXPORT_API int CALL mrgMRQDriverMicroStep(ViSession vi, int name, int ch, int mi
 /*
 *查询电机微步数
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *microstep:电机的微步数 256,128,64,32,16,8,4,2,1
 *返回值：0表示执行成功，－1表示失败
@@ -972,7 +1010,7 @@ EXPORT_API int CALL mrgMRQDriverMicroStep_Query(ViSession vi, int name, int ch, 
 /*
 *设置驱动开关状态
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *state:状态on/off  0:OFF; 1:ON
 *返回值：0表示执行成功，－1表示失败
@@ -981,16 +1019,104 @@ EXPORT_API int CALL mrgMRQDriverState(ViSession vi, int name, int ch, int state)
 /*
 *查询驱动开关状态
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *state1:状态on/off
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQDriverState_Query(ViSession vi, int name, int ch, int *state);
 /*
+*设置驱动的寄存器值
+*vi :visa设备句柄
+*name:设备名称（SEND_ID）
+*ch：通道号
+*regIndex： 寄存器地址
+*value:寄存器值
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQDriverRegisterValue(ViSession vi, int name, int ch, int regIndex, unsigned int value);
+/*
+*查询驱动的寄存器值
+*vi :visa设备句柄
+*name:设备名称（SEND_ID）
+*ch：通道号
+*regIndex： 寄存器地址
+*value:寄存器值
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQDriverRegisterValue_Query(ViSession vi, int name, int ch, int regIndex, unsigned int *value);
+/*
+*设置驱动器TUNING功能的开关状态
+*vi :visa设备句柄
+*name:设备名称（SEND_ID）
+*ch：通道号
+*state:开关状态 0：OFF；1：ON
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQDriverTuningState(ViSession vi, int name, int ch, int state);
+/*
+*查询驱动器TUNING功能的开关状态
+*vi :visa设备句柄
+*name:设备名称（SEND_ID）
+*ch：通道号
+*state:开关状态 0：OFF；1：ON
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQDriverTuningState_Query(ViSession vi, int name, int ch, int *state);
+/*
+*设置驱动器TUNING功能的最小电流比
+*vi :visa设备句柄
+*name:设备名称（SEND_ID）
+*ch：通道号
+*ratio:最小电流比 0：1/2；1：1/4
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQDriverTuningMinCurrent(ViSession vi, int name, int ch, int ratio);
+/*
+*查询驱动器TUNING功能的最小电流比
+*vi :visa设备句柄
+*name:设备名称（SEND_ID）
+*ch：通道号
+*ratio:最小电流比 0：1/2；1：1/4
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQDriverTuningMinCurrent_Query(ViSession vi, int name, int ch, int *ratio);
+/*
+*设置驱动器TUNING功能的电流上升和下降速度
+*vi :visa设备句柄
+*name:设备名称（SEND_ID）
+*ch：通道号
+*speedUp:电流上升速度 0：表示每整步增加一个单位的电流；
+                    1：表示每整步增加两个单位的电流
+                    2：表示每整步增加4个单位的电流
+                    3：表示每整步增加8个单位的电流
+*speedDown：电流下降速度  0：表示每32整步减小一个单位的电流；
+                        1：表示每8整步减小一个单位的电流；
+                        2：表示每2整步减小一个单位的电流；
+                        3：表示每1整步减小一个单位的电流；
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQDriverTuningCurrentRegulate(ViSession vi, int name, int ch, int speedUp, int speedDown);
+/*
+*查询驱动器TUNING功能的电流上升和下降速度
+*vi :visa设备句柄
+*name:设备名称（SEND_ID）
+*ch：通道号
+*speedUp:电流上升速度 0：表示每整步增加一个单位的电流；
+                    1：表示每整步增加两个单位的电流
+                    2：表示每整步增加4个单位的电流
+                    3：表示每整步增加8个单位的电流
+*speedDown：电流下降速度  0：表示每32整步减小一个单位的电流；
+                        1：表示每8整步减小一个单位的电流；
+                        2：表示每2整步减小一个单位的电流；
+                        3：表示每1整步减小一个单位的电流；
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQDriverTuningCurrentRegulate_Query(ViSession vi, int name, int ch, int *speedUp, int *speedDown);
+/*
 *查询编码器的状态,类型,线数及通道个数.状态为OFF时,后面的参数可以省略
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *state:状态  0:OFF;  1：ON
 *type:编码器的类型： 0:INCREMENTAL 或 1: ABSOLUTE
@@ -1003,7 +1129,7 @@ EXPORT_API int CALL mrgMRQEncoderConfig_Query(ViSession vi, int name, int ch,
 /*
 *设置编码器的状态,类型,线数及通道个数.状态为OFF时,后面的参数可以省略
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *state:状态  0:OFF;  1：ON
 *type:编码器的类型： 0:INCREMENTAL 或 1: ABSOLUTE
@@ -1016,7 +1142,7 @@ EXPORT_API int CALL mrgMRQEncoderConfig(ViSession vi, int name, int ch,
 /*
 *设置编码器线数
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *num:编码器线数
 *返回值：0表示执行成功，－1表示失败
@@ -1025,7 +1151,7 @@ EXPORT_API int CALL mrgMRQEncoderLineNum(ViSession vi, int name, int ch, int num
 /*
 *查询编码器线数
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *num:编码器线数
 *返回值：0表示执行成功，－1表示失败
@@ -1034,7 +1160,7 @@ EXPORT_API int CALL mrgMRQEncoderLineNum_Query(ViSession vi, int name, int ch, i
 /*
 *设置编码器通道
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *channelnum:增量型编码器的通道数： 1 或 3
 *返回值：0表示执行成功，－1表示失败
@@ -1043,7 +1169,7 @@ EXPORT_API int CALL mrgMRQEncoderChannelNum(ViSession vi, int name, int ch, int 
 /*
 *查询编码器通道
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *channelnum:增量型编码器的通道数： 1 或 3
 *返回值：0表示执行成功，－1表示失败
@@ -1052,7 +1178,7 @@ EXPORT_API int CALL mrgMRQEncoderChannelNum_Query(ViSession vi, int name, int ch
 /*
 *设置编码器类型
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *type:编码器的类型： INCREMENTAL 或 ABSOLUTE
 *返回值：0表示执行成功，－1表示失败
@@ -1061,7 +1187,7 @@ EXPORT_API int CALL mrgMRQEncoderType(ViSession vi, int name, int ch, int type);
 /*
 *查询编码器类型
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *type:编码器的类型： 0:INCREMENTAL 或 1:ABSOLUTE
 *返回值：0表示执行成功，－1表示失败
@@ -1070,7 +1196,7 @@ EXPORT_API int CALL mrgMRQEncoderType_Query(ViSession vi, int name, int ch, int 
 /*
 *设置编码器信号的倍乘
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *multiple:倍乘
 *返回值：0表示执行成功，－1表示失败
@@ -1079,7 +1205,7 @@ EXPORT_API int CALL mrgMRQEncoderMultiple(ViSession vi, int name, int ch, int mu
 /*
 *查询编码器信号的倍乘
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *multiple:倍乘 0 - 2 "SINGLE","DOUBLE","QUADRUPLE"
 *返回值：0表示执行成功，－1表示失败
@@ -1088,7 +1214,7 @@ EXPORT_API int CALL mrgMRQEncoderMultiple_Query(ViSession vi, int name, int ch, 
 /*
 *设置编码器状态
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *state:编码器的状态：0: NONE;1: OFF ; 2:ON
 *返回值：0表示执行成功，－1表示失败
@@ -1097,7 +1223,7 @@ EXPORT_API int CALL mrgMRQEncoderState(ViSession vi, int name, int ch, int state
 /*
 *查询编码器状态
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *state1:编码器的状态： 0:NONE; 1:OFF ;2: ON
 *返回值：0表示执行成功，－1表示失败
@@ -1106,7 +1232,7 @@ EXPORT_API int CALL mrgMRQEncoderState_Query(ViSession vi, int name, int ch, int
 /*
 *设置LVT模式下编码器反馈比
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *feed:编码器反馈比
 *返回值：0表示执行成功，－1表示失败
@@ -1115,7 +1241,7 @@ EXPORT_API int CALL mrgMRQEncoderFeedback(ViSession vi, int name, int ch, int va
 /*
 *查询LVT模式下编码器反馈比
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *feed:编码器反馈比
 *返回值：0表示执行成功，－1表示失败
@@ -1124,7 +1250,7 @@ EXPORT_API int CALL mrgMRQEncoderFeedback_Query(ViSession vi, int name, int ch, 
 /*
 *设置串口应用配置，配置校验位、数据位、停止位
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *parity:RS232 的校验方式： NONE、 EVEN 或 ODD
 *wordlen:RS232 的数据长度： 8 或 9
 *stopbit:RS232 数据帧中停止位的位数： 1、 0.5、 2 或 1.5
@@ -1134,7 +1260,7 @@ EXPORT_API int CALL mrgMRQUartConfig(ViSession vi, int num, int name, char *pari
 /*
 *查询串口应用配置，配置校验位、数据位、停止位
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *buf:信息
 *返回值：0表示执行成功，－1表示失败
 */
@@ -1142,7 +1268,7 @@ EXPORT_API int CALL mrgMRQUartConfig_Query(ViSession vi, int num, int name, char
 /*
 *设置串口硬件控制流
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *mode:RS232 的流控制方式： NONE、 RTS、 CTS 或 RTS&CTS
 *返回值：0表示执行成功，－1表示失败
 */
@@ -1150,7 +1276,7 @@ EXPORT_API int CALL mrgMRQUartFlowctrl(ViSession vi, int num, int name, int mode
 /*
 *查询串口硬件控制流
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *mode:RS232 的流控制方式： NONE、 RTS、 CTS 或 RTS&CTS
 *返回值：0表示执行成功，－1表示失败
 */
@@ -1158,7 +1284,7 @@ EXPORT_API int CALL mrgMRQUartFlowctrl_Query(ViSession vi, int num, int name, ch
 /*
 *设置串口传感器状态，打开或关闭
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *state:打开或关闭
 *返回值：0表示执行成功，－1表示失败
 */
@@ -1166,7 +1292,7 @@ EXPORT_API int CALL mrgMRQUartSensorState(ViSession vi, int num, int num1, int n
 /*
 *查询串口传感器状态，打开或关闭
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *state:打开或关闭  0:关闭； 1：打开
 *返回值：0表示执行成功，－1表示失败
 */
@@ -1175,7 +1301,7 @@ EXPORT_API int CALL mrgMRQUartSensorState_Query(ViSession vi, int num,
 /*
 *设置传感器配置，数据帧头、帧长度、周期内接收的帧数、切换周期
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *num:要设置的 UART 的串口号：数字 1 或 2
 *num1:传感器所在端口号： 1， 2， 3 或 4
 *sof:数据帧头
@@ -1188,7 +1314,7 @@ EXPORT_API int CALL mrgMRQUartSensorConfAll(ViSession vi, int num, int num1, int
 /*
 *查询传感器配置，数据帧头、帧长度、周期内接收的帧数、切换周期
 **vi :visa设备句柄
-*name: 机器人名称
+*name: 设备名称（SEND_ID）
 *sof:数据帧头
 *framelen:帧长度
 *num2:帧数
@@ -1200,7 +1326,7 @@ EXPORT_API int CALL mrgMRQUartSensorConfAll_Query(ViSession vi, int num,
 /*
 *设置数据帧头
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *num:要设置的 UART 的串口号：数字 1 或 2
 *num1:传感器所在端口号： 1， 2， 3 或 4
 *sof:数据帧头
@@ -1210,7 +1336,7 @@ EXPORT_API int CALL mrgMRQUartSensorConfSof(ViSession vi, int num, int num1, int
 /*
 *查询数据帧头
 *vi :visa设备句柄
-*name : 机器人名称
+*name :设备名称（SEND_ID）
 *num : 要设置的 UART 的串口号：数字 1 或 2
 * num1 : 传感器所在端口号： 1， 2， 3 或 4
 * sof : 数据帧头
@@ -1220,7 +1346,7 @@ EXPORT_API int CALL mrgMRQUartSensorConfSof_Query(ViSession vi, int num, int num
 /*
 *设置帧长度
 *vi :visa设备句柄
-*name : 机器人名称
+*name :设备名称（SEND_ID）
 *num : 要设置的 UART 的串口号：数字 1 或 2
 * num1 : 传感器所在端口号： 1， 2， 3 或 4
 *len:帧长度
@@ -1230,7 +1356,7 @@ EXPORT_API int CALL mrgMRQUartSensorConfFrameLen(ViSession vi, int num, int num1
 /*
 *查询帧长度
 *vi :visa设备句柄
-*name : 机器人名称
+*name :设备名称（SEND_ID）
 *num : 要设置的 UART 的串口号：数字 1 或 2
 * num1 : 传感器所在端口号： 1， 2， 3 或 4
 *len:帧长度
@@ -1240,7 +1366,7 @@ EXPORT_API int CALL mrgMRQUartSensorConfFrameLen_Query(ViSession vi, int num, in
 /*
 *设置帧个数
 *vi :visa设备句柄
-*name : 机器人名称
+*name :设备名称（SEND_ID）
 *num : 要设置的 UART 的串口号：数字 1 或 2
 * num1 : 传感器所在端口号： 1， 2， 3 或 4
 *num2:帧个数
@@ -1250,7 +1376,7 @@ EXPORT_API int CALL mrgMRQUartSensorConfRecvNum(ViSession vi, int num, int num1,
 /*
 *查询帧个数
 *vi :visa设备句柄
-*name : 机器人名称
+*name :设备名称（SEND_ID）
 *num : 要设置的 UART 的串口号：数字 1 或 2
 * num1 : 传感器所在端口号： 1， 2， 3 或 4
 *num2:帧个数
@@ -1260,7 +1386,7 @@ EXPORT_API int CALL mrgMRQUartSensorConfRecvNum_Query(ViSession vi, int num, int
 /*
 *设置周期
 *vi :visa设备句柄
-*name : 机器人名称
+*name :设备名称（SEND_ID）
 *num : 要设置的 UART 的串口号：数字 1 或 2
 * num1 : 传感器所在端口号： 1， 2， 3 或 4
 *period:周期
@@ -1270,7 +1396,7 @@ EXPORT_API int CALL mrgMRQUartSensorConfPeriod(ViSession vi, int num, int num1, 
 /*
 *查询周期
 *vi :visa设备句柄
-*name : 机器人名称
+*name :设备名称（SEND_ID）
 *num : 要设置的 UART 的串口号：数字 1 或 2
 * num1 : 传感器所在端口号： 1， 2， 3 或 4
 *period:周期
@@ -1280,7 +1406,7 @@ EXPORT_API int CALL mrgMRQUartSensorConfPeriod_Query(ViSession vi, int num, int 
 /*
 *查询传感器数据
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *buf:数据
 *返回值：0表示执行成功，－1表示失败
 */
@@ -1288,7 +1414,7 @@ EXPORT_API int CALL mrgMRQUartSensorData_Query(ViSession vi, int num, int num1, 
 /*
 *查询测距报警的状态
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *state:状态  0:禁止； 1：使能
 *返回值：0表示执行成功，－1表示失败
@@ -1297,7 +1423,7 @@ EXPORT_API int CALL mrgMRQDistanceAlarmState_Query(ViSession vi, int name, int c
 /*
 *设置测距报警的状态
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *state1:状态  0:禁止； 1：使能
 *返回值：0表示执行成功，－1表示失败
@@ -1307,7 +1433,7 @@ EXPORT_API int CALL mrgMRQDistanceAlarmState(ViSession vi, int name, int ch, int
 *设置测距报警的响应距离
 *alarm:ALARm1,ALARm2,ALARm3
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *distance:测距报警的响应距离
 *返回值：0表示执行成功，－1表示失败
@@ -1317,7 +1443,7 @@ EXPORT_API int CALL mrgMRQDistanceAlarm(ViSession vi, int name, int num, int ch,
 *查询测距报警的响应距离
 *vi :visa设备句柄
 *alarm:ALARm1,ALARm2,ALARm3
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *distance:测距报警的响应距离
 *返回值：0表示执行成功，－1表示失败
@@ -1326,7 +1452,7 @@ EXPORT_API int CALL mrgMRQDistanceAlarm_Query(ViSession vi, int num, int name, i
 /*
 *查询驱动板类型（只支持10轴）
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *type:驱动板类型
 *返回值：0表示执行成功，－1表示失败
@@ -1335,7 +1461,7 @@ EXPORT_API int CALL mrgMRQNewDriverType_Query(ViSession vi, int name, int ch, ch
 /*
 *设置驱动板电流（只支持10轴）
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *current:驱动板电流
 *返回值：0表示执行成功，－1表示失败
 */
@@ -1343,7 +1469,7 @@ EXPORT_API int CALL mrgMRQNewDriverCurrent(ViSession vi, int name, double curren
 /*
 *查询驱动板电流（只支持10轴）
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *current:驱动板电流
 *返回值：0表示执行成功，－1表示失败
 */
@@ -1351,7 +1477,7 @@ EXPORT_API int CALL mrgMRQNewDriverCurrent_Query(ViSession vi, int name, double 
 /*
 *设置电机微步数（只支持10轴）
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *microstep:电机的微步数
 *返回值：0表示执行成功，－1表示失败
 */
@@ -1359,7 +1485,7 @@ EXPORT_API int CALL mrgMRQNewDriverMicrosteps(ViSession vi, int name, int micros
 /*
 *查询电机微步数（只支持10轴）
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *microstep:电机的微步数
 *返回值：0表示执行成功，－1表示失败
 */
@@ -1367,7 +1493,7 @@ EXPORT_API int CALL mrgMRQNewDriverMicrosteps_Query(ViSession vi, int name, int 
 /*
 *查询驱动开关状态（只支持10轴）
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *state:状态  0:禁止；1：使能
 *返回值：0表示执行成功，－1表示失败
@@ -1376,7 +1502,7 @@ EXPORT_API int CALL mrgMRQNewDriverState_Query(ViSession vi, int name, int ch, i
 /*
 *设置驱动开关状态（只支持10轴）
 *vi :visa设备句柄
-*name: 机器人名称
+*name:设备名称（SEND_ID）
 *ch：通道号
 *state:状态 0:禁止； 1：使能
 *返回值：0表示执行成功，－1表示失败

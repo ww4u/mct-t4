@@ -5,8 +5,7 @@ XThread::XThread(QObject *parent)
     : QThread(parent)
 {
     m_func = nullptr;
-    connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
-//    this->exec();
+    connect(this, SIGNAL(finished()), this, SLOT(deleteLater()), Qt::AutoConnection);
 }
 
 
@@ -14,7 +13,7 @@ XThread::XThread(std::function<void(void)> func, QObject *parent)
     : QThread(parent)
 {
     m_func = func;
-    connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
+    connect(this, SIGNAL(finished()), this, SLOT(deleteLater()), Qt::AutoConnection);
 }
 
 

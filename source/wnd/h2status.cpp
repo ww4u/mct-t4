@@ -1,27 +1,23 @@
 #include "h2status.h"
 #include "ui_h2status.h"
+#include <QTimer>
 
 H2Status::H2Status(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::H2Status)
 {
     ui->setupUi(this);
+
+    connect(ui->chkMct,SIGNAL(toggled(bool)),
+            this,SIGNAL(signal_mct_checked(bool)));
+
+    connect(ui->chkPwr,SIGNAL(toggled(bool)),
+            this,SIGNAL(signal_power_checked(bool)));
 }
 
 H2Status::~H2Status()
 {
     delete ui;
-}
-
-void H2Status::on_chkMct_clicked()
-{
-    if ( ui->chkMct->isChecked() )
-    {}
-    else
-    {
-        ui->chkPwr->setChecked(false);
-        ui->chkPwr->setCheckable( false );
-    }
 }
 
 void H2Status::changeLanguage(QString qmFile)
@@ -31,4 +27,18 @@ void H2Status::changeLanguage(QString qmFile)
     m_translator.load(qmFile);
     qApp->installTranslator(&m_translator);
     ui->retranslateUi(this);
+}
+
+void H2Status::on_chkMct_toggled(bool checked)
+{
+    ui->chkMct->setChecked(checked);
+
+    if(!checked){
+        ui->chkPwr->setChecked(false);
+        ui->chkPwr->setEnabled(false);
+    }
+    else{
+        ui->chkPwr->setEnabled(true);
+        ui->chkPwr->setChecked(false);
+    }
 }

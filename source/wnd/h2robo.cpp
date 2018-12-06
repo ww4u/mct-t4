@@ -23,7 +23,7 @@ H2Robo::H2Robo(QStackedWidget *pWig, QString strDevInfo, QObject *pObj ) : XRobo
     Q_ASSERT( NULL != m_pProduct );
     m_pRoboNode = new QTreeWidgetItem();
     m_pRoboNode->setText( 0, getDeviceName(strDevInfo) );
-    m_pRoboNode->setIcon( 0, QIcon( ":/res/image/icon/201.png" ) );
+    m_pRoboNode->setIcon( 0, QIcon( ":/res/image/h2product/offline.png" ) );
     m_pRoboNode->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(m_pProduct) ) );
     mSubConfigs.append( m_pProduct );
     pWig->addWidget( m_pProduct );
@@ -63,4 +63,19 @@ QString H2Robo::getDeviceName(QString strDevInfo)
 {
     QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
     return strListDev.at(2) + "[" + strListDev.at(0) + "]";
+}
+
+void H2Robo::change_online_status(bool bl)
+{
+
+    m_pProduct->change_online_status(bl);
+
+    if(bl)
+    {   //online
+        m_pRoboNode->setIcon( 0, QIcon( ":/res/image/h2product/online.png" ) );
+    }
+    else
+    {   //offline
+        m_pRoboNode->setIcon( 0, QIcon( ":/res/image/h2product/offline.png" ) );
+    }
 }

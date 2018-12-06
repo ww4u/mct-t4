@@ -153,13 +153,13 @@ void RoboConfig::slotDownload()
             if(ret != 0)
             {
                 ok = false;
-                QMessageBox::warning(this,tr("tips"), pCfg->focusName() + tr("\t\nDownload Failure"));
+                QMessageBox::critical(this,tr("error"), pCfg->focusName() + tr("\t\nDownload Failure"));
             }
             pCfg->saveConfig();
         }
         emit signalDataChanged();
     }else{
-        QMessageBox::information(this,tr("tips"),tr("Current Device In Offline"));
+        QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
         return;//offline
     }
 
@@ -182,7 +182,7 @@ void RoboConfig::slotUpload()
             if(ret != 0)
             {
                 ok = false;
-                QMessageBox::information(this,tr("tips"), pCfg->focusName() + tr("\nUpload Faiured"));
+                QMessageBox::critical(this,tr("error"), pCfg->focusName() + tr("\nUpload Faiured"));
             }
             pCfg->updateShow();
             pCfg->saveConfig();
@@ -191,7 +191,7 @@ void RoboConfig::slotUpload()
         if(ok)
         {   QMessageBox::information(this,tr("tips"),tr("Upload Succeed!"));  }
     }else{
-        QMessageBox::information(this,tr("tips"),tr("Current Device In Offline"));
+        QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
         return;
     }
 }
@@ -200,7 +200,7 @@ void RoboConfig::slotStore()
 {
     if(mIndex < 0) return;
     if( m_RobotList[mIndex].m_Visa == 0) {
-        QMessageBox::information(this,tr("tips"),tr("Current Device In Offline"));
+        QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
         return;
     }
     else{
@@ -255,13 +255,13 @@ void RoboConfig::slotStore()
 void RoboConfig::slotStoreTips(int val)
 {
     if(val == -1){
-        QMessageBox::warning(this,tr("Warning"),tr("Store timeout!"));
+        QMessageBox::warning(this,tr("warning"),tr("Store timeout!"));
     }
     else if(val == 0){
         QMessageBox::information(this,tr("tips"),tr("Store success!"));
     }
     else if(val == -2){
-        QMessageBox::critical(this,tr("Error"),tr("Store error!"));
+        QMessageBox::critical(this,tr("error"),tr("Store error!"));
     }
     else
     {}
@@ -270,7 +270,7 @@ void RoboConfig::slotStoreTips(int val)
 void RoboConfig::slotSync()
 {
     //! TODO
-    QMessageBox::information(this,tr("tips"),tr("unable"));
+    QMessageBox::warning(this,tr("warning"),tr("unable"));
 }
 
 void RoboConfig::slotSearch()
@@ -409,12 +409,12 @@ int RoboConfig::setReset()
             if(ret != 0)
             {
                 ok = false;
-                QMessageBox::information(this,tr("tips"), pCfg->focusName() + tr("\tReset Failure"));
+                QMessageBox::critical(this,tr("error"), pCfg->focusName() + tr("\tReset Failure"));
             }
         }
         emit signalDataChanged();
     }else{
-        QMessageBox::information(this,tr("tips"),tr("Current Device In Offline"));
+        QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
         return -2;//offline
     }
     if(ok)
@@ -480,13 +480,12 @@ void RoboConfig::slot_open_close(QString strIP)
 {
     if(mIndex < 0) return;
     H2Robo *pRobo = (H2Robo *)(m_RobotList[mIndex].m_Robo);
-    H2Product *pProduct = (H2Product *)(pRobo->subConfigs().at(0));
 
     if(m_RobotList[mIndex].m_Visa == 0)
     {
         int ret = deviceOpen(strIP);
         if(ret > 0){
-            pProduct->change_online_status(true);
+            pRobo->change_online_status(true);
         }
         else{
             QMessageBox::information(this,tr("tips"),tr("Device Open Failure!!!"));
@@ -495,7 +494,7 @@ void RoboConfig::slot_open_close(QString strIP)
     else
     {
         deviceClose();
-        pProduct->change_online_status(false);
+        pRobo->change_online_status(false);
     }
 
     //通知OPS

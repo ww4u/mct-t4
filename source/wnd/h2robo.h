@@ -28,6 +28,9 @@ public:
 
     QString getDeviceName(QString strDevInfo);
 
+public slots:
+    void change_online_status(bool bl);
+
 protected:
     void buildConnection();
 

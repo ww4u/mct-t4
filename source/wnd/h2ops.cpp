@@ -457,7 +457,7 @@ void H2Ops::on_pushButton_starting_home_clicked()
 void H2Ops::slot_starting_home_over(int ret)
 {
     if(ret != 0){
-        QMessageBox::information(this,tr("tips"),tr("Starting Home failure"));
+        QMessageBox::critical(this,tr("error"),tr("Starting Home failure"));
     }
     setTimerStop(m_timerCurrentPos);
     ui->pushButton_starting_home->setEnabled(true);

@@ -143,7 +143,7 @@ int MegaInterface::deviceOpen()
     QString strDesc = QString("TCPIP0::%1::inst0::INSTR").arg(strIP);
     int visa =  mrgOpenGateWay(strDesc.toLatin1().data(), 2000);
     if(visa < 0)
-        QMessageBox::warning(this,tr("error"),tr("open device error"));
+        QMessageBox::critical(this,tr("error"),tr("open device error"));
 
     return visa;
 }

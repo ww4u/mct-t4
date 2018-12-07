@@ -19,6 +19,7 @@ signals:
     void signal_focus_in( const QString &);
     void signalDataChanged();
     void signal_record_selected(int);
+    void signalDeviceConnect(bool);
 
 public:
     explicit RoboConfig(QWidget *parent = 0);
@@ -32,6 +33,7 @@ public slots:
     void slotSync();
     void slotSearch();
     void slotExit();
+    void slotConnect();
 
     void slotAddNewRobot(QString strDevInfo );
     void slotSetOneRecord(int row,QString type,double x,double y,double v,double a);

@@ -1,5 +1,5 @@
 
-#define TOOLVERION "0.0.0.3"
+#define TOOLVERION "0.0.1.0"
 
 #include <QApplication>
 #include "../source/wnd/mainwindow.h"

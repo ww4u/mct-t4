@@ -37,7 +37,6 @@ void H2Product::on_pushButton_status_clicked()
 
 void H2Product::change_online_status(bool bl)
 {
-
     if(bl){
 //        ui->pushButton_status->setStyleSheet("border-image: url(:/res/image/h2product/offline.png);");
         ui->pushButton_status->setIcon(QIcon(":/res/image/h2product/online.png"));

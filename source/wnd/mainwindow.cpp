@@ -84,6 +84,9 @@ void MainWindow::setupToolBar()
     ui->mainToolBar->addAction( ui->actionSync );
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction( ui->actionSearch );
+    ui->mainToolBar->addSeparator();
+    ui->mainToolBar->addAction( ui->actionConnect );
+    ui->mainToolBar->addAction( ui->actionIP );
 }
 
 void MainWindow::setupStatusBar()
@@ -107,7 +110,7 @@ void MainWindow::buildConnection()
              this, SLOT(slot_focus_in(const QString &)) );
 
     connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int,int)),
-            this,SLOT(slotSetDockOpsName(QString,int,int,int)));
+            this,SLOT(slotCurrentRobotChanged(QString,int,int,int)));
 
     connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int,int)),
             m_pOps,SLOT(slotSetCurrentRobot(QString,int,int,int)));
@@ -128,6 +131,7 @@ void MainWindow::buildConnection()
     connect(ui->actionStore,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotStore()));
     connect(ui->actionSync,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotSync()));
     connect(ui->actionSearch,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotSearch()));
+    connect(ui->actionConnect,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotConnect()));
 
 //    QTimer::singleShot( 0, this, SLOT(slot_post_startup()));
 }
@@ -292,11 +296,32 @@ void MainWindow::setUiStyle(const QString &styleFile)
     }
 }
 
-void MainWindow::slotSetDockOpsName(QString strDevInfo, int visa, int deviceName,int roboName)
+void MainWindow::slotCurrentRobotChanged(QString strDevInfo, int visa, int deviceName,int roboName)
 {
+    if( (m_strDevInfo == strDevInfo) && (m_ViHandle == visa) && (m_RoboName == roboName) ){
+        return;//没有切换机器人且状态没有改变
+    }
+
     QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
     QString strDeviceName = strListDev.at(2) + "[" + strListDev.at(0) + "]";
+
     m_pDockOps->setWindowTitle("Ops: " + strDeviceName);
+
+    ui->actionIP->setText(strDeviceName);
+
+    m_strDevInfo = strDevInfo;
+    m_ViHandle = visa;
+    m_DeviceName = deviceName;
+    m_RoboName = roboName;
+
+    if(m_ViHandle == 0){
+        //device closed
+        ui->actionConnect->setIcon(QIcon(":/res/image/h2product/offline.png"));
+    }
+    else{
+        //device opened
+        ui->actionConnect->setIcon(QIcon(":/res/image/h2product/online.png"));
+    }
 }
 
 void MainWindow::slot_logout( const QString &str, LogLevel lev )
@@ -318,6 +343,15 @@ void MainWindow::slot_focus_in( const QString &name )
     m_pHelpPanel->setFile( QApplication::applicationDirPath() + "/doc/" + name + ".html" );
 }
 
+void MainWindow::change_online_status(bool isConnect)
+{
+    if(isConnect){
+        ui->actionConnect->setIcon(QIcon(":/res/image/h2product/online.png"));
+    }else{
+        ui->actionConnect->setIcon(QIcon(":/res/image/h2product/offline.png"));
+    }
+}
+
 //void MainWindow::slot_post_startup()
 //{
 //    slot_logout( "start completed" );
@@ -337,7 +371,3 @@ void MainWindow::closeEvent(QCloseEvent *event)
     close();
 }
 
-//void MainWindow::showEvent(QShowEvent *event)
-//{
-//    this->showMaximized();
-//}

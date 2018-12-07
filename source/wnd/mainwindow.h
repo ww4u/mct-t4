@@ -36,7 +36,6 @@ public:
 
 protected:
     void closeEvent(QCloseEvent *event);
-//    void showEvent(QShowEvent *event);
 
 signals:
     void signal_logout_request( QString str, LogLevel lev );
@@ -47,10 +46,12 @@ private slots:
     void on_actionEnglish_triggered();
     void on_actionMega_triggered();
     void on_actionClassic_triggered();
-    void slotSetDockOpsName(QString strDevInfo, int visa, int deviceName, int roboName);
+    void slotCurrentRobotChanged(QString strDevInfo, int visa, int deviceName, int roboName);
     void slot_logout( const QString &str, LogLevel lev = eLogInfo );
     void slot_focus_in( const QString &name );
 //    void slot_post_startup();
+
+    void change_online_status(bool isConnect);
 
     void on_actionExit_triggered();
 
@@ -78,6 +79,11 @@ private:
     void loadConfig();
     void changeLanguage();
     void setUiStyle(const QString &styleFile);
+
+    int m_ViHandle;
+    int m_DeviceName;
+    int m_RoboName;
+    QString m_strDevInfo;
 };
 
 #endif // MAINWINDOW_H

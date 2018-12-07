@@ -270,6 +270,26 @@ border-color: rgba(255, 255, 255, 0);</string>
     <string>Ctrl+F</string>
    </property>
   </action>
+  <action name="actionConnect">
+   <property name="icon">
+    <iconset resource="../../res/res.qrc">
+     <normaloff>:/res/image/h2product/offline.png</normaloff>:/res/image/h2product/offline.png</iconset>
+   </property>
+   <property name="text">
+    <string>Connect</string>
+   </property>
+   <property name="toolTip">
+    <string>Connect</string>
+   </property>
+  </action>
+  <action name="actionIP">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>MRX-H2:[0.0.0.0]</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>

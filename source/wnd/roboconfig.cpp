@@ -290,6 +290,14 @@ void RoboConfig::slotExit()
     }
 }
 
+void RoboConfig::slotConnect()
+{
+    if(mIndex<0) return;
+    QString strIP = m_RobotList[mIndex].m_strDevInfo.split(',').at(0);
+    qDebug() << "slotConnect" << strIP;
+    slot_open_close(strIP);
+}
+
 void RoboConfig::slotShowContextmenu(const QPoint& pos)
 {
     QTreeWidgetItem* curItem = ui->treeWidget->itemAt(pos);  //获取当前被点击的节点
@@ -328,6 +336,8 @@ void RoboConfig::soltActionClose()
     ui->treeWidget->setCurrentItem(m_pRootNode);
 
 //    qDebug() << "after close:" << m_RobotList.count() << mIndex;
+    if(m_RobotList.count() == 0)
+        mIndex = -1;
 }
 
 void RoboConfig::soltActionDelete()
@@ -475,12 +485,14 @@ void RoboConfig::slot_open_close(QString strIP)
         int ret = deviceOpen(strIP);
         if(ret > 0){
             pRobo->change_online_status(true);
+            emit signalDeviceConnect(true);
         }else{
             QMessageBox::information(this,tr("tips"),tr("Device Open Failure!!!"));
         }
     }else{
         deviceClose();
         pRobo->change_online_status(false);
+        emit signalDeviceConnect(true);
     }
 
     //通知OPS
@@ -657,7 +669,6 @@ void RoboConfig::changeLanguage(QString qmFile)
     qApp->installTranslator(&m_translator);
     ui->retranslateUi(this);
 }
-
 
 void RoboConfig::slotSetOneRecord(int row, QString type, double x, double y, double v, double a)
 {

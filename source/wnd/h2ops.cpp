@@ -278,6 +278,11 @@ void H2Ops::slot_mct_checked(bool checked)
     if(!checked){
         setTimerStop(m_timerOpsAll);
     }else{
+        ui->tabWidget->setTabEnabled(3, false);
+        ui->tabWidget->setTabEnabled(4, false);
+        ui->tabWidget->setTabEnabled(5, false);
+        ui->tabWidget->setTabEnabled(6, false);
+
         setTimerStart(m_timerOpsAll);
     }
 }

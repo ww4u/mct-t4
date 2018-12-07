@@ -34,29 +34,26 @@ int H2Measurement::readDeviceConfig()
     m_ZeroPoint = mrgGetRobotCoordinateSystem(mViHandle, mRobotName);
 
     double x, y, z;
-    if(0 == mrgGetRobotProjectZero(mViHandle, mRobotName, &x, &y, &z) )
-    {
+    if(0 == mrgGetRobotProjectZero(mViHandle, mRobotName, &x, &y, &z) ){
+        qDebug() << "mrgGetRobotProjectZero" << x << y;
         m_ProjectZeroPointX = x;
         m_ProjectZeroPointY = y;
-        qDebug() << "mrgGetRobotProjectZero" << x << y;
     }else{
         return -1;
     }
 
-    if(0 == mrgGetRobotSoftWareLimit(mViHandle, mRobotName, 0, &x, &y, &z) )
-    {
+    if(0 == mrgGetRobotSoftWareLimit(mViHandle, mRobotName, 0, &x, &y, &z) ){
+        qDebug() << "mrgGetRobotSoftWareLimit Positive" << x << y;
         m_SWLimitPositiveX = x;
         m_SWLimitPositiveY = y;
-        qDebug() << "mrgGetRobotSoftWareLimit Positive" << x << y;
     }else{
         return -1;
     }
 
-    if(0 == mrgGetRobotSoftWareLimit(mViHandle, mRobotName, 1, &x, &y, &z) )
-    {
+    if(0 == mrgGetRobotSoftWareLimit(mViHandle, mRobotName, 1, &x, &y, &z) ){
+        qDebug() << "mrgGetRobotSoftWareLimit Negative" << x << y;
         m_SWLimitNegativeX  = x;
         m_SWLimitNegativeY  = y;
-        qDebug() << "mrgGetRobotSoftWareLimit Negative" << x << y;
     }else{
         return -1;
     }

@@ -23,6 +23,21 @@
         <source>PRA</source>
         <translation></translation>
     </message>
+    <message>
+        <location filename="../../source/wnd/h2action.cpp" line="216"/>
+        <source>Run</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2action.cpp" line="235"/>
+        <source>warning</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2action.cpp" line="235"/>
+        <source>Device motor uneable</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>H2Configuration</name>
@@ -191,7 +206,7 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2jogmode.ui" line="142"/>
+        <location filename="../../source/wnd/h2jogmode.ui" line="145"/>
         <source>Maximum Velocity:</source>
         <translation></translation>
     </message>
@@ -272,384 +287,422 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="45"/>
+        <location filename="../../source/wnd/h2ops.ui" line="50"/>
         <source>Logout</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="74"/>
+        <location filename="../../source/wnd/h2ops.ui" line="79"/>
         <source>Operate</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="80"/>
+        <location filename="../../source/wnd/h2ops.ui" line="85"/>
         <source>Dynamic Data</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="163"/>
+        <location filename="../../source/wnd/h2ops.ui" line="177"/>
         <source>Mileage X-Axis:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="170"/>
+        <location filename="../../source/wnd/h2ops.ui" line="187"/>
         <source>Target Position X:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="177"/>
-        <location filename="../../source/wnd/h2ops.ui" line="528"/>
+        <location filename="../../source/wnd/h2ops.ui" line="197"/>
+        <location filename="../../source/wnd/h2ops.ui" line="578"/>
         <source>Record Number:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="258"/>
-        <location filename="../../source/wnd/h2ops.ui" line="808"/>
+        <location filename="../../source/wnd/h2ops.ui" line="287"/>
+        <location filename="../../source/wnd/h2ops.ui" line="870"/>
         <source>Actual Position Y:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="265"/>
+        <location filename="../../source/wnd/h2ops.ui" line="297"/>
         <source>Mileage Y-Axis:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="312"/>
-        <location filename="../../source/wnd/h2ops.ui" line="815"/>
+        <location filename="../../source/wnd/h2ops.ui" line="350"/>
+        <location filename="../../source/wnd/h2ops.ui" line="880"/>
         <source>Actual Position X:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="319"/>
+        <location filename="../../source/wnd/h2ops.ui" line="360"/>
         <source>Target Position Y:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="416"/>
+        <location filename="../../source/wnd/h2ops.ui" line="466"/>
         <source>Additional States</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="425"/>
+        <location filename="../../source/wnd/h2ops.ui" line="475"/>
         <source>Extern Stop(ES)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="438"/>
+        <location filename="../../source/wnd/h2ops.ui" line="488"/>
         <source>Home Valid</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="478"/>
+        <location filename="../../source/wnd/h2ops.ui" line="528"/>
         <source>Digital IO</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="487"/>
+        <location filename="../../source/wnd/h2ops.ui" line="537"/>
         <source>Digital Inputs</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="493"/>
+        <location filename="../../source/wnd/h2ops.ui" line="543"/>
         <source>Enable Drive</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="500"/>
+        <location filename="../../source/wnd/h2ops.ui" line="550"/>
         <source>Reset Fault</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="507"/>
+        <location filename="../../source/wnd/h2ops.ui" line="557"/>
         <source>Start Record Execution</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="514"/>
+        <location filename="../../source/wnd/h2ops.ui" line="564"/>
         <source>Record Bit5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="521"/>
+        <location filename="../../source/wnd/h2ops.ui" line="571"/>
         <source>Reserved</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="548"/>
+        <location filename="../../source/wnd/h2ops.ui" line="598"/>
         <source>Record Bit2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="558"/>
+        <location filename="../../source/wnd/h2ops.ui" line="608"/>
         <source>Record Bit1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="568"/>
+        <location filename="../../source/wnd/h2ops.ui" line="618"/>
         <source>Record Bit4</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="578"/>
+        <location filename="../../source/wnd/h2ops.ui" line="628"/>
         <source>Record Bit3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="604"/>
+        <location filename="../../source/wnd/h2ops.ui" line="654"/>
         <source>Digital Outputs</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="610"/>
+        <location filename="../../source/wnd/h2ops.ui" line="660"/>
         <source>Moiton Complete(MC)</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="620"/>
+        <location filename="../../source/wnd/h2ops.ui" line="670"/>
         <source>24V Load Voltage</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="630"/>
+        <location filename="../../source/wnd/h2ops.ui" line="680"/>
         <source>Acknowledge Start</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="640"/>
+        <location filename="../../source/wnd/h2ops.ui" line="690"/>
         <source>Fault</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="650"/>
+        <location filename="../../source/wnd/h2ops.ui" line="700"/>
         <source>Ready</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="690"/>
-        <location filename="../../source/wnd/h2ops.ui" line="709"/>
+        <location filename="../../source/wnd/h2ops.ui" line="740"/>
+        <location filename="../../source/wnd/h2ops.ui" line="759"/>
         <source>Homing</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="721"/>
+        <location filename="../../source/wnd/h2ops.ui" line="771"/>
         <source>Homing Valid</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="737"/>
+        <location filename="../../source/wnd/h2ops.ui" line="790"/>
         <source>Target:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="750"/>
+        <location filename="../../source/wnd/h2ops.ui" line="806"/>
         <source>Direction:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="794"/>
+        <location filename="../../source/wnd/h2ops.ui" line="853"/>
         <source>Move  to Zero Point Position</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="797"/>
+        <location filename="../../source/wnd/h2ops.ui" line="856"/>
         <source>Starting Home</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="890"/>
+        <location filename="../../source/wnd/h2ops.ui" line="964"/>
         <source>Manual</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="902"/>
+        <location filename="../../source/wnd/h2ops.ui" line="976"/>
         <source>Manual Control</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="996"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1420"/>
         <source>Velocity:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1052"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1397"/>
         <source>X-Axis</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1062"/>
-        <source>Apply as</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1112"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1138"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1196"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1236"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1012"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1038"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1061"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1107"/>
         <source>Clicked Move</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1167"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1087"/>
         <source>Jog:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1186"/>
+        <location filename="../../source/wnd/h2ops.ui" line="996"/>
         <source>Y-Axis</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1216"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1262"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1314"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1367"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1127"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1153"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1192"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1212"/>
         <source>Pressed Move Release Stop</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1288"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1100"/>
         <source>Single Step:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1301"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1179"/>
         <source>Current Position</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1334"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1232"/>
         <source>Stop Moving</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1360"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1258"/>
         <source>Increament:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1419"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1486"/>
         <source>Monitor</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1425"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1492"/>
         <source>Debug</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1624"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1541"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="778"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="791"/>
+        <source>Run  Sequence</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.ui" line="1697"/>
         <source>Delete all record</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1665"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1738"/>
         <source>add a new record</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1583"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1656"/>
         <source>Cyclic</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1638"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1711"/>
         <source>Remove the current record</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1487"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1560"/>
         <source>Import</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1439"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1407"/>
+        <source>Apply as point</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.ui" line="1506"/>
         <source>Delay Time:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1465"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1538"/>
         <source>Running</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1468"/>
-        <source>Run</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1520"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1593"/>
         <source>Move Down</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1540"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1613"/>
         <source>Move Up</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1560"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1765"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1633"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1959"/>
         <source>Export</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1708"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1780"/>
+        <source>Status</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.ui" line="1789"/>
+        <source>RecordNumber:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.ui" line="1796"/>
+        <source>Position X:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.ui" line="1803"/>
+        <source>Position Y:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.ui" line="1860"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1885"/>
+        <source> mm</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.ui" line="1902"/>
         <source>Diagnosis</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1714"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1908"/>
         <source>Read from the controller</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1728"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1922"/>
         <source>Deleta all</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="54"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="75"/>
         <source>Clear</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="55"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="76"/>
         <source>Select All</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="56"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="77"/>
         <source>Copy</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="67"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="88"/>
         <source>Energy1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="68"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="89"/>
         <source>Energy2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="360"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="248"/>
+        <source>Apply as point </source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.cpp" line="488"/>
         <source>load completed</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="375"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="408"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="503"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="536"/>
         <source>save completed</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="448"/>
-        <source>tips</source>
+        <location filename="../../source/wnd/h2ops.cpp" line="555"/>
+        <source>error</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="448"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="794"/>
+        <source>Stop Sequence</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.cpp" line="555"/>
         <source>Starting Home failure</source>
         <translation></translation>
     </message>
@@ -687,23 +740,8 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2product.ui" line="295"/>
-        <source>   offline</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2product.cpp" line="43"/>
-        <source>    online    </source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2product.cpp" line="44"/>
+        <location filename="../../source/wnd/h2product.cpp" line="45"/>
         <source>click here to close device</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2product.cpp" line="49"/>
-        <source>    offline    </source>
         <translation></translation>
     </message>
     <message>
@@ -748,58 +786,58 @@
 <context>
     <name>H2Status</name>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="29"/>
+        <location filename="../../source/wnd/h2status.ui" line="32"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="47"/>
+        <location filename="../../source/wnd/h2status.ui" line="50"/>
         <source>Device Status</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="56"/>
+        <location filename="../../source/wnd/h2status.ui" line="59"/>
         <source>Error</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="72"/>
+        <location filename="../../source/wnd/h2status.ui" line="75"/>
         <source>TO</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="92"/>
+        <location filename="../../source/wnd/h2status.ui" line="95"/>
         <source>Warning</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="119"/>
+        <location filename="../../source/wnd/h2status.ui" line="122"/>
         <source>Acknowledge Error</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="126"/>
-        <location filename="../../source/wnd/h2status.ui" line="159"/>
+        <location filename="../../source/wnd/h2status.ui" line="132"/>
+        <location filename="../../source/wnd/h2status.ui" line="165"/>
         <source>Enable</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="133"/>
-        <source>Config Tool</source>
+        <location filename="../../source/wnd/h2status.ui" line="139"/>
+        <source>MCT</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="143"/>
+        <location filename="../../source/wnd/h2status.ui" line="149"/>
         <source>Ready</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="172"/>
+        <location filename="../../source/wnd/h2status.ui" line="178"/>
         <source>Operation Mode</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="182"/>
+        <location filename="../../source/wnd/h2status.ui" line="188"/>
         <source>MC</source>
         <translation></translation>
     </message>
@@ -831,7 +869,7 @@
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.ui" line="60"/>
-        <location filename="../../source/wnd/mainwindow.ui" line="160"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="163"/>
         <source>&amp;Help</source>
         <translation></translation>
     </message>
@@ -856,107 +894,107 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="136"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="139"/>
         <source>&amp;Stop</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="139"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="142"/>
         <source>Ctrl+E</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="144"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="147"/>
         <source>&amp;Exit</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="147"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="150"/>
         <source>Ctrl+Q</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="152"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="155"/>
         <source>&amp;About</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="155"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="158"/>
         <source>Ctrl+I</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="163"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="166"/>
         <source>Ctrl+H</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="172"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="175"/>
         <source>&amp;Upload</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="175"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="178"/>
         <source>Ctrl+U</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="184"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="187"/>
         <source>&amp;Download</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="187"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="190"/>
         <source>Ctrl+D</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="196"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="199"/>
         <source>S&amp;tore</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="199"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="202"/>
         <source>Ctrl+T</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="208"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="211"/>
         <source>S&amp;ync</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="211"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="214"/>
         <source>Ctrl+Y</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="219"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="222"/>
         <source>&amp;Chinese</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="230"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="233"/>
         <source>&amp;English</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="241"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="244"/>
         <source>&amp;MEGAROBO</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="252"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="255"/>
         <source>&amp;Classic</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="261"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="264"/>
         <source>&amp;Search</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="267"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="270"/>
         <source>Ctrl+F</source>
         <translation></translation>
     </message>
@@ -966,7 +1004,7 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="264"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="267"/>
         <source>SearchDevice</source>
         <translation></translation>
     </message>
@@ -1050,107 +1088,117 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="116"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="153"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="159"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="164"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="182"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="189"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="120"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="167"/>
         <location filename="../../source/wnd/roboconfig.cpp" line="191"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="200"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="225"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="229"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="245"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="384"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="389"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="394"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="464"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="257"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="414"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="479"/>
         <source>tips</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="116"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="120"/>
         <source>The device already exists in the project.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="153"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="156"/>
         <source>	
 Download Failure</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="159"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="191"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="200"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="389"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="156"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="184"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="259"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="405"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="576"/>
+        <source>error</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="162"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="194"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="203"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="410"/>
         <source>Current Device In Offline</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="164"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="162"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="194"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="203"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="255"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="268"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="410"/>
+        <source>warning</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="167"/>
         <source>Download Success!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="182"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="184"/>
         <source>
 Upload Faiured</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="189"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="191"/>
         <source>Upload Succeed!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="225"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="255"/>
         <source>Store timeout!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="229"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="257"/>
         <source>Store success!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="232"/>
-        <source>Warning</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="232"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="259"/>
         <source>Store error!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="245"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="268"/>
         <source>unable</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="281"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="304"/>
         <source>close</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="282"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="305"/>
         <source>delete</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="384"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="405"/>
         <source>	Reset Failure</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="394"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="414"/>
         <source>Reset Success!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="464"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="479"/>
         <source>Device Open Failure!!!</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="576"/>
+        <source>Robot type not</source>
         <translation></translation>
     </message>
 </context>

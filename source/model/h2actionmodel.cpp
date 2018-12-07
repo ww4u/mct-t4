@@ -124,6 +124,8 @@ QVariant H2ActionModel::headerData(int section, Qt::Orientation orientation, int
 
     if ( orientation == Qt::Horizontal )
     { return QVariant( H2ActionItem::header(section)); }
+    else if ( orientation == Qt::Vertical )
+    { return QVariant(section+1); }
     else
     { return QVariant(section);}
 }

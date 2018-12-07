@@ -1,4 +1,3 @@
-
 #include "h2action.h"
 #include "ui_h2action.h"
 
@@ -27,9 +26,8 @@ H2Action::H2Action(QWidget *parent) :
             this, SLOT(slotShowContextmenu(const QPoint&)));
 
     connect(ui->tableView,&QTableView::clicked,
-            this, [this](QModelIndex index)
-    {
-        emit signalCurrentRowChanged(index.row());
+            this, [this](QModelIndex index){
+        emit signalCurrentRowChanged(index.row()+1);
     });
 
 }
@@ -45,15 +43,6 @@ void H2Action::slotCurrentRowChanged(QModelIndex index)
 
     emit signalCurrentRowChanged(currentRow);
     qDebug() << "slotCurrentRowChanged" << currentRow;
-
-//   QList<QModelIndex> modelList =  ui->tableView->selectionModel()->selectedIndexes();
-//   QString strInfo = "";
-//   for(int i=0;i<modelList.count(); i++)
-//   {
-//       strInfo += m_actionModel.data(modelList.at(i),Qt::DisplayRole).toString();
-//       strInfo += ",";
-//   }
-//   qDebug() << strInfo;
 }
 
 int H2Action::readDeviceConfig()
@@ -63,8 +52,7 @@ int H2Action::readDeviceConfig()
 
     //! 查找文件
     char filenames[1024] = "";
-    if (mrgStorageMotionFileQuery(mViHandle, 0, filenames, sizeof(filenames)) > 0)
-    {
+    if (mrgStorageMotionFileQuery(mViHandle, 0, filenames, sizeof(filenames)) > 0){
         QStringList lst = QString("%1").arg(filenames).split(',');
         if( !lst.contains(m_strDeviceFileName) )
         {
@@ -84,8 +72,7 @@ int H2Action::readDeviceConfig()
         qDebug() << "mrgStorageMotionFileContextRead error" << ret;
         sysError("H2Action:readDeviceConfig:mrgStorageMotionFileContextRead error");
         goto ERR;
-    }
-    else{
+    }else{
         m_fileContext = QString("%1").arg(pData);//保存到类中
         qDebug() << "mrgStorageMotionFileContextRead" << ret << m_fileContext;
 
@@ -120,10 +107,11 @@ int H2Action::writeDeviceConfig()
                                        m_strDeviceFileName.toLatin1().data());
 
     qDebug() << "mrgStorageMotionFileSave:" << ret;
+    if(ret != 0)
+        return -1;
 
     ret = mrgRobotMotionFileImport(mViHandle, mRobotName, m_strDeviceFileName.toLatin1().data());
     qDebug() << "mrgRobotMotionFileImport:" << ret;
-
     return ret;
 }
 
@@ -196,7 +184,6 @@ void H2Action::translateUI()
     ui->retranslateUi(this);
 }
 
-
 void H2Action::modfiyOneRecord(int row, QString type, double x, double y, double v, double a)
 {
     if (row < 0)
@@ -217,7 +204,6 @@ void H2Action::modfiyOneRecord(int row, QString type, double x, double y, double
     if(a >= 0)
         m_actionModel.setData( m_actionModel.index( row, 4), QVariant( a ), Qt::EditRole );
 }
-
 
 void H2Action::slotShowContextmenu(const QPoint& pos)
 {
@@ -252,6 +238,8 @@ void H2Action::soltActionRun()
 
     auto func = [=]()
     {
+        ui->tableView->selectRow(row);
+
         int ret = -1;
         qDebug() << "soltActionRun begin";
         qDebug() << mViHandle << mRobotName;

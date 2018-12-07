@@ -151,8 +151,7 @@ void RoboConfig::slotDownload()
     if( m_RobotList[mIndex].m_Visa != 0) {
         foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
             int ret = pCfg->writeDeviceConfig();
-            if(ret != 0)
-            {
+            if(ret != 0){
                 ok = false;
                 QMessageBox::critical(this,tr("error"), pCfg->focusName() + tr("\t\nDownload Failure"));
             }
@@ -180,8 +179,7 @@ void RoboConfig::slotUpload()
         bool ok = true;
         foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
             int ret = pCfg->readDeviceConfig();
-            if(ret != 0)
-            {
+            if(ret != 0){
                 ok = false;
                 QMessageBox::critical(this,tr("error"), pCfg->focusName() + tr("\nUpload Faiured"));
             }
@@ -189,8 +187,9 @@ void RoboConfig::slotUpload()
             pCfg->saveConfig();
             emit signalDataChanged();
         }
-        if(ok)
-        {   QMessageBox::information(this,tr("tips"),tr("Upload Succeed!"));  }
+        if(ok){
+            QMessageBox::information(this,tr("tips"),tr("Upload Succeed!"));
+        }
     }else{
         QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
         return;
@@ -203,8 +202,7 @@ void RoboConfig::slotStore()
     if( m_RobotList[mIndex].m_Visa == 0) {
         QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
         return;
-    }
-    else{
+    }else{
         int visa = m_RobotList[mIndex].m_Visa;
         auto func = [&](void)
         {
@@ -231,13 +229,11 @@ void RoboConfig::slotStore()
             if(timeout <= 0){
                 m_retVal = -1;
                 qDebug() << "Store timeout!";
-            }
-            else{
+            }else{
                 if (state == 0){
                     m_retVal = 0;
                     qDebug() << "Store success!";
-                }
-                else{
+                }else{
                     m_retVal = -2;
                     qDebug() << "Store error!";
                 }
@@ -257,11 +253,9 @@ void RoboConfig::slotStoreTips(int val)
 {
     if(val == -1){
         QMessageBox::warning(this,tr("warning"),tr("Store timeout!"));
-    }
-    else if(val == 0){
+    }else if(val == 0){
         QMessageBox::information(this,tr("tips"),tr("Store success!"));
-    }
-    else if(val == -2){
+    }else if(val == -2){
         QMessageBox::critical(this,tr("error"),tr("Store error!"));
     }
     else
@@ -289,7 +283,8 @@ void RoboConfig::slotExit()
 {
     foreach (RobotInfo robo, m_RobotList ){
         QString strIP = robo.m_strDevInfo.split(',').at(0);
-        if(robo.m_Visa != 0){ //如果没有关闭就关闭设备
+        if(robo.m_Visa != 0){
+            //如果没有关闭就关闭设备
             slot_open_close(strIP);
         }
     }
@@ -301,8 +296,7 @@ void RoboConfig::slotShowContextmenu(const QPoint& pos)
     if(curItem == NULL) return; //即在空白位置右击
 
     QVariant var = curItem->data(0,Qt::UserRole);
-    if( "H2Product*" == QString("%1").arg(var.typeName()) )
-    {
+    if( "H2Product*" == QString("%1").arg(var.typeName()) ){
         if(m_menu != NULL)
             delete m_menu;
 
@@ -322,8 +316,8 @@ void RoboConfig::soltActionClose()
 {
     int index = mIndex;
     QString strIP = m_RobotList[index].m_strDevInfo.split(',').at(0);
-    if(m_RobotList[index].m_Visa != 0)
-    {   //如果没有关闭就关闭设备
+    if(m_RobotList[index].m_Visa != 0){
+        //如果没有关闭就关闭设备
         slot_open_close(strIP);
     }
 
@@ -346,8 +340,7 @@ void RoboConfig::soltActionDelete()
     for (QMap<QString,QString>::iterator itMap=mapRead.begin(); itMap != mapRead.end(); ++itMap )
     {
         if( "RobotDevice_" == itMap.key().left(QString("RobotDevice_").length())
-                && m_RobotList[mIndex].m_strDevInfo != itMap.value() )
-        {
+                && m_RobotList[mIndex].m_strDevInfo != itMap.value() ){
             mapWrite.insert(itMap.key(),itMap.value());
         }
     }
@@ -407,8 +400,7 @@ int RoboConfig::setReset()
             pCfg->loadConfig();
             pCfg->updateShow();
             int ret = pCfg->writeDeviceConfig();
-            if(ret != 0)
-            {
+            if(ret != 0){
                 ok = false;
                 QMessageBox::critical(this,tr("error"), pCfg->focusName() + tr("\tReset Failure"));
             }
@@ -418,8 +410,7 @@ int RoboConfig::setReset()
         QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
         return -2;//offline
     }
-    if(ok)
-    {
+    if(ok){
         QMessageBox::information(this,tr("tips"),tr("Reset Success!"));
         return 0;
     }else{
@@ -430,13 +421,11 @@ int RoboConfig::setReset()
 void RoboConfig::on_buttonBox_clicked(QAbstractButton *button)
 {
     QDialogButtonBox::ButtonRole role = ui->buttonBox->buttonRole( button );
-    if ( QDialogButtonBox::ResetRole == role )
-    {
+    if ( QDialogButtonBox::ResetRole == role ){
         setReset();
     }
     else
-    {
-    }
+    {    }
 }
 
 void RoboConfig::slot_current_changed( QTreeWidgetItem* cur,QTreeWidgetItem* prv )
@@ -482,18 +471,14 @@ void RoboConfig::slot_open_close(QString strIP)
     if(mIndex < 0) return;
     H2Robo *pRobo = (H2Robo *)(m_RobotList[mIndex].m_Robo);
 
-    if(m_RobotList[mIndex].m_Visa == 0)
-    {
+    if(m_RobotList[mIndex].m_Visa == 0){
         int ret = deviceOpen(strIP);
         if(ret > 0){
             pRobo->change_online_status(true);
-        }
-        else{
+        }else{
             QMessageBox::information(this,tr("tips"),tr("Device Open Failure!!!"));
         }
-    }
-    else
-    {
+    }else{
         deviceClose();
         pRobo->change_online_status(false);
     }
@@ -511,8 +496,7 @@ int RoboConfig::deviceOpen(QString strIP)
     int ret = -1;
     QString strDesc = QString("TCPIP0::%1::inst0::INSTR").arg(strIP);
     int visa = mrgOpenGateWay(strDesc.toLatin1().data(), 2000);
-    if(visa <= 0)
-    {
+    if(visa <= 0){
         qDebug() << "mrgOpenGateWay error" << visa;
         sysError("mrgOpenGateWay error");
         return -1;
@@ -549,8 +533,7 @@ BUILD:
     {
         //! 构建机器人
         ret = mrgFindDevice(visa, 2000);
-        if(ret <= 0)
-        {
+        if(ret <= 0){
             qDebug() << "mrgFindDevice error" << ret;
             sysError("mrgFindDevice error", ret);
             return -4;
@@ -558,8 +541,7 @@ BUILD:
 
         //读取设备名称
         ret = mrgGetDeviceName(visa, deviceNames);
-        if ( (ret == 0) || (deviceNames[0] == 0) )
-        {
+        if ( (ret == 0) || (deviceNames[0] == 0) ){
             qDebug() << "mrgGetDeviceName error" << ret;
             sysError("mrgGetDeviceName error", ret);
             return -5;
@@ -567,23 +549,20 @@ BUILD:
         deviceName = deviceNames[0];//默认选择第一个驱控器
 
         char deviceType[128] = "";
-        if ( mrgGetDeviceType(visa, deviceName, deviceType) != 0 )
-        {
+        if ( mrgGetDeviceType(visa, deviceName, deviceType) != 0 ){
             qDebug() << "mrgGetDeviceType error";
             sysError("mrgGetDeviceType error");
             return -6;
         }
 
-        ret = mrgBuildRobot(visa, "MRX-H2", QString("0@%1").arg(deviceName).toLatin1().data(), roboNames);
-        if( (ret < 0) || (roboNames[0] == 0))
-        {
+        ret = mrgBuildRobot(visa, "MRX-H2", QString("0@%1,1@%1").arg(deviceName).toLatin1().data(), roboNames);
+        if( (ret < 0) || (roboNames[0] == 0)){
             qDebug() << "mrgBuildRobot error" << ret;
             sysError("mrgBuildRobot error", ret);
             return -7;
         }
         ret = mrgGetRobotName(visa, roboNames);
-        if( (ret <= 0) || (roboNames[0] == 0) )
-        {
+        if( (ret <= 0) || (roboNames[0] == 0) ){
             qDebug() << "mrgGetRobotName error" << ret;
             sysError("mrgGetRobotName error");
             return -8;
@@ -592,6 +571,12 @@ BUILD:
     }
 
 END:
+    //判断机器人类型是否是H2
+    if(2 != mrgGetRobotType(visa, roboName)){
+        QMessageBox::critical(this,tr("error"),tr("Robot type not") + "MRX-H2");
+        return -10;
+    }
+
     foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs())
     {    pCfg->attachHandle( visa, deviceName, roboName);  }
 

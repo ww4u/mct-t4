@@ -23,8 +23,7 @@ int H2Configuration::readDeviceConfig()
 
     int val = 0;
     int ret = mrgMRQMotionReverse_Query(mViHandle, mDeviceName, &val);
-    if(ret < 0)
-        return -1;
+    if(ret < 0) return -1;
 
     m_MotorPosition = val;
 
@@ -33,12 +32,12 @@ int H2Configuration::readDeviceConfig()
 
 int H2Configuration::writeDeviceConfig()
 {
-    int ret = 0;
+    int ret = -1;
 
     //type:0==>small, 1==>big
     ret = mrgSetRobotSubType(mViHandle, mRobotName, m_Size);
-    if(ret != 0)
-        return -1;
+    qDebug() << "mrgSetRobotSubType" << ret;
+    if(ret != 0) return -1;
 
     //WorkStrokeX
 
@@ -48,8 +47,7 @@ int H2Configuration::writeDeviceConfig()
 
     //states:OFF==>bottom, ON==>top
     ret = mrgMRQMotionReverse(mViHandle, mDeviceName, m_MotorPosition);
-    if(ret != 0)
-        return -1;
+    qDebug() << "mrgMRQMotionReverse" << ret;
 
     return ret;
 }
@@ -102,12 +100,10 @@ void H2Configuration::updateShow()
 
     on_sizeComboBox_currentIndexChanged(m_Size);
 
-    if(0 == m_MotorPosition)
-    {
+    if(0 == m_MotorPosition){
         ui->radioButton_b->setChecked(true);
         ui->radioButton_t->setChecked(false);
-    }
-    else{
+    }else{
         ui->radioButton_b->setChecked(false);
         ui->radioButton_t->setChecked(true);
     }
@@ -127,8 +123,7 @@ void H2Configuration::changeModelLabel()
     model += "-";
     model += QString::number(m_WorkStrokeY);
 
-    if(ui->sizeComboBox->currentIndex() == 0)
-    {
+    if(ui->sizeComboBox->currentIndex() == 0){
         model += "-GF";
     }else{
         model += "-KF";
@@ -179,8 +174,7 @@ void H2Configuration::on_sizeComboBox_currentIndexChanged(int index)
 {
     m_Size = index;
 
-    if(index == 0)
-    {
+    if(index == 0){
         ui->spinBox_X->setRange(0, 494);
         ui->spinBox_X->setValue(494);
         ui->spinBox_X->setToolTip("0-494");
@@ -188,9 +182,7 @@ void H2Configuration::on_sizeComboBox_currentIndexChanged(int index)
         ui->spinBox_Y->setRange(0, 802);
         ui->spinBox_Y->setValue(802);
         ui->spinBox_Y->setToolTip("0-820");
-    }
-    else if(index == 1)
-    {
+    } else if(index == 1){
         ui->spinBox_X->setRange(0, 770);
         ui->spinBox_X->setValue(770);
         ui->spinBox_X->setToolTip("0-770");

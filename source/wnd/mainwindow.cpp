@@ -90,7 +90,7 @@ void MainWindow::setupStatusBar()
 {
     qDebug() << "version" << qApp->applicationVersion();
     m_pLabStatus = new QLabel();
-    m_pLabMctVer = new QLabel( QString("%1:%2").arg( ( qApp->applicationName() ) ).arg( qApp->applicationVersion() ) );
+    m_pLabMctVer = new QLabel( QString("Version: %1").arg( qApp->applicationVersion() ) );
     m_pLabConVer = new QLabel();
 
     ui->statusBar->insertWidget( 0, m_pLabStatus, 1 );
@@ -137,8 +137,7 @@ void MainWindow::loadConfig()
     MegaXML mXML;
     QString fileName = QApplication::applicationDirPath() + "/config.xml";
     QMap<QString,QString> map = mXML.xmlRead(fileName);
-    if(map["Style"] == "")
-    {
+    if(map["Style"] == ""){
         map.clear();
         map.insert("Style", "MegaRobo");
         m_style = STYLE_MEGAROBO;
@@ -146,8 +145,7 @@ void MainWindow::loadConfig()
         mXML.xmlNodeAppend(fileName, "WindowStyle", map);
     }
 
-    if(map["Language"] == "")
-    {
+    if(map["Language"] == ""){
         map.clear();
         map.insert("Language", "English");
         m_language = LANG_EN;
@@ -182,8 +180,7 @@ void MainWindow::on_actionAbout_triggered()
 
 void MainWindow::on_actionChinese_triggered()
 {
-    if( !ui->actionEnglish->isChecked() && !ui->actionChinese->isChecked())
-    {
+    if( !ui->actionEnglish->isChecked() && !ui->actionChinese->isChecked()){
         ui->actionChinese->setChecked(true);
         return;
     }
@@ -196,8 +193,7 @@ void MainWindow::on_actionChinese_triggered()
 
 void MainWindow::on_actionEnglish_triggered()
 {
-    if( !ui->actionEnglish->isChecked() && !ui->actionChinese->isChecked())
-    {
+    if( !ui->actionEnglish->isChecked() && !ui->actionChinese->isChecked()){
         ui->actionEnglish->setChecked(true);
         return;
     }
@@ -220,8 +216,7 @@ void MainWindow::changeLanguage()
          qmFile = ":/res/ts/qt_CN.qm";
          map.insert("Language", "Chinese");
     }
-    else if( m_language == LANG_EN )
-    {
+    else if( m_language == LANG_EN ){
         qmFile = ":/res/ts/qt_EN.qm";
         map.insert("Language", "English");
     }
@@ -243,8 +238,7 @@ void MainWindow::changeLanguage()
 
 void MainWindow::on_actionMega_triggered()
 {
-    if( !ui->actionClassic->isChecked() && !ui->actionMega->isChecked())
-    {
+    if( !ui->actionClassic->isChecked() && !ui->actionMega->isChecked()){
         ui->actionMega->setChecked(true);
         return;
     }
@@ -256,8 +250,7 @@ void MainWindow::on_actionMega_triggered()
 
 void MainWindow::on_actionClassic_triggered()
 {
-    if( !ui->actionClassic->isChecked() && !ui->actionMega->isChecked())
-    {
+    if( !ui->actionClassic->isChecked() && !ui->actionMega->isChecked()){
         ui->actionClassic->setChecked(true);
         return;
     }

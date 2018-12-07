@@ -142,8 +142,10 @@ private:
     QTimer *m_timerOpsManual;
     QTimer *m_timerOpsMonitor;
     XThread *m_threadOpsDebug;
+    QTimer *m_timerOpsDebug;
 
 
+    void buttonClickedSingelMove(QToolButton *btn, int ax, int direct);
     void setButtonDisableTime(QToolButton *btn, int msec);
 
     void setTimerStop(QTimer *timer){

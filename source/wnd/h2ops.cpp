@@ -58,6 +58,8 @@ H2Ops::H2Ops(QWidget *parent) :
     m_timerOpsMonitor->setInterval(1000);
 
     m_threadOpsDebug = NULL;
+    m_timerOpsDebug = new QTimer;
+    m_timerOpsDebug->setInterval(500);
 
     buildConnection();
 }
@@ -149,6 +151,7 @@ void H2Ops::buildConnection()
     connect(m_timerOpsHoming, SIGNAL(timeout()), this, SLOT(updateTabHoming()));
     connect(m_timerOpsManual, SIGNAL(timeout()), this, SLOT(updateTabManual()));
     connect(m_timerOpsMonitor, SIGNAL(timeout()), this, SLOT(updateTabMonitor()));
+    connect(m_timerOpsDebug, SIGNAL(timeout()), this, SLOT(updateTabDebug()));
 }
 
 void H2Ops::outConsole( const QString &str, LogLevel e )
@@ -320,6 +323,7 @@ void H2Ops::setAllTabStopWorking()
     setTimerStop(m_timerOpsIO);
     setTimerStop(m_timerOpsHoming);
     setTimerStop(m_timerOpsManual);
+    setTimerStop(m_timerOpsDebug);
     setOpsMonitorTimerStop();
 
     on_pushButton_stop_clicked();
@@ -361,7 +365,7 @@ void H2Ops::on_tabWidget_currentChanged(int index)
         setOpsMonitorTimerStart();
         break;
     case 6://Debug
-
+        setTimerStart(m_timerOpsDebug);
         break;
     case 7://Diagnosis
 
@@ -590,87 +594,58 @@ void H2Ops::setOpsMonitorTimerStart()
 }
 
 
-//! single move
-void H2Ops::on_toolButton_singlestep_x_dec_clicked()
+//ax:0 表示x轴， 1表示y轴, 2表示z轴，
+//direct: -1表示负方向，1表示正方向
+void H2Ops::buttonClickedSingelMove(QToolButton *btn, int ax, int direct)
 {
     if(m_ViHandle <= 0) return;
     float offset = ui->doubleSpinBox_Increament->value();
     float speed = ui->doubleSpinBox_Velocity->value();
     float time = offset/(0.7*speed);
 
-    int ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, 0-offset, 0, 0, time, -1);
-    sysInfo("mrgRobotRelMoveL", ret);
-    setButtonDisableTime(ui->toolButton_singlestep_x_dec, time*1000);
-}
-
-//void H2Ops::test(QToolButton *btn, int x,int y, int z)
-//{
-//    auto funcRun = [=]()
-//    {
-//        int ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, offset, 0, 0, time, 0);
-//        sysInfo("mrgRobotRelMoveL", ret);
-//    };
-
-//    ui->toolButton_singlestep_x_inc->setEnabled(false);
-
-//    XThread *thread = new XThread(funcRun,this);
-//    connect(thread,&XThread::finished,this,
-//            [this](){
-//        ui->toolButton_singlestep_x_inc->setEnabled(true);
-//    });
-//    thread->start();
-//}
-
-void H2Ops::on_toolButton_singlestep_x_inc_clicked()
-{
-    if(m_ViHandle <= 0) return;
-    float offset = ui->doubleSpinBox_Increament->value();
-    float speed = ui->doubleSpinBox_Velocity->value();
-    float time = offset/(0.7*speed);
-
-#if 0
     auto funcRun = [=]()
     {
-        int ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, offset, 0, 0, time, 0);
+        on_pushButton_stop_clicked();
+        QThread::msleep(100);
+        btn->setEnabled(false);
+
+        int ret = -1;
+        if(ax == 0){
+            ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, offset*direct, 0, 0, time, 0);
+        }else if(ax == 1){
+            ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, 0, offset*direct, 0, time, 0);
+        }else if(ax == 2){
+            ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, 0, 0, offset*direct, time, 0);
+        }
+        qDebug() << "mrgRobotRelMoveL" << ret << "ax=" << ax << direct;
         sysInfo("mrgRobotRelMoveL", ret);
     };
 
-    ui->toolButton_singlestep_x_inc->setEnabled(false);
 
     XThread *thread = new XThread(funcRun,this);
-    connect(thread,&XThread::finished,this,
-            [this](){ui->toolButton_singlestep_x_inc->setEnabled(true);});
-
+    connect(thread,&XThread::finished,this,[=](){btn->setEnabled(true);});
     thread->start();
-#else
-    int ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, offset, 0, 0, time, -1);
-    sysInfo("mrgRobotRelMoveL", ret);
-    setButtonDisableTime(ui->toolButton_singlestep_x_inc, time*1000);
-#endif
+}
+
+//! single move
+void H2Ops::on_toolButton_singlestep_x_dec_clicked()
+{
+    buttonClickedSingelMove(ui->toolButton_singlestep_x_dec, 0, -1);
+}
+
+void H2Ops::on_toolButton_singlestep_x_inc_clicked()
+{
+    buttonClickedSingelMove(ui->toolButton_singlestep_x_inc, 0, 1);
 }
 
 void H2Ops::on_toolButton_singlestep_y_dec_clicked()
 {
-    if(m_ViHandle <= 0) return;
-    float offset = ui->doubleSpinBox_Increament->value();
-    float speed = ui->doubleSpinBox_Velocity->value();
-    float time = offset/(0.7*speed);
-
-    int ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, 0, 0-offset, 0, time, -1);
-    sysInfo("mrgRobotRelMoveL", ret);
-    setButtonDisableTime(ui->toolButton_singlestep_y_dec, time*1000);
+    buttonClickedSingelMove(ui->toolButton_singlestep_y_dec, 1, -1);
 }
 
 void H2Ops::on_toolButton_singlestep_y_inc_clicked()
 {
-    if(m_ViHandle <= 0) return;
-    float offset = ui->doubleSpinBox_Increament->value();
-    float speed = ui->doubleSpinBox_Velocity->value();
-    float time = offset/(0.7*speed);    //s = (1 - (加速比 / 1000)) * t * v;
-
-    int ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, 0, offset, 0, time, -1);
-    sysInfo("mrgRobotRelMoveL", ret);
-    setButtonDisableTime(ui->toolButton_singlestep_y_inc, time*1000);
+    buttonClickedSingelMove(ui->toolButton_singlestep_y_inc, 1, 1);
 }
 
 //! jog move
@@ -767,6 +742,7 @@ void H2Ops::on_toolButton_debugRun_clicked()
         {
             for(int i=0; i<rowCount; i++)
             {
+                ui->tvDebug->selectRow(i);
                 int recordNumber = ui->tvDebug->model()->index(i, 0).data().toInt();
                 double time = ui->tvDebug->model()->index(i, 1).data().toDouble();
                 int ret = -1;
@@ -775,14 +751,17 @@ void H2Ops::on_toolButton_debugRun_clicked()
                 qDebug() << m_ViHandle << m_RoboName;
                 qDebug() << "Run Queue :" << recordNumber << "begin";
 
-                ret = mrgRobotFileResolve(m_ViHandle, m_RoboName, 0, recordNumber+1, 0, 20000);
+                ret = mrgRobotFileResolve(m_ViHandle, m_RoboName, 0, recordNumber, 0, 20000);
+                if(ret != 0) return;
 //                qDebug() << "mrgRobotFileResolve" << ret;
 
                 ret = mrgRobotRun(m_ViHandle, m_RoboName, 0);
 //                qDebug() << "mrgRobotRun" << ret;
+                if(ret != 0) return;
 
                 ret = mrgRobotWaitEnd(m_ViHandle, m_RoboName, 0, 0);
 //                qDebug() << "mrgRobotWaitEnd" << ret;
+                if(ret != 0) return;
 
 //                qDebug() << "Run Queue :" << recordNumber << "sleep" << time << "s";
                 QThread::msleep(time * 1000);
@@ -816,8 +795,7 @@ void H2Ops::on_toolButton_debugRun_clicked()
 
         if(m_ViHandle <= 0) return;
         m_threadOpsDebug = new XThread(func);
-        connect(m_threadOpsDebug,&XThread::finished,
-                [&](){ m_threadOpsDebug = NULL; });
+        connect(m_threadOpsDebug,&XThread::finished,[&](){ m_threadOpsDebug = NULL; });
         m_threadOpsDebug->start(QThread::LowestPriority);
     }
 
@@ -840,6 +818,7 @@ void H2Ops::updateBackgroundStatus()
         ui->tab_Manual->setEnabled(false);
         ui->tab_Debug->setEnabled(false);
         ui->tab_Monitor->setEnabled(false);
+        ui->tabWidget->setCurrentIndex(3);
 
 //        setAllTabStopWorking();
         return;
@@ -1008,9 +987,20 @@ LAB1:
 void H2Ops::updateTabDebug()
 {
     if(m_ViHandle <= 0) return;
-    //!TODO
-     qDebug() << "Debug";
+    int ret = -1;
 
+    //! 更新记录编号
+    int record = -1;
+    ret = mrgGetRobotCurrentRecord(m_ViHandle, m_RoboName, &record);
+    qDebug() << "mrgGetRobotCurrentRecord" << ret << record;
+    ui->doubleSpinBox_debugRecord->setValue( record );
+
+    //! 更新当前位置
+    float fx = -1, fy = -1, fz = -1;
+    ret = mrgGetRobotCurrentPosition(m_ViHandle, m_RoboName, &fx, &fy, &fz);
+    qDebug() << "mrgGetRobotCurrentPosition:" << ret << fx << fy;
+    ui->doubleSpinBox_debug_posX->setValue(fx);
+    ui->doubleSpinBox_debug_posY->setValue(fy);
 }
 
 void H2Ops::updateTabDiagnosis()

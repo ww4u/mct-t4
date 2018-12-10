@@ -269,7 +269,7 @@ unsigned int busRead(ViSession vi, char * buf, unsigned int len)
 
 unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* output, unsigned int wantlen)
 {
-    unsigned int retCount;
+    int retCount;
     LOCK();
 
     retCount = send(vi, input, inputlen, 0);
@@ -281,7 +281,12 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* o
 
     retCount = recv(vi, output, wantlen, 0);
     UNLOCK();
-    return retCount;
+    if(retCount < 0)
+    {
+        perror("socket recv error!");
+        retCount = 0;
+    }
+    return (unsigned int)retCount;
 }
 
 /* strHostIp:返回的IP地址

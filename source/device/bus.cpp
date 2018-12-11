@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "bus.h"
+#include "export.h"
+
 #include <pthread.h>
 #include <time.h> 
 

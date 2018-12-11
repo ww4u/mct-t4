@@ -27,6 +27,7 @@ public:
     void changeLanguage(QString qmFile);
 
 public slots:
+    void updateUI();
     void slotDownload();
     void slotUpload();
     void slotStore();
@@ -34,8 +35,6 @@ public slots:
     void slotSearch();
     void slotExit();
     void slotConnect();
-
-    void slotAddNewRobot(QString strDevInfo );
     void slotSetOneRecord(int row,QString type,double x,double y,double v,double a);
 
 private slots:
@@ -43,6 +42,7 @@ private slots:
     void slot_current_changed( QTreeWidgetItem* pre,QTreeWidgetItem* nxt );
     void slot_open_close(QString strIP);
     void slotShowContextmenu(const QPoint &pos);
+    void slotAddNewRobot(QString strDevInfo );
     void soltActionClose();
     void soltActionDelete();
     void slotStoreTips(int val);
@@ -65,7 +65,7 @@ private:
     QList<RobotInfo> m_RobotList;
     int mIndex;
 
-    void initRootNodeWidget();
+    void buildUI();
     void loadXmlConfig();
     void createRobot(QString strDevInfo);
     int  deviceOpen(QString strIP);

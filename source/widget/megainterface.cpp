@@ -141,7 +141,7 @@ int MegaInterface::deviceOpen()
     QModelIndex index = ui->tableView->selectionModel()->selectedIndexes().at(0);
     QString strIP = m_model->data(index,Qt::DisplayRole).toString();
     QString strDesc = QString("TCPIP0::%1::inst0::INSTR").arg(strIP);
-    int visa =  mrgOpenGateWay(strDesc.toLatin1().data(), 2000);
+    int visa =  mrgOpenGateWay(strDesc.toLocal8Bit().data(), 2000);
     if(visa < 0)
         QMessageBox::critical(this,tr("error"),tr("open device error"));
 
@@ -203,7 +203,7 @@ void DeviceSearchThread::run()
     for(int devIndex=0; devIndex<listFindDevices.count(); devIndex++)
     {
         QString strDevice = listFindDevices.at(devIndex);
-        int visa =  mrgOpenGateWay(strDevice.toLatin1().data(), 2000);
+        int visa =  mrgOpenGateWay(strDevice.toLocal8Bit().data(), 2000);
         if(visa < 0) {   return; }
 
         char IDN[1024] = "";

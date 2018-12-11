@@ -23,6 +23,10 @@ public:
 
     void translateUI() override;
 
+public slots:
+    void setWorkStrokeX(double WorkStrokeX);
+    void setWorkStrokeY(double WorkStrokeY);
+
 signals:
     void signal_AxesZeroPoint_currentTextChanged(QString);
 
@@ -53,6 +57,9 @@ private:
     double  m_SWLimitPositiveY ;
     double  m_SWLimitNegativeX ;
     double  m_SWLimitNegativeY ;
+
+    double  m_WorkStrokeX;
+    double  m_WorkStrokeY;
 };
 
 #endif // H2MEASUREMENT_H

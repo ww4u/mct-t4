@@ -33,6 +33,8 @@ public:
     virtual int  writeDeviceConfig();   //将类成员数据设置到设备
     virtual int  loadConfig();          //读取本地配置文件，将数据保存到类成员 启动软件或者添加新设备时调用 如果没用对应的配置就用默认的配置
     virtual int  saveConfig();          //将类成员写入到本地配置文件
+
+public slots:
     virtual void updateShow();          //将类成员更新到界面
 
     virtual void changeLanguage(QString qmFile);

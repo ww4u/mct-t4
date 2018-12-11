@@ -19,6 +19,26 @@ H2Configuration::~H2Configuration()
 
 int H2Configuration::readDeviceConfig()
 {
+    int type = mrgGetRobotType(mViHandle, mRobotName);
+    if (type == MRX_T4){
+        m_Family = "MRX-T4";
+    }
+    else if (type == MRX_AS){
+        m_Family = "MRX-AS";
+    }
+    else if (type == MRX_H2){
+        m_Family = "MRX-H2";
+    }
+    else if (type == MRX_DELTA){
+        m_Family = "MRX-DELTA";
+    }
+    else if (type == MRX_RAW){
+        m_Family = "MRX-RAW";
+    }else{
+        sysError("mrgGetRobotType error", type);
+        return -1;
+    }
+
     m_Size = mrgGetRobotSubType(mViHandle, mRobotName);
 
     int val = 0;
@@ -37,7 +57,10 @@ int H2Configuration::writeDeviceConfig()
     //type:0==>small, 1==>big
     ret = mrgSetRobotSubType(mViHandle, mRobotName, m_Size);
     qDebug() << "mrgSetRobotSubType" << ret;
-    if(ret != 0) return -1;
+    if(ret != 0){
+        sysError("mrgSetRobotSubType error!", ret);
+        return -1;
+    }
 
     //WorkStrokeX
 
@@ -48,7 +71,10 @@ int H2Configuration::writeDeviceConfig()
     //states:OFF==>bottom, ON==>top
     ret = mrgMRQMotionReverse(mViHandle, mDeviceName, m_MotorPosition);
     qDebug() << "mrgMRQMotionReverse" << ret;
-
+    if(ret != 0){
+        sysError("mrgMRQMotionReverse error!", ret);
+        return -1;
+    }
     return ret;
 }
 
@@ -66,8 +92,8 @@ int H2Configuration::loadConfig()
 
     m_Family = map["Family"];
     m_Size = map["Size"].toInt();
-    m_WorkStrokeX = map["WorkStrokeX"].toInt();
-    m_WorkStrokeY = map["WorkStrokeY"].toInt();
+    m_WorkStrokeX = map["WorkStrokeX"].toDouble();
+    m_WorkStrokeY = map["WorkStrokeY"].toDouble();
     m_MotorPosition = map["MotorPosition"].toInt();
 
     return 0;
@@ -95,8 +121,8 @@ void H2Configuration::updateShow()
 {
     ui->label_family->setText(m_Family);
     ui->sizeComboBox->setCurrentIndex(m_Size);
-    ui->spinBox_X->setValue(m_WorkStrokeX);
-    ui->spinBox_Y->setValue(m_WorkStrokeY);
+    ui->doubleSpinBox_X->setValue(m_WorkStrokeX);
+    ui->doubleSpinBox_Y->setValue(m_WorkStrokeY);
 
     on_sizeComboBox_currentIndexChanged(m_Size);
 
@@ -156,40 +182,27 @@ void H2Configuration::on_radioButton_t_toggled(bool checked)
     emit signalModelDataChanged(true);
 }
 
-void H2Configuration::on_spinBox_X_valueChanged(int arg1)
-{
-    m_WorkStrokeX = arg1;
-    changeModelLabel();
-    emit signalModelDataChanged(true);
-}
-
-void H2Configuration::on_spinBox_Y_valueChanged(int arg1)
-{
-    m_WorkStrokeY = arg1;
-    changeModelLabel();
-    emit signalModelDataChanged(true);
-}
-
 void H2Configuration::on_sizeComboBox_currentIndexChanged(int index)
 {
     m_Size = index;
 
     if(index == 0){
-        ui->spinBox_X->setRange(0, 494);
-        ui->spinBox_X->setValue(494);
-        ui->spinBox_X->setToolTip("0-494");
+        ui->doubleSpinBox_X->setRange(0, 442);
+        ui->doubleSpinBox_X->setValue(494);
+        ui->doubleSpinBox_X->setToolTip("0-442");
 
-        ui->spinBox_Y->setRange(0, 802);
-        ui->spinBox_Y->setValue(802);
-        ui->spinBox_Y->setToolTip("0-820");
-    } else if(index == 1){
-        ui->spinBox_X->setRange(0, 770);
-        ui->spinBox_X->setValue(770);
-        ui->spinBox_X->setToolTip("0-770");
+        ui->doubleSpinBox_Y->setRange(0, 764);
+        ui->doubleSpinBox_Y->setValue(764);
+        ui->doubleSpinBox_Y->setToolTip("0-764");
+    }
+    else if(index == 1){
+        ui->doubleSpinBox_X->setRange(0, 770);
+        ui->doubleSpinBox_X->setValue(770);
+        ui->doubleSpinBox_X->setToolTip("0-770");
 
-        ui->spinBox_Y->setRange(0, 890);
-        ui->spinBox_Y->setValue(890);
-        ui->spinBox_Y->setToolTip("0-890");
+        ui->doubleSpinBox_Y->setRange(0, 890);
+        ui->doubleSpinBox_Y->setValue(890);
+        ui->doubleSpinBox_Y->setToolTip("0-890");
     }
 
     changeModelLabel();
@@ -199,4 +212,20 @@ void H2Configuration::on_sizeComboBox_currentIndexChanged(int index)
 void H2Configuration::translateUI()
 {
     ui->retranslateUi(this);
+}
+
+void H2Configuration::on_doubleSpinBox_X_valueChanged(double arg1)
+{
+    m_WorkStrokeX = arg1;
+    changeModelLabel();
+    emit signalModelDataChanged(true);
+    emit WorkStrokeXChanged(m_WorkStrokeX);
+}
+
+void H2Configuration::on_doubleSpinBox_Y_valueChanged(double arg1)
+{
+    m_WorkStrokeY = arg1;
+    changeModelLabel();
+    emit signalModelDataChanged(true);
+    emit WorkStrokeYChanged(m_WorkStrokeY);
 }

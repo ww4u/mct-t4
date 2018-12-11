@@ -53,5 +53,7 @@
         <file>image/icon/find.png</file>
         <file>image/icon/china.png</file>
         <file>image/icon/english.png</file>
+        <file>image/h2product/connect.png</file>
+        <file>image/h2product/disconnect.png</file>
     </qresource>
 </RCC>

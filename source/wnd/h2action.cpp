@@ -66,7 +66,7 @@ int H2Action::readDeviceConfig()
     int len = 4096 * 1024;
     char *pData = (char *)malloc(len);
     memset(pData, 0, len);
-    ret = mrgStorageMotionFileContextRead(mViHandle, m_strDeviceFileName.toLatin1().data(), pData, len);
+    ret = mrgStorageMotionFileContextRead(mViHandle, m_strDeviceFileName.toLocal8Bit().data(), pData, len);
     if(ret <= 0){
         m_fileContext = "";
         qDebug() << "mrgStorageMotionFileContextRead error" << ret;
@@ -102,16 +102,22 @@ int H2Action::writeDeviceConfig()
 {
     m_strLocalFileName = QApplication::applicationDirPath() + "/dataset/" + mProjectName + ".mrp";
 
-    int ret = mrgStorageMotionFileSave(mViHandle,
-                                       m_strLocalFileName.toLatin1().data(),
-                                       m_strDeviceFileName.toLatin1().data());
-
+    int ret = -1;
+    ret = mrgStorageMotionFileSaveContext(mViHandle,
+                                          m_fileContext.toLocal8Bit().data(),
+                                          m_fileContext.size(),
+                                          m_strDeviceFileName.toLocal8Bit().data());
     qDebug() << "mrgStorageMotionFileSave:" << ret;
-    if(ret != 0)
+    if(ret != 0){
+        sysError("mrgStorageMotionFileSave error!", ret);
         return -1;
+    }
 
-    ret = mrgRobotMotionFileImport(mViHandle, mRobotName, m_strDeviceFileName.toLatin1().data());
+    ret = mrgRobotMotionFileImport(mViHandle, mRobotName, m_strDeviceFileName.toLocal8Bit().data());
     qDebug() << "mrgRobotMotionFileImport:" << ret;
+    if(ret != 0){
+        sysError("mrgRobotMotionFileImport error!", ret);
+    }
     return ret;
 }
 
@@ -236,14 +242,34 @@ void H2Action::soltActionRun()
         return;
     }
 
-    auto func = [=]()
-    {
-        ui->tableView->selectRow(row);
+    int homeVaild = mrgGetRobotHomeRequire(mViHandle, mRobotName);
+    qDebug() << "mrgGetRobotHomeRequire" << homeVaild;
+    if(homeVaild == 1)
+    {//表示需要回零
+        QMessageBox::warning(this,tr("warning"),tr("Device Homing Invalid"));
+        return;
+    }
+    ui->tableView->selectRow(row);
 
-        int ret = -1;
-        qDebug() << "soltActionRun begin";
-        qDebug() << mViHandle << mRobotName;
-        ret = mrgRobotFileResolve(mViHandle, mRobotName, 0, row+1, 0, 20000);
+    int recordNumber = row+1;
+    QString strType = ui->tableView->model()->index(row, 0).data().toString();
+    double posX = ui->tableView->model()->index(row, 1).data().toDouble();
+    double posY = ui->tableView->model()->index(row, 2).data().toDouble();
+    double velocity = ui->tableView->model()->index(row, 3).data().toDouble();
+    double acceleration = ui->tableView->model()->index(row, 4).data().toDouble();
+
+#if 0
+    //! 先将数据下载设备，然后发送文件行索引号进行移动
+    ret = saveConfig();
+    ret += writeDeviceConfig();
+    if(ret != 0){
+        QMessageBox::warning(this,tr("warning"),tr("Data download to device error!"));
+        return;
+    }
+
+    auto func = [&]()
+    {
+        ret = mrgRobotFileResolve(mViHandle, mRobotName, 0, recordNumber, 0, 20000);
         qDebug() << "mrgRobotFileResolve" << ret;
         if(ret != 0) return;
 
@@ -254,9 +280,24 @@ void H2Action::soltActionRun()
         ret = mrgRobotWaitEnd(mViHandle, mRobotName, 0, 0);
         qDebug() << "mrgRobotWaitEnd" << ret;
         if(ret != 0) return;
-
-        qDebug() << "soltActionRun end";
     };
+
+#else
+    //! 解析界面的数据PA PRA PRN,手工移动
+    auto func = [&]()
+    {
+        float time = sqrt( pow(posX,2) + pow(posY,2) ) / (0.7 * velocity);
+        if(strType == "PA"){
+            ret = mrgRobotMoveL(mViHandle, mRobotName, -1, posX, posY, 0, time, 0);
+            qDebug() << "mrgRobotRelMoveL PA" << ret << posX << posY;
+        }
+        else if(strType == "PRA" || strType == "PRN" ){
+            ret = mrgRobotRelMoveL(mViHandle, mRobotName, -1, posX, posY, 0, time, 0);
+            qDebug() << "mrgRobotRelMoveL PRA/PRN" << ret << posX << posY;
+        }
+        else{}
+    };
+#endif
 
     XThread *thread = new XThread(func);
     thread->start();

@@ -107,7 +107,7 @@ EXPORT_API int CALL mrgStorageMotionFileSave(ViSession vi, char* srcFileName, ch
     if (busWrite(vi, args, strlen(args)) == 0)//写入文件名
     {
         fclose(pFile);
-        return -1;
+        return -2;
     }
     //写入文件内容
     while (filesize > 0)
@@ -119,7 +119,7 @@ EXPORT_API int CALL mrgStorageMotionFileSave(ViSession vi, char* srcFileName, ch
         if (busWrite(vi, as8Ret, writeLen+cmdLen) == 0)
         {
             fclose(pFile);
-            return -1;
+            return -3;
         }
         filesize -= writeLen;
     }
@@ -127,7 +127,7 @@ EXPORT_API int CALL mrgStorageMotionFileSave(ViSession vi, char* srcFileName, ch
     if (busWrite(vi, args, strlen(args)) == 0)//写入文件结束
     {
         fclose(pFile);
-        return -1;
+        return -4;
     }
     fclose(pFile);
     return 0;

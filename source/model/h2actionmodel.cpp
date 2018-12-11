@@ -349,8 +349,7 @@ int H2ActionModel::input( const QString &fileName )
 
     emit dataChanged( index(0,0),
                       index(mItems.count(),
-                      H2ActionItem::columns() - 1
-                       ) );
+                      H2ActionItem::columns() - 1) );
 
     return 0;
 }

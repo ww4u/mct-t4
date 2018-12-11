@@ -46,6 +46,12 @@ void H2Robo::buildConnection()
     connect(m_pH2Measurement,SIGNAL(signal_AxesZeroPoint_currentTextChanged(QString)),
             m_pH2Homing,SLOT(slot_set_direction(QString)));
 
+    connect(m_pH2Configuration, SIGNAL(WorkStrokeXChanged(double)),
+            m_pH2Measurement,SLOT(setWorkStrokeX(double)));
+
+    connect(m_pH2Configuration, SIGNAL(WorkStrokeYChanged(double)),
+            m_pH2Measurement,SLOT(setWorkStrokeY(double)));
+
     connect(m_pH2Action,SIGNAL(signalCurrentRowChanged(int)),this,SIGNAL(signal_action_selected(int)));
 }
 

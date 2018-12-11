@@ -24,9 +24,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>
-    <widget class="H2Status" name="h2Status" native="true">
-     <zorder>tabWidget</zorder>
-    </widget>
+    <widget class="H2Status" name="h2Status" native="true"/>
    </item>
    <item>
     <widget class="QTabWidget" name="tabWidget">
@@ -40,7 +38,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>1</number>
      </property>
      <property name="movable">
       <bool>false</bool>
@@ -1529,10 +1527,22 @@
          <item row="0" column="14" colspan="2">
           <widget class="QToolButton" name="toolButton_debugRun">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>120</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>120</width>
+             <height>16777215</height>
+            </size>
            </property>
            <property name="toolTip">
             <string>Running</string>
@@ -1664,6 +1674,18 @@
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>80</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>80</width>
+             <height>16777215</height>
+            </size>
            </property>
            <property name="cursor">
             <cursorShape>ArrowCursor</cursorShape>

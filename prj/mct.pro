@@ -35,6 +35,7 @@ HEADERS += ../include/mystd.h           \
     ../source/device/MegaRobot.h        \
     ../source/device/mrqDevice.h        \
     ../source/device/storage.h          \
+    ../source/device/errorcode.h        \
     ../source/device/export.h           \
     ../source/device/stdafx.h           \
     ../source/device/system.h           \
@@ -82,6 +83,7 @@ SOURCES += ../source/main/main.cpp      \
     ../source/device/MegaRobot.cpp      \
     ../source/device/mrqDevice.cpp      \
     ../source/device/storage.cpp        \
+    ../source/device/errorcode.cpp      \
     ../source/device/system.cpp         \
     ../source/sys/sysapi.cpp            \
     ../source/sys/megaxml.cpp           \

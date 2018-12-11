@@ -13,7 +13,6 @@ extern "C" {
 typedef unsigned long ViSession;
 #endif
 
-#include "export.h"
 /*
 * 对于网线连接的网关，查找方式有两种： 一种是用VISA方式查找，另一种是用UDP广播方式查找。
 * method: 0:表示使用VISA方式查找；1表示使用UDP方式查找

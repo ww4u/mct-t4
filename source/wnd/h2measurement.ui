@@ -55,6 +55,12 @@
    </item>
    <item row="0" column="0">
     <widget class="QGroupBox" name="groupBox_Coordinate">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="title">
       <string>Coordinate System</string>
      </property>
@@ -132,6 +138,12 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="cursor">
          <cursorShape>IBeamCursor</cursorShape>
         </property>
@@ -172,6 +184,12 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="cursor">
          <cursorShape>IBeamCursor</cursorShape>
         </property>
@@ -211,6 +229,12 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
         </property>
         <property name="cursor">
          <cursorShape>IBeamCursor</cursorShape>
@@ -254,6 +278,12 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
         </property>
         <property name="cursor">
          <cursorShape>IBeamCursor</cursorShape>
@@ -312,7 +342,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Porject Zero Point:</string>
+         <string>Project Zero Point:</string>
         </property>
        </widget>
       </item>
@@ -336,6 +366,12 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
         </property>
         <property name="cursor">
          <cursorShape>IBeamCursor</cursorShape>
@@ -392,6 +428,12 @@
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
         </property>
         <property name="cursor">
          <cursorShape>IBeamCursor</cursorShape>

@@ -23,24 +23,28 @@ public:
 
     void translateUI() override;
 
+signals:
+    void WorkStrokeXChanged(double);
+    void WorkStrokeYChanged(double);
+
+
 private slots:
     void on_radioButton_b_toggled(bool checked);
 
     void on_radioButton_t_toggled(bool checked);
 
-    void on_spinBox_X_valueChanged(int arg1);
-
-    void on_spinBox_Y_valueChanged(int arg1);
-
     void on_sizeComboBox_currentIndexChanged(int index);
+
+    void on_doubleSpinBox_X_valueChanged(double arg1);
+    void on_doubleSpinBox_Y_valueChanged(double arg1);
 
 private:
     Ui::H2Configuration *ui;
 
     QString m_Family;
     int     m_Size;
-    int     m_WorkStrokeX;
-    int     m_WorkStrokeY;
+    double  m_WorkStrokeX;
+    double  m_WorkStrokeY;
     int     m_MotorPosition;
 
     void changeModelLabel();

@@ -8,7 +8,7 @@ static QString _headers[]=
     QStringLiteral("Error"),
     QStringLiteral("Warning"),
     QStringLiteral("Information"),
-    QStringLiteral("Recation on error"),
+    QStringLiteral("Reaction on error"),
     QStringLiteral("Output stage on"),
     QStringLiteral("Save diagnosis"),
 };

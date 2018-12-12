@@ -27,6 +27,7 @@ H2Ops::H2Ops(QWidget *parent) :
 
     m_recordNumber = -1;
     m_isDebugRunFlag = false;
+    m_isHomgingRunFlag = false;
 
     set_name( ui->tab_LogOut,   "tab_LogOut");
     set_name( ui->tab_Operate,  "tab_Operate");
@@ -48,6 +49,7 @@ H2Ops::H2Ops(QWidget *parent) :
     m_timerOpsIO      = new QTimer;
     m_timerOpsIO->setInterval(500);
 
+    m_threadOpsHoming = NULL;
     m_timerOpsHoming  = new QTimer;
     m_timerOpsHoming->setInterval(500);
 
@@ -102,9 +104,16 @@ void H2Ops::setupUi()
     m_pDiagnosisModel= new DiagnosisModel();
     ui->tvDiagnosis->setModel( m_pDiagnosisModel );
 
-    m_pDebugModel = new DebugModel();
-    ui->tvDebug->setModel( m_pDebugModel );
+    {
+        m_pDebugModel = new DebugModel();
+        ui->tvDebug->setModel( m_pDebugModel );
 
+        m_dblSpinboxRecord = new DoubleSpinBoxDelegate( this, 0, 1, 31 );
+        ui->tvDebug->setItemDelegateForColumn( 0, m_dblSpinboxRecord );
+
+        m_dblSpinboxDelayTime = new DoubleSpinBoxDelegate( this, 2, 0, 999 );
+        ui->tvDebug->setItemDelegateForColumn( 1, m_dblSpinboxDelayTime );
+    }
 
     ui->tabWidget->setCurrentIndex(0);
     ui->tabWidget->setEnabled(false);
@@ -234,10 +243,12 @@ void H2Ops::slotSetCurrentRobot(QString strDevInfo, int visa, int deviceName, in
     {   //device closed
         m_recordNumber = -1;
         ui->h2Status->on_chkMct_toggled(false);
+        ui->h2Status->set_chkMct_enabled(false);
     }
     else
     {   //device opened
         slotLoadConfigAgain();
+        ui->h2Status->set_chkMct_enabled(true);
     }
 }
 
@@ -268,6 +279,11 @@ void H2Ops::slotLoadConfigAgain()
 
     m_Data = map;
     updateTabHoming();
+}
+
+void H2Ops::slotRobotStop()
+{
+    setAllTabStopWorking();
 }
 
 void H2Ops::slot_mct_checked(bool checked)
@@ -336,7 +352,9 @@ void H2Ops::setAllTabStopWorking()
     if(m_isDebugRunFlag){
         on_toolButton_debugRun_clicked();
     }
-
+    if(m_isHomgingRunFlag){
+        on_pushButton_starting_home_clicked();
+    }
 }
 
 void H2Ops::on_tabWidget_currentChanged(int index)
@@ -542,24 +560,69 @@ void H2Ops::on_btnExport_2_clicked()
 }
 
 ////////////////////////////////////// 点击发送指令
-void H2Ops::on_pushButton_starting_home_clicked()
-{
-    if(m_ViHandle <= 0) return;
-    ThreadGoHomingArg arg = {m_ViHandle, m_RoboName, 0};
-    ThreadGoHoming *thread = new ThreadGoHoming;
-    thread->setArgs(arg);
-    connect(thread, SIGNAL(signalThreadGoHomeEnd(int)),this,SLOT(slot_starting_home_over(int)));
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-    ui->pushButton_starting_home->setEnabled(false);
-    thread->start();
-}
-
 void H2Ops::slot_starting_home_over(int ret)
 {
     if(ret != 0){
         QMessageBox::critical(this,tr("error"),tr("Starting Home failure"));
     }
-    ui->pushButton_starting_home->setEnabled(true);
+//    ui->pushButton_starting_home->setEnabled(true);
+}
+
+
+void H2Ops::on_pushButton_starting_home_clicked()
+{
+    if(m_ViHandle <= 0) return;
+
+    auto func = [this]()
+    {
+        //不等待
+        int ret = mrgRobotGoHome(m_ViHandle, m_RoboName, -1);
+        qDebug() << "mrgRobotGoHome" << ret;
+
+
+        while(1)
+        {
+            if ( m_threadOpsHoming->isInterruptionRequested() ){
+                break;
+            }
+            ret = mrgRobotWaitHomeEnd(m_ViHandle, m_RoboName, -1);
+            if(ret == -3){//超时
+                qDebug() << "mrgRobotWaitHomeEnd timeout";
+                continue;
+            }else if(ret != 0){
+                qDebug() << "mrgRobotWaitHomeEnd error";
+                emit signal_gohoming_end(-1);
+                break;
+            }
+            else{
+                qDebug() << "mrgRobotWaitHomeEnd ok";
+                ui->pushButton_starting_home->setText(tr("Start Go Home"));
+                m_isDebugRunFlag = false;
+                break;
+            }
+        }
+    }; //end func
+
+    if(m_isHomgingRunFlag) //正在运行
+    {
+        m_isHomgingRunFlag = false;
+
+        mrgRobotGoHomeStop(m_ViHandle, m_RoboName);
+
+        if( m_threadOpsHoming != NULL ){
+            m_threadOpsHoming->requestInterruption();
+            m_threadOpsHoming->wait();
+        }
+        ui->pushButton_starting_home->setText(tr("Start Go Home"));
+    }else{
+        m_isHomgingRunFlag = true;
+        ui->pushButton_starting_home->setText(tr("Stop Go Home"));
+
+        if(m_ViHandle <= 0) return;
+        m_threadOpsHoming = new XThread(func);
+        connect(m_threadOpsHoming,&XThread::finished,[&](){ m_threadOpsHoming = NULL; });
+        m_threadOpsHoming->start(QThread::LowestPriority);
+    }
 }
 
 void H2Ops::setButtonDisableTime(QToolButton *btn, int msec)
@@ -752,26 +815,16 @@ void H2Ops::on_toolButton_debugRun_clicked()
                 double time = ui->tvDebug->model()->index(i, 1).data().toDouble();
                 int ret = -1;
 
-                qDebug() << "------------------------------";
-                qDebug() << m_ViHandle << m_RoboName;
-                qDebug() << "Run Queue :" << recordNumber << "begin";
-
                 ret = mrgRobotFileResolve(m_ViHandle, m_RoboName, 0, recordNumber, 0, 20000);
                 if(ret != 0) return;
-//                qDebug() << "mrgRobotFileResolve" << ret;
 
                 ret = mrgRobotRun(m_ViHandle, m_RoboName, 0);
-//                qDebug() << "mrgRobotRun" << ret;
                 if(ret != 0) return;
 
                 ret = mrgRobotWaitEnd(m_ViHandle, m_RoboName, 0, 0);
-//                qDebug() << "mrgRobotWaitEnd" << ret;
                 if(ret != 0) return;
 
-//                qDebug() << "Run Queue :" << recordNumber << "sleep" << time << "s";
                 QThread::msleep(time * 1000);
-
-                qDebug() << "Run Queue :" << recordNumber << "ending";
 
                 if ( m_threadOpsDebug->isInterruptionRequested() ){
                     noBreak = false;
@@ -813,6 +866,7 @@ void H2Ops::updateBackgroundStatus()
     if(m_ViHandle <= 0) return;
     int homeVaild = mrgGetRobotHomeRequire(m_ViHandle, m_RoboName);
     qDebug() << "mrgGetRobotHomeRequire" << homeVaild;
+//    sysInfo("mrgGetRobotHomeRequire", homeVaild);
     if(homeVaild == 1)
     {//表示需要回零
         sysInfo("Robot Need Go Home");
@@ -974,8 +1028,10 @@ void H2Ops::updateTabMonitor()
     {
         int v1 = (array2[i] >> 8) & 0xFF;
         int v2 = array2[i] & 0xFF;
-        m_splineChart2->dataAppend(v1,v2);
+
         qDebug() << "m_splineChart2" << i << v1 << v2;
+        if(v1>=0 && v1<=100 && v2>=0 && v2<=100)
+            m_splineChart2->dataAppend(v1,v2);
     }
 
 LAB1:
@@ -983,8 +1039,9 @@ LAB1:
     {
         int v1 = (array1[i] >> 8) & 0xFF;
         int v2 = array1[i] & 0xFF;
-        m_splineChart1->dataAppend(v1,v2);
         qDebug() << "m_splineChart1" << i << v1 << v2;
+        if(v1>=0 && v1<=100 && v2>=0 && v2<=100)
+            m_splineChart1->dataAppend(v1,v2);
     }
 
 }

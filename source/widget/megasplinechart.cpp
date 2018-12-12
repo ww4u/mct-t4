@@ -3,6 +3,9 @@
 #include <QTime>
 #include <QDebug>
 
+#define AXISY_MAX (110)
+#define AXISY_MIN (-10)
+
 Chart::Chart(QGraphicsItem *parent, Qt::WindowFlags wFlags):
     QChart(QChart::ChartTypeCartesian, parent, wFlags),
     m_series1(new QSplineSeries(this)),
@@ -30,12 +33,12 @@ Chart::Chart(QGraphicsItem *parent, Qt::WindowFlags wFlags):
 
     m_axis->setTickCount(6);
     axisX()->setRange(-10.0, 0);
-    axisY()->setRange(0, 100.0);
+    axisY()->setRange(AXISY_MIN, AXISY_MAX);
 
     axisX()->setTitleText("[s]");
 
     m_series1->append(m_x, m_y1);
-    m_series1->append(m_x, m_y2);
+    m_series2->append(m_x, m_y2);
 }
 
 Chart::~Chart()
@@ -45,16 +48,22 @@ Chart::~Chart()
 
 void Chart::dataAppend(double v1, double v2)
 {
+    if(v1<AXISY_MIN || v1>AXISY_MAX)
+        return;
+    if(v2<AXISY_MIN || v2>AXISY_MAX)
+        return;
+
     m_x += m_step;
     m_y1 = v1;
     m_y2 = v2;
 
     m_x += m_step;
-    m_series1->append(m_x, m_y1);
-    m_series1->setName( QString::number(m_y1,'f',2) + " %");
 
-    m_series2->append(m_x, m_y2);
+    m_series1->setName( QString::number(m_y1,'f',2) + " %");
     m_series2->setName( QString::number(m_y2,'f',2) + " %");
+
+    m_series1->append(m_x, m_y1);
+    m_series2->append(m_x, m_y2);
 
     if(qAbs(m_axis->min()-0) < 0.000001)
         axisX()->setRange(0, m_axis->max() + m_step);

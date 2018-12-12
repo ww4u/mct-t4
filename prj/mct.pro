@@ -24,7 +24,7 @@ CONFIG += C++11 #use lambda
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-VERSION = 0.0.1.0
+VERSION = 0.0.1.01
 
 HEADERS += ../include/mystd.h           \
     ../include/mydebug.h                \
@@ -49,6 +49,7 @@ HEADERS += ../include/mystd.h           \
     ../source/model/h2actionitem.h      \
     ../source/model/comboxdelegate.h    \
     ../source/model/checkdelegate.h     \
+    ../source/model/doublespinboxdelegate.h \
     ../source/model/diagnosisitem.h     \
     ../source/model/diagnosismodel.h    \
     ../source/model/errmgritem.h        \
@@ -101,6 +102,7 @@ SOURCES += ../source/main/main.cpp      \
     ../source/model/h2actionitem.cpp    \
     ../source/model/comboxdelegate.cpp  \
     ../source/model/checkdelegate.cpp   \
+    ../source/model/doublespinboxdelegate.cpp \
     ../source/wnd/mainwindow.cpp        \
     ../source/wnd/h2ops.cpp             \
     ../source/wnd/h2action.cpp          \
@@ -121,6 +123,7 @@ SOURCES += ../source/main/main.cpp      \
     ../source/widget/megamessagebox.cpp \
     ../source/widget/megasplinechart.cpp\
     ../source/widget/megainterface.cpp
+
 
 
 FORMS += ../source/wnd/mainwindow.ui    \

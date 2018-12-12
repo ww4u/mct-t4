@@ -718,8 +718,8 @@ EXPORT_API int CALL mrgRobotWaitEnd(ViSession vi, int name, char wavetable, int 
             {
                 return -1;
             }
-            Sleep(200);
-            time += 200;
+            Sleep(50);
+            time += 50;
             continue;
         }
         state[retlen - 1] = '\0';//去掉回车符
@@ -729,8 +729,8 @@ EXPORT_API int CALL mrgRobotWaitEnd(ViSession vi, int name, char wavetable, int 
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
-        Sleep(200);
-        time += 200;
+        Sleep(50);
+        time += 50;
         if (timeout_ms > 0) {
             if (time > timeout_ms) {
                 ret = -3; break;

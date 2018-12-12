@@ -38,7 +38,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>5</number>
      </property>
      <property name="movable">
       <bool>false</bool>
@@ -1534,13 +1534,13 @@
            </property>
            <property name="minimumSize">
             <size>
-             <width>120</width>
+             <width>240</width>
              <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>120</width>
+             <width>240</width>
              <height>16777215</height>
             </size>
            </property>

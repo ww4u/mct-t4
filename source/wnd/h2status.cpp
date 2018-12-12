@@ -42,3 +42,8 @@ void H2Status::on_chkMct_toggled(bool checked)
         ui->chkPwr->setChecked(false);
     }
 }
+
+void H2Status::set_chkMct_enabled(bool isEnabled)
+{
+    ui->chkMct->setEnabled(isEnabled);
+}

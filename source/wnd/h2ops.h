@@ -9,6 +9,7 @@
 #include "xconfig.h"
 #include "megasplinechart.h"
 
+#include "doublespinboxdelegate.h"
 
 namespace Ui {
 class H2Ops;
@@ -37,6 +38,7 @@ public:
 
 signals:
     void signal_apply_point(int, QString, double, double,double,double);
+    void signal_gohoming_end(int);
 
 public slots:
     void slot_logSelectAll_action();
@@ -46,10 +48,7 @@ public slots:
     void slotSetCurrentRobot(QString strDevInfo, int visa, int deviceName, int roboName);
     void slotSetCurrentRecordNumber(int number);
     void slotLoadConfigAgain();
-    void slotRobotStop(){
-        this->on_pushButton_stop_clicked();
-    }
-
+    void slotRobotStop();
     void slot_mct_checked(bool checked);
     void slot_power_checked(bool checked);
 
@@ -119,7 +118,11 @@ private:
     QAction *mp_logSepAction;
 
     DiagnosisModel *m_pDiagnosisModel;
+    DoubleSpinBoxDelegate *m_dblSpinboxRecord;
+    DoubleSpinBoxDelegate *m_dblSpinboxDelayTime;
     DebugModel *m_pDebugModel;
+
+
 
     MegaSplineChart *m_splineChart1;
     MegaSplineChart *m_splineChart2;
@@ -131,17 +134,19 @@ private:
     int m_recordNumber;
     QMap<QString,QString> m_Data;
 
-
-    bool m_isDebugRunFlag;
-
     QTimer *m_timerOpsAll;
 
     QTimer *m_timerOpsOpreate;
     QTimer *m_timerOpsIO;
     QTimer *m_timerOpsHoming;
+    XThread *m_threadOpsHoming;
+    bool m_isHomgingRunFlag;
+
     QTimer *m_timerOpsManual;
     QTimer *m_timerOpsMonitor;
     XThread *m_threadOpsDebug;
+    bool m_isDebugRunFlag;
+
     QTimer *m_timerOpsDebug;
 
 
@@ -159,35 +164,6 @@ private:
 
     void setOpsMonitorTimerStop();  //关闭动态曲线的定时器
     void setOpsMonitorTimerStart(); //打开动态曲线的定时器
-};
-
-
-struct ThreadGoHomingArg{
-    int vi;
-    int roboname;
-    int timeout;
-};
-
-class ThreadGoHoming: public QThread
-{
-    Q_OBJECT
-public:
-    void setArgs(const ThreadGoHomingArg &args)
-    {   m_args = args; }
-
-signals:
-    void signalThreadGoHomeEnd(int);
-
-protected:
-    void run() {
-        int ret = mrgRobotGoHome(m_args.vi, m_args.roboname, m_args.timeout);
-        qDebug() << "mrgRobotGoHome" << ret;
-        sysInfo("mrgRobotGoHome", ret);
-        emit signalThreadGoHomeEnd(ret);
-    }
-
-private:
-    ThreadGoHomingArg m_args;
 };
 
 #endif // H2OPS_H

@@ -24,6 +24,7 @@ signals:
 
 public slots:
     void on_chkMct_toggled(bool checked);
+    void set_chkMct_enabled(bool isEnabled);
 
 private:
     Ui::H2Status *ui;

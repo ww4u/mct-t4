@@ -155,7 +155,16 @@ void RoboConfig::slotAddNewRobot(QString strDevInfo)
     QString strIP = strDevInfo.split(',').at(0);
     slot_open_close(strIP); //默认打开设备
 
-//    slotUpload(); //第一次打开设备将数据同步到上位机
+    //第一次打开设备将数据同步到上位机
+    foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
+        int ret = pCfg->readDeviceConfig();
+        if(ret != 0){
+            QMessageBox::critical(this,tr("error"), pCfg->focusName() + tr("\nFrom device upload config faiured"));
+        }
+        pCfg->updateShow();
+        pCfg->saveConfig();
+        emit signalDataChanged();
+    }
 }
 
 void RoboConfig::slotDownload()
@@ -223,12 +232,13 @@ void RoboConfig::slotUpload()
 void RoboConfig::slotStore()
 {
     if(mIndex < 0) return;
-    if( m_RobotList[mIndex].m_Visa == 0) {
+    int visa = m_RobotList[mIndex].m_Visa;
+    if( visa == 0) {
         QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
         return;
     }else{
-        int visa = m_RobotList[mIndex].m_Visa;
-        auto func = [&](void)
+
+        auto func = [=](void)
         {
             qDebug() << "mrgGetRobotConfigState1";
             if (mrgGetRobotConfigState(visa) == 1){
@@ -704,6 +714,6 @@ void RoboConfig::slotSetOneRecord(int row, QString type, double x, double y, dou
     H2Action *pAction = (H2Action *)(pRobo->subConfigs().at(5));
 
     if(m_RobotList[mIndex].m_Visa > 0){
-        pAction->modfiyOneRecord(row, type, x, y, v, a);
+        pAction->modfiyOneRecord(row-1, type, x, y, v, a);
     }
 }

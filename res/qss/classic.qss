@@ -1,21 +1,15 @@
-/********3***********/
-/*
-    Style by evilworks, 2012-2013. pollux@lavabit.com
-    This file is Public Domain.
-*/
-
 /* === Shared === */
 QStackedWidget, QLabel, QPushButton, QRadioButton, QCheckBox, 
 QGroupBox, QStatusBar, QToolButton, QComboBox, QDialog, QTabBar {
-    font-family: "Segoe UI";
-    background-color: #888;
-    color: #000;
+	font-family: "Segoe UI";
+	background-color: #888;
+	color: #000;
 }
 
 /* === QWidget === */
 QWidget:window {
-    font-family: 'Segoe UI';
-    background-color: #888;
+	font-family: 'Segoe UI';
+	background-color: #888;
 }
 
 /* === QPushButton === */
@@ -353,6 +347,20 @@ QTreeView::branch:open:has-children:!has-siblings {
 
 }
 
+/* === QDockWidget === */
+QDockWidget::close-button, QDockWidget::float-button {
+	border: 1px solid transparent;
+	background: #1f2a3b;
+	padding: 0px;
+}
+
+QDockWidget::close-button:hover, QDockWidget::float-button:hover {
+	background: #00a0e0;
+}
+
+QDockWidget::close-button:pressed, QDockWidget::float-button:pressed {
+	padding: 1px -1px -1px 1px;
+}
 
 /******************/
 QWidget#centralWidget {

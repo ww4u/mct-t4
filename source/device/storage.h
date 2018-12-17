@@ -39,4 +39,11 @@ EXPORT_API int CALL mrgStorageMotionFileSave(ViSession vi, char* srcFileName,cha
 * 返回值：  0：写入成功；1：写入失败
 */
 EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context,int len, char * saveFileName);
+
+/*
+* 等待文件写入完成
+* vi :visa设备句柄
+* 返回值：0表示等待成功，－1：表示等待过程中出错
+*/
+EXPORT_API int CALL waitMotionFileWirteEnd(int vi);
 #endif // !MR_SYSTEM_H

@@ -23,6 +23,12 @@ RoboConfig::RoboConfig(QWidget *parent) :
             this, SLOT(slotShowContextmenu(const QPoint&)));
 
     buildUI();
+
+#ifndef _WIN32
+    //! 如果在MRH-T上运行自动添加本地
+    addDeviceWithIP("127.0.0.1");
+#endif
+
 }
 
 void RoboConfig::buildUI()
@@ -129,8 +135,28 @@ void RoboConfig::slotAddNewRobot(QString strDevInfo)
     {
         if( m_RobotList[i].m_strDevInfo == strDevInfo)
         {
-            QMessageBox::information(this,tr("tips"),tr("The device already exists in the project."));
+            if( !strDevInfo.contains("127.0.0.1") )
+                QMessageBox::information(this,tr("tips"),tr("The device already exists in the project."));
             return;
+        }else{
+            //将之前的127.0.0.1从工程中删除
+            if( m_RobotList[i].m_strDevInfo.contains("127.0.0.1") )
+            {
+                //! delete from xml file
+                MegaXML mXML;
+                QString fileName = QApplication::applicationDirPath() + "/config.xml";
+                QMap<QString,QString> mapRead = mXML.xmlRead(fileName);
+                QMap<QString,QString> mapWrite;
+                for (QMap<QString,QString>::iterator itMap=mapRead.begin(); itMap != mapRead.end(); ++itMap )
+                {
+                    if( "RobotDevice_" == itMap.key().left(QString("RobotDevice_").length())
+                            && m_RobotList[i].m_strDevInfo != itMap.value() ){
+                        mapWrite.insert(itMap.key(),itMap.value());
+                    }
+                }
+                mXML.xmlNodeRemove(fileName, "RobotConfigs");
+                mXML.xmlNodeAppend(fileName, "RobotConfigs", mapWrite); //update config.xml
+            }
         }
     }
     qDebug() << "slotAddNewRobot" << strDevInfo;
@@ -180,7 +206,7 @@ void RoboConfig::slotDownload()
                 ok = false;
                 QMessageBox::critical(this,tr("error"), pCfg->focusName() + tr("\t\nDownload Failure"));
             }
-            {   //从设备再重新读一遍
+            {   //从设备再重新upload一遍
                 int ret = pCfg->readDeviceConfig();
                 if(ret != 0){
                     ok = false;
@@ -716,4 +742,29 @@ void RoboConfig::slotSetOneRecord(int row, QString type, double x, double y, dou
     if(m_RobotList[mIndex].m_Visa > 0){
         pAction->modfiyOneRecord(row-1, type, x, y, v, a);
     }
+}
+
+void RoboConfig::addDeviceWithIP(QString devIP)
+{
+    QString strDevice = "TCPIP0::" + devIP + "::inst0::INSTR";
+    int visa =  mrgOpenGateWay(strDevice.toLocal8Bit().data(), 2000);
+    if(visa <= 0) {
+        return;
+    }
+
+    char IDN[1024] = "";
+    int ret = mrgGateWayIDNQuery(visa,IDN);
+    if(ret != 0)
+    {
+        mrgCloseGateWay(visa);
+        return;
+    }else{
+        int len = strlen(IDN);
+        IDN[len-1] = '\0';
+    }
+    mrgCloseGateWay(visa);
+
+    QStringList lst = strDevice.split("::", QString::SkipEmptyParts);
+    QString devInfo = lst.at(1) + QString(",%1").arg(IDN);
+    slotAddNewRobot(devInfo);
 }

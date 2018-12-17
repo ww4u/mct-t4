@@ -59,7 +59,7 @@ EXPORT_API int CALL mrgGetRobotType(ViSession vi, int name)
     char args[SEND_BUF];
     char ret[100];
     int retlen = 0;
-    snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION? %d", name);
+    snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION? %d\n", name);
     if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
         return -1;
     }
@@ -185,7 +185,7 @@ EXPORT_API int CALL mrgGetRobotConfigState(ViSession vi)
 EXPORT_API int CALL mrgSetRobotMachineSerialNum(ViSession vi, int name, char * sn)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:CONFIGuration:SN %d,%s", name, sn);
+    snprintf(args, SEND_BUF, "ROBOT:CONFIGuration:SN %d,%s\n", name, sn);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -204,7 +204,7 @@ EXPORT_API int CALL mrgGetRobotMachineSerialNum(ViSession vi, int name,char*seri
 {
     char args[SEND_BUF];
     int retlen = 0;
-    snprintf(args, SEND_BUF, "ROBOT:CONFIGuration:SN? %d", name);
+    snprintf(args, SEND_BUF, "ROBOT:CONFIGuration:SN? %d\n", name);
     if ((retlen = busQuery(vi, args, strlen(args), serial, 100)) == 0) {
         return -1;
     }
@@ -222,7 +222,7 @@ EXPORT_API int CALL mrgGetRobotMachineSerialNum(ViSession vi, int name,char*seri
 EXPORT_API int CALL mrgSetRobotSubType(ViSession vi,int name,int subtype)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:SUBTYPE %d,%d", name,subtype);
+    snprintf(args, SEND_BUF, "ROBOT:SUBTYPE %d,%d\n", name,subtype);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -241,7 +241,7 @@ EXPORT_API int CALL mrgGetRobotSubType(ViSession vi, int name)
     char args[SEND_BUF];
     char ret[8];
     int retlen = 0;
-    snprintf(args, SEND_BUF, "ROBOT:SUBTYPE? %d", name);
+    snprintf(args, SEND_BUF, "ROBOT:SUBTYPE? %d\n", name);
     if ((retlen = busQuery(vi, args, strlen(args), ret, 4)) == 0) {
         return 0;
     }
@@ -261,7 +261,7 @@ EXPORT_API int CALL mrgGetRobotSubType(ViSession vi, int name)
 EXPORT_API int CALL mrgSetRobotCoordinateSystem(ViSession vi, int name, int coord)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:COORDinate %d,%d", name, coord);
+    snprintf(args, SEND_BUF, "ROBOT:COORDinate %d,%d\n", name, coord);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -280,7 +280,7 @@ EXPORT_API int CALL mrgGetRobotCoordinateSystem(ViSession vi, int name)
     char args[SEND_BUF];
     char ret[12];
     int retlen = 0;
-    snprintf(args, SEND_BUF, "ROBOT:COORDinate? %d", name);
+    snprintf(args, SEND_BUF, "ROBOT:COORDinate? %d\n", name);
     if ((retlen = busQuery(vi, args, strlen(args), ret, 12)) == 0) {
         return 0;
     }
@@ -375,7 +375,7 @@ EXPORT_API int CALL mrgGetRobotDevice(ViSession vi,int robotname,int * device)
 EXPORT_API int CALL mrgSetRobotProjectZero(ViSession vi, int name, double x,double y,double z)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:ZERO:PROJECT %d,%f,%f,%f", name, x,y,z);
+    snprintf(args, SEND_BUF, "ROBOT:ZERO:PROJECT %d,%f,%f,%f\n", name, x,y,z);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -397,7 +397,7 @@ EXPORT_API int CALL mrgGetRobotProjectZero(ViSession vi, int name,double * x,dou
     char *p, *pNext;
     int retlen = 0,count = 0;
     double values[10] = {0.0};
-    snprintf(args, SEND_BUF, "ROBOT:ZERO:PROJECT? %d", name);
+    snprintf(args, SEND_BUF, "ROBOT:ZERO:PROJECT? %d\n", name);
     if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
         return -1;
     }
@@ -424,7 +424,7 @@ EXPORT_API int CALL mrgGetRobotProjectZero(ViSession vi, int name,double * x,dou
 EXPORT_API int CALL mrgSetRobotAxisZero(ViSession vi, int name, double x, double y, double z)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:ZERO:AXIS %d,%f,%f,%f", name, x, y, z);
+    snprintf(args, SEND_BUF, "ROBOT:ZERO:AXIS %d,%f,%f,%f\n", name, x, y, z);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -446,7 +446,7 @@ EXPORT_API int CALL mrgGetRobotAxisZero(ViSession vi, int name, double * x, doub
     char *p, *pNext;
     int retlen = 0, count = 0;
     double values[10] = { 0.0 };
-    snprintf(args, SEND_BUF, "ROBOT:ZERO:AXIS? %d", name);
+    snprintf(args, SEND_BUF, "ROBOT:ZERO:AXIS? %d\n", name);
     if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
         return -1;
     }
@@ -474,7 +474,7 @@ EXPORT_API int CALL mrgGetRobotAxisZero(ViSession vi, int name, double * x, doub
 EXPORT_API int CALL mrgSetRobotSoftWareLimit(ViSession vi, int name,int type,double x, double y, double z)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:LIMIt:SOFT:%s %d,%f,%f,%f",type == 0?"POSITive":"NEGATive", name, x, y, z);
+    snprintf(args, SEND_BUF, "ROBOT:LIMIt:SOFT:%s %d,%f,%f,%f\n",type == 0?"POSITive":"NEGATive", name, x, y, z);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -497,7 +497,7 @@ EXPORT_API int CALL mrgGetRobotSoftWareLimit(ViSession vi, int name,int type, do
     char *p, *pNext;
     int retlen = 0, count = 0;
     double values[10] = { 0.0 };
-    snprintf(args, SEND_BUF, "ROBOT:LIMIt:SOFT:%s? %d", type == 0 ? "POSITive" : "NEGATive", name);
+    snprintf(args, SEND_BUF, "ROBOT:LIMIt:SOFT:%s? %d\n", type == 0 ? "POSITive" : "NEGATive", name);
     if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
         return -1;
     }

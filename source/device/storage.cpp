@@ -1,3 +1,4 @@
+#include <stdafx.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -121,6 +122,10 @@ EXPORT_API int CALL mrgStorageMotionFileSave(ViSession vi, char* srcFileName, ch
             fclose(pFile);
             return -3;
         }
+        if (waitMotionFileWirteEnd(vi) != 0)
+        {
+            break;
+        }
         filesize -= writeLen;
     }
     snprintf(args, SEND_BUF, "STORage:FILe:MOTion:CONTEXT:WRITe:END\n");
@@ -140,36 +145,76 @@ EXPORT_API int CALL mrgStorageMotionFileSave(ViSession vi, char* srcFileName, ch
 * saveFileName：目的文件名
 * 返回值：  0：写入成功；1：写入失败
 */
-EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context,int len, char * saveFileName)
+EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context,int len, char *saveFileName)
 {
-    int retlen = 0, count = 0, writeLen = 0, cmdLen = 0;
+    int retlen = len, count = 0;
     char args[SEND_BUF];
-    char as8Ret[1024], as8StrLen[20];
+    char as8Ret[1024];
     snprintf(args, SEND_BUF, "STORage:FILe:MOTion:CONTEXT:WRITe:NAMe %s\n", saveFileName);
     
     if (busWrite(vi, args, strlen(args)) == 0)//写入文件名
     {
         return -1;
     }
+
     //写入文件内容
-    while (len > 0)
+    while (retlen > 0)
     {
-        writeLen = len > 512 ? 512 : len;
+        int writeLen = retlen > 512 ? 512 : retlen;
+        memset(as8Ret, 0, sizeof(as8Ret));
         snprintf(as8Ret, 1024, "STORage:FILe:MOTion:CONText:WRITe:DATa #9%09d", writeLen);
-        cmdLen = strlen(as8Ret);
+        int cmdLen = strlen(as8Ret);
         memcpy(&as8Ret[cmdLen],&context[count], writeLen);
-        if (busWrite(vi, as8Ret, writeLen + cmdLen) == 0)
+        as8Ret[cmdLen+writeLen] = '\n';
+        if (busWrite(vi, as8Ret, writeLen + cmdLen + 1) == 0)
         {
             return -1;
         }
-        len -= writeLen;
+        if (waitMotionFileWirteEnd(vi) != 0)
+        {
+            break;
+        }
+        retlen -= writeLen;
         count += writeLen;
     }
+
     snprintf(args, SEND_BUF, "STORage:FILe:MOTion:CONTEXT:WRITe:END\n");
     if (busWrite(vi, args, strlen(args)) == 0)//写入文件结束
     {
         return -1;
     }
     return 0;
+}
+
+/*
+* 等待文件写入完成
+* vi :visa设备句柄
+* 返回值：0表示等待成功，－1：表示等待过程中出错
+*/
+EXPORT_API int CALL waitMotionFileWirteEnd(int vi)
+{
+    char args[SEND_BUF];
+    char as8Ret[100];
+    int retLen = 0,time = 0;
+    snprintf(args, SEND_BUF, "STORage:FILe:MOTion:CONTEXT:WRITe:DATA:STATE?\n");
+    while (1)
+    {
+        if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0)
+        {
+            Sleep(10);
+            time += 10;
+            continue;
+        }
+        as8Ret[retLen - 1] = '\0';//去掉回车符
+        if (STRCASECMP(as8Ret, "IDLE") == 0)
+        {
+            return 0;
+        }
+        if (time > 100)
+        {
+            break;
+        }
+    }
+    return -1;
 }
 

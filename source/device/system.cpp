@@ -1,3 +1,4 @@
+#include <stdafx.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,10 +6,10 @@
 
 #define SEND_BUF  (100)
 /*
-*�л� MRH-T ��ģʽ
-*vi :visa�豸���
-*mode:MRH-T ��ģʽ��ȡֵ��Χ�� [0, 1]
-*����ֵ��0��ʾִ�гɹ�����1��ʾʧ��
+*切换 MRH-T 的模式
+*vi :visa设备句柄
+*mode:MRH-T 的模式，取值范围： [0, 1]
+*返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgSysModeSwitch(ViSession vi, int mode)
 {
@@ -21,10 +22,10 @@ EXPORT_API int CALL mrgSysModeSwitch(ViSession vi, int mode)
     return 0;
 }
 /*
-*��ѯ MRH-T ��ģʽ
-*vi :visa�豸���
-*mode:MRH-T ��ģʽ��ȡֵ��Χ�� [0, 1]
-*����ֵ��0��ʾִ�гɹ�����1��ʾʧ��
+*查询 MRH-T 的模式
+*vi :visa设备句柄
+*mode:MRH-T 的模式，取值范围： [0, 1]
+*返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgGetSysMode(ViSession vi)
 {

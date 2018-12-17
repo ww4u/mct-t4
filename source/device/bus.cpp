@@ -1,5 +1,6 @@
-#include <stdlib.h>
+#include <stdafx.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "bus.h"
 #include "export.h"
@@ -13,7 +14,6 @@
 //#include <Ws2tcpip.h> //组播要用到的头文件 
 #else //_WIN32
 
-#include <unistd.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
 #include <net/if.h>
@@ -105,7 +105,110 @@ END:
     return 0;
 }
 
-int busOpenDevice(char * ip, int timeout_ms)
+
+
+static int connectWithBlock(char *ip)
+{
+    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if(sockfd <= 0)
+        return -1;
+
+    struct sockaddr_in servaddr;
+    memset(&servaddr, 0, sizeof(servaddr));
+
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_port = htons(MEGA_TCP_SOCKET_PORT);
+    servaddr.sin_addr.s_addr = inet_addr(ip);
+    inet_pton(AF_INET, ip, &servaddr.sin_addr); //ipV6
+
+    int ret = connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
+    if(ret != 0)
+    {
+        perror("connectBloking");
+        close(sockfd);
+        return -1;
+    }
+
+    return sockfd;
+}
+
+static int connectWithNoblock(char *ip, int timeout_ms)
+{
+    int ret, error;
+    struct timeval timeout;
+    struct sockaddr_in servaddr;
+
+    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if(sockfd <= 0)
+        return -1;
+
+    timeout.tv_sec = timeout_ms/1000;
+    timeout.tv_usec = (timeout_ms % 1000) * 1000;
+
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_port = htons(MEGA_TCP_SOCKET_PORT);
+    servaddr.sin_addr.s_addr = inet_addr(ip);
+
+    int flags;
+    socklen_t len;
+    fd_set rset,wset;
+
+    //设置为非阻塞
+    flags = fcntl(sockfd, F_GETFL, 0);
+    ret = fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
+    if(ret != 0){
+        perror("Socket Set noblock error");
+        close(sockfd);
+        return -1;
+    }
+
+    if( (ret = connect(sockfd, (struct sockaddr *)&servaddr, sizeof(struct sockaddr)) ) < 0){
+        if(errno != EINPROGRESS){
+            close(sockfd);
+            return -2;
+        }
+    }
+
+    //如果server与client在同一主机上，有些环境socket设为非阻塞会返回 0
+    if(0 == ret)
+        goto END;
+
+    FD_ZERO(&rset);
+    FD_SET(sockfd,&rset);
+
+    FD_ZERO(&wset);
+    FD_SET(sockfd,&wset);
+
+    if( ( ret = select(sockfd+1, NULL, &wset, NULL, &timeout) ) <= 0){
+        perror("connect time out");
+        close(sockfd);
+        return -3;
+    }
+    else{
+        len = sizeof(error);
+        getsockopt(sockfd, SOL_SOCKET, SO_ERROR, &error, &len);
+        if(error)
+        {
+            fprintf(stderr, "Error in connection() %d - %s/n", error, strerror(error));
+            close(sockfd);
+            return -4;
+        }
+    }
+
+END:
+    //还原到阻塞模式
+    ret = fcntl(sockfd, F_SETFL, flags);
+    if(ret != 0){
+        perror("Socket Set noblock error");
+        close(sockfd);
+        return -1;
+    }
+
+    return sockfd;
+}
+
+int busOpenDevice(char *ip, int timeout_ms)
 {
     // TCPIP0::192.168.1.2::inst0::INSTR,
     char buff[20][64] = {""};
@@ -119,120 +222,162 @@ int busOpenDevice(char * ip, int timeout_ms)
     }
     char *strIP = buff[1];
 
-    struct sockaddr_in servaddr;
-    memset(&servaddr, 0, sizeof(servaddr));
-
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(MEGA_TCP_SOCKET_PORT);
-    servaddr.sin_addr.s_addr = inet_addr(strIP);
-    inet_pton(AF_INET, strIP, &servaddr.sin_addr); //ipV6
-
-    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
-
-    //阻塞
-    if(timeout_ms == -1)
-    {
-        int ret = connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
-        if(ret != 0)
-        {
-            perror("connectBloking");
-            close(sockfd);
-            return -1;
-        }
-        return sockfd;
+    int sockfd = -1;
+    if(timeout_ms == -1){
+        sockfd = connectWithBlock(strIP);
+    }
+    else{
+        sockfd = connectWithNoblock(strIP, timeout_ms);
     }
 
-    //设置sockfd非阻塞
-    int oldOption = fcntl(sockfd, F_GETFL);
-    int newOption = oldOption | O_NONBLOCK;
-
-    fcntl(sockfd, F_SETFL, newOption);
-
-    int ret = connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
-    if(ret == 0)
-    {
-        //连接成功
-        fcntl(sockfd, F_SETFL, oldOption);
-        return sockfd;
-    }
-    else if(errno != EINPROGRESS)
-    {
-        //连接没有立即返回，此时errno若不是EINPROGRESS，表明错误
-        perror("connect error != EINPROGRESS");
-        return -1;
-    }
-
-    fd_set readFds;
-    fd_set writeFds;
+    //设置收发超时
+    int error, ret;
     struct timeval timeout;
-
-    FD_ZERO(&readFds);
-    FD_ZERO(&writeFds);
-
-    FD_SET(sockfd, &writeFds);
-    FD_SET(sockfd, &readFds);
-
     timeout.tv_sec = timeout_ms/1000;
     timeout.tv_usec = (timeout_ms % 1000) * 1000;
 
-    ret = select(sockfd+1, &readFds, &writeFds, NULL, &timeout);
-    if(ret <= 0)
-    {
-        if(ret == 0)
-            perror("select timeout");
-        else
-            perror("select error");
-
-        close(sockfd);
+    ret = setsockopt(sockfd, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(struct timeval));
+    if (ret == -1) {
+        error = errno;
+        while ( (errno == EINTR) && (close(sockfd) == -1) ) ;
+        errno = error;
         return -1;
     }
 
-    if(FD_ISSET(sockfd, &writeFds))
+    ret = setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(struct timeval));
+    if (ret == -1) {
+        error = errno;
+        while ( (errno == EINTR) && (close(sockfd) == -1) ) ;
+        errno = error;
+        return -1;
+    }
+
+    return sockfd;
+}
+
+static int SocketSyncSend(int fd, char *buf, int dataLen, int isBlock)
+{
+    int ret = -1;
+    if(fd <= 0)
+        return -1;
+
+    char data[4096];
+    memset(data, 0, sizeof(data));
+    memcpy(data, buf, dataLen);
+    //    if(data[len-1] != '\n')
+    //        data[len-1] = '\n';
+
+    /* 同步阻塞模式 */
+    if(isBlock != 0)
     {
-        //可读可写有两种可能，一是连接错误，二是在连接后服务端已有数据传来
-        if(FD_ISSET(sockfd, &readFds))
-        {
-            if(connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) != 0)
-            {
-                int error=0;
-                socklen_t length = sizeof(errno);
-                //调用getsockopt来获取并清除sockfd上的错误.
-                if(getsockopt(sockfd, SOL_SOCKET, SO_ERROR, &error, &length) < 0)
-                {
-                    printf("get socket option failed\n");
-                    close(sockfd);
-                    return -1;
-                }
-                if(error != EISCONN)
-                {
-                    perror("connect error != EISCONN");
-                    close(sockfd);
-                    return -1;
-                }
-            }
-        }
-        //此时已排除所有错误可能，表明连接成功
-        fcntl(sockfd, F_SETFL, oldOption);
+        ret = send(fd, data, dataLen, 0);
+        return ret;
+    }
+
+    /* 同步非阻塞模式 */
+    while( (ret = send(fd, data, dataLen, MSG_DONTWAIT)) == -1)
+    {
+        usleep(100000);
+    }
+
+    return ret;
+}
+
+static int SocketSyncRead(int fd, char *data, int dataLen, int isBlock)
+{
+    int ret = -1;
+    if(fd <= 0)
+        return -1;
+
+    memset(data, '\0', dataLen);
+    if(isBlock != 0)
+    {
+        /* 同步阻塞模式 */
+        ret = recv(fd, data, dataLen, 0);
     }
     else
     {
-        perror("connect failed");
-        close(sockfd);
-        return -1;
+        /* 同步非阻塞模式 */
+        ret = recv(fd, data, dataLen, MSG_DONTWAIT);
+    }
+    return ret;
+}
+
+unsigned int busWrite(ViSession vi, char *data, unsigned int len)
+{
+    LOCK();
+    int retCount = SocketSyncSend(vi, data, len, 1);
+    if(retCount < 0){
+        perror("busWrite error!");
+        UNLOCK();
+        return 0;
+    }
+    printf("\nTO:\n\t%s", data);
+    UNLOCK();
+    return (unsigned int)retCount;
+}
+
+unsigned int busRead(ViSession vi, char *buf, unsigned int len)
+{
+    LOCK();
+    int retCount = SocketSyncRead(vi, buf, len, 1);
+    if(retCount < 0){
+        perror("busRead error!");
+        UNLOCK();
+        return 0;
     }
 
-#if 1
-    //设置收发超时
-    ret = setsockopt(sockfd , SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(struct timeval));
-    if (ret != 0)
-    {   return -1;  }
+    printf("\nRECV:%d\n\t%s", retCount, buf);
+    if( STRCASECMP(buf, "Command error") == 0 )
+    {
+        printf("\n");
+        UNLOCK();
+        return 0;
+    }
 
-    ret = setsockopt(sockfd , SOL_SOCKET, SO_SNDTIMEO, (char*)&timeout, sizeof(struct timeval));
-    if (ret != 0)
-    {   return -1;  }
-#endif
+    UNLOCK();
+    return (unsigned int)retCount;
+}
 
-    return sockfd;
+unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* output, unsigned int wantlen)
+{
+    int retCount;
+
+    LOCK();
+    retCount = SocketSyncSend(vi, input, inputlen, 1);
+    if(retCount < 0){
+        printf("TO_QUERY error\n");
+        perror("busQuery Write error!");
+        UNLOCK();
+        return 0;
+    }
+    printf("\nQUERY_TO:\n\t%s", input);
+
+    retCount = SocketSyncRead(vi, output, wantlen, 1);
+    if(retCount < 0){
+        printf("RECV_QUERY error\n");
+        perror("busQuery Read error!");
+        UNLOCK();
+        return 0;
+    }
+
+    printf("\nQUERY_RECV:%d\n\t%s", retCount, output);
+    if( STRCASECMP(output, "Command error") == 0 )
+    {
+        printf("\n");
+        UNLOCK();
+        return 0;
+    }
+    UNLOCK();
+
+    return (unsigned int)retCount;
+}
+
+int busCloseDevice(ViSession vi)
+{
+    if(vi > 0)
+    {   close(vi);    }
+    return 0;
 }
 
 ViSession busOpenSocket(const char *pName, const char *addr, unsigned int port)
@@ -240,56 +385,6 @@ ViSession busOpenSocket(const char *pName, const char *addr, unsigned int port)
     //! FIXME
 }
 
-int busCloseDevice(ViSession vi)
-{
-    if(vi != 0)
-    {   close(vi);    }
-    return 0;
-}
-
-unsigned int busWrite(ViSession vi, char * buf, unsigned int len)
-{
-    unsigned int retCount;
-    LOCK();
-    retCount = send(vi, buf, len, 0);
-    if( retCount <= 0 )
-    {
-        UNLOCK();
-        return 0;
-    }
-    UNLOCK();
-    return retCount;
-}
-
-unsigned int busRead(ViSession vi, char * buf, unsigned int len)
-{
-    LOCK();
-    unsigned int retCount = recv(vi, buf, len, 0);
-    UNLOCK();
-    return retCount;
-}
-
-unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* output, unsigned int wantlen)
-{
-    int retCount;
-    LOCK();
-
-    retCount = send(vi, input, inputlen, 0);
-    if( retCount <= 0 )
-    {
-        UNLOCK();
-        return 0;
-    }
-
-    retCount = recv(vi, output, wantlen, 0);
-    UNLOCK();
-    if(retCount < 0)
-    {
-        perror("socket recv error!");
-        retCount = 0;
-    }
-    return (unsigned int)retCount;
-}
 
 /* strHostIp:返回的IP地址
 *  len: IP地址数组长度

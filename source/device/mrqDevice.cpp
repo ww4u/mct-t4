@@ -38,7 +38,7 @@ char *changeReportFuncToString(int fun1)
 EXPORT_API int CALL mrgMRQIdentify(ViSession vi, int name, int state)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:IDENtify %d,%s", name, state ? "ON" : "OFF");
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:IDENtify %d,%s\n", name, state ? "ON" : "OFF");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -56,7 +56,7 @@ EXPORT_API int CALL mrgMRQIdentify(ViSession vi, int name, int state)
 EXPORT_API int CALL mrgMRQMotionStateReport(ViSession vi, int name, int ch, int state)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:STATe:REPORt %d,%d,%s", 
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:STATe:REPORt %d,%d,%s\n",
 						name, ch, state == 0 ? "ACTIVE" : "QUERY");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
@@ -337,7 +337,7 @@ EXPORT_API int CALL mrgMRQMotionTrigSource_Query(ViSession vi, int name, int ch,
 EXPORT_API int CALL mrgMRQMotionOffsetState(ViSession vi, int name, int ch, int state)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:OFFSet:STATe %d,%d,%s", 
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:OFFSet:STATe %d,%d,%s\n",
 										name, ch, state == 0 ? "OFF" : "ON");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
@@ -358,7 +358,7 @@ EXPORT_API int CALL mrgMRQMotionOffsetState_Query(ViSession vi, int name, int ch
     char args[SEND_BUF];
 	char as8Ret[100];
     int retLen = 0;
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:OFFSet:STATe? %d,%d", name, ch);
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:OFFSet:STATe? %d,%d\n", name, ch);
     if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
         return -1;
     }
@@ -2158,6 +2158,7 @@ EXPORT_API int CALL mrgMRQReportQueue_Query(ViSession vi, int name, int ch, int 
     {
         if (buff[0] != '#')//格式错误
         {
+            data[count] = 0;
             return count;
         }
         lenOfLen = buff[1] - 0x30;
@@ -2170,11 +2171,13 @@ EXPORT_API int CALL mrgMRQReportQueue_Query(ViSession vi, int name, int ch, int 
         }
         else
         {
+            data[count] = 0;
             return count;
         }
         memcpy((char*)&data[count], buff, retLen);
         count += retLen / 4;
     }
+    data[count] = 0;
     return count;
 }
 /*

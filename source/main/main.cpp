@@ -31,7 +31,11 @@ int main(int argc, char *argv[])
 
     a.setApplicationVersion(TOOLVERION);
     MainWindow w;
+#ifdef _WIN32
     w.showNormal();
+#else
+    w.showFullScreen();
+#endif
     return a.exec();
 }
 

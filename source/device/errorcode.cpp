@@ -1,3 +1,4 @@
+#include <stdafx.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,7 +17,7 @@ EXPORT_API int CALL mrgErrorCodeConfigUpload(ViSession vi, int code, char* error
 {
 	char args[SEND_BUF];
 	int retlen = 0;
-	snprintf(args, SEND_BUF, ":ERRCode:UPLoad? %d", code);
+    snprintf(args, SEND_BUF, ":ERRCode:UPLoad? %d\n", code);
 	if ((retlen = busQuery(vi, args, strlen(args), error, len)) == 0) {
 		return -1;
 	}
@@ -132,7 +133,7 @@ EXPORT_API int CALL mrgErrorCodeConfigDownload(ViSession vi, int code, int type,
 		return -4;
 	}
 
-	snprintf(args, SEND_BUF, ":ERRCode:DOWNLoad %d,%s,%s,%s,%s", code, ps8Type, ps8Diagnose, ps8Response, ps8Enable);
+    snprintf(args, SEND_BUF, ":ERRCode:DOWNLoad %d,%s,%s,%s,%s\n", code, ps8Type, ps8Diagnose, ps8Response, ps8Enable);
 	if ((retlen = busWrite(vi, args, strlen(args))) <= 0) {
 		return -5;
 	}
@@ -176,7 +177,7 @@ EXPORT_API int CALL mrgErrorLogUpload(ViSession vi, int format, char* errorLog, 
 	}
 
 
-	snprintf(args, SEND_BUF, ":ERRCode:UPLoad? %s", ps8Format);
+    snprintf(args, SEND_BUF, ":ERRCode:UPLoad? %s\n", ps8Format);
 	if ((retlen = busQuery(vi, args, strlen(args), errorLog, len)) == 0) {
 		return -1;
 	}
@@ -192,7 +193,7 @@ EXPORT_API int CALL mrgErrorLogClear(ViSession vi)
 	char args[SEND_BUF];
 	int retlen = 0;
 
-	snprintf(args, SEND_BUF, ":ERRCode:CLEar");
+    snprintf(args, SEND_BUF, ":ERRCode:CLEar\n");
 	if ((retlen = busWrite(vi, args, strlen(args))) == 0) {
 		return -1;
 	}

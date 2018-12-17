@@ -119,7 +119,7 @@ void MegaInterface::slotShowContextmenu(const QPoint& pos)
 void MegaInterface::soltActionOpen()
 {
     int visa = deviceOpen();
-    if(visa < 0)
+    if(visa <= 0)
         return;
 
     mrgIdentify(visa, 1);
@@ -129,7 +129,7 @@ void MegaInterface::soltActionOpen()
 void MegaInterface::soltActionClose()
 {
     int visa = deviceOpen();
-    if(visa < 0)
+    if(visa <= 0)
         return;
 
     mrgIdentify(visa, 0);
@@ -141,10 +141,10 @@ int MegaInterface::deviceOpen()
     QModelIndex index = ui->tableView->selectionModel()->selectedIndexes().at(0);
     QString strIP = m_model->data(index,Qt::DisplayRole).toString();
     QString strDesc = QString("TCPIP0::%1::inst0::INSTR").arg(strIP);
-    int visa =  mrgOpenGateWay(strDesc.toLocal8Bit().data(), 2000);
-    if(visa < 0)
+    int visa =  mrgOpenGateWay(strDesc.toLocal8Bit().data(), 3000);
+    if(visa <= 0){
         QMessageBox::critical(this,tr("error"),tr("open device error"));
-
+    }
     return visa;
 }
 
@@ -204,14 +204,16 @@ void DeviceSearchThread::run()
     {
         QString strDevice = listFindDevices.at(devIndex);
         int visa =  mrgOpenGateWay(strDevice.toLocal8Bit().data(), 2000);
-        if(visa < 0) {   return; }
+        if(visa <= 0) {
+            continue;
+        }
 
         char IDN[1024] = "";
         int ret = mrgGateWayIDNQuery(visa,IDN);
         if(ret != 0)
         {
-            sysError("mrgGateWayIDNQuery error");
-            return;
+            mrgCloseGateWay(visa);
+            continue;
         }else{
             int len = strlen(IDN);
             IDN[len-1] = '\0';  // '\n' ===> '\0'

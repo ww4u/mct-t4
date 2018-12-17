@@ -278,7 +278,6 @@ void H2Ops::slotLoadConfigAgain()
     }
 
     m_Data = map;
-    updateTabHoming();
 }
 
 void H2Ops::slotRobotStop()
@@ -946,7 +945,7 @@ void H2Ops::updateTabOpreate()
     //! 更新当前位置
     float fx = -1, fy = -1, fz = -1;
     ret = mrgGetRobotCurrentPosition(m_ViHandle, m_RoboName, &fx, &fy, &fz);
-    qDebug() << "mrgGetRobotCurrentPosition:" << ret << fx << fy;
+    qDebug() << "mrgGetRobotCurrentPosition1:" << ret << fx << fy;
     ui->doubleSpinBox_actual_position_x->setValue(fx);
     ui->doubleSpinBox_actual_position_y->setValue(fy);
 
@@ -986,7 +985,7 @@ void H2Ops::updateTabHoming()
     //! 更新当前位置
     float fx = -1, fy = -1, fz = -1;
     int ret = mrgGetRobotCurrentPosition(m_ViHandle, m_RoboName, &fx, &fy, &fz);
-    qDebug() << "mrgGetRobotCurrentPosition:" << ret << fx << fy;
+    qDebug() << "mrgGetRobotCurrentPosition2:" << ret << fx << fy;
     ui->doubleSpinBox_homing_actual_pos_x->setValue(fx);
     ui->doubleSpinBox_homing_actual_pos_y->setValue(fy);
 
@@ -999,7 +998,7 @@ void H2Ops::updateTabManual()
     //! 更新当前位置
     float fx = -1, fy = -1, fz = -1;
     int ret = mrgGetRobotCurrentPosition(m_ViHandle, m_RoboName, &fx, &fy, &fz);
-    qDebug() << "mrgGetRobotCurrentPosition:" << ret << fx << fy;
+    qDebug() << "mrgGetRobotCurrentPosition3:" << ret << fx << fy;
     ui->doubleSpinBox_currentPos_x->setValue(fx);
     ui->doubleSpinBox_currentPos_y->setValue(fy);
 }
@@ -1008,23 +1007,23 @@ void H2Ops::updateTabMonitor()
 {
     if(m_ViHandle <= 0) return;
 
-    unsigned int array1[4096] = {0};
-    unsigned int array2[4096] = {0};
-    int count = -1;
+    unsigned int array1[1024] = {0};
+    unsigned int array2[1024] = {0};
+    int count1 = -1, count2 = -1;
 
     //查询第一个电机
-    memset(array1, 0, sizeof(array1));
-    count = mrgMRQReportQueue_Query(m_ViHandle, m_DeviceName, 0, 0, array1);
-    if(count <= 0)
+    memset(array1, '\0', sizeof(array1));
+    count1 = mrgMRQReportQueue_Query(m_ViHandle, m_DeviceName, 0, 0, array1);
+    if(count1 <= 0)
         return;
 
     //查询第二个电机
-    memset(array2, 0, sizeof(array2));
-    count = mrgMRQReportQueue_Query(m_ViHandle, m_DeviceName, 1, 0, array2);
-    if(count <= 0)
+    memset(array2, '\0', sizeof(array2));
+    count2 = mrgMRQReportQueue_Query(m_ViHandle, m_DeviceName, 1, 0, array2);
+    if(count2 <= 0)
         goto LAB1;
 
-    for(int i=0; i<count; i++)
+    for(int i=0; i<count2; i++)
     {
         int v1 = (array2[i] >> 8) & 0xFF;
         int v2 = array2[i] & 0xFF;
@@ -1035,7 +1034,7 @@ void H2Ops::updateTabMonitor()
     }
 
 LAB1:
-    for(int i=0; i<count; i++)
+    for(int i=0; i<count1; i++)
     {
         int v1 = (array1[i] >> 8) & 0xFF;
         int v2 = array1[i] & 0xFF;
@@ -1060,7 +1059,7 @@ void H2Ops::updateTabDebug()
     //! 更新当前位置
     float fx = -1, fy = -1, fz = -1;
     ret = mrgGetRobotCurrentPosition(m_ViHandle, m_RoboName, &fx, &fy, &fz);
-    qDebug() << "mrgGetRobotCurrentPosition:" << ret << fx << fy;
+    qDebug() << "mrgGetRobotCurrentPosition4:" << ret << fx << fy;
     ui->doubleSpinBox_debug_posX->setValue(fx);
     ui->doubleSpinBox_debug_posY->setValue(fy);
 }

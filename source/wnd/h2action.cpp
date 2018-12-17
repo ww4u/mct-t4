@@ -52,14 +52,17 @@ int H2Action::readDeviceConfig()
 
     //! 查找文件
     char filenames[1024] = "";
-    if (mrgStorageMotionFileQuery(mViHandle, 0, filenames, sizeof(filenames)) > 0){
-        QStringList lst = QString("%1").arg(filenames).split(',');
-        if( !lst.contains(m_strDeviceFileName) )
-        {
-            qDebug() << m_strDeviceFileName + " not exist in device";
-            sysError(m_strDeviceFileName + " not exist in device");
-            return -1;
-        }
+    ret = mrgStorageMotionFileQuery(mViHandle, 0, filenames, sizeof(filenames));
+    qDebug() << "mrgStorageMotionFileQuery" << ret;
+    if (ret < 0){
+        return -1;
+    }
+    QStringList lst = QString("%1").arg(filenames).split(',');
+    if( !lst.contains(m_strDeviceFileName) )
+    {
+        qDebug() << m_strDeviceFileName + " not exist in device";
+        sysError(m_strDeviceFileName + " not exist in device");
+        return -1;
     }
 
     //! 读文件
@@ -108,7 +111,7 @@ int H2Action::writeDeviceConfig()
                                           m_fileContext.size(),
                                           m_strDeviceFileName.toLocal8Bit().data());
     qDebug() << "mrgStorageMotionFileSave:" << ret;
-    if(ret != 0){
+    if(ret < 0){
         sysError("mrgStorageMotionFileSave error!", ret);
         return -1;
     }

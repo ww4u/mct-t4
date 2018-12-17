@@ -298,7 +298,7 @@ EXPORT_API int CALL mrgGetFirmWareFpga(ViSession vi, int name, char *buf)
 EXPORT_API int CALL mrgWriteDeviceSerial(ViSession  vi, int name, char * serial)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "PROJECT:DEVICE:SN %d,%s", name, serial);
+    snprintf(args, SEND_BUF, "PROJECT:DEVICE:SN %d,%s\n", name, serial);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -335,7 +335,7 @@ EXPORT_API int CALL mrgGetDeviceSerialNumber(ViSession vi, int name, char * seri
 EXPORT_API int CALL  mrgIdentify(ViSession vi, int state)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "SYSTEM:IDENTIFY %s", state ? "ON" : "OFF");
+    snprintf(args, SEND_BUF, "SYSTEM:IDENTIFY %s\n", state ? "ON" : "OFF");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -351,7 +351,7 @@ EXPORT_API int CALL  mrgIdentify(ViSession vi, int state)
 EXPORT_API int CALL mrgModeSwitch(ViSession vi, int mode)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "SYSTEM:MODe:SWITch %d", mode);
+    snprintf(args, SEND_BUF, "SYSTEM:MODe:SWITch %d\n", mode);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;

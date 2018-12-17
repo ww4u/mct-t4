@@ -116,7 +116,9 @@ void H2Ops::setupUi()
     }
 
     ui->tabWidget->setCurrentIndex(0);
-    ui->tabWidget->setEnabled(false);
+    for(int i=1; i<ui->tabWidget->count(); i++){
+        ui->tabWidget->setTabEnabled(i, false);
+    }
 
 }
 
@@ -288,7 +290,10 @@ void H2Ops::slotRobotStop()
 void H2Ops::slot_mct_checked(bool checked)
 {
     qDebug() << "OPS:slot_mct_checked" << checked;
-    ui->tabWidget->setEnabled(checked);
+    for(int i=1; i<ui->tabWidget->count(); i++){
+        ui->tabWidget->setTabEnabled(i, checked);
+    }
+
 
     if(!checked){
         setTimerStop(m_timerOpsAll);
@@ -815,20 +820,29 @@ void H2Ops::on_toolButton_debugRun_clicked()
                 int ret = -1;
 
                 ret = mrgRobotFileResolve(m_ViHandle, m_RoboName, 0, recordNumber, 0, 20000);
-                if(ret != 0) return;
+                if(ret != 0) {
+                    sysError("mrgRobotFileResolve", ret);
+                    return;
+                }
 
                 ret = mrgRobotRun(m_ViHandle, m_RoboName, 0);
-                if(ret != 0) return;
+                if(ret != 0) {
+                    sysError("mrgRobotRun", ret);
+                    return;
+                }
 
                 ret = mrgRobotWaitEnd(m_ViHandle, m_RoboName, 0, 0);
-                if(ret != 0) return;
-
-                QThread::msleep(time * 1000);
+                if(ret != 0) {
+                    sysError("mrgRobotWaitEnd", ret);
+                    return;
+                }
 
                 if ( m_threadOpsDebug->isInterruptionRequested() ){
                     noBreak = false;
                     break;
                 }
+
+                QThread::msleep(time * 1000);
             }
         }while(isCyclic && noBreak);
 

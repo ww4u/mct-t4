@@ -28,7 +28,7 @@ public:
     void addDeviceWithIP(QString devIP);
 
 public slots:
-    void updateUI();
+//    void updateUI();
     void slotDownload();
     void slotUpload();
     void slotStore();

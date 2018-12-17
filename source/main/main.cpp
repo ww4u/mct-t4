@@ -1,6 +1,4 @@
 
-#define TOOLVERION "0.0.1.01"
-
 #include <QApplication>
 #include "../source/wnd/mainwindow.h"
 
@@ -29,7 +27,6 @@ int main(int argc, char *argv[])
     }
 #endif
 
-    a.setApplicationVersion(TOOLVERION);
     MainWindow w;
 #ifdef _WIN32
     w.showNormal();

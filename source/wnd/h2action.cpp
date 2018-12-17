@@ -145,6 +145,7 @@ int H2Action::saveConfig()
     //! save action to csv
     m_strLocalFileName = QApplication::applicationDirPath() + "/dataset/" + mProjectName + ".mrp";
     int ret = m_actionModel.output( m_strLocalFileName );   //将界面数据保存到本地文件
+    m_fileContext = readFile(m_strLocalFileName);       //保存到类中
     return ret;
 }
 
@@ -274,31 +275,58 @@ void H2Action::soltActionRun()
     {
         ret = mrgRobotFileResolve(mViHandle, mRobotName, 0, recordNumber, 0, 20000);
         qDebug() << "mrgRobotFileResolve" << ret;
-        if(ret != 0) return;
+        if(ret != 0) {
+            sysError("mrgRobotFileResolve", ret);
+            return;
+        }
 
         ret = mrgRobotRun(mViHandle, mRobotName, 0);
         qDebug() << "mrgRobotRun" << ret;
-        if(ret != 0) return;
+        if(ret != 0) {
+            sysError("mrgRobotRun", ret);
+            return;
+        }
 
         ret = mrgRobotWaitEnd(mViHandle, mRobotName, 0, 0);
         qDebug() << "mrgRobotWaitEnd" << ret;
-        if(ret != 0) return;
+        if(ret != 0) {
+            sysError("mrgRobotWaitEnd", ret);
+            return;
+        }
     };
 
 #else
     //! 解析界面的数据PA PRA PRN,手工移动
-    auto func = [&]()
+    auto func = [=]()
     {
-        float time = sqrt( pow(posX,2) + pow(posY,2) ) / (0.7 * velocity);
+        int ret = -1;
+        float time = -1;
+
         if(strType == "PA"){
-            ret = mrgRobotMoveL(mViHandle, mRobotName, -1, posX, posY, 0, time, 0);
-            qDebug() << "mrgRobotRelMoveL PA" << ret << posX << posY;
+            float fx = -1, fy = -1, fz = -1;
+            ret = mrgGetRobotCurrentPosition(mViHandle, mRobotName, &fx, &fy, &fz);
+            if(ret < 0) {
+                sysError("mrgGetRobotCurrentPosition", ret);
+                return;
+            }
+
+            time = sqrt( pow(posX-fx,2) + pow(posY-fy,2) ) / (0.7 * velocity) ;
+            qDebug() << "mrgRobotMoveL PA offset time" << posX << posY << time;
+#if 0
+            ret = mrgRobotMoveL(mViHandle, mRobotName, -1, posX, posY, 0, time, 0); //函数执行暂时存在问题
+#else
+            ret = mrgRobotRelMoveL(mViHandle, mRobotName, -1, posX-fx, posY-fy, 0, time, 0);
+#endif
         }
         else if(strType == "PRA" || strType == "PRN" ){
+            time = sqrt( pow(posX,2) + pow(posY,2) ) / (0.7 * velocity) ;
+            qDebug() << "mrgRobotRelMoveL PRA/PRN offset time" << posX << posY << time;
             ret = mrgRobotRelMoveL(mViHandle, mRobotName, -1, posX, posY, 0, time, 0);
-            qDebug() << "mrgRobotRelMoveL PRA/PRN" << ret << posX << posY;
         }
-        else{}
+        else{
+            qDebug() << "soltActionRun type error!";
+        }
+        qDebug() << "soltActionRun end" << ret;
     };
 #endif
 

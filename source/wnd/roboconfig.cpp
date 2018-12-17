@@ -55,16 +55,16 @@ void RoboConfig::buildUI()
     loadXmlConfig();
 }
 
-void RoboConfig::updateUI()
-{
-    qDebug() << "updateUI";
-    for(int index=0; index<m_RobotList.size(); index++){
-        foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[index].m_Robo)->subConfigs()){
-            pCfg->loadConfig();
-            pCfg->updateShow();
-        }
-    }
-}
+//void RoboConfig::updateUI()
+//{
+//    qDebug() << "updateUI";
+//    for(int index=0; index<m_RobotList.size(); index++){
+//        foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[index].m_Robo)->subConfigs()){
+//            pCfg->loadConfig();
+//            pCfg->updateShow();
+//        }
+//    }
+//}
 
 RoboConfig::~RoboConfig()
 {
@@ -126,7 +126,7 @@ void RoboConfig::createRobot(QString strDevInfo)
     connect((H2Robo *)(robotInfo.m_Robo),SIGNAL(signal_action_selected(int)),
             this,SIGNAL(signal_record_selected(int)));
 
-    updateUI();
+//    updateUI();
 }
 
 void RoboConfig::slotAddNewRobot(QString strDevInfo)
@@ -200,7 +200,7 @@ void RoboConfig::slotDownload()
     if( m_RobotList[mIndex].m_Visa != 0) {
         foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
             pCfg->saveConfig();
-            pCfg->loadConfig();
+//            pCfg->loadConfig();
             int ret = pCfg->writeDeviceConfig();
             if(ret != 0){
                 ok = false;

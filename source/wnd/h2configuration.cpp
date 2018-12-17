@@ -184,24 +184,25 @@ void H2Configuration::on_radioButton_t_toggled(bool checked)
 
 void H2Configuration::on_sizeComboBox_currentIndexChanged(int index)
 {
+    if(index < 0) return;
     m_Size = index;
 
     if(index == 0){
         ui->doubleSpinBox_X->setRange(0, 442);
-        ui->doubleSpinBox_X->setValue(494);
+//        ui->doubleSpinBox_X->setValue(442);
         ui->doubleSpinBox_X->setToolTip("0-442");
 
         ui->doubleSpinBox_Y->setRange(0, 764);
-        ui->doubleSpinBox_Y->setValue(764);
+//        ui->doubleSpinBox_Y->setValue(764);
         ui->doubleSpinBox_Y->setToolTip("0-764");
     }
     else if(index == 1){
         ui->doubleSpinBox_X->setRange(0, 770);
-        ui->doubleSpinBox_X->setValue(770);
+//        ui->doubleSpinBox_X->setValue(770);
         ui->doubleSpinBox_X->setToolTip("0-770");
 
         ui->doubleSpinBox_Y->setRange(0, 890);
-        ui->doubleSpinBox_Y->setValue(890);
+//        ui->doubleSpinBox_Y->setValue(890);
         ui->doubleSpinBox_Y->setToolTip("0-890");
     }
 

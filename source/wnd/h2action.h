@@ -8,6 +8,7 @@
 
 #include "comboxdelegate.h"
 #include "h2actionmodel.h"
+#include "doublespinboxdelegate.h"
 
 namespace Ui {
 class H2Action;
@@ -34,6 +35,11 @@ public:
 signals:
     void signalCurrentRowChanged(int index);
 
+public slots:
+    void setWorkStrokeX(double WorkStrokeX);
+    void setWorkStrokeY(double WorkStrokeY);
+
+
 private slots:
     void slotModelChanged(QModelIndex index1, QModelIndex index2, QVector<int> vector);
     void slotCurrentRowChanged(QModelIndex index);
@@ -45,6 +51,11 @@ private:
     Ui::H2Action *ui;
     H2ActionModel   m_actionModel;
     comboxDelegate *m_pDelegate;
+
+    DoubleSpinBoxDelegate *m_delegatePosX;
+    DoubleSpinBoxDelegate *m_delegatePosY;
+    DoubleSpinBoxDelegate *m_delegateVelocity;
+    DoubleSpinBoxDelegate *m_delegateAcceleration;
 
     QString m_strLocalFileName;
     QString m_strDeviceFileName;

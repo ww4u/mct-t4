@@ -39,7 +39,7 @@ int H2Measurement::readDeviceConfig()
         m_ProjectZeroPointX = x;
         m_ProjectZeroPointY = y;
     }else{
-        sysError("mrgGetRobotProjectZero error!");
+        sysError("mrgGetRobotProjectZero");
         return -1;
     }
 
@@ -48,7 +48,7 @@ int H2Measurement::readDeviceConfig()
         m_SWLimitPositiveX = x;
         m_SWLimitPositiveY = y;
     }else{
-        sysError("mrgGetRobotSoftWareLimit Positive error!");
+        sysError("mrgGetRobotSoftWareLimit Positive");
         return -1;
     }
 
@@ -57,7 +57,7 @@ int H2Measurement::readDeviceConfig()
         m_SWLimitNegativeX  = x;
         m_SWLimitNegativeY  = y;
     }else{
-        sysError("mrgGetRobotSoftWareLimit Negative error!");
+        sysError("mrgGetRobotSoftWareLimit Negative");
         return -1;
     }
 
@@ -72,28 +72,28 @@ int H2Measurement::writeDeviceConfig()
     ret = mrgSetRobotCoordinateSystem(mViHandle, mRobotName, value);
     qDebug() << "mrgSetRobotCoordinateSystem" << ret;
     if( 0 != ret) {
-        sysError("mrgSetRobotCoordinateSystem error!");
+        sysError("mrgSetRobotCoordinateSystem");
         return -1;
     }
 
     ret = mrgSetRobotProjectZero(mViHandle, mRobotName, m_ProjectZeroPointX, m_ProjectZeroPointY, 0);
     qDebug() << "mrgSetRobotProjectZero" << ret;
     if( 0 != ret) {
-        sysError("mrgSetRobotProjectZero error!");
+        sysError("mrgSetRobotProjectZero");
         return -1;
     }
 
     ret = mrgSetRobotSoftWareLimit(mViHandle, mRobotName, 0, m_SWLimitPositiveX, m_SWLimitPositiveY, 0);
     qDebug() << "mrgSetRobotSoftWareLimit Positive" << ret;
     if( 0 != ret) {
-        sysError("mrgSetRobotSoftWareLimit Positive error!");
+        sysError("mrgSetRobotSoftWareLimit Positive");
         return -1;
     }
 
     ret = mrgSetRobotSoftWareLimit(mViHandle, mRobotName, 1, m_SWLimitNegativeX, m_SWLimitNegativeY, 0);
     qDebug() << "mrgSetRobotSoftWareLimit Negative" << ret;
     if( 0 != ret) {
-        sysError("mrgSetRobotSoftWareLimit Negative error!");
+        sysError("mrgSetRobotSoftWareLimit Negative");
         return -1;
     }
 

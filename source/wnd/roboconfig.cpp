@@ -39,10 +39,12 @@ void RoboConfig::buildUI()
     ui->treeWidget->addTopLevelItem( m_pRootNode );
 
     QWidget *pWidget = new QWidget;
+    pWidget->setMinimumSize(600,200);
     QVBoxLayout *t_layout = new QVBoxLayout(pWidget);
     QLabel *t_label = new QLabel;
     t_label->setPixmap(QPixmap(":/res/image/m.png"));
     t_label->setAlignment(Qt::AlignHCenter);
+    t_label->setMinimumSize(200,200);
     QLabel *t_label2 = new QLabel("www.megarobo.tech");
     t_label2->setAlignment(Qt::AlignHCenter);
 
@@ -102,10 +104,11 @@ void RoboConfig::createRobot(QString strDevInfo)
     m_RobotList.insert(m_RobotList.count(), robotInfo);
 
     m_pRootNode->addChild( ((H2Robo *)(robotInfo.m_Robo))->roboNode() );
-    ui->treeWidget->setCurrentItem(m_pRootNode->child(m_RobotList.count()-1) );
 
     mIndex = m_RobotList.count()-1;
+    ui->treeWidget->setCurrentItem(m_pRootNode->child( mIndex ) );
     m_pRootNode->setExpanded(true);
+    m_pRootNode->child(mIndex)->setExpanded(true);
 
     foreach (XConfig *pCfg, ((H2Robo *)(robotInfo.m_Robo))->subConfigs()){
         QString configFileName = robotInfo.m_strDevInfo.split(',').at(3);
@@ -196,63 +199,67 @@ void RoboConfig::slotAddNewRobot(QString strDevInfo)
 void RoboConfig::slotDownload()
 {
     if(mIndex < 0) return;
-    bool ok = true;
-    if( m_RobotList[mIndex].m_Visa != 0) {
-        foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
-            pCfg->saveConfig();
-//            pCfg->loadConfig();
-            int ret = pCfg->writeDeviceConfig();
-            if(ret != 0){
-                ok = false;
-                QMessageBox::critical(this,tr("error"), pCfg->focusName() + tr("\t\nDownload Failure"));
-            }
-            {   //从设备再重新upload一遍
-                int ret = pCfg->readDeviceConfig();
-                if(ret != 0){
-                    ok = false;
-                    QMessageBox::critical(this,tr("error"), pCfg->focusName() + tr("\nUpload Faiured"));
-                }
-                pCfg->updateShow();
-                pCfg->saveConfig();
-            }
-        }
-        emit signalDataChanged();
-    }else{
+
+    if( m_RobotList[mIndex].m_Visa == 0)
+    {
         QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
         return;//offline
     }
 
+    bool ok = true;
+    foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
+        pCfg->saveConfig();
+        int ret = pCfg->writeDeviceConfig();
+        if(ret != 0){
+            ok = false;
+            QMessageBox::critical(this,tr("error"), pCfg->focusName() + tr("\t\nDownload Failure"));
+        }
+
+        {   //从设备再重新upload一遍
+            int ret = pCfg->readDeviceConfig();
+            if(ret != 0){
+                ok = false;
+                QMessageBox::critical(this,tr("error"), pCfg->focusName() + tr("\t\nDownload Failure"));
+            }
+            pCfg->updateShow();
+            pCfg->saveConfig();
+        }
+    }
+    emit signalDataChanged();
     if(ok){
         QMessageBox::information(this,tr("tips"),tr("Download Success!"));
-        return;
     }
-    else{
-        return;
-    }
+    qDebug() << "slotDownload Finish";
+    return;
 }
 
 void RoboConfig::slotUpload()
 {
     if(mIndex < 0) return;
-    if( m_RobotList[mIndex].m_Visa != 0) {
-        bool ok = true;
-        foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
-            int ret = pCfg->readDeviceConfig();
-            if(ret != 0){
-                ok = false;
-                QMessageBox::critical(this,tr("error"), pCfg->focusName() + tr("\nUpload Faiured"));
-            }
-            pCfg->updateShow();
-            pCfg->saveConfig();
-            emit signalDataChanged();
-        }
-        if(ok){
-            QMessageBox::information(this,tr("tips"),tr("Upload Succeed!"));
-        }
-    }else{
+
+    if( m_RobotList[mIndex].m_Visa == 0)
+    {
         QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
         return;
     }
+
+    bool ok = true;
+    foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
+        int ret = pCfg->readDeviceConfig();
+        if(ret != 0){
+            ok = false;
+            QMessageBox::critical(this,tr("error"), pCfg->focusName() + tr("\nUpload Faiured"));
+        }
+        pCfg->updateShow();
+        pCfg->saveConfig();
+    }
+
+    emit signalDataChanged();
+    if(ok){
+        QMessageBox::information(this,tr("tips"),tr("Upload Succeed!"));
+    }
+    qDebug() << "slotUpload Finish";
+    return;
 }
 
 void RoboConfig::slotStore()
@@ -262,51 +269,48 @@ void RoboConfig::slotStore()
     if( visa == 0) {
         QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
         return;
-    }else{
-
-        auto func = [=](void)
-        {
-            qDebug() << "mrgGetRobotConfigState1";
-            if (mrgGetRobotConfigState(visa) == 1){
-                qDebug() << "mrgGetRobotConfigState == 1";
-                return;
-            }
-            qDebug() << "mrgGetRobotConfigState2";
-
-            int timeout = 10000;
-            int state = 0;
-            qDebug() << "mrgExportRobotConfig";
-            mrgExportRobotConfig(visa);
-            while (timeout > 0)
-            {
-                QThread::msleep(500);
-                qDebug() << "mrgGetRobotConfigState";
-                state = mrgGetRobotConfigState(visa);
-                if (state != 1) { break;}
-                timeout -= 500;
-            }
-
-            if(timeout <= 0){
-                m_retVal = -1;
-                qDebug() << "Store timeout!";
-            }else{
-                if (state == 0){
-                    m_retVal = 0;
-                    qDebug() << "Store success!";
-                }else{
-                    m_retVal = -2;
-                    qDebug() << "Store error!";
-                }
-            }
-        };
-
-        XThread *thread = new XThread(func);
-        connect(thread,&XThread::finished,this,
-                [=](){
-            slotStoreTips(m_retVal);
-        });
-        thread->start();
     }
+
+    auto func = [=](void)
+    {
+        qDebug() << "mrgGetRobotConfigState1";
+        if (mrgGetRobotConfigState(visa) == 1){
+            qDebug() << "mrgGetRobotConfigState == 1";
+            return;
+        }
+        qDebug() << "mrgGetRobotConfigState2";
+
+        int timeout = 10000;
+        int state = 0;
+        qDebug() << "mrgExportRobotConfig";
+        mrgExportRobotConfig(visa);
+        while (timeout > 0)
+        {
+            QThread::msleep(500);
+            qDebug() << "mrgGetRobotConfigState";
+            state = mrgGetRobotConfigState(visa);
+            if (state != 1) { break;}
+            timeout -= 500;
+        }
+
+        if(timeout <= 0){
+            m_retVal = -1;
+            qDebug() << "Store timeout!";
+        }else{
+            if (state == 0){
+                m_retVal = 0;
+                qDebug() << "Store success!";
+            }else{
+                m_retVal = -2;
+                qDebug() << "Store error!";
+            }
+        }
+    };
+
+    XThread *thread = new XThread(func);
+    connect(thread,&XThread::finished,this,
+            [=](){slotStoreTips(m_retVal);});
+    thread->start();
 }
 
 void RoboConfig::slotStoreTips(int val)

@@ -5,7 +5,7 @@
 
 enum e_event_type
 {
-    e_error,
+    e_error = 1,
     e_warning,
     e_info
 };

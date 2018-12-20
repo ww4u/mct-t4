@@ -33,6 +33,10 @@ QVariant ErrMgrModel::data(const QModelIndex &index, int role) const
     {
         return userRole_Visible( index );
     }
+    else if ( role == (Qt::UserRole + 1) )
+    {
+        return QVariant( mItems[ row ]->mActionList );
+    }
     else if ( role == Qt::BackgroundColorRole )
     { return backRole(index); }
     else if ( role == Qt::TextAlignmentRole )

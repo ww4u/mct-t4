@@ -8,6 +8,7 @@
 #include "MegaRobot.h"
 #include "system.h"
 #include "storage.h"
+#include "errorcode.h"
 
 EXPORT_API int CALL robo_getIdn(int vi, char* val);
 EXPORT_API int CALL robo_program(int vi, int ax, int page, char *name);

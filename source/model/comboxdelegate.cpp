@@ -3,7 +3,12 @@
 
 comboxDelegate::comboxDelegate( QObject *parent ) : QStyledItemDelegate(parent)
 {
+    m_type = 0;
+}
 
+comboxDelegate::comboxDelegate(int type, QObject *parent)
+{
+    m_type = type;
 }
 
 QWidget *comboxDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option,
@@ -16,13 +21,21 @@ QWidget *comboxDelegate::createEditor(QWidget *parent, const QStyleOptionViewIte
     pCombox->setInsertPolicy( QComboBox::NoInsert );
     pCombox->setEditable( false );
 
-    QMapIterator<QString, int > iter(mTables);
-    while( iter.hasNext() )
+    if(m_type == 0)
     {
-        iter.next();
-
-        pCombox->addItem( iter.key() );
+        QMapIterator<QString, int > iter(mTables);
+        while( iter.hasNext() )
+        {
+            iter.next();
+            pCombox->addItem( iter.key() );
+        }
     }
+    else
+    {
+        QStringList itemData = index.model()->data(index, Qt::UserRole+1).toStringList();
+        pCombox->addItems( itemData );
+    }
+
 
     return pCombox;
 }
@@ -76,7 +89,7 @@ void comboxDelegate::setItems( const QStringList &strList,
                const QList<int> &vals )
 {
     Q_ASSERT( vals.size() == strList.size() );
-
+    mTables.clear();
     for( int i = 0; i < strList.size(); i++ )
     {
         mTables.insert( strList[i], vals[i] );
@@ -85,6 +98,7 @@ void comboxDelegate::setItems( const QStringList &strList,
 void comboxDelegate::setItems( const QStringList &strList,
                const int base )
 {
+    mTables.clear();
     for( int i = 0; i < strList.size(); i++ )
     {
         mTables.insert( strList[i], base + i );

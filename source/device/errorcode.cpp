@@ -61,11 +61,11 @@ EXPORT_API int CALL mrgErrorCodeConfigDownload(ViSession vi, int code, int type,
 	}
 
 
-	if (diagnose == 0)
+    if (diagnose == 1)
 	{
 		ps8Diagnose = "ON";
 	}
-	else if (diagnose == 1)
+    else if (diagnose == 0)
 	{
 		ps8Diagnose = "OFF";
 	}

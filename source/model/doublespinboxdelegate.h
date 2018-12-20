@@ -9,7 +9,7 @@ class DoubleSpinBoxDelegate : public QStyledItemDelegate
 
 public:
     DoubleSpinBoxDelegate( QObject *parent = 0);
-    DoubleSpinBoxDelegate(QObject *parent = 0, int decimals = 2, double min = 0, double max = 100);
+    DoubleSpinBoxDelegate( int decimals = 2, double min = 0, double max = 100, QObject *parent = 0);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
                           const QModelIndex &index) const override;
@@ -20,6 +20,9 @@ public:
 
     void updateEditorGeometry(QWidget *editor,
         const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+
+public slots:
+    void slotSetValueRange(int min, int max);
 
 private:
     int m_decimals;

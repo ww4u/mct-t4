@@ -25,7 +25,7 @@ CONFIG += C++11 #use lambda
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 #qt >= 5.10
-VERSION = 0.0.1.02
+VERSION = 0.0.1.3
 
 HEADERS += ../include/mystd.h           \
     ../include/mydebug.h                \

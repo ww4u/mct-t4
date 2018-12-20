@@ -26,6 +26,13 @@ MegaInterface::MegaInterface(QWidget *parent) :
     ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tableView, SIGNAL(customContextMenuRequested(const QPoint&)),
             this, SLOT(slotShowContextmenu(const QPoint&)));
+
+    connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)),
+            this, SLOT(slotSelectDevices()));
+
+    connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)),
+            this, SLOT(close()));
+
 }
 
 MegaInterface::~MegaInterface()
@@ -136,6 +143,21 @@ void MegaInterface::soltActionClose()
     mrgCloseGateWay(visa);
 }
 
+void MegaInterface::slotSelectDevices()
+{
+    QString strDevInfo = "";
+    QList<QModelIndex> modelList =  ui->tableView->selectionModel()->selectedIndexes();
+    for(int i=0;i<modelList.count(); i++)
+    {
+        strDevInfo += m_model->data(modelList.at(i),Qt::DisplayRole).toString();
+        strDevInfo += ",";
+    }
+    if(strDevInfo.split(",").count() >= 5)
+    {
+        emit signal_selected_info(strDevInfo);
+    }
+}
+
 int MegaInterface::deviceOpen()
 {
     QModelIndex index = ui->tableView->selectionModel()->selectedIndexes().at(0);
@@ -153,17 +175,7 @@ void MegaInterface::on_buttonBox_clicked(QAbstractButton *button)
     QDialogButtonBox::ButtonRole role = ui->buttonBox->buttonRole( button );
     if ( QDialogButtonBox::AcceptRole == role )
     {
-        QString strDevInfo = "";
-        QList<QModelIndex> modelList =  ui->tableView->selectionModel()->selectedIndexes();
-        for(int i=0;i<modelList.count(); i++)
-        {
-            strDevInfo += m_model->data(modelList.at(i),Qt::DisplayRole).toString();
-            strDevInfo += ",";
-        }
-        if(strDevInfo.split(",").count() >= 5)
-        {
-            emit signal_selected_info(strDevInfo);
-        }
+        slotSelectDevices();
     }
     else
     {}

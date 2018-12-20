@@ -243,7 +243,7 @@ EXPORT_API int CALL mrgGetRobotSubType(ViSession vi, int name)
     int retlen = 0;
     snprintf(args, SEND_BUF, "ROBOT:SUBTYPE? %d\n", name);
     if ((retlen = busQuery(vi, args, strlen(args), ret, 4)) == 0) {
-        return 0;
+        return -1;
     }
     else {
         ret[retlen] = '\0';
@@ -282,7 +282,7 @@ EXPORT_API int CALL mrgGetRobotCoordinateSystem(ViSession vi, int name)
     int retlen = 0;
     snprintf(args, SEND_BUF, "ROBOT:COORDinate? %d\n", name);
     if ((retlen = busQuery(vi, args, strlen(args), ret, 12)) == 0) {
-        return 0;
+        return -1;
     }
     else {
         ret[retlen] = '\0';
@@ -301,7 +301,7 @@ EXPORT_API int CALL mrgGetRobotCount(ViSession vi)
     int retlen = 0;
     snprintf(args, SEND_BUF, "ROBOT:COUNT?\n");
     if ((retlen = busQuery(vi, args, strlen(args),ret,12)) == 0) {
-        return 0;
+        return -1;
     }
     else {
         ret[retlen - 1] = '\0';
@@ -322,7 +322,7 @@ EXPORT_API int CALL mrgGetRobotName(ViSession vi,int *robotnames)
     int retlen = 0,count = 0;
     snprintf(args, SEND_BUF, "ROBOT:NAME?\n");
     if ((retlen = busQuery(vi, args, strlen(args), names, 100)) == 0) {
-        return 0;
+        return -1;
     }
     else {
         names[retlen - 1] = '\0';
@@ -351,7 +351,7 @@ EXPORT_API int CALL mrgGetRobotDevice(ViSession vi,int robotname,int * device)
     int count = 0, retlen = 0;
     snprintf(args, SEND_BUF, "ROBOT:DEVICE:NAME? %d\n", robotname);
     if ((retlen = busQuery(vi, args, strlen(args), devlist, 100)) == 0) {
-        return 0;
+        return -1;
     }
     devlist[retlen] = '\0';
     p = STRTOK_S(devlist, ",", &pNext);

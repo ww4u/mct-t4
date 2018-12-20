@@ -281,3 +281,27 @@ void DiagnosisModel::createDemoData()
     endResetModel();
 }
 
+
+void DiagnosisModel::appendOneItem(int nr,
+                                QString type,
+                                QString ts,
+                                QString addInfo,
+                                int counter,
+                                QString message)
+{
+    DiagnosisItem *pItem;
+
+    pItem = new DiagnosisItem();
+    pItem->mNr = nr;
+    pItem->mType = type;
+    pItem->mTs = QDateTime::currentDateTime().toString( "yyyy/M/d h/m/s/z");
+    pItem->mAddInfo = addInfo;
+    pItem->mCounter = counter;
+    pItem->mMessage = message;
+
+    mItems.append( pItem );
+
+    endResetModel();
+}
+
+

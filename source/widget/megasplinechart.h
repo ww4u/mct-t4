@@ -53,8 +53,6 @@ public:
     void dataAppend(double v1, double v2);
 
 public:
-    virtual QSize sizeHint() const;
-
     void changeLanguage(QString qmFile);
 
 private:

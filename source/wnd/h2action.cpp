@@ -19,6 +19,11 @@ H2Action::H2Action(QWidget *parent) :
     prxs << tr("PA") << tr("PRN") << tr("PRA");
     m_pDelegate->setItems( prxs );
 
+    m_delegatePosX          = new DoubleSpinBoxDelegate(2, -9999.99, 9999.99, this);
+    m_delegatePosY          = new DoubleSpinBoxDelegate(2, -9999.99, 9999.99, this);
+    m_delegateVelocity      = new DoubleSpinBoxDelegate(2, 0.01, 9999.99, this);
+    m_delegateAcceleration  = new DoubleSpinBoxDelegate(2, 0, 9999.99, this);
+
     connect(&m_actionModel, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
             this, SLOT(slotModelChanged(QModelIndex,QModelIndex,QVector<int>)));
 
@@ -55,6 +60,7 @@ int H2Action::readDeviceConfig()
     ret = mrgStorageMotionFileQuery(mViHandle, 0, filenames, sizeof(filenames));
     qDebug() << "mrgStorageMotionFileQuery" << ret;
     if (ret < 0){
+        sysError("mrgStorageMotionFileQuery", ret);
         return -1;
     }
     QStringList lst = QString("%1").arg(filenames).split(',');
@@ -70,14 +76,13 @@ int H2Action::readDeviceConfig()
     char *pData = (char *)malloc(len);
     memset(pData, 0, len);
     ret = mrgStorageMotionFileContextRead(mViHandle, m_strDeviceFileName.toLocal8Bit().data(), pData, len);
+    qDebug() << "mrgStorageMotionFileContextRead" << ret;
     if(ret <= 0){
         m_fileContext = "";
-        qDebug() << "mrgStorageMotionFileContextRead error" << ret;
-        sysError("H2Action:readDeviceConfig:mrgStorageMotionFileContextRead error");
+        sysError("mrgStorageMotionFileContextRead");
         goto ERR;
     }else{
         m_fileContext = QString("%1").arg(pData);//保存到类中
-        qDebug() << "mrgStorageMotionFileContextRead" << ret << m_fileContext;
 
         //保存到本地文件
         if(0 != writeFile(m_strLocalFileName, m_fileContext) ){
@@ -110,16 +115,16 @@ int H2Action::writeDeviceConfig()
                                           m_fileContext.toLocal8Bit().data(),
                                           m_fileContext.size(),
                                           m_strDeviceFileName.toLocal8Bit().data());
-    qDebug() << "mrgStorageMotionFileSave:" << ret;
+    qDebug() << "mrgStorageMotionFileSaveContext" << ret;
     if(ret < 0){
-        sysError("mrgStorageMotionFileSave error!", ret);
+        sysError("mrgStorageMotionFileSaveContext", ret);
         return -1;
     }
 
     ret = mrgRobotMotionFileImport(mViHandle, mRobotName, m_strDeviceFileName.toLocal8Bit().data());
-    qDebug() << "mrgRobotMotionFileImport:" << ret;
+    qDebug() << "mrgRobotMotionFileImport" << ret;
     if(ret != 0){
-        sysError("mrgRobotMotionFileImport error!", ret);
+        sysError("mrgRobotMotionFileImport", ret);
     }
     return ret;
 }
@@ -153,6 +158,12 @@ void H2Action::updateShow()
 {
     ui->tableView->setModel( &m_actionModel );
     ui->tableView->setItemDelegateForColumn( 0, m_pDelegate );
+
+    ui->tableView->setItemDelegateForColumn( 1, m_delegatePosX );
+    ui->tableView->setItemDelegateForColumn( 2, m_delegatePosY );
+    ui->tableView->setItemDelegateForColumn( 3, m_delegateVelocity );
+    ui->tableView->setItemDelegateForColumn( 4, m_delegateAcceleration );
+
 }
 
 void H2Action::slotModelChanged(QModelIndex index1, QModelIndex index2, QVector<int> vector)
@@ -213,6 +224,16 @@ void H2Action::modfiyOneRecord(int row, QString type, double x, double y, double
 
     if(a >= 0)
         m_actionModel.setData( m_actionModel.index( row, 4), QVariant( a ), Qt::EditRole );
+}
+
+void H2Action::setWorkStrokeX(double WorkStrokeX)
+{
+    m_delegatePosX->slotSetValueRange(0-WorkStrokeX, WorkStrokeX);
+}
+
+void H2Action::setWorkStrokeY(double WorkStrokeY)
+{
+    m_delegatePosY->slotSetValueRange(0-WorkStrokeY, WorkStrokeY);
 }
 
 void H2Action::slotShowContextmenu(const QPoint& pos)

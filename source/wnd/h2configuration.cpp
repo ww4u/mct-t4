@@ -19,7 +19,9 @@ H2Configuration::~H2Configuration()
 
 int H2Configuration::readDeviceConfig()
 {
+    int ret = -1;
     int type = mrgGetRobotType(mViHandle, mRobotName);
+    qDebug() << "mrgGetRobotType" << type;
     if (type == MRX_T4){
         m_Family = "MRX-T4";
     }
@@ -39,12 +41,21 @@ int H2Configuration::readDeviceConfig()
         return -1;
     }
 
-    m_Size = mrgGetRobotSubType(mViHandle, mRobotName);
+    ret = mrgGetRobotSubType(mViHandle, mRobotName);
+    qDebug() << "mrgGetRobotSubType" << ret;
+    if(ret < 0) {
+        sysError("mrgGetRobotSubType", ret);
+        return -1;
+    }
+    m_Size = ret;
 
     int val = 0;
-    int ret = mrgMRQMotionReverse_Query(mViHandle, mDeviceName, &val);
-    if(ret < 0) return -1;
-
+    ret = mrgMRQMotionReverse_Query(mViHandle, mDeviceName, &val);
+    qDebug() << "mrgMRQMotionReverse_Query" << ret;
+    if(ret < 0) {
+        sysError("mrgMRQMotionReverse_Query", ret);
+        return -1;
+    }
     m_MotorPosition = val;
 
     return 0;
@@ -58,7 +69,7 @@ int H2Configuration::writeDeviceConfig()
     ret = mrgSetRobotSubType(mViHandle, mRobotName, m_Size);
     qDebug() << "mrgSetRobotSubType" << ret;
     if(ret != 0){
-        sysError("mrgSetRobotSubType error!", ret);
+        sysError("mrgSetRobotSubType", ret);
         return -1;
     }
 
@@ -72,7 +83,7 @@ int H2Configuration::writeDeviceConfig()
     ret = mrgMRQMotionReverse(mViHandle, mDeviceName, m_MotorPosition);
     qDebug() << "mrgMRQMotionReverse" << ret;
     if(ret != 0){
-        sysError("mrgMRQMotionReverse error!", ret);
+        sysError("mrgMRQMotionReverse", ret);
         return -1;
     }
     return ret;

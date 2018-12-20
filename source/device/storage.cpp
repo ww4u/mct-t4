@@ -124,7 +124,8 @@ EXPORT_API int CALL mrgStorageMotionFileSave(ViSession vi, char* srcFileName, ch
         }
         if (waitMotionFileWirteEnd(vi) != 0)
         {
-            break;
+            fclose(pFile);
+            return -5;
         }
         filesize -= writeLen;
     }
@@ -169,10 +170,10 @@ EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context,
         if (busWrite(vi, as8Ret, writeLen + cmdLen + 1) == 0)
         {
             return -1;
-        }
+        }        
         if (waitMotionFileWirteEnd(vi) != 0)
         {
-            break;
+            return -1;
         }
         retlen -= writeLen;
         count += writeLen;
@@ -195,24 +196,24 @@ EXPORT_API int CALL waitMotionFileWirteEnd(int vi)
 {
     char args[SEND_BUF];
     char as8Ret[100];
-    int retLen = 0,time = 0;
+    int retLen = 0,time = 0, intervalTime = 20;
     snprintf(args, SEND_BUF, "STORage:FILe:MOTion:CONTEXT:WRITe:DATA:STATE?\n");
     while (1)
     {
+        if (time > 200)
+        {
+            break;
+        }
         if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0)
         {
-            Sleep(10);
-            time += 10;
+            Sleep(intervalTime);
+            time += intervalTime;
             continue;
         }
         as8Ret[retLen - 1] = '\0';//去掉回车符
         if (STRCASECMP(as8Ret, "IDLE") == 0)
         {
             return 0;
-        }
-        if (time > 100)
-        {
-            break;
         }
     }
     return -1;

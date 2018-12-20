@@ -123,9 +123,6 @@ QChartView *MegaSplineChart::chartView()
     return m_chartView;
 }
 
-QSize MegaSplineChart::sizeHint() const
-{ return QSize(200,50); }
-
 void MegaSplineChart::dataAppend(double v1, double v2)
 {
     m_chart->dataAppend(v1, v2);

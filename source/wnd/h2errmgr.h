@@ -35,7 +35,14 @@ private:
 
     checkDelegate *m_pCheckDelegate;
     checkDelegate *m_pRadioDelegate;
-    comboxDelegate *m_pErrActionDelegate;
+    comboxDelegate *m_pReactionCombox;
+
+    QString m_errorFileInfo;
+    QMap< QString, int> m_mapResponse;
+
+    QString readFile(QString fileName);
+    int writeFile(QString fileName, QString text);
+
 };
 
 #endif // H2ERRMGR_H

@@ -108,10 +108,10 @@ void H2Ops::setupUi()
         m_pDebugModel = new DebugModel();
         ui->tvDebug->setModel( m_pDebugModel );
 
-        m_dblSpinboxRecord = new DoubleSpinBoxDelegate( this, 0, 1, 31 );
+        m_dblSpinboxRecord = new DoubleSpinBoxDelegate( 0, 1, 31 ,this);
         ui->tvDebug->setItemDelegateForColumn( 0, m_dblSpinboxRecord );
 
-        m_dblSpinboxDelayTime = new DoubleSpinBoxDelegate( this, 2, 0, 999 );
+        m_dblSpinboxDelayTime = new DoubleSpinBoxDelegate( 2, 0, 999 , this);
         ui->tvDebug->setItemDelegateForColumn( 1, m_dblSpinboxDelayTime );
     }
 
@@ -530,12 +530,52 @@ void H2Ops::on_btnExport_clicked()
     sysInfo( fDlg.selectedFiles().first(), tr("save completed") );
 }
 
+int writeFile(QString fileName, QString text)
+{
+    QFile file(fileName);
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        qDebug() << QString("Can't WriteOnly open the file: %1").arg(fileName);
+        return -1;
+    }
+
+    file.write(text.toUtf8());
+    file.close();
+    return 0;
+}
+
 //! diagnosis
 void H2Ops::on_btnRead_clicked()
 {
     //! \todo read from device
-    //! debug for the model
-    m_pDiagnosisModel->createDemoData();
+    //    for ( int i = 0; i < 10; i++ )
+    //    {
+    //        m_pDiagnosisModel->appendOneItem(
+    //                    i,
+    //                    "Err",
+    //                    QDateTime::currentDateTime().toString( "yyyy/M/d h/m/s/z"),
+    //                    "additional info",
+    //                    i+1,
+    //                    "no messgage");
+    //    }
+
+    QString strFileName = QApplication::applicationDirPath() + "/dataset/111.txt";
+
+    int len = 4096 * 1024;
+    char *logBuff = (char *)malloc(len);
+    int ret = mrgErrorLogUpload(m_ViHandle, 1, logBuff, len );
+    qDebug() << "mrgErrorLogUpload" << ret;
+
+    ret = writeFile(strFileName.toLocal8Bit().data(), QString("%1").arg(logBuff) );
+    qDebug() << "mrgErrorLogUpload write file" << ret;
+
+
+
+
+
+
+
+
 }
 
 void H2Ops::on_btnDelete_clicked()
@@ -600,6 +640,7 @@ void H2Ops::on_pushButton_starting_home_clicked()
             }
             else{
                 qDebug() << "mrgRobotWaitHomeEnd ok";
+//                emit signal_gohoming_end(0);
                 ui->pushButton_starting_home->setText(tr("Start Go Home"));
                 m_isDebugRunFlag = false;
                 break;
@@ -677,10 +718,6 @@ void H2Ops::buttonClickedSingelMove(QToolButton *btn, int ax, int direct)
 
     auto funcRun = [=]()
     {
-        on_pushButton_stop_clicked();
-        QThread::msleep(100);
-        btn->setEnabled(false);
-
         int ret = -1;
         if(ax == 0){
             ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, offset*direct, 0, 0, time, 0);
@@ -693,7 +730,9 @@ void H2Ops::buttonClickedSingelMove(QToolButton *btn, int ax, int direct)
         sysInfo("mrgRobotRelMoveL", ret);
     };
 
-
+    on_pushButton_stop_clicked();
+    QThread::msleep(100);
+    btn->setEnabled(false);
     XThread *thread = new XThread(funcRun,this);
     connect(thread,&XThread::finished,this,[=](){btn->setEnabled(true);});
     thread->start();
@@ -1057,6 +1096,14 @@ LAB1:
             m_splineChart1->dataAppend(v1,v2);
     }
 
+#if 0
+    qsrand((uint) QTime::currentTime().msec());
+
+    int v1 = qrand() % 101;
+    int v2 = qrand() % 101;
+    m_splineChart1->dataAppend(v1,v2);
+    m_splineChart2->dataAppend(v1,v2);
+#endif
 }
 
 void H2Ops::updateTabDebug()

@@ -57,6 +57,7 @@ private slots:
     void soltActionOpen();
     void soltActionClose();
 
+    void slotSelectDevices();
     void on_buttonBox_clicked(QAbstractButton *button);
 
 private:

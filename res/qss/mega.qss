@@ -7,6 +7,10 @@ QFrame {
 	font-size: 12px;
 }
 
+QScrollArea {
+    border: 0px solid #1f2a3b;
+}
+
 QLabel{
 	border: none;
 	background: none;

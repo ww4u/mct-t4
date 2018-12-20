@@ -9,7 +9,7 @@ DoubleSpinBoxDelegate::DoubleSpinBoxDelegate(QObject *parent)
     m_max = 100;
 }
 
-DoubleSpinBoxDelegate::DoubleSpinBoxDelegate(QObject *parent,int decimals, double min, double max)
+DoubleSpinBoxDelegate::DoubleSpinBoxDelegate(int decimals, double min, double max, QObject *parent)
     : QStyledItemDelegate(parent)
 {
     m_decimals = decimals;
@@ -27,6 +27,8 @@ QWidget *DoubleSpinBoxDelegate::createEditor(QWidget *parent,
     editor->setDecimals(m_decimals);
     editor->setMinimum(m_min);
     editor->setMaximum(m_max);
+
+    editor->setToolTip(QString("%1 <-> %2").arg(m_min).arg(m_max));
 
     return editor;
 }
@@ -51,6 +53,12 @@ void DoubleSpinBoxDelegate::updateEditorGeometry(QWidget *editor,
                                            const QModelIndex &/* index */) const
 {
     editor->setGeometry(option.rect);
+}
+
+void DoubleSpinBoxDelegate::slotSetValueRange(int min, int max)
+{
+    this->m_max = max;
+    this->m_min = min;
 }
 
 //void dblSpinDelegate::setRange(double min, double max)

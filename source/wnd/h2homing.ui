@@ -44,13 +44,13 @@
     <widget class="QGroupBox" name="groupBox">
      <property name="minimumSize">
       <size>
-       <width>320</width>
-       <height>0</height>
+       <width>0</width>
+       <height>174</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>320</width>
+       <width>350</width>
        <height>16777215</height>
       </size>
      </property>
@@ -61,7 +61,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_2">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -69,7 +69,7 @@
         <property name="minimumSize">
          <size>
           <width>60</width>
-          <height>0</height>
+          <height>12</height>
          </size>
         </property>
         <property name="maximumSize">
@@ -86,7 +86,7 @@
       <item row="2" column="1">
        <widget class="QComboBox" name="comboBox_movement">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -94,7 +94,7 @@
         <property name="minimumSize">
          <size>
           <width>200</width>
-          <height>0</height>
+          <height>20</height>
          </size>
         </property>
         <property name="maximumSize">
@@ -113,7 +113,7 @@
       <item row="2" column="0">
        <widget class="QLabel" name="label_3">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -121,7 +121,7 @@
         <property name="minimumSize">
          <size>
           <width>60</width>
-          <height>0</height>
+          <height>20</height>
          </size>
         </property>
         <property name="maximumSize">
@@ -138,7 +138,7 @@
       <item row="0" column="1">
        <widget class="QComboBox" name="comboBox_target">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -146,7 +146,7 @@
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>0</height>
+          <height>20</height>
          </size>
         </property>
         <property name="maximumSize">
@@ -171,7 +171,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -179,7 +179,7 @@
         <property name="minimumSize">
          <size>
           <width>60</width>
-          <height>0</height>
+          <height>20</height>
          </size>
         </property>
         <property name="maximumSize">
@@ -195,6 +195,18 @@
       </item>
       <item row="1" column="1">
        <widget class="QLabel" name="label_direction">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>20</height>
+         </size>
+        </property>
         <property name="font">
          <font>
           <weight>75</weight>
@@ -269,20 +281,20 @@
    <item row="1" column="0">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
      <property name="minimumSize">
       <size>
-       <width>320</width>
-       <height>0</height>
+       <width>0</width>
+       <height>86</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>320</width>
+       <width>350</width>
        <height>16777215</height>
       </size>
      </property>
@@ -293,7 +305,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_5">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -301,7 +313,7 @@
         <property name="minimumSize">
          <size>
           <width>100</width>
-          <height>0</height>
+          <height>24</height>
          </size>
         </property>
         <property name="maximumSize">
@@ -318,7 +330,7 @@
       <item row="0" column="1">
        <widget class="QDoubleSpinBox" name="doubleSpinBox_SearchVelocity">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -326,7 +338,7 @@
         <property name="minimumSize">
          <size>
           <width>120</width>
-          <height>0</height>
+          <height>24</height>
          </size>
         </property>
         <property name="maximumSize">
@@ -370,7 +382,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_7">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -378,7 +390,7 @@
         <property name="minimumSize">
          <size>
           <width>100</width>
-          <height>0</height>
+          <height>24</height>
          </size>
         </property>
         <property name="maximumSize">
@@ -395,7 +407,7 @@
       <item row="1" column="1">
        <widget class="QDoubleSpinBox" name="doubleSpinBox_ForceLimit">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -403,7 +415,7 @@
         <property name="minimumSize">
          <size>
           <width>120</width>
-          <height>0</height>
+          <height>24</height>
          </size>
         </property>
         <property name="maximumSize">
@@ -448,6 +460,9 @@
     </widget>
    </item>
   </layout>
+  <zorder>groupBox_2</zorder>
+  <zorder>groupBox</zorder>
+  <zorder>label_picture</zorder>
  </widget>
  <resources>
   <include location="../../res/res.qrc"/>

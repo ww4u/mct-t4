@@ -413,7 +413,7 @@ EXPORT_API int CALL mrgMRQMotionABCount_Query(ViSession vi, int name, int ch)
     int retLen = 0;
     snprintf(args, SEND_BUF,  "DEVICE:MRQ:MOTion:ABCOUNt? %d,%d\n", name, ch);
     if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
-        return 0;
+        return -1;
     }
     else {
         as8Ret[retLen-1] = '\0';
@@ -2124,7 +2124,7 @@ EXPORT_API int CALL mrgMRQReportData_Query(ViSession vi, int name, int ch, int f
     snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:DATA:VALue? %d,%d,%s\n", 
 						name, ch, changeReportFuncToString(func));
     if ((retLen = busQuery(vi, args, strlen(args), buff, 100)) == 0) {
-        return 0;
+        return -1;
     }
     else
     {

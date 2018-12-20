@@ -9,6 +9,7 @@ class comboxDelegate : public QStyledItemDelegate
 
 public:
     comboxDelegate(QObject *parent = 0);
+    comboxDelegate(int type = 0, QObject *parent = 0);
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
                           const QModelIndex &index) const override;
@@ -31,7 +32,8 @@ public:
 
 protected:
     QMap<QString, int> mTables;
-//    QComboBox *m_pCombobox;
+
+    int m_type;
 };
 
 #endif // COMBOXDELEGATE_H

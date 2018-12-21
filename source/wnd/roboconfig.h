@@ -25,7 +25,7 @@ public:
     explicit RoboConfig(QWidget *parent = 0);
     ~RoboConfig();
     void changeLanguage(QString qmFile);
-    void addDeviceWithIP(QString devIP);
+    void addDeviceWithIP(QString strID);
 
 public slots:
 //    void updateUI();

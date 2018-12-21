@@ -12,7 +12,19 @@ H2Product::H2Product(QString strDevInfo, QWidget *parent) :
     setFocusName( "Product" );
 
     QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
-    this->m_IP      = strListDev.at(0);
+
+    QString strIP;
+    QString strID = strListDev.at(0);
+    if(strID.left(3) == "USB")
+    {
+        QStringList lst = strID.split('_', QString::SkipEmptyParts);
+        strIP = lst.at(1) + "_" + lst.at(2);
+    }
+    else{
+        strIP = strID;
+    }
+
+    this->m_IP      = strIP;
     this->m_Type    = strListDev.at(2);
     this->m_SN      = strListDev.at(3);
     this->m_Version = strListDev.at(4);

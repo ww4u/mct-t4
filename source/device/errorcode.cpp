@@ -21,6 +21,7 @@ EXPORT_API int CALL mrgErrorCodeConfigUpload(ViSession vi, int code, char* error
 	if ((retlen = busQuery(vi, args, strlen(args), error, len)) == 0) {
 		return -1;
 	}
+    error[retlen-1] = '\0';
 	return 0;
 }
 
@@ -177,7 +178,7 @@ EXPORT_API int CALL mrgErrorLogUpload(ViSession vi, int format, char* errorLog, 
 	}
 
 
-    snprintf(args, SEND_BUF, ":ERRCode:UPLoad? %s\n", ps8Format);
+    snprintf(args, SEND_BUF, ":ERRL:UPLoad? %s\n", ps8Format);
 	if ((retlen = busQuery(vi, args, strlen(args), errorLog, len)) == 0) {
 		return -1;
 	}
@@ -193,7 +194,7 @@ EXPORT_API int CALL mrgErrorLogClear(ViSession vi)
 	char args[SEND_BUF];
 	int retlen = 0;
 
-    snprintf(args, SEND_BUF, ":ERRCode:CLEar\n");
+    snprintf(args, SEND_BUF, ":ERRL:CLEar\n");
 	if ((retlen = busWrite(vi, args, strlen(args))) == 0) {
 		return -1;
 	}

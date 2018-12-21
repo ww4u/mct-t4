@@ -78,11 +78,15 @@ void MegaInterface::slotScanFinished()
 
 void MegaInterface::insertOneRow(QString str)
 {
-#if 1
     QStringList strListHeader;
-    strListHeader << "IP" << "Manufacturer" << "Type" << "SN" << "Version";
+    if(m_devType == TYPE_LAN)
+    {
+        strListHeader << "IP" << "Manufacturer" << "Type" << "SN" << "Version";
+    }else if(m_devType == TYPE_USB)
+    {
+        strListHeader << "USBID" << "Manufacturer" << "Type" << "SN" << "Version";
+    }
     m_model->setHorizontalHeaderLabels(strListHeader);
-#endif
 
     int maxRow = m_model->rowCount();
     QStringList strListInfo = str.split(',', QString::SkipEmptyParts);
@@ -161,8 +165,24 @@ void MegaInterface::slotSelectDevices()
 int MegaInterface::deviceOpen()
 {
     QModelIndex index = ui->tableView->selectionModel()->selectedIndexes().at(0);
-    QString strIP = m_model->data(index,Qt::DisplayRole).toString();
-    QString strDesc = QString("TCPIP0::%1::inst0::INSTR").arg(strIP);
+    QString strID = m_model->data(index,Qt::DisplayRole).toString();
+
+    QString strDesc;
+    if(m_devType == TYPE_LAN)
+    {
+        strDesc = QString("TCPIP0::%1::inst0::INSTR").arg(strID);
+    }
+    else if(m_devType == TYPE_USB)
+    {
+        //USB0::0xA1B2::0x5722::MRHT00000000000001::INSTR
+        QStringList lst = strID.split('_', QString::SkipEmptyParts);
+        strDesc = QString("%1::%2::%3::%4::INSTR")
+                .arg(lst.at(0))
+                .arg(lst.at(1))
+                .arg(lst.at(2))
+                .arg(lst.at(3));
+    }
+
     int visa =  mrgOpenGateWay(strDesc.toLocal8Bit().data(), 3000);
     if(visa <= 0){
         QMessageBox::critical(this,tr("error"),tr("open device error"));
@@ -203,6 +223,7 @@ void DeviceSearchThread::run()
         char buff[4096] = "";
         mrgFindGateWay(1, buff, sizeof(buff), 1);
         strFindDevices = QString("%1").arg(buff);
+        //USB0::0xA1B2::0x5722::MRHT00000000000001::INSTR
         if(strFindDevices.length() == 0)
         {
             sysError("mrgFindGateWay USB error!");
@@ -233,7 +254,19 @@ void DeviceSearchThread::run()
         mrgCloseGateWay(visa);
 
         QStringList lst = strDevice.split("::", QString::SkipEmptyParts);
-        emit resultReady(lst.at(1) + QString(",%1").arg(IDN));
+
+        if(m_type == TYPE_LAN)
+        {
+            emit resultReady(lst.at(1) + QString(",%1").arg(IDN));
+        }
+        else if(m_type == TYPE_USB)
+        {
+            QString str = lst.at(0) + "_"
+                    + lst.at(1) + "_"
+                    + lst.at(2) + "_"
+                    + lst.at(3);
+            emit resultReady(str + QString(",%1").arg(IDN));
+        }
     }
 }
 

@@ -50,7 +50,7 @@ H2ErrMgr::~H2ErrMgr()
 int H2ErrMgr::readDeviceConfig()
 {
     ////////////////////////
-    return 0;
+//    return 0;
 
     int isOk = 0;
     for(int i=0; i<ui->tvErr->model()->rowCount(); i++)
@@ -64,6 +64,10 @@ int H2ErrMgr::readDeviceConfig()
             isOk = -1;
             continue;
         }
+
+        QStringList lst = QString("%1").arg(buffer).split(",", QString::SkipEmptyParts);
+        qDebug() << code << ":" << lst;
+
 #if 0
         int code            = mErrManager.items()->at(i)->mNr;
         QString errorText   = mErrManager.items()->at(i)->mErr;
@@ -81,6 +85,7 @@ int H2ErrMgr::readDeviceConfig()
         int enable = 1; //默认使能,界面上没有对应的列
 #endif
 
+
     }
 
     return isOk;
@@ -89,7 +94,7 @@ int H2ErrMgr::readDeviceConfig()
 int H2ErrMgr::writeDeviceConfig()
 {
     ////////////////////////
-    return 0;
+//    return 0;
 
     int isOk = 0;
     int ret = -1;
@@ -114,8 +119,7 @@ int H2ErrMgr::writeDeviceConfig()
         int enable = 1; //默认使能,界面上没有对应的列
 
         ret = mrgErrorCodeConfigDownload(mViHandle, code, type, diagnose, response, enable);
-//        qDebug() << "ErrorManger:" << code << type << diagnose << response << enable;
-        qDebug() << "ErrorCodeDownload" << code << ret;
+        qDebug() << "ErrorCodeDownload:" << code << type << diagnose << response << enable << "ret:" << ret;
         if(ret < 0){
             sysError("mrgErrorCodeConfigDownload", code);
             isOk = -1;

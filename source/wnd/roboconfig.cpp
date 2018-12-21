@@ -567,11 +567,27 @@ void RoboConfig::slot_open_close(QString strIP)
                                    m_RobotList[mIndex].m_RoboName);
 }
 
-int RoboConfig::deviceOpen(QString strIP)
+int RoboConfig::deviceOpen(QString strID)
 {
     if(mIndex < 0) return -1;
     int ret = -1;
-    QString strDesc = QString("TCPIP0::%1::inst0::INSTR").arg(strIP);
+
+    QString strDesc;
+    if(strID.left(3) != "USB")
+    {
+        strDesc = QString("TCPIP0::%1::inst0::INSTR").arg(strID);
+    }
+    else
+    {
+        //USB0::0xA1B2::0x5722::MRHT00000000000001::INSTR
+        QStringList lst = strID.split('_', QString::SkipEmptyParts);
+        strDesc = QString("%1::%2::%3::%4::INSTR")
+                .arg(lst.at(0))
+                .arg(lst.at(1))
+                .arg(lst.at(2))
+                .arg(lst.at(3));
+    }
+
     int visa = mrgOpenGateWay(strDesc.toLocal8Bit().data(), 2000);
     if(visa <= 0){
         qDebug() << "mrgOpenGateWay error" << visa;
@@ -659,7 +675,7 @@ END:
 
     mrgIdentify(visa, 0); //关闭识别防止用户之前打开
 
-    qDebug() << "device open" << strIP << visa;
+    qDebug() << "device open" << strID << visa;
     sysInfo("Device Open", visa);
 
     m_RobotList[mIndex].m_Visa = visa;
@@ -748,10 +764,25 @@ void RoboConfig::slotSetOneRecord(int row, QString type, double x, double y, dou
     }
 }
 
-void RoboConfig::addDeviceWithIP(QString devIP)
+void RoboConfig::addDeviceWithIP(QString strID)
 {
-    QString strDevice = "TCPIP0::" + devIP + "::inst0::INSTR";
-    int visa =  mrgOpenGateWay(strDevice.toLocal8Bit().data(), 2000);
+    QString strDesc;
+    if(strID.left(3) != "USB")
+    {
+        strDesc = QString("TCPIP0::%1::inst0::INSTR").arg(strID);
+    }
+    else
+    {
+        //USB0::0xA1B2::0x5722::MRHT00000000000001::INSTR
+        QStringList lst = strID.split('_', QString::SkipEmptyParts);
+        strDesc = QString("%1::%2::%3::%4::INSTR")
+                .arg(lst.at(0))
+                .arg(lst.at(1))
+                .arg(lst.at(2))
+                .arg(lst.at(3));
+    }
+
+    int visa =  mrgOpenGateWay(strDesc.toLocal8Bit().data(), 2000);
     if(visa <= 0) {
         return;
     }
@@ -768,7 +799,7 @@ void RoboConfig::addDeviceWithIP(QString devIP)
     }
     mrgCloseGateWay(visa);
 
-    QStringList lst = strDevice.split("::", QString::SkipEmptyParts);
+    QStringList lst = strDesc.split("::", QString::SkipEmptyParts);
     QString devInfo = lst.at(1) + QString(",%1").arg(IDN);
     slotAddNewRobot(devInfo);
 }

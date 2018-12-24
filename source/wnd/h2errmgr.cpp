@@ -15,28 +15,26 @@ H2ErrMgr::H2ErrMgr(QWidget *parent) :
 
 
     //! 建立错误响应通信和显示对应表
-    m_mapResponse.insert( "A", 1 );
-    m_mapResponse.insert( "B", 2 );
-    m_mapResponse.insert( "C", 3 );
-    m_mapResponse.insert( "D", 4 );
-    m_mapResponse.insert( "E", 5 );
-    m_mapResponse.insert( "F", 6 );
-    m_mapResponse.insert( "G", 7 );
+    m_mapRespStrToInt.insert( "A", 1 );
+    m_mapRespStrToInt.insert( "B", 2 );
+    m_mapRespStrToInt.insert( "C", 3 );
+    m_mapRespStrToInt.insert( "D", 4 );
+    m_mapRespStrToInt.insert( "E", 5 );
+    m_mapRespStrToInt.insert( "F", 6 );
+    m_mapRespStrToInt.insert( "G", 7 );
+
+    m_mapRespIntToStr.insert( 1, "A" );
+    m_mapRespIntToStr.insert( 2, "B" );
+    m_mapRespIntToStr.insert( 3, "C" );
+    m_mapRespIntToStr.insert( 4, "D" );
+    m_mapRespIntToStr.insert( 5, "E" );
+    m_mapRespIntToStr.insert( 6, "F" );
+    m_mapRespIntToStr.insert( 7, "G" );
 
     //! 创建表格代理
     m_pCheckDelegate = new checkDelegate( shape_check, this );
     m_pRadioDelegate = new checkDelegate( shape_radio, this );
     m_pReactionCombox = new comboxDelegate( 1, this );
-
-    //! 错误响应设置过滤
-//    QStringList errActions;
-//    for (QMap<int, QString>::iterator itMap=m_mapResponse.begin();
-//         itMap != m_mapResponse.end();
-//         ++itMap )
-//    {
-//        errActions << itMap.value();
-//    }
-//    m_pReactionCombox->setItems( errActions );
 
     //!
 
@@ -49,43 +47,33 @@ H2ErrMgr::~H2ErrMgr()
 
 int H2ErrMgr::readDeviceConfig()
 {
-    ////////////////////////
-//    return 0;
-
     int isOk = 0;
     for(int i=0; i<ui->tvErr->model()->rowCount(); i++)
     {
         int code = mErrManager.items()->at(i)->mNr;;
-        char buffer[4096] = "";
-        int ret=  mrgErrorCodeConfigUpload(mViHandle, code, buffer, sizeof(buffer));
-        qDebug() << "ErrorCodeUpload" << code << QString("%1").arg(buffer);
+
+        int type;
+        int response;
+        int outputAble;
+        int diagnose;
+        int enable; //默认使能,界面上没有对应的列
+
+        int ret=  mrgErrorCodeConfigUpload(mViHandle, code, &type, &diagnose, &response, &enable);
+        qDebug() << "ErrorCodeUpload" << ret << ":" << code << type << diagnose << response << enable;
         if(ret < 0){
             sysError("mrgErrorCodeConfigUpload", code);
+            qDebug() << "mrgErrorCodeConfigUpload error" << code << ret;
             isOk = -1;
             continue;
         }
 
-        QStringList lst = QString("%1").arg(buffer).split(",", QString::SkipEmptyParts);
-        qDebug() << code << ":" << lst;
+        mErrManager.mItems.at(i)->mEventType = (e_event_type)type;
 
-#if 0
-        int code            = mErrManager.items()->at(i)->mNr;
-        QString errorText   = mErrManager.items()->at(i)->mErr;
-        int type            = mErrManager.items()->at(i)->mEventType;
+        mErrManager.mItems.at(i)->mAction =  m_mapRespIntToStr[response];
 
-        str                 = mErrManager.items()->at(i)->mAction;
-        int response        = m_mapResponse[str];
+        mErrManager.mItems.at(i)->mbSaveDiagnosis = (diagnose==1) ? true : false;
 
-        bl                  = mErrManager.items()->at(i)->mbOutputAble;
-        int outputAble      = bl ? 1 : 0 ;
-
-        bl                  = mErrManager.items()->at(i)->mbSaveDiagnosis;
-        int diagnose        = bl ? 1 : 0 ;
-
-        int enable = 1; //默认使能,界面上没有对应的列
-#endif
-
-
+        // mErrManager.mItems.at(i)->mbOutputAble = (outputAble==1) ? true : false;
     }
 
     return isOk;
@@ -93,9 +81,6 @@ int H2ErrMgr::readDeviceConfig()
 
 int H2ErrMgr::writeDeviceConfig()
 {
-    ////////////////////////
-//    return 0;
-
     int isOk = 0;
     int ret = -1;
     bool bl = false;
@@ -108,7 +93,7 @@ int H2ErrMgr::writeDeviceConfig()
         int type            = mErrManager.items()->at(i)->mEventType;
 
         str                 = mErrManager.items()->at(i)->mAction;
-        int response        = m_mapResponse[str];
+        int response        = m_mapRespStrToInt[str];
 
         bl                  = mErrManager.items()->at(i)->mbOutputAble;
         int outputAble      = bl ? 1 : 0 ;
@@ -163,7 +148,6 @@ void H2ErrMgr::updateShow()
 
     ui->tvErr->setItemDelegateForColumn( 6, m_pCheckDelegate );
     ui->tvErr->setItemDelegateForColumn( 7, m_pCheckDelegate );
-
 }
 
 void H2ErrMgr::translateUI()

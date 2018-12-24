@@ -469,4 +469,3 @@ void ErrMgrModel::createDebug()
 
     mItems.append( pItem );
 }
-

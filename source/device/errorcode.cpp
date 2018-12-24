@@ -13,15 +13,89 @@ code:错误代码值
 error:返回错误代码配置值
 len: 长度
 */
-EXPORT_API int CALL mrgErrorCodeConfigUpload(ViSession vi, int code, char* error, int len)
+EXPORT_API int CALL mrgErrorCodeConfigUpload(ViSession vi, int code, int *type, int *diagnose, int *response, int *enable)
 {
+    char error[256] = "";
+    int len = 256;
 	char args[SEND_BUF];
-	int retlen = 0;
+    int retlen = 0, count = 0;;
     snprintf(args, SEND_BUF, ":ERRCode:UPLoad? %d\n", code);
 	if ((retlen = busQuery(vi, args, strlen(args), error, len)) == 0) {
 		return -1;
 	}
     error[retlen-1] = '\0';
+
+    char *p, *pNext;
+    char values[32][64] = {""};
+    p = STRTOK_S(error, ",", &pNext);
+    while (p)
+    {
+        strcpy(values[count++], p);
+        p = STRTOK_S(NULL, ",", &pNext);
+    }
+
+    //! type
+    if(STRCASECMP(values[0], "F") == 0){
+        *type = 1;
+    }
+    else if(STRCASECMP(values[0], "W") == 0){
+        *type = 2;
+    }
+    else if(STRCASECMP(values[0], "I") == 0){
+        *type = 3;
+    }
+    else{
+        return -2;
+    }
+
+    //! diagnose
+    if(STRCASECMP(values[1], "ON") == 0){
+        *diagnose = 1;
+    }
+    else if(STRCASECMP(values[1], "OFF") == 0){
+        *diagnose = 0;
+    }
+    else{
+        return -3;
+    }
+
+    //! response
+    if(STRCASECMP(values[2], "A") == 0){
+        *response = 1;
+    }
+    else if(STRCASECMP(values[2], "B") == 0){
+        *response = 2;
+    }
+    else if(STRCASECMP(values[2], "C") == 0){
+        *response = 3;
+    }
+    else if(STRCASECMP(values[2], "D") == 0){
+        *response = 4;
+    }
+    else if(STRCASECMP(values[2], "E") == 0){
+        *response = 5;
+    }
+    else if(STRCASECMP(values[2], "F") == 0){
+        *response = 6;
+    }
+    else if(STRCASECMP(values[2], "G") == 0){
+        *response = 7;
+    }
+    else{
+        return -4;
+    }
+
+    //! enable
+    if(STRCASECMP(values[3], "Y") == 0){
+        *enable = 1;
+    }
+    else if(STRCASECMP(values[3], "N") == 0){
+        *enable = 0;
+    }
+    else{
+        return -5;
+    }
+
 	return 0;
 }
 
@@ -69,19 +143,6 @@ EXPORT_API int CALL mrgErrorCodeConfigDownload(ViSession vi, int code, int type,
     else if (diagnose == 0)
 	{
 		ps8Diagnose = "OFF";
-	}
-	else
-	{
-		return -2;
-	}
-
-	if (diagnose == 0)
-	{
-		ps8Diagnose = "OFF";
-	}
-	else if (diagnose == 1)
-	{
-		ps8Diagnose = "ON";
 	}
 	else
 	{

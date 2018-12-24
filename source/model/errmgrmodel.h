@@ -38,6 +38,7 @@ public:
     int serialIn( QXmlStreamReader & reader );
 
     void createDebug();
+
 public:
     QList< ErrMgrItem *> mItems;
 };

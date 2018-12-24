@@ -38,7 +38,9 @@ private:
     comboxDelegate *m_pReactionCombox;
 
     QString m_errorFileInfo;
-    QMap< QString, int> m_mapResponse;
+
+    QMap< int, QString> m_mapRespIntToStr;
+    QMap< QString, int> m_mapRespStrToInt;
 
     QString readFile(QString fileName);
     int writeFile(QString fileName, QString text);

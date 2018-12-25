@@ -10,8 +10,15 @@ extern "C" {
 #include "visatype.h"
 #include "visa.h"
 #else
+
+//定义下面宏则使用VX11为Linux平台通信，否则使用TCP的socket
+#define _VXI11_
+
 typedef unsigned long ViSession;
+#include <vxi11/vxi11_user.h>
+
 #endif
+
 
 /*
 * 对于网线连接的网关，查找方式有两种： 一种是用VISA方式查找，另一种是用UDP广播方式查找。

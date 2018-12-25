@@ -37,7 +37,7 @@
 #define UDP_PORT  5353//5566
 #define MEGA_TCP_SOCKET_PORT (5555)
 
-#ifdef _WIN32
+#ifdef _WIN32 //Windows
 #pragma comment (lib, "ws2_32")
 #pragma comment (lib, "visa32.lib")
 #pragma comment (lib,"IPHlpApi.lib") //需要添加Iphlpapi.lib库
@@ -61,7 +61,7 @@ ViStatus viSta = viLock( vi, VI_EXCLUSIVE_LOCK, UINT_MAX, VI_NULL, VI_NULL );\
 
 #endif
 
-#else //_WIN32
+#else //_WIN32 Linux
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 //#define INIT_LOCK() pthread_mutex_init(&mutex,NULL)
@@ -106,7 +106,8 @@ END:
 }
 
 
-
+//使用TCP的Socket
+#ifndef _VXI11_ //TCP Socket
 static int connectWithBlock(char *ip)
 {
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -255,7 +256,7 @@ int busOpenDevice(char *ip, int timeout_ms)
     return sockfd;
 }
 
-static int SocketSyncSend(int fd, char *buf, int dataLen, int isBlock)
+static int SyncSend(int fd, char *buf, int dataLen, int isBlock)
 {
     int ret = -1;
     if(fd <= 0)
@@ -283,7 +284,7 @@ static int SocketSyncSend(int fd, char *buf, int dataLen, int isBlock)
     return ret;
 }
 
-static int SocketSyncRead(int fd, char *data, int dataLen, int isBlock)
+static int SyncRead(int fd, char *data, int dataLen, int isBlock)
 {
     int ret = -1;
     if(fd <= 0)
@@ -303,10 +304,121 @@ static int SocketSyncRead(int fd, char *data, int dataLen, int isBlock)
     return ret;
 }
 
+int busCloseDevice(ViSession vi)
+{
+    if(vi > 0)
+    {   close(vi);    }
+    return 0;
+}
+
+#else //_VXI11_ Vxi11
+
+char _g_device_IP[512] = ""; //设备IP，用于关闭
+int _g_timeout = 2000; //收发超时时间
+VXI11_CLINK *_g_clink = NULL;    //vxi11句柄
+
+int busOpenDevice(char *ip, int timeout_ms)
+{
+    memset(_g_device_IP,'\0',sizeof(_g_device_IP));
+    _g_clink = NULL;
+    _g_timeout = 2000;
+
+    VXI11_CLINK *clink = (VXI11_CLINK *)malloc( sizeof(struct _VXI11_CLINK) );
+    if(vxi11_open_device(&clink, ip, NULL)){
+        printf("vxi11_open_device error: %s\n", ip);
+        free(clink);
+        return -1;
+    }
+
+    strcpy(_g_device_IP, ip);
+    _g_clink = clink;
+    _g_timeout = timeout_ms;
+
+    return 100;//随便返回一个非零数字
+}
+
+static int SyncSend(int vi, char *buf, int dataLen, int isBlock)
+{
+    if(_g_clink == NULL)
+        return -1;
+
+    int time = 0, intervalTime = 20;
+    while (1)
+    {
+        if (time > 200){
+            return -2;
+        }
+
+        int ret = vxi11_send(_g_clink, buf, dataLen);
+        if(ret == 0)
+            return 0;
+
+        if(ret == -VXI11_NULL_WRITE_RESP) //timeout
+        {
+            Sleep(intervalTime);
+            time += intervalTime;
+            continue;
+        }
+        else{
+            return -1;
+        }
+    }
+}
+
+static int SyncRead(int vi, char *data, int dataLen, int isBlock)
+{
+    if(_g_clink == NULL)
+        return -1;
+
+    if(isBlock)
+    {
+        int time = 0, intervalTime = 20;
+        while (1)
+        {
+            if (time > 200){
+                return -2;
+            }
+
+            int ret = vxi11_receive(_g_clink, data, dataLen);
+            if(ret == 0)
+                return ret;
+
+            if(ret == -VXI11_NULL_WRITE_RESP) //timeout
+            {
+                Sleep(intervalTime);
+                time += intervalTime;
+                continue;
+            }
+            else{
+                return -1;
+            }
+        }
+    }
+    else
+    {
+        // -VXI11_NULL_READ_RESP 超时未判断
+        return vxi11_receive_timeout(_g_clink, data, dataLen, _g_timeout);
+    }
+}
+
+int busCloseDevice(ViSession vi)
+{
+    if( (_g_clink != NULL) && (0!=strcmp(_g_device_IP,"")) )
+    {
+        vxi11_close_device(_g_clink, _g_device_IP);
+    }
+
+    memset(_g_device_IP,'\0',sizeof(_g_device_IP));
+    _g_clink = NULL;
+    return 0;
+}
+#endif //_VXI11_
+
+
 unsigned int busWrite(ViSession vi, char *data, unsigned int len)
 {
     LOCK();
-    int retCount = SocketSyncSend(vi, data, len, 1);
+    int retCount = SyncSend(vi, data, len, 1);
     if(retCount < 0){
         perror("busWrite error!");
         UNLOCK();
@@ -320,7 +432,7 @@ unsigned int busWrite(ViSession vi, char *data, unsigned int len)
 unsigned int busRead(ViSession vi, char *buf, unsigned int len)
 {
     LOCK();
-    int retCount = SocketSyncRead(vi, buf, len, 1);
+    int retCount = SyncRead(vi, buf, len, 1);
     if(retCount < 0){
         perror("busRead error!");
         UNLOCK();
@@ -344,7 +456,7 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* o
     int retCount;
 
     LOCK();
-    retCount = SocketSyncSend(vi, input, inputlen, 1);
+    retCount = SyncSend(vi, input, inputlen, 1);
     if(retCount < 0){
         printf("TO_QUERY error\n");
         perror("busQuery Write error!");
@@ -353,7 +465,7 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* o
     }
     printf("\nQUERY_TO:\n\t%s", input);
 
-    retCount = SocketSyncRead(vi, output, wantlen, 1);
+    retCount = SyncRead(vi, output, wantlen, 1);
     if(retCount < 0){
         printf("RECV_QUERY error\n");
         perror("busQuery Read error!");
@@ -371,13 +483,6 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* o
     UNLOCK();
 
     return (unsigned int)retCount;
-}
-
-int busCloseDevice(ViSession vi)
-{
-    if(vi > 0)
-    {   close(vi);    }
-    return 0;
 }
 
 ViSession busOpenSocket(const char *pName, const char *addr, unsigned int port)

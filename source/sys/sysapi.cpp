@@ -28,6 +28,10 @@ void sysError( const QString &info , const int &val)
     MainWindow::requestLogout( str, eLogError );
 }
 
+void sysShowStatus(const QString &statusInfo)
+{
+    MainWindow::showStatus(statusInfo);
+}
 
 bool copyFileToPath(QString sourceDir ,QString toDir, bool coverFileIfExist)
 {

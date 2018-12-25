@@ -33,6 +33,7 @@ public:
 
     static MainWindow *_pBackendProxy;
     static void requestLogout( const QString &str, LogLevel lev );
+    static void showStatus(const QString str);
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -48,11 +49,8 @@ private slots:
     void on_actionClassic_triggered();
     void slotCurrentRobotChanged(QString strDevInfo, int visa, int deviceName, int roboName);
     void slot_logout( const QString &str, LogLevel lev = eLogInfo );
+    void slotUpdateStatus(const QString str);
     void slot_focus_in( const QString &name );
-//    void slot_post_startup();
-
-    void change_online_status(bool isConnect);
-
     void on_actionExit_triggered();
 
 private:

@@ -11,6 +11,14 @@ void MainWindow::requestLogout( const QString &str, LogLevel lev )
     MainWindow::_pBackendProxy->slot_logout( str, lev );
 }
 
+void MainWindow::showStatus( const QString str)
+{
+    if( NULL == MainWindow::_pBackendProxy )
+    { return; }
+
+    MainWindow::_pBackendProxy->slotUpdateStatus(str);
+}
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -92,13 +100,18 @@ void MainWindow::setupToolBar()
 void MainWindow::setupStatusBar()
 {
     qDebug() << "version" << qApp->applicationVersion();
-    m_pLabStatus = new QLabel();
-    m_pLabMctVer = new QLabel( QString("Version: %1").arg( qApp->applicationVersion() ) );
-    m_pLabConVer = new QLabel();
+    m_pLabStatus = new QLabel("MegaRobo Configuration Tool");
+    m_pLabMctVer = new QLabel( QString("Version: %1  ").arg( qApp->applicationVersion() ) );
+    m_pLabConVer = new QLabel( "Build: " __DATE__);
 
     ui->statusBar->insertWidget( 0, m_pLabStatus, 1 );
     ui->statusBar->insertWidget( 1, m_pLabMctVer, 0 );
     ui->statusBar->insertWidget( 2, m_pLabConVer, 0 );
+}
+
+void MainWindow::slotUpdateStatus( const QString str )
+{
+    m_pLabStatus->setText(str);
 }
 
 void MainWindow::buildConnection()
@@ -133,7 +146,6 @@ void MainWindow::buildConnection()
     connect(ui->actionSearch,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotSearch()));
     connect(ui->actionConnect,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotConnect()));
 
-//    QTimer::singleShot( 0, this, SLOT(slot_post_startup()));
 }
 
 void MainWindow::loadConfig()
@@ -333,7 +345,6 @@ void MainWindow::slot_logout( const QString &str, LogLevel lev )
 void MainWindow::slot_focus_in( const QString &name )
 {
 //    logDbg() << name;
-
     if ( name.length() <= 0 )
     { return; }
 
@@ -342,23 +353,6 @@ void MainWindow::slot_focus_in( const QString &name )
 
     m_pHelpPanel->setFile( QApplication::applicationDirPath() + "/doc/" + name + ".html" );
 }
-
-void MainWindow::change_online_status(bool isConnect)
-{
-    if(isConnect){
-        ui->actionConnect->setIcon(QIcon(":/res/image/h2product/online.png"));
-    }else{
-        ui->actionConnect->setIcon(QIcon(":/res/image/h2product/offline.png"));
-    }
-}
-
-//void MainWindow::slot_post_startup()
-//{
-//    slot_logout( "start completed" );
-//    slot_logout( "start warning", eLogWarning );
-//    slot_logout( "start error", eLogError );
-//}
-
 
 void MainWindow::on_actionExit_triggered()
 {

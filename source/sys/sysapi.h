@@ -12,6 +12,8 @@ void sysWarning( const QString &str );
 void sysError( const QString &str );
 void sysError( const QString &info , const int &val);
 
+void sysShowStatus(const QString &statusInfo);
+
 bool copyFileToPath(QString sourceDir ,QString toDir, bool coverFileIfExist);
 
 QString readFile(QString fileName);

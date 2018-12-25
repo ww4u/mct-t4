@@ -9,46 +9,76 @@
         <translation>窗口</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="19"/>
+        <location filename="../../source/wnd/h2action.cpp" line="20"/>
         <source>PA</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="19"/>
+        <location filename="../../source/wnd/h2action.cpp" line="20"/>
         <source>PRN</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="19"/>
+        <location filename="../../source/wnd/h2action.cpp" line="20"/>
         <source>PRA</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="247"/>
+        <location filename="../../source/wnd/h2action.cpp" line="220"/>
         <source>Run</source>
         <translation>运行</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="266"/>
-        <location filename="../../source/wnd/h2action.cpp" line="274"/>
-        <location filename="../../source/wnd/h2action.cpp" line="291"/>
+        <location filename="../../source/wnd/h2action.cpp" line="239"/>
+        <location filename="../../source/wnd/h2action.cpp" line="247"/>
         <source>warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="266"/>
+        <location filename="../../source/wnd/h2action.cpp" line="239"/>
         <source>Device motor uneable</source>
         <translation>设备电机未使能</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="274"/>
+        <location filename="../../source/wnd/h2action.cpp" line="247"/>
         <source>Device Homing Invalid</source>
         <translation>设备回零无效</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="291"/>
+        <location filename="../../source/wnd/h2action.cpp" line="311"/>
+        <source>tips</source>
+        <translation>提示</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2action.cpp" line="311"/>
+        <source>Run Success!</source>
+        <translation>执行成功！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2action.cpp" line="314"/>
+        <location filename="../../source/wnd/h2action.cpp" line="317"/>
+        <location filename="../../source/wnd/h2action.cpp" line="320"/>
+        <source>error</source>
+        <translation>错误</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2action.cpp" line="314"/>
+        <source>Get current position error!</source>
+        <translation>获取当前位置失败！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2action.cpp" line="317"/>
+        <source>Running error!</source>
+        <translation>执行出错！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2action.cpp" line="320"/>
+        <source>Type error!</source>
+        <translation>类型有误！</translation>
+    </message>
+    <message>
         <source>Data download to device error!</source>
-        <translation>下载数据到设备失败！</translation>
+        <translation type="vanished">下载数据到设备失败！</translation>
     </message>
 </context>
 <context>
@@ -540,8 +570,8 @@
     </message>
     <message>
         <location filename="../../source/wnd/h2ops.ui" line="1950"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="888"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="901"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="889"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="902"/>
         <source>Run  Sequence</source>
         <translation>运行序列</translation>
     </message>
@@ -731,34 +761,40 @@
         <translation>应用为点</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="515"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="521"/>
         <source>load completed</source>
         <translation>完成加载</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="530"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="603"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="536"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="604"/>
         <source>save completed</source>
         <translation>完成保存</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="610"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="552"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="611"/>
         <source>error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="644"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="661"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="552"/>
+        <source>Error log upload error!</source>
+        <translation>错误日志上传失败！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.cpp" line="645"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="662"/>
         <source>Start Go Home</source>
         <translation>开始回零</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="664"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="665"/>
         <source>Stop Go Home</source>
         <translation>停止回零</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="904"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="905"/>
         <source>Stop Sequence</source>
         <translation>停止序列</translation>
     </message>
@@ -767,7 +803,7 @@
         <translation type="vanished">提示</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="610"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="611"/>
         <source>Starting Home failure</source>
         <translation>回零失败</translation>
     </message>
@@ -1218,22 +1254,22 @@
         <translation>扫描</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="119"/>
+        <location filename="../../source/widget/megainterface.cpp" line="170"/>
         <source>ON</source>
         <translation>打开</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="120"/>
+        <location filename="../../source/widget/megainterface.cpp" line="171"/>
         <source>OFF</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="188"/>
+        <location filename="../../source/widget/megainterface.cpp" line="239"/>
         <source>error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="188"/>
+        <location filename="../../source/widget/megainterface.cpp" line="239"/>
         <source>open device error</source>
         <translation>打开设备失败</translation>
     </message>
@@ -1250,17 +1286,17 @@
         <translation type="vanished">工程</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="142"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="230"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="259"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="143"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="231"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="261"/>
         <location filename="../../source/wnd/roboconfig.cpp" line="321"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="488"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="555"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="502"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="569"/>
         <source>tips</source>
         <translation>提示</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="142"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="143"/>
         <source>The device already exists in the project.</source>
         <translation>设备已经存在于工程中.</translation>
     </message>
@@ -1273,65 +1309,79 @@
         <translation type="vanished">同步成功！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="215"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="222"/>
         <source>	
 Download Failure</source>
-        <translation>下载失败</translation>
+        <translation type="vanished">下载失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="191"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="192"/>
         <location filename="../../source/wnd/roboconfig.cpp" line="215"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="222"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="251"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="323"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="479"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="669"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="223"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="253"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="330"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="493"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="683"/>
         <source>error</source>
         <translation>错误</translation>
     </message>
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="205"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="242"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="270"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="484"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="244"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="272"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="498"/>
         <source>Current Device In Offline</source>
         <translation>当前设备处于离线状态</translation>
     </message>
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="205"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="242"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="270"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="319"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="332"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="484"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="244"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="272"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="324"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="327"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="340"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="498"/>
         <source>warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="230"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="215"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="223"/>
+        <source>Download Failure</source>
+        <translation>下载失败</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="231"/>
         <source>Download Success!</source>
         <translation>下载成功！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="251"/>
         <source>
 Upload Faiured</source>
-        <translation>上传失败</translation>
+        <translation type="vanished">上传失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="191"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="192"/>
         <source>
 From device upload config faiured</source>
         <translation>从设备上传配置失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="259"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="253"/>
+        <source>Upload Faiured</source>
+        <translation>上传失败</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="261"/>
         <source>Upload Succeed!</source>
         <translation>上传成功！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="319"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="324"/>
+        <source>Operation in progress!</source>
+        <translation>操作正在进行！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="327"/>
         <source>Store timeout!</source>
         <translation>存储超时！</translation>
     </message>
@@ -1341,7 +1391,7 @@ From device upload config faiured</source>
         <translation>存储成功！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="669"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="683"/>
         <source>Robot type not</source>
         <translation>机器人类型不是</translation>
     </message>
@@ -1350,22 +1400,22 @@ From device upload config faiured</source>
         <translation type="vanished">警告</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="323"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="330"/>
         <source>Store error!</source>
         <translation>存储失败！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="332"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="340"/>
         <source>unable</source>
         <translation>不可用</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="376"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="390"/>
         <source>close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="377"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="391"/>
         <source>delete</source>
         <translation>删除</translation>
     </message>
@@ -1378,17 +1428,17 @@ From device upload config faiured</source>
         <translation type="vanished">应用成功！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="479"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="493"/>
         <source>	Reset Failure</source>
         <translation>重置失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="488"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="502"/>
         <source>Reset Success!</source>
         <translation>重置成功！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="555"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="569"/>
         <source>Device Open Failure!!!</source>
         <translation>设备打开失败!!!!</translation>
     </message>

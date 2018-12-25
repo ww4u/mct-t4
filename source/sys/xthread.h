@@ -9,6 +9,7 @@ class XThread : public QThread
 {
     Q_OBJECT
 
+public:
     typedef std::function<void(void)> XTHREAD_VOID_FUNC;
     typedef std::function<void(int &)> XTHREAD_INT_FUNC;
     typedef std::function<void(QString &)> XTHREAD_STRING_FUNC;

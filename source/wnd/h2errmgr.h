@@ -41,10 +41,6 @@ private:
 
     QMap< int, QString> m_mapRespIntToStr;
     QMap< QString, int> m_mapRespStrToInt;
-
-    QString readFile(QString fileName);
-    int writeFile(QString fileName, QString text);
-
 };
 
 #endif // H2ERRMGR_H

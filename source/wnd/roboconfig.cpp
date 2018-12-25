@@ -200,7 +200,6 @@ void RoboConfig::slotAddNewRobot(QString strDevInfo)
 void RoboConfig::slotDownload()
 {
     if(mIndex < 0) return;
-
     if( m_RobotList[mIndex].m_Visa == 0)
     {
         QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
@@ -213,14 +212,15 @@ void RoboConfig::slotDownload()
         int ret = pCfg->writeDeviceConfig();
         if(ret != 0){
             ok = false;
-            QMessageBox::critical(this,tr("error"), pCfg->focusName() + tr("\t\nDownload Failure"));
+            QMessageBox::critical(this,tr("error"), pCfg->focusName() + "\n" + tr("Download Failure"));
+            continue;
         }
 
         {   //从设备再重新upload一遍
             int ret = pCfg->readDeviceConfig();
             if(ret != 0){
                 ok = false;
-                QMessageBox::critical(this,tr("error"), pCfg->focusName() + tr("\t\nDownload Failure"));
+                QMessageBox::critical(this,tr("error"), pCfg->focusName() + "\n" + tr("Download Failure"));
             }
             pCfg->updateShow();
             pCfg->saveConfig();
@@ -231,6 +231,7 @@ void RoboConfig::slotDownload()
         QMessageBox::information(this,tr("tips"),tr("Download Success!"));
     }
     qDebug() << "slotDownload Finish";
+
     return;
 }
 
@@ -249,7 +250,7 @@ void RoboConfig::slotUpload()
         int ret = pCfg->readDeviceConfig();
         if(ret != 0){
             ok = false;
-            QMessageBox::critical(this,tr("error"), pCfg->focusName() + tr("\nUpload Faiured"));
+            QMessageBox::critical(this,tr("error"), pCfg->focusName() + "\n" + tr("Upload Faiured"));
         }
         pCfg->updateShow();
         pCfg->saveConfig();
@@ -272,11 +273,12 @@ void RoboConfig::slotStore()
         return;
     }
 
-    auto func = [=](void)
+    auto func = [=](int &ret)
     {
         qDebug() << "mrgGetRobotConfigState1";
         if (mrgGetRobotConfigState(visa) == 1){
             qDebug() << "mrgGetRobotConfigState == 1";
+            ret = -1;
             return;
         }
         qDebug() << "mrgGetRobotConfigState2";
@@ -295,36 +297,41 @@ void RoboConfig::slotStore()
         }
 
         if(timeout <= 0){
-            m_retVal = -1;
-            qDebug() << "Store timeout!";
-        }else{
-            if (state == 0){
-                m_retVal = 0;
-                qDebug() << "Store success!";
-            }else{
-                m_retVal = -2;
-                qDebug() << "Store error!";
-            }
+            ret = -2;
+            return;
         }
+
+        if (state == 0){
+            ret = 0;
+        }else{
+            ret = -3;
+        }
+        return;
     };
 
     XThread *thread = new XThread(func);
-    connect(thread,&XThread::finished,this,
-            [=](){slotStoreTips(m_retVal);});
+    connect(thread,SIGNAL(signalFinishResult(int)),this,SLOT(slotStoreEnd(int)));
     thread->start();
 }
 
-void RoboConfig::slotStoreTips(int val)
+void RoboConfig::slotStoreEnd(int val)
 {
-    if(val == -1){
-        QMessageBox::warning(this,tr("warning"),tr("Store timeout!"));
-    }else if(val == 0){
+    switch (val) {
+    case 0:
         QMessageBox::information(this,tr("tips"),tr("Store success!"));
-    }else if(val == -2){
+        break;
+    case -1:
+        QMessageBox::warning(this,tr("warning"),tr("Operation in progress!"));
+        break;
+    case -2:
+        QMessageBox::warning(this,tr("warning"),tr("Store timeout!"));
+        break;
+    case -3:
         QMessageBox::critical(this,tr("error"),tr("Store error!"));
+        break;
+    default:
+        break;
     }
-    else
-    {}
 }
 
 void RoboConfig::slotSync()
@@ -343,7 +350,7 @@ void RoboConfig::slotSearch()
     m_megaSerachWidget = new MegaInterface;
     m_megaSerachWidget->move( x()+100, y()+100);
     m_megaSerachWidget->show();
-    connect(m_megaSerachWidget, SIGNAL(signal_selected_info(QString)), this, SLOT(slotAddNewRobot(QString)));
+    connect(m_megaSerachWidget, SIGNAL(signalSelectedInfo(QString)), this, SLOT(slotAddNewRobot(QString)));
 }
 
 void RoboConfig::slotExit()
@@ -718,30 +725,6 @@ int RoboConfig::deviceClose()
     m_RobotList[mIndex].m_RoboName = 0;
 
     return ret;
-}
-
-bool RoboConfig::copyFileToPath(QString sourceDir ,QString toDir, bool coverFileIfExist)
-{
-    toDir.replace("\\","/");
-    if (sourceDir == toDir){
-        return true;
-    }
-    if (!QFile::exists(sourceDir)){
-        return false;
-    }
-    QDir *createfile     = new QDir;
-    bool exist = createfile->exists(toDir);
-    if (exist){
-        if(coverFileIfExist){
-            createfile->remove(toDir);
-        }
-    }//end if
-
-    if(!QFile::copy(sourceDir, toDir))
-    {
-        return false;
-    }
-    return true;
 }
 
 void RoboConfig::changeLanguage(QString qmFile)

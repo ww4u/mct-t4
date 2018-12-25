@@ -12,4 +12,10 @@ void sysWarning( const QString &str );
 void sysError( const QString &str );
 void sysError( const QString &info , const int &val);
 
+bool copyFileToPath(QString sourceDir ,QString toDir, bool coverFileIfExist);
+
+QString readFile(QString fileName);
+
+int writeFile(QString fileName, QString text);
+
 #endif // SYSAPI_H

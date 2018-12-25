@@ -9,45 +9,71 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="19"/>
+        <location filename="../../source/wnd/h2action.cpp" line="20"/>
         <source>PA</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="19"/>
+        <location filename="../../source/wnd/h2action.cpp" line="20"/>
         <source>PRN</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="19"/>
+        <location filename="../../source/wnd/h2action.cpp" line="20"/>
         <source>PRA</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="247"/>
+        <location filename="../../source/wnd/h2action.cpp" line="220"/>
         <source>Run</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="266"/>
-        <location filename="../../source/wnd/h2action.cpp" line="274"/>
-        <location filename="../../source/wnd/h2action.cpp" line="291"/>
+        <location filename="../../source/wnd/h2action.cpp" line="239"/>
+        <location filename="../../source/wnd/h2action.cpp" line="247"/>
         <source>warning</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="266"/>
+        <location filename="../../source/wnd/h2action.cpp" line="239"/>
         <source>Device motor uneable</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="274"/>
+        <location filename="../../source/wnd/h2action.cpp" line="247"/>
         <source>Device Homing Invalid</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="291"/>
-        <source>Data download to device error!</source>
+        <location filename="../../source/wnd/h2action.cpp" line="311"/>
+        <source>tips</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2action.cpp" line="311"/>
+        <source>Run Success!</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2action.cpp" line="314"/>
+        <location filename="../../source/wnd/h2action.cpp" line="317"/>
+        <location filename="../../source/wnd/h2action.cpp" line="320"/>
+        <source>error</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2action.cpp" line="314"/>
+        <source>Get current position error!</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2action.cpp" line="317"/>
+        <source>Running error!</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2action.cpp" line="320"/>
+        <source>Type error!</source>
         <translation></translation>
     </message>
 </context>
@@ -97,7 +123,7 @@
         <location filename="../../source/wnd/h2configuration.ui" line="251"/>
         <location filename="../../source/wnd/h2configuration.ui" line="300"/>
         <source> mm</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/h2configuration.ui" line="321"/>
@@ -546,8 +572,8 @@
     </message>
     <message>
         <location filename="../../source/wnd/h2ops.ui" line="1950"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="888"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="901"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="889"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="902"/>
         <source>Run  Sequence</source>
         <translation></translation>
     </message>
@@ -679,39 +705,45 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="515"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="521"/>
         <source>load completed</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="530"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="603"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="536"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="604"/>
         <source>save completed</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="610"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="552"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="611"/>
         <source>error</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="644"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="661"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="552"/>
+        <source>Error log upload error!</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.cpp" line="645"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="662"/>
         <source>Start Go Home</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="664"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="665"/>
         <source>Stop Go Home</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="904"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="905"/>
         <source>Stop Sequence</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="610"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="611"/>
         <source>Starting Home failure</source>
         <translation></translation>
     </message>
@@ -731,7 +763,7 @@
     <message>
         <location filename="../../source/wnd/h2product.ui" line="112"/>
         <source>ID：</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/h2product.ui" line="130"/>
@@ -1070,22 +1102,22 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="119"/>
+        <location filename="../../source/widget/megainterface.cpp" line="170"/>
         <source>ON</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="120"/>
+        <location filename="../../source/widget/megainterface.cpp" line="171"/>
         <source>OFF</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="188"/>
+        <location filename="../../source/widget/megainterface.cpp" line="239"/>
         <source>error</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="188"/>
+        <location filename="../../source/widget/megainterface.cpp" line="239"/>
         <source>open device error</source>
         <translation></translation>
     </message>
@@ -1098,80 +1130,68 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="142"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="230"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="259"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="143"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="231"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="261"/>
         <location filename="../../source/wnd/roboconfig.cpp" line="321"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="488"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="555"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="502"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="569"/>
         <source>tips</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="142"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="143"/>
         <source>The device already exists in the project.</source>
         <translation></translation>
     </message>
     <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="192"/>
         <location filename="../../source/wnd/roboconfig.cpp" line="215"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="222"/>
-        <source>	
-Download Failure</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="191"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="215"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="222"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="251"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="323"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="479"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="669"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="223"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="253"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="330"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="493"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="683"/>
         <source>error</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="205"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="242"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="270"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="484"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="244"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="272"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="498"/>
         <source>Current Device In Offline</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="205"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="242"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="270"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="319"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="332"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="484"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="244"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="272"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="324"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="327"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="340"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="498"/>
         <source>warning</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="230"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="231"/>
         <source>Download Success!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="251"/>
-        <source>
-Upload Faiured</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="191"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="192"/>
         <source>
 From device upload config faiured</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="259"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="261"/>
         <source>Upload Succeed!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="319"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="327"/>
         <source>Store timeout!</source>
         <translation></translation>
     </message>
@@ -1181,42 +1201,58 @@ From device upload config faiured</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="323"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="215"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="223"/>
+        <source>Download Failure</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="253"/>
+        <source>Upload Faiured</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="324"/>
+        <source>Operation in progress!</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="330"/>
         <source>Store error!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="332"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="340"/>
         <source>unable</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="376"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="390"/>
         <source>close</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="377"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="391"/>
         <source>delete</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="479"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="493"/>
         <source>	Reset Failure</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="488"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="502"/>
         <source>Reset Success!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="555"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="569"/>
         <source>Device Open Failure!!!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="669"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="683"/>
         <source>Robot type not</source>
         <translation></translation>
     </message>

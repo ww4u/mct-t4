@@ -734,7 +734,7 @@ void H2Ops::buttonClickedSingelMove(QToolButton *btn, int ax, int direct)
     on_pushButton_stop_clicked();
     QThread::msleep(100);
     btn->setEnabled(false);
-    XThread *thread = new XThread(funcRun,this);
+    XThread *thread = new XThread(funcRun);
     connect(thread,&XThread::finished,this,[=](){btn->setEnabled(true);});
     thread->start();
 }

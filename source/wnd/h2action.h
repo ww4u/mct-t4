@@ -46,6 +46,7 @@ private slots:
 
     void slotShowContextmenu(const QPoint &pos);
     void soltActionRun();
+    void soltActionRunEnd(int ret);
 
 private:
     Ui::H2Action *ui;
@@ -63,9 +64,6 @@ private:
     QString m_fileContext;
 
     QMenu *m_menu;
-
-    QString readFile(QString fileName);
-    int writeFile(QString fileName, QString text);
 };
 
 #endif // H2ACTION_H

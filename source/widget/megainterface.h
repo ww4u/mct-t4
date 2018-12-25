@@ -4,7 +4,6 @@
 #include <QMenu>
 #include <QStandardItemModel>
 #include <QWidget>
-#include <QThread>
 #include <QMetaType>
 #include <QAbstractItemView>
 #include <QTableWidget>
@@ -20,20 +19,6 @@ enum _DEV_TYPES
     TYPE_USB = 1
 };
 
-class DeviceSearchThread: public QThread
-{
-    Q_OBJECT
-signals:
-    void resultReady(const QString &s);
-
-public:
-    void run();
-    void setType(int type);
-
-private:
-    int m_type;
-};
-
 
 class MegaInterface : public QWidget
 {
@@ -43,16 +28,14 @@ public:
     explicit MegaInterface(QWidget *parent = 0);
     ~MegaInterface();
 
-    int visa() const;
-
 signals:
-    void signal_selected_info(const QString &strDevInfo);
+    void signalSelectedInfo(const QString &strDevInfo);
 
 private slots:
     void slotChangeDeviceType(int index);
-    void slotScanDevices();
-    void slotScanFinished();
-    void insertOneRow(QString str);
+    void slotDeviceScan();
+    void slotDeviceScanEnd();
+    void slotShowSearchResult(QString strDevices);
     void slotShowContextmenu(const QPoint &pos);
     void soltActionOpen();
     void soltActionClose();
@@ -68,7 +51,6 @@ private:
     QMenu *m_menu;
 
     int m_devType;
-    DeviceSearchThread *m_searchThread;
     void clearListView();
     int deviceOpen();
 };

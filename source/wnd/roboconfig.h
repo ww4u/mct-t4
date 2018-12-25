@@ -46,7 +46,7 @@ private slots:
     void slotAddNewRobot(QString strDevInfo );
     void soltActionClose();
     void soltActionDelete();
-    void slotStoreTips(int val);
+    void slotStoreEnd(int val);
 
 private:
     Ui::RoboConfig *ui;
@@ -75,9 +75,7 @@ private:
     int  setReset();
 
     QMenu *m_menu;
-    bool copyFileToPath(QString sourceDir, QString toDir, bool coverFileIfExist);
     QTranslator m_translator;
-    int m_retVal;
 };
 
 #endif // H2CONFIG_H

@@ -1,5 +1,6 @@
 #include "h2action.h"
 #include "ui_h2action.h"
+#include "sysapi.h"
 
 H2Action::H2Action(QWidget *parent) :
     XConfig(parent),
@@ -172,34 +173,6 @@ void H2Action::slotModelChanged(QModelIndex index1, QModelIndex index2, QVector<
     emit signalModelDataChanged(true);
 }
 
-QString H2Action::readFile(QString fileName)
-{
-    QFile file(fileName);
-    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        qDebug() << QString("Can't ReadOnly open the file: %1").arg(fileName);
-        return "";
-    }
-
-    QByteArray array = file.readAll();
-    file.close();
-    return QString(array);
-}
-
-int H2Action::writeFile(QString fileName, QString text)
-{
-    QFile file(fileName);
-    if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        qDebug() << QString("Can't WriteOnly open the file: %1").arg(fileName);
-        return -1;
-    }
-
-    file.write(text.toUtf8());
-    file.close();
-    return 0;
-}
-
 void H2Action::translateUI()
 {
     ui->retranslateUi(this);
@@ -283,44 +256,9 @@ void H2Action::soltActionRun()
     double velocity = ui->tableView->model()->index(row, 3).data().toDouble();
     double acceleration = ui->tableView->model()->index(row, 4).data().toDouble();
 
-#if 0
-    //! 先将数据下载设备，然后发送文件行索引号进行移动
-    ret = saveConfig();
-    ret += writeDeviceConfig();
-    if(ret != 0){
-        QMessageBox::warning(this,tr("warning"),tr("Data download to device error!"));
-        return;
-    }
-
-    auto func = [&]()
-    {
-        ret = mrgRobotFileResolve(mViHandle, mRobotName, 0, recordNumber, 0, 20000);
-        qDebug() << "mrgRobotFileResolve" << ret;
-        if(ret != 0) {
-            sysError("mrgRobotFileResolve", ret);
-            return;
-        }
-
-        ret = mrgRobotRun(mViHandle, mRobotName, 0);
-        qDebug() << "mrgRobotRun" << ret;
-        if(ret != 0) {
-            sysError("mrgRobotRun", ret);
-            return;
-        }
-
-        ret = mrgRobotWaitEnd(mViHandle, mRobotName, 0, 0);
-        qDebug() << "mrgRobotWaitEnd" << ret;
-        if(ret != 0) {
-            sysError("mrgRobotWaitEnd", ret);
-            return;
-        }
-    };
-
-#else
     //! 解析界面的数据PA PRA PRN,手工移动
-    auto func = [=]()
+    auto func = [=](int &ret)
     {
-        int ret = -1;
         float time = -1;
 
         if(strType == "PA"){
@@ -328,29 +266,60 @@ void H2Action::soltActionRun()
             ret = mrgGetRobotCurrentPosition(mViHandle, mRobotName, &fx, &fy, &fz);
             if(ret < 0) {
                 sysError("mrgGetRobotCurrentPosition", ret);
+                ret = -1;
                 return;
             }
 
             time = sqrt( pow(posX-fx,2) + pow(posY-fy,2) ) / (0.7 * velocity) ;
             qDebug() << "mrgRobotMoveL PA offset time" << posX << posY << time;
-#if 0
-            ret = mrgRobotMoveL(mViHandle, mRobotName, -1, posX, posY, 0, time, 0); //函数执行暂时存在问题
-#else
             ret = mrgRobotRelMoveL(mViHandle, mRobotName, -1, posX-fx, posY-fy, 0, time, 0);
-#endif
+            if(ret < 0) {
+                sysError("mrgRobotRelMoveL", ret);
+                ret = -2;
+                return;
+            }
         }
         else if(strType == "PRA" || strType == "PRN" ){
             time = sqrt( pow(posX,2) + pow(posY,2) ) / (0.7 * velocity) ;
             qDebug() << "mrgRobotRelMoveL PRA/PRN offset time" << posX << posY << time;
             ret = mrgRobotRelMoveL(mViHandle, mRobotName, -1, posX, posY, 0, time, 0);
+            if(ret < 0) {
+                sysError("mrgRobotRelMoveL", ret);
+                ret = -2;
+                return;
+            }
         }
         else{
             qDebug() << "soltActionRun type error!";
+            ret = -3;
+            return;
         }
-        qDebug() << "soltActionRun end" << ret;
+        qDebug() << "soltActionRun Ok";
+        ret = 0;
+        return;
     };
-#endif
 
     XThread *thread = new XThread(func);
+    connect(thread,SIGNAL(signalFinishResult(int)),this,SLOT(soltActionRunEnd(int)));
     thread->start();
+}
+
+void H2Action::soltActionRunEnd(int ret)
+{
+    switch (ret) {
+    case 0:
+        QMessageBox::information(this,tr("tips"),tr("Run Success!"));
+        break;
+    case -1:
+        QMessageBox::critical(this,tr("error"),tr("Get current position error!"));
+        break;
+    case -2:
+        QMessageBox::critical(this,tr("error"),tr("Running error!"));
+        break;
+    case -3:
+        QMessageBox::critical(this,tr("error"),tr("Type error!"));
+        break;
+    default:
+        break;
+    }
 }

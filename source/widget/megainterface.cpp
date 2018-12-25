@@ -7,18 +7,18 @@
 
 #include "MegaGateway.h"
 #include "sysapi.h"
+#include "xthread.h"
 
 MegaInterface::MegaInterface(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MegaInterface),
     m_devType(TYPE_LAN),
-    m_menu(NULL),
-    m_searchThread(NULL)
+    m_menu(NULL)
 {
     ui->setupUi(this);
 
     connect(ui->comboBox_DevType,SIGNAL(currentIndexChanged(int)),this,SLOT(slotChangeDeviceType(int)));
-    connect(ui->pushButton_Scan,SIGNAL(clicked(bool)),this,SLOT(slotScanDevices()));
+    connect(ui->pushButton_Scan,SIGNAL(clicked(bool)),this,SLOT(slotDeviceScan()));
 
     m_model = new QStandardItemModel(ui->tableView);
     ui->tableView->setModel(m_model);
@@ -55,28 +55,77 @@ void MegaInterface::slotChangeDeviceType(int index)
     }
 }
 
-void MegaInterface::slotScanDevices()
+void MegaInterface::slotDeviceScan()
 {
+    auto func = [this](QString &strRet)
+    {
+        QString strFindDevices = "";
+        QStringList strAllDeviceList;
+        char buff[4096] = "";
+        if(m_devType == TYPE_LAN){
+            mrgFindGateWay(0, buff, sizeof(buff), 1);
+        }
+        else if(m_devType == TYPE_USB){
+            mrgFindGateWay(1, buff, sizeof(buff), 1);
+        }
+
+        strFindDevices = QString("%1").arg(buff);
+        if(strFindDevices.length() == 0)
+        {
+            sysError("mrgFindGateWay error!");
+            strRet = "";
+            return;
+        }
+        qDebug() << "find devices:" << strFindDevices;
+
+        foreach (QString strDevice, strFindDevices.split(',', QString::SkipEmptyParts)) {
+            int visa =  mrgOpenGateWay(strDevice.toLocal8Bit().data(), 2000);
+            if(visa <= 0) {
+                continue;
+            }
+
+            char IDN[1024] = "";
+            int ret = mrgGateWayIDNQuery(visa,IDN);
+            if(ret != 0)
+            {
+                mrgCloseGateWay(visa);
+                continue;
+            }else{
+                int len = strlen(IDN);
+                IDN[len-1] = '\0';  // '\n' ===> '\0'
+            }
+            mrgCloseGateWay(visa);
+
+            QStringList lst = strDevice.split("::", QString::SkipEmptyParts);
+            if(m_devType == TYPE_LAN){
+                strAllDeviceList << lst.at(1) + QString(",%1").arg(IDN);
+            }
+            if(m_devType == TYPE_USB){
+                strAllDeviceList << lst.at(0) + "_" + lst.at(1) + "_"
+                                    + lst.at(2) + "_" + lst.at(3)
+                                    + QString(",%1").arg(IDN);
+            }
+        }
+        strRet = strAllDeviceList.join("::");
+        return;
+    };
+
     clearListView();
-
-    m_searchThread = new DeviceSearchThread;
-    m_searchThread->setType(m_devType);
-    connect(m_searchThread, SIGNAL(resultReady(QString)), this, SLOT(insertOneRow(QString)));
-    connect(m_searchThread, SIGNAL(finished()), this, SLOT(slotScanFinished()));
-    connect(m_searchThread, SIGNAL(finished()), m_searchThread, SLOT(deleteLater()));
-
-    m_searchThread->start();
+    XThread *thread = new XThread(func);
+    connect(thread, SIGNAL(finished()), this, SLOT(slotDeviceScanEnd()));
+    connect(thread, SIGNAL(signalFinishResult(QString)), this, SLOT(slotShowSearchResult(QString)));
     ui->pushButton_Scan->setEnabled(false);
     ui->progressBar->setMaximum(0);
+    thread->start();
 }
 
-void MegaInterface::slotScanFinished()
+void MegaInterface::slotDeviceScanEnd()
 {
     ui->pushButton_Scan->setEnabled(true);
     ui->progressBar->setMaximum(100);
 }
 
-void MegaInterface::insertOneRow(QString str)
+void MegaInterface::slotShowSearchResult(QString strDevices)
 {
     QStringList strListHeader;
     if(m_devType == TYPE_LAN)
@@ -88,13 +137,15 @@ void MegaInterface::insertOneRow(QString str)
     }
     m_model->setHorizontalHeaderLabels(strListHeader);
 
-    int maxRow = m_model->rowCount();
-    QStringList strListInfo = str.split(',', QString::SkipEmptyParts);
-    for(int index=0; index<strListInfo.count(); index++)
-    {
-        QStandardItem *t_item = new QStandardItem(strListInfo.at(index));
-        m_itemList.append(t_item);
-        m_model->setItem(maxRow, index, t_item);
+    foreach (QString strDev, strDevices.split("::", QString::SkipEmptyParts)) {
+        int maxRow = m_model->rowCount();
+        QStringList strListInfo = strDev.split(',', QString::SkipEmptyParts);
+        for(int index=0; index<strListInfo.count(); index++)
+        {
+            QStandardItem *t_item = new QStandardItem(strListInfo.at(index));
+            m_itemList.append(t_item);
+            m_model->setItem(maxRow, index, t_item);
+        }
     }
 }
 
@@ -158,7 +209,7 @@ void MegaInterface::slotSelectDevices()
     }
     if(strDevInfo.split(",").count() >= 5)
     {
-        emit signal_selected_info(strDevInfo);
+        emit signalSelectedInfo(strDevInfo);
     }
 }
 
@@ -197,80 +248,5 @@ void MegaInterface::on_buttonBox_clicked(QAbstractButton *button)
     {
         slotSelectDevices();
     }
-    else
-    {}
     close();
-}
-
-
-/////////////////////////////////////////////////////////////
-void DeviceSearchThread::run()
-{
-    QString strFindDevices;
-    if(m_type == TYPE_LAN)
-    {
-        char buff[4096] = "";
-        mrgFindGateWay(0, buff, sizeof(buff), 1);
-        strFindDevices = QString("%1").arg(buff);
-        if(strFindDevices.length() == 0)
-        {
-            sysError("mrgFindGateWay LAN Null!");
-            return;
-        }
-    }
-    else if(m_type == TYPE_USB)
-    {
-        char buff[4096] = "";
-        mrgFindGateWay(1, buff, sizeof(buff), 1);
-        strFindDevices = QString("%1").arg(buff);
-        //USB0::0xA1B2::0x5722::MRHT00000000000001::INSTR
-        if(strFindDevices.length() == 0)
-        {
-            sysError("mrgFindGateWay USB error!");
-            return;
-        }
-    }
-    qDebug() << "find devices:" << strFindDevices;
-
-    QStringList listFindDevices = strFindDevices.split(',', QString::SkipEmptyParts);
-    for(int devIndex=0; devIndex<listFindDevices.count(); devIndex++)
-    {
-        QString strDevice = listFindDevices.at(devIndex);
-        int visa =  mrgOpenGateWay(strDevice.toLocal8Bit().data(), 2000);
-        if(visa <= 0) {
-            continue;
-        }
-
-        char IDN[1024] = "";
-        int ret = mrgGateWayIDNQuery(visa,IDN);
-        if(ret != 0)
-        {
-            mrgCloseGateWay(visa);
-            continue;
-        }else{
-            int len = strlen(IDN);
-            IDN[len-1] = '\0';  // '\n' ===> '\0'
-        }
-        mrgCloseGateWay(visa);
-
-        QStringList lst = strDevice.split("::", QString::SkipEmptyParts);
-
-        if(m_type == TYPE_LAN)
-        {
-            emit resultReady(lst.at(1) + QString(",%1").arg(IDN));
-        }
-        else if(m_type == TYPE_USB)
-        {
-            QString str = lst.at(0) + "_"
-                    + lst.at(1) + "_"
-                    + lst.at(2) + "_"
-                    + lst.at(3);
-            emit resultReady(str + QString(",%1").arg(IDN));
-        }
-    }
-}
-
-void DeviceSearchThread::setType(int type)
-{
-    m_type = type;
 }

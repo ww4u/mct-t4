@@ -1,8 +1,6 @@
 #include "h2product.h"
 #include "ui_h2product.h"
 
-#include <QThread>
-
 H2Product::H2Product(QString strDevInfo, QWidget *parent) :
     XConfig(parent),
     ui(new Ui::H2Product)

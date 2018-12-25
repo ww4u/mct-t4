@@ -30,7 +30,7 @@ QVariant DiagnosisModel::data(const QModelIndex &index, int role) const
     { return QVariant(); }
 
     if ( col == 0 )
-    { return QVariant( mItems[ row ]->mNr ); }
+    { return QVariant( mItems[ row ]->mNr );        }
     else if ( col == 1 )
     { return QVariant( ( mItems[ row ]->mType ) ); }
     else if ( col == 2 )
@@ -136,24 +136,17 @@ QList< DiagnosisItem *> *DiagnosisModel::items()
 int DiagnosisModel::save( const QString &fileName )
 {
     QFile fileOut( fileName );
-
     if ( !fileOut.open( QIODevice::WriteOnly) )
     { return -1; }
 
     QXmlStreamWriter writer( &fileOut );
 
     int ret;
-
     writer.writeStartDocument();
-
     writer.writeStartElement("diagnosis");
-
     ret = serialOut( writer );
-
     writer.writeEndElement();
-
     writer.writeEndDocument();
-
     fileOut.close();
 
     return ret;
@@ -260,13 +253,6 @@ void DiagnosisModel::createDemoData()
     for ( int i = 0; i < 10; i++ )
     {
         pItem = new DiagnosisItem();
-
-//        int mNr;
-//        QString mType;
-//        QString mTs;
-//        QString mAddInfo;
-//        int mCounter;
-//        QString mMessage;
 
         pItem->mNr = i;
         pItem->mType = "Err";

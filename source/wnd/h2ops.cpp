@@ -284,7 +284,13 @@ void H2Ops::slotLoadConfigAgain()
 
 void H2Ops::slotRobotStop()
 {
-    setAllTabStopWorking();
+//    setAllTabStopWorking();
+    int index = ui->tabWidget->currentIndex();
+
+    if(m_isHomgingRunFlag){
+        on_pushButton_starting_home_clicked();
+    }
+    on_tabWidget_currentChanged(index);
 }
 
 void H2Ops::slot_mct_checked(bool checked)
@@ -356,9 +362,9 @@ void H2Ops::setAllTabStopWorking()
     if(m_isDebugRunFlag){
         on_toolButton_debugRun_clicked();
     }
-    if(m_isHomgingRunFlag){
-        on_pushButton_starting_home_clicked();
-    }
+//    if(m_isHomgingRunFlag){ //正在回零
+//        on_pushButton_starting_home_clicked();
+//    }
 }
 
 void H2Ops::on_tabWidget_currentChanged(int index)
@@ -530,51 +536,46 @@ void H2Ops::on_btnExport_clicked()
     sysInfo( fDlg.selectedFiles().first(), tr("save completed") );
 }
 
-int writeFile(QString fileName, QString text)
-{
-    QFile file(fileName);
-    if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        qDebug() << QString("Can't WriteOnly open the file: %1").arg(fileName);
-        return -1;
-    }
-
-    file.write(text.toUtf8());
-    file.close();
-    return 0;
-}
-
 //! diagnosis
 void H2Ops::on_btnRead_clicked()
 {
-    //! \todo read from device
-    //    for ( int i = 0; i < 10; i++ )
-    //    {
-    //        m_pDiagnosisModel->appendOneItem(
-    //                    i,
-    //                    "Err",
-    //                    QDateTime::currentDateTime().toString( "yyyy/M/d h/m/s/z"),
-    //                    "additional info",
-    //                    i+1,
-    //                    "no messgage");
-    //    }
-
-    QString strFileName = QApplication::applicationDirPath() + "/dataset/111.txt";
-
-    int len = 4096 * 1024;
+    int len = 4096;
     char *logBuff = (char *)malloc(len);
     int ret = mrgErrorLogUpload(m_ViHandle, 1, logBuff, len );
+    QString strFileData = QString("%1").arg(logBuff);
+    free(logBuff);
+
     qDebug() << "mrgErrorLogUpload" << ret;
+    if(ret <= 0)
+    {
+        sysError("mrgErrorLogUpload");
+        QMessageBox::critical(this,tr("error"), tr("Error log upload error!"));
+        return;
+    }
 
-    ret = writeFile(strFileName.toLocal8Bit().data(), QString("%1").arg(logBuff) );
-    qDebug() << "mrgErrorLogUpload write file" << ret;
+    qDebug() << "mrgErrorLogUpload Data:" << strFileData;
 
+    QList<QStringList> lstData;
+    foreach (QString str, strFileData.split('\n', QString::SkipEmptyParts)) {
+        lstData << str.split(",", QString::SkipEmptyParts);
+    };
 
+    foreach (QStringList lst, lstData) {
+        bool ok = false;
+        int code = lst.at(0).toInt(&ok);
+        if(!ok) continue;
+        int counter = lst.at(1).toInt(&ok);
+        if(!ok) continue;
+        QString strErrorText = lst.at(2);
 
-
-
-
-
+        m_pDiagnosisModel->appendOneItem(
+                    code,
+                    "Err",
+                    QDateTime::currentDateTime().toString( "yyyy/M/d h/m/s/z"),
+                    "additional info",
+                    counter,
+                    strErrorText);
+    };
 
 }
 
@@ -931,7 +932,6 @@ void H2Ops::updateBackgroundStatus()
         ui->tab_Monitor->setEnabled(false);
         ui->tabWidget->setCurrentIndex(3);
 
-//        setAllTabStopWorking();
         return;
     }
     else if(homeVaild == 0)

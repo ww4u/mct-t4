@@ -31,7 +31,14 @@ void H2Measurement::slotChangeCornerPicture(int index)
 
 int H2Measurement::readDeviceConfig()
 {
-    m_ZeroPoint = mrgGetRobotCoordinateSystem(mViHandle, mRobotName);
+    int ret = mrgGetRobotCoordinateSystem(mViHandle, mRobotName);
+    if(ret < 0)
+    {
+        qDebug() << "mrgGetRobotCoordinateSystem" << ret;
+        sysError("mrgGetRobotCoordinateSystem", ret);
+        return -1;
+    }
+    m_ZeroPoint = ret;
 
     double x, y, z;
     if(0 == mrgGetRobotProjectZero(mViHandle, mRobotName, &x, &y, &z) ){

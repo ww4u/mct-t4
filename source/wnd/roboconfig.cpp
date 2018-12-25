@@ -134,6 +134,7 @@ void RoboConfig::createRobot(QString strDevInfo)
 
 void RoboConfig::slotAddNewRobot(QString strDevInfo)
 {
+    m_megaSerachWidget = NULL;
     for(int i=0; i< m_RobotList.count(); i++)
     {
         if( m_RobotList[i].m_strDevInfo == strDevInfo)
@@ -335,8 +336,10 @@ void RoboConfig::slotSync()
 void RoboConfig::slotSearch()
 {
     if(m_megaSerachWidget != NULL)
+    {
         delete m_megaSerachWidget;
-
+        m_megaSerachWidget = NULL;
+    }
     m_megaSerachWidget = new MegaInterface;
     m_megaSerachWidget->move( x()+100, y()+100);
     m_megaSerachWidget->show();
@@ -351,6 +354,10 @@ void RoboConfig::slotExit()
             //如果没有关闭就关闭设备
             slot_open_close(strIP);
         }
+    }
+
+    if(m_megaSerachWidget != NULL){
+        m_megaSerachWidget->close();
     }
 }
 
@@ -696,6 +703,7 @@ int RoboConfig::deviceClose()
 
     ret = mrgMRQDriverState(m_RobotList[mIndex].m_Visa, m_RobotList[mIndex].m_DeviceName, 1, 0);
     qDebug() << "mrgMRQDriverState1 OFF" << ret;
+    QThread::msleep(300);
 
     ret = mrgCloseGateWay(m_RobotList[mIndex].m_Visa);
 

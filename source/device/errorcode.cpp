@@ -203,20 +203,22 @@ EXPORT_API int CALL mrgErrorCodeConfigDownload(ViSession vi, int code, int type,
 }
 
 
-/*
-返回错误文件
-vi :visa设备句柄
-format: NORMAL|ZIP|TARGZ|TAR -> 0,1,2,3
-errorLog:返回错误日志
-len: 长度
-*/
+
+/**
+ * @brief 返回错误文件
+ * @param vi visa设备句柄
+ * @param format NORMAL|ZIP|TARGZ|TAR -> 0,1,2,3
+ * @param errorLog 返回错误日志
+ * @param len 长度
+ * @return 获取数据长度，<=0表示错误
+ */
 EXPORT_API int CALL mrgErrorLogUpload(ViSession vi, int format, char* errorLog, int len)
 {
 	char args[SEND_BUF];
-	int retlen = 0;
+    int retlen = 0, headDataLen = 0;
+    char as8Ret[1024] = "", as8StrLen[20] = "";
 
 	char* ps8Format = NULL;
-
 	if (format == 0)
 	{
 		ps8Format = "NORMAL";
@@ -238,12 +240,24 @@ EXPORT_API int CALL mrgErrorLogUpload(ViSession vi, int format, char* errorLog, 
 		return -2;
 	}
 
-
     snprintf(args, SEND_BUF, ":ERRL:UPLoad? %s\n", ps8Format);
-	if ((retlen = busQuery(vi, args, strlen(args), errorLog, len)) == 0) {
+    if ((retlen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
 		return -1;
 	}
-	return 0;
+    if(as8Ret[0] != '#')
+    {
+        return -3;
+    }
+    headDataLen = as8Ret[1] - 0x30;
+    memcpy(as8StrLen, &as8Ret[2], headDataLen);
+    int dataLen = strtoul(as8StrLen, NULL, 10);
+    if (dataLen == 0)
+    {
+        return 0;
+    }
+
+    memcpy(errorLog, &as8Ret[2+headDataLen], dataLen);
+    return dataLen;
 }
 
 /*

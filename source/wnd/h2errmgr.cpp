@@ -59,13 +59,13 @@ int H2ErrMgr::readDeviceConfig()
         int enable; //默认使能,界面上没有对应的列
 
         int ret=  mrgErrorCodeConfigUpload(mViHandle, code, &type, &diagnose, &response, &enable);
-        qDebug() << "ErrorCodeUpload" << ret << ":" << code << type << diagnose << response << enable;
         if(ret < 0){
             sysError("mrgErrorCodeConfigUpload", code);
             qDebug() << "mrgErrorCodeConfigUpload error" << code << ret;
             isOk = -1;
             continue;
         }
+        qDebug() << "ErrorCodeUpload" << ret << ":" << code << type << diagnose << response << enable;
 
         mErrManager.mItems.at(i)->mEventType = (e_event_type)type;
 

@@ -27,13 +27,14 @@ enable: 是否使能 Y/N ->0,1
 EXPORT_API int CALL mrgErrorCodeConfigDownload(ViSession vi, int code, int type, int diagnose, int response, int enable);
 
 
-/*
-*返回错误文件
-*vi :visa设备句柄
-*format: NORMAL|ZIP|TARGZ|TAR -> 0,1,2,3
-*errorLog:返回错误日志
-*len: 长度
-*/
+/**
+ * @brief 返回错误文件
+ * @param vi visa设备句柄
+ * @param format NORMAL|ZIP|TARGZ|TAR -> 0,1,2,3
+ * @param errorLog 返回错误日志
+ * @param len 长度
+ * @return 获取数据长度
+ */
 EXPORT_API int CALL mrgErrorLogUpload(ViSession vi, int format, char* errorLog, int len);
 
 /*

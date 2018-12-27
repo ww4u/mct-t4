@@ -9,155 +9,257 @@
 /* Default timeout can be changed using clnt_control() */
 static struct timeval TIMEOUT = { 25, 0 };
 
-enum clnt_stat 
-device_abort_1(Device_Link *argp, Device_Error *clnt_res, CLIENT *clnt)
+Device_Error *
+device_abort_1(Device_Link *argp, CLIENT *clnt)
 {
-	return (clnt_call(clnt, device_abort,
-		(xdrproc_t) xdr_Device_Link, (caddr_t) argp,
-		(xdrproc_t) xdr_Device_Error, (caddr_t) clnt_res,
-		TIMEOUT));
+    static Device_Error clnt_res;
+
+    memset((char *)&clnt_res, 0, sizeof(clnt_res));
+    if (clnt_call (clnt, device_abort,
+                   (xdrproc_t) xdr_Device_Link, (caddr_t) argp,
+                   (xdrproc_t) xdr_Device_Error, (caddr_t) &clnt_res,
+                   TIMEOUT) != RPC_SUCCESS) {
+        return (NULL);
+    }
+    return (&clnt_res);
 }
 
-enum clnt_stat 
-create_link_1(Create_LinkParms *argp, Create_LinkResp *clnt_res, CLIENT *clnt)
+Create_LinkResp *
+create_link_1(Create_LinkParms *argp, CLIENT *clnt)
 {
-	return (clnt_call(clnt, create_link,
-		(xdrproc_t) xdr_Create_LinkParms, (caddr_t) argp,
-		(xdrproc_t) xdr_Create_LinkResp, (caddr_t) clnt_res,
-		TIMEOUT));
+    static Create_LinkResp clnt_res;
+
+    memset((char *)&clnt_res, 0, sizeof(clnt_res));
+    if (clnt_call (clnt, create_link,
+                   (xdrproc_t) xdr_Create_LinkParms, (caddr_t) argp,
+                   (xdrproc_t) xdr_Create_LinkResp, (caddr_t) &clnt_res,
+                   TIMEOUT) != RPC_SUCCESS) {
+        return (NULL);
+    }
+    return (&clnt_res);
 }
 
-enum clnt_stat 
-device_write_1(Device_WriteParms *argp, Device_WriteResp *clnt_res, CLIENT *clnt)
+Device_WriteResp *
+device_write_1(Device_WriteParms *argp, CLIENT *clnt)
 {
-	return (clnt_call(clnt, device_write,
-		(xdrproc_t) xdr_Device_WriteParms, (caddr_t) argp,
-		(xdrproc_t) xdr_Device_WriteResp, (caddr_t) clnt_res,
-		TIMEOUT));
+    static Device_WriteResp clnt_res;
+
+    memset((char *)&clnt_res, 0, sizeof(clnt_res));
+    if (clnt_call (clnt, device_write,
+                   (xdrproc_t) xdr_Device_WriteParms, (caddr_t) argp,
+                   (xdrproc_t) xdr_Device_WriteResp, (caddr_t) &clnt_res,
+                   TIMEOUT) != RPC_SUCCESS) {
+        return (NULL);
+    }
+    return (&clnt_res);
 }
 
-enum clnt_stat 
-device_read_1(Device_ReadParms *argp, Device_ReadResp *clnt_res, CLIENT *clnt)
+Device_ReadResp *
+device_read_1(Device_ReadParms *argp, CLIENT *clnt)
 {
-	return (clnt_call(clnt, device_read,
-		(xdrproc_t) xdr_Device_ReadParms, (caddr_t) argp,
-		(xdrproc_t) xdr_Device_ReadResp, (caddr_t) clnt_res,
-		TIMEOUT));
+    static Device_ReadResp clnt_res;
+
+    memset((char *)&clnt_res, 0, sizeof(clnt_res));
+    if (clnt_call (clnt, device_read,
+                   (xdrproc_t) xdr_Device_ReadParms, (caddr_t) argp,
+                   (xdrproc_t) xdr_Device_ReadResp, (caddr_t) &clnt_res,
+                   TIMEOUT) != RPC_SUCCESS) {
+        return (NULL);
+    }
+    return (&clnt_res);
 }
 
-enum clnt_stat 
-device_readstb_1(Device_GenericParms *argp, Device_ReadStbResp *clnt_res, CLIENT *clnt)
+Device_ReadStbResp *
+device_readstb_1(Device_GenericParms *argp, CLIENT *clnt)
 {
-	return (clnt_call(clnt, device_readstb,
-		(xdrproc_t) xdr_Device_GenericParms, (caddr_t) argp,
-		(xdrproc_t) xdr_Device_ReadStbResp, (caddr_t) clnt_res,
-		TIMEOUT));
+    static Device_ReadStbResp clnt_res;
+
+    memset((char *)&clnt_res, 0, sizeof(clnt_res));
+    if (clnt_call (clnt, device_readstb,
+                   (xdrproc_t) xdr_Device_GenericParms, (caddr_t) argp,
+                   (xdrproc_t) xdr_Device_ReadStbResp, (caddr_t) &clnt_res,
+                   TIMEOUT) != RPC_SUCCESS) {
+        return (NULL);
+    }
+    return (&clnt_res);
 }
 
-enum clnt_stat 
-device_trigger_1(Device_GenericParms *argp, Device_Error *clnt_res, CLIENT *clnt)
+Device_Error *
+device_trigger_1(Device_GenericParms *argp, CLIENT *clnt)
 {
-	return (clnt_call(clnt, device_trigger,
-		(xdrproc_t) xdr_Device_GenericParms, (caddr_t) argp,
-		(xdrproc_t) xdr_Device_Error, (caddr_t) clnt_res,
-		TIMEOUT));
+    static Device_Error clnt_res;
+
+    memset((char *)&clnt_res, 0, sizeof(clnt_res));
+    if (clnt_call (clnt, device_trigger,
+                   (xdrproc_t) xdr_Device_GenericParms, (caddr_t) argp,
+                   (xdrproc_t) xdr_Device_Error, (caddr_t) &clnt_res,
+                   TIMEOUT) != RPC_SUCCESS) {
+        return (NULL);
+    }
+    return (&clnt_res);
 }
 
-enum clnt_stat 
-device_clear_1(Device_GenericParms *argp, Device_Error *clnt_res, CLIENT *clnt)
+Device_Error *
+device_clear_1(Device_GenericParms *argp, CLIENT *clnt)
 {
-	return (clnt_call(clnt, device_clear,
-		(xdrproc_t) xdr_Device_GenericParms, (caddr_t) argp,
-		(xdrproc_t) xdr_Device_Error, (caddr_t) clnt_res,
-		TIMEOUT));
+    static Device_Error clnt_res;
+
+    memset((char *)&clnt_res, 0, sizeof(clnt_res));
+    if (clnt_call (clnt, device_clear,
+                   (xdrproc_t) xdr_Device_GenericParms, (caddr_t) argp,
+                   (xdrproc_t) xdr_Device_Error, (caddr_t) &clnt_res,
+                   TIMEOUT) != RPC_SUCCESS) {
+        return (NULL);
+    }
+    return (&clnt_res);
 }
 
-enum clnt_stat 
-device_remote_1(Device_GenericParms *argp, Device_Error *clnt_res, CLIENT *clnt)
+Device_Error *
+device_remote_1(Device_GenericParms *argp, CLIENT *clnt)
 {
-	return (clnt_call(clnt, device_remote,
-		(xdrproc_t) xdr_Device_GenericParms, (caddr_t) argp,
-		(xdrproc_t) xdr_Device_Error, (caddr_t) clnt_res,
-		TIMEOUT));
+    static Device_Error clnt_res;
+
+    memset((char *)&clnt_res, 0, sizeof(clnt_res));
+    if (clnt_call (clnt, device_remote,
+                   (xdrproc_t) xdr_Device_GenericParms, (caddr_t) argp,
+                   (xdrproc_t) xdr_Device_Error, (caddr_t) &clnt_res,
+                   TIMEOUT) != RPC_SUCCESS) {
+        return (NULL);
+    }
+    return (&clnt_res);
 }
 
-enum clnt_stat 
-device_local_1(Device_GenericParms *argp, Device_Error *clnt_res, CLIENT *clnt)
+Device_Error *
+device_local_1(Device_GenericParms *argp, CLIENT *clnt)
 {
-	return (clnt_call(clnt, device_local,
-		(xdrproc_t) xdr_Device_GenericParms, (caddr_t) argp,
-		(xdrproc_t) xdr_Device_Error, (caddr_t) clnt_res,
-		TIMEOUT));
+    static Device_Error clnt_res;
+
+    memset((char *)&clnt_res, 0, sizeof(clnt_res));
+    if (clnt_call (clnt, device_local,
+                   (xdrproc_t) xdr_Device_GenericParms, (caddr_t) argp,
+                   (xdrproc_t) xdr_Device_Error, (caddr_t) &clnt_res,
+                   TIMEOUT) != RPC_SUCCESS) {
+        return (NULL);
+    }
+    return (&clnt_res);
 }
 
-enum clnt_stat 
-device_lock_1(Device_LockParms *argp, Device_Error *clnt_res, CLIENT *clnt)
+Device_Error *
+device_lock_1(Device_LockParms *argp, CLIENT *clnt)
 {
-	return (clnt_call(clnt, device_lock,
-		(xdrproc_t) xdr_Device_LockParms, (caddr_t) argp,
-		(xdrproc_t) xdr_Device_Error, (caddr_t) clnt_res,
-		TIMEOUT));
+    static Device_Error clnt_res;
+
+    memset((char *)&clnt_res, 0, sizeof(clnt_res));
+    if (clnt_call (clnt, device_lock,
+                   (xdrproc_t) xdr_Device_LockParms, (caddr_t) argp,
+                   (xdrproc_t) xdr_Device_Error, (caddr_t) &clnt_res,
+                   TIMEOUT) != RPC_SUCCESS) {
+        return (NULL);
+    }
+    return (&clnt_res);
 }
 
-enum clnt_stat 
-device_unlock_1(Device_Link *argp, Device_Error *clnt_res, CLIENT *clnt)
+Device_Error *
+device_unlock_1(Device_Link *argp, CLIENT *clnt)
 {
-	return (clnt_call(clnt, device_unlock,
-		(xdrproc_t) xdr_Device_Link, (caddr_t) argp,
-		(xdrproc_t) xdr_Device_Error, (caddr_t) clnt_res,
-		TIMEOUT));
+    static Device_Error clnt_res;
+
+    memset((char *)&clnt_res, 0, sizeof(clnt_res));
+    if (clnt_call (clnt, device_unlock,
+                   (xdrproc_t) xdr_Device_Link, (caddr_t) argp,
+                   (xdrproc_t) xdr_Device_Error, (caddr_t) &clnt_res,
+                   TIMEOUT) != RPC_SUCCESS) {
+        return (NULL);
+    }
+    return (&clnt_res);
 }
 
-enum clnt_stat 
-device_enable_srq_1(Device_EnableSrqParms *argp, Device_Error *clnt_res, CLIENT *clnt)
+Device_Error *
+device_enable_srq_1(Device_EnableSrqParms *argp, CLIENT *clnt)
 {
-	return (clnt_call(clnt, device_enable_srq,
-		(xdrproc_t) xdr_Device_EnableSrqParms, (caddr_t) argp,
-		(xdrproc_t) xdr_Device_Error, (caddr_t) clnt_res,
-		TIMEOUT));
+    static Device_Error clnt_res;
+
+    memset((char *)&clnt_res, 0, sizeof(clnt_res));
+    if (clnt_call (clnt, device_enable_srq,
+                   (xdrproc_t) xdr_Device_EnableSrqParms, (caddr_t) argp,
+                   (xdrproc_t) xdr_Device_Error, (caddr_t) &clnt_res,
+                   TIMEOUT) != RPC_SUCCESS) {
+        return (NULL);
+    }
+    return (&clnt_res);
 }
 
-enum clnt_stat 
-device_docmd_1(Device_DocmdParms *argp, Device_DocmdResp *clnt_res, CLIENT *clnt)
+Device_DocmdResp *
+device_docmd_1(Device_DocmdParms *argp, CLIENT *clnt)
 {
-	return (clnt_call(clnt, device_docmd,
-		(xdrproc_t) xdr_Device_DocmdParms, (caddr_t) argp,
-		(xdrproc_t) xdr_Device_DocmdResp, (caddr_t) clnt_res,
-		TIMEOUT));
+    static Device_DocmdResp clnt_res;
+
+    memset((char *)&clnt_res, 0, sizeof(clnt_res));
+    if (clnt_call (clnt, device_docmd,
+                   (xdrproc_t) xdr_Device_DocmdParms, (caddr_t) argp,
+                   (xdrproc_t) xdr_Device_DocmdResp, (caddr_t) &clnt_res,
+                   TIMEOUT) != RPC_SUCCESS) {
+        return (NULL);
+    }
+    return (&clnt_res);
 }
 
-enum clnt_stat 
-destroy_link_1(Device_Link *argp, Device_Error *clnt_res, CLIENT *clnt)
+Device_Error *
+destroy_link_1(Device_Link *argp, CLIENT *clnt)
 {
-	return (clnt_call(clnt, destroy_link,
-		(xdrproc_t) xdr_Device_Link, (caddr_t) argp,
-		(xdrproc_t) xdr_Device_Error, (caddr_t) clnt_res,
-		TIMEOUT));
+    static Device_Error clnt_res;
+
+    memset((char *)&clnt_res, 0, sizeof(clnt_res));
+    if (clnt_call (clnt, destroy_link,
+                   (xdrproc_t) xdr_Device_Link, (caddr_t) argp,
+                   (xdrproc_t) xdr_Device_Error, (caddr_t) &clnt_res,
+                   TIMEOUT) != RPC_SUCCESS) {
+        return (NULL);
+    }
+    return (&clnt_res);
 }
 
-enum clnt_stat 
-create_intr_chan_1(Device_RemoteFunc *argp, Device_Error *clnt_res, CLIENT *clnt)
+Device_Error *
+create_intr_chan_1(Device_RemoteFunc *argp, CLIENT *clnt)
 {
-	return (clnt_call(clnt, create_intr_chan,
-		(xdrproc_t) xdr_Device_RemoteFunc, (caddr_t) argp,
-		(xdrproc_t) xdr_Device_Error, (caddr_t) clnt_res,
-		TIMEOUT));
+    static Device_Error clnt_res;
+
+    memset((char *)&clnt_res, 0, sizeof(clnt_res));
+    if (clnt_call (clnt, create_intr_chan,
+                   (xdrproc_t) xdr_Device_RemoteFunc, (caddr_t) argp,
+                   (xdrproc_t) xdr_Device_Error, (caddr_t) &clnt_res,
+                   TIMEOUT) != RPC_SUCCESS) {
+        return (NULL);
+    }
+    return (&clnt_res);
 }
 
-enum clnt_stat 
-destroy_intr_chan_1(void *argp, Device_Error *clnt_res, CLIENT *clnt)
+Device_Error *
+destroy_intr_chan_1(void *argp, CLIENT *clnt)
 {
-	return (clnt_call(clnt, destroy_intr_chan,
-		(xdrproc_t) xdr_void, (caddr_t) argp,
-		(xdrproc_t) xdr_Device_Error, (caddr_t) clnt_res,
-		TIMEOUT));
+    static Device_Error clnt_res;
+
+    memset((char *)&clnt_res, 0, sizeof(clnt_res));
+    if (clnt_call (clnt, destroy_intr_chan,
+                   (xdrproc_t) xdr_void, (caddr_t) argp,
+                   (xdrproc_t) xdr_Device_Error, (caddr_t) &clnt_res,
+                   TIMEOUT) != RPC_SUCCESS) {
+        return (NULL);
+    }
+    return (&clnt_res);
 }
 
-enum clnt_stat 
-device_intr_srq_1(Device_SrqParms *argp, void *clnt_res, CLIENT *clnt)
+void *
+device_intr_srq_1(Device_SrqParms *argp, CLIENT *clnt)
 {
-	return (clnt_call(clnt, device_intr_srq,
-		(xdrproc_t) xdr_Device_SrqParms, (caddr_t) argp,
-		(xdrproc_t) xdr_void, (caddr_t) clnt_res,
-		TIMEOUT));
+    static char clnt_res;
+
+    memset((char *)&clnt_res, 0, sizeof(clnt_res));
+    if (clnt_call (clnt, device_intr_srq,
+                   (xdrproc_t) xdr_Device_SrqParms, (caddr_t) argp,
+                   (xdrproc_t) xdr_void, (caddr_t) &clnt_res,
+                   TIMEOUT) != RPC_SUCCESS) {
+        return (NULL);
+    }
+    return ((void *)&clnt_res);
 }

@@ -18,7 +18,8 @@ int main(int argc, char *argv[])
     w.showNormal();
 //    w.showMaximized();
 #else
-    w.showFullScreen();
+//    w.showFullScreen();
+    w.showNormal();
 #endif
     return a.exec();
 }

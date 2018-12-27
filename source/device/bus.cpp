@@ -323,14 +323,26 @@ int busOpenDevice(char *ip, int timeout_ms)
     _g_clink = NULL;
     _g_timeout = 2000;
 
-    VXI11_CLINK *clink = (VXI11_CLINK *)malloc( sizeof(struct _VXI11_CLINK) );
-    if(vxi11_open_device(&clink, ip, NULL)){
-        printf("vxi11_open_device error: %s\n", ip);
+    // TCPIP0::192.168.1.2::inst0::INSTR,
+    char buff[20][64] = {""};
+    char *p, *pNext;
+    int index = 0;
+    p = STRTOK_S(ip, "::", &pNext);
+    while ( p && (index<20) )
+    {
+        strcpy(buff[index++], p);
+        p = STRTOK_S(NULL, "::", &pNext);
+    }
+    char *strIP = buff[1];
+
+    VXI11_CLINK *clink; //sizeof(VXI11_CLINK)
+    if(vxi11_open_device(&clink, strIP, NULL)){
+//        printf("vxi11_open_device error: %s\n", strIP);
         free(clink);
         return -1;
     }
 
-    strcpy(_g_device_IP, ip);
+    strcpy(_g_device_IP, strIP);
     _g_clink = clink;
     _g_timeout = timeout_ms;
 
@@ -342,26 +354,11 @@ static int SyncSend(int vi, char *buf, int dataLen, int isBlock)
     if(_g_clink == NULL)
         return -1;
 
-    int time = 0, intervalTime = 20;
-    while (1)
-    {
-        if (time > 200){
-            return -2;
-        }
-
-        int ret = vxi11_send(_g_clink, buf, dataLen);
-        if(ret == 0)
-            return 0;
-
-        if(ret == -VXI11_NULL_WRITE_RESP) //timeout
-        {
-            Sleep(intervalTime);
-            time += intervalTime;
-            continue;
-        }
-        else{
-            return -1;
-        }
+    int ret = vxi11_send(_g_clink, buf, dataLen);
+    if(ret > 0)
+        return ret;
+    else{
+        return -1;
     }
 }
 
@@ -370,34 +367,20 @@ static int SyncRead(int vi, char *data, int dataLen, int isBlock)
     if(_g_clink == NULL)
         return -1;
 
+    int ret = -1;
     if(isBlock)
     {
-        int time = 0, intervalTime = 20;
-        while (1)
-        {
-            if (time > 200){
-                return -2;
-            }
-
-            int ret = vxi11_receive(_g_clink, data, dataLen);
-            if(ret == 0)
-                return ret;
-
-            if(ret == -VXI11_NULL_WRITE_RESP) //timeout
-            {
-                Sleep(intervalTime);
-                time += intervalTime;
-                continue;
-            }
-            else{
-                return -1;
-            }
-        }
+        ret = vxi11_receive(_g_clink, data, dataLen);
     }
     else
     {
         // -VXI11_NULL_READ_RESP 超时未判断
-        return vxi11_receive_timeout(_g_clink, data, dataLen, _g_timeout);
+        ret = vxi11_receive_timeout(_g_clink, data, dataLen, _g_timeout);
+    }
+    if(ret > 0)
+        return ret;
+    else{
+        return -1;
     }
 }
 
@@ -424,7 +407,7 @@ unsigned int busWrite(ViSession vi, char *data, unsigned int len)
         UNLOCK();
         return 0;
     }
-    printf("\nTO:\n\t%s", data);
+//    printf("\nTO:\n\t%s", data);
     UNLOCK();
     return (unsigned int)retCount;
 }
@@ -439,10 +422,10 @@ unsigned int busRead(ViSession vi, char *buf, unsigned int len)
         return 0;
     }
 
-    printf("\nRECV:%d\n\t%s", retCount, buf);
+//    printf("\nRECV:%d\n\t%s", retCount, buf);
     if( STRCASECMP(buf, "Command error") == 0 )
     {
-        printf("\n");
+//        printf("\n");
         UNLOCK();
         return 0;
     }
@@ -458,25 +441,25 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* o
     LOCK();
     retCount = SyncSend(vi, input, inputlen, 1);
     if(retCount < 0){
-        printf("TO_QUERY error\n");
+//        printf("TO_QUERY error\n");
         perror("busQuery Write error!");
         UNLOCK();
         return 0;
     }
-    printf("\nQUERY_TO:\n\t%s", input);
+//    printf("\nQUERY_TO:\n\t%s", input);
 
     retCount = SyncRead(vi, output, wantlen, 1);
     if(retCount < 0){
-        printf("RECV_QUERY error\n");
+//        printf("RECV_QUERY error\n");
         perror("busQuery Read error!");
         UNLOCK();
         return 0;
     }
 
-    printf("\nQUERY_RECV:%d\n\t%s", retCount, output);
+//    printf("\nQUERY_RECV:%d\n\t%s", retCount, output);
     if( STRCASECMP(output, "Command error") == 0 )
     {
-        printf("\n");
+//        printf("\n");
         UNLOCK();
         return 0;
     }
@@ -859,8 +842,8 @@ int socketFindResources(char ip[][100], int ip_len,int timeout_ms)
         ret = setsockopt(sock[i], SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout_ms, sizeof(int));
 #else
         struct timeval timeout;
-        timeout.tv_sec = 0;
-        timeout.tv_usec = timeout_ms*1000;
+        timeout.tv_sec = timeout_ms/1000;
+        timeout.tv_usec = (timeout_ms % 1000) * 1000;
         ret = setsockopt(sock[i], SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(struct timeval));
 #endif
         if (ret != 0)
@@ -874,9 +857,15 @@ int socketFindResources(char ip[][100], int ip_len,int timeout_ms)
 		int bOpt = 1;
 #endif
         //设置该套接字为广播类型
+#ifdef _WIN32
         ret = setsockopt(sock[i], SOL_SOCKET, SO_BROADCAST, (char*)&bOpt, sizeof(bOpt));
+#else
+        ret = setsockopt(sock[i], SOL_SOCKET, SO_BROADCAST | SO_REUSEADDR, (char*)&bOpt, sizeof(bOpt));
+#endif
         if(ret != 0)
+        {
             return -1;
+        }
     }
     remoteAddr.sin_family = AF_INET;
     remoteAddr.sin_port = htons(6000);

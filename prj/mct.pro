@@ -30,6 +30,8 @@ VERSION = 0.0.1.3
 HEADERS += ../include/mystd.h           \
     ../include/mydebug.h                \
     ../include/mydef.h                  \
+    ../source/device/vxi11/vxi11.h      \
+    ../source/device/vxi11/vxi11_user.h \
     ../source/device/bus.h              \
     ../source/device/device.h           \
     ../source/device/MegaGateway.h      \
@@ -78,8 +80,10 @@ HEADERS += ../include/mystd.h           \
     ../source/widget/megasplinechart.h  \
     ../source/widget/megainterface.h
 
-
 SOURCES += ../source/main/main.cpp      \
+    ../source/device/vxi11/vxi11_clnt.c \
+    ../source/device/vxi11/vxi11_user.c \
+    ../source/device/vxi11/vxi11_xdr.c  \
     ../source/device/bus.cpp            \
     ../source/device/device.cpp         \
     ../source/device/MegaRobot.cpp      \

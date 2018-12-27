@@ -8,7 +8,6 @@
 
 #include <rpc/rpc.h>
 
-#include <pthread.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -163,14 +162,14 @@ typedef struct Device_SrqParms Device_SrqParms;
 
 #if defined(__STDC__) || defined(__cplusplus)
 #define device_abort 1
-extern  enum clnt_stat device_abort_1(Device_Link *, Device_Error *, CLIENT *);
-extern  bool_t device_abort_1_svc(Device_Link *, Device_Error *, struct svc_req *);
+extern  Device_Error * device_abort_1(Device_Link *, CLIENT *);
+extern  Device_Error * device_abort_1_svc(Device_Link *, struct svc_req *);
 extern int device_async_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
 #define device_abort 1
-extern  enum clnt_stat device_abort_1();
-extern  bool_t device_abort_1_svc();
+extern  Device_Error * device_abort_1();
+extern  Device_Error * device_abort_1_svc();
 extern int device_async_1_freeresult ();
 #endif /* K&R C */
 
@@ -179,98 +178,98 @@ extern int device_async_1_freeresult ();
 
 #if defined(__STDC__) || defined(__cplusplus)
 #define create_link 10
-extern  enum clnt_stat create_link_1(Create_LinkParms *, Create_LinkResp *, CLIENT *);
-extern  bool_t create_link_1_svc(Create_LinkParms *, Create_LinkResp *, struct svc_req *);
+extern  Create_LinkResp * create_link_1(Create_LinkParms *, CLIENT *);
+extern  Create_LinkResp * create_link_1_svc(Create_LinkParms *, struct svc_req *);
 #define device_write 11
-extern  enum clnt_stat device_write_1(Device_WriteParms *, Device_WriteResp *, CLIENT *);
-extern  bool_t device_write_1_svc(Device_WriteParms *, Device_WriteResp *, struct svc_req *);
+extern  Device_WriteResp * device_write_1(Device_WriteParms *, CLIENT *);
+extern  Device_WriteResp * device_write_1_svc(Device_WriteParms *, struct svc_req *);
 #define device_read 12
-extern  enum clnt_stat device_read_1(Device_ReadParms *, Device_ReadResp *, CLIENT *);
-extern  bool_t device_read_1_svc(Device_ReadParms *, Device_ReadResp *, struct svc_req *);
+extern  Device_ReadResp * device_read_1(Device_ReadParms *, CLIENT *);
+extern  Device_ReadResp * device_read_1_svc(Device_ReadParms *, struct svc_req *);
 #define device_readstb 13
-extern  enum clnt_stat device_readstb_1(Device_GenericParms *, Device_ReadStbResp *, CLIENT *);
-extern  bool_t device_readstb_1_svc(Device_GenericParms *, Device_ReadStbResp *, struct svc_req *);
+extern  Device_ReadStbResp * device_readstb_1(Device_GenericParms *, CLIENT *);
+extern  Device_ReadStbResp * device_readstb_1_svc(Device_GenericParms *, struct svc_req *);
 #define device_trigger 14
-extern  enum clnt_stat device_trigger_1(Device_GenericParms *, Device_Error *, CLIENT *);
-extern  bool_t device_trigger_1_svc(Device_GenericParms *, Device_Error *, struct svc_req *);
+extern  Device_Error * device_trigger_1(Device_GenericParms *, CLIENT *);
+extern  Device_Error * device_trigger_1_svc(Device_GenericParms *, struct svc_req *);
 #define device_clear 15
-extern  enum clnt_stat device_clear_1(Device_GenericParms *, Device_Error *, CLIENT *);
-extern  bool_t device_clear_1_svc(Device_GenericParms *, Device_Error *, struct svc_req *);
+extern  Device_Error * device_clear_1(Device_GenericParms *, CLIENT *);
+extern  Device_Error * device_clear_1_svc(Device_GenericParms *, struct svc_req *);
 #define device_remote 16
-extern  enum clnt_stat device_remote_1(Device_GenericParms *, Device_Error *, CLIENT *);
-extern  bool_t device_remote_1_svc(Device_GenericParms *, Device_Error *, struct svc_req *);
+extern  Device_Error * device_remote_1(Device_GenericParms *, CLIENT *);
+extern  Device_Error * device_remote_1_svc(Device_GenericParms *, struct svc_req *);
 #define device_local 17
-extern  enum clnt_stat device_local_1(Device_GenericParms *, Device_Error *, CLIENT *);
-extern  bool_t device_local_1_svc(Device_GenericParms *, Device_Error *, struct svc_req *);
+extern  Device_Error * device_local_1(Device_GenericParms *, CLIENT *);
+extern  Device_Error * device_local_1_svc(Device_GenericParms *, struct svc_req *);
 #define device_lock 18
-extern  enum clnt_stat device_lock_1(Device_LockParms *, Device_Error *, CLIENT *);
-extern  bool_t device_lock_1_svc(Device_LockParms *, Device_Error *, struct svc_req *);
+extern  Device_Error * device_lock_1(Device_LockParms *, CLIENT *);
+extern  Device_Error * device_lock_1_svc(Device_LockParms *, struct svc_req *);
 #define device_unlock 19
-extern  enum clnt_stat device_unlock_1(Device_Link *, Device_Error *, CLIENT *);
-extern  bool_t device_unlock_1_svc(Device_Link *, Device_Error *, struct svc_req *);
+extern  Device_Error * device_unlock_1(Device_Link *, CLIENT *);
+extern  Device_Error * device_unlock_1_svc(Device_Link *, struct svc_req *);
 #define device_enable_srq 20
-extern  enum clnt_stat device_enable_srq_1(Device_EnableSrqParms *, Device_Error *, CLIENT *);
-extern  bool_t device_enable_srq_1_svc(Device_EnableSrqParms *, Device_Error *, struct svc_req *);
+extern  Device_Error * device_enable_srq_1(Device_EnableSrqParms *, CLIENT *);
+extern  Device_Error * device_enable_srq_1_svc(Device_EnableSrqParms *, struct svc_req *);
 #define device_docmd 22
-extern  enum clnt_stat device_docmd_1(Device_DocmdParms *, Device_DocmdResp *, CLIENT *);
-extern  bool_t device_docmd_1_svc(Device_DocmdParms *, Device_DocmdResp *, struct svc_req *);
+extern  Device_DocmdResp * device_docmd_1(Device_DocmdParms *, CLIENT *);
+extern  Device_DocmdResp * device_docmd_1_svc(Device_DocmdParms *, struct svc_req *);
 #define destroy_link 23
-extern  enum clnt_stat destroy_link_1(Device_Link *, Device_Error *, CLIENT *);
-extern  bool_t destroy_link_1_svc(Device_Link *, Device_Error *, struct svc_req *);
+extern  Device_Error * destroy_link_1(Device_Link *, CLIENT *);
+extern  Device_Error * destroy_link_1_svc(Device_Link *, struct svc_req *);
 #define create_intr_chan 25
-extern  enum clnt_stat create_intr_chan_1(Device_RemoteFunc *, Device_Error *, CLIENT *);
-extern  bool_t create_intr_chan_1_svc(Device_RemoteFunc *, Device_Error *, struct svc_req *);
+extern  Device_Error * create_intr_chan_1(Device_RemoteFunc *, CLIENT *);
+extern  Device_Error * create_intr_chan_1_svc(Device_RemoteFunc *, struct svc_req *);
 #define destroy_intr_chan 26
-extern  enum clnt_stat destroy_intr_chan_1(void *, Device_Error *, CLIENT *);
-extern  bool_t destroy_intr_chan_1_svc(void *, Device_Error *, struct svc_req *);
+extern  Device_Error * destroy_intr_chan_1(void *, CLIENT *);
+extern  Device_Error * destroy_intr_chan_1_svc(void *, struct svc_req *);
 extern int device_core_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
 #define create_link 10
-extern  enum clnt_stat create_link_1();
-extern  bool_t create_link_1_svc();
+extern  Create_LinkResp * create_link_1();
+extern  Create_LinkResp * create_link_1_svc();
 #define device_write 11
-extern  enum clnt_stat device_write_1();
-extern  bool_t device_write_1_svc();
+extern  Device_WriteResp * device_write_1();
+extern  Device_WriteResp * device_write_1_svc();
 #define device_read 12
-extern  enum clnt_stat device_read_1();
-extern  bool_t device_read_1_svc();
+extern  Device_ReadResp * device_read_1();
+extern  Device_ReadResp * device_read_1_svc();
 #define device_readstb 13
-extern  enum clnt_stat device_readstb_1();
-extern  bool_t device_readstb_1_svc();
+extern  Device_ReadStbResp * device_readstb_1();
+extern  Device_ReadStbResp * device_readstb_1_svc();
 #define device_trigger 14
-extern  enum clnt_stat device_trigger_1();
-extern  bool_t device_trigger_1_svc();
+extern  Device_Error * device_trigger_1();
+extern  Device_Error * device_trigger_1_svc();
 #define device_clear 15
-extern  enum clnt_stat device_clear_1();
-extern  bool_t device_clear_1_svc();
+extern  Device_Error * device_clear_1();
+extern  Device_Error * device_clear_1_svc();
 #define device_remote 16
-extern  enum clnt_stat device_remote_1();
-extern  bool_t device_remote_1_svc();
+extern  Device_Error * device_remote_1();
+extern  Device_Error * device_remote_1_svc();
 #define device_local 17
-extern  enum clnt_stat device_local_1();
-extern  bool_t device_local_1_svc();
+extern  Device_Error * device_local_1();
+extern  Device_Error * device_local_1_svc();
 #define device_lock 18
-extern  enum clnt_stat device_lock_1();
-extern  bool_t device_lock_1_svc();
+extern  Device_Error * device_lock_1();
+extern  Device_Error * device_lock_1_svc();
 #define device_unlock 19
-extern  enum clnt_stat device_unlock_1();
-extern  bool_t device_unlock_1_svc();
+extern  Device_Error * device_unlock_1();
+extern  Device_Error * device_unlock_1_svc();
 #define device_enable_srq 20
-extern  enum clnt_stat device_enable_srq_1();
-extern  bool_t device_enable_srq_1_svc();
+extern  Device_Error * device_enable_srq_1();
+extern  Device_Error * device_enable_srq_1_svc();
 #define device_docmd 22
-extern  enum clnt_stat device_docmd_1();
-extern  bool_t device_docmd_1_svc();
+extern  Device_DocmdResp * device_docmd_1();
+extern  Device_DocmdResp * device_docmd_1_svc();
 #define destroy_link 23
-extern  enum clnt_stat destroy_link_1();
-extern  bool_t destroy_link_1_svc();
+extern  Device_Error * destroy_link_1();
+extern  Device_Error * destroy_link_1_svc();
 #define create_intr_chan 25
-extern  enum clnt_stat create_intr_chan_1();
-extern  bool_t create_intr_chan_1_svc();
+extern  Device_Error * create_intr_chan_1();
+extern  Device_Error * create_intr_chan_1_svc();
 #define destroy_intr_chan 26
-extern  enum clnt_stat destroy_intr_chan_1();
-extern  bool_t destroy_intr_chan_1_svc();
+extern  Device_Error * destroy_intr_chan_1();
+extern  Device_Error * destroy_intr_chan_1_svc();
 extern int device_core_1_freeresult ();
 #endif /* K&R C */
 
@@ -279,14 +278,14 @@ extern int device_core_1_freeresult ();
 
 #if defined(__STDC__) || defined(__cplusplus)
 #define device_intr_srq 30
-extern  enum clnt_stat device_intr_srq_1(Device_SrqParms *, void *, CLIENT *);
-extern  bool_t device_intr_srq_1_svc(Device_SrqParms *, void *, struct svc_req *);
+extern  void * device_intr_srq_1(Device_SrqParms *, CLIENT *);
+extern  void * device_intr_srq_1_svc(Device_SrqParms *, struct svc_req *);
 extern int device_intr_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
 #define device_intr_srq 30
-extern  enum clnt_stat device_intr_srq_1();
-extern  bool_t device_intr_srq_1_svc();
+extern  void * device_intr_srq_1();
+extern  void * device_intr_srq_1_svc();
 extern int device_intr_1_freeresult ();
 #endif /* K&R C */
 

@@ -53,6 +53,12 @@ private slots:
     void slot_focus_in( const QString &name );
     void on_actionExit_triggered();
 
+    void on_actionPoweroff_triggered();
+
+    void on_actionReboot_triggered();
+
+    void on_actionWifi_triggered();
+
 private:
     Ui::MainWindow *ui;
 

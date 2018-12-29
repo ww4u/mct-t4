@@ -25,13 +25,11 @@ CONFIG += C++11 #use lambda
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 #qt >= 5.10
-VERSION = 0.0.1.3
+VERSION = 0.0.1.4
 
 HEADERS += ../include/mystd.h           \
     ../include/mydebug.h                \
     ../include/mydef.h                  \
-    ../source/device/vxi11/vxi11.h      \
-    ../source/device/vxi11/vxi11_user.h \
     ../source/device/bus.h              \
     ../source/device/device.h           \
     ../source/device/MegaGateway.h      \
@@ -81,9 +79,6 @@ HEADERS += ../include/mystd.h           \
     ../source/widget/megainterface.h
 
 SOURCES += ../source/main/main.cpp      \
-    ../source/device/vxi11/vxi11_clnt.c \
-    ../source/device/vxi11/vxi11_user.c \
-    ../source/device/vxi11/vxi11_xdr.c  \
     ../source/device/bus.cpp            \
     ../source/device/device.cpp         \
     ../source/device/MegaRobot.cpp      \
@@ -129,6 +124,11 @@ SOURCES += ../source/main/main.cpp      \
     ../source/widget/megasplinechart.cpp\
     ../source/widget/megainterface.cpp
 
+!win32: HEADERS += ../source/device/vxi11/vxi11.h
+!win32: HEADERS += ../source/device/vxi11/vxi11_user.h
+!win32: SOURCES += ../source/device/vxi11/vxi11_clnt.c
+!win32: SOURCES += ../source/device/vxi11/vxi11_user.c
+!win32: SOURCES += ../source/device/vxi11/vxi11_xdr.c
 
 
 FORMS += ../source/wnd/mainwindow.ui    \

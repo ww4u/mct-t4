@@ -89,58 +89,58 @@
         <translation>窗口</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="64"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="88"/>
         <source>Mechanics</source>
         <translation>结构</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="79"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="109"/>
         <source>WorkSpace X-Stroke:</source>
         <translation>工作空间X：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="105"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="153"/>
         <source>WorkSpace Y-Stroke:</source>
         <translation>工作空间Y：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="118"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="172"/>
         <source>Size:</source>
         <translation>尺寸：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="131"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="191"/>
         <source>Family:</source>
         <translation>类型：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="189"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="255"/>
         <source>Small</source>
         <translation>小</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="194"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="260"/>
         <source>Big</source>
         <translation>大</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="251"/>
-        <location filename="../../source/wnd/h2configuration.ui" line="300"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="317"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="366"/>
         <source> mm</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="321"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="398"/>
         <source>Motor Position</source>
         <translation>电机位置</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="339"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="416"/>
         <source>Bottom(B)</source>
         <translation>底部</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="361"/>
+        <location filename="../../source/wnd/h2configuration.ui" line="438"/>
         <source>Top(T)</source>
         <translation>顶部</translation>
     </message>
@@ -177,32 +177,32 @@
         <translation>窗口</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2homing.ui" line="58"/>
+        <location filename="../../source/wnd/h2homing.ui" line="70"/>
         <source>Homing Method</source>
         <translation>回零方式</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2homing.ui" line="82"/>
+        <location filename="../../source/wnd/h2homing.ui" line="94"/>
         <source>Direction:</source>
         <translation>方向：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2homing.ui" line="108"/>
+        <location filename="../../source/wnd/h2homing.ui" line="120"/>
         <source>First in direction of X,then Y</source>
         <translation>先X轴，然后Y轴</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2homing.ui" line="134"/>
+        <location filename="../../source/wnd/h2homing.ui" line="146"/>
         <source>Movement:</source>
         <translation>方式：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2homing.ui" line="166"/>
+        <location filename="../../source/wnd/h2homing.ui" line="178"/>
         <source>Block</source>
         <translation>块状</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2homing.ui" line="192"/>
+        <location filename="../../source/wnd/h2homing.ui" line="204"/>
         <source>Target:</source>
         <translation>目标：</translation>
     </message>
@@ -211,22 +211,22 @@
         <translation type="vanished">起点1</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2homing.ui" line="249"/>
+        <location filename="../../source/wnd/h2homing.ui" line="261"/>
         <source>Homing is always executed in dirrection of the corner,where the Axis Zero Point is defined to be.</source>
         <translation>回零总是在定义了角的方向和零点坐标的前提下执行.</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2homing.ui" line="302"/>
+        <location filename="../../source/wnd/h2homing.ui" line="320"/>
         <source>Parameters</source>
         <translation>参数</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2homing.ui" line="326"/>
+        <location filename="../../source/wnd/h2homing.ui" line="344"/>
         <source>Search Velocity:</source>
         <translation>速度：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2homing.ui" line="403"/>
+        <location filename="../../source/wnd/h2homing.ui" line="421"/>
         <source>Force Limit:</source>
         <translation>限制：</translation>
     </message>
@@ -239,22 +239,22 @@
         <translation>窗口</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2jogmode.ui" line="38"/>
+        <location filename="../../source/wnd/h2jogmode.ui" line="50"/>
         <source>Jog Mode</source>
         <translation>跳跃模式</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2jogmode.ui" line="102"/>
+        <location filename="../../source/wnd/h2jogmode.ui" line="114"/>
         <source>Crawling Velocity:</source>
         <translation>速度：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2jogmode.ui" line="121"/>
+        <location filename="../../source/wnd/h2jogmode.ui" line="133"/>
         <source>Crawling Time:</source>
         <translation>时间：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2jogmode.ui" line="235"/>
+        <location filename="../../source/wnd/h2jogmode.ui" line="247"/>
         <source>Maximum Velocity:</source>
         <translation>最大速度：</translation>
     </message>
@@ -267,52 +267,52 @@
         <translation>窗口</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="67"/>
+        <location filename="../../source/wnd/h2measurement.ui" line="85"/>
         <source>Coordinate System</source>
         <translation>坐标系统</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="85"/>
+        <location filename="../../source/wnd/h2measurement.ui" line="103"/>
         <source>Axes Zero Point:</source>
         <translation>原点位置：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="105"/>
+        <location filename="../../source/wnd/h2measurement.ui" line="129"/>
         <source>Corner Point 1</source>
         <translation>原点1</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="110"/>
+        <location filename="../../source/wnd/h2measurement.ui" line="134"/>
         <source>Corner Point 2</source>
         <translation>原点2</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="115"/>
+        <location filename="../../source/wnd/h2measurement.ui" line="139"/>
         <source>Corner Point 3</source>
         <translation>原点3</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="120"/>
+        <location filename="../../source/wnd/h2measurement.ui" line="144"/>
         <source>Corner Point 4</source>
         <translation>原点4</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="143"/>
+        <location filename="../../source/wnd/h2measurement.ui" line="167"/>
         <source>Zero Points and End Positions</source>
         <translation>零点与终点位置</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="161"/>
+        <location filename="../../source/wnd/h2measurement.ui" line="185"/>
         <source>SW Limit Positive:</source>
         <translation>正向限制：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="391"/>
+        <location filename="../../source/wnd/h2measurement.ui" line="421"/>
         <source>X-Axis</source>
         <translation>坐标X</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="413"/>
+        <location filename="../../source/wnd/h2measurement.ui" line="443"/>
         <source>Project Zero Point:</source>
         <translation>项目零点：</translation>
     </message>
@@ -321,12 +321,12 @@
         <translation type="vanished">项目零点：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="432"/>
+        <location filename="../../source/wnd/h2measurement.ui" line="462"/>
         <source>SW Limit Negative:</source>
         <translation>负向限制：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="503"/>
+        <location filename="../../source/wnd/h2measurement.ui" line="539"/>
         <source>Y-Axis</source>
         <translation>坐标Y</translation>
     </message>
@@ -334,242 +334,242 @@
 <context>
     <name>H2Ops</name>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="29"/>
+        <location filename="../../source/wnd/h2ops.ui" line="35"/>
         <source>Form</source>
         <translation>窗口</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="130"/>
+        <location filename="../../source/wnd/h2ops.ui" line="139"/>
         <source>Logout</source>
         <translation>日志输出</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="180"/>
+        <location filename="../../source/wnd/h2ops.ui" line="189"/>
         <source>Operate</source>
         <translation>操作</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="198"/>
+        <location filename="../../source/wnd/h2ops.ui" line="207"/>
         <source>Dynamic Data</source>
         <translation>动态数据</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="302"/>
+        <location filename="../../source/wnd/h2ops.ui" line="311"/>
         <source>Mileage X-Axis:</source>
         <translation>X轴里程：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="312"/>
+        <location filename="../../source/wnd/h2ops.ui" line="321"/>
         <source>Target Position X:</source>
         <translation>目标位置X：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="322"/>
-        <location filename="../../source/wnd/h2ops.ui" line="793"/>
+        <location filename="../../source/wnd/h2ops.ui" line="331"/>
+        <location filename="../../source/wnd/h2ops.ui" line="802"/>
         <source>Record Number:</source>
         <translation>记录编号：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="424"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1169"/>
+        <location filename="../../source/wnd/h2ops.ui" line="433"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1178"/>
         <source>Actual Position Y:</source>
         <translation>实时位置Y:</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="434"/>
+        <location filename="../../source/wnd/h2ops.ui" line="443"/>
         <source>Mileage Y-Axis:</source>
         <translation>Y轴里程：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="493"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1179"/>
+        <location filename="../../source/wnd/h2ops.ui" line="502"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1188"/>
         <source>Actual Position X:</source>
         <translation>实时位置X：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="503"/>
+        <location filename="../../source/wnd/h2ops.ui" line="512"/>
         <source>Target Position Y:</source>
         <translation>目标位置Y：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="621"/>
+        <location filename="../../source/wnd/h2ops.ui" line="630"/>
         <source>Additional States</source>
         <translation>外部状态</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="636"/>
+        <location filename="../../source/wnd/h2ops.ui" line="645"/>
         <source>Extern Stop(ES)</source>
         <translation>外部停止</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="655"/>
+        <location filename="../../source/wnd/h2ops.ui" line="664"/>
         <source>Home Valid</source>
         <translation>回零有效</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="695"/>
+        <location filename="../../source/wnd/h2ops.ui" line="704"/>
         <source>Digital IO</source>
         <translation>I/O</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="716"/>
+        <location filename="../../source/wnd/h2ops.ui" line="725"/>
         <source>Digital Inputs</source>
         <translation>数据输入</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="728"/>
+        <location filename="../../source/wnd/h2ops.ui" line="737"/>
         <source>Enable Drive</source>
         <translation>支持驱动</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="741"/>
+        <location filename="../../source/wnd/h2ops.ui" line="750"/>
         <source>Reset Fault</source>
         <translation>故障重置</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="754"/>
+        <location filename="../../source/wnd/h2ops.ui" line="763"/>
         <source>Start Record Execution</source>
         <translation>开始执行记录</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="767"/>
+        <location filename="../../source/wnd/h2ops.ui" line="776"/>
         <source>Record Bit5</source>
         <translation>记录5</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="780"/>
+        <location filename="../../source/wnd/h2ops.ui" line="789"/>
         <source>Reserved</source>
         <translation>预留</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="819"/>
+        <location filename="../../source/wnd/h2ops.ui" line="828"/>
         <source>Record Bit2</source>
         <translation>记录2</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="835"/>
+        <location filename="../../source/wnd/h2ops.ui" line="844"/>
         <source>Record Bit1</source>
         <translation>记录1</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="851"/>
+        <location filename="../../source/wnd/h2ops.ui" line="860"/>
         <source>Record Bit4</source>
         <translation>记录4</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="867"/>
+        <location filename="../../source/wnd/h2ops.ui" line="876"/>
         <source>Record Bit3</source>
         <translation>记录3</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="893"/>
+        <location filename="../../source/wnd/h2ops.ui" line="902"/>
         <source>Digital Outputs</source>
         <translation>数据输出</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="905"/>
+        <location filename="../../source/wnd/h2ops.ui" line="914"/>
         <source>Moiton Complete(MC)</source>
         <translation>动作完整</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="921"/>
+        <location filename="../../source/wnd/h2ops.ui" line="930"/>
         <source>24V Load Voltage</source>
         <translation>24V电压</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="937"/>
+        <location filename="../../source/wnd/h2ops.ui" line="946"/>
         <source>Acknowledge Start</source>
         <translation>开始应答</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="953"/>
+        <location filename="../../source/wnd/h2ops.ui" line="962"/>
         <source>Fault</source>
         <translation>故障</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="969"/>
+        <location filename="../../source/wnd/h2ops.ui" line="978"/>
         <source>Ready</source>
         <translation>就绪</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1009"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1040"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1018"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1049"/>
         <source>Homing</source>
         <translation>回零</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1058"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1067"/>
         <source>Homing Valid</source>
         <translation>回零有效</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1077"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1086"/>
         <source>Target:</source>
         <translation>目标：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1093"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1102"/>
         <source>Direction:</source>
         <translation>方向：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1152"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1161"/>
         <source>Move  to Zero Point Position</source>
         <translation>移动到零点位置</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1155"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1164"/>
         <source>Starting Home</source>
         <translation>开始回零</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1269"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1278"/>
         <source>Manual</source>
         <translation>手动</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1293"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1302"/>
         <source>Manual Control</source>
         <translation>手动控制</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1773"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1806"/>
         <source>Velocity:</source>
         <translation>速度：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="2219"/>
+        <location filename="../../source/wnd/h2ops.ui" line="2252"/>
         <source>Status</source>
         <translation>状态</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="2228"/>
+        <location filename="../../source/wnd/h2ops.ui" line="2273"/>
         <source>RecordNumber:</source>
         <translation>记录编号：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="2235"/>
+        <location filename="../../source/wnd/h2ops.ui" line="2292"/>
         <source>Position X:</source>
         <translation>坐标X：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="2242"/>
+        <location filename="../../source/wnd/h2ops.ui" line="2311"/>
         <source>Position Y:</source>
         <translation>坐标Y：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="2299"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2324"/>
+        <location filename="../../source/wnd/h2ops.ui" line="2392"/>
+        <location filename="../../source/wnd/h2ops.ui" line="2429"/>
         <source> mm</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1744"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1771"/>
         <source>X-Axis</source>
         <translation>坐标X</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1950"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1983"/>
         <location filename="../../source/wnd/h2ops.cpp" line="889"/>
         <location filename="../../source/wnd/h2ops.cpp" line="902"/>
         <source>Run  Sequence</source>
@@ -580,12 +580,12 @@
         <translation type="vanished">应用</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="2124"/>
+        <location filename="../../source/wnd/h2ops.ui" line="2157"/>
         <source>Delete all record</source>
         <translation>删除所有的记录</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="2177"/>
+        <location filename="../../source/wnd/h2ops.ui" line="2210"/>
         <source>add a new record</source>
         <translation>添加一条记录</translation>
     </message>
@@ -594,50 +594,50 @@
         <translation type="vanished">应用...</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1410"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1431"/>
         <source>Jog:</source>
         <translation>跳跃模式:</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1313"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1334"/>
         <source>Y-Axis</source>
         <translation>坐标Y</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1462"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1488"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1527"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1553"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1483"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1509"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1548"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1574"/>
         <source>Pressed Move Release Stop</source>
         <translation>按下开始移动</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1423"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1444"/>
         <source>Single Step:</source>
         <translation>单步模式：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1514"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1535"/>
         <source>Current Position</source>
         <translation>当前位置</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1573"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1594"/>
         <source>Stop Moving</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1599"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1626"/>
         <source>Increament:</source>
         <translation>距离：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1858"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1891"/>
         <source>Monitor</source>
         <translation>监控器</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1877"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1910"/>
         <source>Debug</source>
         <translation>调试</translation>
     </message>
@@ -646,7 +646,7 @@
         <translation type="vanished">删除所有</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="2065"/>
+        <location filename="../../source/wnd/h2ops.ui" line="2098"/>
         <source>Cyclic</source>
         <translation>循环</translation>
     </message>
@@ -659,35 +659,35 @@
         <translation type="vanished">延时时间</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="2144"/>
+        <location filename="../../source/wnd/h2ops.ui" line="2177"/>
         <source>Remove the current record</source>
         <translation>删除当前记录</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1969"/>
+        <location filename="../../source/wnd/h2ops.ui" line="2002"/>
         <source>Import</source>
         <translation>导入</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1760"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1787"/>
         <source>Apply as point</source>
         <translation>应用为点</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1329"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1355"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1384"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1436"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1350"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1376"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1405"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1457"/>
         <source>Clicked Move</source>
         <translation>点击开始移动</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1903"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1936"/>
         <source>Delay Time:</source>
         <translation>延时时间：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="1947"/>
+        <location filename="../../source/wnd/h2ops.ui" line="1980"/>
         <source>Running</source>
         <translation>开始运行</translation>
     </message>
@@ -696,18 +696,18 @@
         <translation type="vanished">运行</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="2002"/>
+        <location filename="../../source/wnd/h2ops.ui" line="2035"/>
         <source>Move Down</source>
         <translation>向下移动</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="2022"/>
+        <location filename="../../source/wnd/h2ops.ui" line="2055"/>
         <source>Move Up</source>
         <translation>向上移动</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="2042"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2428"/>
+        <location filename="../../source/wnd/h2ops.ui" line="2075"/>
+        <location filename="../../source/wnd/h2ops.ui" line="2533"/>
         <source>Export</source>
         <translation>导出</translation>
     </message>
@@ -716,17 +716,17 @@
         <translation type="vanished">下</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="2341"/>
+        <location filename="../../source/wnd/h2ops.ui" line="2446"/>
         <source>Diagnosis</source>
         <translation>诊断</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="2365"/>
+        <location filename="../../source/wnd/h2ops.ui" line="2470"/>
         <source>Read from the controller</source>
         <translation>从控制器读</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.ui" line="2385"/>
+        <location filename="../../source/wnd/h2ops.ui" line="2490"/>
         <source>Deleta all</source>
         <translation>删除所有</translation>
     </message>
@@ -758,7 +758,7 @@
     <message>
         <location filename="../../source/wnd/h2ops.cpp" line="261"/>
         <source>Apply as point </source>
-        <translation>应用为点</translation>
+        <translation>应用为点 </translation>
     </message>
     <message>
         <location filename="../../source/wnd/h2ops.cpp" line="521"/>
@@ -816,7 +816,7 @@
         <translation>窗口</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2product.ui" line="64"/>
+        <location filename="../../source/wnd/h2product.ui" line="88"/>
         <source>Product</source>
         <translation>产品</translation>
     </message>
@@ -825,22 +825,22 @@
         <translation type="vanished">IP地址：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2product.ui" line="112"/>
+        <location filename="../../source/wnd/h2product.ui" line="151"/>
         <source>ID：</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2product.ui" line="130"/>
+        <location filename="../../source/wnd/h2product.ui" line="181"/>
         <source>SN:</source>
         <translation>序列号：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2product.ui" line="210"/>
+        <location filename="../../source/wnd/h2product.ui" line="285"/>
         <source>Type:</source>
         <translation>类型：</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2product.ui" line="272"/>
+        <location filename="../../source/wnd/h2product.ui" line="365"/>
         <source>Version:</source>
         <translation>版本号：</translation>
     </message>
@@ -901,43 +901,43 @@
 <context>
     <name>H2Status</name>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="32"/>
+        <location filename="../../source/wnd/h2status.ui" line="38"/>
         <source>Form</source>
         <translation>窗口</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="50"/>
+        <location filename="../../source/wnd/h2status.ui" line="65"/>
         <source>Device Status</source>
         <translation>设备状态</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="59"/>
+        <location filename="../../source/wnd/h2status.ui" line="196"/>
         <source>Error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="75"/>
+        <location filename="../../source/wnd/h2status.ui" line="154"/>
         <source>TO</source>
         <translation>发送</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="95"/>
+        <location filename="../../source/wnd/h2status.ui" line="180"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="122"/>
+        <location filename="../../source/wnd/h2status.ui" line="296"/>
         <source>Acknowledge Error</source>
         <translation>错误应答</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="132"/>
-        <location filename="../../source/wnd/h2status.ui" line="168"/>
+        <location filename="../../source/wnd/h2status.ui" line="125"/>
+        <location filename="../../source/wnd/h2status.ui" line="277"/>
         <source>Enable</source>
         <translation>使能</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="142"/>
+        <location filename="../../source/wnd/h2status.ui" line="255"/>
         <source>MCT</source>
         <translation>配置</translation>
     </message>
@@ -946,17 +946,17 @@
         <translation type="vanished">配置</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="152"/>
+        <location filename="../../source/wnd/h2status.ui" line="96"/>
         <source>Ready</source>
         <translation>就绪</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="181"/>
+        <location filename="../../source/wnd/h2status.ui" line="86"/>
         <source>Operation Mode</source>
         <translation>操作模式</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2status.ui" line="191"/>
+        <location filename="../../source/wnd/h2status.ui" line="141"/>
         <source>MC</source>
         <translation>动作完整</translation>
     </message>
@@ -982,150 +982,180 @@
         <translation>文件&amp;F</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="53"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="55"/>
         <source>&amp;Operate</source>
         <translation>操作&amp;O</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="66"/>
-        <location filename="../../source/wnd/mainwindow.ui" line="169"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="68"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="172"/>
         <source>&amp;Help</source>
         <translation>帮助&amp;H</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="72"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="74"/>
         <source>&amp;Tool</source>
         <translation>工具&amp;T</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="77"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="80"/>
         <source>&amp;View</source>
         <translation>视图&amp;V</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="81"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="84"/>
         <source>&amp;Language</source>
         <translation>语言&amp;L</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="88"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="91"/>
         <source>&amp;Style</source>
         <translation>风格&amp;S</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="145"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="148"/>
         <source>&amp;Stop</source>
         <translation>停止&amp;S</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="148"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="151"/>
         <source>Ctrl+E</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="153"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="156"/>
         <source>&amp;Exit</source>
         <translation>退出&amp;E</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="156"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="159"/>
         <source>Ctrl+Q</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="161"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="164"/>
         <source>&amp;About</source>
         <translation>关于&amp;A</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="164"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="167"/>
         <source>Ctrl+I</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="172"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="175"/>
         <source>Ctrl+H</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="181"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="184"/>
         <source>&amp;Upload</source>
         <translation>上传&amp;U</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="184"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="187"/>
         <source>Ctrl+U</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="193"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="196"/>
         <source>&amp;Download</source>
         <translation>下载&amp;D</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="196"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="199"/>
         <source>Ctrl+D</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="205"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="208"/>
         <source>S&amp;tore</source>
         <translation>储存&amp;T</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="208"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="211"/>
         <source>Ctrl+T</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="217"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="220"/>
         <source>S&amp;ync</source>
         <translation>同步&amp;Y</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="220"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="223"/>
         <source>Ctrl+Y</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="228"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="231"/>
         <source>&amp;Chinese</source>
         <translation>中文&amp;C</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="239"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="242"/>
         <source>&amp;English</source>
         <translation>英语&amp;E</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="250"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="253"/>
         <source>&amp;MEGAROBO</source>
         <translation>镁伽&amp;M</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="261"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="264"/>
         <source>&amp;Classic</source>
         <translation>经典&amp;C</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="270"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="273"/>
         <source>&amp;Search</source>
         <translation>搜索&amp;S</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="276"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="279"/>
         <source>Ctrl+F</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="285"/>
         <location filename="../../source/wnd/mainwindow.ui" line="288"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="291"/>
         <source>Connect</source>
         <translation>连接</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="296"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="294"/>
+        <source>Ctrl+L</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="302"/>
         <source>MRX-H2:[0.0.0.0]</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="307"/>
+        <source>&amp;Reboot</source>
+        <translation>重启&amp;R</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="310"/>
+        <source>Ctrl+Alt+R</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="315"/>
+        <source>&amp;Poweroff</source>
+        <translation>关机&amp;P</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="318"/>
+        <source>Ctrl+Alt+P</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/mainwindow.ui" line="323"/>
+        <source>&amp;Wifi</source>
         <translation></translation>
     </message>
     <message>
@@ -1137,7 +1167,7 @@
         <translation type="vanished">操作</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="67"/>
+        <location filename="../../source/wnd/mainwindow.cpp" line="75"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
@@ -1198,17 +1228,17 @@
         <translation type="vanished">搜索</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="273"/>
+        <location filename="../../source/wnd/mainwindow.ui" line="276"/>
         <source>SearchDevice</source>
         <translation>搜索设备</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="54"/>
+        <location filename="../../source/wnd/mainwindow.cpp" line="62"/>
         <source>Pref</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="57"/>
+        <location filename="../../source/wnd/mainwindow.cpp" line="65"/>
         <source>Ops</source>
         <translation></translation>
     </message>
@@ -1290,8 +1320,9 @@
         <location filename="../../source/wnd/roboconfig.cpp" line="231"/>
         <location filename="../../source/wnd/roboconfig.cpp" line="261"/>
         <location filename="../../source/wnd/roboconfig.cpp" line="321"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="502"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="569"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="389"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="544"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="611"/>
         <source>tips</source>
         <translation>提示</translation>
     </message>
@@ -1319,16 +1350,24 @@ Download Failure</source>
         <location filename="../../source/wnd/roboconfig.cpp" line="223"/>
         <location filename="../../source/wnd/roboconfig.cpp" line="253"/>
         <location filename="../../source/wnd/roboconfig.cpp" line="330"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="493"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="683"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="370"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="392"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="535"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="725"/>
         <source>error</source>
         <translation>错误</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="192"/>
+        <source>From device upload config faiured</source>
+        <translation>从设备上传配置失败</translation>
     </message>
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="205"/>
         <location filename="../../source/wnd/roboconfig.cpp" line="244"/>
         <location filename="../../source/wnd/roboconfig.cpp" line="272"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="498"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="361"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="540"/>
         <source>Current Device In Offline</source>
         <translation>当前设备处于离线状态</translation>
     </message>
@@ -1339,7 +1378,8 @@ Download Failure</source>
         <location filename="../../source/wnd/roboconfig.cpp" line="324"/>
         <location filename="../../source/wnd/roboconfig.cpp" line="327"/>
         <location filename="../../source/wnd/roboconfig.cpp" line="340"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="498"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="361"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="540"/>
         <source>warning</source>
         <translation>警告</translation>
     </message>
@@ -1360,10 +1400,9 @@ Upload Faiured</source>
         <translation type="vanished">上传失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="192"/>
         <source>
 From device upload config faiured</source>
-        <translation>从设备上传配置失败</translation>
+        <translation type="vanished">从设备上传配置失败</translation>
     </message>
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="253"/>
@@ -1391,7 +1430,12 @@ From device upload config faiured</source>
         <translation>存储成功！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="683"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="535"/>
+        <source>Reset Failure</source>
+        <translation>重置失败</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="725"/>
         <source>Robot type not</source>
         <translation>机器人类型不是</translation>
     </message>
@@ -1410,12 +1454,47 @@ From device upload config faiured</source>
         <translation>不可用</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="390"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="370"/>
+        <source>Wifi search error or empty!</source>
+        <translation>wifi搜索出错或者为空！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="378"/>
+        <source>Wifi</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="378"/>
+        <source>Please choose wifi:</source>
+        <translation>请输入选择Wifi：</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="383"/>
+        <source>Input</source>
+        <translation>输入</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="383"/>
+        <source>Please input wifi password:</source>
+        <translation>请输入wifi密码：</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="389"/>
+        <source>Wifi Connect success!</source>
+        <translation>Wifi连接成功！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="392"/>
+        <source>Wifi Connect error!</source>
+        <translation>Wifi连接失败！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/roboconfig.cpp" line="432"/>
         <source>close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="391"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="433"/>
         <source>delete</source>
         <translation>删除</translation>
     </message>
@@ -1428,17 +1507,16 @@ From device upload config faiured</source>
         <translation type="vanished">应用成功！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="493"/>
         <source>	Reset Failure</source>
-        <translation>重置失败</translation>
+        <translation type="vanished">重置失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="502"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="544"/>
         <source>Reset Success!</source>
         <translation>重置成功！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="569"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="611"/>
         <source>Device Open Failure!!!</source>
         <translation>设备打开失败!!!!</translation>
     </message>

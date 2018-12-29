@@ -39,13 +39,15 @@
      <x>0</x>
      <y>0</y>
      <width>1200</width>
-     <height>23</height>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <addaction name="actionPoweroff"/>
+    <addaction name="actionReboot"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuOperate">
@@ -71,6 +73,7 @@
     <property name="title">
      <string>&amp;Tool</string>
     </property>
+    <addaction name="actionWifi"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -287,6 +290,9 @@ border-color: rgba(255, 255, 255, 0);</string>
    <property name="toolTip">
     <string>Connect</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
   </action>
   <action name="actionIP">
    <property name="enabled">
@@ -294,6 +300,27 @@ border-color: rgba(255, 255, 255, 0);</string>
    </property>
    <property name="text">
     <string>MRX-H2:[0.0.0.0]</string>
+   </property>
+  </action>
+  <action name="actionReboot">
+   <property name="text">
+    <string>&amp;Reboot</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+R</string>
+   </property>
+  </action>
+  <action name="actionPoweroff">
+   <property name="text">
+    <string>&amp;Poweroff</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+P</string>
+   </property>
+  </action>
+  <action name="actionWifi">
+   <property name="text">
+    <string>&amp;Wifi</string>
    </property>
   </action>
  </widget>

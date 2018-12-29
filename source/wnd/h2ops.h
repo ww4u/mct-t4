@@ -38,7 +38,6 @@ public:
 
 signals:
     void signal_apply_point(int, QString, double, double,double,double);
-    void signal_gohoming_end(int);
 
 public slots:
     void slot_logSelectAll_action();

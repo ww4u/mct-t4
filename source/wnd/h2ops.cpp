@@ -607,28 +607,26 @@ void H2Ops::on_btnExport_2_clicked()
 ////////////////////////////////////// 点击发送指令
 void H2Ops::slot_starting_home_over(int ret)
 {
-    if(ret != 0){
+    if(ret == -1){
         QMessageBox::critical(this,tr("error"),tr("Starting Home failure"));
     }
-//    ui->pushButton_starting_home->setEnabled(true);
 }
-
 
 void H2Ops::on_pushButton_starting_home_clicked()
 {
     if(m_ViHandle <= 0) return;
 
-    auto func = [this]()
+    auto func = [this](int &result)
     {
         //不等待
         int ret = mrgRobotGoHome(m_ViHandle, m_RoboName, -1);
         qDebug() << "mrgRobotGoHome" << ret;
 
-
         while(1)
         {
             if ( m_threadOpsHoming->isInterruptionRequested() ){
-                break;
+                result = 1;
+                return;
             }
             ret = mrgRobotWaitHomeEnd(m_ViHandle, m_RoboName, -1);
             if(ret == -3){//超时
@@ -636,15 +634,15 @@ void H2Ops::on_pushButton_starting_home_clicked()
                 continue;
             }else if(ret != 0){
                 qDebug() << "mrgRobotWaitHomeEnd error";
-                emit signal_gohoming_end(-1);
-                break;
+                result = -1;
+                return;
             }
             else{
                 qDebug() << "mrgRobotWaitHomeEnd ok";
-//                emit signal_gohoming_end(0);
                 ui->pushButton_starting_home->setText(tr("Start Go Home"));
                 m_isDebugRunFlag = false;
-                break;
+                result = 0;
+                return;
             }
         }
     }; //end func
@@ -667,6 +665,7 @@ void H2Ops::on_pushButton_starting_home_clicked()
         if(m_ViHandle <= 0) return;
         m_threadOpsHoming = new XThread(func);
         connect(m_threadOpsHoming,&XThread::finished,[&](){ m_threadOpsHoming = NULL; });
+        connect(m_threadOpsHoming,SIGNAL(signalFinishResult(int)),SLOT(slot_starting_home_over(int)));
         m_threadOpsHoming->start(QThread::LowestPriority);
     }
 }

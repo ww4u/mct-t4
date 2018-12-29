@@ -35,6 +35,7 @@ public slots:
     void slotSync();
     void slotSearch();
     void slotExit();
+    void slotWifi();
     void slotConnect();
     void slotSetOneRecord(int row,QString type,double x,double y,double v,double a);
 

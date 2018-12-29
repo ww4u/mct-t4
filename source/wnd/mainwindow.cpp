@@ -95,6 +95,14 @@ void MainWindow::setupToolBar()
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction( ui->actionConnect );
     ui->mainToolBar->addAction( ui->actionIP );
+
+#ifdef _WIN32
+    //! windows禁用这些功能
+    ui->actionReboot->setVisible(false);
+    ui->actionPoweroff->setVisible(false);
+    ui->actionWifi->setVisible(false);
+#endif
+
 }
 
 void MainWindow::setupStatusBar()
@@ -365,3 +373,30 @@ void MainWindow::closeEvent(QCloseEvent *event)
     close();
 }
 
+
+void MainWindow::on_actionPoweroff_triggered()
+{
+    m_roboConfig->slotExit();
+    QThread::msleep(1000);
+#ifndef _WIN32
+    system("poweroff");
+#else
+    system("shutdown -s -t 0");
+#endif
+}
+
+void MainWindow::on_actionReboot_triggered()
+{
+    m_roboConfig->slotExit();
+    QThread::msleep(1000);
+#ifndef _WIN32
+    system("reboot");
+#else
+    system("shutdown -s -r 0");
+#endif
+}
+
+void MainWindow::on_actionWifi_triggered()
+{
+    m_roboConfig->slotWifi();
+}

@@ -6,14 +6,26 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>804</width>
-    <height>445</height>
+    <width>734</width>
+    <height>383</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
+    <number>2</number>
+   </property>
    <item row="0" column="2">
     <spacer name="horizontalSpacer">
      <property name="orientation">
@@ -21,7 +33,7 @@
      </property>
      <property name="sizeHint" stdset="0">
       <size>
-       <width>603</width>
+       <width>50</width>
        <height>20</height>
       </size>
      </property>
@@ -42,6 +54,12 @@
    </item>
    <item row="0" column="1">
     <widget class="QLabel" name="label_picture">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>100</height>
+      </size>
+     </property>
      <property name="frameShape">
       <enum>QFrame::Box</enum>
      </property>
@@ -55,6 +73,12 @@
    </item>
    <item row="0" column="0">
     <widget class="QGroupBox" name="groupBox">
+     <property name="minimumSize">
+      <size>
+       <width>310</width>
+       <height>240</height>
+      </size>
+     </property>
      <property name="font">
       <font>
        <pointsize>9</pointsize>
@@ -64,19 +88,22 @@
       <string>Product</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
-      <property name="horizontalSpacing">
-       <number>10</number>
-      </property>
-      <property name="verticalSpacing">
+      <property name="spacing">
        <number>6</number>
       </property>
       <item row="0" column="1">
        <widget class="QLabel" name="label_ip">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>20</height>
+         </size>
         </property>
         <property name="font">
          <font>
@@ -103,6 +130,18 @@
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="labelAddressTip">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>80</width>
+          <height>20</height>
+         </size>
+        </property>
         <property name="font">
          <font>
           <pointsize>11</pointsize>
@@ -112,7 +151,7 @@
          <string>ID：</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
         <property name="indent">
          <number>0</number>
@@ -121,6 +160,18 @@
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_5">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>80</width>
+          <height>20</height>
+         </size>
+        </property>
         <property name="font">
          <font>
           <pointsize>11</pointsize>
@@ -130,7 +181,7 @@
          <string>SN:</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
         <property name="indent">
          <number>0</number>
@@ -140,10 +191,16 @@
       <item row="2" column="1">
        <widget class="QLabel" name="label_sn">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>20</height>
+         </size>
         </property>
         <property name="font">
          <font>
@@ -171,10 +228,16 @@
       <item row="1" column="1">
        <widget class="QLabel" name="label_type">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>20</height>
+         </size>
         </property>
         <property name="font">
          <font>
@@ -201,6 +264,18 @@
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_3">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>80</width>
+          <height>20</height>
+         </size>
+        </property>
         <property name="font">
          <font>
           <pointsize>11</pointsize>
@@ -210,7 +285,7 @@
          <string>Type:</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
         <property name="indent">
          <number>0</number>
@@ -233,10 +308,16 @@
       <item row="3" column="1">
        <widget class="QLabel" name="label_version">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>20</height>
+         </size>
         </property>
         <property name="font">
          <font>
@@ -263,6 +344,18 @@
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="label_7">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>80</width>
+          <height>20</height>
+         </size>
+        </property>
         <property name="font">
          <font>
           <pointsize>11</pointsize>
@@ -272,7 +365,7 @@
          <string>Version:</string>
         </property>
         <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
         </property>
         <property name="indent">
          <number>0</number>

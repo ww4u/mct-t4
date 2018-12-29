@@ -6,14 +6,26 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>656</width>
-    <height>376</height>
+    <width>679</width>
+    <height>382</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
+    <number>2</number>
+   </property>
    <item row="0" column="0" colspan="2">
     <widget class="QGroupBox" name="groupBox_222">
      <property name="sizePolicy">
@@ -24,7 +36,7 @@
      </property>
      <property name="minimumSize">
       <size>
-       <width>0</width>
+       <width>290</width>
        <height>200</height>
       </size>
      </property>
@@ -41,20 +53,20 @@
       <item row="1" column="1">
        <widget class="QDoubleSpinBox" name="doubleSpinBox_CrawlingVelocity">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>80</width>
+          <width>130</width>
           <height>20</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>120</width>
+          <width>16777215</width>
           <height>16777215</height>
          </size>
         </property>
@@ -87,14 +99,14 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_111">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>108</width>
+          <width>130</width>
           <height>20</height>
          </size>
         </property>
@@ -106,14 +118,14 @@
       <item row="3" column="0">
        <widget class="QLabel" name="label_2">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>108</width>
+          <width>130</width>
           <height>20</height>
          </size>
         </property>
@@ -125,20 +137,20 @@
       <item row="3" column="1">
        <widget class="QDoubleSpinBox" name="doubleSpinBox_CrawlingTime">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>80</width>
+          <width>130</width>
           <height>20</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>120</width>
+          <width>16777215</width>
           <height>16777215</height>
          </size>
         </property>
@@ -174,20 +186,20 @@
       <item row="5" column="1">
        <widget class="QDoubleSpinBox" name="doubleSpinBox_MaximumVelocity">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>80</width>
+          <width>130</width>
           <height>20</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>120</width>
+          <width>16777215</width>
           <height>16777215</height>
          </size>
         </property>
@@ -220,14 +232,14 @@
       <item row="5" column="0">
        <widget class="QLabel" name="label_3">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>108</width>
+          <width>130</width>
           <height>20</height>
          </size>
         </property>
@@ -296,9 +308,12 @@
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Expanding</enum>
+     </property>
      <property name="sizeHint" stdset="0">
       <size>
-       <width>168</width>
+       <width>50</width>
        <height>20</height>
       </size>
      </property>
@@ -306,6 +321,12 @@
    </item>
    <item row="0" column="2">
     <widget class="QLabel" name="label_picture">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>100</height>
+      </size>
+     </property>
      <property name="frameShape">
       <enum>QFrame::Box</enum>
      </property>

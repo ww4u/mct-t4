@@ -189,7 +189,7 @@ void RoboConfig::slotAddNewRobot(QString strDevInfo)
     foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
         int ret = pCfg->readDeviceConfig();
         if(ret != 0){
-            QMessageBox::critical(this,tr("error"), pCfg->focusName() + tr("\nFrom device upload config faiured"));
+            QMessageBox::critical(this,tr("error"), pCfg->focusName() + "\n" +tr("From device upload config faiured"));
         }
         pCfg->updateShow();
         pCfg->saveConfig();
@@ -353,6 +353,48 @@ void RoboConfig::slotSearch()
     connect(m_megaSerachWidget, SIGNAL(signalSelectedInfo(QString)), this, SLOT(slotAddNewRobot(QString)));
 }
 
+void RoboConfig::slotWifi()
+{
+    if(mIndex < 0) return;
+    if( m_RobotList[mIndex].m_Visa == 0)
+    {
+        QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
+        return;
+    }
+
+    int ret = -1;
+    char wifiList[1024] = "";
+    ret = mrgSysWifiSearch(m_RobotList[mIndex].m_Visa, wifiList);
+    if(ret < 0)
+    {
+        QMessageBox::critical(this,tr("error"),tr("Wifi search error or empty!"));
+        qDebug() << "mrgSysWifiSearch" << ret;
+        return;
+    }
+
+    QStringList StrList = QString(wifiList).split(",", QString::SkipEmptyParts);
+
+    //显示选择对话框
+    QString wifiName = QInputDialog::getItem(this, tr("Wifi"), tr("Please choose wifi:"), StrList, -1, false);
+    if(wifiName == "")
+        return;
+
+    //显示输入对话框获取输入的wifi密码
+    QString password = QInputDialog::getText(this, tr("Input"), tr("Please input wifi password:"), QLineEdit::Password);
+    if(password == "")
+        return;
+
+    ret = mrgSysWifiConnect(m_RobotList[mIndex].m_Visa, wifiName.toLocal8Bit().data(), password.toLocal8Bit().data());
+    if(ret == 1){
+        QMessageBox::information(this,tr("tips"),tr("Wifi Connect success!"));
+    }
+    else{
+        QMessageBox::critical(this,tr("error"),tr("Wifi Connect error!"));
+        qDebug() << "mrgSysWifiConnect" << ret;
+    }
+    return;
+}
+
 void RoboConfig::slotExit()
 {
     foreach (RobotInfo robo, m_RobotList ){
@@ -490,7 +532,7 @@ int RoboConfig::setReset()
             int ret = pCfg->writeDeviceConfig();
             if(ret != 0){
                 ok = false;
-                QMessageBox::critical(this,tr("error"), pCfg->focusName() + tr("\tReset Failure"));
+                QMessageBox::critical(this,tr("error"), pCfg->focusName() + "\t" + tr("Reset Failure"));
             }
         }
         emit signalDataChanged();

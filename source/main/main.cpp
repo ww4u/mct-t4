@@ -2,7 +2,7 @@
 #include <QApplication>
 #include "../source/wnd/mainwindow.h"
 
-#define MCTVERSION "0.0.1.3"
+#define MCTVERSION "0.0.1.4"
 
 int main(int argc, char *argv[])
 {
@@ -14,13 +14,8 @@ int main(int argc, char *argv[])
     a.setApplicationVersion(MCTVERSION);
 
     MainWindow w;
-#ifdef _WIN32
-    w.showNormal();
-//    w.showMaximized();
-#else
-//    w.showFullScreen();
-    w.showNormal();
-#endif
+    w.showMaximized();
+
     return a.exec();
 }
 

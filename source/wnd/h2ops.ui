@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1200</width>
-    <height>300</height>
+    <width>905</width>
+    <height>270</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,6 +22,12 @@
     <height>270</height>
    </size>
   </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>600</height>
+   </size>
+  </property>
   <property name="focusPolicy">
    <enum>Qt::StrongFocus</enum>
   </property>
@@ -33,10 +39,13 @@
     <number>0</number>
    </property>
    <property name="topMargin">
-    <number>2</number>
+    <number>6</number>
+   </property>
+   <property name="rightMargin">
+    <number>9</number>
    </property>
    <property name="bottomMargin">
-    <number>2</number>
+    <number>6</number>
    </property>
    <item>
     <widget class="QScrollArea" name="scrollArea">
@@ -60,8 +69,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>1182</width>
-        <height>296</height>
+        <width>887</width>
+        <height>258</height>
        </rect>
       </property>
       <property name="minimumSize">
@@ -120,7 +129,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>4</number>
+          <number>0</number>
          </property>
          <property name="movable">
           <bool>false</bool>
@@ -1289,10 +1298,28 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="title">
               <string>Manual Control</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_4">
+              <property name="leftMargin">
+               <number>9</number>
+              </property>
+              <property name="rightMargin">
+               <number>9</number>
+              </property>
+              <property name="bottomMargin">
+               <number>9</number>
+              </property>
+              <property name="spacing">
+               <number>6</number>
+              </property>
               <item row="0" column="0">
                <layout class="QGridLayout" name="gridLayout_3">
                 <item row="2" column="4" colspan="2">
@@ -1334,35 +1361,6 @@
                   <property name="icon">
                    <iconset resource="../../res/res.qrc">
                     <normaloff>:/res/image/icon/arrow-right.png</normaloff>:/res/image/icon/arrow-right.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>40</width>
-                    <height>16</height>
-                   </size>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="1">
-                 <widget class="QToolButton" name="toolButton_singlestep_x_dec">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="toolTip">
-                   <string>Clicked Move</string>
-                  </property>
-                  <property name="layoutDirection">
-                   <enum>Qt::LeftToRight</enum>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset resource="../../res/res.qrc">
-                    <normaloff>:/res/image/icon/arrow-left.png</normaloff>:/res/image/icon/arrow-left.png</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -1424,8 +1422,8 @@
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="5">
-                 <widget class="QToolButton" name="toolButton_singlestep_y_inc">
+                <item row="3" column="1">
+                 <widget class="QToolButton" name="toolButton_singlestep_x_dec">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -1435,12 +1433,15 @@
                   <property name="toolTip">
                    <string>Clicked Move</string>
                   </property>
+                  <property name="layoutDirection">
+                   <enum>Qt::LeftToRight</enum>
+                  </property>
                   <property name="text">
                    <string/>
                   </property>
                   <property name="icon">
                    <iconset resource="../../res/res.qrc">
-                    <normaloff>:/res/image/icon/arrow-right.png</normaloff>:/res/image/icon/arrow-right.png</iconset>
+                    <normaloff>:/res/image/icon/arrow-left.png</normaloff>:/res/image/icon/arrow-left.png</iconset>
                   </property>
                   <property name="iconSize">
                    <size>
@@ -1452,32 +1453,6 @@
                 </item>
                 <item row="4" column="4">
                  <widget class="QToolButton" name="toolButton_jogmode_y_dec">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="toolTip">
-                   <string>Pressed Move Release Stop</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset resource="../../res/res.qrc">
-                    <normaloff>:/res/image/icon/arrow-left-2.png</normaloff>:/res/image/icon/arrow-left-2.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>40</width>
-                    <height>16</height>
-                   </size>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="1">
-                 <widget class="QToolButton" name="toolButton_jogmode_x_dec">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
@@ -1515,6 +1490,58 @@
                   </property>
                  </widget>
                 </item>
+                <item row="4" column="1">
+                 <widget class="QToolButton" name="toolButton_jogmode_x_dec">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="toolTip">
+                   <string>Pressed Move Release Stop</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../../res/res.qrc">
+                    <normaloff>:/res/image/icon/arrow-left-2.png</normaloff>:/res/image/icon/arrow-left-2.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>40</width>
+                    <height>16</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="5">
+                 <widget class="QToolButton" name="toolButton_singlestep_y_inc">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="toolTip">
+                   <string>Clicked Move</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../../res/res.qrc">
+                    <normaloff>:/res/image/icon/arrow-right.png</normaloff>:/res/image/icon/arrow-right.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>40</width>
+                    <height>16</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
                 <item row="4" column="2">
                  <widget class="QToolButton" name="toolButton_jogmode_x_inc">
                   <property name="sizePolicy">
@@ -1541,59 +1568,19 @@
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="5">
-                 <widget class="QToolButton" name="toolButton_jogmode_y_inc">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="toolTip">
-                   <string>Pressed Move Release Stop</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset resource="../../res/res.qrc">
-                    <normaloff>:/res/image/icon/arrow-right-2.png</normaloff>:/res/image/icon/arrow-right-2.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>40</width>
-                    <height>16</height>
-                   </size>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="3" rowspan="2">
-                 <widget class="QPushButton" name="pushButton_stop">
-                  <property name="toolTip">
-                   <string>Stop Moving</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset resource="../../res/res.qrc">
-                    <normaloff>:/res/image/icon/246.png</normaloff>:/res/image/icon/246.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>32</width>
-                    <height>32</height>
-                   </size>
-                  </property>
-                 </widget>
-                </item>
                 <item row="0" column="0">
                  <widget class="QLabel" name="label">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>60</width>
+                    <height>20</height>
+                   </size>
                   </property>
                   <property name="text">
                    <string>Increament:</string>
@@ -1680,6 +1667,106 @@
                   </property>
                  </widget>
                 </item>
+                <item row="4" column="5">
+                 <widget class="QToolButton" name="toolButton_jogmode_y_inc">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="toolTip">
+                   <string>Pressed Move Release Stop</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../../res/res.qrc">
+                    <normaloff>:/res/image/icon/arrow-right-2.png</normaloff>:/res/image/icon/arrow-right-2.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>40</width>
+                    <height>16</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="3" rowspan="2">
+                 <widget class="QPushButton" name="pushButton_stop">
+                  <property name="toolTip">
+                   <string>Stop Moving</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset resource="../../res/res.qrc">
+                    <normaloff>:/res/image/icon/246.png</normaloff>:/res/image/icon/246.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="2" colspan="3">
+                 <widget class="QPushButton" name="pushButton_apply">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string>Apply as point</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1" colspan="2">
+                 <widget class="QLabel" name="label_6">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="text">
+                   <string>X-Axis</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_2">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>60</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Velocity:</string>
+                  </property>
+                 </widget>
+                </item>
                 <item row="5" column="4" colspan="2">
                  <widget class="QDoubleSpinBox" name="doubleSpinBox_currentPos_y">
                   <property name="enabled">
@@ -1723,54 +1810,6 @@
                   </property>
                   <property name="maximum">
                    <double>10000.000000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="1" colspan="2">
-                 <widget class="QLabel" name="label_6">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="text">
-                   <string>X-Axis</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="6" column="2" colspan="3">
-                 <widget class="QPushButton" name="pushButton_apply">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string>Apply as point</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_2">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text">
-                   <string>Velocity:</string>
                   </property>
                  </widget>
                 </item>
@@ -1820,6 +1859,19 @@
                   </property>
                  </widget>
                 </item>
+                <item row="7" column="2">
+                 <spacer name="verticalSpacer_6">
+                  <property name="orientation">
+                   <enum>Qt::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
                </layout>
               </item>
              </layout>
@@ -1834,19 +1886,6 @@
               <size>
                <width>40</width>
                <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="1" column="1">
-            <spacer name="verticalSpacer_6">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
               </size>
              </property>
             </spacer>
@@ -1895,7 +1934,7 @@
               <widget class="QLabel" name="label_9">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
+                 <horstretch>1</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
@@ -1926,20 +1965,20 @@
              <item row="0" column="14" colspan="2">
               <widget class="QToolButton" name="toolButton_debugRun">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>3</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>240</width>
-                 <height>0</height>
+                 <width>120</width>
+                 <height>20</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>240</width>
+                 <width>16777215</width>
                  <height>16777215</height>
                 </size>
                </property>
@@ -1961,7 +2000,7 @@
               <widget class="QToolButton" name="btnImport">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
+                 <horstretch>1</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
@@ -1994,7 +2033,7 @@
               <widget class="QToolButton" name="btnDown">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
+                 <horstretch>1</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
@@ -2014,7 +2053,7 @@
               <widget class="QToolButton" name="btnUp">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
+                 <horstretch>1</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
@@ -2034,7 +2073,7 @@
               <widget class="QToolButton" name="btnExport">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
+                 <horstretch>1</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
@@ -2054,7 +2093,7 @@
               <widget class="QCheckBox" name="chkCyclic">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
+                 <horstretch>1</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
@@ -2070,7 +2109,7 @@
               <widget class="QDoubleSpinBox" name="spinDly">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
+                 <horstretch>1</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
@@ -2116,7 +2155,7 @@
               <widget class="QToolButton" name="btnClr">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
+                 <horstretch>1</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
@@ -2136,7 +2175,7 @@
               <widget class="QToolButton" name="btnDel">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
+                 <horstretch>1</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
@@ -2169,7 +2208,7 @@
               <widget class="QToolButton" name="btnAdd">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
+                 <horstretch>1</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
@@ -2224,6 +2263,18 @@
               </property>
               <item row="0" column="0">
                <widget class="QLabel" name="label_10">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>80</width>
+                  <height>20</height>
+                 </size>
+                </property>
                 <property name="text">
                  <string>RecordNumber:</string>
                 </property>
@@ -2231,6 +2282,18 @@
               </item>
               <item row="1" column="0">
                <widget class="QLabel" name="label_11">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>80</width>
+                  <height>20</height>
+                 </size>
+                </property>
                 <property name="text">
                  <string>Position X:</string>
                 </property>
@@ -2238,6 +2301,18 @@
               </item>
               <item row="2" column="0">
                <widget class="QLabel" name="label_23">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>80</width>
+                  <height>20</height>
+                 </size>
+                </property>
                 <property name="text">
                  <string>Position Y:</string>
                 </property>
@@ -2260,6 +2335,18 @@
                <widget class="QDoubleSpinBox" name="doubleSpinBox_debugRecord">
                 <property name="enabled">
                  <bool>false</bool>
+                </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>80</width>
+                  <height>20</height>
+                 </size>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -2286,6 +2373,18 @@
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>80</width>
+                  <height>20</height>
+                 </size>
+                </property>
                 <property name="alignment">
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                 </property>
@@ -2310,6 +2409,18 @@
                <widget class="QDoubleSpinBox" name="doubleSpinBox_debug_posY">
                 <property name="enabled">
                  <bool>false</bool>
+                </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>80</width>
+                  <height>20</height>
+                 </size>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

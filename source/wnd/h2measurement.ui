@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>781</width>
+    <width>873</width>
     <height>425</height>
    </rect>
   </property>
@@ -17,8 +17,26 @@
    <set>Qt::ImhFormattedNumbersOnly</set>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
+    <number>2</number>
+   </property>
    <item row="0" column="1" rowspan="2">
     <widget class="QLabel" name="label_picture">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>100</height>
+      </size>
+     </property>
      <property name="frameShape">
       <enum>QFrame::Box</enum>
      </property>
@@ -53,13 +71,13 @@
      </property>
      <property name="minimumSize">
       <size>
-       <width>310</width>
-       <height>0</height>
+       <width>390</width>
+       <height>92</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>350</width>
+       <width>16777215</width>
        <height>16777215</height>
       </size>
      </property>
@@ -70,14 +88,14 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+         <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>100</width>
+          <width>120</width>
           <height>20</height>
          </size>
         </property>
@@ -88,9 +106,15 @@
       </item>
       <item row="0" column="1">
        <widget class="QComboBox" name="comboBox_AxesZeroPoint">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>0</width>
+          <width>240</width>
           <height>20</height>
          </size>
         </property>
@@ -129,13 +153,13 @@
     <widget class="QGroupBox" name="groupBox_Zero_End_point">
      <property name="minimumSize">
       <size>
-       <width>310</width>
-       <height>130</height>
+       <width>390</width>
+       <height>160</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>350</width>
+       <width>16777215</width>
        <height>16777215</height>
       </size>
      </property>
@@ -146,7 +170,7 @@
       <item row="4" column="0">
        <widget class="QLabel" name="label_7">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -165,20 +189,20 @@
       <item row="4" column="3">
        <widget class="QDoubleSpinBox" name="doubleSpinBox_swlp_Y">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>80</width>
+          <width>120</width>
           <height>20</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>120</width>
+          <width>16777215</width>
           <height>16777215</height>
          </size>
         </property>
@@ -217,20 +241,20 @@
       <item row="5" column="2">
        <widget class="QDoubleSpinBox" name="doubleSpinBox_swln_X">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>80</width>
+          <width>120</width>
           <height>20</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>120</width>
+          <width>16777215</width>
           <height>16777215</height>
          </size>
         </property>
@@ -269,20 +293,20 @@
       <item row="2" column="2">
        <widget class="QDoubleSpinBox" name="doubleSpinBox_pzpX">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>80</width>
+          <width>120</width>
           <height>20</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>120</width>
+          <width>16777215</width>
           <height>16777215</height>
          </size>
         </property>
@@ -324,20 +348,20 @@
       <item row="2" column="3">
        <widget class="QDoubleSpinBox" name="doubleSpinBox_pzpY">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>80</width>
+          <width>120</width>
           <height>20</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>120</width>
+          <width>16777215</width>
           <height>16777215</height>
          </size>
         </property>
@@ -375,9 +399,15 @@
       </item>
       <item row="0" column="1" colspan="2">
        <widget class="QLabel" name="label_9">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>80</width>
+          <width>120</width>
           <height>16</height>
          </size>
         </property>
@@ -398,7 +428,7 @@
       <item row="2" column="0" colspan="2">
        <widget class="QLabel" name="label_6">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -417,7 +447,7 @@
       <item row="5" column="0">
        <widget class="QLabel" name="label_8">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
@@ -436,20 +466,20 @@
       <item row="4" column="2">
        <widget class="QDoubleSpinBox" name="doubleSpinBox_swlp_X">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>80</width>
+          <width>120</width>
           <height>20</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>120</width>
+          <width>16777215</width>
           <height>16777215</height>
          </size>
         </property>
@@ -487,10 +517,16 @@
       </item>
       <item row="0" column="3">
        <widget class="QLabel" name="label_10">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
-          <width>80</width>
-          <height>16</height>
+          <width>120</width>
+          <height>20</height>
          </size>
         </property>
         <property name="font">
@@ -510,20 +546,20 @@
       <item row="5" column="3">
        <widget class="QDoubleSpinBox" name="doubleSpinBox_swln_Y">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="minimumSize">
          <size>
-          <width>80</width>
+          <width>120</width>
           <height>20</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>120</width>
+          <width>16777215</width>
           <height>16777215</height>
          </size>
         </property>
@@ -594,7 +630,7 @@
      </property>
      <property name="sizeHint" stdset="0">
       <size>
-       <width>327</width>
+       <width>50</width>
        <height>20</height>
       </size>
      </property>

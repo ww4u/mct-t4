@@ -384,3 +384,15 @@ QRadioButton#radError::indicator:checked, QRadioButton#radWarning::indicator:che
 	/*background-color:red;*/
 	image: url(:/res/image/widget/radiobutton_checked_red.png);
 }
+
+QTreeView::branch:has-children:!has-siblings:closed,
+QTreeView::branch:closed:has-children:has-siblings {
+        border-image: none;
+        image: url(:/res/image/widget/arrow_right_2.png);
+}
+
+QTreeView::branch:open:has-children:!has-siblings,
+QTreeView::branch:open:has-children:has-siblings  {
+        border-image: none;
+        image: url(:/res/image/widget/arrow_down_2.png);
+}

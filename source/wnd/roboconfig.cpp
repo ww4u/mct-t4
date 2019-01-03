@@ -508,44 +508,29 @@ void RoboConfig::soltActionDelete()
 int RoboConfig::setReset()
 {
     if(mIndex < 0) return -100;
-    bool ok = true;
-    if( m_RobotList[mIndex].m_Visa != 0)
+
+    //将默认的配置文件替换掉对应的配置文件，更新界面，写入设备
+    QString strIDN = m_RobotList[mIndex].m_strDevInfo.split(',').at(3);
+    copyFileToPath(QApplication::applicationDirPath() + "/robots/default.xml",
+                   QApplication::applicationDirPath() + "/robots/" + strIDN + ".xml",
+                   true);
+
+    copyFileToPath(QApplication::applicationDirPath() + "/dataset/action_default.mrp",
+                   QApplication::applicationDirPath() + "/dataset/" + strIDN + ".mrp",
+                   true);
+
+    copyFileToPath(QApplication::applicationDirPath() + "/dataset/errmgr_default.xml",
+                   QApplication::applicationDirPath() + "/dataset/" + strIDN + ".xml",
+                   true);
+
+    foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs())
     {
-        //将默认的配置文件替换掉对应的配置文件，更新界面，写入设备
-        QString strIDN = m_RobotList[mIndex].m_strDevInfo.split(',').at(3);
-        copyFileToPath(QApplication::applicationDirPath() + "/robots/default.xml",
-                       QApplication::applicationDirPath() + "/robots/" + strIDN + ".xml",
-                       true);
-
-        copyFileToPath(QApplication::applicationDirPath() + "/dataset/action_default.mrp",
-                       QApplication::applicationDirPath() + "/dataset/" + strIDN + ".mrp",
-                       true);
-
-        copyFileToPath(QApplication::applicationDirPath() + "/dataset/errmgr_default.xml",
-                       QApplication::applicationDirPath() + "/dataset/" + strIDN + ".xml",
-                       true);
-
-        foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs())
-        {
-            pCfg->loadConfig();
-            pCfg->updateShow();
-            int ret = pCfg->writeDeviceConfig();
-            if(ret != 0){
-                ok = false;
-                QMessageBox::critical(this,tr("error"), pCfg->focusName() + "\t" + tr("Reset Failure"));
-            }
-        }
-        emit signalDataChanged();
-    }else{
-        QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
-        return -2;//offline
+        pCfg->loadConfig();
+        pCfg->updateShow();
     }
-    if(ok){
-        QMessageBox::information(this,tr("tips"),tr("Reset Success!"));
-        return 0;
-    }else{
-        return -1;
-    }
+
+    emit signalDataChanged();
+    return 0;
 }
 
 void RoboConfig::on_buttonBox_clicked(QAbstractButton *button)

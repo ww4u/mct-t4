@@ -352,14 +352,15 @@ void MainWindow::slot_logout( const QString &str, LogLevel lev )
 
 void MainWindow::slot_focus_in( const QString &name )
 {
-//    logDbg() << name;
+    QString strName =  QApplication::applicationDirPath() + "/doc/" + name + ".html";
+    logDbg() << name;
     if ( name.length() <= 0 )
     { return; }
 
     if ( m_pHelpPanel == NULL )
     { return; }
 
-    m_pHelpPanel->setFile( QApplication::applicationDirPath() + "/doc/" + name + ".html" );
+    m_pHelpPanel->setFile( strName );
 }
 
 void MainWindow::on_actionExit_triggered()

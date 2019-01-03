@@ -101,11 +101,51 @@ bool ErrMgrModel::setData(const QModelIndex &index, const QVariant &value, int r
         { mItems[ row ]->mErr = value.toString(); }
 
         else if ( index.column() == 2 )
-        {  mItems[ row ]->setEventType( e_error, value.toBool() ); }
+        {
+            if(mItems[ row ]->mEventType != e_error)
+            {
+                if(mItems[ row ]->mActionList.size() > 1)
+                {
+                    mItems[ row ]->mAction = mItems[ row ]->mActionList.at(0);
+                    mItems[ row ]->mbActionAble = true;
+                }else if(mItems[ row ]->mActionList.size() == 1){
+                    mItems[ row ]->mAction = mItems[ row ]->mActionList.at(0);
+                }
+
+                if((mItems[ row ]->mActionList.size() == 1) && (mItems[ row ]->mActionList.at(0) == ACTION_FREEWHEEL)) {
+                    mItems[ row ]->mbOutputAble = false;
+                }else{
+                    mItems[ row ]->mbOutputAble = true;
+                }
+            }
+
+            if(mItems[ row ]->mEventType != e_error)
+                mItems[ row ]->setEventType( e_error, value.toBool() );
+        }
         else if ( index.column() == 3 )
-        {  mItems[ row ]->setEventType( e_warning, value.toBool() ); }
+        {
+            if(mItems[ row ]->mEventType == e_error)
+            {
+                mItems[ row ]->mAction = "";
+                mItems[ row ]->mbActionAble = false;
+                mItems[ row ]->mbOutputAble = false;
+            }
+
+            if(mItems[ row ]->mEventType != e_warning)
+                mItems[ row ]->setEventType( e_warning, value.toBool() );
+        }
         else if( index.column() == 4 )
-        {  mItems[ row ]->setEventType( e_info, value.toBool() ); }
+        {
+            if(mItems[ row ]->mEventType == e_error)
+            {
+                mItems[ row ]->mAction = "";
+                mItems[ row ]->mbActionAble = false;
+                mItems[ row ]->mbOutputAble = false;
+            }
+
+            if(mItems[ row ]->mEventType != e_info)
+                mItems[ row ]->setEventType( e_info, value.toBool() );
+        }
 
         else if ( index.column() == 5 )
         { mItems[ row ]->mAction = value.toString(); }
@@ -161,7 +201,8 @@ Qt::ItemFlags ErrMgrModel::flags(const QModelIndex &index) const
     }
     else if ( col == 5 )
     {
-        return enable_flags( mItems[row]->mActionList.size() > 1 );
+//        return enable_flags( mItems[row]->mActionList.size() > 1 );
+        return enable_flags( mItems[row]->mbActionAble );
     }
     else if ( col == 6 )
     {
@@ -249,7 +290,10 @@ QVariant ErrMgrModel::userRole_Visible( const QModelIndex &index ) const
     else if ( col == 4 )
     { return role_visible(mItems[row]->mbInfoAble); }
     else if ( col == 5 )
-    { return role_visible(mItems[row]->mActionList.size() > 0 ); }
+    {
+        return role_visible( mItems[row]->mbActionAble );
+//        return role_visible(mItems[row]->mActionList.size() > 0 );
+    }
     else if ( col == 6 )
     { return role_visible(mItems[row]->mbOutputAble); }
     else if ( col == 7 )
@@ -277,7 +321,10 @@ QVariant ErrMgrModel::backRole( const QModelIndex &index ) const
         else if ( col == 4 )
         {  back_role(mItems[row]->mbInfoAble); }
         else if ( col == 5 )
-        {  back_role(mItems[row]->mActionList.size() > 0 ); }
+        {
+            back_role(mItems[row]->mbActionAble );
+//            back_role(mItems[row]->mActionList.size() > 0 );
+        }
         else if ( col == 6 )
         {  back_role(mItems[row]->mbOutputAble); }
         else if ( col == 7 )
@@ -428,6 +475,11 @@ int ErrMgrModel::serialIn( QXmlStreamReader & reader )
                 { pItem->mbSaveAble = reader.readElementText().toInt() > 0; }
                 else
                 { reader.skipCurrentElement(); }
+
+                if(pItem->mActionList.size() > 1)
+                {pItem->mbActionAble = true; }
+                else
+                {pItem->mbActionAble = false; }
             }
 
             localItems.append( pItem );
@@ -454,16 +506,6 @@ void ErrMgrModel::createDebug()
     pItem->mErr = "hello";
 
     pItem->mEventType = e_error;
-
-//    set_bit( pItem->mEventAttr, e_error);
-//    set_bit( pItem->mEventAttr, e_warning);
-//    set_bit( pItem->mEventAttr, e_info);
-
-//    pItem->mAction = e_action_freewheel;
-//    set_bit( pItem->mActionAttr, e_action_freewheel );
-//    set_bit( pItem->mActionAttr, e_action_qs );
-//    set_bit( pItem->mActionAttr, e_action_record_dec );
-//    set_bit( pItem->mActionAttr, e_action_finish );
 
     pItem->mbOutput = true;
     pItem->mbOutputAble = true;

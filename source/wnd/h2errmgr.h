@@ -41,6 +41,10 @@ private:
 
     QMap< int, QString> m_mapRespIntToStr;
     QMap< QString, int> m_mapRespStrToInt;
+
+    int calcResponse(int reaction, int outputAble);
+    int parseResponse(int response, int *reaction, int *outputAble);
+
 };
 
 #endif // H2ERRMGR_H

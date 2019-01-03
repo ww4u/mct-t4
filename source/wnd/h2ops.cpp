@@ -640,7 +640,7 @@ void H2Ops::on_pushButton_starting_home_clicked()
             else{
                 qDebug() << "mrgRobotWaitHomeEnd ok";
                 ui->pushButton_starting_home->setText(tr("Start Go Home"));
-                m_isDebugRunFlag = false;
+                m_isHomgingRunFlag = false;
                 result = 0;
                 return;
             }

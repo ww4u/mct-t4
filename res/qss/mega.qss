@@ -526,16 +526,16 @@ QFrame#label_picture {
 	font-size: 12px;
 }
 
-/*
+
 QTreeView::branch:has-children:!has-siblings:closed,
 QTreeView::branch:closed:has-children:has-siblings {
         border-image: none;
-        image: url(branch-closed.png);
+        image: url(:/res/image/widget/arrow_right_2.png);
 }
 
 QTreeView::branch:open:has-children:!has-siblings,
 QTreeView::branch:open:has-children:has-siblings  {
         border-image: none;
-        image: url(branch-open.png);
+        image: url(:/res/image/widget/arrow_down_2.png);
 }
-*/
+

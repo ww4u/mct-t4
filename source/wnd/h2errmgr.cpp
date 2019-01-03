@@ -15,21 +15,16 @@ H2ErrMgr::H2ErrMgr(QWidget *parent) :
 
 
     //! 建立错误响应通信和显示对应表
-    m_mapRespStrToInt.insert( "A", 1 );
-    m_mapRespStrToInt.insert( "B", 2 );
-    m_mapRespStrToInt.insert( "C", 3 );
-    m_mapRespStrToInt.insert( "D", 4 );
-    m_mapRespStrToInt.insert( "E", 5 );
-    m_mapRespStrToInt.insert( "F", 6 );
-    m_mapRespStrToInt.insert( "G", 7 );
+    m_mapRespStrToInt.insert( ACTION_FREEWHEEL, 1 );
+    m_mapRespStrToInt.insert( ACTION_QSDEC, 2 );
+    m_mapRespStrToInt.insert( ACTION_RECDEC, 3 );
+    m_mapRespStrToInt.insert( ACTION_FINISH, 4 );
 
-    m_mapRespIntToStr.insert( 1, "A" );
-    m_mapRespIntToStr.insert( 2, "B" );
-    m_mapRespIntToStr.insert( 3, "C" );
-    m_mapRespIntToStr.insert( 4, "D" );
-    m_mapRespIntToStr.insert( 5, "E" );
-    m_mapRespIntToStr.insert( 6, "F" );
-    m_mapRespIntToStr.insert( 7, "G" );
+    m_mapRespIntToStr.insert( 1, ACTION_FREEWHEEL );
+    m_mapRespIntToStr.insert( 2, ACTION_QSDEC );
+    m_mapRespIntToStr.insert( 3, ACTION_RECDEC );
+    m_mapRespIntToStr.insert( 4, ACTION_FINISH );
+
 
     //! 创建表格代理
     m_pCheckDelegate = new checkDelegate( shape_check, this );
@@ -54,7 +49,6 @@ int H2ErrMgr::readDeviceConfig()
 
         int type;
         int response;
-        int outputAble;
         int diagnose;
         int enable; //默认使能,界面上没有对应的列
 
@@ -69,11 +63,13 @@ int H2ErrMgr::readDeviceConfig()
 
         mErrManager.mItems.at(i)->mEventType = (e_event_type)type;
 
-        mErrManager.mItems.at(i)->mAction =  m_mapRespIntToStr[response];
+        int reaction = 0;
+        int output = 0;
+        parseResponse(response, &reaction, &output);
 
+        mErrManager.mItems.at(i)->mAction =  m_mapRespIntToStr[reaction];
+        mErrManager.mItems.at(i)->mbOutput = (output==1) ? true : false;
         mErrManager.mItems.at(i)->mbSaveDiagnosis = (diagnose==1) ? true : false;
-
-        // mErrManager.mItems.at(i)->mbOutputAble = (outputAble==1) ? true : false;
     }
 
     return isOk;
@@ -93,23 +89,27 @@ int H2ErrMgr::writeDeviceConfig()
         int type            = mErrManager.items()->at(i)->mEventType;
 
         str                 = mErrManager.items()->at(i)->mAction;
-        int response        = m_mapRespStrToInt[str];
-
-        bl                  = mErrManager.items()->at(i)->mbOutputAble;
+        bl                  = mErrManager.items()->at(i)->mbOutput;
         int outputAble      = bl ? 1 : 0 ;
+
+        int response        = calcResponse( m_mapRespStrToInt[str], outputAble);
 
         bl                  = mErrManager.items()->at(i)->mbSaveDiagnosis;
         int diagnose        = bl ? 1 : 0 ;
 
         int enable = 1; //默认使能,界面上没有对应的列
 
-        ret = mrgErrorCodeConfigDownload(mViHandle, code, type, diagnose, response, enable);
-        qDebug() << "ErrorCodeDownload:" << code << type << diagnose << response << enable << "ret:" << ret;
-        if(ret < 0){
-            sysError("mrgErrorCodeConfigDownload", code);
-            isOk = -1;
-            continue;
+        if(type == e_error)
+        {
+            ret = mrgErrorCodeConfigDownload(mViHandle, code, type, diagnose, response, enable);
+            qDebug() << "ErrorCodeDownload:" << code << type << diagnose << QChar('A' + response - 1) << enable << "ret:" << ret;
+            if(ret < 0){
+                sysError("mrgErrorCodeConfigDownload", code);
+                isOk = -1;
+                continue;
+            }
         }
+
     }
 
     return isOk;
@@ -153,4 +153,62 @@ void H2ErrMgr::updateShow()
 void H2ErrMgr::translateUI()
 {
     ui->retranslateUi(this);
+}
+
+
+/**
+ * @brief calcResponse
+ * @param reaction 1,2,3,4
+ * @param outputAble 0,1
+ * @return 小于零失败
+ */
+int H2ErrMgr::calcResponse(int reaction, int outputAble)
+{
+    if(reaction<1 || reaction>4 || outputAble<0 || outputAble>1 ) {
+        return -1;
+    }
+
+    //! 1
+    if(reaction == 1){
+        return 1;
+    }
+
+    //! 2 3 4
+    if(reaction != 1 && outputAble == 1){
+        return reaction;
+    }
+
+    //! 5 6 7
+    if(reaction != 1 && outputAble == 0){
+        return reaction + 3;
+    }
+}
+
+/**
+ * @brief H2ErrMgr::parseResponse
+ * @param response 1,2,3,4,5,6,7
+ * @param reaction 输出1,2,3,4
+ * @param outputAble 输出0或1
+ * @return 小于零失败
+ */
+int H2ErrMgr::parseResponse(int response,int *reaction, int *outputAble)
+{
+    if(response == 1) {
+        *reaction = 1;
+        return 0;
+    }
+
+    if(response>=2 && response<=4) {
+        *reaction = response;
+        *outputAble = 1;
+        return 0;
+    }
+    else if(response>=5 && response<=7) {
+        *reaction = response - 3;
+        *outputAble = 0;
+        return 0;
+    }
+    else {
+        return -1;
+    }
 }

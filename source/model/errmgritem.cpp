@@ -28,7 +28,7 @@ ErrMgrItem::ErrMgrItem()
 {
     mNr = 0;
     mEventType = e_error;
-    mAction = e_action_freewheel;
+    mAction = "";
     mbErrorAble = true;
     mbWarnAble = true;
     mbInfoAble = true;
@@ -38,6 +38,8 @@ ErrMgrItem::ErrMgrItem()
 
     mbSaveDiagnosis = false;
     mbSaveAble = true;
+
+    mbActionAble = true;
 }
 
 eColumnAttr ErrMgrItem::columnAttr( int col )

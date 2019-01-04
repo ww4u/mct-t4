@@ -5,16 +5,16 @@
         <Family>MRX-H2</Family>
         <MotorPosition>0</MotorPosition>
         <Size>0</Size>
-        <WorkStrokeX>494</WorkStrokeX>
-        <WorkStrokeY>820</WorkStrokeY>
+        <WorkStrokeX>370</WorkStrokeX>
+        <WorkStrokeY>390</WorkStrokeY>
     </H2Configuration>
     <H2Measurement id="H2Measurement">
         <ProjectZeroPointX>0.00</ProjectZeroPointX>
         <ProjectZeroPointY>0.00</ProjectZeroPointY>
         <SWLimitNegativeX>0.00</SWLimitNegativeX>
         <SWLimitNegativeY>0.00</SWLimitNegativeY>
-        <SWLimitPositiveX>494.00</SWLimitPositiveX>
-        <SWLimitPositiveY>820.00</SWLimitPositiveY>
+        <SWLimitPositiveX>370.00</SWLimitPositiveX>
+        <SWLimitPositiveY>390.00</SWLimitPositiveY>
 		<Direction>Comer Point 1</Direction>
         <ZeroPoint>0</ZeroPoint>
     </H2Measurement>

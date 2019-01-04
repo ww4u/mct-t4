@@ -26,8 +26,13 @@ QVariant H2ActionModel::data(const QModelIndex &index, int role) const
     int col = index.column();
     int row = index.row();
 
-    if ( role != Qt::DisplayRole && role != Qt::EditRole )
+    if ( role == Qt::DisplayRole || role == Qt::EditRole )
+    {}
+    else if ( role == Qt::TextAlignmentRole )
+    { return QVariant( Qt::AlignCenter ); }
+    else
     { return QVariant(); }
+
 
     if ( col == 0 )
     { return QVariant( mItems[ row ]->mType ); }

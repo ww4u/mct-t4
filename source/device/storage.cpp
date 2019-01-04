@@ -196,11 +196,11 @@ EXPORT_API int CALL waitMotionFileWirteEnd(int vi)
 {
     char args[SEND_BUF];
     char as8Ret[100];
-    int retLen = 0,time = 0, intervalTime = 20;
+    int retLen = 0,time = 0, intervalTime = 50;
     snprintf(args, SEND_BUF, "STORage:FILe:MOTion:CONTEXT:WRITe:DATA:STATE?\n");
     while (1)
     {
-        if (time > 200)
+        if (time > 300)
         {
             break;
         }

@@ -52,6 +52,11 @@ int H2ErrMgr::readDeviceConfig()
         int diagnose;
         int enable; //默认使能,界面上没有对应的列
 
+
+        //! 45 53 54 55 61 不是error类型
+        if(code == 45 || code == 53 || code == 54 || code == 55 || code == 61)
+            continue;
+
         int ret=  mrgErrorCodeConfigUpload(mViHandle, code, &type, &diagnose, &response, &enable);
         if(ret < 0){
             sysError("mrgErrorCodeConfigUpload", code);
@@ -99,15 +104,16 @@ int H2ErrMgr::writeDeviceConfig()
 
         int enable = 1; //默认使能,界面上没有对应的列
 
-        if(type == e_error)
-        {
-            ret = mrgErrorCodeConfigDownload(mViHandle, code, type, diagnose, response, enable);
-            qDebug() << "ErrorCodeDownload:" << code << type << diagnose << QChar('A' + response - 1) << enable << "ret:" << ret;
-            if(ret < 0){
-                sysError("mrgErrorCodeConfigDownload", code);
-                isOk = -1;
-                continue;
-            }
+        //! 45 53 54 55 61 不是error类型
+        if(code == 45 || code == 53 || code == 54 || code == 55 || code == 61)
+            continue;
+
+        ret = mrgErrorCodeConfigDownload(mViHandle, code, type, diagnose, response, enable);
+        qDebug() << "ErrorCodeDownload:" << code << type << diagnose << QChar('A' + response - 1) << enable << "ret:" << ret;
+        if(ret < 0){
+            sysError("mrgErrorCodeConfigDownload", code);
+            isOk = -1;
+            continue;
         }
 
     }
@@ -148,6 +154,10 @@ void H2ErrMgr::updateShow()
 
     ui->tvErr->setItemDelegateForColumn( 6, m_pCheckDelegate );
     ui->tvErr->setItemDelegateForColumn( 7, m_pCheckDelegate );
+
+    ui->tvErr->resizeColumnToContents(1);
+    ui->tvErr->setColumnWidth(5,200);
+
 }
 
 void H2ErrMgr::translateUI()

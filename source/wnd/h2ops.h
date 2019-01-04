@@ -99,6 +99,8 @@ private slots:
 
     void setAllTabStopWorking();
 
+    void on_pushButton_go_prjZero_clicked();
+
 protected:
     void setupUi();
     void setupName();
@@ -140,6 +142,8 @@ private:
     QTimer *m_timerOpsHoming;
     XThread *m_threadOpsHoming;
     bool m_isHomgingRunFlag;
+    XThread *m_threadOpsPrjZero;
+    bool m_isPrjZeroRunFlag;
 
     QTimer *m_timerOpsManual;
     QTimer *m_timerOpsMonitor;

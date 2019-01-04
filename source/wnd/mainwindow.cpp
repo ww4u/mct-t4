@@ -78,6 +78,7 @@ void MainWindow::setupWorkArea()
 
     m_pHelpPanel = new HelpPanel();
     m_pDockHelp->setWidget( m_pHelpPanel );    
+    m_pDockHelp->toggleViewAction()->setText(tr("&ShowHelp"));
     ui->menuHelp->addAction( m_pDockHelp->toggleViewAction() );
     m_pDockHelp->hide();//默认不显示
 }
@@ -237,16 +238,14 @@ void MainWindow::changeLanguage()
     QMap<QString,QString> map;
 
     if( m_language == LANG_CN ){
-         qmFile = ":/res/ts/qt_CN.qm";
-         map.insert("Language", "Chinese");
+        qmFile = ":/res/ts/qt_CN.qm";
+        map.insert("Language", "Chinese");
     }
     else if( m_language == LANG_EN ){
         qmFile = ":/res/ts/qt_EN.qm";
         map.insert("Language", "English");
     }
-
     qDebug() << "changeLanguage:" << qmFile;
-    sysInfo("changeLanguage:", qmFile);
 
     m_roboConfig->changeLanguage(qmFile);
     m_pOps->changeLanguage(qmFile);
@@ -255,6 +254,7 @@ void MainWindow::changeLanguage()
     m_translator.load(qmFile);
     qApp->installTranslator(&m_translator);
     ui->retranslateUi(this);
+    m_pDockHelp->toggleViewAction()->setText(tr("&ShowHelp"));
 
     mXML.xmlNodeRemove(fileName, "WindowLanguage");
     mXML.xmlNodeAppend(fileName, "WindowLanguage", map);

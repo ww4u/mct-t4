@@ -129,7 +129,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>3</number>
          </property>
          <property name="movable">
           <bool>false</bool>
@@ -1087,22 +1087,6 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_20">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="text">
-                 <string>Direction:</string>
-                </property>
-               </widget>
-              </item>
               <item row="3" column="1" colspan="2">
                <widget class="QDoubleSpinBox" name="doubleSpinBox_homing_actual_pos_x">
                 <property name="enabled">
@@ -1149,43 +1133,19 @@
                 </property>
                </widget>
               </item>
-              <item row="5" column="0" colspan="3">
-               <widget class="QPushButton" name="pushButton_starting_home">
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_20">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
-                <property name="toolTip">
-                 <string>Move  to Zero Point Position</string>
-                </property>
                 <property name="text">
-                 <string>Starting Home</string>
-                </property>
-                <property name="icon">
-                 <iconset resource="../../res/res.qrc">
-                  <normaloff>:/res/image/icon/address.png</normaloff>:/res/image/icon/address.png</iconset>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0">
-               <widget class="QLabel" name="label_22">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string>Actual Position Y:</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <widget class="QLabel" name="label_21">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="text">
-                 <string>Actual Position X:</string>
+                 <string>Direction:</string>
                 </property>
                </widget>
               </item>
@@ -1235,7 +1195,47 @@
                 </property>
                </widget>
               </item>
-              <item row="6" column="0">
+              <item row="4" column="0">
+               <widget class="QLabel" name="label_22">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string>Actual Position Y:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="0" colspan="3">
+               <widget class="QPushButton" name="pushButton_starting_home">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="toolTip">
+                 <string>Move  to Zero Point Position</string>
+                </property>
+                <property name="text">
+                 <string>Starting Home</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="../../res/res.qrc">
+                  <normaloff>:/res/image/icon/address.png</normaloff>:/res/image/icon/address.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_21">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string>Actual Position X:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="0">
                <spacer name="verticalSpacer_5">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -1248,6 +1248,16 @@
                 </property>
                </spacer>
               </item>
+              <item row="1" column="1" colspan="2">
+               <widget class="QLabel" name="label_homing_direction">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
               <item row="0" column="1" colspan="2">
                <widget class="QLabel" name="label_homing_target">
                 <property name="enabled">
@@ -1258,13 +1268,10 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="1" colspan="2">
-               <widget class="QLabel" name="label_homing_direction">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
+              <item row="6" column="0" colspan="3">
+               <widget class="QPushButton" name="pushButton_go_prjZero">
                 <property name="text">
-                 <string/>
+                 <string>Run to Project Zero Point</string>
                 </property>
                </widget>
               </item>

@@ -58,6 +58,7 @@ int H2Action::readDeviceConfig()
 
     //! 查找文件
     char filenames[1024] = "";
+    QThread::msleep(100);
     ret = mrgStorageMotionFileQuery(mViHandle, 0, filenames, sizeof(filenames));
     qDebug() << "mrgStorageMotionFileQuery" << ret;
     if (ret < 0){
@@ -121,7 +122,7 @@ int H2Action::writeDeviceConfig()
         sysError("mrgStorageMotionFileSaveContext", ret);
         return -1;
     }
-
+    QThread::msleep(50);
     ret = mrgRobotMotionFileImport(mViHandle, mRobotName, m_strDeviceFileName.toLocal8Bit().data());
     qDebug() << "mrgRobotMotionFileImport" << ret;
     if(ret != 0){

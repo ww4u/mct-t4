@@ -28,6 +28,8 @@ H2Ops::H2Ops(QWidget *parent) :
     m_recordNumber = -1;
     m_isDebugRunFlag = false;
     m_isHomgingRunFlag = false;
+    m_isPrjZeroRunFlag = false;
+
 
     set_name( ui->tab_LogOut,   "tab_LogOut");
     set_name( ui->tab_Operate,  "tab_Operate");
@@ -50,6 +52,7 @@ H2Ops::H2Ops(QWidget *parent) :
     m_timerOpsIO->setInterval(500);
 
     m_threadOpsHoming = NULL;
+    m_threadOpsPrjZero = NULL;
     m_timerOpsHoming  = new QTimer;
     m_timerOpsHoming->setInterval(500);
 
@@ -290,6 +293,11 @@ void H2Ops::slotRobotStop()
     if(m_isHomgingRunFlag){
         on_pushButton_starting_home_clicked();
     }
+
+    if(m_isPrjZeroRunFlag){
+        on_pushButton_go_prjZero_clicked();
+    }
+
     on_tabWidget_currentChanged(index);
 }
 
@@ -365,6 +373,10 @@ void H2Ops::setAllTabStopWorking()
 //    if(m_isHomgingRunFlag){ //正在回零
 //        on_pushButton_starting_home_clicked();
 //    }
+
+    if(m_isPrjZeroRunFlag){
+        on_pushButton_go_prjZero_clicked();
+    }
 }
 
 void H2Ops::on_tabWidget_currentChanged(int index)
@@ -607,8 +619,8 @@ void H2Ops::on_btnExport_2_clicked()
 ////////////////////////////////////// 点击发送指令
 void H2Ops::slot_starting_home_over(int ret)
 {
-    if(ret == -1){
-        QMessageBox::critical(this,tr("error"),tr("Starting Home failure"));
+    if(ret < 0){
+        QMessageBox::critical(this,tr("error"),tr("failure"));
     }
 }
 
@@ -639,8 +651,6 @@ void H2Ops::on_pushButton_starting_home_clicked()
             }
             else{
                 qDebug() << "mrgRobotWaitHomeEnd ok";
-                ui->pushButton_starting_home->setText(tr("Start Go Home"));
-                m_isHomgingRunFlag = false;
                 result = 0;
                 return;
             }
@@ -664,8 +674,12 @@ void H2Ops::on_pushButton_starting_home_clicked()
 
         if(m_ViHandle <= 0) return;
         m_threadOpsHoming = new XThread(func);
-        connect(m_threadOpsHoming,&XThread::finished,[&](){ m_threadOpsHoming = NULL; });
         connect(m_threadOpsHoming,SIGNAL(signalFinishResult(int)),SLOT(slot_starting_home_over(int)));
+        connect(m_threadOpsHoming,&XThread::finished,[&](){
+            m_threadOpsHoming = NULL;
+            ui->pushButton_starting_home->setText(tr("Start Go Home"));
+            m_isHomgingRunFlag = false;
+        });
         m_threadOpsHoming->start(QThread::LowestPriority);
     }
 }
@@ -1132,4 +1146,55 @@ void H2Ops::updateTabDiagnosis()
     qDebug() << "Diagnosis";
 }
 
+void H2Ops::on_pushButton_go_prjZero_clicked()
+{
+    if(m_ViHandle <= 0) return;
 
+    double velocity = m_Data["SearchVelocity"].toDouble();
+
+    auto func = [=](int &result)
+    {
+        float fx = -1, fy = -1, fz = -1;
+        result = mrgGetRobotCurrentPosition(m_ViHandle, m_RoboName, &fx, &fy, &fz);
+        if(result < 0) {
+            sysError("mrgGetRobotCurrentPosition", result);
+            result = -1;
+            return;
+        }
+
+        double time = sqrt( pow(0-fx,2) + pow(0-fy,2) ) / (0.7 * velocity);
+        result = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, 0-fx, 0-fy, 0, time, 0);
+        if(result < 0) {
+            sysError("mrgRobotRelMoveL", result);
+            result = -2;
+            return;
+        }
+
+        qDebug() << "Go project zero point ok";
+        result = 0;
+        return;
+
+    }; //end func
+
+    if(m_isPrjZeroRunFlag) //正在运行
+    {
+        m_isPrjZeroRunFlag = false;
+        int ret = mrgRobotStop(m_ViHandle, m_RoboName, -1);
+        qDebug() << "mrgRobotStop" << ret;
+        ui->pushButton_go_prjZero->setText(tr("Run to Project Zero Point"));
+    }else{
+        m_isPrjZeroRunFlag = true;
+        ui->pushButton_go_prjZero->setText(tr("Stop"));
+
+        m_threadOpsPrjZero = new XThread(func);
+        connect(m_threadOpsPrjZero,&XThread::finished,
+                [&](){
+            m_threadOpsPrjZero = NULL;
+            ui->pushButton_go_prjZero->setText(tr("Run to Project Zero Point"));
+            m_isPrjZeroRunFlag = false;
+        });
+        connect(m_threadOpsPrjZero,SIGNAL(signalFinishResult(int)),this,SLOT(slot_starting_home_over(int)));
+        m_threadOpsPrjZero->start(QThread::LowestPriority);
+    }
+
+}

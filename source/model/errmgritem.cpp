@@ -1,16 +1,16 @@
 #include "errmgritem.h"
 #include "mystd.h"
 
-static QString _headers[]=
+const static char *_headers[] =
 {
-    QStringLiteral("No."),
-    QStringLiteral("Error Text"),
-    QStringLiteral("Error"),
-    QStringLiteral("Warning"),
-    QStringLiteral("Information"),
-    QStringLiteral("Reaction on error"),
-    QStringLiteral("Output stage on"),
-    QStringLiteral("Save diagnosis"),
+    QT_TRANSLATE_NOOP("HEADER", "No."),
+    QT_TRANSLATE_NOOP("HEADER", "Error Text"),
+    QT_TRANSLATE_NOOP("HEADER", "Error"),
+    QT_TRANSLATE_NOOP("HEADER", "Warning"),
+    QT_TRANSLATE_NOOP("HEADER", "Information"),
+    QT_TRANSLATE_NOOP("HEADER", "Reaction on error"),
+    QT_TRANSLATE_NOOP("HEADER", "Output stage on"),
+    QT_TRANSLATE_NOOP("HEADER", "Save diagnosis"),
 };
 
 int ErrMgrItem::columns()
@@ -21,7 +21,7 @@ QString ErrMgrItem::header( int col )
 {
     Q_ASSERT( col >= 0 && col <= sizeof_array(_headers) );
 
-    return _headers[ col ];
+    return qApp->translate("HEADER", _headers[col]);
 }
 
 ErrMgrItem::ErrMgrItem()

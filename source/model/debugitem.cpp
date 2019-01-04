@@ -3,10 +3,10 @@
 
 #include "mystd.h"
 
-static QString _headers[]=
+const static char *_headers[] =
 {
-    QStringLiteral("No."),
-    QStringLiteral("Delay(s)"),
+    QT_TRANSLATE_NOOP("HEADER", "No."),
+    QT_TRANSLATE_NOOP("HEADER", "Delay(s)"),
 };
 
 int DebugItem::columns()
@@ -17,7 +17,7 @@ QString DebugItem::header( int col )
 {
     Q_ASSERT( col >= 0 && col <= sizeof_array(_headers) );
 
-    return _headers[ col ];
+    return qApp->translate("HEADER", _headers[col]);
 }
 
 DebugItem::DebugItem()

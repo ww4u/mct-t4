@@ -77,6 +77,8 @@ private:
 
     QMenu *m_menu;
     QTranslator m_translator;
+    void translateUi();
+
 };
 
 #endif // H2CONFIG_H

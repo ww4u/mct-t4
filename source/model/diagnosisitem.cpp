@@ -1,14 +1,14 @@
 #include "diagnosisitem.h"
 #include "mystd.h"
 
-static QString _headers[]=
+const static char *_headers[] =
 {
-    QStringLiteral("No."),
-    QStringLiteral("Type"),
-    QStringLiteral("Timestamp"),
-    QStringLiteral("Additional Info"),
-    QStringLiteral("Counter"),
-    QStringLiteral("Message"),
+    QT_TRANSLATE_NOOP("HEADER", "No."),
+    QT_TRANSLATE_NOOP("HEADER", "Type"),
+    QT_TRANSLATE_NOOP("HEADER", "Timestamp"),
+    QT_TRANSLATE_NOOP("HEADER", "Additional Info"),
+    QT_TRANSLATE_NOOP("HEADER", "Counter"),
+    QT_TRANSLATE_NOOP("HEADER", "Message"),
 };
 
 int DiagnosisItem::columns()
@@ -19,7 +19,7 @@ QString DiagnosisItem::header( int col )
 {
     Q_ASSERT( col >= 0 && col <= sizeof_array(_headers) );
 
-    return _headers[ col ];
+    return qApp->translate("HEADER", _headers[col]);
 }
 
 DiagnosisItem::DiagnosisItem()

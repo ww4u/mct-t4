@@ -34,7 +34,7 @@ RoboConfig::RoboConfig(QWidget *parent) :
 void RoboConfig::buildUI()
 {
     m_pRootNode = new QTreeWidgetItem();
-    m_pRootNode->setText( 0, "Project");
+    m_pRootNode->setText( 0, tr("Project"));
     m_pRootNode->setIcon( 0, QIcon( ":/res/image/icon/201.png" ) );
     ui->treeWidget->addTopLevelItem( m_pRootNode );
 
@@ -529,8 +529,29 @@ int RoboConfig::setReset()
         pCfg->updateShow();
     }
 
+    bool ok = true;
+    if( m_RobotList[mIndex].m_Visa == 0)
+    {
+        QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
+        return -2;//offline
+     }
+
+    foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs())
+    {
+        int ret = pCfg->writeDeviceConfig();
+        if(ret != 0){
+            ok = false;
+            QMessageBox::critical(this,tr("error"), pCfg->focusName() + "\t" + tr("Reset Failure"));
+        }
+    }
     emit signalDataChanged();
-    return 0;
+
+    if(ok){
+        QMessageBox::information(this,tr("tips"),tr("Reset Success!"));
+        return 0;
+    }else{
+        return -1;
+    }
 }
 
 void RoboConfig::on_buttonBox_clicked(QAbstractButton *button)
@@ -758,6 +779,7 @@ void RoboConfig::changeLanguage(QString qmFile)
 {
     for(int index=0; index<m_RobotList.size(); index++)
     {
+        m_RobotList[index].m_Robo->changeLanguage(qmFile);
         foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[index].m_Robo)->subConfigs()){
             pCfg->changeLanguage(qmFile);
         }
@@ -766,7 +788,15 @@ void RoboConfig::changeLanguage(QString qmFile)
     qApp->removeTranslator(&m_translator);
     m_translator.load(qmFile);
     qApp->installTranslator(&m_translator);
+
+    translateUi();
+}
+
+void RoboConfig::translateUi()
+{
+//    ui->buttonBox->button(QDialogButtonBox::Reset)->setText(tr("Reset"));
     ui->retranslateUi(this);
+    m_pRootNode->setText( 0, tr("Project"));
 }
 
 void RoboConfig::slotSetOneRecord(int row, QString type, double x, double y, double v, double a)

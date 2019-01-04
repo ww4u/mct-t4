@@ -46,15 +46,13 @@ QVariant ErrMgrModel::data(const QModelIndex &index, int role) const
 
     if ( col == 0 )
     {
-        return QVariant( mItems[ row ]->mNr);
-
-//        //! \note 0x
-//        if ( role == Qt::DisplayRole )
-//        {
-//            return QVariant( QString("0x%1").arg( mItems[row]->mNr, 2, 16, QChar('0') ) );
-//        }
-//        else
-//        { return QVariant( mItems[ row ]->mNr ); }
+        //! \note 0x
+        if ( role == Qt::DisplayRole )
+        {
+            return QVariant( QString("0x%1").arg( mItems[row]->mNr, 2, 16, QChar('0') ) );
+        }
+        else
+        { return QVariant( mItems[ row ]->mNr ); }
     }
     else if ( col == 1 )
     { return QVariant( ( mItems[ row ]->mErr ) ); }

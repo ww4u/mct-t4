@@ -10,6 +10,10 @@ H2Configuration::H2Configuration(QWidget *parent) :
     setFocusName( "Configuration" );
 
     ui->label_family->setText("MRX-H2");
+
+    //暂时隐藏此选择项
+    ui->groupBox_motorPos->setEnabled(false);
+    ui->groupBox_motorPos->setHidden(true);
 }
 
 H2Configuration::~H2Configuration()
@@ -49,6 +53,7 @@ int H2Configuration::readDeviceConfig()
     }
     m_Size = ret;
 
+#if 0
     int val = 0;
     ret = mrgMRQMotionReverse_Query(mViHandle, mDeviceName, &val);
     qDebug() << "mrgMRQMotionReverse_Query" << ret;
@@ -57,6 +62,7 @@ int H2Configuration::readDeviceConfig()
         return -1;
     }
     m_MotorPosition = val;
+#endif
 
     return 0;
 }
@@ -78,7 +84,7 @@ int H2Configuration::writeDeviceConfig()
 
     //WorkStrokeY
 
-
+#if 0
     //states:OFF==>bottom, ON==>top
     ret = mrgMRQMotionReverse(mViHandle, mDeviceName, m_MotorPosition);
     qDebug() << "mrgMRQMotionReverse" << ret;
@@ -86,6 +92,8 @@ int H2Configuration::writeDeviceConfig()
         sysError("mrgMRQMotionReverse", ret);
         return -1;
     }
+#endif
+
     return ret;
 }
 
@@ -144,15 +152,25 @@ void H2Configuration::updateShow()
         ui->radioButton_b->setChecked(false);
         ui->radioButton_t->setChecked(true);
     }
+
 }
 
 void H2Configuration::changeModelLabel()
 {
-    m_Family = ui->label_family->text();
+    QString model = "";
 
-    QString model = QString("%1-%2")
-            .arg(m_Family)
-            .arg(ui->sizeComboBox->currentText());
+    m_Family = ui->label_family->text();
+    model += m_Family;
+
+    //! 目前暂时未知大尺寸H2的型号，暂时写死为小号H2的型号
+    model += "-M";
+
+#if 0
+    if(ui->sizeComboBox->currentIndex() == 0){
+        model += "-M";
+    }else{
+        model += "-L";
+    }
 
     model += "-";
     model += QString::number(m_WorkStrokeX);
@@ -160,11 +178,6 @@ void H2Configuration::changeModelLabel()
     model += "-";
     model += QString::number(m_WorkStrokeY);
 
-    if(ui->sizeComboBox->currentIndex() == 0){
-        model += "-GF";
-    }else{
-        model += "-KF";
-    }
 
     if(ui->radioButton_b->isChecked()){
         model += "-B";
@@ -172,6 +185,7 @@ void H2Configuration::changeModelLabel()
     else if(ui->radioButton_t->isChecked()){
         model += "-T";
     }
+#endif
 
     ui->label_model->setText(model);
 }
@@ -199,21 +213,19 @@ void H2Configuration::on_sizeComboBox_currentIndexChanged(int index)
     m_Size = index;
 
     if(index == 0){
-        ui->doubleSpinBox_X->setRange(0, 442);
-//        ui->doubleSpinBox_X->setValue(442);
-        ui->doubleSpinBox_X->setToolTip("0-442");
+        //! MRX-H2-M 370 x 390
+        ui->doubleSpinBox_X->setRange(0, 370);
+        ui->doubleSpinBox_X->setToolTip("0-370");
 
-        ui->doubleSpinBox_Y->setRange(0, 764);
-//        ui->doubleSpinBox_Y->setValue(764);
-        ui->doubleSpinBox_Y->setToolTip("0-764");
+        ui->doubleSpinBox_Y->setRange(0, 390);
+        ui->doubleSpinBox_Y->setToolTip("0-390");
     }
     else if(index == 1){
+
         ui->doubleSpinBox_X->setRange(0, 770);
-//        ui->doubleSpinBox_X->setValue(770);
         ui->doubleSpinBox_X->setToolTip("0-770");
 
         ui->doubleSpinBox_Y->setRange(0, 890);
-//        ui->doubleSpinBox_Y->setValue(890);
         ui->doubleSpinBox_Y->setToolTip("0-890");
     }
 

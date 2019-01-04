@@ -1,12 +1,11 @@
 #include "h2robo.h"
 
-#define new_widget( type, var, title, icon ) \
+#define new_widget( type, var, icon ) \
 do{ \
     var = new type;\
     Q_ASSERT( NULL != var ); \
     QTreeWidgetItem *plwItem = new QTreeWidgetItem();   \
     Q_ASSERT( NULL != plwItem ); \
-    plwItem->setText( 0, title ); \
     plwItem->setIcon( 0, QIcon( icon) ); \
     plwItem->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(var) ) ); \
     m_pRoboNode->addChild(plwItem); \
@@ -28,15 +27,27 @@ H2Robo::H2Robo(QStackedWidget *pWig, QString strDevInfo, QObject *pObj ) : XRobo
     mSubConfigs.append( m_pProduct );
     pWig->addWidget( m_pProduct );
 
-    new_widget( H2Configuration, m_pH2Configuration, tr("Configuration"), ":/res/image/icon/205.png" );
-    new_widget( H2Measurement, m_pH2Measurement, tr("Measurements") , ":/res/image/icon/54.png");
-    new_widget( H2Homing, m_pH2Homing, tr("Homing") , ":/res/image/icon/address.png");
-    new_widget( H2JogMode, m_pH2JogMode, tr("Jog Mode"), ":/res/image/icon/409.png" );
-    new_widget( H2Action, m_pH2Action, tr("Record Table"), ":/res/image/icon/activity.png" );
-    new_widget( H2ErrMgr, m_pH2ErrMgr, tr("Error Management"), ":/res/image/icon/remind.png" );
+    new_widget( H2Configuration, m_pH2Configuration, ":/res/image/icon/205.png" );
+    new_widget( H2Measurement, m_pH2Measurement, ":/res/image/icon/54.png");
+    new_widget( H2Homing, m_pH2Homing , ":/res/image/icon/address.png");
+    new_widget( H2JogMode, m_pH2JogMode, ":/res/image/icon/409.png" );
+    new_widget( H2Action, m_pH2Action, ":/res/image/icon/activity.png" );
+    new_widget( H2ErrMgr, m_pH2ErrMgr, ":/res/image/icon/remind.png" );
+
+    translateUI();
 
     //! connection
     buildConnection();
+}
+
+void H2Robo::translateUI()
+{
+    m_pRoboNode->child(0)->setText(0, tr("Configuration"));
+    m_pRoboNode->child(1)->setText(0, tr("Measurements"));
+    m_pRoboNode->child(2)->setText(0, tr("Homing"));
+    m_pRoboNode->child(3)->setText(0, tr("Jog Mode"));
+    m_pRoboNode->child(4)->setText(0, tr("Record Table"));
+    m_pRoboNode->child(5)->setText(0, tr("Error Management"));
 }
 
 void H2Robo::buildConnection()
@@ -78,6 +89,8 @@ QString H2Robo::getDeviceName(QString strDevInfo)
     QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
     return strListDev.at(2) + "[" + strListDev.at(0) + "]";
 }
+
+
 
 void H2Robo::change_online_status(bool bl)
 {

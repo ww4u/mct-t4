@@ -28,6 +28,8 @@ public:
 
     QString getDeviceName(QString strDevInfo);
 
+    void translateUI() override;
+
 public slots:
     void change_online_status(bool bl);
 

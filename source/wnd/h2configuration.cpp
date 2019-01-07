@@ -7,7 +7,7 @@ H2Configuration::H2Configuration(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setFocusName( "Configuration" );
+    setFocuHelpName( "Configuration" );
 
     ui->label_family->setText("MRX-H2");
 
@@ -101,7 +101,7 @@ int H2Configuration::loadConfig()
 {
     //! load xml
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mConfigFileName + ".xml";
     QFile file(fileName);
     if( !file.exists() )
         fileName = QApplication::applicationDirPath() + "/robots/default.xml";
@@ -121,7 +121,7 @@ int H2Configuration::loadConfig()
 int H2Configuration::saveConfig()
 {
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mConfigFileName + ".xml";
     QMap<QString,QString> map;
 
     map.insert( "Family", m_Family);

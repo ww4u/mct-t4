@@ -7,7 +7,7 @@ H2JogMode::H2JogMode(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setFocusName( "Jogmode" );
+    setFocuHelpName( "Jogmode" );
 }
 
 H2JogMode::~H2JogMode()
@@ -30,7 +30,7 @@ int H2JogMode::loadConfig()
 {
     //! load xml
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mConfigFileName + ".xml";
     QFile file(fileName);
     if( !file.exists() )
         fileName = QApplication::applicationDirPath() + "/robots/default.xml";
@@ -48,7 +48,7 @@ int H2JogMode::loadConfig()
 int H2JogMode::saveConfig()
 {
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mConfigFileName + ".xml";
     QMap<QString,QString> map;
 
     map.insert("CrawlingVelocity",  QString::number(m_CrawlingVelocity,10,2));

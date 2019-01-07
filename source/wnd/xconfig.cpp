@@ -6,13 +6,13 @@ XConfig::XConfig(QWidget *parent) : QWidget(parent)
     setFocusPolicy( Qt::StrongFocus );
 }
 
-QString XConfig::focusName() const
+QString XConfig::focuHelpName() const
 {
-    return mFocusName;
+    return mFocuHelpName;
 }
-void XConfig::setFocusName(const QString &focusName)
+void XConfig::setFocuHelpName(const QString &focusName)
 {
-    mFocusName = focusName;
+    mFocuHelpName = focusName;
 }
 
 int XConfig::readDeviceConfig()
@@ -64,10 +64,10 @@ int XConfig::detachHandle()
 void XConfig::focusInEvent(QFocusEvent *event)
 {
     QWidget::focusInEvent( event );
-    emit signal_focus_in( mFocusName );
+    emit signal_focus_in( mFocuHelpName );
 }
 
-void XConfig::setProjectName(const QString &projectName)
+void XConfig::setConfigFileName(const QString &projectName)
 {
-    mProjectName = projectName;
+    mConfigFileName = projectName;
 }

@@ -21,10 +21,10 @@ public:
     explicit XConfig(QWidget *parent = nullptr);
 
 public:
-    QString focusName() const;
-    void setFocusName(const QString &focusName);
+    QString focuHelpName() const;
+    void setFocuHelpName(const QString &focuHelpName);
 
-    void setProjectName(const QString &projectName);
+    void setConfigFileName(const QString &projectName);
 
     int attachHandle(int vihandle, int deviceName, int robotName);
     int detachHandle();
@@ -48,9 +48,9 @@ signals:
     void signalModelDataChanged(const bool &bl);
 
 protected:
-    QString mFocusName;
+    QString mFocuHelpName;
 
-    QString mProjectName;
+    QString mConfigFileName;
 
     int mViHandle;
     int mDeviceName;

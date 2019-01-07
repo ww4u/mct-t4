@@ -8,7 +8,7 @@ H2ErrMgr::H2ErrMgr(QWidget *parent) :
     ui->setupUi(this);
     m_errorFileInfo = "";
 
-    setFocusName( "Error_management" );
+    setFocuHelpName( "Error_management" );
 
     connect(&mErrManager, &ErrMgrModel::dataChanged,
             [=](){emit signalModelDataChanged(true);} );
@@ -123,7 +123,7 @@ int H2ErrMgr::writeDeviceConfig()
 
 int H2ErrMgr::loadConfig()
 {
-    QString fileName = QApplication::applicationDirPath() + "/dataset/" + mProjectName + ".xml";
+    QString fileName = QApplication::applicationDirPath() + "/dataset/" + mConfigFileName + ".xml";
     QFile file(fileName);
     if( !file.exists() )
         fileName = QApplication::applicationDirPath() + "/dataset/errmgr_default.xml";
@@ -137,7 +137,7 @@ int H2ErrMgr::loadConfig()
 int H2ErrMgr::saveConfig()
 {
     //! save event to xml
-    QString fileName = QApplication::applicationDirPath() + "/dataset/" + mProjectName + ".xml";
+    QString fileName = QApplication::applicationDirPath() + "/dataset/" + mConfigFileName + ".xml";
     int ret = mErrManager.save( fileName );
     return ret;
 }

@@ -7,7 +7,7 @@ H2Product::H2Product(QString strDevInfo, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setFocusName( "Product" );
+    setFocuHelpName( "Product" );
 
     QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
 

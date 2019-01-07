@@ -13,6 +13,8 @@ H2Status::H2Status(QWidget *parent) :
 
     connect(ui->chkPwr,SIGNAL(toggled(bool)),
             this,SIGNAL(signal_power_checked(bool)));
+
+    connect(ui->btnAckError, SIGNAL(clicked(bool)),this, SIGNAL(signal_btnAckError_clicked()));
 }
 
 H2Status::~H2Status()
@@ -47,3 +49,4 @@ void H2Status::set_chkMct_enabled(bool isEnabled)
 {
     ui->chkMct->setEnabled(isEnabled);
 }
+

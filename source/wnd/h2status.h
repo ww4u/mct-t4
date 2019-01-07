@@ -21,6 +21,7 @@ public:
 signals:
     void signal_mct_checked(bool);
     void signal_power_checked(bool);
+    void signal_btnAckError_clicked();
 
 public slots:
     void on_chkMct_toggled(bool checked);

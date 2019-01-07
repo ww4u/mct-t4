@@ -112,7 +112,7 @@ void RoboConfig::createRobot(QString strDevInfo)
 
     foreach (XConfig *pCfg, ((H2Robo *)(robotInfo.m_Robo))->subConfigs()){
         QString configFileName = robotInfo.m_strDevInfo.split(',').at(3);
-        pCfg->setProjectName(configFileName);
+        pCfg->setConfigFileName(configFileName);
         pCfg->loadConfig();
         pCfg->updateShow();
         connect( pCfg, SIGNAL(signal_focus_in( const QString &)),
@@ -189,7 +189,7 @@ void RoboConfig::slotAddNewRobot(QString strDevInfo)
     foreach (XConfig *pCfg, ((H2Robo *)m_RobotList[mIndex].m_Robo)->subConfigs()){
         int ret = pCfg->readDeviceConfig();
         if(ret != 0){
-            QMessageBox::critical(this,tr("error"), pCfg->focusName() + "\n" +tr("From device upload config faiured"));
+            QMessageBox::critical(this,tr("error"), pCfg->focuHelpName() + "\n" +tr("From device upload config faiured"));
         }
         pCfg->updateShow();
         pCfg->saveConfig();
@@ -212,7 +212,7 @@ void RoboConfig::slotDownload()
         int ret = pCfg->writeDeviceConfig();
         if(ret != 0){
             ok = false;
-            QMessageBox::critical(this,tr("error"), pCfg->focusName() + "\n" + tr("Download Failure"));
+            QMessageBox::critical(this,tr("error"), pCfg->focuHelpName() + "\n" + tr("Download Failure"));
             continue;
         }
 
@@ -220,7 +220,7 @@ void RoboConfig::slotDownload()
             int ret = pCfg->readDeviceConfig();
             if(ret != 0){
                 ok = false;
-                QMessageBox::critical(this,tr("error"), pCfg->focusName() + "\n" + tr("Download Failure"));
+                QMessageBox::critical(this,tr("error"), pCfg->focuHelpName() + "\n" + tr("Download Failure"));
             }
             pCfg->updateShow();
             pCfg->saveConfig();
@@ -250,7 +250,7 @@ void RoboConfig::slotUpload()
         int ret = pCfg->readDeviceConfig();
         if(ret != 0){
             ok = false;
-            QMessageBox::critical(this,tr("error"), pCfg->focusName() + "\n" + tr("Upload Faiured"));
+            QMessageBox::critical(this,tr("error"), pCfg->focuHelpName() + "\n" + tr("Upload Faiured"));
         }
         pCfg->updateShow();
         pCfg->saveConfig();
@@ -541,7 +541,7 @@ int RoboConfig::setReset()
         int ret = pCfg->writeDeviceConfig();
         if(ret != 0){
             ok = false;
-            QMessageBox::critical(this,tr("error"), pCfg->focusName() + "\t" + tr("Reset Failure"));
+            QMessageBox::critical(this,tr("error"), pCfg->focuHelpName() + "\t" + tr("Reset Failure"));
         }
     }
     emit signalDataChanged();
@@ -589,12 +589,12 @@ void RoboConfig::slot_current_changed( QTreeWidgetItem* cur,QTreeWidgetItem* prv
         row = cur->parent()->indexOfChild(cur) + 1;
     }
 
-    if(mIndex != index){
-        sysInfo("Current Robot Changed: ", mIndex);
-    }
-
     mIndex = index;
-    qDebug() << "slot_current_changed" << mIndex;
+    QString strHelpName = ((H2Robo *)(m_RobotList[mIndex].m_Robo))->subConfigs().at(row)->focuHelpName();
+
+//    qDebug() << "slot_current_changed" << mIndex << row << cur->text(0) << strHelpName;
+
+    emit signal_focus_in( strHelpName );
 
     emit signalCurrentRobotChanged(m_RobotList[mIndex].m_strDevInfo,
                                    m_RobotList[mIndex].m_Visa,

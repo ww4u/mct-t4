@@ -50,6 +50,7 @@ public slots:
     void slotRobotStop();
     void slot_mct_checked(bool checked);
     void slot_power_checked(bool checked);
+    void slot_btnAckError_clicked();
 
 private slots:
     void on_btnUp_clicked();
@@ -64,7 +65,6 @@ private slots:
     void on_btnExport_2_clicked();
 
     void on_tabWidget_currentChanged(int index);
-    void on_tabWidget_tabBarClicked(int index);
 
     void on_pushButton_starting_home_clicked();
     void slot_starting_home_over(int ret);
@@ -124,13 +124,9 @@ private:
     DebugModel *m_pDebugModel;
 
 
-
     MegaSplineChart *m_splineChart1;
     MegaSplineChart *m_splineChart2;
 
-    int m_ViHandle;
-    int m_DeviceName;
-    int m_RoboName;
     QString m_strDevInfo;
     int m_recordNumber;
     QMap<QString,QString> m_Data;

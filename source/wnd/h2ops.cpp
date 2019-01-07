@@ -11,7 +11,7 @@
 #include "megamessagebox.h"
 #include "megaxml.h"
 
-#define set_name( the, name )   the->setFocusName( name );\
+#define set_name( the, name )   the->setFocuHelpName( name );\
                                 mSubTabs.append( the );
 
 H2Ops::H2Ops(QWidget *parent) :
@@ -20,9 +20,9 @@ H2Ops::H2Ops(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    m_ViHandle = 0;
-    m_DeviceName = 0;
-    m_RoboName = 0;
+    mViHandle = 0;
+    mDeviceName = 0;
+    mRobotName = 0;
     m_strDevInfo = "";
 
     m_recordNumber = -1;
@@ -145,6 +145,11 @@ void H2Ops::buildConnection()
     connect(ui->h2Status,SIGNAL(signal_power_checked(bool)),
             this,SLOT(slot_power_checked(bool)));
 
+
+    connect(ui->h2Status,SIGNAL(signal_btnAckError_clicked()),
+            this,SLOT(slot_btnAckError_clicked()));
+
+
     //! connect
     connect( mp_logClearAction, SIGNAL(triggered(bool)),
              this, SLOT(slot_logClear_action()) );
@@ -228,23 +233,26 @@ void H2Ops::slot_logClear_action()
 
 void H2Ops::slotSetCurrentRobot(QString strDevInfo, int visa, int deviceName, int roboName)
 {
-    if( (m_strDevInfo == strDevInfo) && (m_ViHandle == visa) && (m_RoboName == roboName) ){
+    if( (m_strDevInfo == strDevInfo) && (mViHandle == visa) && (mRobotName == roboName) ){
         return;//没有切换机器人且状态没有改变
     }
 
     m_strDevInfo = strDevInfo;
-    m_ViHandle = visa;
-    m_DeviceName = deviceName;
-    m_RoboName = roboName;
+
+    mViHandle = visa;
+    mDeviceName = deviceName;
+    mRobotName = roboName;
+    mConfigFileName = m_strDevInfo.split(',').at(3);
+
     m_Data.clear();
 
     qDebug() << "H2OPS "
-             << "m_ViHandle:"  << m_ViHandle
-             << "m_DeviceName:" << m_DeviceName
-             << "m_RoboName:" << m_RoboName;
+             << "m_ViHandle:"  << mViHandle
+             << "m_DeviceName:" << mDeviceName
+             << "m_RoboName:" << mRobotName;
 
     ui->tabWidget->setCurrentIndex(0);
-    if(m_ViHandle == 0)
+    if(mViHandle == 0)
     {   //device closed
         m_recordNumber = -1;
         ui->h2Status->on_chkMct_toggled(false);
@@ -268,8 +276,7 @@ void H2Ops::slotLoadConfigAgain()
 {
     m_Data.clear();
     MegaXML mXML;
-    QString deviceName = m_strDevInfo.split(',').at(3);
-    QString fileName = QApplication::applicationDirPath() + "/robots/" + deviceName + ".xml";
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mConfigFileName + ".xml";
     QFile file(fileName);
     if( !file.exists() )
         fileName = QApplication::applicationDirPath() + "/robots/default.xml";
@@ -325,14 +332,14 @@ void H2Ops::slot_power_checked(bool checked)
 {
     qDebug() << "OPS:slot_power_checked" << checked;
     ui->tabWidget->setCurrentIndex(0);
-    if(m_ViHandle == 0) return;
+    if(mViHandle == 0) return;
 
     int ret = -1;
     if(checked){
         //电机使能
-        ret = mrgMRQDriverState(m_ViHandle, m_DeviceName, 0, 1);
+        ret = mrgMRQDriverState(mViHandle, mDeviceName, 0, 1);
         qDebug() << "mrgMRQDriverState0 ON" << ret;
-        ret = mrgMRQDriverState(m_ViHandle, m_DeviceName, 1, 1);
+        ret = mrgMRQDriverState(mViHandle, mDeviceName, 1, 1);
         qDebug() << "mrgMRQDriverState1 ON" << ret;
 
         ui->tabWidget->setTabEnabled(3, true);
@@ -341,9 +348,9 @@ void H2Ops::slot_power_checked(bool checked)
         ui->tabWidget->setTabEnabled(6, true);
     }else{
         //电机关闭
-        ret = mrgMRQDriverState(m_ViHandle, m_DeviceName, 0, 0);
+        ret = mrgMRQDriverState(mViHandle, mDeviceName, 0, 0);
         qDebug() << "mrgMRQDriverState0 OFF" << ret;
-        ret = mrgMRQDriverState(m_ViHandle, m_DeviceName, 1, 0);
+        ret = mrgMRQDriverState(mViHandle, mDeviceName, 1, 0);
         qDebug() << "mrgMRQDriverState1 OFF" << ret;
 
         ui->tabWidget->setTabEnabled(3, false);
@@ -354,6 +361,17 @@ void H2Ops::slot_power_checked(bool checked)
         setAllTabStopWorking();
     }
 
+}
+
+void H2Ops::slot_btnAckError_clicked()
+{
+    if(mViHandle == 0) return;
+    if(0 == mrgErrorLogClear(mViHandle)){
+        QMessageBox::information(this,tr("tips"),tr("Success!"));
+    }
+    else{
+        QMessageBox::critical(this,tr("error"),tr("Failured!"));
+    }
 }
 
 void H2Ops::setAllTabStopWorking()
@@ -381,12 +399,11 @@ void H2Ops::setAllTabStopWorking()
 
 void H2Ops::on_tabWidget_currentChanged(int index)
 {
-    QString strName = ui->tabWidget->tabText( index );
-    emit signal_focus_in( strName );
+//    qDebug() << __func__ << index << ui->tabWidget->tabText( index );
 
-    qDebug() << __func__ << index;
+    emit signal_focus_in( mSubTabs.at(index)->focuHelpName() );
 
-    if(m_ViHandle == 0) return;
+    if(mViHandle == 0) return;
 
     setAllTabStopWorking();
 
@@ -422,10 +439,7 @@ void H2Ops::on_tabWidget_currentChanged(int index)
 
 }
 
-void H2Ops::on_tabWidget_tabBarClicked(int index)
-{
-    emit signal_focus_in( ui->tabWidget->tabText( index ) );
-}
+
 
 //! debug
 void H2Ops::on_btnUp_clicked()
@@ -553,7 +567,7 @@ void H2Ops::on_btnRead_clicked()
 {
     int len = 4096;
     char *logBuff = (char *)malloc(len);
-    int ret = mrgErrorLogUpload(m_ViHandle, 1, logBuff, len );
+    int ret = mrgErrorLogUpload(mViHandle, 1, logBuff, len );
     QString strFileData = QString("%1").arg(logBuff);
     free(logBuff);
 
@@ -588,6 +602,13 @@ void H2Ops::on_btnRead_clicked()
                     counter,
                     strErrorText);
     };
+
+
+    ui->tvDiagnosis->resizeColumnsToContents();
+    for(int i = 0; i < ui->tvDiagnosis->horizontalHeader()->count() - 1; i++){
+        ui->tvDiagnosis->setColumnWidth(i, ui->tvDiagnosis->columnWidth(i) + 16);
+    }
+    ui->tvDiagnosis->horizontalHeader()->setStretchLastSection(true);
 
 }
 
@@ -626,12 +647,12 @@ void H2Ops::slot_starting_home_over(int ret)
 
 void H2Ops::on_pushButton_starting_home_clicked()
 {
-    if(m_ViHandle <= 0) return;
+    if(mViHandle <= 0) return;
 
     auto func = [this](int &result)
     {
         //不等待
-        int ret = mrgRobotGoHome(m_ViHandle, m_RoboName, -1);
+        int ret = mrgRobotGoHome(mViHandle, mRobotName, -1);
         qDebug() << "mrgRobotGoHome" << ret;
 
         while(1)
@@ -640,7 +661,7 @@ void H2Ops::on_pushButton_starting_home_clicked()
                 result = 1;
                 return;
             }
-            ret = mrgRobotWaitHomeEnd(m_ViHandle, m_RoboName, -1);
+            ret = mrgRobotWaitHomeEnd(mViHandle, mRobotName, -1);
             if(ret == -3){//超时
                 qDebug() << "mrgRobotWaitHomeEnd timeout";
                 continue;
@@ -661,7 +682,7 @@ void H2Ops::on_pushButton_starting_home_clicked()
     {
         m_isHomgingRunFlag = false;
 
-        mrgRobotGoHomeStop(m_ViHandle, m_RoboName);
+        mrgRobotGoHomeStop(mViHandle, mRobotName);
 
         if( m_threadOpsHoming != NULL ){
             m_threadOpsHoming->requestInterruption();
@@ -672,7 +693,7 @@ void H2Ops::on_pushButton_starting_home_clicked()
         m_isHomgingRunFlag = true;
         ui->pushButton_starting_home->setText(tr("Stop Go Home"));
 
-        if(m_ViHandle <= 0) return;
+        if(mViHandle <= 0) return;
         m_threadOpsHoming = new XThread(func);
         connect(m_threadOpsHoming,SIGNAL(signalFinishResult(int)),SLOT(slot_starting_home_over(int)));
         connect(m_threadOpsHoming,&XThread::finished,[&](){
@@ -700,22 +721,22 @@ void H2Ops::setOpsMonitorTimerStop()
     if( m_timerOpsMonitor->isActive() )
     {
         m_timerOpsMonitor->stop();
-        if(m_ViHandle <= 0) return;
+        if(mViHandle <= 0) return;
         //关闭上报状态
-        mrgMRQReportState(this->m_ViHandle,this->m_DeviceName, 0, 0, 0);
-        mrgMRQReportState(this->m_ViHandle,this->m_DeviceName, 1, 0, 0);
+        mrgMRQReportState(this->mViHandle,this->mDeviceName, 0, 0, 0);
+        mrgMRQReportState(this->mViHandle,this->mDeviceName, 1, 0, 0);
     }
 }
 
 void H2Ops::setOpsMonitorTimerStart()
 {
-    if(m_ViHandle <= 0) return;
+    if(mViHandle <= 0) return;
     if( !m_timerOpsMonitor->isActive() )
     {
-        if(m_ViHandle <= 0) return;
+        if(mViHandle <= 0) return;
         //打开上报状态
-        mrgMRQReportState(this->m_ViHandle,this->m_DeviceName, 0, 0, 1);
-        mrgMRQReportState(this->m_ViHandle,this->m_DeviceName, 1, 0, 1);
+        mrgMRQReportState(this->mViHandle,this->mDeviceName, 0, 0, 1);
+        mrgMRQReportState(this->mViHandle,this->mDeviceName, 1, 0, 1);
         m_timerOpsMonitor->start();
     }
 }
@@ -725,7 +746,7 @@ void H2Ops::setOpsMonitorTimerStart()
 //direct: -1表示负方向，1表示正方向
 void H2Ops::buttonClickedSingelMove(QToolButton *btn, int ax, int direct)
 {
-    if(m_ViHandle <= 0) return;
+    if(mViHandle <= 0) return;
     float offset = ui->doubleSpinBox_Increament->value();
     float speed = ui->doubleSpinBox_Velocity->value();
     float time = offset/(0.7*speed);
@@ -734,14 +755,15 @@ void H2Ops::buttonClickedSingelMove(QToolButton *btn, int ax, int direct)
     {
         int ret = -1;
         if(ax == 0){
-            ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, offset*direct, 0, 0, time, 0);
+            ret = mrgRobotRelMoveL(mViHandle, mRobotName, -1, offset*direct, 0, 0, time, 0);
         }else if(ax == 1){
-            ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, 0, offset*direct, 0, time, 0);
+            ret = mrgRobotRelMoveL(mViHandle, mRobotName, -1, 0, offset*direct, 0, time, 0);
         }else if(ax == 2){
-            ret = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, 0, 0, offset*direct, time, 0);
+            ret = mrgRobotRelMoveL(mViHandle, mRobotName, -1, 0, 0, offset*direct, time, 0);
         }
         qDebug() << "mrgRobotRelMoveL" << ret << "ax=" << ax << direct;
-        sysInfo("mrgRobotRelMoveL", ret);
+        if(ret != 0)
+            sysError("mrgRobotRelMoveL", ret);
     };
 
     on_pushButton_stop_clicked();
@@ -776,46 +798,50 @@ void H2Ops::on_toolButton_singlestep_y_inc_clicked()
 //! jog move
 void H2Ops::on_toolButton_jogmode_x_dec_pressed()
 {
-    if(m_ViHandle <= 0) return;
+    if(mViHandle <= 0) return;
     float cr_speed = m_Data["CrawlingVelocity"].toFloat();
     float cr_time = m_Data["CrawlingTime"].toFloat() / 1000; //ms --> s
     float speed = m_Data["MaximumVelocity"].toFloat();
 
-    int ret = mrgRobotMoveJog(m_ViHandle, m_RoboName, -1, 0, cr_time, 0-cr_speed, speed);
-    sysInfo("mrhtRobotMoveJog", ret);
+    int ret = mrgRobotMoveJog(mViHandle, mRobotName, -1, 0, cr_time, 0-cr_speed, speed);
+    if(ret != 0)
+        sysError("mrhtRobotMoveJog", ret);
 }
 
 void H2Ops::on_toolButton_jogmode_x_inc_pressed()
 {
-    if(m_ViHandle <= 0) return;
+    if(mViHandle <= 0) return;
     float cr_speed = m_Data["CrawlingVelocity"].toFloat();
     float cr_time = m_Data["CrawlingTime"].toFloat() / 1000; //ms --> s
     float speed = m_Data["MaximumVelocity"].toFloat();
 
-    int ret = mrgRobotMoveJog(m_ViHandle, m_RoboName, -1, 0, cr_time, cr_speed, speed);
-    sysInfo("mrhtRobotMoveJog", ret);
+    int ret = mrgRobotMoveJog(mViHandle, mRobotName, -1, 0, cr_time, cr_speed, speed);
+    if(ret != 0)
+        sysError("mrhtRobotMoveJog", ret);
 }
 
 void H2Ops::on_toolButton_jogmode_y_dec_pressed()
 {
-    if(m_ViHandle <= 0) return;
+    if(mViHandle <= 0) return;
     float cr_speed = m_Data["CrawlingVelocity"].toFloat();
     float cr_time = m_Data["CrawlingTime"].toFloat() / 1000; //ms --> s
     float speed = m_Data["MaximumVelocity"].toFloat();
 
-    int ret = mrgRobotMoveJog(m_ViHandle, m_RoboName, -1, 1, cr_time, 0-cr_speed, speed);
-    sysInfo("mrhtRobotMoveJog", ret);
+    int ret = mrgRobotMoveJog(mViHandle, mRobotName, -1, 1, cr_time, 0-cr_speed, speed);
+    if(ret != 0)
+        sysError("mrhtRobotMoveJog", ret);
 }
 
 void H2Ops::on_toolButton_jogmode_y_inc_pressed()
 {
-    if(m_ViHandle <= 0) return;
+    if(mViHandle <= 0) return;
     float cr_speed = m_Data["CrawlingVelocity"].toFloat();
     float cr_time = m_Data["CrawlingTime"].toFloat() / 1000; //ms --> s
     float speed = m_Data["MaximumVelocity"].toFloat();
 
-    int ret = mrgRobotMoveJog(m_ViHandle, m_RoboName, -1, 1, cr_time, cr_speed, speed);
-    sysInfo("mrhtRobotMoveJog", ret);
+    int ret = mrgRobotMoveJog(mViHandle, mRobotName, -1, 1, cr_time, cr_speed, speed);
+    if(ret != 0)
+        sysError("mrhtRobotMoveJog", ret);
 }
 
 
@@ -834,9 +860,9 @@ void H2Ops::on_toolButton_jogmode_y_inc_released()
 
 void H2Ops::on_pushButton_stop_clicked()
 {
-    if(m_ViHandle <= 0) return;
+    if(mViHandle <= 0) return;
 
-    int ret = mrgRobotStop(m_ViHandle, m_RoboName, -1);
+    int ret = mrgRobotStop(mViHandle, mRobotName, -1);
     qDebug() << "mrgRobotStop" << ret;
 //    sysInfo("mrgRobotStop", ret);
 
@@ -872,19 +898,19 @@ void H2Ops::on_toolButton_debugRun_clicked()
                 double time = ui->tvDebug->model()->index(i, 1).data().toDouble();
                 int ret = -1;
 
-                ret = mrgRobotFileResolve(m_ViHandle, m_RoboName, 0, recordNumber, 0, 20000);
+                ret = mrgRobotFileResolve(mViHandle, mRobotName, 0, recordNumber, 0, 20000);
                 if(ret != 0) {
                     sysError("mrgRobotFileResolve", ret);
                     return;
                 }
 
-                ret = mrgRobotRun(m_ViHandle, m_RoboName, 0);
+                ret = mrgRobotRun(mViHandle, mRobotName, 0);
                 if(ret != 0) {
                     sysError("mrgRobotRun", ret);
                     return;
                 }
 
-                ret = mrgRobotWaitEnd(m_ViHandle, m_RoboName, 0, 0);
+                ret = mrgRobotWaitEnd(mViHandle, mRobotName, 0, 0);
                 if(ret != 0) {
                     sysError("mrgRobotWaitEnd", ret);
                     return;
@@ -917,7 +943,7 @@ void H2Ops::on_toolButton_debugRun_clicked()
         m_isDebugRunFlag = true;
         ui->toolButton_debugRun->setText(tr("Stop Sequence"));
 
-        if(m_ViHandle <= 0) return;
+        if(mViHandle <= 0) return;
         m_threadOpsDebug = new XThread(func);
         connect(m_threadOpsDebug,&XThread::finished,[&](){ m_threadOpsDebug = NULL; });
         m_threadOpsDebug->start(QThread::LowestPriority);
@@ -929,8 +955,8 @@ void H2Ops::on_toolButton_debugRun_clicked()
 //更新标签的实时数值
 void H2Ops::updateBackgroundStatus()
 {
-    if(m_ViHandle <= 0) return;
-    int homeVaild = mrgGetRobotHomeRequire(m_ViHandle, m_RoboName);
+    if(mViHandle <= 0) return;
+    int homeVaild = mrgGetRobotHomeRequire(mViHandle, mRobotName);
     qDebug() << "mrgGetRobotHomeRequire" << homeVaild;
 //    sysInfo("mrgGetRobotHomeRequire", homeVaild);
     if(homeVaild == 1)
@@ -985,38 +1011,38 @@ void H2Ops::updateBackgroundStatus()
 
 void H2Ops::updateOpsDeviceStatus()
 {
-    if(m_ViHandle <= 0) return;
+    if(mViHandle <= 0) return;
     //! TODO
 
 }
 
 void H2Ops::updateTabOpreate()
 {
-    if(m_ViHandle <= 0) return;
+    if(mViHandle <= 0) return;
     int ret = -1;
 
     //! 更新记录编号
     int record = -1;
-    ret = mrgGetRobotCurrentRecord(m_ViHandle, m_RoboName, &record);
+    ret = mrgGetRobotCurrentRecord(mViHandle, mRobotName, &record);
     qDebug() << "mrgGetRobotCurrentRecord" << ret << record;
     ui->doubleSpinBox_RecordNumber->setValue( record );
 
     //! 更新目标位置
     double dx = -1, dy = -1, dz = -1;
-    ret =  mrgGetRobotTargetPosition(m_ViHandle, m_RoboName, &dx, &dy, &dz);
+    ret =  mrgGetRobotTargetPosition(mViHandle, mRobotName, &dx, &dy, &dz);
     qDebug() << "mrgGetRobotTargetPosition" << ret << dx << dy;
     ui->doubleSpinBox_target_position_x->setValue( dx );
     ui->doubleSpinBox_target_position_y->setValue( dy );
 
     //! 更新当前位置
     float fx = -1, fy = -1, fz = -1;
-    ret = mrgGetRobotCurrentPosition(m_ViHandle, m_RoboName, &fx, &fy, &fz);
+    ret = mrgGetRobotCurrentPosition(mViHandle, mRobotName, &fx, &fy, &fz);
     qDebug() << "mrgGetRobotCurrentPosition1:" << ret << fx << fy;
     ui->doubleSpinBox_actual_position_x->setValue(fx);
     ui->doubleSpinBox_actual_position_y->setValue(fy);
 
     //! 更新当前里程
-    ret = mrgGetRobotCurrentMileage(m_ViHandle, m_RoboName, &dx, &dy, &dz);
+    ret = mrgGetRobotCurrentMileage(mViHandle, mRobotName, &dx, &dy, &dz);
     qDebug() << "mrgGetRobotCurrentMileage:" << ret << dx << dy;
     ui->doubleSpinBox_Mileage_x->setValue( dx );
     ui->doubleSpinBox_Mileage_y->setValue( dy );
@@ -1025,14 +1051,14 @@ void H2Ops::updateTabOpreate()
 
 void H2Ops::updateTabIO()
 {
-    if(m_ViHandle <= 0) return;
+    if(mViHandle <= 0) return;
     int ret = -1;
 
     //!TODO
 
     //! 更新记录编号
     int record = -1;
-    ret = mrgGetRobotCurrentRecord(m_ViHandle, m_RoboName, &record);
+    ret = mrgGetRobotCurrentRecord(mViHandle, mRobotName, &record);
     qDebug() << "mrgGetRobotCurrentRecord" << ret << record;
     ui->label_recordNumber->setText(QString::number( record ));
 
@@ -1043,14 +1069,14 @@ void H2Ops::updateTabIO()
 
 void H2Ops::updateTabHoming()
 {
-    if(m_ViHandle <= 0) return;
+    if(mViHandle <= 0) return;
 
     ui->label_homing_target->setText(m_Data["Target"]);
     ui->label_homing_direction->setText(m_Data["Direction"]);
 
     //! 更新当前位置
     float fx = -1, fy = -1, fz = -1;
-    int ret = mrgGetRobotCurrentPosition(m_ViHandle, m_RoboName, &fx, &fy, &fz);
+    int ret = mrgGetRobotCurrentPosition(mViHandle, mRobotName, &fx, &fy, &fz);
     qDebug() << "mrgGetRobotCurrentPosition2:" << ret << fx << fy;
     ui->doubleSpinBox_homing_actual_pos_x->setValue(fx);
     ui->doubleSpinBox_homing_actual_pos_y->setValue(fy);
@@ -1059,11 +1085,11 @@ void H2Ops::updateTabHoming()
 
 void H2Ops::updateTabManual()
 {
-    if(m_ViHandle <= 0) return;
+    if(mViHandle <= 0) return;
 
     //! 更新当前位置
     float fx = -1, fy = -1, fz = -1;
-    int ret = mrgGetRobotCurrentPosition(m_ViHandle, m_RoboName, &fx, &fy, &fz);
+    int ret = mrgGetRobotCurrentPosition(mViHandle, mRobotName, &fx, &fy, &fz);
     qDebug() << "mrgGetRobotCurrentPosition3:" << ret << fx << fy;
     ui->doubleSpinBox_currentPos_x->setValue(fx);
     ui->doubleSpinBox_currentPos_y->setValue(fy);
@@ -1071,7 +1097,7 @@ void H2Ops::updateTabManual()
 
 void H2Ops::updateTabMonitor()
 {
-    if(m_ViHandle <= 0) return;
+    if(mViHandle <= 0) return;
 
     unsigned int array1[1024] = {0};
     unsigned int array2[1024] = {0};
@@ -1079,13 +1105,13 @@ void H2Ops::updateTabMonitor()
 
     //查询第一个电机
     memset(array1, '\0', sizeof(array1));
-    count1 = mrgMRQReportQueue_Query(m_ViHandle, m_DeviceName, 0, 0, array1);
+    count1 = mrgMRQReportQueue_Query(mViHandle, mDeviceName, 0, 0, array1);
     if(count1 <= 0)
         return;
 
     //查询第二个电机
     memset(array2, '\0', sizeof(array2));
-    count2 = mrgMRQReportQueue_Query(m_ViHandle, m_DeviceName, 1, 0, array2);
+    count2 = mrgMRQReportQueue_Query(mViHandle, mDeviceName, 1, 0, array2);
     if(count2 <= 0)
         goto LAB1;
 
@@ -1121,18 +1147,18 @@ LAB1:
 
 void H2Ops::updateTabDebug()
 {
-    if(m_ViHandle <= 0) return;
+    if(mViHandle <= 0) return;
     int ret = -1;
 
     //! 更新记录编号
     int record = -1;
-    ret = mrgGetRobotCurrentRecord(m_ViHandle, m_RoboName, &record);
+    ret = mrgGetRobotCurrentRecord(mViHandle, mRobotName, &record);
     qDebug() << "mrgGetRobotCurrentRecord" << ret << record;
     ui->doubleSpinBox_debugRecord->setValue( record );
 
     //! 更新当前位置
     float fx = -1, fy = -1, fz = -1;
-    ret = mrgGetRobotCurrentPosition(m_ViHandle, m_RoboName, &fx, &fy, &fz);
+    ret = mrgGetRobotCurrentPosition(mViHandle, mRobotName, &fx, &fy, &fz);
     qDebug() << "mrgGetRobotCurrentPosition4:" << ret << fx << fy;
     ui->doubleSpinBox_debug_posX->setValue(fx);
     ui->doubleSpinBox_debug_posY->setValue(fy);
@@ -1140,7 +1166,7 @@ void H2Ops::updateTabDebug()
 
 void H2Ops::updateTabDiagnosis()
 {
-    if(m_ViHandle <= 0) return;
+    if(mViHandle <= 0) return;
 
     //!TODO
     qDebug() << "Diagnosis";
@@ -1148,14 +1174,14 @@ void H2Ops::updateTabDiagnosis()
 
 void H2Ops::on_pushButton_go_prjZero_clicked()
 {
-    if(m_ViHandle <= 0) return;
+    if(mViHandle <= 0) return;
 
     double velocity = m_Data["SearchVelocity"].toDouble();
 
     auto func = [=](int &result)
     {
         float fx = -1, fy = -1, fz = -1;
-        result = mrgGetRobotCurrentPosition(m_ViHandle, m_RoboName, &fx, &fy, &fz);
+        result = mrgGetRobotCurrentPosition(mViHandle, mRobotName, &fx, &fy, &fz);
         if(result < 0) {
             sysError("mrgGetRobotCurrentPosition", result);
             result = -1;
@@ -1163,7 +1189,7 @@ void H2Ops::on_pushButton_go_prjZero_clicked()
         }
 
         double time = sqrt( pow(0-fx,2) + pow(0-fy,2) ) / (0.7 * velocity);
-        result = mrgRobotRelMoveL(m_ViHandle, m_RoboName, -1, 0-fx, 0-fy, 0, time, 0);
+        result = mrgRobotRelMoveL(mViHandle, mRobotName, -1, 0-fx, 0-fy, 0, time, 0);
         if(result < 0) {
             sysError("mrgRobotRelMoveL", result);
             result = -2;
@@ -1179,7 +1205,7 @@ void H2Ops::on_pushButton_go_prjZero_clicked()
     if(m_isPrjZeroRunFlag) //正在运行
     {
         m_isPrjZeroRunFlag = false;
-        int ret = mrgRobotStop(m_ViHandle, m_RoboName, -1);
+        int ret = mrgRobotStop(mViHandle, mRobotName, -1);
         qDebug() << "mrgRobotStop" << ret;
         ui->pushButton_go_prjZero->setText(tr("Run to Project Zero Point"));
     }else{

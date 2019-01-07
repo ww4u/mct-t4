@@ -8,7 +8,7 @@ H2Measurement::H2Measurement(QWidget *parent) :
     ui->setupUi(this);
     m_ZeroPoint = 0;
 
-    setFocusName("Measurement");
+    setFocuHelpName("Measurement");
 
     connect(ui->comboBox_AxesZeroPoint,SIGNAL(currentIndexChanged(int)),this,SLOT(slotChangeCornerPicture(int)));
 
@@ -111,7 +111,7 @@ int H2Measurement::loadConfig()
 {
     //! load xml
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mConfigFileName + ".xml";
     QFile file(fileName);
     if( !file.exists() )
         fileName = QApplication::applicationDirPath() + "/robots/default.xml";
@@ -133,7 +133,7 @@ int H2Measurement::loadConfig()
 int H2Measurement::saveConfig()
 {
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mConfigFileName + ".xml";
     QMap<QString,QString> map;
 
     map.insert("ZeroPoint"  , QString::number(m_ZeroPoint));

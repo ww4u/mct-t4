@@ -312,7 +312,7 @@ void MainWindow::setUiStyle(const QString &styleFile)
         qss.close();
 
         qDebug() << "setStyleSheet:" << styleFile;
-        sysInfo("setStyleSheet", styleFile);
+//        sysInfo("setStyleSheet", styleFile);
     }
 }
 
@@ -353,7 +353,7 @@ void MainWindow::slot_logout( const QString &str, LogLevel lev )
 void MainWindow::slot_focus_in( const QString &name )
 {
     QString strName =  QApplication::applicationDirPath() + "/doc/" + name + ".html";
-    logDbg() << name;
+//    logDbg() << name;
     if ( name.length() <= 0 )
     { return; }
 

@@ -361,7 +361,7 @@
     <message>
         <location filename="../../source/wnd/h2ops.ui" line="139"/>
         <source>Logout</source>
-        <translation>日志输出</translation>
+        <translation>日志</translation>
     </message>
     <message>
         <location filename="../../source/wnd/h2ops.ui" line="189"/>
@@ -544,8 +544,8 @@
     </message>
     <message>
         <location filename="../../source/wnd/h2ops.ui" line="1274"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="1184"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="1193"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1213"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1222"/>
         <source>Run to Project Zero Point</source>
         <translation>回到项目零点</translation>
     </message>
@@ -597,8 +597,8 @@
     </message>
     <message>
         <location filename="../../source/wnd/h2ops.ui" line="1996"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="902"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="915"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="931"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="944"/>
         <source>Run  Sequence</source>
         <translation>运行序列</translation>
     </message>
@@ -783,61 +783,73 @@
         <translation>能效曲线2</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="264"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="272"/>
         <source>Apply as point </source>
         <translation>应用为点 </translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="533"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="370"/>
+        <source>Success!</source>
+        <translation>成功！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.cpp" line="373"/>
+        <source>Failured!</source>
+        <translation>失败！</translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.cpp" line="550"/>
         <source>load completed</source>
         <translation>完成加载</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="548"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="616"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="565"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="640"/>
         <source>save completed</source>
         <translation>完成保存</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="564"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="623"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="373"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="581"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="647"/>
         <source>error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="564"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="581"/>
         <source>Error log upload error!</source>
         <translation>错误日志上传失败！</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="623"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="647"/>
         <source>failure</source>
         <translation>失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="670"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="680"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="694"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="704"/>
         <source>Start Go Home</source>
         <translation>开始回零</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="673"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="697"/>
         <source>Stop Go Home</source>
         <translation>停止回零</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="918"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="947"/>
         <source>Stop Sequence</source>
         <translation>停止序列</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="1187"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1216"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
     <message>
+        <location filename="../../source/wnd/h2ops.cpp" line="370"/>
         <source>tips</source>
-        <translation type="vanished">提示</translation>
+        <translation>提示</translation>
     </message>
     <message>
         <source>Starting Home failure</source>
@@ -1376,7 +1388,7 @@
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.cpp" line="81"/>
-        <location filename="../../source/wnd/mainwindow.cpp" line="259"/>
+        <location filename="../../source/wnd/mainwindow.cpp" line="257"/>
         <source>&amp;ShowHelp</source>
         <translation>显示帮助&amp;S</translation>
     </message>
@@ -1422,22 +1434,64 @@
         <translation>扫描</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="170"/>
+        <location filename="../../source/widget/megainterface.cpp" line="133"/>
+        <source>IP</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/widget/megainterface.cpp" line="133"/>
+        <location filename="../../source/widget/megainterface.cpp" line="136"/>
+        <source>Manufacturer</source>
+        <translation>厂商</translation>
+    </message>
+    <message>
+        <location filename="../../source/widget/megainterface.cpp" line="133"/>
+        <location filename="../../source/widget/megainterface.cpp" line="136"/>
+        <source>Type</source>
+        <translation>类型</translation>
+    </message>
+    <message>
+        <location filename="../../source/widget/megainterface.cpp" line="133"/>
+        <location filename="../../source/widget/megainterface.cpp" line="136"/>
+        <source>SN</source>
+        <translation>序列号</translation>
+    </message>
+    <message>
+        <location filename="../../source/widget/megainterface.cpp" line="133"/>
+        <location filename="../../source/widget/megainterface.cpp" line="136"/>
+        <source>Version</source>
+        <translation>版本</translation>
+    </message>
+    <message>
+        <location filename="../../source/widget/megainterface.cpp" line="136"/>
+        <source>USBID</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../source/widget/megainterface.cpp" line="177"/>
+        <source>Identify ON</source>
+        <translation>打开识别</translation>
+    </message>
+    <message>
+        <location filename="../../source/widget/megainterface.cpp" line="178"/>
+        <source>Identify OFF</source>
+        <translation>关闭识别</translation>
+    </message>
+    <message>
         <source>ON</source>
-        <translation>打开</translation>
+        <translation type="vanished">打开</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="171"/>
         <source>OFF</source>
-        <translation>关闭</translation>
+        <translation type="vanished">关闭</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="239"/>
+        <location filename="../../source/widget/megainterface.cpp" line="246"/>
         <source>error</source>
         <translation>错误</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="239"/>
+        <location filename="../../source/widget/megainterface.cpp" line="246"/>
         <source>open device error</source>
         <translation>打开设备失败</translation>
     </message>
@@ -1451,7 +1505,7 @@
     </message>
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="37"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="797"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="799"/>
         <source>Project</source>
         <translation>工程</translation>
     </message>
@@ -1639,9 +1693,8 @@ From device upload config faiured</source>
         <translation>删除</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="799"/>
         <source>Reset</source>
-        <translation>重置</translation>
+        <translation type="vanished">重置</translation>
     </message>
     <message>
         <source>Ok</source>

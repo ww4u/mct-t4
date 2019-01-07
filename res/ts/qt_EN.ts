@@ -496,8 +496,8 @@
     </message>
     <message>
         <location filename="../../source/wnd/h2ops.ui" line="1274"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="1184"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="1193"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1213"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1222"/>
         <source>Run to Project Zero Point</source>
         <translation></translation>
     </message>
@@ -579,8 +579,8 @@
     </message>
     <message>
         <location filename="../../source/wnd/h2ops.ui" line="1996"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="902"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="915"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="931"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="944"/>
         <source>Run  Sequence</source>
         <translation></translation>
     </message>
@@ -707,55 +707,71 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="264"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="272"/>
         <source>Apply as point </source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="533"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="370"/>
+        <source>tips</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.cpp" line="370"/>
+        <source>Success!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.cpp" line="373"/>
+        <source>Failured!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/wnd/h2ops.cpp" line="550"/>
         <source>load completed</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="548"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="616"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="565"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="640"/>
         <source>save completed</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="564"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="623"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="373"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="581"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="647"/>
         <source>error</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="564"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="581"/>
         <source>Error log upload error!</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="623"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="647"/>
         <source>failure</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="670"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="680"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="694"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="704"/>
         <source>Start Go Home</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="673"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="697"/>
         <source>Stop Go Home</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="918"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="947"/>
         <source>Stop Sequence</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="1187"/>
+        <location filename="../../source/wnd/h2ops.cpp" line="1216"/>
         <source>Stop</source>
         <translation></translation>
     </message>
@@ -1200,7 +1216,7 @@
     </message>
     <message>
         <location filename="../../source/wnd/mainwindow.cpp" line="81"/>
-        <location filename="../../source/wnd/mainwindow.cpp" line="259"/>
+        <location filename="../../source/wnd/mainwindow.cpp" line="257"/>
         <source>&amp;ShowHelp</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1246,22 +1262,56 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="170"/>
-        <source>ON</source>
-        <translation></translation>
+        <location filename="../../source/widget/megainterface.cpp" line="133"/>
+        <source>IP</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="171"/>
-        <source>OFF</source>
-        <translation></translation>
+        <location filename="../../source/widget/megainterface.cpp" line="133"/>
+        <location filename="../../source/widget/megainterface.cpp" line="136"/>
+        <source>Manufacturer</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="239"/>
+        <location filename="../../source/widget/megainterface.cpp" line="133"/>
+        <location filename="../../source/widget/megainterface.cpp" line="136"/>
+        <source>Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/widget/megainterface.cpp" line="133"/>
+        <location filename="../../source/widget/megainterface.cpp" line="136"/>
+        <source>SN</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/widget/megainterface.cpp" line="133"/>
+        <location filename="../../source/widget/megainterface.cpp" line="136"/>
+        <source>Version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/widget/megainterface.cpp" line="136"/>
+        <source>USBID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/widget/megainterface.cpp" line="177"/>
+        <source>Identify ON</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/widget/megainterface.cpp" line="178"/>
+        <source>Identify OFF</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/widget/megainterface.cpp" line="246"/>
         <source>error</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="239"/>
+        <location filename="../../source/widget/megainterface.cpp" line="246"/>
         <source>open device error</source>
         <translation></translation>
     </message>
@@ -1345,7 +1395,7 @@
     </message>
     <message>
         <location filename="../../source/wnd/roboconfig.cpp" line="37"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="797"/>
+        <location filename="../../source/wnd/roboconfig.cpp" line="799"/>
         <source>Project</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1444,11 +1494,6 @@
         <location filename="../../source/wnd/roboconfig.cpp" line="731"/>
         <source>Robot type not</source>
         <translation></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="799"/>
-        <source>Reset</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

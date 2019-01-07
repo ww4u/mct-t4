@@ -130,10 +130,10 @@ void MegaInterface::slotShowSearchResult(QString strDevices)
     QStringList strListHeader;
     if(m_devType == TYPE_LAN)
     {
-        strListHeader << "IP" << "Manufacturer" << "Type" << "SN" << "Version";
+        strListHeader << tr("IP") << tr("Manufacturer") << tr("Type") << tr("SN") << tr("Version");
     }else if(m_devType == TYPE_USB)
     {
-        strListHeader << "USBID" << "Manufacturer" << "Type" << "SN" << "Version";
+        strListHeader << tr("USBID") << tr("Manufacturer") << tr("Type") << tr("SN") << tr("Version");
     }
     m_model->setHorizontalHeaderLabels(strListHeader);
 
@@ -147,6 +147,13 @@ void MegaInterface::slotShowSearchResult(QString strDevices)
             m_model->setItem(maxRow, index, t_item);
         }
     }
+
+    //自动调整列宽
+    ui->tableView->resizeColumnsToContents();
+    for(int i = 0; i < ui->tableView->horizontalHeader()->count() - 1; i++){
+        ui->tableView->setColumnWidth(i, ui->tableView->columnWidth(i) + 10);
+    }
+    ui->tableView->horizontalHeader()->setStretchLastSection(true);
 }
 
 void MegaInterface::clearListView()
@@ -167,8 +174,8 @@ void MegaInterface::slotShowContextmenu(const QPoint& pos)
             delete m_menu;
 
         m_menu = new QMenu(ui->tableView);
-        QAction *actionOpen = m_menu->addAction(tr("ON"));
-        QAction *actionClose = m_menu->addAction(tr("OFF"));
+        QAction *actionOpen = m_menu->addAction(tr("Identify ON"));
+        QAction *actionClose = m_menu->addAction(tr("Identify OFF"));
 
         connect(actionOpen, SIGNAL(triggered(bool)), this, SLOT(soltActionOpen()));
         connect(actionClose, SIGNAL(triggered(bool)), this, SLOT(soltActionClose()));

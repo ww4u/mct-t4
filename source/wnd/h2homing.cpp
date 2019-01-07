@@ -7,7 +7,7 @@ H2Homing::H2Homing(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setFocusName( "Homing" );
+    setFocuHelpName( "Homing" );
 }
 
 H2Homing::~H2Homing()
@@ -30,7 +30,7 @@ int H2Homing::loadConfig()
 {
     //! load xml
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mConfigFileName + ".xml";
     QFile file(fileName);
     if( !file.exists() )
         fileName = QApplication::applicationDirPath() + "/robots/default.xml";
@@ -50,7 +50,7 @@ int H2Homing::loadConfig()
 int H2Homing::saveConfig()
 {
     MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/robots/" + mProjectName + ".xml";
+    QString fileName = QApplication::applicationDirPath() + "/robots/" + mConfigFileName + ".xml";
     QMap<QString,QString> map;
 
     map.insert("Target", ui->comboBox_target->currentText() );

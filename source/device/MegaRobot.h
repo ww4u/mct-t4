@@ -366,11 +366,12 @@ EXPORT_API int CALL mrgGetRobotHomeWavetable(ViSession vi, int name);
 * 机器人回零位操作
 * vi :visa设备句柄
 * name: 机器人名称
+* velocity: 回零速度
 * timeout_ms:表示等待超时时间
 * 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示执行超时
 * 说明：末端保持不动
 */
-EXPORT_API int CALL mrgRobotGoHome(ViSession vi, int name, int timeout_ms);
+EXPORT_API int CALL mrgRobotGoHome(ViSession vi, int name,double velocity,int timeout_ms);
 /*
 * 机器人回零位操作
 * vi :visa设备句柄

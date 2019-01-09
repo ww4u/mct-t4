@@ -597,7 +597,7 @@ void H2Ops::on_btnRead_clicked()
         m_pDiagnosisModel->appendOneItem(
                     code,
                     "Err",
-                    QDateTime::currentDateTime().toString( "yyyy/M/d h/m/s/z"),
+                    QDateTime::currentDateTime().toString( "yyyy-M-d h:m:s"),
                     "additional info",
                     counter,
                     strErrorText);
@@ -649,10 +649,12 @@ void H2Ops::on_pushButton_starting_home_clicked()
 {
     if(mViHandle <= 0) return;
 
-    auto func = [this](int &result)
+    double velocity = m_Data["SearchVelocity"].toDouble();
+
+    auto func = [=](int &result)
     {
         //不等待
-        int ret = mrgRobotGoHome(mViHandle, mRobotName, -1);
+        int ret = mrgRobotGoHome(mViHandle, mRobotName, velocity, -1);
         qDebug() << "mrgRobotGoHome" << ret;
 
         while(1)

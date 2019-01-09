@@ -280,7 +280,7 @@ void DiagnosisModel::appendOneItem(int nr,
     pItem = new DiagnosisItem();
     pItem->mNr = nr;
     pItem->mType = type;
-    pItem->mTs = QDateTime::currentDateTime().toString( "yyyy/M/d h/m/s/z");
+    pItem->mTs = ts;
     pItem->mAddInfo = addInfo;
     pItem->mCounter = counter;
     pItem->mMessage = message;

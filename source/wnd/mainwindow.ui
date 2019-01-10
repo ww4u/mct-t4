@@ -74,6 +74,7 @@
      <string>&amp;Tool</string>
     </property>
     <addaction name="actionWifi"/>
+    <addaction name="actiontest"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -318,6 +319,11 @@ border-color: rgba(255, 255, 255, 0);</string>
   <action name="actionWifi">
    <property name="text">
     <string>&amp;Wifi</string>
+   </property>
+  </action>
+  <action name="actiontest">
+   <property name="text">
+    <string>test</string>
    </property>
   </action>
  </widget>

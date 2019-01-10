@@ -401,3 +401,26 @@ void MainWindow::on_actionWifi_triggered()
 {
     m_roboConfig->slotWifi();
 }
+
+//! test used
+#include "../plugin/factory/pluginfactory.h"
+void MainWindow::on_actiontest_triggered()
+{
+    XPlugin *plugin = PluginFactory::createPlugin( "mrx-t4","" );
+    if ( NULL == plugin )
+    { return; }
+
+    //! ops panel
+    QWidget *pWig = plugin->createOpsPanel( nullptr );
+    if ( NULL != pWig )
+    {
+        pWig->show();
+        m_pDockOps->setWidget( pWig );
+    }
+
+    //! pref pages
+    QTreeWidgetItem *pRoboRoot = plugin->createPrefPages( m_roboConfig->stackWidget() );
+    m_roboConfig->rootItem()->addChild( pRoboRoot );
+
+
+}

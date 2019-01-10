@@ -14,7 +14,10 @@ int main(int argc, char *argv[])
     a.setApplicationVersion(MCTVERSION);
 
     MainWindow w;
-    w.showMaximized();
+#ifndef QT_NO_DEBUG
+    w.show();
+//    w.showMaximized();
+#endif
 
     return a.exec();
 }

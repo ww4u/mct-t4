@@ -1,6 +1,33 @@
 <RCC>
     <qresource prefix="/res">
         <file>image/m.png</file>
+
+        <file>image/icon/addition.png</file>
+        <file>image/icon/playon.png</file>
+
+        <file>image/icon/arrowleft.png</file>
+        <file>image/icon/arrowright.png</file>
+        <file>image/icon/arrowup.png</file>
+        <file>image/icon/arrowdown.png</file>
+
+        <file>image/icon/c_add.png</file>
+        <file>image/icon/c_back.png</file>
+        <file>image/icon/c_less.png</file>
+        <file>image/icon/c_more.png</file>
+        <file>image/icon/c_more_unfold.png</file>
+
+        <file>image/icon/c_subtract.png</file>
+
+        <file>image/icon/g_arrowdown.png</file>
+        <file>image/icon/g_arrowleft.png</file>
+        <file>image/icon/g_arrowright.png</file>
+        <file>image/icon/g_arrowup.png</file>
+
+        <file>image/icon/r_arrowdown.png</file>
+        <file>image/icon/r_arrowleft.png</file>
+        <file>image/icon/r_arrowright.png</file>
+        <file>image/icon/r_arrowup.png</file>
+
         <file>image/icon/arrow-left.png</file>
         <file>image/icon/arrow-right.png</file>
         <file>image/icon/246.png</file>

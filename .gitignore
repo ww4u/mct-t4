@@ -1,7 +1,7 @@
 build*/
 installer/
 unittest/
-
+log/
 *.o
 *.qm
 debug/

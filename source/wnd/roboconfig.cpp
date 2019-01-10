@@ -577,29 +577,29 @@ void RoboConfig::slot_current_changed( QTreeWidgetItem* cur,QTreeWidgetItem* prv
         }
     }
 
-    int index = -1, row = -1;
-    if(NULL == cur->parent() ){// 根节点-1,0
-        return;
-    }
-    else if( NULL == cur->parent()->parent() ) { //子节点 x,0
-        index = cur->parent()->indexOfChild(cur);
-        row = 0;
-    } else { //孙节点 x,y
-        index = cur->parent()->parent()->indexOfChild(cur->parent());
-        row = cur->parent()->indexOfChild(cur) + 1;
-    }
+//    int index = -1, row = -1;
+//    if(NULL == cur->parent() ){// 根节点-1,0
+//        return;
+//    }
+//    else if( NULL == cur->parent()->parent() ) { //子节点 x,0
+//        index = cur->parent()->indexOfChild(cur);
+//        row = 0;
+//    } else { //孙节点 x,y
+//        index = cur->parent()->parent()->indexOfChild(cur->parent());
+//        row = cur->parent()->indexOfChild(cur) + 1;
+//    }
 
-    mIndex = index;
-    QString strHelpName = ((H2Robo *)(m_RobotList[mIndex].m_Robo))->subConfigs().at(row)->focuHelpName();
+//    mIndex = index;
+//    QString strHelpName = ((H2Robo *)(m_RobotList[mIndex].m_Robo))->subConfigs().at(row)->focuHelpName();
 
-//    qDebug() << "slot_current_changed" << mIndex << row << cur->text(0) << strHelpName;
+////    qDebug() << "slot_current_changed" << mIndex << row << cur->text(0) << strHelpName;
 
-    emit signal_focus_in( strHelpName );
+//    emit signal_focus_in( strHelpName );
 
-    emit signalCurrentRobotChanged(m_RobotList[mIndex].m_strDevInfo,
-                                   m_RobotList[mIndex].m_Visa,
-                                   m_RobotList[mIndex].m_DeviceName,
-                                   m_RobotList[mIndex].m_RoboName);
+//    emit signalCurrentRobotChanged(m_RobotList[mIndex].m_strDevInfo,
+//                                   m_RobotList[mIndex].m_Visa,
+//                                   m_RobotList[mIndex].m_DeviceName,
+//                                   m_RobotList[mIndex].m_RoboName);
 }
 
 void RoboConfig::slot_open_close(QString strIP)
@@ -851,3 +851,8 @@ void RoboConfig::addDeviceWithIP(QString strID)
     QString devInfo = lst.at(1) + QString(",%1").arg(IDN);
     slotAddNewRobot(devInfo);
 }
+
+QTreeWidgetItem *RoboConfig::rootItem()
+{ return m_pRootNode; }
+QStackedWidget *RoboConfig::stackWidget()
+{ return ui->stackedWidget; }

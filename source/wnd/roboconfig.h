@@ -27,6 +27,9 @@ public:
     void changeLanguage(QString qmFile);
     void addDeviceWithIP(QString strID);
 
+    QTreeWidgetItem *rootItem();
+    QStackedWidget *stackWidget();
+
 public slots:
 //    void updateUI();
     void slotDownload();

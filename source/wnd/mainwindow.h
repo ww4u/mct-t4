@@ -59,6 +59,8 @@ private slots:
 
     void on_actionWifi_triggered();
 
+    void on_actiontest_triggered();
+
 private:
     Ui::MainWindow *ui;
 

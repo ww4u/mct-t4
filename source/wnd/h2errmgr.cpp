@@ -192,6 +192,8 @@ int H2ErrMgr::calcResponse(int reaction, int outputAble)
     if(reaction != 1 && outputAble == 0){
         return reaction + 3;
     }
+
+    return -1;
 }
 
 /**

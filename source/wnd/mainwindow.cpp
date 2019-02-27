@@ -1,14 +1,28 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "login.h"
+#include "syspref.h"
+
+#define pref_file_path  QDir::homePath() + "/mct"
+#define pref_file_name  pref_file_path + "/mct_pref.xml"
+
 MainWindow *MainWindow::_pBackendProxy = NULL;
 
-void MainWindow::requestLogout( const QString &str, LogLevel lev )
+void MainWindow::requestLogout( const QString &str, LogStr::eLogLevel lev )
 {
     if( NULL == MainWindow::_pBackendProxy )
     { return; }
 
-    MainWindow::_pBackendProxy->slot_logout( str, lev );
+    MainWindow::_pBackendProxy->mLogModel.append( str, lev );
+}
+
+void MainWindow::requestProgress( const QString &info, bool b, int now, int mi, int ma  )
+{
+    if( NULL == MainWindow::_pBackendProxy )
+    { return; }
+
+    MainWindow::_pBackendProxy->emit_progress( info, b, now, mi, ma );
 }
 
 void MainWindow::showStatus( const QString str)
@@ -24,16 +38,22 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 {
     ui->setupUi(this);
 
-    m_pLabStatus    = NULL;
-    m_pLabMctVer    = NULL;
-    m_pLabConVer    = NULL;
-    m_roboConfig    = NULL;
-    m_pDockOps      = NULL;
-    m_pOps          = NULL;
-    m_pDockHelp     = NULL;
-    m_pHelpPanel    = NULL;
+    m_pLabStatus = NULL;
+    m_pLabMctVer = NULL;
+    m_pLabConVer = NULL;
+    m_roboConfig = NULL;
+    m_pDockOps   = NULL;
+
+    m_pDockHelp  = NULL;
+    m_pHelpPanel = NULL;
+    m_pProgress  = NULL;
+
+    //! default
+    mPref.init();
 
     setupWorkArea();
+
+    setupMenu();
 
     setupToolBar();
 
@@ -53,6 +73,9 @@ MainWindow::~MainWindow()
 
     if ( NULL != m_pHelpPanel )
     { delete m_pHelpPanel; }
+
+    if ( NULL != m_pProgress )
+    { delete m_pProgress; }
 }
 
 void MainWindow::setupWorkArea()
@@ -61,14 +84,27 @@ void MainWindow::setupWorkArea()
     m_roboConfig = new RoboConfig(this);
     ui->centralWidget->insertTab( 0, m_roboConfig, tr("Pref") );
 
+    //! connect
+    connect( m_roboConfig, SIGNAL(signal_request_sysOpPanel()),
+             this, SLOT(slot_request_sysOpPanel()) );
+    connect( m_roboConfig, SIGNAL(signal_save_sysPref()),
+             this, SLOT(slot_save_sysPref()) );
+
     //! dock
     m_pDockOps = new QDockWidget( tr("Ops"), this );
     m_pDockOps->setAllowedAreas(  Qt::BottomDockWidgetArea );
     m_pDockOps->setFeatures( QDockWidget::DockWidgetVerticalTitleBar | m_pDockOps->features() );
     addDockWidget( Qt::BottomDockWidgetArea, m_pDockOps );
 
-    m_pOps = new H2Ops();
-    m_pDockOps->setWidget( m_pOps );
+    m_roboConfig->attachOpDock( m_pDockOps );
+    m_roboConfig->attachLogModel( &mLogModel );
+    m_roboConfig->attachSysPref( &mPref );
+
+    m_pSysLogout = new SysLogout( this );
+    m_pDockOps->setWidget( m_pSysLogout );
+
+    m_pSysLogout->attachLogModel( &mLogModel );
+
     ui->menuView->addAction( m_pDockOps->toggleViewAction() );
 
     //! help
@@ -80,7 +116,28 @@ void MainWindow::setupWorkArea()
     m_pDockHelp->setWidget( m_pHelpPanel );    
     m_pDockHelp->toggleViewAction()->setText(tr("&ShowHelp"));
     ui->menuHelp->addAction( m_pDockHelp->toggleViewAction() );
-    m_pDockHelp->hide();//默认不显示
+    m_pDockHelp->hide();
+}
+
+void MainWindow::setupMenu()
+{
+    QActionGroup * langGroup = new QActionGroup( ui->menuView );
+    m_pChAction = langGroup->addAction( tr("Chinese") );
+    m_pChAction->setCheckable( true );
+    m_pEnAction = langGroup->addAction( tr("English") );
+    m_pEnAction->setCheckable( true );
+
+    QActionGroup * styleGroup = new QActionGroup(ui->menuView);
+    m_pMegaAction = styleGroup->addAction( tr("MEGAROBO") );
+    m_pMegaAction->setCheckable( true );
+    m_pClasAction = styleGroup->addAction( tr("Classic") );
+    m_pClasAction->setCheckable( true );
+
+    ui->menuView->addSection( tr("Language") );
+    ui->menuView->addActions( langGroup->actions() );
+
+    ui->menuView->addSection( tr("Style") );
+    ui->menuView->addActions( styleGroup->actions() );
 }
 
 void MainWindow::setupToolBar()
@@ -108,10 +165,9 @@ void MainWindow::setupToolBar()
 
 void MainWindow::setupStatusBar()
 {
-    qDebug() << "version" << qApp->applicationVersion();
     m_pLabStatus = new QLabel("MegaRobo Configuration Tool");
     m_pLabMctVer = new QLabel( QString("Version: %1  ").arg( qApp->applicationVersion() ) );
-    m_pLabConVer = new QLabel( "Build: " __DATE__);
+    m_pLabConVer = new QLabel( "Build: " __DATE__ );
 
     ui->statusBar->insertWidget( 0, m_pLabStatus, 1 );
     ui->statusBar->insertWidget( 1, m_pLabMctVer, 0 );
@@ -125,28 +181,11 @@ void MainWindow::slotUpdateStatus( const QString str )
 
 void MainWindow::buildConnection()
 {
-    connect( m_pOps, SIGNAL(signal_focus_in( const QString &)),
-             this, SLOT(slot_focus_in(const QString &)) );
+    connect( this, SIGNAL(signal_pref_changed()),
+             this, SLOT(slot_save_sysPref()) );
 
     connect( m_roboConfig, SIGNAL(signal_focus_in( const QString &)),
              this, SLOT(slot_focus_in(const QString &)) );
-
-    connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int,int)),
-            this,SLOT(slotCurrentRobotChanged(QString,int,int,int)));
-
-    connect(m_roboConfig,SIGNAL(signalCurrentRobotChanged(QString,int,int,int)),
-            m_pOps,SLOT(slotSetCurrentRobot(QString,int,int,int)));
-
-    connect(m_roboConfig,SIGNAL(signalDataChanged()),
-            m_pOps,SLOT(slotLoadConfigAgain()));
-
-    connect(m_roboConfig,SIGNAL(signal_record_selected(int)),
-            m_pOps,SLOT(slotSetCurrentRecordNumber(int)));
-
-    connect(m_pOps,SIGNAL(signal_apply_point(int,QString,double,double,double,double)),
-            m_roboConfig,SLOT(slotSetOneRecord(int,QString,double,double,double,double)));
-
-    connect(ui->actionStop,SIGNAL(triggered(bool)), m_pOps, SLOT(slotRobotStop()));
 
     connect(ui->actionDownload,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotDownload()));
     connect(ui->actionUpload,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotUpload()));
@@ -155,150 +194,115 @@ void MainWindow::buildConnection()
     connect(ui->actionSearch,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotSearch()));
     connect(ui->actionConnect,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotConnect()));
 
+    //! connect menu
+    connect( m_pEnAction, SIGNAL(triggered(bool)), this, SLOT(slot_lang_changed()) );
+    connect( m_pChAction, SIGNAL(triggered(bool)), this, SLOT(slot_lang_changed()) );
+
+    connect( m_pMegaAction, SIGNAL(triggered(bool)), this, SLOT(slot_style_changed()) );
+    connect( m_pClasAction, SIGNAL(triggered(bool)), this, SLOT(slot_style_changed()) );
+
+    //! progress
+    connect( this, SIGNAL(signal_progress(const QString &,bool,int,int,int)),
+             this, SLOT(slot_progress(const QString &,bool,int,int,int)), Qt::QueuedConnection );
 }
 
 void MainWindow::loadConfig()
 {
-    MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/config.xml";
-    QMap<QString,QString> map = mXML.xmlRead(fileName);
-    if(map["Style"] == ""){
-        map.clear();
-        map.insert("Style", "MegaRobo");
-        m_style = STYLE_MEGAROBO;
-        mXML.xmlNodeRemove(fileName, "WindowStyle");
-        mXML.xmlNodeAppend(fileName, "WindowStyle", map);
+    //! \todo lang/style
+
+    //! log in
+    LogIn logIn;
+    if ( logIn.exec() == QDialog::Accepted )
+    {
+        if ( logIn.getUserRole() == 0 )
+        { setSysMode( sysPara::e_sys_user ); }
+        else
+        { setSysMode( sysPara::e_sys_admin ); }
     }
-
-    if(map["Language"] == ""){
-        map.clear();
-        map.insert("Language", "English");
-        m_language = LANG_EN;
-        mXML.xmlNodeRemove(fileName, "WindowLanguage");
-        mXML.xmlNodeAppend(fileName, "WindowLanguage", map);
-    }
-
-    map = mXML.xmlRead(fileName);
-    if(map["Language"] == "English"){
-        //默认缺省
-        on_actionEnglish_triggered();
-        on_actionEnglish_triggered();
-    }else{
-        on_actionChinese_triggered();
-        on_actionChinese_triggered();
-    }
-
-    if(map["Style"] == "MegaRobo"){
-        on_actionMega_triggered();
-        on_actionMega_triggered();
-    }else{
-        on_actionClassic_triggered();
-        on_actionClassic_triggered();
-    }
-}
-
-void MainWindow::on_actionAbout_triggered()
-{
-    aboutDlg dlg(this);
-    dlg.exec();
-}
-
-void MainWindow::on_actionChinese_triggered()
-{
-    if( !ui->actionEnglish->isChecked() && !ui->actionChinese->isChecked()){
-        ui->actionChinese->setChecked(true);
-        return;
-    }
-    ui->actionEnglish->setChecked(false);
-
-    m_language = LANG_CN;
-    changeLanguage();
-    changeLanguage();
-}
-
-void MainWindow::on_actionEnglish_triggered()
-{
-    if( !ui->actionEnglish->isChecked() && !ui->actionChinese->isChecked()){
-        ui->actionEnglish->setChecked(true);
+    else
+    {
+        QTimer::singleShot( 0, qApp, SLOT(quit()) );
         return;
     }
 
-    ui->actionChinese->setChecked(false);
+    //! load pref
+    loadPref();
 
-    m_language = LANG_EN;
-    changeLanguage();
-    changeLanguage();
+    //! post startup
+    QTimer::singleShot( 0, this, SLOT(slot_post_startup()) );
 }
 
 void MainWindow::changeLanguage()
 {
-    QString qmFile = "";
-    MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/config.xml";
-    QMap<QString,QString> map;
+    //! set lang
+    do
+    {
+        QLocale::Language lang;
+        QLocale::Country area;
+        QString qmFile = "";
+        if ( mPref.mLangIndex == LANG_EN )
+        {
+            lang = QLocale::English;
+            area = QLocale::AnyCountry;
+            qmFile = ":/res/ts/qt_EN.qm";
+        }
+        else if ( mPref.mLangIndex == LANG_CN )
+        {
+            lang = QLocale::Chinese;
+            area = QLocale::China;
+            qmFile = ":/res/ts/qt_CN.qm";
+        }
+        else
+        {
+            lang = QLocale::AnyLanguage;
+            area = QLocale::AnyCountry;
+            sysError( tr("Invalid language"));
+            return;
+        }
 
-    if( m_language == LANG_CN ){
-        qmFile = ":/res/ts/qt_CN.qm";
-        map.insert("Language", "Chinese");
-    }
-    else if( m_language == LANG_EN ){
-        qmFile = ":/res/ts/qt_EN.qm";
-        map.insert("Language", "English");
-    }
-    qDebug() << "changeLanguage:" << qmFile;
+        if ( mTranslator.isEmpty() )
+        {}
+        else
+        { qApp->removeTranslator( &mTranslator ); }
 
-    m_roboConfig->changeLanguage(qmFile);
-    m_pOps->changeLanguage(qmFile);
+        //! local
+        QLocale local( lang, area );
+        local.setDefault( QLocale(QLocale::English) );
 
-    qApp->removeTranslator(&m_translator);
-    m_translator.load(qmFile);
-    qApp->installTranslator(&m_translator);
-    ui->retranslateUi(this);
-    m_pDockHelp->toggleViewAction()->setText(tr("&ShowHelp"));
+        logDbg()<<local.uiLanguages();
 
-    mXML.xmlNodeRemove(fileName, "WindowLanguage");
-    mXML.xmlNodeAppend(fileName, "WindowLanguage", map);
+//        if ( mTranslator.load( local,
+//                              QLatin1String("megarobostudio"),
+//                              QLatin1String("_"),
+//                              qApp->applicationDirPath() + "/translate"
+//                              )
+        if ( mTranslator.load( qmFile )
+             && qApp->installTranslator(&mTranslator) )
+        {
+        }
+        else
+        {
+            QMessageBox::information( NULL,
+                                    QObject::tr("Info"),
+                                    QObject::tr("language loss"));
+        }
+    }while( 0 );
 }
 
-void MainWindow::on_actionMega_triggered()
+void MainWindow::changeStyle()
 {
-    if( !ui->actionClassic->isChecked() && !ui->actionMega->isChecked()){
-        ui->actionMega->setChecked(true);
-        return;
+    if ( mPref.mStyleIndex == STYLE_MEGAROBO )
+    {
+        setUiStyle(":/res/qss/mega.qss");
     }
-    ui->actionClassic->setChecked(false);
-
-    m_style = STYLE_MEGAROBO;
-    setUiStyle(":/res/qss/mega.qss");
-}
-
-void MainWindow::on_actionClassic_triggered()
-{
-    if( !ui->actionClassic->isChecked() && !ui->actionMega->isChecked()){
-        ui->actionClassic->setChecked(true);
-        return;
+    else
+    {
+        setUiStyle(":/res/qss/classic.qss");
     }
-
-    ui->actionMega->setChecked(false);
-    m_style = STYLE_CLASSIC;
-
-    setUiStyle(":/res/qss/classic.qss");
 }
 
 void MainWindow::setUiStyle(const QString &styleFile)
 {
-    MegaXML mXML;
-    QString fileName = QApplication::applicationDirPath() + "/config.xml";
-    QMap<QString,QString> map;
-    if( m_style == STYLE_MEGAROBO){
-        map.insert("Style", "MegaRobo");
-    }else{
-        map.insert("Style", "Classic");
-    }
-
-    mXML.xmlNodeRemove(fileName, "WindowStyle");
-    mXML.xmlNodeAppend(fileName, "WindowStyle", map);
-
     if( ! QFile::exists(styleFile) )
     {
         qDebug() << "setStyleSheet file not exists!";
@@ -307,47 +311,114 @@ void MainWindow::setUiStyle(const QString &styleFile)
     }
 
     QFile qss(styleFile);
-    if( qss.open(QFile::ReadOnly) ){
+    if( qss.open(QFile::ReadOnly) )
+    {
         qApp->setStyleSheet(qss.readAll());
         qss.close();
-
-        qDebug() << "setStyleSheet:" << styleFile;
-//        sysInfo("setStyleSheet", styleFile);
     }
+    else
+    { sysError( tr("Style apply fail") );}
 }
 
-void MainWindow::slotCurrentRobotChanged(QString strDevInfo, int visa, int deviceName,int roboName)
+void MainWindow::slot_request_sysOpPanel()
 {
-    if( (m_strDevInfo == strDevInfo) && (m_ViHandle == visa) && (m_RoboName == roboName) ){
-        return;//没有切换机器人且状态没有改变
-    }
+    Q_ASSERT( NULL != m_pDockOps );
+    Q_ASSERT( NULL != m_pSysLogout );
 
-    QStringList strListDev = strDevInfo.split(',', QString::SkipEmptyParts);
-    QString strDeviceName = strListDev.at(2) + "[" + strListDev.at(0) + "]";
-
-    m_pDockOps->setWindowTitle("Ops: " + strDeviceName);
-
-    ui->actionIP->setText(strDeviceName);
-
-    m_strDevInfo = strDevInfo;
-    m_ViHandle = visa;
-    m_DeviceName = deviceName;
-    m_RoboName = roboName;
-
-    if(m_ViHandle == 0){
-        //device closed
-        ui->actionConnect->setIcon(QIcon(":/res/image/h2product/offline.png"));
-    }
-    else{
-        //device opened
-        ui->actionConnect->setIcon(QIcon(":/res/image/h2product/online.png"));
-    }
+    m_pDockOps->setWidget( m_pSysLogout );
 }
 
-void MainWindow::slot_logout( const QString &str, LogLevel lev )
+void MainWindow::slot_save_sysPref()
+{ savePref(); }
+
+//! change the language
+void MainWindow::slot_post_startup()
 {
-    Q_ASSERT( NULL != m_pOps );
-    m_pOps->outConsole( str, lev );
+    //! change the language
+    if ( mPref.mLangIndex == 0 )
+    { m_pEnAction->setChecked( true ); }
+    else
+    { m_pChAction->setChecked( true ); }
+
+    changeLanguage();
+
+    //! change the style
+    if ( mPref.mStyleIndex == 0 )
+    { m_pMegaAction->setChecked( true ); }
+    else
+    { m_pClasAction->setChecked( true ); }
+
+    changeStyle();
+
+    Q_ASSERT( NULL != m_roboConfig );
+    m_roboConfig->postStartup();
+
+}
+
+void MainWindow::on_actionAbout_triggered()
+{
+    aboutDlg dlg(this);
+    dlg.exec();
+}
+
+void MainWindow::slot_lang_changed()
+{
+    if ( m_pEnAction->isChecked() )
+    { mPref.mLangIndex = LANG_EN; }
+    else
+    { mPref.mLangIndex = LANG_CN; }
+
+    changeLanguage();
+
+    emit signal_pref_changed();
+}
+void MainWindow::slot_style_changed()
+{
+    if ( m_pMegaAction->isChecked() )
+    {
+        mPref.mStyleIndex = STYLE_MEGAROBO;
+
+        setUiStyle(":/res/qss/mega.qss");
+    }
+    else
+    {
+        mPref.mStyleIndex = STYLE_CLASSIC;
+
+        setUiStyle(":/res/qss/classic.qss");
+    }
+
+    changeStyle();
+
+    emit signal_pref_changed();
+}
+
+void MainWindow::slot_progress( const QString &info, bool b, int now, int mi, int ma )
+{
+    if ( NULL == m_pProgress )
+    {
+        m_pProgress = new QProgressDialog();
+        if ( NULL == m_pProgress )
+        { return; }
+
+        connect( m_pProgress, SIGNAL(canceled()),
+                 this, SLOT(slot_progress_canceled()) );
+    }
+    else
+    {}
+    if ( b )
+    {
+        m_pProgress->setMinimum( mi );
+        m_pProgress->setMaximum( ma );
+        m_pProgress->setValue( now );
+        m_pProgress->show();
+    }
+    else
+    { m_pProgress->hide(); }
+}
+
+void MainWindow::slot_progress_canceled()
+{
+    m_roboConfig->cancelBgWorking();
 }
 
 void MainWindow::slot_focus_in( const QString &name )
@@ -363,21 +434,71 @@ void MainWindow::slot_focus_in( const QString &name )
     m_pHelpPanel->setFile( strName );
 }
 
-void MainWindow::on_actionExit_triggered()
+void MainWindow::changeEvent( QEvent * event )
 {
-    this->closeEvent(NULL);
+    QMainWindow::changeEvent( event );
+
+    Q_ASSERT( NULL != event && NULL != ui );
+
+    //! language change
+    if (event->type() == QEvent::LanguageChange)
+    {
+        ui->retranslateUi( this );
+
+        m_pClasAction->setText( tr("Classic") );
+        m_pMegaAction->setText( tr("MEGAROBO") );
+
+        //! \todo for each plugin and widgets
+//        for ( int i = 0; i < ui->widget->count(); i++ )
+//        {
+//            Q_ASSERT( NULL != ui->widget->widget(i) );
+
+//            qApp->postEvent( (modelView*)ui->widget->widget( i ),
+//                          new QEvent( QEvent::LanguageChange )
+//                          );
+//        }
+    }
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
+void MainWindow::emit_progress( const QString &info, bool b, int now, int mi, int ma )
 {
-    m_roboConfig->slotExit();
-    close();
+    emit signal_progress( info, b, now, mi, ma );
 }
 
+void MainWindow::retranslateUi()
+{}
+
+void MainWindow::savePref()
+{
+    int ret;
+
+    //! create path
+    ret = assurePath( pref_file_path );
+    if ( ret != 0 )
+    { return; }
+
+    //! save file
+    ret = mPref.save( pref_file_name );
+    if ( ret != 0 )
+    {
+        sysError( tr("Pref save fail") );
+
+        logDbg()<<pref_file_name;
+    }
+}
+void MainWindow::loadPref()
+{
+    int ret;
+    ret = mPref.load( pref_file_name );
+    if ( ret != 0 )
+    {
+        sysError( tr("Pref load fail") );
+    }
+}
 
 void MainWindow::on_actionPoweroff_triggered()
 {
-    m_roboConfig->slotExit();
+//    m_roboConfig->slotExit();
     QThread::msleep(1000);
 #ifndef _WIN32
     system("poweroff");
@@ -388,7 +509,7 @@ void MainWindow::on_actionPoweroff_triggered()
 
 void MainWindow::on_actionReboot_triggered()
 {
-    m_roboConfig->slotExit();
+//    m_roboConfig->slotExit();
     QThread::msleep(1000);
 #ifndef _WIN32
     system("reboot");
@@ -402,25 +523,39 @@ void MainWindow::on_actionWifi_triggered()
     m_roboConfig->slotWifi();
 }
 
+void MainWindow::on_actionPref_triggered()
+{
+    //! get from the pref
+    SysPref pref( mPref );
+
+    if ( pref.exec() == QDialog::Accepted )
+    {
+        mPref = pref;
+        savePref();
+    }
+    else
+    {}
+}
+
 //! test used
 #include "../plugin/factory/pluginfactory.h"
 void MainWindow::on_actiontest_triggered()
 {
-    XPlugin *plugin = PluginFactory::createPlugin( "mrx-t4","" );
-    if ( NULL == plugin )
-    { return; }
+//    XPlugin *plugin = PluginFactory::createPlugin( "mrx-t4","" );
+//    if ( NULL == plugin )
+//    { return; }
 
-    //! ops panel
-    QWidget *pWig = plugin->createOpsPanel( nullptr );
-    if ( NULL != pWig )
-    {
-        pWig->show();
-        m_pDockOps->setWidget( pWig );
-    }
+//    //! ops panel
+//    QWidget *pWig = plugin->createOpsPanel( nullptr );
+//    if ( NULL != pWig )
+//    {
+//        pWig->show();
+//        m_pDockOps->setWidget( pWig );
+//    }
 
-    //! pref pages
-    QTreeWidgetItem *pRoboRoot = plugin->createPrefPages( m_roboConfig->stackWidget() );
-    m_roboConfig->rootItem()->addChild( pRoboRoot );
-
-
+//    //! pref pages
+//    QTreeWidgetItem *pRoboRoot = plugin->createPrefPages( m_roboConfig->stackWidget() );
+//    m_roboConfig->rootItem()->addChild( pRoboRoot );
 }
+
+

@@ -6,9 +6,10 @@
 XPlugin *PluginFactory::createPlugin( const QString &name,
                               const QString &addr )
 {
-    if ( name == "mrx-t4" )
+    if ( str_is( name, "mrx-t4") )
     {
         return new MRX_T4( );
+//        return NULL;
     }
     else
     {

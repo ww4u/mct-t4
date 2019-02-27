@@ -8,21 +8,31 @@
 #include "MegaGateway.h"
 #include "sysapi.h"
 #include "xthread.h"
+#include "../include/mystd.h"
 
-MegaInterface::MegaInterface(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::MegaInterface),
-    m_devType(TYPE_LAN),
-    m_menu(NULL)
+#define ICON_WIDTH      64
+#define ICON_HEIGHT     64
+
+MegaInterface::MegaInterface(SysPara *pPara, QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::MegaInterface), m_pPara( pPara )
 {
+
     ui->setupUi(this);
 
-    connect(ui->comboBox_DevType,SIGNAL(currentIndexChanged(int)),this,SLOT(slotChangeDeviceType(int)));
-    connect(ui->pushButton_Scan,SIGNAL(clicked(bool)),this,SLOT(slotDeviceScan()));
+    m_devType = TYPE_LAN;
+    m_menu = NULL;
+
+    setupMenu();
+
+    buildConnection();
+
+    retranslateUi();
 
     m_model = new QStandardItemModel(ui->tableView);
     ui->tableView->setModel(m_model);
 
+    //! context menu
     ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->tableView, SIGNAL(customContextMenuRequested(const QPoint&)),
             this, SLOT(slotShowContextmenu(const QPoint&)));
@@ -33,6 +43,9 @@ MegaInterface::MegaInterface(QWidget *parent) :
     connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(close()));
 
+    //! interface type
+    ui->comboBox_DevType->setCurrentIndex( m_pPara->mIntfIndex );
+    on_comboBox_DevType_currentIndexChanged( ui->comboBox_DevType->currentIndex() );
 }
 
 MegaInterface::~MegaInterface()
@@ -40,120 +53,28 @@ MegaInterface::~MegaInterface()
     delete ui;
 }
 
-void MegaInterface::slotChangeDeviceType(int index)
+void MegaInterface::setupMenu()
 {
-    if(index == TYPE_LAN)
-    {
-        //! LAN
-        ui->label_icon->setPixmap(QPixmap(":/res/image/icon/network.ico"));
-        m_devType = TYPE_LAN;
-    }else if(index == TYPE_USB)
-    {
-        //! USB
-        ui->label_icon->setPixmap(QPixmap(":/res/image/icon/usb.ico"));
-        m_devType = TYPE_USB;
-    }
+    m_menu = new QMenu( this );
+    Q_ASSERT( NULL != m_menu );
+
+    m_pActionOpen = m_menu->addAction( tr("Identify ON") );
+    m_pActionClose = m_menu->addAction( tr("Identify OFF") );
+
+    Q_ASSERT( NULL != m_pActionOpen );
+    Q_ASSERT( NULL != m_pActionClose );
 }
-
-void MegaInterface::slotDeviceScan()
+void MegaInterface::buildConnection()
 {
-    auto func = [this](QString &strRet)
-    {
-        QString strFindDevices = "";
-        QStringList strAllDeviceList;
-        char buff[4096] = "";
-        if(m_devType == TYPE_LAN){
-            mrgFindGateWay(0, buff, sizeof(buff), 1);
-        }
-        else if(m_devType == TYPE_USB){
-            mrgFindGateWay(1, buff, sizeof(buff), 1);
-        }
-
-        strFindDevices = QString("%1").arg(buff);
-        if(strFindDevices.length() == 0)
-        {
-            sysError("mrgFindGateWay error!");
-            strRet = "";
-            return;
-        }
-        qDebug() << "find devices:" << strFindDevices;
-
-        foreach (QString strDevice, strFindDevices.split(',', QString::SkipEmptyParts)) {
-            int visa =  mrgOpenGateWay(strDevice.toLocal8Bit().data(), 2000);
-            if(visa <= 0) {
-                continue;
-            }
-
-            char IDN[1024] = "";
-            int ret = mrgGateWayIDNQuery(visa,IDN);
-            if(ret != 0)
-            {
-                mrgCloseGateWay(visa);
-                continue;
-            }else{
-                int len = strlen(IDN);
-                IDN[len-1] = '\0';  // '\n' ===> '\0'
-            }
-            mrgCloseGateWay(visa);
-
-            QStringList lst = strDevice.split("::", QString::SkipEmptyParts);
-            if(m_devType == TYPE_LAN){
-                strAllDeviceList << lst.at(1) + QString(",%1").arg(IDN);
-            }
-            if(m_devType == TYPE_USB){
-                strAllDeviceList << lst.at(0) + "_" + lst.at(1) + "_"
-                                    + lst.at(2) + "_" + lst.at(3)
-                                    + QString(",%1").arg(IDN);
-            }
-        }
-        strRet = strAllDeviceList.join("::");
-        return;
-    };
-
-    clearListView();
-    XThread *thread = new XThread(func);
-    connect(thread, SIGNAL(finished()), this, SLOT(slotDeviceScanEnd()));
-    connect(thread, SIGNAL(signalFinishResult(QString)), this, SLOT(slotShowSearchResult(QString)));
-    ui->pushButton_Scan->setEnabled(false);
-    ui->progressBar->setMaximum(0);
-    thread->start();
+    connect( m_pActionOpen, SIGNAL(triggered(bool)),
+             this, SLOT(soltActionOpen()));
+    connect( m_pActionClose, SIGNAL(triggered(bool)),
+             this, SLOT(soltActionClose()));
 }
-
-void MegaInterface::slotDeviceScanEnd()
+void MegaInterface::retranslateUi()
 {
-    ui->pushButton_Scan->setEnabled(true);
-    ui->progressBar->setMaximum(100);
-}
-
-void MegaInterface::slotShowSearchResult(QString strDevices)
-{
-    QStringList strListHeader;
-    if(m_devType == TYPE_LAN)
-    {
-        strListHeader << tr("IP") << tr("Manufacturer") << tr("Type") << tr("SN") << tr("Version");
-    }else if(m_devType == TYPE_USB)
-    {
-        strListHeader << tr("USBID") << tr("Manufacturer") << tr("Type") << tr("SN") << tr("Version");
-    }
-    m_model->setHorizontalHeaderLabels(strListHeader);
-
-    foreach (QString strDev, strDevices.split("::", QString::SkipEmptyParts)) {
-        int maxRow = m_model->rowCount();
-        QStringList strListInfo = strDev.split(',', QString::SkipEmptyParts);
-        for(int index=0; index<strListInfo.count(); index++)
-        {
-            QStandardItem *t_item = new QStandardItem(strListInfo.at(index));
-            m_itemList.append(t_item);
-            m_model->setItem(maxRow, index, t_item);
-        }
-    }
-
-    //自动调整列宽
-    ui->tableView->resizeColumnsToContents();
-    for(int i = 0; i < ui->tableView->horizontalHeader()->count() - 1; i++){
-        ui->tableView->setColumnWidth(i, ui->tableView->columnWidth(i) + 10);
-    }
-    ui->tableView->horizontalHeader()->setStretchLastSection(true);
+    m_pActionOpen->setText( tr("Identify ON") );
+    m_pActionClose->setText( tr("Identify OFF") );
 }
 
 void MegaInterface::clearListView()
@@ -166,21 +87,124 @@ void MegaInterface::clearListView()
     m_model->clear();
 }
 
+int MegaInterface::deviceOpen()
+{
+    //! current
+    QModelIndex index = ui->tableView->selectionModel()->selectedIndexes().at(0);
+    QString strAddr = m_model->data(index,Qt::DisplayRole).toString();
+
+    //! open
+    int visa =  mrgOpenGateWay( strAddr.toLocal8Bit().data(), 3000 );
+    if(visa <= 0){
+        QMessageBox::critical(this,tr("error"),tr("open device error"));
+    }
+    return visa;
+}
+
+void MegaInterface::slotDeviceScanEnd()
+{
+    ui->pushButton_Scan->setEnabled(true);
+    ui->progressBar->setMaximum(100);
+}
+
+void MegaInterface::slotShowSearchResult( QVariant var )
+{
+    if ( var.isValid() )
+    {}
+    else
+    { return; }
+
+    QStringList strListHeader;
+    if(m_devType == TYPE_LAN)
+    {
+        strListHeader<< tr("IP")
+                     << tr("Type")
+                     << tr("SN")
+                     << tr("Version")
+                     << tr("Model");
+    }
+    else if(m_devType == TYPE_USB)
+    {
+        strListHeader<<tr("USBID")
+                     << tr("Type")
+                     << tr("SN")
+                     << tr("Version")
+                     << tr("Model");
+    }
+    else
+    { Q_ASSERT(false); }
+
+    m_model->setHorizontalHeaderLabels(strListHeader);
+
+    QStandardItem *t_item;
+    int rowCnt = 0;
+    foreach( const RoboInfo &info, mSearchRobos )
+    {
+
+        t_item = new QStandardItem( info.mAddr );
+        m_model->setItem( rowCnt, 0, t_item );
+
+        t_item = new QStandardItem( info.mFMModel );
+        m_model->setItem( rowCnt, 1, t_item );
+
+        t_item = new QStandardItem( info.mFMSN );
+        m_model->setItem( rowCnt, 2, t_item );
+
+        t_item = new QStandardItem( info.mFMVer );
+        m_model->setItem( rowCnt, 3, t_item );
+
+        t_item = new QStandardItem( info.mRoboModel );
+        m_model->setItem( rowCnt, 4, t_item );
+
+        rowCnt++;
+    }
+}
+
+//void MegaInterface::slotShowSearchResult(QString strDevices)
+//{
+//    QStringList strListHeader;
+//    if(m_devType == TYPE_LAN)
+//    {
+//        strListHeader << tr("IP") << tr("Manufacturer") << tr("Type") << tr("SN") << tr("Version");
+//    }
+//    else if(m_devType == TYPE_USB)
+//    {
+//        strListHeader << tr("USBID") << tr("Manufacturer") << tr("Type") << tr("SN") << tr("Version");
+//    }
+//    else
+//    { Q_ASSERT(false); }
+
+//    m_model->setHorizontalHeaderLabels(strListHeader);
+
+//    foreach (QString strDev, strDevices.split("::", QString::SkipEmptyParts))
+//    {
+//        int maxRow = m_model->rowCount();
+//        QStringList strListInfo = strDev.split(',', QString::SkipEmptyParts);
+//        for(int index=0; index<strListInfo.count(); index++)
+//        {
+//            QStandardItem *t_item = new QStandardItem(strListInfo.at(index));
+//            m_itemList.append(t_item);
+//            m_model->setItem(maxRow, index, t_item);
+//        }
+//    }
+
+//    //! 自动调整列宽
+//    ui->tableView->resizeColumnsToContents();
+//    for(int i = 0; i < ui->tableView->horizontalHeader()->count() - 1; i++){
+//        ui->tableView->setColumnWidth(i, ui->tableView->columnWidth(i) + 10);
+//    }
+//    ui->tableView->horizontalHeader()->setStretchLastSection(true);
+//}
+
 void MegaInterface::slotShowContextmenu(const QPoint& pos)
 {
+    //! selected
     if(!((ui->tableView->selectionModel()->selectedIndexes()).empty()))
     {
-        if(m_menu != NULL)
-            delete m_menu;
-
-        m_menu = new QMenu(ui->tableView);
-        QAction *actionOpen = m_menu->addAction(tr("Identify ON"));
-        QAction *actionClose = m_menu->addAction(tr("Identify OFF"));
-
-        connect(actionOpen, SIGNAL(triggered(bool)), this, SLOT(soltActionOpen()));
-        connect(actionClose, SIGNAL(triggered(bool)), this, SLOT(soltActionClose()));
+        Q_ASSERT( NULL != m_menu );
 
         m_menu->exec(QCursor::pos());
+
         ui->tableView->selectionModel()->clear();
     }
 }
@@ -192,6 +216,7 @@ void MegaInterface::soltActionOpen()
         return;
 
     mrgIdentify(visa, 1);
+
     mrgCloseGateWay(visa);
 }
 
@@ -207,45 +232,25 @@ void MegaInterface::soltActionClose()
 
 void MegaInterface::slotSelectDevices()
 {
-    QString strDevInfo = "";
-    QList<QModelIndex> modelList =  ui->tableView->selectionModel()->selectedIndexes();
-    for(int i=0;i<modelList.count(); i++)
-    {
-        strDevInfo += m_model->data(modelList.at(i),Qt::DisplayRole).toString();
-        strDevInfo += ",";
-    }
-    if(strDevInfo.split(",").count() >= 5)
-    {
-        emit signalSelectedInfo(strDevInfo);
-    }
-}
+    //! only one item
+    QString strAddr = m_model->data( m_model->index(  ui->tableView->currentIndex().row(), 0 ), Qt::DisplayRole ).toString();
+    QString strFullAddr = strAddr;
 
-int MegaInterface::deviceOpen()
-{
-    QModelIndex index = ui->tableView->selectionModel()->selectedIndexes().at(0);
-    QString strID = m_model->data(index,Qt::DisplayRole).toString();
+    QString strModel = m_model->data( m_model->index(  ui->tableView->currentIndex().row(), 4 ), Qt::DisplayRole ).toString();
 
-    QString strDesc;
-    if(m_devType == TYPE_LAN)
-    {
-        strDesc = QString("TCPIP0::%1::inst0::INSTR").arg(strID);
-    }
-    else if(m_devType == TYPE_USB)
-    {
-        //USB0::0xA1B2::0x5722::MRHT00000000000001::INSTR
-        QStringList lst = strID.split('_', QString::SkipEmptyParts);
-        strDesc = QString("%1::%2::%3::%4::INSTR")
-                .arg(lst.at(0))
-                .arg(lst.at(1))
-                .arg(lst.at(2))
-                .arg(lst.at(3));
-    }
+    QString firmwareVer = m_model->data( m_model->index(  ui->tableView->currentIndex().row(), 3 ), Qt::DisplayRole ).toString();
+    QString sn = m_model->data( m_model->index(  ui->tableView->currentIndex().row(), 2 ), Qt::DisplayRole ).toString();
+    //! \todo get the mechanical ver from the protocol
+    QString mechanicalVer = "1.0";
 
-    int visa =  mrgOpenGateWay(strDesc.toLocal8Bit().data(), 3000);
-    if(visa <= 0){
-        QMessageBox::critical(this,tr("error"),tr("open device error"));
-    }
-    return visa;
+    //! append the item
+    //! "addr,model,sn,firmwareVer,mechanicalVer"
+    //!
+    QStringList strList;
+    strList<<QString("%1,%2,%3,%4,%5").arg( strFullAddr).arg( strModel ).arg(sn).arg(firmwareVer).arg(mechanicalVer);
+    logDbg()<<strList;
+
+    emit signalSelectedInfo(strList);
 }
 
 void MegaInterface::on_buttonBox_clicked(QAbstractButton *button)
@@ -256,4 +261,135 @@ void MegaInterface::on_buttonBox_clicked(QAbstractButton *button)
         slotSelectDevices();
     }
     close();
+}
+
+void MegaInterface::on_pushButton_Scan_clicked()
+{
+//    auto func = [this]( QString &strRet )
+//    auto func = [this]( QList<RoboInfo> &robos )
+    auto func = [this]( void *ptr )
+    {
+        Q_ASSERT( NULL != ptr );
+        QList<RoboInfo> *pRoboList = (QList<RoboInfo> *)ptr;
+
+        QString strFindDevices = "";
+
+        char buff[4096] = "";
+
+        int devCnt;
+        if(m_devType == TYPE_LAN)
+        { devCnt = mrgFindGateWay(0, buff, sizeof(buff), 1); }
+        else if(m_devType == TYPE_USB)
+        { devCnt = mrgFindGateWay(1, buff, sizeof(buff), 1); }
+        else
+        { return; }
+
+        //! split
+        strFindDevices = QString("%1").arg(buff);
+        sysInfo( strFindDevices );
+
+        int idCnt;
+        RoboInfo tInfo;
+        foreach ( QString strDevice, strFindDevices.split(',', QString::SkipEmptyParts) )
+        {
+            sysInfo( strDevice );
+
+            int visa =  mrgOpenGateWay(strDevice.toLocal8Bit().data(), 2000);
+            if(visa <= 0)
+            {
+                sysError( strDevice + " " + tr("Open fail!")  );
+                continue;
+            }
+
+            do
+            {
+                //! idn query
+                char IDN[128] = "";
+                int ret = mrgGateWayIDNQuery(visa,IDN);
+                if(ret != 0)
+                {
+                    break;
+                }
+
+                tInfo.mAddr = strDevice;
+                tInfo.mRawInfo = QString("%1").arg( IDN );
+
+                //! split the idn
+                QStringList infoList;
+                infoList = tInfo.mRawInfo.split(',', QString::SkipEmptyParts );
+                if ( infoList.size() == 4 )
+                {}
+                else
+                { break; }
+                tInfo.mFMModel = infoList.at( 1 );
+                tInfo.mFMSN = infoList.at(2);
+                tInfo.mFMVer = infoList.at(3);
+
+                //! device name
+                int roboIds[128];
+                idCnt = mrgGetRobotName( visa, roboIds );
+                if ( idCnt < 1 )
+                { break; }
+
+                char roboType[64];
+                for ( int i = 0; i < idCnt; i++ )
+                {
+                    logDbg()<<roboIds[i];
+                    ret = mrgGetRobotType( visa, roboIds[i], roboType );
+                    if ( ret == 0 )
+                    { }
+                    else
+                    { continue; }
+
+                    tInfo.mId = roboIds[i];
+                    tInfo.mRoboModel = QString("%1").arg( roboType );
+                    tInfo.mRoboSN = "";
+
+                    sysInfo( IDN );
+                    sysInfo( QString("%1 %2").arg( tInfo.mRoboModel).arg( tInfo.mId ) );
+
+                    //! append
+                    pRoboList->append( tInfo );
+                }
+
+            }while( 0 );
+
+            mrgCloseGateWay(visa);
+        }
+
+        return;
+    };
+
+    //! init
+    clearListView();
+
+    mSearchRobos.clear();
+
+    //! attach
+    XThread *thread = new XThread( func, &mSearchRobos );
+
+    connect(thread, SIGNAL(finished()), this, SLOT(slotDeviceScanEnd()));
+    connect(thread, SIGNAL(signalFinishResult( QVariant ) ),
+            this, SLOT(slotShowSearchResult( QVariant )));
+
+    ui->pushButton_Scan->setEnabled(false);
+    ui->progressBar->setMaximum(0);
+
+    thread->start();
+}
+
+void MegaInterface::on_comboBox_DevType_currentIndexChanged(int index)
+{
+    QIcon icon = ui->comboBox_DevType->itemIcon( index );
+    if( icon.isNull() )
+    { ui->label_icon->setVisible(false);}
+    else
+    {
+        ui->label_icon->setVisible( true );
+        ui->label_icon->setPixmap( icon.pixmap( ICON_WIDTH, ICON_HEIGHT ) );
+
+        //! save the setting
+        m_pPara->mIntfIndex = index;
+        emit signal_setting_changed();
+    }
 }

@@ -17,6 +17,16 @@ public:
     explicit Config(QWidget *parent = 0);
     ~Config();
 
+    virtual void adapteToUserMode( sysPara::eSysMode mode );
+
+    virtual void updateUi();
+    virtual void updateData();
+protected:
+    virtual void spyEdited();
+
+private slots:
+    void on_cmbTypeTerminal_currentIndexChanged(int index);
+
 private:
     Ui::Config *ui;
 };

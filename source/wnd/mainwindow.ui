@@ -74,28 +74,13 @@
      <string>&amp;Tool</string>
     </property>
     <addaction name="actionWifi"/>
+    <addaction name="actionPref"/>
     <addaction name="actiontest"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
      <string>&amp;View</string>
     </property>
-    <widget class="QMenu" name="menuLanguage">
-     <property name="title">
-      <string>&amp;Language</string>
-     </property>
-     <addaction name="actionChinese"/>
-     <addaction name="actionEnglish"/>
-    </widget>
-    <widget class="QMenu" name="menuStyle">
-     <property name="title">
-      <string>&amp;Style</string>
-     </property>
-     <addaction name="actionMega"/>
-     <addaction name="actionClassic"/>
-    </widget>
-    <addaction name="menuLanguage"/>
-    <addaction name="menuStyle"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
@@ -326,10 +311,36 @@ border-color: rgba(255, 255, 255, 0);</string>
     <string>test</string>
    </property>
   </action>
+  <action name="actionPref">
+   <property name="icon">
+    <iconset resource="../../res/res.qrc">
+     <normaloff>:/res/image/icon/205.png</normaloff>:/res/image/icon/205.png</iconset>
+   </property>
+   <property name="text">
+    <string>Pref</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
   <include location="../../res/res.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>599</x>
+     <y>449</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

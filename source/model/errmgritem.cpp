@@ -74,3 +74,18 @@ void ErrMgrItem::setEventType( e_event_type evt, bool b )
     else
     { Q_ASSERT(false); }
 }
+
+e_event_type ErrMgrItem::eventType()
+{ return mEventType; }
+
+void ErrMgrItem::snap( int &code, int &type, int &action, int &output, int &save )
+{
+    code = mNr;
+    type = (int)mEventType;
+
+    action = mActionList.indexOf( mAction );
+    output = mbOutput;
+    save = mbSaveDiagnosis;
+}
+
+

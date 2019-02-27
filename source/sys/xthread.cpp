@@ -8,11 +8,7 @@ XThread::XThread(QObject *parent)
 {
     m_count++;
 
-    m_funcVoid = nullptr;
-    m_funcInt = nullptr;
-    m_funcString = nullptr;
-
-    connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
+    init();
 }
 
 XThread::XThread(XTHREAD_VOID_FUNC func, QObject *parent)
@@ -20,12 +16,9 @@ XThread::XThread(XTHREAD_VOID_FUNC func, QObject *parent)
 {
     m_count++;
 
-    m_funcVoid = nullptr;
-    m_funcInt = nullptr;
-    m_funcString = nullptr;
+    init();
 
     m_funcVoid = func;
-    connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
 }
 
 XThread::XThread(XTHREAD_INT_FUNC func, QObject *parent)
@@ -33,25 +26,41 @@ XThread::XThread(XTHREAD_INT_FUNC func, QObject *parent)
 {
     m_count++;
 
-    m_funcVoid = nullptr;
-    m_funcInt = nullptr;
-    m_funcString = nullptr;
+    init();
 
     m_funcInt = func;
-    connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
 }
 
 XThread::XThread(XTHREAD_STRING_FUNC func, QObject *parent)
     : QThread(parent)
 {
     m_count++;
+
+    init();
+
     m_funcString = func;
-    connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
+}
+
+XThread::XThread(XTHREAD_PTR_FUNC func, void *ptr, QObject *parent)
+{
+    init();
+
+    m_funcPtr = func;
+    m_pPtr = ptr;
 }
 
 XThread::~XThread()
 {
     m_count--;
+}
+
+void XThread::init()
+{
+    m_funcVoid = nullptr;
+    m_funcInt = nullptr;
+    m_funcString = nullptr;
+
+    connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
 }
 
 void XThread::run()
@@ -64,17 +73,22 @@ void XThread::run()
     {
         int ret = -1;
         m_funcInt( ret );
-        emit signalFinishResult(ret);
+        emit signalFinishResult( QVariant(ret) );
     }
     else if (m_funcString != nullptr)
     {
         QString str = "";
         m_funcString( str );
-        emit signalFinishResult(str);
+        emit signalFinishResult( QVariant(str) );
+    }
+    else if ( m_funcPtr != NULL )
+    {
+        m_funcPtr( m_pPtr );
+
+        emit signalFinishResult( QVariant::fromValue( (quint32)m_pPtr ) );
     }
     else
     {
-
     }
 }
 

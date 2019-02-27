@@ -173,21 +173,21 @@ void H2Ops::buildConnection()
     connect(m_timerOpsDebug, SIGNAL(timeout()), this, SLOT(updateTabDebug()));
 }
 
-void H2Ops::outConsole( const QString &str, LogLevel e )
-{
-    QString fmtStr = QDateTime::currentDateTime().toString("hh:mm:ss.zzz") + "   " + str;
+//void H2Ops::outConsole( const QString &str, LogLevel e )
+//{
+//    QString fmtStr = QDateTime::currentDateTime().toString("hh:mm:ss.zzz") + "   " + str;
 
-    if ( e == eLogInfo )
-    { outInfo( fmtStr); }
-    else if ( e == eLogWarning )
-    { outWarning( fmtStr ); }
-    else if ( e == eLogError )
-    { outError( fmtStr ); }
-    else
-    {}
+//    if ( e == eLogInfo )
+//    { outInfo( fmtStr); }
+//    else if ( e == eLogWarning )
+//    { outWarning( fmtStr ); }
+//    else if ( e == eLogError )
+//    { outError( fmtStr ); }
+//    else
+//    {}
 
-    ui->lstLogout->scrollToBottom();
-}
+//    ui->lstLogout->scrollToBottom();
+//}
 void H2Ops::outInfo( const QString &str )
 {
     QListWidgetItem *pItem = new QListWidgetItem( QIcon(":/res/image/icon/xiaoxi.png"), str );
@@ -1030,20 +1030,21 @@ void H2Ops::updateTabOpreate()
     ui->doubleSpinBox_RecordNumber->setValue( record );
 
     //! 更新目标位置
-    double dx = -1, dy = -1, dz = -1;
-    ret =  mrgGetRobotTargetPosition(mViHandle, mRobotName, &dx, &dy, &dz);
-    qDebug() << "mrgGetRobotTargetPosition" << ret << dx << dy;
-    ui->doubleSpinBox_target_position_x->setValue( dx );
-    ui->doubleSpinBox_target_position_y->setValue( dy );
+    float fx = -1, fy = -1, fz = -1;
+    ret =  mrgGetRobotTargetPosition(mViHandle, mRobotName, &fx, &fy, &fz);
+//    qDebug() << "mrgGetRobotTargetPosition" << ret << dx << dy;
+    ui->doubleSpinBox_target_position_x->setValue( fx );
+    ui->doubleSpinBox_target_position_y->setValue( fy );
 
     //! 更新当前位置
-    float fx = -1, fy = -1, fz = -1;
+
     ret = mrgGetRobotCurrentPosition(mViHandle, mRobotName, &fx, &fy, &fz);
     qDebug() << "mrgGetRobotCurrentPosition1:" << ret << fx << fy;
     ui->doubleSpinBox_actual_position_x->setValue(fx);
     ui->doubleSpinBox_actual_position_y->setValue(fy);
 
     //! 更新当前里程
+    double dx = -1, dy = -1, dz = -1;
     ret = mrgGetRobotCurrentMileage(mViHandle, mRobotName, &dx, &dy, &dz);
     qDebug() << "mrgGetRobotCurrentMileage:" << ret << dx << dy;
     ui->doubleSpinBox_Mileage_x->setValue( dx );

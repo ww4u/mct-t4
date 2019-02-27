@@ -2,6 +2,9 @@
     <qresource prefix="/res">
         <file>image/m.png</file>
 
+        <file>image/icon/guanlianshebei.png</file>
+        <file>image/icon/tupianjiazaishibai.png</file>
+
         <file>image/icon/addition.png</file>
         <file>image/icon/playon.png</file>
 
@@ -84,5 +87,18 @@
         <file>image/h2product/disconnect.png</file>
         <file>image/widget/arrow_down_2.png</file>
         <file>image/widget/arrow_right_2.png</file>
+        <file>image/icon/51.png</file>
+
+        <file>image/t4/mrx-t4.png</file>
+        <file>image/t4/sinanju_pn_256px_nor@2x.png</file>
+        <file>image/t4/a5.png</file>
+        <file>image/t4/f2.png</file>
+        <file>image/t4/f3.png</file>
+        <file>image/t4/tip.png</file>
+
+        <file>image/t4/timg.jpg</file>
+        <file>image/t4/motor.png</file>
+
     </qresource>
 </RCC>
+

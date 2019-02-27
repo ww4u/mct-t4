@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>242</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -204,7 +204,7 @@
         <item>
          <widget class="QCheckBox" name="chkMct">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -226,7 +226,7 @@
         <item>
          <widget class="QCheckBox" name="chkPwr">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">

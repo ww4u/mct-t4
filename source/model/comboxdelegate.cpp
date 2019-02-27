@@ -118,7 +118,6 @@ int comboxDelegate::value( const QString &name,
     }
 
     return 0;
-
 }
 
 QString comboxDelegate::toString( int id )

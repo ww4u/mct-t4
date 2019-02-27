@@ -5,17 +5,23 @@
 #include <QtWidgets>
 #include <QDockWidget>
 
+#include "syspara.h"
+
 #include "helppanel.h"
 #include "aboutdlg.h"
 #include "h2ops.h"
 #include "roboconfig.h"
+
+#include "syslogout.h"
+
+#include "../plugin/model/megaloglistmodel.h"
 
 namespace Ui {
 class MainWindow;
 }
 
 enum {
-    LANG_EN,
+    LANG_EN = 0,
     LANG_CN,
 };
 
@@ -32,26 +38,54 @@ public:
     ~MainWindow();
 
     static MainWindow *_pBackendProxy;
-    static void requestLogout( const QString &str, LogLevel lev );
+    static void requestLogout( const QString &str, LogStr::eLogLevel lev );
+    static void requestProgress( const QString &info, bool b, int now, int mi=0, int ma = 100 );
+
     static void showStatus(const QString str);
 
 protected:
-    void closeEvent(QCloseEvent *event);
+    virtual void changeEvent( QEvent *event );
+
+public:
+    void emit_progress( const QString &info, bool b, int now, int mi, int ma );
+
+protected:
+    void retranslateUi();
+
+    void savePref();
+    void loadPref();
+
+    void setupWorkArea();
+    void setupMenu();
+    void setupToolBar();
+    void setupStatusBar();
+    void buildConnection();
+    void loadConfig();
+
+    void changeLanguage();
+    void changeStyle();
+    void setUiStyle(const QString &styleFile);
 
 signals:
-    void signal_logout_request( QString str, LogLevel lev );
+    void signal_pref_changed();
+    void signal_progress( const QString &info, bool b, int now, int mi, int ma );
 
 private slots:
-    void on_actionAbout_triggered();
-    void on_actionChinese_triggered();
-    void on_actionEnglish_triggered();
-    void on_actionMega_triggered();
-    void on_actionClassic_triggered();
-    void slotCurrentRobotChanged(QString strDevInfo, int visa, int deviceName, int roboName);
-    void slot_logout( const QString &str, LogLevel lev = eLogInfo );
+    void slot_request_sysOpPanel();
+    void slot_save_sysPref();
+
+    void slot_post_startup();
+
+    void slot_lang_changed();
+    void slot_style_changed();
+
+    void slot_progress( const QString &info, bool b, int now, int mi, int ma );
+    void slot_progress_canceled();
+
     void slotUpdateStatus(const QString str);
     void slot_focus_in( const QString &name );
-    void on_actionExit_triggered();
+
+    void on_actionAbout_triggered();
 
     void on_actionPoweroff_triggered();
 
@@ -59,37 +93,35 @@ private slots:
 
     void on_actionWifi_triggered();
 
+    void on_actionPref_triggered();
+
     void on_actiontest_triggered();
 
 private:
     Ui::MainWindow *ui;
 
+    //! lang/style action
+    QAction *m_pChAction, *m_pEnAction, *m_pMegaAction, *m_pClasAction;
+
     QLabel *m_pLabStatus, *m_pLabMctVer, *m_pLabConVer;
 
     QDockWidget *m_pDockOps;
-    H2Ops *m_pOps;
+
+    QProgressDialog *m_pProgress;
 
     QDockWidget *m_pDockHelp;
     HelpPanel *m_pHelpPanel;
 
     RoboConfig *m_roboConfig;
+    SysLogout *m_pSysLogout;
 
-    int m_style;
-    int m_language;
-    QTranslator m_translator;
+    //! sys para
+    SysPara mPref;
 
-    void setupWorkArea();
-    void setupToolBar();
-    void setupStatusBar();
-    void buildConnection();
-    void loadConfig();
-    void changeLanguage();
-    void setUiStyle(const QString &styleFile);
+    //! common
+    MegaLogListModel mLogModel;
 
-    int m_ViHandle;
-    int m_DeviceName;
-    int m_RoboName;
-    QString m_strDevInfo;
+    QTranslator mTranslator;
 };
 
 #endif // MAINWINDOW_H

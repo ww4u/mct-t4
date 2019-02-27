@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>MegaInterface</class>
- <widget class="QWidget" name="MegaInterface">
+ <widget class="QDialog" name="MegaInterface">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>614</width>
+    <height>316</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,8 +18,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>640</width>
-    <height>480</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
   <property name="focusPolicy">
@@ -53,13 +53,6 @@
        </property>
        <property name="pixmap">
         <pixmap resource="../../res/res.qrc">:/res/image/icon/network.ico</pixmap>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_project">
-       <property name="text">
-        <string>MRX-H2:project</string>
        </property>
       </widget>
      </item>
@@ -100,10 +93,18 @@
         <property name="text">
          <string>LAN</string>
         </property>
+        <property name="icon">
+         <iconset resource="../../res/res.qrc">
+          <normaloff>:/res/image/icon/network.ico</normaloff>:/res/image/icon/network.ico</iconset>
+        </property>
        </item>
        <item>
         <property name="text">
          <string>USB</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../res/res.qrc">
+          <normaloff>:/res/image/icon/usb.ico</normaloff>:/res/image/icon/usb.ico</iconset>
         </property>
        </item>
       </widget>

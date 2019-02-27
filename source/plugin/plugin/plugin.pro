@@ -9,12 +9,15 @@ MOC_DIR = ./obj
 
 SOURCES = \
     xplugin.cpp \
-    xpage.cpp
-
+    xpage.cpp \
+    xpluginintf.cpp \
+    xpluginworkingthread.cpp
 
 HEADERS = \
     xplugin.h \
-    xpage.h
+    xpage.h \
+    xpluginintf.h \
+    xpluginworkingthread.h
 
 
 

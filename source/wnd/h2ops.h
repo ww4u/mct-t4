@@ -15,12 +15,12 @@ namespace Ui {
 class H2Ops;
 }
 
-enum LogLevel
-{
-    eLogInfo,
-    eLogWarning,
-    eLogError,
-};
+//enum LogLevel
+//{
+//    eLogInfo,
+//    eLogWarning,
+//    eLogError,
+//};
 
 class H2Ops : public XConfig
 {
@@ -29,7 +29,7 @@ public:
     explicit H2Ops(QWidget *parent = 0);
     ~H2Ops();
 
-    void outConsole( const QString &str, LogLevel e );
+//    void outConsole( const QString &str, LogLevel e );
     void outInfo( const QString &str );
     void outWarning( const QString &str );
     void outError( const QString &str );

@@ -1,13 +1,17 @@
 #ifndef MEGAINTERFACE_H
 #define MEGAINTERFACE_H
 
+#include <QDialog>
 #include <QMenu>
+#include <QVariant>
 #include <QStandardItemModel>
 #include <QWidget>
 #include <QMetaType>
 #include <QAbstractItemView>
 #include <QTableWidget>
 #include <QAbstractButton>
+
+#include "syspara.h"
 
 namespace Ui {
 class MegaInterface;
@@ -19,23 +23,49 @@ enum _DEV_TYPES
     TYPE_USB = 1
 };
 
+class RoboInfo
+{
+public:
+    QString mRawInfo;
 
-class MegaInterface : public QWidget
+    QString mAddr;
+
+    QString mFMModel, mFMSN, mFMVer;
+
+    QString mRoboSN;
+    QString mRoboModel;
+
+    int mId;
+};
+
+class MegaInterface : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit MegaInterface(QWidget *parent = 0);
+    explicit MegaInterface(SysPara *pPara, QWidget *parent = 0);
     ~MegaInterface();
 
+protected:
+    void setupMenu();
+    void buildConnection();
+    void retranslateUi();
+
+    void clearListView();
+    int deviceOpen();
+
 signals:
-    void signalSelectedInfo(const QString &strDevInfo);
+    //! stringlist
+    //! devinfo,model
+    void signalSelectedInfo(const QStringList &strDevInfo );
+    void signal_setting_changed();
 
 private slots:
-    void slotChangeDeviceType(int index);
-    void slotDeviceScan();
     void slotDeviceScanEnd();
-    void slotShowSearchResult(QString strDevices);
+//    void slotShowSearchResult(QString strDevices);
+
+    void slotShowSearchResult( QVariant var );
+
     void slotShowContextmenu(const QPoint &pos);
     void soltActionOpen();
     void soltActionClose();
@@ -43,16 +73,26 @@ private slots:
     void slotSelectDevices();
     void on_buttonBox_clicked(QAbstractButton *button);
 
+public slots:
+    void on_pushButton_Scan_clicked();
+
+    void on_comboBox_DevType_currentIndexChanged(int index);
+
+
 private:
     Ui::MegaInterface *ui;
     QStandardItemModel* m_model;
     QList<QStandardItem *> m_itemList;
 
     QMenu *m_menu;
+    QAction *m_pActionOpen, *m_pActionClose;
 
     int m_devType;
-    void clearListView();
-    int deviceOpen();
+
+    QList<RoboInfo > mSearchRobos;
+
+
+    SysPara *m_pPara;
 };
 
 

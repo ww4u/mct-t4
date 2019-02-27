@@ -4,20 +4,24 @@
 #include <QAbstractTableModel>
 #include <QAbstractItemView>
 
-class MegaTableModel : public QAbstractTableModel
-{
-    Q_OBJECT
+#include "../plugin/model/model.h"
 
-public:
-    MegaTableModel( QObject *parent=Q_NULLPTR );
-    virtual ~MegaTableModel()
-    {}
+//class MegaTableModel : public QAbstractTableModel
+//{
+//    Q_OBJECT
 
-    QString fmtString( const QStringList &list );
+//public:
+//    MegaTableModel( QObject *parent=Q_NULLPTR );
+//    virtual ~MegaTableModel()
+//    {}
 
-Q_SIGNALS:
-    void signal_data_changed();
+//    QString fmtString( const QStringList &list );
 
-};
+//Q_SIGNALS:
+//    void signal_data_changed();
+
+//protected:
+//    QStringList mHeaderList;
+//};
 
 #endif // MEGATABLEMODEL_H

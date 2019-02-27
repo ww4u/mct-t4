@@ -33,8 +33,6 @@ enum eColumnAttr
     column_empty = 1,
 };
 
-
-
 class ErrMgrItem
 {
 public:
@@ -48,6 +46,9 @@ public:
     eColumnAttr columnAttr( int col );
 
     void setEventType( e_event_type evt, bool b );
+    e_event_type eventType();
+
+    void snap( int &code, int &type, int &action, int &output, int &save );
 
 public:
     bool mbErrorAble, mbWarnAble, mbInfoAble;

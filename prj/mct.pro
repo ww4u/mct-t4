@@ -32,6 +32,7 @@ CONFIG += C++11 #use lambda
 LIBS += -L"../lib"
 
 LIBS += -lxfactory -lmrx-t4 -lxplugin
+LIBS += -lmodel
 
 HEADERS += ../include/mystd.h           \
     ../include/mydebug.h                \
@@ -51,7 +52,7 @@ HEADERS += ../include/mystd.h           \
     ../source/sys/xthread.h             \
     ../source/mrp/mdatarow.h            \
     ../source/mrp/mdataset.h            \
-    ../source/model/megatablemodel.h    \
+#    ../source/model/megatablemodel.h    \
     ../source/model/h2actionmodel.h     \
     ../source/model/h2actionitem.h      \
     ../source/model/comboxdelegate.h    \
@@ -82,7 +83,12 @@ HEADERS += ../include/mystd.h           \
     ../source/widget/megalcdnumber.h    \
     ../source/widget/megamessagebox.h   \
     ../source/widget/megasplinechart.h  \
-    ../source/widget/megainterface.h
+    ../source/widget/megainterface.h \
+    ../source/wnd/login.h \
+    ../source/wnd/syslogout.h \
+    ../source/wnd/syspref.h \
+    ../source/wnd/syspara.h \
+    ../source/wnd/welcomepage.h
 
 SOURCES += ../source/main/main.cpp      \
     ../source/device/bus.cpp            \
@@ -103,7 +109,7 @@ SOURCES += ../source/main/main.cpp      \
     ../source/model/errmgrmodel.cpp     \
     ../source/model/debugitem.cpp       \
     ../source/model/debugmodel.cpp      \
-    ../source/model/megatablemodel.cpp  \
+#    ../source/model/megatablemodel.cpp  \
     ../source/model/h2actionmodel.cpp   \
     ../source/model/h2actionitem.cpp    \
     ../source/model/comboxdelegate.cpp  \
@@ -128,7 +134,12 @@ SOURCES += ../source/main/main.cpp      \
     ../source/widget/megalcdnumber.cpp  \
     ../source/widget/megamessagebox.cpp \
     ../source/widget/megasplinechart.cpp\
-    ../source/widget/megainterface.cpp
+    ../source/widget/megainterface.cpp \
+    ../source/wnd/login.cpp \
+    ../source/wnd/syslogout.cpp \
+    ../source/wnd/syspref.cpp \
+    ../source/wnd/syspara.cpp \
+    ../source/wnd/welcomepage.cpp
 
 !win32: HEADERS += ../source/device/vxi11/vxi11.h
 !win32: HEADERS += ../source/device/vxi11/vxi11_user.h
@@ -150,7 +161,11 @@ FORMS += ../source/wnd/mainwindow.ui    \
     ../source/wnd/h2measurement.ui      \
     ../source/wnd/h2product.ui          \
     ../source/wnd/roboconfig.ui         \
-    ../source/widget/megainterface.ui
+    ../source/widget/megainterface.ui \
+    ../source/wnd/login.ui \
+    ../source/wnd/syslogout.ui \
+    ../source/wnd/syspref.ui \
+    ../source/wnd/welcomepage.ui
 
 INCLUDEPATH += ../include
 INCLUDEPATH += ../source/sys
@@ -159,6 +174,7 @@ INCLUDEPATH += ../source/device
 INCLUDEPATH += ../source/model
 INCLUDEPATH += ../source/wnd
 INCLUDEPATH += ../source/widget
+INCLUDEPATH += ../source/plugin/model/widget
 
 
 win32:INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include"

@@ -23,46 +23,46 @@ H2Configuration::~H2Configuration()
 
 int H2Configuration::readDeviceConfig()
 {
-    int ret = -1;
-    int type = mrgGetRobotType(mViHandle, mRobotName);
-    qDebug() << "mrgGetRobotType" << type;
-    if (type == MRX_T4){
-        m_Family = "MRX-T4";
-    }
-    else if (type == MRX_AS){
-        m_Family = "MRX-AS";
-    }
-    else if (type == MRX_H2){
-        m_Family = "MRX-H2";
-    }
-    else if (type == MRX_DELTA){
-        m_Family = "MRX-DELTA";
-    }
-    else if (type == MRX_RAW){
-        m_Family = "MRX-RAW";
-    }else{
-        sysError("mrgGetRobotType error", type);
-        return -1;
-    }
+//    int ret = -1;
+//    int type = mrgGetRobotType(mViHandle, mRobotName);
+//    qDebug() << "mrgGetRobotType" << type;
+//    if (type == e_MRX_T4){
+//        m_Family = "MRX-T4";
+//    }
+//    else if (type == e_MRX_AS){
+//        m_Family = "MRX-AS";
+//    }
+//    else if (type == e_MRX_H2){
+//        m_Family = "MRX-H2";
+//    }
+//    else if (type == e_MRX_DELTA){
+//        m_Family = "MRX-DELTA";
+//    }
+//    else if (type == e_MRX_RAW){
+//        m_Family = "MRX-RAW";
+//    }else{
+//        sysError("mrgGetRobotType error", type);
+//        return -1;
+//    }
 
-    ret = mrgGetRobotSubType(mViHandle, mRobotName);
-    qDebug() << "mrgGetRobotSubType" << ret;
-    if(ret < 0) {
-        sysError("mrgGetRobotSubType", ret);
-        return -1;
-    }
-    m_Size = ret;
+//    ret = mrgGetRobotSubType(mViHandle, mRobotName);
+//    qDebug() << "mrgGetRobotSubType" << ret;
+//    if(ret < 0) {
+//        sysError("mrgGetRobotSubType", ret);
+//        return -1;
+//    }
+//    m_Size = ret;
 
-#if 0
-    int val = 0;
-    ret = mrgMRQMotionReverse_Query(mViHandle, mDeviceName, &val);
-    qDebug() << "mrgMRQMotionReverse_Query" << ret;
-    if(ret < 0) {
-        sysError("mrgMRQMotionReverse_Query", ret);
-        return -1;
-    }
-    m_MotorPosition = val;
-#endif
+//#if 0
+//    int val = 0;
+//    ret = mrgMRQMotionReverse_Query(mViHandle, mDeviceName, &val);
+//    qDebug() << "mrgMRQMotionReverse_Query" << ret;
+//    if(ret < 0) {
+//        sysError("mrgMRQMotionReverse_Query", ret);
+//        return -1;
+//    }
+//    m_MotorPosition = val;
+//#endif
 
     return 0;
 }

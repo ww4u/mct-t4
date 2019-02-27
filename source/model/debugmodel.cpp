@@ -85,6 +85,7 @@ bool DebugModel::insertRows(int position, int rows, const QModelIndex &parent)
     }
 
     endInsertRows();
+
     return true;
 }
 bool DebugModel::removeRows(int position, int rows, const QModelIndex &parent)

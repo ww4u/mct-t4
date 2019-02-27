@@ -5,6 +5,9 @@
 #define RAD_TO_DEG( rad )       ( ( rad )*180/MATH_PI )
 #define DEG_TO_RAD( deg )       ( (deg) * MATH_PI/180 )
 
+#define char_deg                        QChar(0x00B0)
+#define char_square                     QChar(0x00B2)
+
 #define SINdeg( deg )           qSin( DEG_TO_RAD(deg) )
 #define COSdeg( deg )           qCos( DEG_TO_RAD(deg) )
 
@@ -69,5 +72,69 @@
                                     }
 
 #define wait_on( ret, cond )             wait_sth( ret, cond, 10000000, 10000 )
+
+//! dir = true :: to screen
+#define exchange_check( control, val, dir )  \
+                                        if ( dir )\
+                                        { ui->control->setChecked( val ); } \
+                                        else \
+                                        { val = ui->control->isChecked(); }
+
+
+#define exchange_spin( control, val, dir )  \
+                                        if ( dir )\
+                                        { ui->control->setValue( val ); } \
+                                        else \
+                                        { val = ui->control->value(); }
+
+#define exchange_combox( control, val, dir )    \
+                                        if ( dir )\
+                                        { ui->control->setCurrentIndex( val ); } \
+                                        else \
+                                        { val = ui->control->currentIndex(); }
+
+#define exchange_container_check( control, val, dir )  \
+                                        if ( dir )\
+                                        { control->setChecked( val ); } \
+                                        else \
+                                        { val = control->isChecked(); }
+
+
+#define exchange_container_spin( control, val, dir )  \
+                                        if ( dir )\
+                                        { control->setValue( val ); } \
+                                        else \
+                                        { val = control->value(); }
+
+
+#define enable_edit( control )               if ( sysMode() == sysPara::e_sys_admin )\
+                                             { control->setEnabled(true);}\
+                                             else \
+                                             { control->setEnabled(false);}
+
+//! spy
+#define spy_control_edit( control )   connect( control, SIGNAL(editingFinished()), this, SLOT(slot_modified())); enable_edit( control );
+//#define spy_control_combox( control ) connect( control, SIGNAL(currentIndexChanged(int)), this, SLOT(slot_modified())); enable_edit( control );
+#define spy_control_combox( control ) connect( control, SIGNAL(activated(int)), this, SLOT(slot_modified())); enable_edit( control );
+#define spy_control_checkbox( control ) connect( control, SIGNAL(clicked()), this, SLOT(slot_modified())); enable_edit( control );
+
+#define install_spy()       \
+for ( int i = 0; i < sizeof_array(gpBox); i++ )\
+{ spy_control_checkbox( gpBox[i] ); }\
+for ( int i = 0; i < sizeof_array(checkBoxes); i++ )\
+{ spy_control_checkbox( checkBoxes[i] ); }\
+for ( int i = 0; i < sizeof_array(radBoxes); i++ )\
+{ spy_control_checkbox( radBoxes[i] ); }\
+for ( int i = 0; i < sizeof_array(edits); i++ )\
+{ spy_control_edit( edits[i] ); }\
+\
+for ( int i = 0; i < sizeof_array(spinBoxes); i++ )\
+{ spy_control_edit( spinBoxes[i] ); }\
+\
+for ( int i = 0; i < sizeof_array(doubleSpinBoxes); i++ )\
+{ spy_control_edit( doubleSpinBoxes[i] ); }\
+\
+for ( int i = 0; i < sizeof_array(comboxes); i++ )\
+{ spy_control_combox( comboxes[i] ); }
 
 #endif

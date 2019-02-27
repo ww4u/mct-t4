@@ -1,0 +1,74 @@
+#include "iodelegate.h"
+
+#include "../iowidget.h"
+
+QString IODelegate::toString( quint32 _do, int w )
+{
+    QString str;
+
+    //! fmt
+    str += "[0]";
+    for ( int i = 0; i < w; i++ )
+    {
+        if ( i != 0 )
+        { str += ","; }
+
+        if ( _do & 0x01 )
+        { str += "H"; }
+        else
+        { str += "L"; }
+
+        _do >>= 1;
+    }
+    str += QString("[%1]").arg( w - 1);
+
+    return str;
+}
+
+IODelegate::IODelegate( int w, QObject *parent ) : QStyledItemDelegate(parent)
+{
+    mWidth = w;
+}
+
+QWidget *IODelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+                      const QModelIndex &index) const
+{
+    IOWidget *pWig = new IOWidget( mWidth, parent );
+    Q_ASSERT( NULL != pWig );
+
+    return pWig;
+}
+
+void IODelegate::setEditorData(QWidget *editor, const QModelIndex &index) const
+{
+    if ( index.isValid() )
+    {}
+    else
+    { return; }
+
+    quint32 value = index.model()->data(index, Qt::EditRole).toUInt();
+
+    IOWidget *pWig = static_cast<IOWidget*>(editor);
+
+    pWig->setData( value );
+}
+
+void IODelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
+                  const QModelIndex &index) const
+{
+    IOWidget *pWig = static_cast<IOWidget*>(editor);
+    quint32 value = pWig->getData();
+
+    model->setData(index, value, Qt::EditRole);
+}
+
+void IODelegate::updateEditorGeometry(QWidget *editor,
+    const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
+    QRect selfRect;
+    selfRect = editor->geometry();
+
+    editor->setGeometry( option.rect.left(), option.rect.top(),
+                         selfRect.width(), selfRect.height() );
+}
+

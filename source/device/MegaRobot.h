@@ -6,13 +6,13 @@
 
 enum MRX_TYPE
 {
-    MRX_T4 = 0,  //arm
-    MRX_AS,  //megatron
-    MRX_H2,  //H2
-    MRX_DELTA,
-    MRX_RAW, //此类的机器人指的是没有构形,只有电机的机器人.这类机器人不需要空间解算,只接受PVT.
-    MRX_OTHER,
-    MRX_UNKOWN,
+    e_MRX_T4 = 0,  //arm
+    e_MRX_AS,  //megatron
+    e_MRX_H2,  //H2
+    e_MRX_DELTA,
+    e_MRX_RAW, //此类的机器人指的是没有构形,只有电机的机器人.这类机器人不需要空间解算,只接受PVT.
+    e_MRX_OTHER,
+    e_MRX_UNKOWN,
 };
 
 
@@ -33,7 +33,7 @@ EXPORT_API int CALL mrgBuildRobot(ViSession vi, char * robotType, char * devList
 * 返回值：小于零表示出错。 0：MRX-T4;1:MRX-AS;2:MRX-H2,3:MRX-DELTA;4:MRX-RAW
 * 说明：此函数目前只对H2有效
 */
-EXPORT_API int CALL mrgGetRobotType(ViSession vi, int name);
+EXPORT_API int CALL mrgGetRobotType(ViSession vi, int name, char roboType[64] );
 /*
 * 保存当前系统中所有机器人构形
 * vi :visa设备句柄
@@ -603,7 +603,7 @@ EXPORT_API int CALL mrgGetRobotCurrentMileage(ViSession vi, int name, double * x
 * x,y,z ：各坐标轴方向上的点
 * 返回值：0表示执行成功， －1：表示执行失败
 */
-EXPORT_API int CALL mrgGetRobotTargetPosition(ViSession vi, int name, double * x, double *y, double* z);
+EXPORT_API int CALL mrgGetRobotTargetPosition(ViSession vi, int name, float * x, float *y, float* z);
 /*
 * 获取机器人的当前执行的指令索引
 * vi :visa设备句柄

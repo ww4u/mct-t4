@@ -4,7 +4,7 @@
 MegaLogListModel::MegaLogListModel(QObject *parent)
     : QAbstractListModel(parent)
 {
-    mMaxCount = 1024;
+    mMaxCount = 256;
 }
 MegaLogListModel::~MegaLogListModel()
 {
@@ -20,6 +20,23 @@ int MegaLogListModel::rowCount(const QModelIndex &parent) const
 
     // FIXME: Implement me!
     return mItemList.size();
+}
+
+bool MegaLogListModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if ( !index.isValid() )
+    { return false; }
+
+    if ( role != Qt::EditRole )
+    { return false; }
+
+    QVariantList varList = value.toList();
+    if ( varList.size() != 2 )
+    { return false; }
+
+    mItemList[ index.row() ]->mLevel  = (LogStr::eLogLevel)varList[0].toInt();
+    mItemList[ index.row() ]->mStr  = varList[1].toString();
+    return true;
 }
 
 QVariant MegaLogListModel::data(const QModelIndex &index, int role) const
@@ -47,6 +64,38 @@ QVariant MegaLogListModel::data(const QModelIndex &index, int role) const
     { return QVariant(); }
 }
 
+bool MegaLogListModel::insertRows(int row, int count, const QModelIndex &parent)
+{
+    LogStr * pItem = new LogStr();
+    if ( NULL == pItem )
+    { return false ; }
+
+    beginInsertRows( parent, row, row + count - 1 );
+        mItemList.append( pItem );
+    endInsertRows();
+
+    return true;
+}
+
+bool MegaLogListModel::removeRows(int row, int count, const QModelIndex &parent)
+{
+    if ( row < 0 || count < 1 )
+    { return false; }
+
+    beginRemoveRows(QModelIndex(), row, row+count-1);
+
+    for ( int i = 0; i < count; i++ )
+    {
+        delete mItemList[ row ];
+//        logDbg()<<mItemList.size();
+        mItemList.removeAt( row );
+//        logDbg()<<mItemList.size();
+    }
+
+    endRemoveRows();
+    return true;
+}
+
 void MegaLogListModel::append( const QString &content,
                                LogStr::eLogLevel logLev )
 {
@@ -55,29 +104,69 @@ void MegaLogListModel::append( const QString &content,
 //                      );
 
 //    beginResetModel();
-
-    LogStr *pItem = new LogStr();
-    if ( NULL == pItem )
-    { return; }
-
-    pItem->mLevel = logLev;
-    pItem->mStr = content;
+//    return;
+    LogStr *pItem;
 
     //! overlap
     if ( mItemList.size() >= mMaxCount )
-    { removeRow( 0 ); }
+    {
+        removeRow( 0 );
 
-    beginInsertRows(QModelIndex(), mItemList.size(), mItemList.size()+1 );
+//        beginResetModel();
 
-    mItemList.append( pItem );
+//            pItem = mItemList.takeAt( 0 );
+//            pItem->mLevel = logLev;
+//            pItem->mStr = content;
+//            mItemList.append( pItem );
 
-    endInsertRows();
+//            emit dataChanged( index( 0,0), index( mItemList.size()-1,0 ) );
+//        endResetModel();
+
+//        return;
+//        beginInsertRows(QModelIndex(), mItemList.size(), mItemList.size() );
+    }
+//    else if ( mItemList.size() < 1 )
+//    {
+//        pItem = new LogStr();
+//        if ( NULL == pItem )
+//        { return; }
+
+//        beginInsertRows(QModelIndex(), 0, 0 );
+//    }
+//    else
+    {
+//        pItem = new LogStr();
+//        if ( NULL == pItem )
+//        { return; }
+
+        if ( insertRow( mItemList.size() ) )
+        {}
+        else
+        { return; }
+//        beginInsertRows(QModelIndex(), mItemList.size(), mItemList.size() );
+    }
+
+    //! set content
+//    pItem->mLevel = logLev;
+//    pItem->mStr = content;
+
+//    mItemList[ mItemList.size()-1]->mLevel = logLev;
+//    mItemList[ mItemList.size()-1]->mStr = content;
+
+//    data( index( mItemList.size() -1, 0),)
+//    setData( index( mItemList.size() -1, 0) , logLev );
+
+    QVariantList varList;
+    varList<<(int)logLev<<content;
+    setData( index( mItemList.size() - 1, 0), varList );
+
+
+    //! append
+//    mItemList.append( pItem );
+
+//    endInsertRows();
 }
 void MegaLogListModel::clear()
 {
-    beginResetModel();
-
     delete_all( mItemList );
-
-    endResetModel();
 }

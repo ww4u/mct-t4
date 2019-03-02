@@ -17,7 +17,6 @@ MegaInterface::MegaInterface(SysPara *pPara, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::MegaInterface), m_pPara( pPara )
 {
-
     ui->setupUi(this);
 
     m_devType = TYPE_LAN;
@@ -46,6 +45,9 @@ MegaInterface::MegaInterface(SysPara *pPara, QWidget *parent) :
     //! interface type
     ui->comboBox_DevType->setCurrentIndex( m_pPara->mIntfIndex );
     on_comboBox_DevType_currentIndexChanged( ui->comboBox_DevType->currentIndex() );
+
+    //! \note disable usb
+    ui->comboBox_DevType->setEnabled( false );
 }
 
 MegaInterface::~MegaInterface()
@@ -105,6 +107,7 @@ void MegaInterface::slotDeviceScanEnd()
 {
     ui->pushButton_Scan->setEnabled(true);
     ui->progressBar->setMaximum(100);
+    ui->progressBar->hide();
 }
 
 void MegaInterface::slotShowSearchResult( QVariant var )
@@ -374,6 +377,7 @@ void MegaInterface::on_pushButton_Scan_clicked()
 
     ui->pushButton_Scan->setEnabled(false);
     ui->progressBar->setMaximum(0);
+    ui->progressBar->show();
 
     thread->start();
 }

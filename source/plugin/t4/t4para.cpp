@@ -58,6 +58,11 @@ void T4Para::init()
     mbMctEn = true;
 }
 
+double T4Para::velocity()
+{
+    return mMaxTerminalSpeed * mSpeed / 100;
+}
+
 int T4Para::serialOut( QXmlStreamWriter &writer )
 {
     writer.writeStartElement("terminal");

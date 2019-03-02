@@ -6,9 +6,25 @@ XPage::XPage(QWidget *parent) : QWidget(parent)
 {
     mUri = "data";
     m_pPlugin = NULL;
+    mbMissionWorking = false;
 
     mAttr = page_attr_unk;
 }
+
+void XPage::changeEvent(QEvent *event)
+{
+    if ( event->type() == QEvent::LanguageChange )
+    {
+//        logDbg();
+        retranslateUi();
+        event->accept();
+    }
+    else
+    { QWidget::changeEvent( event ); }
+}
+
+void XPage::retranslateUi()
+{}
 
 void XPage::attachPlugin( XPlugin *pPlugin )
 {
@@ -16,6 +32,7 @@ void XPage::attachPlugin( XPlugin *pPlugin )
 
     mUri = "data";
     m_pPlugin = pPlugin;
+
 
     //! virtual
     connectPlugin();
@@ -53,10 +70,10 @@ void XPage::connectPlugin()
              this, SLOT(slot_request_load()) );
 
     //! \note only for mission
-    connect( m_pPlugin->m_pMissionWorking, SIGNAL( signal_enter_working(WorkingApi*)),
-             this, SLOT(slot_enter_mission(WorkingApi*)));
-    connect( m_pPlugin->m_pMissionWorking, SIGNAL(signal_exit_working(WorkingApi*, int)),
-             this, SLOT(slot_exit_mission(WorkingApi*, int)));
+    connect( m_pPlugin->m_pMissionWorking, SIGNAL( signal_enter_working(WorkingApi *)),
+             this, SLOT(slot_enter_mission(WorkingApi *)));
+    connect( m_pPlugin->m_pMissionWorking, SIGNAL(signal_exit_working(WorkingApi *, int)),
+             this, SLOT(slot_exit_mission(WorkingApi *, int)));
 }
 
 void XPage::attachWorkings()
@@ -81,13 +98,21 @@ void XPage::onSetting( XSetting setting )
 {
     if ( setting.mSetting == XPage::e_setting_opened )
     {
-        if ( setting.mPara1.isValid() )
-        {}
-        else
-        { return; }
+        check_para1();
 
         //! enable/disable
-        setEnabled( setting.mPara1.toBool() );
+        setOpened( setting.mPara1.toBool() );
+    }
+    else if ( setting.mSetting == XPage::e_setting_mission_working )
+    {
+        check_para1();
+
+        mbMissionWorking = setting.mPara1.toBool();
+
+        if ( mbMissionWorking )
+        { enterMission(); }
+        else
+        { exitMission(); }
     }
     else
     {}
@@ -209,6 +234,16 @@ bool XPage::filterSetting( XSetting setting )
     return true;
 }
 
+void XPage::enterMission()
+{}
+void XPage::exitMission()
+{}
+
+void XPage::setOpened( bool b )
+{
+    setEnabled( b );
+}
+
 void XPage::slot_plugin_setting_changed( XSetting setting )
 {
     do
@@ -226,10 +261,16 @@ void XPage::slot_plugin_setting_changed( XSetting setting )
     onSetting( setting );
 }
 
-void XPage::slot_enter_mission( WorkingApi *pApi )
-{}
-void XPage::slot_exit_mission( WorkingApi *pApi, int ret )
-{}
+void XPage::slot_enter_mission( WorkingApi *api )
+{
+    Q_ASSERT( NULL != m_pPlugin );
+
+    m_pPlugin->emit_setting_changed( XPage::e_setting_mission_working, true );
+}
+void XPage::slot_exit_mission( WorkingApi *api, int ret )
+{
+    m_pPlugin->emit_setting_changed( XPage::e_setting_mission_working, false );
+}
 
 void XPage::slot_request_save()
 {}

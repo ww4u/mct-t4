@@ -19,6 +19,15 @@
    </item>
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="contextMenuPolicy">
+      <enum>Qt::CustomContextMenu</enum>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
      <property name="tabPosition">
       <enum>QTabWidget::South</enum>
      </property>
@@ -26,7 +35,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>4</number>
+      <number>0</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -1859,9 +1868,101 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tab_5">
+      <property name="contextMenuPolicy">
+       <enum>Qt::DefaultContextMenu</enum>
+      </property>
       <attribute name="title">
        <string>Monitor</string>
       </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>788</width>
+            <height>328</height>
+           </rect>
+          </property>
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="MegaSplineChart" name="jointChart1" native="true">
+             <property name="contextMenuPolicy">
+              <enum>Qt::CustomContextMenu</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="MegaSplineChart" name="jointChart2" native="true">
+             <property name="contextMenuPolicy">
+              <enum>Qt::CustomContextMenu</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="MegaSplineChart" name="jointChart3" native="true">
+             <property name="contextMenuPolicy">
+              <enum>Qt::CustomContextMenu</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="MegaSplineChart" name="jointChart4" native="true">
+             <property name="contextMenuPolicy">
+              <enum>Qt::CustomContextMenu</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="MegaSplineChart" name="jointChart5" native="true">
+             <property name="contextMenuPolicy">
+              <enum>Qt::CustomContextMenu</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="tab_6">
       <attribute name="title">
@@ -2495,6 +2596,11 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>LogoutWidget</class>
+   <extends>QListView</extends>
+   <header>logoutwidget.h</header>
+  </customwidget>
+  <customwidget>
    <class>ControllerStatus</class>
    <extends>QWidget</extends>
    <header>controllerstatus.h</header>
@@ -2507,12 +2613,14 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>LogoutWidget</class>
-   <extends>QListView</extends>
-   <header>logoutwidget.h</header>
+   <class>MegaSplineChart</class>
+   <extends>QWidget</extends>
+   <header location="global">megasplinechart.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
+  <include location="../../../res/res.qrc"/>
   <include location="../../../res/res.qrc"/>
  </resources>
  <connections>

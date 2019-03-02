@@ -46,6 +46,8 @@ public:
     virtual int open();
     virtual void close();
 
+    virtual int stop();
+
     bool isOpened();
 
     int deviceVi();

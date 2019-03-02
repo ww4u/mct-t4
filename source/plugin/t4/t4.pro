@@ -14,8 +14,9 @@ INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include"
 #LIBS += -lvisa32
 #DEFINES += NI_VISA
 #DEFINES += ARCH_32
-
 }
+
+INCLUDEPATH += "../../widget"
 
 OBJECTS_DIR = ./obj
 MOC_DIR = ./obj

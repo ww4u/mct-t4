@@ -11,6 +11,7 @@
 #include "aboutdlg.h"
 #include "h2ops.h"
 #include "roboconfig.h"
+#include "stopwidget.h"
 
 #include "syslogout.h"
 
@@ -23,6 +24,7 @@ class MainWindow;
 enum {
     LANG_EN = 0,
     LANG_CN,
+    LANG_TR_CN,
 };
 
 enum {
@@ -47,6 +49,8 @@ protected:
     virtual void changeEvent( QEvent *event );
 
 public:
+    void emit_logout( const QString &info, int level );
+    void emit_status( const QString &str );
     void emit_progress( const QString &info, bool b, int now, int mi, int ma );
 
 protected:
@@ -68,6 +72,9 @@ protected:
 
 signals:
     void signal_pref_changed();
+    void signal_logout( const QString &str, int lev );
+    void signal_status( const QString &str );
+
     void signal_progress( const QString &info, bool b, int now, int mi, int ma );
 
 private slots:
@@ -79,10 +86,14 @@ private slots:
     void slot_lang_changed();
     void slot_style_changed();
 
+    void slot_logout( const QString &str, int lev );
+
+    void slot_status(const QString &str);
+
     void slot_progress( const QString &info, bool b, int now, int mi, int ma );
     void slot_progress_canceled();
 
-    void slotUpdateStatus(const QString str);
+
     void slot_focus_in( const QString &name );
 
     void on_actionAbout_triggered();
@@ -99,6 +110,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    StopWidget *m_pStopWidget;
 
     //! lang/style action
     QAction *m_pChAction, *m_pEnAction, *m_pMegaAction, *m_pClasAction;

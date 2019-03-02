@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 TARGET = mct
 TEMPLATE = app
 #qt >= 5.10
-VERSION = 0.0.1.4
+VERSION = 0.0.0.1
 
 CONFIG += C++11 #use lambda
 
@@ -31,7 +31,7 @@ CONFIG += C++11 #use lambda
 
 LIBS += -L"../lib"
 
-LIBS += -lxfactory -lmrx-t4 -lxplugin
+LIBS += -lxfactory -lmrx-t4 -lmrx-h2 -lxplugin
 LIBS += -lmodel
 
 HEADERS += ../include/mystd.h           \
@@ -88,7 +88,8 @@ HEADERS += ../include/mystd.h           \
     ../source/wnd/syslogout.h \
     ../source/wnd/syspref.h \
     ../source/wnd/syspara.h \
-    ../source/wnd/welcomepage.h
+    ../source/wnd/welcomepage.h \
+    ../source/wnd/stopwidget.h
 
 SOURCES += ../source/main/main.cpp      \
     ../source/device/bus.cpp            \
@@ -139,7 +140,8 @@ SOURCES += ../source/main/main.cpp      \
     ../source/wnd/syslogout.cpp \
     ../source/wnd/syspref.cpp \
     ../source/wnd/syspara.cpp \
-    ../source/wnd/welcomepage.cpp
+    ../source/wnd/welcomepage.cpp \
+    ../source/wnd/stopwidget.cpp
 
 !win32: HEADERS += ../source/device/vxi11/vxi11.h
 !win32: HEADERS += ../source/device/vxi11/vxi11_user.h
@@ -165,7 +167,8 @@ FORMS += ../source/wnd/mainwindow.ui    \
     ../source/wnd/login.ui \
     ../source/wnd/syslogout.ui \
     ../source/wnd/syspref.ui \
-    ../source/wnd/welcomepage.ui
+    ../source/wnd/welcomepage.ui \
+    ../source/wnd/stopwidget.ui
 
 INCLUDEPATH += ../include
 INCLUDEPATH += ../source/sys
@@ -189,5 +192,10 @@ RESOURCES += ../res/res.qrc
 
 RC_ICONS = ../res/image/megarobo.ico
 
-TRANSLATIONS += ../res/ts/qt_CN.ts
-TRANSLATIONS += ../res/ts/qt_EN.ts
+DISTFILES += ../build/doc/readme.txt \
+             ../build/doc/errant.txt
+
+#TRANSLATIONS += ../res/ts/mct_zh_CN.ts \
+#                ../res/ts/mct_EN.ts \
+#                ../res/ts/mct_zh_TW.ts
+

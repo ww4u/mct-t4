@@ -23,6 +23,9 @@ public:
     explicit ErrorMgrTable(QWidget *parent = 0);
     ~ErrorMgrTable();
 
+protected:
+    virtual void retranslateUi();
+
 public:
     void setModel( QAbstractTableModel *pModel );
 

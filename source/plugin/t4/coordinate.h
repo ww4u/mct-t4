@@ -23,6 +23,7 @@ public:
 
 protected:
     virtual void spyEdited();
+    virtual void retranslateUi();
 
 private:
     Ui::Coordinate *ui;

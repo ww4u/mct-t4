@@ -50,5 +50,6 @@ void MRX_T4::slot_load_setting()
         sysError( tr("Config load fail") );
     }
 
+    XPlugin::slot_load_setting();
     logDbg()<<setupfileName;
 }

@@ -629,7 +629,8 @@ int busOpenDevice(char * ip, int timeout)
         printf("Could not open a session to the VISA Resource Manager!\n");
         return 0;
     }
-    status = viOpen(defaultRM, ip, VI_NO_LOCK, VI_TMO_IMMEDIATE, &vi);
+//    status = viOpen(defaultRM, ip, VI_NO_LOCK, VI_TMO_IMMEDIATE, &vi);
+    status = viOpen(defaultRM, ip, VI_NO_LOCK, timeout, &vi);
     if (status < VI_SUCCESS)
     {
         vi = -1;

@@ -21,6 +21,9 @@ public:
 public:
     virtual void updateUi();
 
+protected:
+    virtual void retranslateUi();
+
 private:
     Ui::Info *ui;
 

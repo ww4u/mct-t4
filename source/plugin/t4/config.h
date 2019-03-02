@@ -23,6 +23,7 @@ public:
     virtual void updateData();
 protected:
     virtual void spyEdited();
+    virtual void retranslateUi();
 
 private slots:
     void on_cmbTypeTerminal_currentIndexChanged(int index);

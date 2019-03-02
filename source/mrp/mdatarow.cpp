@@ -20,7 +20,7 @@ MDataRow &MDataRow::operator=( const QStringList &row )
     for ( int i = 0; i < row.size(); i++ )
     {
         localStr = row.at(i);
-        append( localStr.toLower() );
+        append( localStr );
     }
 
     return *this;
@@ -38,7 +38,7 @@ MDataRow &MDataRow::operator=( const QString &row )
     {
         localAry = aryList.at( i );
 
-        append( localAry.toLower() );
+        append( localAry );
     }
 
     return *this;
@@ -267,12 +267,12 @@ bool MDataSection::cellValue( int r, int c,
 
     bool ok;
 
-    localV   = var.toString();
+    localV = var.toString();
     ok = !localV.isEmpty();
     if ( ok )
     { v = localV; }
     else if ( bOv )
-    { v = def; }
+    { v = def; ok = true; }
     else
     {}
 

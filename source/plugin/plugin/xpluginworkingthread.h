@@ -45,6 +45,7 @@ public:
 };
 
 Q_DECLARE_METATYPE( WorkingApi * )
+Q_DECLARE_METATYPE( WorkingApi )
 
 class XPluginWorkingThread : public QThread
 {
@@ -55,20 +56,25 @@ public:
 
     void attachMutex( QMutex *pMutex );
 Q_SIGNALS:
-    void signal_enter_working( WorkingApi *);
-    void signal_exit_working( WorkingApi *, int );
+    void signal_enter_working( WorkingApi *api);
+    void signal_exit_working( WorkingApi *api, int );
 
 public:
     void attach( WorkingApi * pApi );
     void detach();
 
+    void setTick( int ms );
+    int tick();
+
 protected:
     virtual void run();
 
 protected:
+    const int _tickms = 100;
+
     QList< WorkingApi *> mApis;
 
-    const int _tickms = 100;
+    int mTickms;
 
     QMutex mMutex;
 

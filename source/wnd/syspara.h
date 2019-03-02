@@ -25,8 +25,10 @@ public:
     int mLangIndex;
     int mStyleIndex;
 
-    bool mbAutoExpand, mbAutoLoad, mbAutoSearch;
+    bool mbAutoExpand, mbAutoLoad, mbAutoSearch, mbAutoLogin;
     int mIntfIndex;
+
+    int mSysMode;
 
     //! addr,model,sn
     //! addr,model,sn

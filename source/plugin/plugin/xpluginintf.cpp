@@ -115,6 +115,9 @@ int XPluginIntf::open()
 void XPluginIntf::close()
 {}
 
+int XPluginIntf::stop()
+{ return 0; }
+
 bool XPluginIntf::isOpened()
 { return ( mVi > 0 ); }
 

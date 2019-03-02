@@ -30,7 +30,11 @@ void Coordinate::updateUi()
 
 void Coordinate::spyEdited()
 {
+}
 
+void Coordinate::retranslateUi()
+{
+    ui->retranslateUi( this );
 }
 
 }

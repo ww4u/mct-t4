@@ -53,6 +53,10 @@ void ControllerStatus::spyEdited()
 
     };
 
+    QSlider *sliders[]
+    {
+    };
+
     install_spy();
 }
 

@@ -3,6 +3,8 @@
 
 #include "../../../include/mydebug.h"
 
+#include "../../mrp/mdataset.h"
+
 namespace mrx_t4{
 
 #define char_deg                        QChar(0x00B0)
@@ -189,6 +191,151 @@ QVariant RecordTable::headerData(int section, Qt::Orientation orientation, int r
     else
     { return QVariant(section);}
 }
+//<<QObject::tr("Type")
+//<<QObject::tr("Para.")
+//<<QObject::tr("X(mm)")
+//<<QObject::tr("Y(mm)")
+//<<QObject::tr("Z(mm)")
+//<<QObject::tr("Pw(") + char_deg + ")"
+//<<QObject::tr("H(") + char_deg + ")"
+//<<QObject::tr("Velocity(mm/s)")
+//<<QObject::tr("Acceleration(mm/s") + char_square + ")"
+//<<QObject::tr("Comment");
+//! save mrp
+int RecordTable::exportOut( const QString &fileName )
+{
+    MDataSet dataSet;
+    dataSet.setModel( "MRX-T4" );
+    QStringList headers;
+    headers<<"type"<<"coord"<<"para"<<"di"<<"do"
+           <<"x"<<"y"<<"z"<<"w"<<"h"<<"v"<<"a"<<"comment";
+    dataSet.setHeaders( headers );
+
+    MDataSection *pSection;
+    pSection = dataSet.addSection();
+    if ( NULL == pSection )
+    { return -1; }
+
+    bool bRet;
+    QString strRow;
+    for ( int i = 0; i < mItems.size(); i++ )
+    {
+        strRow = QString("%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12,%13").arg( mItems.at(i)->mType )
+                                                          .arg( mItems.at(i)->mCoord )
+                                                          .arg( mItems.at(i)->mPara )
+                                                          .arg( mItems.at(i)->mDi )
+                                                          .arg( mItems.at(i)->mDo )
+                                                          .arg( mItems.at(i)->mX )
+                                                          .arg( mItems.at(i)->mY )
+                                                          .arg( mItems.at(i)->mZ )
+                                                          .arg( mItems.at(i)->mPw )
+                                                          .arg( mItems.at(i)->mH )
+                                                          .arg( mItems.at(i)->mVel )
+                                                          .arg( mItems.at(i)->mAcc )
+                                                          .arg( mItems.at(i)->mComment );
+
+        bRet = pSection->addRow(strRow );
+        if ( bRet )
+        {}
+        else
+        { return -1; }
+    }
+
+    return dataSet.save( fileName );
+}
+
+//! load mrp
+int RecordTable::loadIn( const QString &fileName )
+{
+    MDataSet dataSet;
+
+    int ret;
+    ret = dataSet.load( fileName );
+    if ( ret != 0 )
+    { logDbg();return ret; }
+
+    //! extract the data
+    int secCnt = dataSet.sections();
+    if ( secCnt < 1 )
+    { logDbg();return -1; }
+
+    //! get the first one
+    MDataSection *pSection = dataSet.section( 0 );
+
+    QList<RecordItem*> localItems;
+    ret = _loadIn( pSection, localItems );
+
+    if ( ret != 0 )
+    {logDbg();
+        qDeleteAll( localItems );
+        return ret;
+    }
+    else
+    {
+        qDeleteAll( mItems );
+
+        beginResetModel();
+            mItems = localItems;
+        endResetModel();
+    }
+
+    return 0;
+}
+
+#define get_v( out, row, def, local )   bRet = pSection->cellValue( row, col++, local, def );\
+                                        if ( !bRet ){ logDbg(); return -1; }\
+                                        out = local;
+
+#define get_str( out, row, def )   get_v( out, row, def, strV )
+#define get_float( out, row, def )   get_v( out, row, def, fV )
+#define get_double( out, row, def )   get_v( out, row, def, dV )
+#define get_int( out, row, def )   get_v( out, row, def, iV )
+
+#define get_bool( out, row, def )   get_v( out, row, def, bV )
+
+int RecordTable::_loadIn( MDataSection *pSection,
+                          QList< RecordItem *> &items )
+{
+    RecordItem *pItem;
+    bool bRet;
+    int col;
+
+    QString strV;
+    int iV;
+    double dV;
+    float fV;
+    bool bV;
+    for ( int i = 0; i < pSection->rows(); i++ )
+    {
+        pItem = new RecordItem();
+        if ( NULL == pItem )
+        { return -1; }
+
+        //! col
+        col = 0;
+
+        get_str( pItem->mType, i, "PA" );
+        get_str( pItem->mCoord, i, "" );
+        get_str( pItem->mPara, i, "" );
+        get_int( pItem->mDi, i, 0 );
+        get_int( pItem->mDo, i, 0 );
+
+        get_double( pItem->mX, i, 0 );
+        get_double( pItem->mY, i, 0 );
+        get_double( pItem->mZ, i, 0 );
+        get_double( pItem->mPw, i, 0 );
+        get_double( pItem->mH, i, 0 );
+
+        get_double( pItem->mVel, i, 0 );
+        get_double( pItem->mAcc, i, 0 );
+
+        //! append
+        items.append( pItem );
+    }
+
+    return 0;
+}
+
 
 bool RecordTable::decorationRole( int role, int row, int col, QVariant &var ) const
 {
@@ -271,7 +418,9 @@ int RecordTable::serialOut( QXmlStreamWriter &writer )
         writer.writeStartElement("item");
 
             writer.writeTextElement("type", pItem->mType );
+            writer.writeTextElement( "coord", pItem->mCoord );
             writer.writeTextElement( "para", pItem->mPara );
+
             writer.writeTextElement( "di", QString::number( pItem->mDi, 16 ) );
             writer.writeTextElement( "do", QString::number( pItem->mDo, 16 ) );
 
@@ -339,8 +488,11 @@ int RecordTable::_serialIn( QXmlStreamReader &reader, RecordItem *pItem )
     {
         if ( reader.name() == "type" )
         { pItem->mType = reader.readElementText(); }
+        else if ( reader.name() == "coord" )
+        { pItem->mCoord = reader.readElementText(); }
         else if ( reader.name() == "para" )
         { pItem->mPara = reader.readElementText(); }
+
         else if ( reader.name() == "di" )
         { pItem->mDi = reader.readElementText().toInt( Q_NULLPTR, 16 ); }
         else if ( reader.name() == "do" )

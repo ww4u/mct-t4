@@ -15,20 +15,31 @@ class Chart: public QChart
 public:
     Chart(QGraphicsItem *parent = 0, Qt::WindowFlags wFlags = 0);
     virtual ~Chart();
+
+    void beginChangeData();
     void dataAppend(double v1, double v2);
+    void endChangeData();
+
+    void snapDataSet( QList<QPointF> **m_pData1,
+                      QList<QPointF> **m_pData2 );
 
     QSplineSeries *series1() const;
     QSplineSeries *series2() const;
+
     QValueAxis *axis() const;
 
 private:
     QSplineSeries *m_series1;
     QSplineSeries *m_series2;
     QValueAxis *m_axis;
+
     double m_x;
     double m_y1;
     double m_y2;
     double m_step;
+
+    const int _capacity = 2048;
+    QList<QPointF> mData1, mData2;
 };
 
 
@@ -44,6 +55,7 @@ class MegaSplineChart : public QWidget
     Q_OBJECT
 public:
     explicit MegaSplineChart(const QString &tittle = "", QWidget *parent = nullptr);
+    MegaSplineChart(QWidget *parent = nullptr);
 
     ~MegaSplineChart();
 

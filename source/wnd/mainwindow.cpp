@@ -14,7 +14,7 @@ void MainWindow::requestLogout( const QString &str, LogStr::eLogLevel lev )
     if( NULL == MainWindow::_pBackendProxy )
     { return; }
 
-    MainWindow::_pBackendProxy->mLogModel.append( str, lev );
+    MainWindow::_pBackendProxy->emit_logout( str, lev );
 }
 
 void MainWindow::requestProgress( const QString &info, bool b, int now, int mi, int ma  )
@@ -30,7 +30,7 @@ void MainWindow::showStatus( const QString str)
     if( NULL == MainWindow::_pBackendProxy )
     { return; }
 
-    MainWindow::_pBackendProxy->slotUpdateStatus(str);
+    MainWindow::_pBackendProxy->emit_status(str);
 }
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
@@ -99,6 +99,7 @@ void MainWindow::setupWorkArea()
     m_roboConfig->attachOpDock( m_pDockOps );
     m_roboConfig->attachLogModel( &mLogModel );
     m_roboConfig->attachSysPref( &mPref );
+    m_roboConfig->attachConnectWidget( ui->actionConnect );
 
     m_pSysLogout = new SysLogout( this );
     m_pDockOps->setWidget( m_pSysLogout );
@@ -142,17 +143,27 @@ void MainWindow::setupMenu()
 
 void MainWindow::setupToolBar()
 {
-    ui->mainToolBar->addAction( ui->actionStop );
-    ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction( ui->actionDownload );
     ui->mainToolBar->addAction( ui->actionUpload );
-    ui->mainToolBar->addAction( ui->actionStore );
-    ui->mainToolBar->addAction( ui->actionSync );
+//    ui->mainToolBar->addAction( ui->actionStore );
+//    ui->mainToolBar->addAction( ui->actionSync );
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction( ui->actionSearch );
     ui->mainToolBar->addSeparator();
     ui->mainToolBar->addAction( ui->actionConnect );
-    ui->mainToolBar->addAction( ui->actionIP );
+
+//    QWidget *pWidget;
+//    pWidget->setLayout();
+//    ui->mainToolBar->addWidget( new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum)
+//                                );
+
+    ui->mainToolBar->addSeparator();
+    m_pStopWidget = new StopWidget();
+    ui->mainToolBar->addWidget( m_pStopWidget );
+
+
+//    ui->mainToolBar->addAction( ui->actionStop );
+//    ui->mainToolBar->addAction( ui->actionIP );
 
 #ifdef _WIN32
     //! windows禁用这些功能
@@ -174,10 +185,7 @@ void MainWindow::setupStatusBar()
     ui->statusBar->insertWidget( 2, m_pLabConVer, 0 );
 }
 
-void MainWindow::slotUpdateStatus( const QString str )
-{
-    m_pLabStatus->setText(str);
-}
+
 
 void MainWindow::buildConnection()
 {
@@ -187,12 +195,16 @@ void MainWindow::buildConnection()
     connect( m_roboConfig, SIGNAL(signal_focus_in( const QString &)),
              this, SLOT(slot_focus_in(const QString &)) );
 
+    //! direct connect
     connect(ui->actionDownload,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotDownload()));
     connect(ui->actionUpload,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotUpload()));
     connect(ui->actionStore,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotStore()));
     connect(ui->actionSync,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotSync()));
     connect(ui->actionSearch,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotSearch()));
     connect(ui->actionConnect,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotConnect()));
+
+    connect( m_pStopWidget, SIGNAL(signal_stop_clicked(bool)),
+             m_roboConfig, SLOT(slot_plugins_stop()));
 
     //! connect menu
     connect( m_pEnAction, SIGNAL(triggered(bool)), this, SLOT(slot_lang_changed()) );
@@ -201,32 +213,61 @@ void MainWindow::buildConnection()
     connect( m_pMegaAction, SIGNAL(triggered(bool)), this, SLOT(slot_style_changed()) );
     connect( m_pClasAction, SIGNAL(triggered(bool)), this, SLOT(slot_style_changed()) );
 
+    //! logout
+    connect( this, SIGNAL(signal_logout(const QString &,int)),
+             this, SLOT(slot_logout(const QString &, int)),
+             Qt::QueuedConnection );
+
+    //! status
+    connect( this, SIGNAL(signal_status(const QString &)),
+             this, SLOT(slot_status(const QString&)),
+             Qt::QueuedConnection );
+
     //! progress
     connect( this, SIGNAL(signal_progress(const QString &,bool,int,int,int)),
-             this, SLOT(slot_progress(const QString &,bool,int,int,int)), Qt::QueuedConnection );
+             this, SLOT(slot_progress(const QString &,bool,int,int,int)),
+             Qt::QueuedConnection );
+
+
 }
 
 void MainWindow::loadConfig()
 {
-    //! \todo lang/style
-
-    //! log in
-    LogIn logIn;
-    if ( logIn.exec() == QDialog::Accepted )
-    {
-        if ( logIn.getUserRole() == 0 )
-        { setSysMode( sysPara::e_sys_user ); }
-        else
-        { setSysMode( sysPara::e_sys_admin ); }
-    }
-    else
-    {
-        QTimer::singleShot( 0, qApp, SLOT(quit()) );
-        return;
-    }
-
     //! load pref
     loadPref();
+
+    changeLanguage();
+
+    changeStyle();
+
+    do
+    {
+        //! skip, use the last mode
+        if ( mPref.mbAutoLogin )
+        { break; }
+
+        //! log in
+        LogIn logIn;
+        if ( logIn.exec() == QDialog::Accepted )
+        {
+            if ( logIn.getUserRole() == 0 )
+            { setSysMode( sysPara::e_sys_user ); }
+            else
+            { setSysMode( sysPara::e_sys_admin ); }
+
+            //! save mode
+            mPref.mSysMode = logIn.getUserRole();
+            mPref.mbAutoLogin = logIn.getAutoLogin();
+
+            QTimer::singleShot( 0, this, SLOT( slot_save_sysPref()) );
+        }
+        else
+        {
+            QTimer::singleShot( 0, qApp, SLOT(quit()) );
+            return;
+        }
+
+    }while( 0 );
 
     //! post startup
     QTimer::singleShot( 0, this, SLOT(slot_post_startup()) );
@@ -239,18 +280,17 @@ void MainWindow::changeLanguage()
     {
         QLocale::Language lang;
         QLocale::Country area;
-        QString qmFile = "";
         if ( mPref.mLangIndex == LANG_EN )
         {
             lang = QLocale::English;
             area = QLocale::AnyCountry;
-            qmFile = ":/res/ts/qt_EN.qm";
+//            qmFile = ":/res/ts/qt_EN.qm";
         }
         else if ( mPref.mLangIndex == LANG_CN )
         {
             lang = QLocale::Chinese;
             area = QLocale::China;
-            qmFile = ":/res/ts/qt_CN.qm";
+//            qmFile = ":/res/ts/qt_CN.qm";
         }
         else
         {
@@ -271,12 +311,11 @@ void MainWindow::changeLanguage()
 
         logDbg()<<local.uiLanguages();
 
-//        if ( mTranslator.load( local,
-//                              QLatin1String("megarobostudio"),
-//                              QLatin1String("_"),
-//                              qApp->applicationDirPath() + "/translate"
-//                              )
-        if ( mTranslator.load( qmFile )
+        if ( mTranslator.load( local,
+                              QLatin1String("mct"),
+                              QLatin1String("_"),
+                              qApp->applicationDirPath() + "/translate",
+                              ".qm")
              && qApp->installTranslator(&mTranslator) )
         {
         }
@@ -293,11 +332,14 @@ void MainWindow::changeStyle()
 {
     if ( mPref.mStyleIndex == STYLE_MEGAROBO )
     {
-        setUiStyle(":/res/qss/mega.qss");
+
+//        setUiStyle(":/res/qss/mega.qss");
+        setUiStyle( qApp->applicationDirPath() + "/style/mega.qss" );
     }
     else
     {
-        setUiStyle(":/res/qss/classic.qss");
+//        setUiStyle(":/res/qss/classic.qss");
+        setUiStyle( qApp->applicationDirPath() + "/style/classic.qss" );
     }
 }
 
@@ -340,7 +382,7 @@ void MainWindow::slot_post_startup()
     else
     { m_pChAction->setChecked( true ); }
 
-    changeLanguage();
+//    changeLanguage();
 
     //! change the style
     if ( mPref.mStyleIndex == 0 )
@@ -348,7 +390,7 @@ void MainWindow::slot_post_startup()
     else
     { m_pClasAction->setChecked( true ); }
 
-    changeStyle();
+//    changeStyle();
 
     Q_ASSERT( NULL != m_roboConfig );
     m_roboConfig->postStartup();
@@ -377,19 +419,26 @@ void MainWindow::slot_style_changed()
     if ( m_pMegaAction->isChecked() )
     {
         mPref.mStyleIndex = STYLE_MEGAROBO;
-
-        setUiStyle(":/res/qss/mega.qss");
     }
     else
     {
         mPref.mStyleIndex = STYLE_CLASSIC;
-
-        setUiStyle(":/res/qss/classic.qss");
     }
 
     changeStyle();
 
     emit signal_pref_changed();
+}
+
+void MainWindow::slot_logout( const QString &str, int lev )
+{
+    mLogModel.append( str, (LogStr::eLogLevel)lev );
+}
+
+void MainWindow::slot_status( const QString &str )
+{
+    if ( m_pLabStatus!=NULL )
+    { m_pLabStatus->setText(str); }
 }
 
 void MainWindow::slot_progress( const QString &info, bool b, int now, int mi, int ma )
@@ -459,6 +508,14 @@ void MainWindow::changeEvent( QEvent * event )
 //        }
     }
 }
+
+void MainWindow::emit_logout( const QString &info, int level )
+{
+    emit signal_logout( info, level );
+}
+
+void MainWindow::emit_status( const QString &str )
+{ emit signal_status( str ); }
 
 void MainWindow::emit_progress( const QString &info, bool b, int now, int mi, int ma )
 {

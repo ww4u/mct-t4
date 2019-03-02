@@ -36,13 +36,13 @@ RoboConfig::RoboConfig(QWidget *parent) :
              this, SLOT(slot_plugins_changed()) );
 
     //! init to hide
-    ui->buttonBox->button( QDialogButtonBox::Reset )->hide();
+    //! \note
+    ui->buttonBox->button( QDialogButtonBox::Reset )->setVisible( false );
 
 #ifndef _WIN32
     //! 如果在MRH-T上运行自动添加本地
     addDeviceWithIP("127.0.0.1");
 #endif
-
 }
 
 RoboConfig::~RoboConfig()
@@ -388,6 +388,19 @@ void RoboConfig::slotSearch()
     m_megaSerachWidget->on_pushButton_Scan_clicked();
 }
 
+void RoboConfig::slotConnect()
+{
+    if ( pluginsConnectState() )
+    { plginsClose(); }
+    else
+    { pluginsOpen(); }
+}
+
+void RoboConfig::slot_plugins_stop()
+{
+    pluginsStop();
+}
+
 void RoboConfig::slotWifi()
 {
 //    if(mIndex < 0) return;
@@ -445,14 +458,6 @@ void RoboConfig::slotWifi()
 //    }
 //}
 
-void RoboConfig::slotConnect()
-{
-//    if(mIndex<0) return;
-//    QString strIP = m_RobotList[mIndex].m_strDevInfo.split(',').at(0);
-//    qDebug() << "slotConnect" << strIP;
-//    slot_open_close(strIP);
-}
-
 #define gc_context_menu() { delete m_pRoboContextMenu; m_pRoboContextMenu = NULL; }
 void RoboConfig::slotShowContextmenu(const QPoint& pos)
 {
@@ -487,15 +492,18 @@ void RoboConfig::slotShowContextmenu(const QPoint& pos)
             if ( NULL == m_pRoboContextMenu )
             { return; }
 
-            m_pActionOpen = m_pRoboContextMenu->addAction(tr("Open"));
+            m_pActionOpen = m_pRoboContextMenu->addAction(tr("Connect"));
+            m_pActionOpen->setIcon( QIcon(":/res/image/h2product/connect.png") );
             if ( NULL == m_pActionOpen )
             { gc_context_menu(); return; }
 
-            m_pActionClose = m_pRoboContextMenu->addAction(tr("Close"));
+            m_pActionClose = m_pRoboContextMenu->addAction(tr("Disconnect"));
+            m_pActionClose->setIcon( QIcon(":/res/image/h2product/disconnect.png") );
             if ( NULL == m_pActionClose )
             { gc_context_menu(); return; }
 
             QAction *actionDelete = m_pRoboContextMenu->addAction(tr("Delete"));
+            actionDelete->setIcon( QIcon(":/res/image/icon/trash.png") );
             if ( NULL == actionDelete )
             { gc_context_menu(); return; }
 
@@ -503,6 +511,7 @@ void RoboConfig::slotShowContextmenu(const QPoint& pos)
             { gc_context_menu(); return; }
 
             QAction *actionExplorer = m_pRoboContextMenu->addAction( tr("Explorer") );
+            actionExplorer->setIcon( QIcon(":/res/image/icon/manage.png") );
             if ( NULL == actionExplorer )
             { gc_context_menu(); return; }
 
@@ -892,6 +901,12 @@ void RoboConfig::attachSysPref( SysPara *pPref )
     m_pPref = pPref;
 }
 
+void RoboConfig::attachConnectWidget( QAction *pAction )
+{
+    Q_ASSERT( NULL != pAction );
+    m_pConnAction = pAction;
+}
+
 void RoboConfig::postStartup()
 {
     Q_ASSERT( NULL != m_pPref );
@@ -906,9 +921,12 @@ logDbg();
     if ( m_pPref->mbAutoLoad )
     {
         QString strItem;
-        for ( int i = 0; i < m_pPref->mPlugins.size(); i++ )
+
+        //! get the back up
+        QStringList lastPlugin = m_pPref->mPlugins;
+        for ( int i = 0; i < lastPlugin.size(); i++ )
         {
-            strItem = m_pPref->mPlugins.at(i);
+            strItem = lastPlugin.at(i);
             createRobot( strItem.split(',') );
         }
     }
@@ -944,12 +962,11 @@ void RoboConfig::stackPageChange( QTreeWidgetItem *current,
             ui->stackedWidget->setCurrentWidget( (QWidget*)pObj );
         }
 
+        //! page
         XPage *pPage = dynamic_cast<XPage*>(pObj);
         bool bV;
         if ( NULL != pObj )
-        {
-            bV = has_attr( pPage->pageAttr(), XPage::page_rst_able );
-        }
+        { bV = has_attr( pPage->pageAttr(), XPage::page_rst_able ); }
         else
         { bV = false; }
         ui->buttonBox->button( QDialogButtonBox::Reset )->setVisible( bV );
@@ -1032,6 +1049,7 @@ logDbg();
     //! pref pages
     //! \note pRoboRoot is managed by the tree
     QTreeWidgetItem *pRoboRoot = plugin->createPrefPages( stackWidget() );logDbg()<<pRoboRoot;
+    pRoboRoot->setToolTip( 0, plugin->addr() );
     plugin->setViewObj( pRoboRoot );
     rootItem()->addChild( pRoboRoot );
 logDbg();
@@ -1073,6 +1091,10 @@ void RoboConfig::addPlugin( XPlugin *plugin )
     Q_ASSERT( NULL != plugin );
 
     mPluginList.append( plugin );
+
+    connect( plugin, SIGNAL(signal_setting_changed(XSetting)),
+             this, SLOT(slot_plugin_setting_changed(XSetting)));
+
     plugin_changed();
 }
 
@@ -1143,7 +1165,48 @@ int RoboConfig::setReset()
     return 0;
 }
 
+bool RoboConfig::pluginsConnectState()
+{
+    bool bFullOpened;
 
+    for( int i = 0; i < mPluginList.size(); i++ )
+    {
+        if ( mPluginList[i]->isOpened() )
+        { bFullOpened = true; }
+        else
+        { bFullOpened = false; break; }
+    }
+
+    return bFullOpened;
+}
+
+#define foreach_plugin()    for( int i = 0; i < mPluginList.size(); i++ ){
+#define end_foreach_plugin() }
+void RoboConfig::pluginsOpen()
+{
+//    for( int i = 0; i < mPluginList.size(); i++ )
+    foreach_plugin()
+        if ( mPluginList[i]->isOpened() )
+        {  }
+        else if ( mPluginList[i]->open() == 0 )
+        {}
+        else
+        { sysError( mPluginList[i]->addr() + " " + tr("connect fail") );}
+    end_foreach_plugin()
+}
+void RoboConfig::plginsClose()
+{
+    foreach_plugin()
+        mPluginList[i]->close();
+    end_foreach_plugin()
+}
+
+void RoboConfig::pluginsStop()
+{
+    foreach_plugin()
+        mPluginList[i]->stop();
+    end_foreach_plugin()
+}
 
 void RoboConfig::slot_plugins_changed()
 {
@@ -1159,4 +1222,26 @@ void RoboConfig::slot_plugins_changed()
 
     //! save pref
     emit signal_save_sysPref();
+}
+
+//! update the plugin open status
+void RoboConfig::slot_plugin_setting_changed( XSetting setting )
+{
+    if ( setting.mSetting == XPage::e_setting_opened )
+    {
+        //! full opened
+        Q_ASSERT( NULL != m_pConnAction );
+        if ( pluginsConnectState() )
+        {
+            m_pConnAction->setIcon( QIcon(":/res/image/h2product/connect.png") );
+            m_pConnAction->setToolTip( tr("Connect") );
+        }
+        else
+        {
+            m_pConnAction->setIcon( QIcon(":/res/image/h2product/disconnect.png") );
+            m_pConnAction->setToolTip( tr("Disconnect") );
+        }
+    }
+    else
+    {}
 }

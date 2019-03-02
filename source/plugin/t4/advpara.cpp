@@ -102,10 +102,17 @@ void AdvPara::spyEdited()
 
         ui->spinVel,
         ui->spinAcc,
+
+        ui->spinJointSpeed,
+        ui->spinTerminalSpeed,
     };
 
     QComboBox *comboxes[]={
 //        ui->cmbInterpMode,
+    };
+
+    QSlider *sliders[]
+    {
     };
 
     install_spy();
@@ -115,5 +122,8 @@ void AdvPara::spyEdited()
 //        spy_control_edit( pEdit );
 //    }
 }
+
+void AdvPara::retranslateUi()
+{ ui->retranslateUi( this ); }
 
 }

@@ -11,6 +11,12 @@ class WorkingApi;
 
 #define set_page_attr( attr )   mAttr = (attr);
 #define set_page_rstable( )     set_page_attr( page_rst_able )
+
+#define check_para1()       if ( setting.mPara1.isValid() )\
+                            {}\
+                            else\
+                            { return; }
+
 class XPage : public QWidget
 {
     Q_OBJECT
@@ -27,6 +33,9 @@ public:
         e_setting_unk = 0,
         e_setting_op_able,
         e_setting_opened,
+
+        e_setting_mission_working,
+
         e_setting_user = 1024,
     };
 
@@ -40,6 +49,12 @@ public:
 
 public:
     explicit XPage(QWidget *parent = nullptr);
+
+protected:
+    virtual void changeEvent(QEvent *event);
+
+protected:
+    virtual void retranslateUi();
 
 public:
     void attachPlugin( XPlugin *pPlugin );
@@ -97,6 +112,11 @@ protected:
     void spySetting( int setting );
     bool filterSetting( XSetting setting );
 
+    virtual void enterMission();
+    virtual void exitMission();
+
+    virtual void setOpened( bool b );
+
 signals:
     void signal_request_save();
 
@@ -104,8 +124,8 @@ protected slots:
     void slot_plugin_setting_changed( XSetting setting );
     void slot_modified();
 
-    virtual void slot_enter_mission( WorkingApi *pApi );
-    virtual void slot_exit_mission( WorkingApi *pApi, int ret );
+    virtual void slot_enter_mission( WorkingApi *api );
+    virtual void slot_exit_mission( WorkingApi *api, int ret );
 
     virtual void slot_request_save();
     virtual void slot_request_load();
@@ -118,6 +138,8 @@ protected:
     PageAttr mAttr;
 
     QString mUri;
+
+    bool mbMissionWorking;
 };
 
 class XSetting

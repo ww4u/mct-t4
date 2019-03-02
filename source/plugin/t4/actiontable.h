@@ -23,10 +23,21 @@ public:
     explicit ActionTable(QWidget *parent = 0);
     ~ActionTable();
 
+protected:
+    virtual void retranslateUi();
+
 public:
     void setModel( QAbstractTableModel *pModel );
 
     virtual void onSetting(XSetting setting);
+
+    virtual int upload();
+    virtual int download();
+    virtual int diff();    
+
+protected:
+    virtual void enterMission();
+    virtual void exitMission();
 
 public:
     int currentIndex();

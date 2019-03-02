@@ -4,6 +4,7 @@
 
 XPlugin::XPlugin( QObject *parent ) : XPluginIntf( parent )
 {
+    m_pRootWidgetItem = NULL;
     m_pDock = NULL;
     m_pPanelWidget = NULL;
     m_pViewObj = NULL;
@@ -13,11 +14,11 @@ XPlugin::XPlugin( QObject *parent ) : XPluginIntf( parent )
     m_pUpdateWorking->start();
 
     m_pMissionWorking = new XPluginWorkingThread( this );
-    m_pUpdateWorking->attachMutex( &mMissionMutex );
+    m_pMissionWorking->attachMutex( &mMissionMutex );
     m_pMissionWorking->start();
 
     m_pEmergencyWorking = new XPluginWorkingThread( this );
-    m_pUpdateWorking->attachMutex( &mEmergMutex );
+    m_pEmergencyWorking->attachMutex( &mEmergMutex );
     m_pEmergencyWorking->start();
 
     m_pBgWorking = new XPluginBgThread( this, this );
@@ -153,8 +154,17 @@ bool XPlugin::isEnabled( void *context )
 void XPlugin::onSetting( XSetting setting )
 {}
 
-int XPlugin::stop()
-{ return 0; }
+void XPlugin::updateUi()
+{
+    XPage *pPage;
+    foreach( QWidget *pWidget, mPluginWidgets )
+    {
+        Q_ASSERT( NULL != pWidget );
+        pPage = dynamic_cast<XPage*>( pWidget );
+        if ( NULL != pPage )
+        { pPage->updateUi(); }
+    }
+}
 
 int XPlugin::upload()
 { return 0; }
@@ -295,7 +305,7 @@ void XPlugin::attachMissionWorking( XPage *pObj,
 
     pApi->setType( WorkingApi::e_work_single );
 
-    Q_ASSERT( m_pMissionWorking );
+    Q_ASSERT( m_pMissionWorking!=NULL );
     m_pMissionWorking->attach( pApi );
 }
 
@@ -343,7 +353,7 @@ void XPlugin::slot_save_setting()
 }
 
 void XPlugin::slot_load_setting()
-{}
+{ updateUi(); }
 
 void XPlugin::slot_plugin_setting_changed( XSetting setting )
 {

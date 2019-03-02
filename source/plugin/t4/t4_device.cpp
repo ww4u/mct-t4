@@ -6,7 +6,7 @@ int MRX_T4::open()
 {
     int vi;
 logDbg()<<mAddr;
-    vi = mrgOpenGateWay( mAddr.toLatin1().data(), 2000 );
+    vi = mrgOpenGateWay( mAddr.toLatin1().data(), 500 );
 
     if ( vi > 0 )
     {
@@ -81,7 +81,10 @@ void MRX_T4::close()
 }
 
 int MRX_T4::stop()
-{ return 0; }
+{
+    //! \todo
+    return 0;
+}
 
 int MRX_T4::upload()
 {

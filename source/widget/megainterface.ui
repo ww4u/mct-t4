@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>614</width>
-    <height>316</height>
+    <width>667</width>
+    <height>277</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -53,19 +53,6 @@
        </property>
        <property name="pixmap">
         <pixmap resource="../../res/res.qrc">:/res/image/icon/network.ico</pixmap>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QProgressBar" name="progressBar">
-       <property name="value">
-        <number>0</number>
-       </property>
-       <property name="textVisible">
-        <bool>false</bool>
-       </property>
-       <property name="invertedAppearance">
-        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -146,6 +133,19 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QProgressBar" name="progressBar">
+     <property name="value">
+      <number>0</number>
+     </property>
+     <property name="textVisible">
+      <bool>false</bool>
+     </property>
+     <property name="invertedAppearance">
+      <bool>false</bool>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QTableView" name="tableView">
@@ -246,7 +246,7 @@
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Close</set>
      </property>
     </widget>
    </item>

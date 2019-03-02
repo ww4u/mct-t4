@@ -106,7 +106,7 @@ protected:
 
 private:
     mrx_t4::ActionTable *m_pReccordTable;
-    QTreeWidgetItem *m_pRootWidgetItem;
+
 };
 
 #endif // T4_H

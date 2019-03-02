@@ -9,6 +9,54 @@
 
 #include "./model/debugtable.h"
 #include "../model/diagnosistable.h"
+#include "megasplinechart.h"
+
+#define MONITOR_EVENT   (QEvent::Type)( QEvent::User + 1 )
+typedef QList<QPointF> PointList;
+
+class PlotDataSets
+{
+protected:
+    QList< PointList *> mDataSets;
+    int mIndex;
+public:
+    PlotDataSets( PointList *a, PointList *b )
+    {
+        mDataSets.append( a );
+        mDataSets.append( b );
+
+        Q_ASSERT( a->size() == b->size() );
+        mIndex = 0;
+    }
+
+public:
+    void toHead()
+    { mIndex = 0; }
+    bool isEnd()
+    {
+        if ( mIndex >= mDataSets.at(0)->size() )
+        { return true; }
+        else
+        { return false; }
+    }
+    bool getNext( QPointF &a, QPointF &b )
+    {
+        if ( mDataSets.size() > 0 )
+        {}
+        else
+        { return false; }
+
+        //! end?
+        if ( isEnd() )
+        { return false; };
+
+        a = mDataSets.at(0)->at( mIndex );
+        b = mDataSets.at(1)->at( mIndex );
+        mIndex++;
+        //! get success
+        return true;
+    }
+};
 
 namespace Ui {
 class T4OpPanel;
@@ -20,6 +68,38 @@ void on_##joint##_signal_single_sub_clicked();
 
 namespace mrx_t4{
 
+class DataCache : public QObject
+{
+    Q_OBJECT
+public:
+    DataCache( QObject *parent ) : QObject( parent )
+    {}
+
+public:
+    QList<int> v1;
+    QList<int> v2;
+
+    QSemaphore mWSema, mRSema;
+};
+
+class OpEvent : public QEvent
+{
+public:
+    OpEvent( QEvent::Type tpe) : QEvent( tpe )
+    {}
+
+public:
+    QVariant mVar1;
+    QVariant mVar2;
+
+public:
+    void setPara( QVariant v1, QVariant v2 )
+    {
+        mVar1 = v1;
+        mVar2 = v2;
+    }
+};
+
 class T4OpPanel : public XPage
 {
     Q_OBJECT
@@ -29,14 +109,24 @@ public:
     ~T4OpPanel();
 
 public:
-    void retranslateUi();
+    void setupUi();
+protected:
+    virtual void retranslateUi();
+
+public:
+    virtual bool event(QEvent *e);
+
+protected:
+    void updateMonitor(QEvent *e );
 
 protected:
     virtual void spyEdited();
 
 public:
-    void posRefreshProc( void *pContext );
+    int posRefreshProc( void *pContext );
     void terminalValidate( bool b );
+
+    int monitorRefreshProc( void *pContext );
 
 public:
     virtual void attachWorkings();
@@ -49,8 +139,10 @@ public:
 protected:
     double localSpeed();
 
-    void enterMission();
-    void exitMission( int ret );
+    virtual void enterMission();
+    virtual void exitMission();
+
+    virtual void setOpened( bool b );
 
     void _step( double x, double y, double z );
 
@@ -59,6 +151,10 @@ protected:
 
     int onJointStep( QVariant var );
     int onJointZero( QVariant var );
+
+    int exportDataSets( QTextStream &stream,
+                        QStringList &headers,
+                        QList<PlotDataSets*> &dataSets );
 
 protected:
 
@@ -79,6 +175,11 @@ protected Q_SLOTS:
     void slot_customContextMenuRequested( const QPoint &);
     void slot_toHere();
 
+    void slot_monitorContextMenuRequested( const QPoint &);
+    void slot_monitorExportImage();
+    void slot_monitorExportData();
+    void slot_monitorCopy();
+
     void on_toolSingleXN_clicked();
     void on_toolSingleXP_clicked();
     void on_toolSingleYP_clicked();
@@ -95,6 +196,10 @@ protected:
 
     QList<QWidget*> mTerminalRelations;
     QMenu *m_pDebugContextMenu;
+    QMenu *m_pMonitorContextMenu;
+
+    QList<MegaSplineChart*> mJointCharts;
+    DataCache *m_pCaches[5];
 
 private slots:
 //    void on_pushButton_2_clicked();
@@ -124,9 +229,9 @@ private slots:
 
 //    void on_cmbStepXx_activated(int index);
 
-protected:
-    virtual void slot_enter_mission( WorkingApi *pApi );
-    virtual void slot_exit_mission( WorkingApi *pApi, int ret );
+//protected Q_SLOTS:
+//    virtual void slot_enter_mission( WorkingApi *pApi );
+//    virtual void slot_exit_mission( WorkingApi *pApi, int ret );
 
 };
 

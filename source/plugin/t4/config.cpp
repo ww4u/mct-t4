@@ -125,12 +125,21 @@ void Config::spyEdited()
         ui->cmbTypeTerminal
     };
 
+    QSlider *sliders[]
+    {
+    };
+
     install_spy();
 
 //    foreach( QLineEdit *pEdit, mAxesEdits )
 //    {
 //        spy_control_edit( pEdit );
 //    }
+}
+
+void Config::retranslateUi()
+{
+    ui->retranslateUi( this );
 }
 
 void Config::on_cmbTypeTerminal_currentIndexChanged(int index)

@@ -2,6 +2,7 @@
     <qresource prefix="/res">
         <file>image/m.png</file>
 
+        <file>image/icon/manage.png</file>
         <file>image/icon/guanlianshebei.png</file>
         <file>image/icon/tupianjiazaishibai.png</file>
 
@@ -55,7 +56,7 @@
         <file>image/widget/radiobutton_checked_green.png</file>
         <file>image/widget/radiobutton_checked_red.png</file>
         <file>image/widget/radiobutton_checked_yellow.png</file>
-        <file>qss/mega.qss</file>
+<!--        <file>qss/mega.qss</file>-->
         <file>image/h2homing/dir_X_Y.PNG</file>
         <file>image/h2homing/info.png</file>
         <file>image/icon/jogmode.PNG</file>
@@ -72,9 +73,9 @@
         <file>image/h2product/online.png</file>
         <file>image/h2product/product.png</file>
         <file>image/icon/201.png</file>
-        <file>ts/qt_CN.qm</file>
-        <file>ts/qt_EN.qm</file>
-        <file>qss/classic.qss</file>
+<!--        <file>ts/qt_CN.qm</file>-->
+<!--        <file>ts/qt_EN.qm</file>-->
+<!--        <file>qss/classic.qss</file>-->
         <file>image/icon/stop.png</file>
         <file>image/icon/download.png</file>
         <file>image/icon/upload.png</file>

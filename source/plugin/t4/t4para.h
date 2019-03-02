@@ -44,6 +44,7 @@ public:
 
 public:
     void init();
+    double velocity();
 
 public:
     int serialOut( QXmlStreamWriter &writer );

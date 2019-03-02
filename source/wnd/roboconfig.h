@@ -46,6 +46,7 @@ public:
     void attachOpDock( QDockWidget *pDock );
     void attachLogModel( MegaLogListModel *pModel );
     void attachSysPref( SysPara *pPref );
+    void attachConnectWidget( QAction *pAction );
 
     void postStartup();
 
@@ -70,6 +71,12 @@ protected:
 
     int  setReset();
 
+    bool pluginsConnectState();
+    void pluginsOpen();
+    void plginsClose();
+
+    void pluginsStop();
+
 public slots:
     void slotDownload();
     void slotUpload();
@@ -78,10 +85,11 @@ public slots:
 
     void slotSearch();
 
-//    void slotExit();
+    void slotConnect();
 
     void slotWifi();
-    void slotConnect();
+
+    void slot_plugins_stop();
 
 //    void slotSetOneRecord(int row,QString type,double x,double y,double v,double a);
 
@@ -103,9 +111,8 @@ private slots:
 
 //    void slotStoreEnd(int val);
 
-
-
     void slot_plugins_changed();
+    void slot_plugin_setting_changed( XSetting setting );
 
 private:
     Ui::RoboConfig *ui;
@@ -114,6 +121,8 @@ private:
     QDockWidget *m_pOpDock;
     MegaLogListModel *m_pLogModel;
     SysPara *m_pPref;
+
+    QAction *m_pConnAction;
 
     QMenu *m_pRoboContextMenu;
     QAction *m_pActionOpen, *m_pActionClose;

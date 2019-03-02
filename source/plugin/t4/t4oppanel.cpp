@@ -23,12 +23,28 @@ static double _stepRatio[]={ 0.1,0.2,0.5,
                             10,20,50,
                             100 };
 
+#define new_cache( id ) m_pCaches[id] = new DataCache( this ); \
+                        Q_ASSERT( m_pCaches[id] != NULL );\
+                        m_pCaches[id]->mWSema.release();
+
 T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     XPage(parent),
     ui(new Ui::T4OpPanel)
 {
     ui->setupUi(this);
+
+    setupUi();
+
     m_pDebugContextMenu = NULL;
+    m_pMonitorContextMenu = NULL;
+
+    //! data cache
+//    m_pCaches[0] = new DataCache( this ); m_pCaches[0]->mWSema.release();
+    new_cache( 0 );
+    new_cache( 1 );
+    new_cache( 2 );
+    new_cache( 3 );
+    new_cache( 4 );
 
     ui->spinActTerminal->setSuffix( char_deg );
     ui->spinActWrist->setSuffix( char_deg );
@@ -56,8 +72,24 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     connect( &mDebugTable, SIGNAL(signal_data_changed()),
              this, SLOT(slot_save_debug()) );
 
+    //! context menu
     connect( ui->tvDebug, SIGNAL(customContextMenuRequested(const QPoint &)),
              this, SLOT(slot_customContextMenuRequested(const QPoint &)));
+
+    //! customconst QPoint &
+    connect( ui->jointChart1,SIGNAL(customContextMenuRequested(const QPoint &)),
+             this, SLOT(slot_monitorContextMenuRequested(const QPoint &)) );
+    connect( ui->jointChart2,SIGNAL(customContextMenuRequested(const QPoint &)),
+             this, SLOT(slot_monitorContextMenuRequested(const QPoint &)) );
+    connect( ui->jointChart3,SIGNAL(customContextMenuRequested(const QPoint &)),
+             this, SLOT(slot_monitorContextMenuRequested(const QPoint &)) );
+    connect( ui->jointChart4,SIGNAL(customContextMenuRequested(const QPoint &)),
+             this, SLOT(slot_monitorContextMenuRequested(const QPoint &)) );
+    connect( ui->jointChart5,SIGNAL(customContextMenuRequested(const QPoint &)),
+             this, SLOT(slot_monitorContextMenuRequested(const QPoint &)) );
+
+//    connect( ui->tab_5, SIGNAL(customContextMenuRequested(const QPoint &)),
+//             this, SLOT(slot_monitorContextMenuRequested(const QPoint &)) );
 
     //! diagnosis
     connect( &mDiagTable, SIGNAL(signal_data_changed()),
@@ -80,7 +112,7 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     mTerminalRelations.append( ui->label_26 );
     mTerminalRelations.append( ui->spinActTerminal );
     mTerminalRelations.append( ui->joint5 );
-
+    mTerminalRelations.append( ui->jointChart5 );
     //! spys
     spySetting( MRX_T4::e_setting_terminal );
 
@@ -92,8 +124,36 @@ T4OpPanel::~T4OpPanel()
     delete ui;
 }
 
+#define config_chart( wig, title )  ui->wig->chart()->setTitle( title );\
+                                    ui->wig->chart()->series1()->setPen(QPen(Qt::red));\
+                                    ui->wig->chart()->series2()->setPen(QPen(Qt::blue));
+void T4OpPanel::setupUi()
+{
+    //! config the chart
+//    ui->jointChart1->chart()->setTitle( tr("Basement") );
+//    ui->jointChart1->chart()->series1()->setPen(QPen(Qt::red));
+//    ui->jointChart1->chart()->series2()->setPen(QPen(Qt::blue));
+    config_chart( jointChart1, tr("Basement") );
+    config_chart( jointChart2, tr("Big Arm") );
+    config_chart( jointChart3, tr("Little Arm") );
+    config_chart( jointChart4, tr("Wrist") );
+
+    config_chart( jointChart5, tr("Terminal") );
+
+    //! cache
+    mJointCharts.append( ui->jointChart1 );
+    mJointCharts.append( ui->jointChart2 );
+    mJointCharts.append( ui->jointChart3 );
+    mJointCharts.append( ui->jointChart4 );
+
+    mJointCharts.append( ui->jointChart5 );
+}
+
 void T4OpPanel::retranslateUi()
 {
+    //! base ui
+    ui->retranslateUi( this );
+
     //! joint name
     ui->joint1->setJointName( tr("Basement") );
     ui->joint2->setJointName( tr("Big Arm") );
@@ -101,6 +161,51 @@ void T4OpPanel::retranslateUi()
     ui->joint4->setJointName( tr("Wrist") );
 
     ui->joint5->setJointName( tr("Terminal") );
+
+    ui->jointChart1->chart()->setTitle( tr("Basement") );
+    ui->jointChart2->chart()->setTitle( tr("Big Arm") );
+    ui->jointChart3->chart()->setTitle( tr("Little Arm") );
+    ui->jointChart4->chart()->setTitle( tr("Wrist") );
+
+    ui->jointChart5->chart()->setTitle( tr("Terminal") );
+}
+
+bool T4OpPanel::event(QEvent *e)
+{
+    Q_ASSERT( NULL != e );
+
+    if ( e->type() == MONITOR_EVENT  )
+    {
+        updateMonitor( e );
+        e->accept();
+        return true;
+    }
+
+    return XPage::event( e );
+}
+
+void T4OpPanel::updateMonitor(QEvent *e )
+{
+    OpEvent *pOpEvent = (OpEvent*)e;
+
+    Q_ASSERT( NULL != pOpEvent );
+    Q_ASSERT( pOpEvent->mVar1.isValid() );
+
+    int joint = pOpEvent->mVar1.toInt();
+
+    //! proc the cache
+    Q_ASSERT( m_pCaches[joint]->v1.size() == m_pCaches[joint]->v2.size() );
+
+    mJointCharts[joint]->chart()->beginChangeData();
+    for ( int i = 0; i < m_pCaches[joint]->v1.size(); i++ )
+    {
+        mJointCharts[joint]->chart()->dataAppend( m_pCaches[joint]->v1.at(i),
+                                         m_pCaches[joint]->v2.at(i)
+                                        );
+    }
+    mJointCharts[joint]->chart()->endChangeData();
+
+    m_pCaches[joint]->mWSema.release();
 }
 
 void T4OpPanel::spyEdited()
@@ -131,6 +236,11 @@ void T4OpPanel::spyEdited()
         ui->cmbStepXx
     };
 
+    QSlider *sliders[]
+    {
+        ui->sliderVel
+    };
+
     install_spy();
 
     //! modified
@@ -138,7 +248,7 @@ void T4OpPanel::spyEdited()
              this, SLOT(slot_modified()) );
 }
 
-void T4OpPanel::posRefreshProc( void *pContext )
+int T4OpPanel::posRefreshProc( void *pContext )
 {
     //! to local
     MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
@@ -147,15 +257,14 @@ void T4OpPanel::posRefreshProc( void *pContext )
     if ( pRobo->isOpened() )
     {}
     else
-    { return; }
+    { return -1; }
 
     do
     {//logDbg()<<QThread::currentThreadId();
-        if ( isVisible() )
-        {}
-        else
-        { return; }
-
+//        if ( isVisible() )
+//        {}
+//        else
+//        { return -1; }
 
         int ret;
         float x,y,z;
@@ -187,7 +296,6 @@ void T4OpPanel::posRefreshProc( void *pContext )
                                           &x, &y, &z );
         if ( ret != 0 )
         { sysError( tr("Current read fail") ); break; }
-        else
         {
             //! act
             ui->actPosX->setValue( x );
@@ -235,7 +343,6 @@ void T4OpPanel::posRefreshProc( void *pContext )
 
         //! home valid?
         ret = mrgGetRobotHomeRequire( robot_var() );
-        do
         {
             bool bHomeValid;
             if ( ret == 0 )             //! valid
@@ -250,10 +357,13 @@ void T4OpPanel::posRefreshProc( void *pContext )
 
             ui->radHome->setChecked( bHomeValid );
             ui->radioButton_homing_valid->setChecked( bHomeValid );
+        }
 
-        }while( 0 );
+        return 0;
 
     }while( 0 );
+
+    return -1;
 }
 
 void T4OpPanel::terminalValidate( bool b )
@@ -265,22 +375,86 @@ void T4OpPanel::terminalValidate( bool b )
     }
 }
 
+int T4OpPanel::monitorRefreshProc( void *pContext )
+{
+    //! to local
+    MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
+    Q_ASSERT( NULL != pRobo );
+
+    if ( pRobo->isOpened() )
+    {}
+    else
+    { return -1; }
+
+    unsigned int array[1024] = {0};
+    int ret, v1, v2;
+
+    //! foreach sub plot
+    for( int joint = 0; joint < mJointCharts.size(); joint++ )
+    {
+        //! get from device
+        //! \todo
+        ret = mrgMRQReportQueue_Query( robot_var(), joint, 0, array);
+        if ( ret <= 0 )
+        {
+            sysError( tr("Monitor update fail") );
+            continue;
+        }
+
+        m_pCaches[joint]->mWSema.acquire();
+
+        m_pCaches[joint]->v1.clear();
+        m_pCaches[joint]->v2.clear();
+
+        //! debug used
+//        ret = rand() % 100;
+//        for ( int i = 0; i < ret; i++ )
+//        { array[i] = rand()%100; }
+
+//        logDbg()<<joint<<ret;
+        //! update the data
+        if ( ret > 0 )
+        {
+            for(int i=0; i < ret; i++)
+            {
+                v1 = (array[i] >> 8) & 0xFF;
+                v2 = array[i] & 0xFF;
+                if( v1>=0 && v1<=100 && v2>=0 && v2<=100 )
+                {
+    //                jointCharts[joint]->dataAppend(v1,v2);
+                    m_pCaches[joint]->v1.append( v1 );
+                    m_pCaches[joint]->v2.append( v2 );
+                }
+            }
+        }
+
+//        m_pCaches[joint]->mRSema.release();
+        do
+        {
+            OpEvent *refreshEvent = new OpEvent( MONITOR_EVENT );
+            if ( NULL == refreshEvent )
+            {
+                m_pCaches[joint]->mWSema.release();
+                break;
+            }
+            else
+            { }
+
+            refreshEvent->setPara( joint, 0 );
+            qApp->postEvent( this, refreshEvent );
+        }while( 0 );
+    }
+
+    return 0;
+}
+
 void T4OpPanel::attachWorkings()
 {
     //! attach
     attachUpdateWorking( (XPage::procDo)( &T4OpPanel::posRefreshProc) );
+
+    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ) );
 }
-
-//void T4OpPanel::connectPlugin()
-//{
-//    Q_ASSERT( NULL != m_pPlugin );
-
-//    //! spy it
-//    spySetting( MRX_T4::e_setting_terminal );
-
-//    connect( m_pPlugin, SIGNAL(signal_setting_changed( XSetting ) ),
-//             this, SLOT(slot_plugin_setting_changed( XSetting)) ) ;
-//}
 
 void T4OpPanel::updateUi()
 {
@@ -315,15 +489,13 @@ void T4OpPanel::onSetting(XSetting setting)
 
     if ( setting.mSetting == XPage::e_setting_op_able )
     {
-        if ( setting.mPara1.isValid() )
-        {}
-        else
-        { return; }
+        check_para1();
 
         //! enable/disable
         ui->tabWidget->setEnabled( setting.mPara1.toBool() );
         ui->controllerStatus->setDevicePowerEnable( setting.mPara1.toBool() );
     }
+
     else if ( (int)setting.mSetting == (int)MRX_T4::e_setting_terminal )
     {
         if ( setting.mPara1.isValid() )
@@ -342,32 +514,37 @@ void T4OpPanel::onSetting(XSetting setting)
     {}
 }
 
-//void T4OpPanel::slot_plugin_setting_changed( XSetting setting )
-//{
-//    //! filter
-//    if ( filterSetting( setting) )
-//    { return; }
-
-//    if ( setting.mSetting == MRX_T4::e_setting_terminal )
-//    {
-//        if ( setting.mPara1.isValid() )
-//        {}
-//        else
-//        { return; }
-//        logDbg();
-//        terminalValidate( setting.mPara1.toBool() );
-//    }
-//    else
-//    {}
-//}
-
 void T4OpPanel::enterMission()
 {
-    setEnabled( false );
+//    setEnabled( false );
+    ui->controllerStatus->setEnabled( false );
+
+    //! \note the page 1 is logout
+    for( int i = 1; i < ui->tabWidget->count();i++ )
+    {
+        ui->tabWidget->widget( i )->setEnabled( false );
+    }
 }
-void T4OpPanel::exitMission( int ret )
+void T4OpPanel::exitMission( )
 {
-    setEnabled( true );
+//    setEnabled( true );
+    ui->controllerStatus->setEnabled( true );
+
+
+    for( int i = 0; i < ui->tabWidget->count();i++ )
+    {
+        ui->tabWidget->widget( i )->setEnabled( true );
+    }
+}
+
+void T4OpPanel::setOpened( bool b )
+{
+    //! enabled
+    if ( b )
+    { exitMission();  }
+    //! disabled
+    else
+    { enterMission(); }
 }
 
 void T4OpPanel::_step( double x, double y, double z )
@@ -454,6 +631,53 @@ int T4OpPanel::onJointZero( QVariant var )
     //! \todo
     return 0;
 }
+
+int T4OpPanel::exportDataSets( QTextStream &stream,
+                               QStringList &headers,
+                               QList<PlotDataSets*> &dataSets )
+{
+    //! headers
+    foreach( const QString &str, headers )
+    {
+       stream<<str<<",";
+    }
+    stream<<"\n";
+
+    //! for each dataset
+    QPointF a,b;
+    bool bRet;
+    bool bEnd;
+    for ( ;; )
+    {
+        //! check end
+        bEnd = true;
+        for( int i = 0; i < dataSets.size(); i++ )
+        {
+            if ( dataSets[i]->isEnd() )
+            { }
+            else
+            { bEnd = false; break; }
+        }
+
+        if ( bEnd )
+        { break; }
+
+        //! for each data sets
+        for ( int i = 0; i < dataSets.size(); i++ )
+        {
+            bRet = dataSets[i]->getNext( a, b );
+            if ( bRet )
+            { stream<<a.x()<<","<<a.y()<<","<<b.y()<<","; }
+            else
+            { stream<<",,,"; }
+        }
+
+        stream<<"\n";
+    }
+
+    return 0;
+}
+
 
 void T4OpPanel::slot_mct_checked( bool b )
 {
@@ -582,8 +806,6 @@ void T4OpPanel::slot_debug_table_changed()
     { ui->btnDown->setEnabled(true); }
     else
     { ui->btnDown->setEnabled( false ); }
-
-
 }
 
 void T4OpPanel::slot_customContextMenuRequested( const QPoint &pt )
@@ -606,17 +828,151 @@ void T4OpPanel::slot_customContextMenuRequested( const QPoint &pt )
         else
         {}
 
-//        int row = ui->tableView->selectionModel()->selectedIndexes().first().row();
-//        ui->tvDebug->selectRow( ui->tvDebug->currentIndex().row() );
         m_pDebugContextMenu->exec(QCursor::pos());
-
-//        ui->tableView->selectionModel()->clear();
     }
 }
 
 void T4OpPanel::slot_toHere()
 {
     //! \todo
+}
+
+void T4OpPanel::slot_monitorContextMenuRequested( const QPoint &)
+{logDbg();
+    if(m_pMonitorContextMenu == NULL )
+    {
+        m_pMonitorContextMenu = new QMenu( ui->tab_5 );
+        if ( NULL == m_pMonitorContextMenu )
+        { return; }
+
+        QAction *actionExportImage = m_pMonitorContextMenu->addAction(tr("Export image..."));
+        if ( NULL == actionExportImage )
+        {
+            delete m_pMonitorContextMenu;
+            m_pMonitorContextMenu = NULL;
+            return;
+        }
+
+        QAction *actionExportData = m_pMonitorContextMenu->addAction(tr("Export data..."));
+        if ( NULL == actionExportData )
+        {
+            delete m_pMonitorContextMenu;
+            m_pMonitorContextMenu = NULL;
+            return;
+        }
+
+        QAction *actionCopy = m_pMonitorContextMenu->addAction(tr("Copy"));
+        if ( NULL == actionCopy )
+        {
+            delete m_pMonitorContextMenu;
+            m_pMonitorContextMenu = NULL;
+            return;
+        }
+
+        connect(actionExportImage, SIGNAL(triggered(bool)),
+                this, SLOT( slot_monitorExportImage() ) );
+        connect(actionExportData, SIGNAL(triggered(bool)),
+                this, SLOT( slot_monitorExportData() ) );
+        connect(actionCopy, SIGNAL(triggered(bool)),
+                this, SLOT( slot_monitorCopy() ) );
+    }
+    else
+    {}
+
+    m_pMonitorContextMenu->exec(QCursor::pos());
+}
+
+void T4OpPanel::slot_monitorExportImage()
+{
+    QString strFileName = QFileDialog::getSaveFileName( this,
+                                  tr("Export"),
+                                  m_pPlugin->homePath(),
+                                  tr("Image Files (*.png *.jpg *.bmp)")
+                                  );
+    if ( !strFileName.isEmpty() )
+    {
+        QPixmap pixmap = ui->scrollAreaWidgetContents->grab();
+        pixmap.save( strFileName );
+    }
+}
+
+void T4OpPanel::slot_monitorExportData()
+{
+    QString strFileName = QFileDialog::getSaveFileName( this,
+                                  tr("Export"),
+                                  m_pPlugin->homePath(),
+                                  tr("Data (*.csv)")
+                                  );
+    if ( !strFileName.isEmpty() )
+    {
+//        QPixmap pixmap = ui->scrollAreaWidgetContents->grab();
+//        pixmap.save( strFileName );
+        //! \todo
+        //!
+        //!
+
+        QFile file( strFileName );
+        if ( file.open( QIODevice::WriteOnly ) )
+        {}
+        else
+        {
+            sysError( strFileName + " " + tr("save fail") );
+            return;
+        }
+
+        QTextStream txtStream( &file );
+
+        m_pPlugin->lockWorking();
+            PointList *p11, *p12;
+            PointList *p21, *p22;
+            PointList *p31, *p32;
+            PointList *p41, *p42;
+            PointList *p51, *p52;
+
+            //! snap
+            ui->jointChart1->chart()->snapDataSet( &p11, &p12 );
+            ui->jointChart2->chart()->snapDataSet( &p21, &p22 );
+            ui->jointChart3->chart()->snapDataSet( &p31, &p32 );
+            ui->jointChart4->chart()->snapDataSet( &p41, &p42 );
+
+            ui->jointChart5->chart()->snapDataSet( &p51, &p52 );
+
+            //! datasets
+            PlotDataSets d1( p11, p12 );
+            PlotDataSets d2( p21, p22 );
+            PlotDataSets d3( p31, p32 );
+            PlotDataSets d4( p41, p42 );
+            PlotDataSets d5( p51, p52 );
+
+            QList<PlotDataSets*> dataSets;
+            dataSets<<&d1<<&d2<<&d3<<&d4;
+            if ( ui->jointChart5->isVisible() )
+            { dataSets<<&d5; }
+
+            QStringList headers;
+            headers<<"t(base)"<<"sg(base)"<<"se(base)"
+                   <<"t(ba)"<<"sg(ba)"<<"se(ba)"
+                   <<"t(la))"<<"sg(la)"<<"se(la)"
+                   <<"t(wrist)"<<"sg(wrist)"<<"se(wrist)"
+                   <<"t(terminal)"<<"sg(terminal)"<<"se(terminal)";
+            exportDataSets( txtStream, headers, dataSets );
+
+            file.close();
+
+        m_pPlugin->unlockWorking();
+    }
+}
+
+void T4OpPanel::slot_monitorCopy()
+{
+    QPixmap pixmap = ui->scrollAreaWidgetContents->grab();
+
+    QClipboard *clipboard = QGuiApplication::clipboard();
+    if ( NULL == clipboard )
+    { return; }
+
+    clipboard->setImage( pixmap.toImage() );
+
 }
 
 //void T4OpPanel::on_pushButton_2_clicked()
@@ -983,14 +1339,17 @@ on_joint_actions( 5 )
 //void on_joint5_signal_single_add_clicked();
 //void on_joint5_signal_single_sub_clicked();
 
-void T4OpPanel::slot_enter_mission( WorkingApi *pApi )
-{
-    enterMission();
-}
-void T4OpPanel::slot_exit_mission( WorkingApi *pApi, int ret )
-{
-    exitMission( ret );
-}
+//void T4OpPanel::slot_enter_mission( WorkingApi *pApi )
+//{
+//    enterMission();
+//}
+//void T4OpPanel::slot_exit_mission( WorkingApi *pApi, int ret )
+//{
+//    exitMission( ret );
+
+//    //! exit
+//    XPage::slot_exit_mission( pApi, ret );
+//}
 
 }
 

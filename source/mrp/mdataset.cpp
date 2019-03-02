@@ -363,7 +363,7 @@ void MDataSet::normalLine( QString &ary )
 
 bool MDataSet::filterLine( QString &ary )
 {
-    normalLine( ary );
+//    normalLine( ary );
 
     if ( verifyLine(ary) )
     { }

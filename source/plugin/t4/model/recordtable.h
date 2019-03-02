@@ -2,26 +2,22 @@
 #define RECORDTABLE_H
 
 #include "../../model/megatablemodel.h"
-
+class MDataSection;
 namespace mrx_t4{
 
 class RecordItem
 {
-public:
-//    enum recordType
-//    {
-//        record_pa,
-//        record_ra
-//    };
 
 public:
     QString mType;
+    QString mCoord;
     QString mPara;
     quint32 mDi, mDo;
     float mX, mY, mZ, mH, mPw;
     float mVel, mAcc;
     QString mComment;
 };
+
 
 class RecordTable : public MegaTableModel
 {
@@ -44,6 +40,12 @@ public:
     virtual bool removeRows(int position, int rows, const QModelIndex &parent);
 
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+
+public:
+    int exportOut( const QString &fileName );
+    int loadIn( const QString &fileName );
+protected:
+    int _loadIn( MDataSection *pSection, QList< RecordItem *> &items );
 
 protected:
     bool decorationRole( int role, int row, int col, QVariant &var ) const;

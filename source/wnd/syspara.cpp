@@ -13,9 +13,13 @@ void SysPara::init()
     mbAutoExpand = true;
     mbAutoLoad = true;
     mbAutoSearch = true;
+    mbAutoLogin = false;
 
     mIntfIndex = 0;
     mStyleIndex = 0;
+
+    mSysMode = 0;   //! operator
+
 }
 
 int SysPara::save( const QString &fileName )
@@ -75,8 +79,10 @@ int SysPara::serialOut( QXmlStreamWriter &writer )
         writer.writeTextElement( "auto_expand", QString::number( mbAutoExpand ) );
         writer.writeTextElement( "auto_load", QString::number( mbAutoLoad ) );
         writer.writeTextElement( "auto_search", QString::number( mbAutoSearch ) );
+        writer.writeTextElement( "auto_login", QString::number( mbAutoLogin ) );
 
         writer.writeTextElement( "intf", QString::number(mIntfIndex) );
+        writer.writeTextElement( "sys_mode", QString::number(mSysMode) );
     writer.writeEndElement();
 
     writer.writeStartElement( "plugins");
@@ -107,8 +113,12 @@ int SysPara::serialIn( QXmlStreamReader &reader )
                 { mbAutoLoad = reader.readElementText().toInt() > 0; }
                 else if ( reader.name() == "auto_search" )
                 { mbAutoSearch = reader.readElementText().toInt() > 0; }
+                else if ( reader.name() == "auto_login" )
+                { mbAutoLogin = reader.readElementText().toInt() > 0; }
                 else if ( reader.name() == "intf" )
                 { mIntfIndex = reader.readElementText().toInt(); }
+                else if ( reader.name() == "sys_mode" )
+                { mSysMode = reader.readElementText().toInt(); }
                 else
                 { reader.skipCurrentElement(); }
             }
@@ -118,7 +128,7 @@ int SysPara::serialIn( QXmlStreamReader &reader )
             while( reader.readNextStartElement() )
             {
                 if ( reader.name() == "plugin" )
-                { mPlugins.append( reader.readElementText()); }
+                { mPlugins.append( reader.readElementText()); qDebug()<<mPlugins.last(); }
                 else
                 { reader.skipCurrentElement(); }
             }

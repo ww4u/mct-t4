@@ -17,67 +17,29 @@ MRX_T4::MRX_T4( QObject *parent ) : XPlugin( parent )
     mRobotHandle = -1;
 
     m_pReccordTable = NULL;
-    m_pRootWidgetItem = NULL;
 }
 
 //! role: page
 //! role+1: plugin
 
-#define new_widget( type, var, txt, icon ) \
-do{ \
-    var = new type;\
-    Q_ASSERT( NULL != var ); \
-    var->adapteToUserMode(sysMode());\
-    var->attachPlugin( this );\
-    var->attachWorkings(); \
-    var->setObjectName( txt );\
-    \
-    QTreeWidgetItem *plwItem = new QTreeWidgetItem();   \
-    Q_ASSERT( NULL != plwItem ); \
-    plwItem->setIcon( 0, QIcon( icon) ); \
-    plwItem->setText( 0, tr(txt) ); \
-    plwItem->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(var) ) ); \
-    plwItem->setData( 0, Qt::UserRole + 1, QVariant( QVariant::fromValue(this) ) ); \
-    pRoot->addChild(plwItem); \
-    stack->addWidget( var );     \
-    mPluginWidgets.append( var ); \
-}while(0)
-
-#define new_root_widget( type, var, txt, icon, root ) \
-do{ \
-    var = new type;\
-    Q_ASSERT( NULL != var ); \
-    var->adapteToUserMode(sysMode());\
-    var->attachPlugin( this );\
-    var->attachWorkings(); \
-    var->setObjectName( txt );\
-    \
-    \
-    root->setIcon( 0, QIcon( icon) ); \
-    root->setText( 0, tr(txt) ); \
-    root->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(var) ) ); \
-    stack->addWidget( var );     \
-    mPluginWidgets.append( var ); \
-}while(0)
-
 QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
 {
+    //! root
     m_pRootWidgetItem = new QTreeWidgetItem();
     QTreeWidgetItem *pRoot;
     pRoot = m_pRootWidgetItem;
-//    pRoot->setText( 0, "MRX-T4" );
+
     //! attach user role
     m_pRootWidgetItem->setData( 0, Qt::UserRole+1, QVariant::fromValue( this ) );
 
+    //! pages
     XPage *pWig;
-
-//    mrx_t4::ActionTable *pRecordTable;
     mrx_t4::ErrorMgrTable *pErrCfgTable;
 
     new_root_widget( mrx_t4::Info, pWig, "MRX-T4", ":/res/image/icon/205.png", m_pRootWidgetItem );
     new_widget( mrx_t4::Config, pWig, "Configuration", ":/res/image/icon/205.png" );
     new_widget( mrx_t4::AdvPara, pWig, "Misc", ":/res/image/icon/205.png" );
-    new_widget( mrx_t4::Coordinate, pWig, "Coordinate", ":/res/image/icon/205.png" );
+//    new_widget( mrx_t4::Coordinate, pWig, "Coordinate", ":/res/image/icon/205.png" );
     new_widget( mrx_t4::MotorConfig, pWig, "Motor", ":/res/image/icon/205.png" );
     new_widget( mrx_t4::ActionTable, m_pReccordTable, "Record Table", ":/res/image/icon/activity.png" );
     new_widget( mrx_t4::ErrorMgrTable, pErrCfgTable, "Error Management", ":/res/image/icon/205.png" );
@@ -137,8 +99,10 @@ void MRX_T4::onSetting(XSetting setting)
 
         Q_ASSERT( NULL != m_pRootWidgetItem );
         if ( setting.mPara1.toBool() )
-        { m_pRootWidgetItem->setIcon( 0, QIcon(":/res/image/icon/guanlianshebei.png") );}
+//        { m_pRootWidgetItem->setIcon( 0, QIcon(":/res/image/icon/guanlianshebei.png") );}
+        { m_pRootWidgetItem->setIcon( 0, QIcon(":/res/image/h2product/connect.png") );}
         else
-        { m_pRootWidgetItem->setIcon( 0, QIcon(":/res/image/icon/tupianjiazaishibai.png") );}
+//        { m_pRootWidgetItem->setIcon( 0, QIcon(":/res/image/icon/tupianjiazaishibai.png") );}
+        { m_pRootWidgetItem->setIcon( 0, QIcon(":/res/image/h2product/disconnect.png") );}
     }
 }

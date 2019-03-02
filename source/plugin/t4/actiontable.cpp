@@ -1,9 +1,15 @@
+#include <float.h>
 #include "actiontable.h"
 #include "ui_actiontable.h"
 
 #include "../../plugin/t4/t4.h"
 #include "../../device/MegaRobot.h"
 #include "../../device/mrqDevice.h"
+#include "../../device/storage.h"
+
+#include "../model/recordtable.h"
+
+#define record_file_name  "record.mrp"
 
 namespace mrx_t4 {
 
@@ -36,6 +42,11 @@ ActionTable::ActionTable(QWidget *parent) :
 ActionTable::~ActionTable()
 {
     delete ui;
+}
+
+void ActionTable::retranslateUi()
+{
+    ui->retranslateUi( this );
 }
 
 void ActionTable::setModel( QAbstractTableModel *pModel )
@@ -78,6 +89,84 @@ void ActionTable::onSetting(XSetting setting)
     }
     else
     {}
+}
+
+int ActionTable::upload()
+{
+    check_connect_ret( -1 );
+
+    QByteArray ary;
+
+    int capacity = 1024*1024;
+    ary.reserve( capacity );
+
+    do
+    {
+        QString fileAry = m_pPlugin->SN() + "_" + record_file_name;
+        int ret = mrgStorageMotionFileContextRead( pRobo->deviceVi(),
+                                               fileAry.toLatin1().data(),
+                                               ary.data(),
+                                               capacity );
+
+        if ( ret <= 0 )
+        { break; }
+
+        //! save the file
+        QFile file( m_pPlugin->homePath() + "/" + record_file_name );
+        if ( file.open( QIODevice::WriteOnly ) )
+        {}
+        else
+        { break; }
+
+        if ( ret != file.write( ary.data(), ret ) )
+        {
+            file.close();
+            break;
+        }
+
+        file.close();
+
+        //! write success + reload
+        doLoad();
+
+        return 0;
+
+    }while( 0 );
+
+    sysError( tr("Record load fail") );
+    return -1;
+}
+int ActionTable::download()
+{
+    check_connect_ret( -1 );
+
+    QString fileName = m_pPlugin->homePath() + "/" + record_file_name;
+    QString fileOutName = m_pPlugin->SN() + "_" + record_file_name;
+    int ret = mrgStorageMotionFileSave( pRobo->deviceVi(),
+                              fileName.toLatin1().data(),
+                              fileOutName.toLatin1().data()
+                              );
+    if ( ret != 0 )
+    {
+        sysError( tr("Record save fail") );
+    }
+
+    return ret;
+}
+int ActionTable::diff()
+{
+    return 0;
+}
+
+void ActionTable::enterMission()
+{
+    if ( NULL != m_pContextMenu )
+    { m_pContextMenu->setEnabled( false ); }
+}
+void ActionTable::exitMission()
+{
+    if ( NULL != m_pContextMenu )
+    { m_pContextMenu->setEnabled( true ); }
 }
 
 int ActionTable::currentIndex()
@@ -154,7 +243,7 @@ void ActionTable::addRecord( XSetting setting )
 
 void ActionTable::doSave()
 {
-    MegaTableModel *pTable = (MegaTableModel*)ui->tableView->model();
+    RecordTable *pTable = (RecordTable*)ui->tableView->model();
     if ( NULL == pTable )
     {
         sysError( tr("Save record fail") );
@@ -166,10 +255,14 @@ void ActionTable::doSave()
     Q_ASSERT( NULL != m_pPlugin );
     ret = assurePath( m_pPlugin->homePath() );
     if ( ret != 0 )
-    { return; }
+    {
+        sysError( tr("Save record fail") );
+        return;
+    }
 
-    QString fileName = m_pPlugin->homePath() + "/record.xml";
-    ret = pTable->save( fileName );
+    //! mrp
+    QString fileName = m_pPlugin->homePath() + "/" + record_file_name;
+    ret = pTable->exportOut( fileName );
     if ( ret != 0 )
     {
         sysError( fileName + " " + tr("save fail") );
@@ -178,23 +271,20 @@ void ActionTable::doSave()
 }
 
 void ActionTable::doLoad()
-{logDbg();
-    QString fileName = m_pPlugin->homePath() +"/record.xml";
-    int ret;
-
-    MegaTableModel *pTable = (MegaTableModel*)ui->tableView->model();
+{
+    QString fileName = m_pPlugin->homePath() + "/" + record_file_name;
+    RecordTable *pTable = (RecordTable*)ui->tableView->model();
     if ( NULL == pTable )
     {
         sysError( tr("Load record fail") );
         return;
     }
 
-    ret = pTable->load( fileName );
+    int ret = pTable->loadIn( fileName );
     if ( ret != 0 )
     {
-        sysError( fileName + " " + tr("load fail") );
-        return;
-    }logDbg();
+        sysError( tr("Load record fail") );
+    }
 }
 
 //! x,y,z,pw,h,v,a
@@ -212,23 +302,41 @@ logDbg()<<QThread::currentThreadId()
       <<vars.at(3).toDouble()
       <<vars.at(4).toDouble()
       <<vars.at(5).toDouble()
-      <<vars.at(6).toDouble()  ;
+      <<vars.at(6).toDouble();
 
-    //! \todo
-//        //! wait idle
-//        //! \todo speed
-//        int ret = mrgRobotRelMove( robot_var(),
-//                                   wave_table,
-//                                   vars.at(0).toDouble(),
-//                                   vars.at(1).toDouble(),
-//                                   vars.at(2).toDouble(),
-//                                   1,
-//                                   60000
-//                                   );
+    //! get remote pos
+    int ret;
+    float x,y,z;
+    ret = mrgGetRobotCurrentPosition( robot_var(),
+                                &x, &y, &z );
+    if ( ret != 0 )
+    {
+        sysError( tr("Position read fail") );
+        return -1;
+    }
 
-//    logDbg()<<ret;
-//    return ret;
-    return 0;
+    //! calc the distance
+    float dist = sqrt( pow(  x - vars.at(0).toDouble(), 2) +
+                       pow(  y - vars.at(1).toDouble(), 2) +
+                       pow(  z - vars.at(1).toDouble(), 2)
+                       );
+    float time = qAbs( dist ) / pRobo->velocity();
+    if ( time < FLT_MIN * 2 )
+    {
+        sysError( tr("Time too short") );
+        return -1;
+    }
+
+    ret = mrgRobotRelMove( robot_var(),
+                               wave_table,
+                               vars.at(0).toDouble(),
+                               vars.at(1).toDouble(),
+                               vars.at(2).toDouble(),
+                               time,
+                               60000 + time
+                               );
+
+    return ret;
 }
 
 void ActionTable::slot_request_save()
@@ -288,6 +396,9 @@ void ActionTable::slot_toHere()
 
 void ActionTable::slot_customContextMenuRequested(const QPoint &pos)
 {
+    if ( mbMissionWorking )
+    { return; }
+
     //! valid
     if ( ui->tableView->currentIndex().isValid() )
     {

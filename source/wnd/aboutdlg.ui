@@ -74,7 +74,7 @@
      <item>
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>MEGAROBO Config</string>
+        <string>MEGAROBO Config Tool</string>
        </property>
       </widget>
      </item>

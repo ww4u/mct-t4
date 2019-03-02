@@ -28,8 +28,11 @@ public:
     // Basic functionality:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+    virtual bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    virtual bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 public:
     void append( const QString &content, LogStr::eLogLevel lev=LogStr::log_info );
     void clear();

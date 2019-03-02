@@ -83,7 +83,14 @@ void MotorConfig::spyEdited()
 
     };
 
+    QSlider *sliders[]
+    {
+    };
+
     install_spy();
 }
+
+void MotorConfig::retranslateUi()
+{ ui->retranslateUi( this ); }
 
 }

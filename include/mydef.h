@@ -117,6 +117,7 @@
 //#define spy_control_combox( control ) connect( control, SIGNAL(currentIndexChanged(int)), this, SLOT(slot_modified())); enable_edit( control );
 #define spy_control_combox( control ) connect( control, SIGNAL(activated(int)), this, SLOT(slot_modified())); enable_edit( control );
 #define spy_control_checkbox( control ) connect( control, SIGNAL(clicked()), this, SLOT(slot_modified())); enable_edit( control );
+#define spy_control_slider( control )   connect( control, SIGNAL(sliderMoved(int)), this, SLOT(slot_modified())); enable_edit( control );
 
 #define install_spy()       \
 for ( int i = 0; i < sizeof_array(gpBox); i++ )\
@@ -135,6 +136,8 @@ for ( int i = 0; i < sizeof_array(doubleSpinBoxes); i++ )\
 { spy_control_edit( doubleSpinBoxes[i] ); }\
 \
 for ( int i = 0; i < sizeof_array(comboxes); i++ )\
-{ spy_control_combox( comboxes[i] ); }
+{ spy_control_combox( comboxes[i] ); } \
+for ( int i = 0; i < sizeof_array(sliders); i++ )\
+{ spy_control_slider( sliders[i] ); }
 
 #endif

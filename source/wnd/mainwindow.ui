@@ -44,7 +44,7 @@
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>&amp;File</string>
+     <string>File(&amp;F)</string>
     </property>
     <addaction name="actionPoweroff"/>
     <addaction name="actionReboot"/>
@@ -52,7 +52,7 @@
    </widget>
    <widget class="QMenu" name="menuOperate">
     <property name="title">
-     <string>&amp;Operate</string>
+     <string>Operate(&amp;O)</string>
     </property>
     <addaction name="actionStop"/>
     <addaction name="separator"/>
@@ -65,13 +65,13 @@
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>&amp;Help</string>
+     <string>Help(&amp;H)</string>
     </property>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuToo">
     <property name="title">
-     <string>&amp;Tool</string>
+     <string>Tool(&amp;T)</string>
     </property>
     <addaction name="actionWifi"/>
     <addaction name="actionPref"/>
@@ -79,7 +79,7 @@
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>&amp;View</string>
+     <string>View(&amp;V)</string>
     </property>
    </widget>
    <addaction name="menuFile"/>
@@ -97,10 +97,6 @@
    </property>
    <property name="focusPolicy">
     <enum>Qt::ClickFocus</enum>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color: rgba(255, 255, 255, 0);
-border-color: rgba(255, 255, 255, 0);</string>
    </property>
    <property name="movable">
     <bool>false</bool>
@@ -265,7 +261,7 @@ border-color: rgba(255, 255, 255, 0);</string>
   <action name="actionConnect">
    <property name="icon">
     <iconset resource="../../res/res.qrc">
-     <normaloff>:/res/image/h2product/offline.png</normaloff>:/res/image/h2product/offline.png</iconset>
+     <normaloff>:/res/image/h2product/disconnect.png</normaloff>:/res/image/h2product/disconnect.png</iconset>
    </property>
    <property name="text">
     <string>Connect</string>

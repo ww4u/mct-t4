@@ -12,6 +12,44 @@
 #include "xpluginintf.h"
 
 
+//! macros
+#define new_widget( type, var, txt, icon ) \
+do{ \
+    var = new type;\
+    Q_ASSERT( NULL != var ); \
+    var->adapteToUserMode(sysMode());\
+    var->attachPlugin( this );\
+    var->attachWorkings(); \
+    var->setObjectName( txt );\
+    \
+    QTreeWidgetItem *plwItem = new QTreeWidgetItem();   \
+    Q_ASSERT( NULL != plwItem ); \
+    plwItem->setIcon( 0, QIcon( icon) ); \
+    plwItem->setText( 0, tr(txt) ); \
+    plwItem->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(var) ) ); \
+    plwItem->setData( 0, Qt::UserRole + 1, QVariant( QVariant::fromValue(this) ) ); \
+    pRoot->addChild(plwItem); \
+    stack->addWidget( var );     \
+    mPluginWidgets.append( var ); \
+}while(0)
+
+#define new_root_widget( type, var, txt, icon, root ) \
+do{ \
+    var = new type;\
+    Q_ASSERT( NULL != var ); \
+    var->adapteToUserMode(sysMode());\
+    var->attachPlugin( this );\
+    var->attachWorkings();\
+    var->setObjectName( txt );\
+    \
+    \
+    root->setIcon( 0, QIcon( icon) ); \
+    root->setText( 0, tr(txt) ); \
+    root->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(var) ) ); \
+    stack->addWidget( var ); \
+    mPluginWidgets.append( var ); \
+}while(0)
+
 class XPluginWorkingThread;
 class XPluginBgThread;
 class XPlugin : public XPluginIntf
@@ -51,7 +89,7 @@ public:
     virtual void onSetting( XSetting setting );
 
 public:
-    virtual int stop();
+    virtual void updateUi();
 
     virtual int upload();
     virtual int download();
@@ -106,6 +144,7 @@ public:
     void cancelBgWorking();
 
 protected:
+    QTreeWidgetItem *m_pRootWidgetItem;
     QWidget *m_pPanelWidget;
     QDockWidget *m_pDock;
 

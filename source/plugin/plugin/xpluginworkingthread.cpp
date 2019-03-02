@@ -27,7 +27,11 @@ WorkingApi::eWorkingClass WorkingApi::getClass()
 { return mWorkingClass; }
 
 XPluginWorkingThread::XPluginWorkingThread( QObject *parent ) : QThread( parent )
-{}
+{
+    m_pWorkMutex = NULL;
+
+    mTickms = 100;
+}
 
 XPluginWorkingThread::~XPluginWorkingThread()
 {
@@ -39,6 +43,7 @@ void XPluginWorkingThread::attachMutex( QMutex *pMutex )
     Q_ASSERT( NULL != pMutex );
 
     m_pWorkMutex = pMutex;
+    logDbg()<<m_pWorkMutex;
 }
 
 void XPluginWorkingThread::attach( WorkingApi * pApi )
@@ -59,6 +64,11 @@ void XPluginWorkingThread::detach()
 
     mMutex.unlock();
 }
+
+void XPluginWorkingThread::setTick( int ms )
+{ mTickms = ms; }
+int XPluginWorkingThread::tick()
+{ return mTickms; }
 
 void XPluginWorkingThread::run()
 {
@@ -115,7 +125,8 @@ void XPluginWorkingThread::run()
 
                 }while( 0 );
 
-                //! \note delete
+                //! \note delete in this thread
+                //! alert to be used in slot
             emit signal_exit_working( pApi, ret );
 
                 //! remove
@@ -131,8 +142,10 @@ void XPluginWorkingThread::run()
 
 
 //            mMutex.unlock();
-
-            QThread::msleep( XPluginWorkingThread::_tickms );
+            if ( mTickms > 0 )
+            { QThread::msleep( mTickms ); }
         }
     }
+
+    qDeleteAll( mApis );
 }

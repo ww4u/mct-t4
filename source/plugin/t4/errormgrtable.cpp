@@ -31,6 +31,11 @@ ErrorMgrTable::~ErrorMgrTable()
     delete ui;
 }
 
+void ErrorMgrTable::retranslateUi()
+{
+    ui->retranslateUi( this );
+}
+
 void ErrorMgrTable::setModel( QAbstractTableModel *pModel )
 {
     Q_ASSERT( NULL != pModel );

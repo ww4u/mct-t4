@@ -24,6 +24,7 @@ public:
     virtual void updateData();
 protected:
     virtual void spyEdited();
+    virtual void retranslateUi();
 
 private:
     Ui::AdvPara *ui;

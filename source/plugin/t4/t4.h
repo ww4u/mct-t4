@@ -60,7 +60,13 @@ public:
     virtual QWidget *createOpsPanel( QAbstractListModel *pModel,
                                      QWidget *parent=nullptr );
 public:
-    virtual void ErrorMgrTable( QByteArray &ary );
+    virtual void rstErrorMgrTable();
+    virtual void rstRecordTable();
+
+protected:
+    void ErrorMgrTable( QByteArray &ary );
+    void RecordTable( QByteArray &ary );
+public:
     virtual void onSetting(XSetting setting);
 public:
     virtual int serialOut(QXmlStreamWriter &writer);
@@ -75,6 +81,8 @@ public:
     virtual void close();
 
     virtual int stop();
+
+    virtual void rst();
 
     virtual int upload();
     virtual int download();

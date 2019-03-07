@@ -63,9 +63,13 @@ public:
     virtual ~XPlugin();
 
 signals:
+    void signal_focus_changed( const QString &model,
+                               const QString &contextHelp );
     void signal_setting_changed( XSetting setting );
     void signal_request_save();
     void signal_request_load();
+
+    void signal_api_operate( QObject *pApi, bool );
 
 public:
     virtual QTreeWidgetItem* createPrefPages( QStackedWidget *stack );
@@ -74,7 +78,11 @@ public:
 
     virtual void setActive( );
 
-    virtual void ErrorMgrTable( QByteArray &ary );
+    virtual void rstErrorMgrTable();
+    virtual void rstRecordTable();
+
+//    virtual void ErrorMgrTable( QByteArray &ary );
+//    virtual void RecordTable( QByteArray &ary );
 
     virtual void onOperateAble( bool b );
 public:
@@ -90,6 +98,8 @@ public:
 
 public:
     virtual void updateUi();
+
+    virtual void rst();
 
     virtual int upload();
     virtual int download();
@@ -118,13 +128,15 @@ public:
 
     void attachUpdateWorking( XPage *pObj,
                         XPage::procDo proc,
-                        void *pContext = NULL
+                        void *pContext = NULL,
+                        int tmoms = 100
                         );
     void attachUpdateWorking( XPage *pObj,
                         XPage::procDo proc,
                         XPage::preDo pre,
                         XPage::postDo post,
-                        void *pContext = NULL
+                        void *pContext = NULL,
+                        int tmoms = 100
                         );
 
     void attachMissionWorking( XPage *pObj,
@@ -158,6 +170,8 @@ public:
     XPluginBgThread *m_pBgWorking;
 
     QMutex mEmergMutex, mMissionMutex, mUpdateMutex;
+
+    QSignalMapper mMapper;
 
 protected Q_SLOTS:
     virtual void slot_save_setting();

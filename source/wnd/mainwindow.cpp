@@ -1,10 +1,13 @@
+#include <QFile>
+#include <QAction>
+#include <QKeySequence>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 #include "login.h"
 #include "syspref.h"
 
-#define pref_file_path  QDir::homePath() + "/mct"
+#define pref_file_path  QDir::homePath() + "/AppData/Roaming/mct"
 #define pref_file_name  pref_file_path + "/mct_pref.xml"
 
 MainWindow *MainWindow::_pBackendProxy = NULL;
@@ -47,6 +50,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     m_pDockHelp  = NULL;
     m_pHelpPanel = NULL;
     m_pProgress  = NULL;
+
+    m_pSysLogout = NULL;
 
     //! default
     mPref.init();
@@ -115,8 +120,12 @@ void MainWindow::setupWorkArea()
 
     m_pHelpPanel = new HelpPanel();
     m_pDockHelp->setWidget( m_pHelpPanel );    
-    m_pDockHelp->toggleViewAction()->setText(tr("&ShowHelp"));
-    ui->menuHelp->addAction( m_pDockHelp->toggleViewAction() );
+
+    m_pHelpAction = m_pDockHelp->toggleViewAction();
+    ui->menuHelp->addAction( m_pHelpAction );
+    m_pHelpAction->setText( tr("Show Help") );
+    m_pHelpAction->setShortcut( QKeySequence("Ctrl+H") );
+
     m_pDockHelp->hide();
 }
 
@@ -192,8 +201,8 @@ void MainWindow::buildConnection()
     connect( this, SIGNAL(signal_pref_changed()),
              this, SLOT(slot_save_sysPref()) );
 
-    connect( m_roboConfig, SIGNAL(signal_focus_in( const QString &)),
-             this, SLOT(slot_focus_in(const QString &)) );
+    connect( m_roboConfig, SIGNAL(signal_focus_in( const QString &, const QString &)),
+             this, SLOT(slot_focus_in(const QString &, const QString &)) );
 
     //! direct connect
     connect(ui->actionDownload,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotDownload()));
@@ -217,6 +226,8 @@ void MainWindow::buildConnection()
     connect( this, SIGNAL(signal_logout(const QString &,int)),
              this, SLOT(slot_logout(const QString &, int)),
              Qt::QueuedConnection );
+    connect( m_pSysLogout, SIGNAL(signal_focus_in(const QString &,const QString &)),
+             this, SLOT(slot_focus_in(const QString &, const QString &)) );
 
     //! status
     connect( this, SIGNAL(signal_status(const QString &)),
@@ -470,17 +481,28 @@ void MainWindow::slot_progress_canceled()
     m_roboConfig->cancelBgWorking();
 }
 
-void MainWindow::slot_focus_in( const QString &name )
+//! mrx-t4/info.html
+void MainWindow::slot_focus_in( const QString &model,
+                                const QString &name )
 {
-    QString strName =  QApplication::applicationDirPath() + "/doc/" + name + ".html";
-//    logDbg() << name;
+    QString strName =  QApplication::applicationDirPath() + "/help/" + model + "/" + name + ".html";
     if ( name.length() <= 0 )
     { return; }
 
+    if ( QFile::exists( strName ) )
+    {}
+    else
+    {
+        sysError( strName + " not exist");
+        return;
+    }
+
+    //! help panel
     if ( m_pHelpPanel == NULL )
     { return; }
 
     m_pHelpPanel->setFile( strName );
+    logDbg()<< strName;
 }
 
 void MainWindow::changeEvent( QEvent * event )
@@ -494,8 +516,7 @@ void MainWindow::changeEvent( QEvent * event )
     {
         ui->retranslateUi( this );
 
-        m_pClasAction->setText( tr("Classic") );
-        m_pMegaAction->setText( tr("MEGAROBO") );
+        retranslateUi();
 
         //! \todo for each plugin and widgets
 //        for ( int i = 0; i < ui->widget->count(); i++ )
@@ -523,7 +544,12 @@ void MainWindow::emit_progress( const QString &info, bool b, int now, int mi, in
 }
 
 void MainWindow::retranslateUi()
-{}
+{
+    m_pClasAction->setText( tr("Classic") );
+    m_pMegaAction->setText( tr("MEGAROBO") );
+
+    m_pHelpAction->setText(tr("Show Help"));
+}
 
 void MainWindow::savePref()
 {

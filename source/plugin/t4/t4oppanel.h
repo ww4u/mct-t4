@@ -117,9 +117,10 @@ public:
     virtual bool event(QEvent *e);
 
 protected:
-    void updateMonitor(QEvent *e );
+    virtual void focusInEvent(QFocusEvent *event);
 
 protected:
+    void updateMonitor(QEvent *e );
     virtual void spyEdited();
 
 public:
@@ -233,6 +234,7 @@ private slots:
 //    virtual void slot_enter_mission( WorkingApi *pApi );
 //    virtual void slot_exit_mission( WorkingApi *pApi, int ret );
 
+    void on_tabWidget_currentChanged(int index);
 };
 
 }

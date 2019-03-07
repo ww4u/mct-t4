@@ -14,6 +14,8 @@ AdvPara::AdvPara(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setContextHelp("advpara");
+
     spyEdited();
 
     set_page_rstable();

@@ -194,7 +194,6 @@ public:
         menuHelp->addAction(actionAbout);
         menuToo->addAction(actionWifi);
         menuToo->addAction(actionPref);
-        menuToo->addAction(actiontest);
 
         retranslateUi(MainWindow);
         QObject::connect(actionExit, SIGNAL(triggered()), MainWindow, SLOT(close()));

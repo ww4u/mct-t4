@@ -23,6 +23,7 @@ RoboConfig::RoboConfig(QWidget *parent) :
     m_pRoboContextMenu = NULL;
     m_pActionOpen = NULL;
     m_pActionClose = NULL;
+    m_pActionRst = NULL;
 
     ui->setupUi(this);
 
@@ -58,6 +59,7 @@ void RoboConfig::setupUi()
     m_pRootNode->setText( 0, tr("Project"));
     m_pRootNode->setIcon( 0, QIcon( ":/res/image/icon/201.png" ) );
     ui->treeWidget->addTopLevelItem( m_pRootNode );
+    ui->treeWidget->setCurrentItem( m_pRootNode );
 
     //! logon
     WelcomePage *pPage = new WelcomePage();
@@ -502,6 +504,11 @@ void RoboConfig::slotShowContextmenu(const QPoint& pos)
             if ( NULL == m_pActionClose )
             { gc_context_menu(); return; }
 
+            m_pActionRst = m_pRoboContextMenu->addAction(tr("Reset"));
+            m_pActionRst->setIcon( QIcon(":/res/image/icon/beauty.png") );
+            if ( NULL == m_pActionRst )
+            { gc_context_menu(); return; }
+
             QAction *actionDelete = m_pRoboContextMenu->addAction(tr("Delete"));
             actionDelete->setIcon( QIcon(":/res/image/icon/trash.png") );
             if ( NULL == actionDelete )
@@ -518,6 +525,7 @@ void RoboConfig::slotShowContextmenu(const QPoint& pos)
             //! add action
             connect(m_pActionOpen, SIGNAL(triggered(bool)), this, SLOT(slotActionOpen()));
             connect(m_pActionClose, SIGNAL(triggered(bool)), this, SLOT(slotActionClose()));
+            connect(m_pActionRst, SIGNAL(triggered(bool)), this, SLOT(slotActionRst()));
             connect(actionDelete, SIGNAL(triggered(bool)), this, SLOT(slotActionDelete()));
             connect(actionExplorer, SIGNAL(triggered(bool)), this, SLOT(slotActionExplorer()));
         }
@@ -527,11 +535,13 @@ void RoboConfig::slotShowContextmenu(const QPoint& pos)
         {
             m_pActionOpen->setVisible(false);
             m_pActionClose->setVisible(true);
+            m_pActionRst->setVisible( true );
         }
         else
         {
             m_pActionOpen->setVisible(true);
             m_pActionClose->setVisible(false);
+            m_pActionRst->setVisible( false );
         }
 
         //! pop proc
@@ -552,10 +562,15 @@ void RoboConfig::slotActionOpen()
 
 void RoboConfig::slotActionClose()
 {
-    //! \todo lock the device
-
+    //! \note lock in the close()
     Q_ASSERT( NULL != m_pCurPlugin );
     m_pCurPlugin->close();
+}
+
+void RoboConfig::slotActionRst()
+{
+    Q_ASSERT( NULL != m_pCurPlugin );
+    m_pCurPlugin->rst();
 }
 
 void RoboConfig::slotActionDelete()
@@ -591,6 +606,8 @@ void RoboConfig::on_treeWidget_currentItemChanged(QTreeWidgetItem *current,
     stackPageChange( current, previous );
 
     panelPageChange( current, previous );
+
+    //! change help
 }
 
 void RoboConfig::on_buttonBox_clicked(QAbstractButton *button)
@@ -930,6 +947,9 @@ logDbg();
             createRobot( strItem.split(',') );
         }
     }
+
+    on_treeWidget_currentItemChanged( ui->treeWidget->currentItem(),
+                                      NULL );
 }
 
 void RoboConfig::cancelBgWorking()
@@ -1021,6 +1041,10 @@ void RoboConfig::createRobot( const QStringList &strInfos )
         sysError( tr("No model") + " " + strInfos.at(1) );
         return;
     }
+
+    //! connect plugin
+    connect( plugin, SIGNAL(signal_focus_changed(const QString &,const QString &)),
+             this, SIGNAL(signal_focus_in(const QString &,const QString &)));
 
     //! config plugin
     plugin->setAddr( strInfos.at(0) );
@@ -1116,6 +1140,18 @@ XPlugin* RoboConfig::findPlugin( const QString &_addr,
 int RoboConfig::setReset()
 {
     //! \todo reset the current page
+
+
+//    ui->stackedWidget->curr
+    XPage *pPage;
+
+    pPage = (XPage*)ui->stackedWidget->currentWidget();
+    if ( NULL == pPage )
+    { return -1; }
+
+    //! page rst
+    pPage->rst();
+
 
 //    if(mIndex < 0) return -100;
 
@@ -1244,4 +1280,15 @@ void RoboConfig::slot_plugin_setting_changed( XSetting setting )
     }
     else
     {}
+}
+
+void RoboConfig::on_stackedWidget_currentChanged(int arg1)
+{
+    //! xpage
+
+    XPage *pPage = (XPage*)ui->stackedWidget->currentWidget();
+    if ( pPage == NULL )
+    { return; }
+
+    pPage->showFocusHelp();
 }

@@ -18,6 +18,12 @@ public:
 
     void attachLogModel( QAbstractListModel *pModel );
 
+Q_SIGNALS:
+    void signal_focus_in( const QString &model, const QString &help );
+
+protected:
+    virtual void focusInEvent(QFocusEvent *event);
+
 private:
     Ui::SysLogout *ui;
 };

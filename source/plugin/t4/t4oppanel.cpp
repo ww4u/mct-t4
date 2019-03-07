@@ -129,6 +129,21 @@ T4OpPanel::~T4OpPanel()
                                     ui->wig->chart()->series2()->setPen(QPen(Qt::blue));
 void T4OpPanel::setupUi()
 {
+    //! config the obj name
+    QStringList strList;
+    strList <<"logout"
+            <<"operate"
+            <<"dio"
+            <<"homing"
+            <<"control"
+            <<"monitor"
+            <<"debug"
+            <<"diagnosis"
+              ;
+    Q_ASSERT( strList.size() == ui->tabWidget->count() );
+    for ( int i = 0; i < ui->tabWidget->count(); i++ )
+    { ui->tabWidget->widget( i )->setObjectName( strList.at( i ) ); }
+
     //! config the chart
 //    ui->jointChart1->chart()->setTitle( tr("Basement") );
 //    ui->jointChart1->chart()->series1()->setPen(QPen(Qt::red));
@@ -182,6 +197,11 @@ bool T4OpPanel::event(QEvent *e)
     }
 
     return XPage::event( e );
+}
+
+void T4OpPanel::focusInEvent(QFocusEvent *event)
+{
+    on_tabWidget_currentChanged( ui->tabWidget->currentIndex() );
 }
 
 void T4OpPanel::updateMonitor(QEvent *e )
@@ -451,9 +471,9 @@ int T4OpPanel::monitorRefreshProc( void *pContext )
 void T4OpPanel::attachWorkings()
 {
     //! attach
-    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::posRefreshProc) );
+    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::posRefreshProc), NULL, 5000 );
 
-    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ) );
+    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ), NULL, 1000 );
 }
 
 void T4OpPanel::updateUi()
@@ -1351,5 +1371,13 @@ on_joint_actions( 5 )
 //    XPage::slot_exit_mission( pApi, ret );
 //}
 
+void T4OpPanel::on_tabWidget_currentChanged(int index)
+{
+//    emit signal_focus_changed( );
+    emit signal_focus_changed( m_pPlugin->model(),
+                               ui->tabWidget->currentWidget()->objectName() );
 }
+
+}
+
 

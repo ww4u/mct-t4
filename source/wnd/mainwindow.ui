@@ -75,7 +75,6 @@
     </property>
     <addaction name="actionWifi"/>
     <addaction name="actionPref"/>
-    <addaction name="actiontest"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -319,6 +318,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
+  <include location="../../res/res.qrc"/>
   <include location="../../res/res.qrc"/>
  </resources>
  <connections>

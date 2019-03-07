@@ -19,6 +19,8 @@ ActionTable::ActionTable(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setContextHelp( "record" );
+
     set_page_rstable();
 
     setUri( "record" );
@@ -89,6 +91,15 @@ void ActionTable::onSetting(XSetting setting)
     }
     else
     {}
+}
+
+void ActionTable::rst()
+{
+    MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
+    if ( NULL == pRobo )
+    { return; }
+
+    pRobo->rstRecordTable();logDbg();
 }
 
 int ActionTable::upload()

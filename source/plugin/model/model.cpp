@@ -87,6 +87,24 @@ int MegaTableModel::load( const QString &fileName )
     return ret;
 }
 
+int MegaTableModel::load( QByteArray &ary )
+{
+    int ret;
+    QXmlStreamReader reader( ary );
+
+    while( reader.readNextStartElement() )
+    {
+        if ( reader.name()==mUri )
+        {
+            ret = serialIn( reader );
+        }
+        else
+        { reader.skipCurrentElement(); }
+    }
+
+    return ret;
+}
+
 int MegaTableModel::serialOut( QXmlStreamWriter &writer )
 { return -1; }
 int MegaTableModel::serialIn( QXmlStreamReader &reader )

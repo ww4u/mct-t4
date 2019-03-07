@@ -178,6 +178,7 @@ INCLUDEPATH += ../source/model
 INCLUDEPATH += ../source/wnd
 INCLUDEPATH += ../source/widget
 INCLUDEPATH += ../source/plugin/model/widget
+INCLUDEPATH += ../source/plugin
 
 
 win32:INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include"

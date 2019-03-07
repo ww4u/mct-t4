@@ -9,6 +9,8 @@ MotorConfig::MotorConfig(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setContextHelp( "motor" );
+
     spyEdited();
 
     set_page_rstable();

@@ -52,6 +52,7 @@ public:
 
 protected:
     virtual void changeEvent(QEvent *event);
+    virtual void focusInEvent(QFocusEvent *event);
 
 protected:
     virtual void retranslateUi();
@@ -65,7 +66,6 @@ public:
     virtual void rst();
 
     virtual void connectPlugin();
-
     virtual void attachWorkings();
 
     virtual void updateUi();        //! data -> ui
@@ -77,13 +77,18 @@ public:
 
     virtual void onSetting( XSetting setting );
 public:
+    QString model();
+    void showFocusHelp();
+
     void attachUpdateWorking( XPage::procDo proc,
-                        void *pContext = NULL
+                              void *pContext = NULL,
+                              int tmo = 100
                         );
     void attachUpdateWorking( XPage::procDo proc,
                         XPage::preDo pre,
                         XPage::postDo post,
-                        void *pContext = NULL
+                        void *pContext = NULL,
+                        int tmo = 100
                         );
 
     void attachMissionWorking( XPage *pObj,
@@ -99,6 +104,10 @@ public:
 protected:
     void setUri( const QString &uri );
     QString Uri( );
+
+    void setContextHelp( const QString &str );
+    QString contextHelp();
+
 public:
     int save( const QString &fileName );
     int load( const QString &fileName );
@@ -119,6 +128,8 @@ protected:
 
 signals:
     void signal_request_save();
+    void signal_focus_changed( const QString &model,
+                               const QString &contextHelp );
 
 protected slots:
     void slot_plugin_setting_changed( XSetting setting );
@@ -139,7 +150,11 @@ protected:
 
     QString mUri;
 
+    QString mContextHelp;
+
     bool mbMissionWorking;
+
+
 };
 
 class XSetting

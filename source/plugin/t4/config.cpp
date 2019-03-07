@@ -12,6 +12,8 @@ Config::Config(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setContextHelp("config");
+
     spyEdited();
 
     set_page_rstable();

@@ -31,6 +31,8 @@ public:
 
     virtual void onSetting(XSetting setting);
 
+    virtual void rst();
+
     virtual int upload();
     virtual int download();
     virtual int diff();    

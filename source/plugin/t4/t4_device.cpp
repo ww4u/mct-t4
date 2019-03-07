@@ -86,6 +86,16 @@ int MRX_T4::stop()
     return 0;
 }
 
+void MRX_T4::rst()
+{
+    rstRecordTable();
+
+    rstErrorMgrTable();
+
+    //! \todo other settings
+    //!
+}
+
 int MRX_T4::upload()
 {
     attachBgWorking( (XPlugin::bgProc)(&MRX_T4::uploadProc) );

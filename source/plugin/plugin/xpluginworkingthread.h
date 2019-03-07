@@ -1,12 +1,16 @@
 #ifndef XPLUGINWORKINGTHREAD_H
 #define XPLUGINWORKINGTHREAD_H
 
+#include <QObject>
 #include <QThread>
+#include <QTimer>
 
 #include "xpage.h"
 
-class WorkingApi
+class WorkingApi : public QObject
 {
+    Q_OBJECT
+
 public:
     enum eWorkingType
     {
@@ -21,7 +25,8 @@ public:
         e_work_update,
     };
 public:
-    WorkingApi();
+    WorkingApi( QObject *parent = Q_NULLPTR );
+    ~WorkingApi();
 
     void setType( WorkingApi::eWorkingType type );
     WorkingApi::eWorkingType getType();
@@ -42,10 +47,12 @@ public:
     QVariant mVar;
     XPage::onMsg m_pOnMsg;
     XPage::isEnable m_pIsEnabled;
+
+    QTimer *m_pTimer;
 };
 
-Q_DECLARE_METATYPE( WorkingApi * )
-Q_DECLARE_METATYPE( WorkingApi )
+//Q_DECLARE_METATYPE( WorkingApi * )
+//Q_DECLARE_METATYPE( WorkingApi )
 
 class XPluginWorkingThread : public QThread
 {
@@ -59,6 +66,10 @@ Q_SIGNALS:
     void signal_enter_working( WorkingApi *api);
     void signal_exit_working( WorkingApi *api, int );
 
+protected Q_SLOTS:
+    void slot_api_proc( QObject *pApi );
+    void slot_api_operate( QObject *pApi, bool b );
+
 public:
     void attach( WorkingApi * pApi );
     void detach();
@@ -68,6 +79,9 @@ public:
 
 protected:
     virtual void run();
+
+protected:
+    void procApi( WorkingApi *pApi );
 
 protected:
     const int _tickms = 100;
@@ -81,6 +95,15 @@ protected:
     QMutex *m_pWorkMutex;
 };
 
+class XPluginUpdateingThread : public XPluginWorkingThread
+{
+    Q_OBJECT
+public:
+    XPluginUpdateingThread( QObject *parent =  Q_NULLPTR );
+    virtual ~XPluginUpdateingThread();
 
+protected:
+    virtual void run();
+};
 
 #endif // XPLUGINWORKINGTHREAD_H

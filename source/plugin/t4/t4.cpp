@@ -55,6 +55,10 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
     ErrorMgrTable(ary);
     mErrorConfigTable.load( ary );
 
+    //! record table
+    RecordTable( ary );
+    mRecordTable.load( ary );
+
     //! attach model
     m_pReccordTable->setModel( &mRecordTable );
     pErrCfgTable->setModel( &mErrorConfigTable );
@@ -79,13 +83,38 @@ QWidget *MRX_T4::createOpsPanel( QAbstractListModel *pModel,
     return pPanel;
 }
 
+//! mgr table
+void MRX_T4::rstErrorMgrTable()
+{
+    QByteArray ary;
+    ErrorMgrTable(ary);
+    mErrorConfigTable.load( ary );
+}
+void MRX_T4::rstRecordTable()
+{
+    QByteArray ary;
+    RecordTable( ary );
+    mRecordTable.load( ary );
+}
+
 const char _meta_tables[]=
 {
     #include "./dataset/errmgr_default.cpp"
 };
 void MRX_T4::ErrorMgrTable( QByteArray &ary )
 {
+    ary.clear();
     ary.setRawData( _meta_tables, sizeof( _meta_tables )/sizeof( _meta_tables[0] ) );
+}
+
+const char _record_tables[]=
+{
+    #include "./dataset/record_default.cpp"
+};
+void MRX_T4::RecordTable( QByteArray &ary )
+{
+    ary.clear();
+    ary.setRawData( _record_tables, sizeof( _record_tables )/sizeof( _record_tables[0] ) );
 }
 
 void MRX_T4::onSetting(XSetting setting)

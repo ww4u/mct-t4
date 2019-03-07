@@ -2,6 +2,7 @@
     <qresource prefix="/res">
         <file>image/m.png</file>
 
+        <file>image/icon/beauty.png</file>
         <file>image/icon/manage.png</file>
         <file>image/icon/guanlianshebei.png</file>
         <file>image/icon/tupianjiazaishibai.png</file>

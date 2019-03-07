@@ -9,7 +9,8 @@ XPlugin::XPlugin( QObject *parent ) : XPluginIntf( parent )
     m_pPanelWidget = NULL;
     m_pViewObj = NULL;
 
-    m_pUpdateWorking = new XPluginWorkingThread( this );
+    //! updateing
+    m_pUpdateWorking = new XPluginUpdateingThread( this );
     m_pUpdateWorking->attachMutex( &mUpdateMutex );
     m_pUpdateWorking->start();
 
@@ -29,11 +30,20 @@ XPlugin::XPlugin( QObject *parent ) : XPluginIntf( parent )
 
     connect( this, SIGNAL(signal_setting_changed(XSetting)),
              this, SLOT(slot_plugin_setting_changed(XSetting)));
+
+    //! signal
+    connect( this, SIGNAL(signal_api_operate(QObject*,bool)),
+             m_pUpdateWorking, SLOT(slot_api_operate(QObject*,bool)));
+
+    //! maped object
+    connect( &mMapper, SIGNAL(mapped(QObject*)),
+             m_pUpdateWorking, SLOT(slot_api_proc(QObject*)) );
 }
 
 XPlugin::~XPlugin()
 {
-    m_pUpdateWorking->requestInterruption();
+//    m_pUpdateWorking->requestInterruption();
+    m_pUpdateWorking->quit( );
     m_pUpdateWorking->wait();
 
     m_pMissionWorking->requestInterruption();
@@ -68,9 +78,15 @@ void XPlugin::setActive( )
     m_pDock->setWidget( m_pPanelWidget );
 }
 
-void XPlugin::ErrorMgrTable( QByteArray &ary )
+void XPlugin::rstErrorMgrTable()
+{}
+void XPlugin::rstRecordTable()
 {}
 
+//void XPlugin::ErrorMgrTable( QByteArray &ary )
+//{}
+//void XPlugin::RecordTable( QByteArray &ary )
+//{}
 void XPlugin::onOperateAble( bool b )
 {
     emit_setting_changed( XPage::e_setting_op_able, b );
@@ -166,6 +182,9 @@ void XPlugin::updateUi()
     }
 }
 
+void XPlugin::rst()
+{}
+
 int XPlugin::upload()
 { return 0; }
 int XPlugin::download()
@@ -222,7 +241,7 @@ QWidget *XPlugin::panel()
 
 QString XPlugin::homePath()
 {
-    return QDir::homePath() + "/mct/" + model() + "/" + SN();
+    return QDir::homePath() + "/AppData/Roaming/mct/" + model() + "/" + SN();
 }
 
 void XPlugin::lockWorking()
@@ -240,30 +259,34 @@ void XPlugin::unlockWorking()
 
 void XPlugin::attachUpdateWorking( XPage *pObj,
                              XPage::procDo proc,
-                    void *pContext
+                             void *pContext,
+                             int tmoms
                     )
 {
     Q_ASSERT( NULL != pObj );
 
-    WorkingApi *pApi = new WorkingApi();
-    if ( NULL == pApi )
-    { return; }
+    attachUpdateWorking( pObj, proc, NULL, NULL, pContext, tmoms );
 
-    pApi->m_pIsEnabled = isEnabled;
+//    WorkingApi *pApi = new WorkingApi();
+//    if ( NULL == pApi )
+//    { return; }
 
-    pApi->m_pProcDo = proc;
-    pApi->m_pContext = pContext;
-    pApi->m_pObj = pObj;
+//    pApi->m_pIsEnabled = isEnabled;
 
-    Q_ASSERT( m_pUpdateWorking );
-    m_pUpdateWorking->attach( pApi );
+//    pApi->m_pProcDo = proc;
+//    pApi->m_pContext = pContext;
+//    pApi->m_pObj = pObj;
+
+//    Q_ASSERT( m_pUpdateWorking );
+//    m_pUpdateWorking->attach( pApi );
 }
 void XPlugin::attachUpdateWorking(
                     XPage *pObj,
                     XPage::procDo proc,
                     XPage::preDo pre,
                     XPage::postDo post,
-                    void *pContext
+                    void *pContext,
+                    int tmoms
                     )
 {
     Q_ASSERT( NULL != pObj );
@@ -281,8 +304,41 @@ void XPlugin::attachUpdateWorking(
     pApi->m_pPreDo = pre;
     pApi->m_pPostDo = post;
 
-    Q_ASSERT( m_pUpdateWorking );
-    m_pUpdateWorking->attach( pApi );
+    do
+    {
+        //! tmo
+        Q_ASSERT( m_pUpdateWorking );
+        if ( tmoms > 0 )
+        {
+            //! in the update working thread
+            QTimer *pTimer = new QTimer( m_pUpdateWorking );
+            if ( NULL == pTimer )
+            { break; }
+
+            pApi->m_pTimer = pTimer;
+            pTimer->setInterval( tmoms );
+
+            //! connect
+//            connect( pTimer, SIGNAL(timeout()),
+//                     m_pUpdateWorking, SLOT())
+//            connect( pTimer, SIGNAL(timeout()),
+//                     m_pUpdateWorking,  [=]{ slot_api_proc( pApi); } );
+
+            //! mapped
+            connect( pTimer, SIGNAL(timeout()),
+                     &mMapper, SLOT(map()));
+            mMapper.setMapping( pTimer, pApi );
+
+            //! enable
+            emit signal_api_operate( pApi, true );
+        }
+
+//        m_pUpdateWorking->attach( pApi );
+
+        return;
+    }while( 0 );
+
+    delete pApi;
 }
 
 void XPlugin::attachMissionWorking( XPage *pObj,

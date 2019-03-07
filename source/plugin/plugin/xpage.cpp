@@ -15,12 +15,17 @@ void XPage::changeEvent(QEvent *event)
 {
     if ( event->type() == QEvent::LanguageChange )
     {
-//        logDbg();
         retranslateUi();
         event->accept();
     }
     else
     { QWidget::changeEvent( event ); }
+}
+
+void XPage::focusInEvent(QFocusEvent *event)
+{
+    Q_ASSERT( NULL != m_pPlugin );
+    showFocusHelp();
 }
 
 void XPage::retranslateUi()
@@ -57,6 +62,11 @@ void XPage::connectPlugin()
 {
     Q_ASSERT( NULL != m_pPlugin );
 
+    //! focus
+    connect( this, SIGNAL(signal_focus_changed(const QString &,const QString &)),
+             m_pPlugin, SIGNAL(signal_focus_changed(const QString &,const QString &)) );
+
+    //! change
     connect( m_pPlugin, SIGNAL(signal_setting_changed( XSetting ) ),
              this, SLOT(slot_plugin_setting_changed( XSetting)) ) ;
     //! request save
@@ -118,23 +128,39 @@ void XPage::onSetting( XSetting setting )
     {}
 }
 
+QString XPage::model()
+{
+    if ( NULL == m_pPlugin )
+    { return "sys"; }
+    else
+    { return m_pPlugin->model(); }
+}
+
+void XPage::showFocusHelp()
+{
+    emit signal_focus_changed(  model(),
+                                mContextHelp );
+}
+
 void XPage::attachUpdateWorking( XPage::procDo proc,
-                           void *pContext
+                                 void *pContext,
+                                 int tmoms
                     )
 {
     Q_ASSERT( NULL != m_pPlugin );
 
-    m_pPlugin->attachUpdateWorking( this, proc, pContext );
+    m_pPlugin->attachUpdateWorking( this, proc, pContext, tmoms );
 }
 void XPage::attachUpdateWorking( XPage::procDo proc,
                     XPage::preDo pre,
                     XPage::postDo post,
-                    void *pContext
+                    void *pContext,
+                    int tmoms
                     )
 {
     Q_ASSERT( NULL != m_pPlugin );
 
-    m_pPlugin->attachUpdateWorking( this, proc, pre, post, pContext );
+    m_pPlugin->attachUpdateWorking( this, proc, pre, post, pContext,tmoms );
 }
 
 void XPage::attachMissionWorking( XPage *pObj,
@@ -161,6 +187,11 @@ void XPage::setUri( const QString &uri )
 { mUri = uri; }
 QString XPage::Uri( )
 { return mUri; }
+
+void XPage::setContextHelp( const QString &str )
+{ mContextHelp = str; }
+QString XPage::contextHelp()
+{ return mContextHelp; }
 
 int XPage::save( const QString &fileName )
 {

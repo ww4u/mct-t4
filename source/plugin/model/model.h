@@ -24,7 +24,7 @@ public:
 public:
     int save( const QString &fileName );
     int load( const QString &fileName );
-
+    int load( QByteArray &ary );
 protected:
     virtual int serialOut( QXmlStreamWriter &writer );
     virtual int serialIn( QXmlStreamReader &reader );

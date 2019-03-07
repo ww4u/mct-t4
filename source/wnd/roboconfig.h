@@ -25,7 +25,7 @@ public:
 
 signals:
 //    void signalCurrentRobotChanged(QString,int,int,int);
-    void signal_focus_in( const QString &);
+    void signal_focus_in( const QString &model, const QString &help );
 //    void signalDataChanged();
 //    void signal_record_selected(int);
 //    void signalDeviceConnect(bool);
@@ -106,6 +106,7 @@ private slots:
     void slotShowContextmenu(const QPoint &pos);
     void slotActionOpen();
     void slotActionClose();
+    void slotActionRst();
     void slotActionDelete();
     void slotActionExplorer();
 
@@ -113,6 +114,8 @@ private slots:
 
     void slot_plugins_changed();
     void slot_plugin_setting_changed( XSetting setting );
+
+    void on_stackedWidget_currentChanged(int arg1);
 
 private:
     Ui::RoboConfig *ui;
@@ -125,7 +128,7 @@ private:
     QAction *m_pConnAction;
 
     QMenu *m_pRoboContextMenu;
-    QAction *m_pActionOpen, *m_pActionClose;
+    QAction *m_pActionOpen, *m_pActionClose, *m_pActionRst;
 
     //! info
     XPlugin *m_pCurPlugin;

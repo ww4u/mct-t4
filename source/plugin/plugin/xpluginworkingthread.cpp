@@ -1,6 +1,6 @@
 #include "xpluginworkingthread.h"
 
-WorkingApi::WorkingApi()
+WorkingApi::WorkingApi( QObject *parent ) : QObject( parent )
 {
     mWorkingType = e_work_loop;
     mWorkingClass = e_work_mission;
@@ -14,6 +14,14 @@ WorkingApi::WorkingApi()
 
     m_pOnMsg = NULL;
     m_pIsEnabled = NULL;
+
+    m_pTimer = NULL;
+}
+
+WorkingApi::~WorkingApi()
+{
+    if ( NULL != m_pTimer )
+    { delete m_pTimer; }
 }
 
 void WorkingApi::setType( WorkingApi::eWorkingType type )
@@ -44,6 +52,29 @@ void XPluginWorkingThread::attachMutex( QMutex *pMutex )
 
     m_pWorkMutex = pMutex;
     logDbg()<<m_pWorkMutex;
+}
+
+void XPluginWorkingThread::slot_api_proc( QObject *pApi )
+{
+    Q_ASSERT( NULL != pApi );
+
+    procApi( (WorkingApi*)pApi );
+}
+
+void XPluginWorkingThread::slot_api_operate( QObject *pApi, bool b )
+{
+    Q_ASSERT( NULL != pApi );
+
+    WorkingApi *pWorkingApi;
+
+    pWorkingApi = (WorkingApi*)pApi;
+    Q_ASSERT( NULL != pWorkingApi && NULL != pWorkingApi->m_pTimer );
+    if ( b )
+    {
+        pWorkingApi->m_pTimer->start();
+    }
+    else
+    { pWorkingApi->m_pTimer->stop(); }
 }
 
 void XPluginWorkingThread::attach( WorkingApi * pApi )
@@ -90,56 +121,18 @@ void XPluginWorkingThread::run()
             Q_ASSERT( NULL != pApi );
             Q_ASSERT( NULL != pApi->m_pObj );
 
-            emit signal_enter_working( pApi );
+            procApi( pApi );
 
-                do
-                {
-                    //! enabled
-                    if ( pApi->m_pIsEnabled &&
-                         !(pApi->m_pObj->*(pApi->m_pIsEnabled))( pApi->m_pContext ) )
-                    { break; }
-                    else
-                    {  }
-
-                    if ( NULL != m_pWorkMutex  )
-                    { m_pWorkMutex->lock(); }
-
-                    if ( pApi->m_pPreDo )
-                    {  (pApi->m_pObj->*(pApi->m_pPreDo))( pApi->m_pContext ); }
-
-                    //! call the api
-                    if ( pApi->m_pProcDo )
-                    {  ret = (pApi->m_pObj->*(pApi->m_pProcDo))( pApi->m_pContext ); }
-                    else
-                    { ret = 0; }
-
-                    //! msg api
-                    if ( pApi->m_pOnMsg )
-                    { ret = (pApi->m_pObj->*(pApi->m_pOnMsg))( pApi->mVar ); }
-
-                    if ( pApi->m_pPostDo )
-                    {  (pApi->m_pObj->*(pApi->m_pPostDo))( pApi->m_pContext, ret ); }
-
-                    if ( NULL != m_pWorkMutex )
-                    { m_pWorkMutex->unlock(); }
-
-                }while( 0 );
-
-                //! \note delete in this thread
-                //! alert to be used in slot
-            emit signal_exit_working( pApi, ret );
-
-                //! remove
-                if ( pApi->mWorkingType == WorkingApi::e_work_loop )
-                {  }
-                else
-                {
-                    delete pApi;
-                    mMutex.lock();
-                    mApis.removeAll( pApi );
-                    mMutex.unlock();
-                }
-
+            //! remove
+            if ( pApi->mWorkingType == WorkingApi::e_work_loop )
+            {  }
+            else
+            {
+                delete pApi;
+                mMutex.lock();
+                mApis.removeAll( pApi );
+                mMutex.unlock();
+            }
 
 //            mMutex.unlock();
             if ( mTickms > 0 )
@@ -148,4 +141,64 @@ void XPluginWorkingThread::run()
     }
 
     qDeleteAll( mApis );
+    logDbg();
+}
+
+void XPluginWorkingThread::procApi( WorkingApi *pApi )
+{
+    Q_ASSERT( NULL != pApi );
+    int ret;
+
+    emit signal_enter_working( pApi );
+
+        do
+        {
+            //! enabled
+            if ( pApi->m_pIsEnabled &&
+                 !(pApi->m_pObj->*(pApi->m_pIsEnabled))( pApi->m_pContext ) )
+            { break; }
+            else
+            {  }
+
+            if ( NULL != m_pWorkMutex  )
+            { m_pWorkMutex->lock(); }
+
+            if ( pApi->m_pPreDo )
+            {  (pApi->m_pObj->*(pApi->m_pPreDo))( pApi->m_pContext ); }
+
+            //! call the api
+            if ( pApi->m_pProcDo )
+            {  ret = (pApi->m_pObj->*(pApi->m_pProcDo))( pApi->m_pContext ); }
+            else
+            { ret = 0; }
+
+            //! msg api
+            if ( pApi->m_pOnMsg )
+            { ret = (pApi->m_pObj->*(pApi->m_pOnMsg))( pApi->mVar ); }
+
+            if ( pApi->m_pPostDo )
+            {  (pApi->m_pObj->*(pApi->m_pPostDo))( pApi->m_pContext, ret ); }
+
+            if ( NULL != m_pWorkMutex )
+            { m_pWorkMutex->unlock(); }
+
+        }while( 0 );
+
+        //! \note delete in this thread
+        //! alert to be used in slot
+    emit signal_exit_working( pApi, ret );
+}
+
+XPluginUpdateingThread::XPluginUpdateingThread( QObject *parent )
+                        : XPluginWorkingThread(parent)
+{}
+
+XPluginUpdateingThread::~XPluginUpdateingThread()
+{}
+
+void XPluginUpdateingThread::run()
+{
+    QThread::run();
+    qDeleteAll( mApis );
+    logDbg();
 }

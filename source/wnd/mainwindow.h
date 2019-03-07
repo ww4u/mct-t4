@@ -94,7 +94,8 @@ private slots:
     void slot_progress_canceled();
 
 
-    void slot_focus_in( const QString &name );
+    void slot_focus_in( const QString &model,
+                        const QString &name );
 
     void on_actionAbout_triggered();
 
@@ -124,6 +125,7 @@ private:
 
     QDockWidget *m_pDockHelp;
     HelpPanel *m_pHelpPanel;
+    QAction *m_pHelpAction;
 
     RoboConfig *m_roboConfig;
     SysLogout *m_pSysLogout;

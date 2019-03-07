@@ -13,6 +13,8 @@ ErrorMgrTable::ErrorMgrTable(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setContextHelp( "errorconfig" );
+
     set_page_rstable();
 
     m_pCheckDelegate = new CheckDelegate( shape_check, this );
@@ -52,6 +54,16 @@ void ErrorMgrTable::setModel( QAbstractTableModel *pModel )
 //                 this, SLOT(slot_data_changed()) );
     }
 }
+
+void ErrorMgrTable::rst()
+{
+    MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
+    if ( NULL == pRobo )
+    { return; }
+
+    pRobo->rstErrorMgrTable();
+}
+
 //QT_TRANSLATE_NOOP("HEADER", "No."),
 //QT_TRANSLATE_NOOP("HEADER", "Error Text"),
 //QT_TRANSLATE_NOOP("HEADER", "Error"),

@@ -9,6 +9,8 @@ Info::Info(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setContextHelp( "info" );
+
     //! cell items
     for ( int i = 0; i < ui->tableWidget->rowCount(); i++ )
     {

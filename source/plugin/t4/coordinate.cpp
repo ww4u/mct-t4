@@ -11,6 +11,8 @@ Coordinate::Coordinate(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    setContextHelp( "coordinate" );
+
     spyEdited();
 
     set_page_rstable();

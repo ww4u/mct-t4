@@ -30,6 +30,8 @@ public:
     void setModel( QAbstractTableModel *pModel );
 
 public:
+    virtual void rst();
+
     virtual int upload();
     virtual int download();
     virtual int diff();

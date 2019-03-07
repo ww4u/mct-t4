@@ -19,3 +19,10 @@ void SysLogout::attachLogModel( QAbstractListModel *pModel )
 
     ui->listView->setModel( pModel );
 }
+
+void SysLogout::focusInEvent(QFocusEvent *event)
+{
+    emit signal_focus_in( "sys", "logout" );
+
+    QWidget::focusInEvent( event );
+}

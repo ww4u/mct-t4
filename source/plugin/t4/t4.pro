@@ -32,7 +32,7 @@ SOURCES = \
     traceplot.cpp \
     joint.cpp \
     model/debugtable.cpp \
-    model/recordtable.cpp \
+#    model/recordtable.cpp \
     dlgio.cpp \
     info.cpp \
     model/iodelegate.cpp \
@@ -46,7 +46,9 @@ SOURCES = \
     t4para.cpp \
     t4_serial.cpp \
     advpara.cpp \
-    comassist.cpp
+    comassist.cpp \
+    model\treeitem.cpp \
+    model\treemodel.cpp
 
 
 HEADERS = \
@@ -60,7 +62,7 @@ HEADERS = \
     traceplot.h \
     joint.h \
     model/debugtable.h \
-    model/recordtable.h \
+#    model/recordtable.h \
     dlgio.h \
     info.h \
     model/iodelegate.h \
@@ -72,7 +74,9 @@ HEADERS = \
     coordpara.h \
     t4para.h \
     advpara.h \
-    comassist.h
+    comassist.h \
+    model\treeitem.h \
+    model\treemodel.h
 
 FORMS += \
     t4oppanel.ui \

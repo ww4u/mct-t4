@@ -253,6 +253,11 @@ void MainWindow::loadConfig()
 
     do
     {
+#ifdef QT_DEBUG
+        mPref.mSysMode = 1;
+    break;
+#endif
+
         //! skip, use the last mode
         if ( mPref.mbAutoLogin )
         { break; }
@@ -344,13 +349,13 @@ void MainWindow::changeStyle()
     if ( mPref.mStyleIndex == STYLE_MEGAROBO )
     {
 
-//        setUiStyle(":/res/qss/mega.qss");
         setUiStyle( qApp->applicationDirPath() + "/style/mega.qss" );
     }
     else
     {
-//        setUiStyle(":/res/qss/classic.qss");
+#ifndef QT_DEBUG
         setUiStyle( qApp->applicationDirPath() + "/style/classic.qss" );
+#endif
     }
 }
 

@@ -4,9 +4,9 @@
 #include <QObject>
 
 #include "../plugin/xplugin.h"
-
-#include "./model/recordtable.h"
 #include "../model/errmgrmodel.h"
+
+#include "./model/treemodel.h"
 
 #include "t4para.h"
 
@@ -54,6 +54,7 @@ public:
 
 public:
     MRX_T4( QObject *parent = nullptr );
+    ~MRX_T4();
 
 public:
     virtual QTreeWidgetItem* createPrefPages( QStackedWidget *stack );
@@ -65,7 +66,7 @@ public:
 
 protected:
     void ErrorMgrTable( QByteArray &ary );
-    void RecordTable( QByteArray &ary );
+    void RecordData( QByteArray &ary );
 public:
     virtual void onSetting(XSetting setting);
 public:
@@ -106,14 +107,17 @@ public:
     int currentRecordIndex();
 
 protected:
-    mrx_t4::RecordTable mRecordTable;
+//    mrx_t4::RecordTable mRecordTable;
+
+    TreeModel* m_pRecordModel;
+
     ErrorMgrModel mErrorConfigTable;
 
     int mRobotHandle;
     int mDeviceHandle;
 
 private:
-    mrx_t4::ActionTable *m_pReccordTable;
+    mrx_t4::ActionTable *m_pRecordView;
 
 };
 

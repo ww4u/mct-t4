@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>595</width>
+    <height>451</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,9 +15,39 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QTableView" name="tableView">
-     <property name="contextMenuPolicy">
+    <widget class="QTreeView" name="view">
+
+<property name="alternatingRowColors">
+ <bool>true</bool>
+</property>
+<property name="selectionBehavior">
+ <enum>QAbstractItemView::SelectItems</enum>
+</property>
+<property name="horizontalScrollMode">
+ <enum>QAbstractItemView::ScrollPerPixel</enum>
+</property>
+<property name="indentation">
+ <number>20</number>
+</property>
+<property name="rootIsDecorated">
+ <bool>true</bool>
+</property>
+<property name="animated">
+ <bool>false</bool>
+</property>
+<property name="allColumnsShowFocus">
+ <bool>true</bool>
+</property>
+
+
+<!--     <property name="contextMenuPolicy">
       <enum>Qt::CustomContextMenu</enum>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+     </property>
+     <property name="alternatingRowColors">
+      <bool>true</bool>
      </property>
      <property name="selectionMode">
       <enum>QAbstractItemView::SingleSelection</enum>
@@ -25,9 +55,15 @@
      <property name="selectionBehavior">
       <enum>QAbstractItemView::SelectRows</enum>
      </property>
-     <attribute name="horizontalHeaderStretchLastSection">
+     <property name="horizontalScrollMode">
+      <enum>QAbstractItemView::ScrollPerPixel</enum>
+     </property>
+     <property name="indentation">
+      <number>20</number>
+     </property>
+     <property name="allColumnsShowFocus">
       <bool>true</bool>
-     </attribute>
+     </property>-->
     </widget>
    </item>
   </layout>

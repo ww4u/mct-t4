@@ -181,6 +181,11 @@ int MDataSet::save( const QString &fullName )
     return ret;
 }
 
+int MDataSet::load( QTextStream &stream )
+{
+    return doLoad( stream );
+}
+
 MDataSection* MDataSet::tryLoad( const QString &fullName,
                      const QString &modelStr,
                      const QStringList &headers )
@@ -226,6 +231,11 @@ int MDataSet::doLoad( QFile &file )
     //! \note utf-8
     QTextStream stream( &file );
 
+    return doLoad( stream );
+}
+
+int MDataSet::doLoad( QTextStream &stream )
+{
     //! load the content
     QString rawLine;
     QString varLine;
@@ -262,6 +272,8 @@ int MDataSet::doLoad( QFile &file )
                         else
                         { m_pNowSection = new MDataSection( ); }
 
+                        mHeaders.clear();
+
                         if ( NULL == m_pNowSection )
                         { return -1; }
 
@@ -280,6 +292,10 @@ int MDataSet::doLoad( QFile &file )
                         mSections.append( m_pNowSection );
 
                         break;
+                    }
+                    else
+                    {
+                        //! no used the current line
                     }
                 }
             }while( 0 );
@@ -305,6 +321,7 @@ int MDataSet::doLoad( QFile &file )
                     m_pNowSection->setModel( mModel );
                     m_pNowSection->setHeaders( mHeaders );
                     mSections.append( m_pNowSection );
+//                    logDbg()<<mSections.size();
                 }while ( 0 );
 
                 if ( m_pNowSection->lineIn( varLine ) )
@@ -323,11 +340,13 @@ int MDataSet::doSave( QFile &file )
     QTextStream stream( &file );
 
     stream << "[" << mModel << "]" <<line_seperator;
-    stream << "[section]" << line_seperator;
-    stream << "[" << mHeaders.join(data_seperator) << "]" << line_seperator;
 
     for ( int i = 0; i < mSections.size(); i++ )
     {
+        stream <<"#! section"<<QString::number( i )<<line_seperator;
+        stream << "[section]" << line_seperator;
+        stream << "[" << mHeaders.join(data_seperator) << "]" << line_seperator;
+
         if ( mSections[i]->lineOut( stream ) )
         {}
         else

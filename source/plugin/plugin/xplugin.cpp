@@ -55,11 +55,11 @@ XPlugin::~XPlugin()
     m_pBgWorking->requestInterruption();
     m_pBgWorking->wait();
 
-    //! delete the plugins widgets
+    //! \note only close, delete by the parent
     foreach( QWidget *pWidget, mPluginWidgets )
     {
         pWidget->close();
-        delete pWidget;
+//        delete pWidget;
     }
 
     close();

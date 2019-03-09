@@ -58,6 +58,14 @@ private:
     ComboxDelegate *m_pTypeDelegate;
 
     QMenu *m_pContextMenu;
+    QAction *m_pActionAddBefore, *m_pActionAddBelow;
+    QAction *m_pActionDelete;
+
+    QAction *m_pActionUp, *m_pActionDown;
+
+    QAction *m_pActionExpandAll, *m_pActionCollapseAll;
+
+    QAction *m_pActionResize;
 
 protected Q_SLOTS:
     void slot_request_save();
@@ -66,6 +74,17 @@ protected Q_SLOTS:
     void slot_data_changed();
 
     void slot_toHere();
+    void slot_add_before();
+    void slot_add_below();
+    void slot_delete();
+
+    void slot_up();
+    void slot_down();
+
+    void slot_expandAll();
+    void slot_collapseAll();
+
+    void slot_resize();
 
     void slot_customContextMenuRequested(const QPoint &pos);
 };

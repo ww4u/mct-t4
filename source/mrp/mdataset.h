@@ -54,6 +54,8 @@ public:
     int load( const QString &fullname );
     int save( const QString &fullName );
 
+    int load( QTextStream &stream );
+
     MDataSection * tryLoad( const QString &fullName,
                  const QString &model,
                  const QStringList &headers );
@@ -62,6 +64,8 @@ public:
 
 protected:
     int doLoad( QFile &file );
+    int doLoad( QTextStream &stream );
+
     int doSave( QFile &file );
 
     bool verifyLine( QString &ary );

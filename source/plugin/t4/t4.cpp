@@ -16,7 +16,13 @@ MRX_T4::MRX_T4( QObject *parent ) : XPlugin( parent )
 {
     mRobotHandle = -1;
 
-    m_pReccordTable = NULL;
+    m_pRecordModel = NULL;
+    m_pRecordView = NULL;
+}
+
+MRX_T4::~MRX_T4()
+{
+    delete m_pRecordModel;
 }
 
 //! role: page
@@ -41,7 +47,7 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
     new_widget( mrx_t4::AdvPara, pWig, "Misc", ":/res/image/icon/205.png" );
 //    new_widget( mrx_t4::Coordinate, pWig, "Coordinate", ":/res/image/icon/205.png" );
     new_widget( mrx_t4::MotorConfig, pWig, "Motor", ":/res/image/icon/205.png" );
-    new_widget( mrx_t4::ActionTable, m_pReccordTable, "Record Table", ":/res/image/icon/activity.png" );
+    new_widget( mrx_t4::ActionTable, m_pRecordView, "Record Table", ":/res/image/icon/activity.png" );
     new_widget( mrx_t4::ErrorMgrTable, pErrCfgTable, "Error Management", ":/res/image/icon/205.png" );
 //    new_widget( mrx_t4::TracePlot, pWig, "Trace", ":/res/image/icon/409.png" );logDbg();
 //    new_widget( mrx_t4::ScriptEditor, pWig, "Script", ":/res/image/icon/activity.png" );logDbg();
@@ -56,11 +62,24 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
     mErrorConfigTable.load( ary );
 
     //! record table
-    RecordTable( ary );
-    mRecordTable.load( ary );
+    QStringList headerList;
+//    headerList<<"id"<<"type"<<"coord"<<"para"
+//              <<"x(mm)"<<"y(mm)"<<"z(mm)"
+//              <<QString("w(%1)").arg(char_deg)<<QString("h(%1)").arg( char_deg )
+//              <<QString("v(mm/s)")<<QString("a(mm/s%1)").arg(char_square)<<"comment";
+
+    headerList<<"id"<<"type"<<"coord";
+
+    m_pRecordModel = new TreeModel( headerList,"" );
+    m_pRecordModel->setColumnReadonly( 0 );
+#ifndef QT_DEBUG
+    rstRecordTable();
+#else
+//    m_pRecordModel->loadIn("G:/work/mct/doc/template2.mrp");
+#endif
 
     //! attach model
-    m_pReccordTable->setModel( &mRecordTable );
+    m_pRecordView->setModel( m_pRecordModel );
     pErrCfgTable->setModel( &mErrorConfigTable );
 
     return pRoot;
@@ -93,8 +112,10 @@ void MRX_T4::rstErrorMgrTable()
 void MRX_T4::rstRecordTable()
 {
     QByteArray ary;
-    RecordTable( ary );
-    mRecordTable.load( ary );
+    RecordData( ary );
+
+    QTextStream stream( ary );
+    m_pRecordModel->loadIn( stream );
 }
 
 const char _meta_tables[]=
@@ -107,14 +128,15 @@ void MRX_T4::ErrorMgrTable( QByteArray &ary )
     ary.setRawData( _meta_tables, sizeof( _meta_tables )/sizeof( _meta_tables[0] ) );
 }
 
-const char _record_tables[]=
+const char _record_datas[]=
 {
-    #include "./dataset/record_default.cpp"
+    #include "./dataset/template_raw.cpp"
 };
-void MRX_T4::RecordTable( QByteArray &ary )
+void MRX_T4::RecordData( QByteArray &ary )
 {
+    //! \todo
     ary.clear();
-    ary.setRawData( _record_tables, sizeof( _record_tables )/sizeof( _record_tables[0] ) );
+    ary.setRawData( _record_datas, sizeof( _record_datas )/sizeof( _record_datas[0] ) );
 }
 
 void MRX_T4::onSetting(XSetting setting)

@@ -206,8 +206,8 @@ int MRX_T4::deviceHandle()
 //!
 int MRX_T4::currentRecordIndex()
 {
-    Q_ASSERT( NULL != m_pReccordTable );
+    Q_ASSERT( NULL != m_pRecordView );
 
-    return m_pReccordTable->currentIndex();
+    return m_pRecordView->currentIndex();
 }
 

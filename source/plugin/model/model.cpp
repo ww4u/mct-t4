@@ -16,6 +16,9 @@ MegaTableModel::MegaTableModel( QObject *parent  ) : QAbstractTableModel( parent
 
     connect( this, SIGNAL(modelReset()),
              this, SIGNAL(signal_data_changed()));
+
+    connect( this, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
+             this, SIGNAL(signal_data_changed()));
 }
 
 QString MegaTableModel::fmtString( const QStringList &list )

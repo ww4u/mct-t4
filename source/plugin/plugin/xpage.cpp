@@ -272,7 +272,9 @@ void XPage::exitMission()
 
 void XPage::setOpened( bool b )
 {
+#ifndef QT_DEBUG
     setEnabled( b );
+#endif
 }
 
 void XPage::slot_plugin_setting_changed( XSetting setting )

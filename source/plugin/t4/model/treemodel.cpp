@@ -56,7 +56,7 @@
 //! [0]
 TreeModel::TreeModel(const QStringList &headers, const QString &fileName, QObject *parent_obj)
 //    : MegaTableModel(parent_obj)
-    : QAbstractTableModel( parent_obj )
+    : QAbstractItemModel( parent_obj )
 {
     mHeaders.clear();
     foreach (QString header, headers)
@@ -64,38 +64,24 @@ TreeModel::TreeModel(const QStringList &headers, const QString &fileName, QObjec
 
     //! root item is header
     rootItem = new TreeItem( mHeaders );
+    loadIn( fileName );
 
-    //! debug
-    TreeItem *parent = rootItem;
-    parent->insertChildren( 0, 1, 3 );
-    TreeItem *pLevel1 = parent->child(0);
-    pLevel1->setData( 0, "1" );
-    pLevel1->setData( 1, "2" );
-    pLevel1->setData( 2, "3" );
+    //! connect
+    connect( this, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+             this, SIGNAL(signal_data_changed()));
 
-    TreeItem *pItem;
-//    = new TreeItem( vars, pLevel1 );
-    pLevel1->insertChildren( 0, 1, 3 );
-    pItem = pLevel1->child( pLevel1->childCount() - 1 );
-    pItem->setData( 0, "11" );
-    pItem->setData( 1, "22" );
-    pItem->setData( 2, "33" );
+    connect( this, SIGNAL(rowsInserted(QModelIndex,int,int)),
+             this, SIGNAL(signal_data_changed()));
 
-    pLevel1->insertChildren( 1, 1, 3 );
-    pItem = pLevel1->child( pLevel1->childCount() - 1);
-    pItem->setData( 0, "111" );
-    pItem->setData( 1, "222" );
-    pItem->setData( 2, "333" );
+    connect( this, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+             this, SIGNAL(signal_data_changed()));
 
-    qDebug()<<parent->childCount()<<pLevel1->childCount();
+    connect( this, SIGNAL(modelReset()),
+             this, SIGNAL(signal_data_changed()));
 
+    connect( this, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
+             this, SIGNAL(signal_data_changed()));
 
-//    logDbg()<<(quint32)rootItem;
-//    loadIn( fileName );
-//    logDbg()<<(quint32)rootItem;
-////    setupModelData(data.split(QString("\n")), rootItem);
-
-//    logDbg()<<rootItem->childCount();
 }
 //! [0]
 
@@ -229,10 +215,9 @@ QModelIndex TreeModel::parent(const QModelIndex &index) const
 
     if (parentItem == rootItem)
         return QModelIndex();
-//logDbg()<<parentItem->childNumber()<<parentItem->data(0).toInt()<<index.row()<<index.column();
+
     //! \note by
     return createIndex(parentItem->childNumber(), 0, parentItem);
-//    return createIndex(parentItem->childNumber(), index.column(), parentItem);
 }
 //! [7]
 
@@ -439,7 +424,7 @@ int TreeModel::exportOut( const QString &fileName )
             { return -1; }
         }
     }
-    logDbg();
+
     return dataSet.save( fileName );
 }
 
@@ -495,8 +480,8 @@ int TreeModel::_loadIn( MDataSet &dataSet )
 
         beginResetModel();
 
-            delete rootItem;logDbg()<<(quint32)rootItem;
-            rootItem = pLocalRoot;logDbg()<<(quint32)pLocalRoot<<pLocalRoot->childCount();
+            delete rootItem;
+            rootItem = pLocalRoot;
 
         endResetModel();
     }
@@ -617,55 +602,3 @@ int TreeModel::_fmtItem( TreeItem *pItem,
     return 0;
 }
 
-//void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent)
-//{
-//    QList<TreeItem*> parents;
-//    QList<int> indentations;
-//    parents << parent;
-//    indentations << 0;
-
-//    int number = 0;
-
-//    while (number < lines.count()) {
-//        int position = 0;
-//        while (position < lines[number].length()) {
-//            if (lines[number].at(position) != ' ')
-//                break;
-//            ++position;
-//        }
-
-
-//        QString lineData = lines[number].mid(position).trimmed();
-
-//        if (!lineData.isEmpty()) {
-//            // Read the column data from the rest of the line.
-//            QStringList columnStrings = lineData.split("\t", QString::SkipEmptyParts);
-//            QVector<QVariant> columnData;
-//            for (int column = 0; column < columnStrings.count(); ++column)
-//                columnData << columnStrings[column];
-
-//            if (position > indentations.last()) {
-//                // The last child of the current parent is now the new parent
-//                // unless the current parent has no children.
-
-//                if (parents.last()->childCount() > 0) {
-//                    parents << parents.last()->child(parents.last()->childCount()-1);
-//                    indentations << position;
-//                }
-//            } else {
-//                while (position < indentations.last() && parents.count() > 0) {
-//                    parents.pop_back();
-//                    indentations.pop_back();
-//                }
-//            }
-
-//            // Append a new item to the current parent's list of children.
-//            TreeItem *parent = parents.last();
-//            parent->insertChildren(parent->childCount(), 1, rootItem->columnCount());
-//            for (int column = 0; column < columnData.size(); ++column)
-//                parent->child(parent->childCount() - 1)->setData(column, columnData[column]);
-//        }
-
-//        ++number;
-//    }
-//}

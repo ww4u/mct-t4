@@ -44,7 +44,7 @@ ActionTable::ActionTable(QWidget *parent) :
     strList<<"PA"<<"RA";//<<"STOP"<<"CONTINUE"<<"ZERO";
     m_pTypeDelegate->setItems( strList );
 
-//    ui->view->setItemDelegateForColumn( 1, m_pTypeDelegate );
+    ui->view->setItemDelegateForColumn( 1, m_pTypeDelegate );
 
     //! connection
     connect( ui->view, SIGNAL(customContextMenuRequested(const QPoint &)),
@@ -63,13 +63,13 @@ void ActionTable::retranslateUi()
     ui->retranslateUi( this );
 }
 
-void ActionTable::setModel( QAbstractTableModel *pModel )
+void ActionTable::setModel( QAbstractItemModel *pModel )
 {
     Q_ASSERT( NULL != pModel );
 
     ui->view->setModel( pModel );
 
-    MegaTableModel *pMegaModel = (MegaTableModel*)pModel;
+    TreeModel *pMegaModel = (TreeModel*)pModel;
     if ( NULL != pMegaModel )
     {
         connect( pMegaModel, SIGNAL(signal_data_changed()),
@@ -303,19 +303,19 @@ void ActionTable::doSave()
 
 void ActionTable::doLoad()
 {
-//    QString fileName = m_pPlugin->homePath() + "/" + record_file_name;
-//    TreeModel *pTable = (TreeModel*)ui->view->model();
-//    if ( NULL == pTable )
-//    {
-//        sysError( tr("Load record fail") );
-//        return;
-//    }
+    QString fileName = m_pPlugin->homePath() + "/" + record_file_name;
+    TreeModel *pTable = (TreeModel*)ui->view->model();
+    if ( NULL == pTable )
+    {
+        sysError( tr("Load record fail") );
+        return;
+    }
 
-//    int ret = pTable->loadIn( fileName );
-//    if ( ret != 0 )
-//    {
-//        sysError( tr("Load record fail") );
-//    }
+    int ret = pTable->loadIn( fileName );
+    if ( ret != 0 )
+    {
+        sysError( tr("Load record fail") );
+    }
 }
 
 //! x,y,z,pw,h,v,a
@@ -371,7 +371,7 @@ logDbg()<<QThread::currentThreadId()
 }
 
 void ActionTable::slot_request_save()
-{ doSave(); logDbg(); }
+{ doSave(); }
 
 void ActionTable::slot_request_load()
 { doLoad(); }
@@ -472,15 +472,17 @@ void ActionTable::slot_add_below()
 
     //! section
     int dstRow;
+    QModelIndex parIndex;
     if ( pItem->level() == 1 )
     {
         if ( ui->view->model()->insertRow( 0 , index ) )
-        {}
+        { }
         else
         { return; }
 
-        //! the parent index
-        index = ui->view->model()->index( 0, 0, index );
+        logDbg()<<index;
+        parIndex = ui->view->model()->index( index.row(), 0, index.parent() );
+        logDbg()<<parIndex;
         dstRow = 0;
     }
     //! sibling
@@ -491,6 +493,7 @@ void ActionTable::slot_add_below()
         else
         { return; }
 
+        parIndex = index.parent();
         dstRow = index.row() + 1;
     }
 
@@ -498,9 +501,11 @@ void ActionTable::slot_add_below()
     bool bRet;
     for ( int i = 0; i < ui->view->model()->columnCount(); i++ )
     {
-        iterIndex = ui->view->model()->index( dstRow, i, index.parent() );
+        iterIndex = ui->view->model()->index( dstRow, i, parIndex );
+        logDbg()<<iterIndex<<parIndex;
         bRet = ui->view->model()->setData( iterIndex, vars.at(i) );
-        logDbg()<<vars.at(i)<<bRet<<dstRow<<i;
+        if ( !bRet )
+        { return; }
     }
 
     return;

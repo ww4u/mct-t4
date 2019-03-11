@@ -57,7 +57,7 @@
 #include "treeitem.h"
 
 #include <QStringList>
-
+#include <QDebug>
 //! [0]
 TreeItem::TreeItem(const QVector<QVariant> &data,
                    TreeItem *parent,
@@ -142,7 +142,12 @@ bool TreeItem::insertChildren(int position, int count, int columns)
         //! insert again
         TreeItem *lastItem;
         lastItem = childItems.takeLast();
-        childItems.insert( position, lastItem );
+        if ( position < childCount() )
+        { childItems.insert( position+row, lastItem ); }
+        else
+        { childItems.append( lastItem ); }
+
+        qDebug()<<__FUNCTION__<<__LINE__<<childItems.size()<<position;
 
 //        childItems.insert(position, item);
     }

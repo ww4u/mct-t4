@@ -27,7 +27,7 @@ protected:
     virtual void retranslateUi();
 
 public:
-    void setModel( QAbstractTableModel *pModel );
+    void setModel( QAbstractItemModel *pModel );
 
     virtual void onSetting(XSetting setting);
 

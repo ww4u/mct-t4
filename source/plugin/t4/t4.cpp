@@ -52,10 +52,6 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
 //    new_widget( mrx_t4::TracePlot, pWig, "Trace", ":/res/image/icon/409.png" );logDbg();
 //    new_widget( mrx_t4::ScriptEditor, pWig, "Script", ":/res/image/icon/activity.png" );logDbg();
 
-    //! recordtable
-//    mRecordTable.createDebug();
-//    mErrorConfigTable.createDebug();
-
     //! default
     QByteArray ary;
     ErrorMgrTable(ary);
@@ -63,19 +59,19 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
 
     //! record table
     QStringList headerList;
-//    headerList<<"id"<<"type"<<"coord"<<"para"
-//              <<"x(mm)"<<"y(mm)"<<"z(mm)"
-//              <<QString("w(%1)").arg(char_deg)<<QString("h(%1)").arg( char_deg )
-//              <<QString("v(mm/s)")<<QString("a(mm/s%1)").arg(char_square)<<"comment";
+    headerList<<"id"<<"type"<<"coord"<<"para"
+              <<"x(mm)"<<"y(mm)"<<"z(mm)"
+              <<QString("w(%1)").arg(char_deg)<<QString("h(%1)").arg( char_deg )
+              <<QString("v(mm/s)")<<QString("a(mm/s%1)").arg(char_square)<<"comment";
 
-    headerList<<"id"<<"type"<<"coord";
+//    headerList<<"id"<<"type"<<"coord";
 
     m_pRecordModel = new TreeModel( headerList,"" );
     m_pRecordModel->setColumnReadonly( 0 );
 #ifndef QT_DEBUG
     rstRecordTable();
 #else
-//    m_pRecordModel->loadIn("G:/work/mct/doc/template2.mrp");
+    m_pRecordModel->loadIn("G:/work/mct/doc/template2.mrp");
 #endif
 
     //! attach model

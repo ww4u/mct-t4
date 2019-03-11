@@ -63,7 +63,7 @@ class TreeItem;
 
 //! [0]
 //class TreeModel : public MegaTableModel
-class TreeModel : public QAbstractTableModel
+class TreeModel : public QAbstractItemModel
 {
     Q_OBJECT
 
@@ -125,9 +125,13 @@ private:
     int _fmtItem( TreeItem *pItem,
                   QString &ary );
 
-//    void setupModelData(const QStringList &lines, TreeItem *parent);
     TreeItem *getItem(const QModelIndex &index) const;
 
+
+Q_SIGNALS:
+    void signal_data_changed();
+
+private:
     TreeItem *rootItem;
     QVector<QVariant> mHeaders;
 

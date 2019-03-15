@@ -43,6 +43,9 @@ class MegaInterface : public QDialog
     Q_OBJECT
 
 public:
+    static QString megaMrxTypeToString( int type );
+
+public:
     explicit MegaInterface(SysPara *pPara, QWidget *parent = 0);
     ~MegaInterface();
 

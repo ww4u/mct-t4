@@ -35,6 +35,7 @@
 
         <file>image/icon/arrow-left.png</file>
         <file>image/icon/arrow-right.png</file>
+
         <file>image/icon/246.png</file>
         <file>image/icon/address.png</file>
         <file>image/icon/add.png</file>
@@ -54,6 +55,13 @@
         <file>image/icon/54.png</file>
         <file>image/icon/activity.png</file>
         <file>image/icon/409.png</file>
+
+        <file>image/icon/fuzhi.png</file>
+        <file>image/icon/icon_baocun.png</file>
+        <file>image/icon/xiangshangzhanhang.png</file>
+        <file>image/icon/xiangxiazhanhang.png</file>
+        <file>image/icon/xingzhuang-tupian.png</file>
+
         <file>image/widget/radiobutton_checked_green.png</file>
         <file>image/widget/radiobutton_checked_red.png</file>
         <file>image/widget/radiobutton_checked_yellow.png</file>
@@ -90,6 +98,15 @@
         <file>image/widget/arrow_down_2.png</file>
         <file>image/widget/arrow_right_2.png</file>
         <file>image/icon/51.png</file>
+
+        <file>image/slice/down_arrow.png</file>
+        <file>image/slice/down_arrow_disabled.png</file>
+        <file>image/slice/stylesheet-branch-closed.png</file>
+        <file>image/slice/stylesheet-branch-end.png</file>
+        <file>image/slice/stylesheet-branch-more.png</file>
+        <file>image/slice/stylesheet-branch-open.png</file>
+        <file>image/slice/stylesheet-vline.png</file>
+
 
         <file>image/t4/mrx-t4.png</file>
         <file>image/t4/sinanju_pn_256px_nor@2x.png</file>

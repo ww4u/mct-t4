@@ -39,11 +39,15 @@ Q_SIGNALS:
 public:
     void setJointName( const QString &name );
 
+    void setAngleVisible( bool bAbs, bool bDelta );
+
     void setAngle( double angle );
     double getAngle();
 
     void setdAngle( double v );
     double getdAngle();
+
+protected:
 
 private:
     Ui::Joint *ui;

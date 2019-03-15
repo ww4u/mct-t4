@@ -1420,7 +1420,7 @@
     <message>
         <location filename="../../source/model/debugitem.cpp" line="9"/>
         <source>Delay(s)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">延迟(s)</translation>
     </message>
     <message>
         <location filename="../../source/model/diagnosisitem.cpp" line="7"/>

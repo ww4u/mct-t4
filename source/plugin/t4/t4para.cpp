@@ -7,6 +7,17 @@ T4Para::T4Para()
 
 void T4Para::init()
 {
+    //! rst
+
+    for ( int i = 0; i < T4Para::_axis_cnt; i++ )
+    {
+        mAxisZero[i] = 0;
+    }
+}
+
+//! keep the axis zero
+void T4Para::rst()
+{
     mTerminalType = T4Para::e_terminal_f2;
 
     mAxisCurrents[0] = 3.5;
@@ -15,10 +26,7 @@ void T4Para::init()
     mAxisCurrents[3] = 1.8;
     mAxisCurrents[4] = 1.5;
 
-    for ( int i = 0; i < T4Para::_axis_cnt; i++ )
-    {
-        mAxisZero[i] = 0;
-    }
+    //! \note not change the zero
 
     for ( int i = 0; i < T4Para::_axis_cnt; i++ )
     {
@@ -56,6 +64,12 @@ void T4Para::init()
 
     mbAxisPwr = true;
     mbMctEn = true;
+
+    //! \note the delta angle for
+    mPackagesAxes[0] = 0;
+    mPackagesAxes[1] = -18.8;
+    mPackagesAxes[2] = -57.4;
+    mPackagesAxes[3] = -103;
 }
 
 double T4Para::velocity()
@@ -134,7 +148,7 @@ int T4Para::serialOut( QXmlStreamWriter &writer )
     writer.writeEndElement();
 
     //! control
-    writer.writeStartElement("cotrol");
+    writer.writeStartElement("control");
         writer.writeTextElement( "driver_enable", QString::number( mbAxisPwr ) );
         writer.writeTextElement( "mct_enable", QString::number( mbMctEn ) );
     writer.writeEndElement();

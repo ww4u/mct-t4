@@ -11,7 +11,11 @@
 #include "../model/diagnosistable.h"
 #include "megasplinechart.h"
 
-#define MONITOR_EVENT   (QEvent::Type)( QEvent::User + 1 )
+//! delegate
+#include "../../model/delegate/dspindelegate.h"
+#include "../../model/delegate/ispindelegate.h"
+
+//#define MONITOR_EVENT   (QEvent::Type)( QEvent::User + 1 )
 typedef QList<QPointF> PointList;
 
 class PlotDataSets
@@ -58,6 +62,57 @@ public:
     }
 };
 
+class SequenceItem
+{
+public:
+    int id;     //! record id
+    int vRow;
+    QString mType;
+    double x, y, z, pw, h, a, v;
+    double delay;
+
+public:
+    SequenceItem()
+    {
+        id = 0;
+        vRow = 0;
+
+        x = 0;
+        y = 0;
+        z = 0;
+        pw =0;
+        h = 0;
+        a = 200;
+        v = 100;
+
+        delay = 0;
+    }
+
+    SequenceItem &operator=( const SequenceItem &item )
+    {
+        vRow = item.vRow;
+
+        mType = item.mType;
+
+        x = item.x;
+        y = item.y;
+        z = item.z;
+        pw =item.pw;
+        h = item.h;
+        a = item.a;
+        v = item.v;
+
+        delay = item.delay;
+
+        return *this;
+    }
+
+    SequenceItem( const SequenceItem &item )
+    {
+        *this = item;
+    }
+};
+
 namespace Ui {
 class T4OpPanel;
 }
@@ -85,8 +140,25 @@ public:
 class OpEvent : public QEvent
 {
 public:
-    OpEvent( QEvent::Type tpe) : QEvent( tpe )
+    enum T4EventType
+    {
+        debug_enter = QEvent::User + 1,
+        debug_exit,
+        monitor_event,
+    };
+
+public:
+    OpEvent( int tpe) : QEvent( (QEvent::Type)tpe )
     {}
+
+    OpEvent( int tpe, QVariant v1 ) : QEvent( (QEvent::Type)tpe )
+    { mVar1 = v1; }
+
+    OpEvent( int tpe, QVariant v1, QVariant v2 ) : QEvent( (QEvent::Type)tpe )
+    {
+        mVar1 = v1;
+        mVar2 = v2;
+    }
 
 public:
     QVariant mVar1;
@@ -109,12 +181,12 @@ public:
     ~T4OpPanel();
 
 public:
+    bool event(QEvent *e);
+
+public:
     void setupUi();
 protected:
     virtual void retranslateUi();
-
-public:
-    virtual bool event(QEvent *e);
 
 protected:
     virtual void focusInEvent(QFocusEvent *event);
@@ -143,21 +215,63 @@ protected:
     virtual void enterMission();
     virtual void exitMission();
 
+    virtual void setOperAble( bool b );
     virtual void setOpened( bool b );
 
     void _step( double x, double y, double z );
 
     int onStep( QVariant var );
     int onHoming( QVariant var );
+    int onFolding( QVariant var );
 
     int onJointStep( QVariant var );
     int onJointZero( QVariant var );
 
+    int onSequence( QVariant var );
+    int _onSequence( QVariant var );
+
+    int procSequence( SequenceItem* pItem );
+
+
     int exportDataSets( QTextStream &stream,
                         QStringList &headers,
                         QList<PlotDataSets*> &dataSets );
+protected:
+    int buildSequence( QList<SequenceItem*> &list );
+
+    void post_debug_enter( int id, int r );
+    void post_debug_exit( int id, int r );
+
+    void on_debug_enter( int id, int r );
+    void on_debug_exit( int id, int r );
+
+private:
+    Ui::T4OpPanel *ui;
+
+    iSpinDelegate *m_pISpinDelegateId;
+    dSpinDelegate *m_pDSpinDelegateTime;
 
 protected:
+    DebugTable mDebugTable;
+    DiagnosisTable mDiagTable;
+
+    QList<QWidget*> mTerminalRelations;
+    QMenu *m_pDebugContextMenu;
+    QMenu *m_pMonitorContextMenu;
+
+    QList<MegaSplineChart*> mJointCharts;
+    DataCache *m_pCaches[5];
+
+    QMutex mSeqMutex;
+    QList<SequenceItem*> mSeqList;
+
+    QAction *m_pActionExportImage;
+    QAction *m_pActionExportData;
+    QAction *m_pActionCopy;
+
+Q_SIGNALS:
+//    void signal_debug_enter( int i );
+//    void signal_debug_exit( int i );
 
 protected Q_SLOTS:
     //! status
@@ -188,27 +302,14 @@ protected Q_SLOTS:
     void on_toolSingleZP_clicked();
     void on_toolSingleZN_clicked();
 
-private:
-    Ui::T4OpPanel *ui;
-
-protected:
-    DebugTable mDebugTable;
-    DiagnosisTable mDiagTable;
-
-    QList<QWidget*> mTerminalRelations;
-    QMenu *m_pDebugContextMenu;
-    QMenu *m_pMonitorContextMenu;
-
-    QList<MegaSplineChart*> mJointCharts;
-    DataCache *m_pCaches[5];
-
 private slots:
-//    void on_pushButton_2_clicked();
-
     void on_pushButton_starting_home_clicked();
+    void on_btnFold_clicked();
 
     void on_toolSingleAdd_clicked();
-    void on_toolButton_15_clicked();
+    void on_toolSingleEdit_clicked();
+
+//    void on_toolButton_15_clicked();
     void on_btnImport_clicked();
     void on_btnExport_clicked();
     void on_btnAdd_clicked();
@@ -235,6 +336,9 @@ private slots:
 //    virtual void slot_exit_mission( WorkingApi *pApi, int ret );
 
     void on_tabWidget_currentChanged(int index);
+
+    void on_toolButton_debugRun_clicked();
+
 };
 
 }

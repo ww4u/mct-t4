@@ -29,32 +29,13 @@ CONFIG += C++11 #use lambda
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-LIBS += -L"../lib"
-
-LIBS += -lxfactory -lmrx-t4 -lmrx-h2 -lxplugin
-LIBS += -lmodel
-
 HEADERS += ../include/mystd.h           \
     ../include/mydebug.h                \
     ../include/mydef.h                  \
-    ../source/device/bus.h              \
-    ../source/device/device.h           \
-    ../source/device/MegaGateway.h      \
-    ../source/device/MegaRobot.h        \
-    ../source/device/mrqDevice.h        \
-    ../source/device/storage.h          \
-    ../source/device/errorcode.h        \
-    ../source/device/export.h           \
-    ../source/device/stdafx.h           \
-    ../source/device/system.h           \
     ../source/sys/sysapi.h              \
-    ../source/sys/megaxml.h             \
     ../source/sys/xthread.h             \
     ../source/mrp/mdatarow.h            \
     ../source/mrp/mdataset.h            \
-#    ../source/model/megatablemodel.h    \
-    ../source/model/h2actionmodel.h     \
-    ../source/model/h2actionitem.h      \
     ../source/model/comboxdelegate.h    \
     ../source/model/checkdelegate.h     \
     ../source/model/doublespinboxdelegate.h \
@@ -65,21 +46,11 @@ HEADERS += ../include/mystd.h           \
     ../source/model/debugitem.h         \
     ../source/model/debugmodel.h        \
     ../source/wnd/mainwindow.h          \
-    ../source/wnd/h2ops.h               \
-    ../source/wnd/h2action.h            \
     ../source/wnd/aboutdlg.h            \
-    ../source/wnd/h2status.h            \
-    ../source/wnd/h2product.h           \
     ../source/wnd/roboconfig.h          \
     ../source/wnd/xrobo.h               \
-    ../source/wnd/h2robo.h              \
-    ../source/wnd/h2configuration.h     \
-    ../source/wnd/h2errmgr.h            \
-    ../source/wnd/h2jogmode.h           \
-    ../source/wnd/h2homing.h            \
     ../source/wnd/helppanel.h           \
     ../source/wnd/xconfig.h             \
-    ../source/wnd/h2measurement.h       \
     ../source/widget/megalcdnumber.h    \
     ../source/widget/megamessagebox.h   \
     ../source/widget/megasplinechart.h  \
@@ -92,15 +63,7 @@ HEADERS += ../include/mystd.h           \
     ../source/wnd/stopwidget.h
 
 SOURCES += ../source/main/main.cpp      \
-    ../source/device/bus.cpp            \
-    ../source/device/device.cpp         \
-    ../source/device/MegaRobot.cpp      \
-    ../source/device/mrqDevice.cpp      \
-    ../source/device/storage.cpp        \
-    ../source/device/errorcode.cpp      \
-    ../source/device/system.cpp         \
     ../source/sys/sysapi.cpp            \
-    ../source/sys/megaxml.cpp           \
     ../source/sys/xthread.cpp           \
     ../source/mrp/mdatarow.cpp          \
     ../source/mrp/mdataset.cpp          \
@@ -110,28 +73,15 @@ SOURCES += ../source/main/main.cpp      \
     ../source/model/errmgrmodel.cpp     \
     ../source/model/debugitem.cpp       \
     ../source/model/debugmodel.cpp      \
-#    ../source/model/megatablemodel.cpp  \
-    ../source/model/h2actionmodel.cpp   \
-    ../source/model/h2actionitem.cpp    \
     ../source/model/comboxdelegate.cpp  \
     ../source/model/checkdelegate.cpp   \
     ../source/model/doublespinboxdelegate.cpp \
     ../source/wnd/mainwindow.cpp        \
-    ../source/wnd/h2ops.cpp             \
-    ../source/wnd/h2action.cpp          \
     ../source/wnd/aboutdlg.cpp          \
-    ../source/wnd/h2status.cpp          \
-    ../source/wnd/h2configuration.cpp   \
-    ../source/wnd/h2errmgr.cpp          \
-    ../source/wnd/h2jogmode.cpp         \
-    ../source/wnd/h2homing.cpp          \
     ../source/wnd/helppanel.cpp         \
     ../source/wnd/xconfig.cpp           \
-    ../source/wnd/h2measurement.cpp     \
-    ../source/wnd/h2product.cpp         \
     ../source/wnd/roboconfig.cpp        \
     ../source/wnd/xrobo.cpp             \
-    ../source/wnd/h2robo.cpp            \
     ../source/widget/megalcdnumber.cpp  \
     ../source/widget/megamessagebox.cpp \
     ../source/widget/megasplinechart.cpp\
@@ -151,17 +101,7 @@ SOURCES += ../source/main/main.cpp      \
 
 
 FORMS += ../source/wnd/mainwindow.ui    \
-    ../source/wnd/h2ops.ui              \
-    ../source/wnd/h2action.ui           \
-    ../source/wnd/aboutdlg.ui           \
-    ../source/wnd/h2status.ui           \
-    ../source/wnd/h2configuration.ui    \
-    ../source/wnd/h2errmgr.ui           \
-    ../source/wnd/h2jogmode.ui          \
-    ../source/wnd/h2homing.ui           \
     ../source/wnd/helppanel.ui          \
-    ../source/wnd/h2measurement.ui      \
-    ../source/wnd/h2product.ui          \
     ../source/wnd/roboconfig.ui         \
     ../source/widget/megainterface.ui \
     ../source/wnd/login.ui \
@@ -183,11 +123,19 @@ INCLUDEPATH += ../source/plugin
 
 win32:INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include"
 
+# libs
+LIBS += -L"../lib"
+
+LIBS += -lxfactory -lmrx-t4 -lmrx-h2 -lxplugin
+LIBS += -lmrx-device
+LIBS += -lmodel
+
 win32:LIBS += -L"C:/Program Files (x86)/IVI Foundation/VISA/WinNT/lib/msc"
 win32:LIBS += -lvisa32
 
 win32:LIBS += -L"../3rdlib"
 win32:LIBS += -llibws2_32 -llibiphlpapi
+
 
 RESOURCES += ../res/res.qrc
 

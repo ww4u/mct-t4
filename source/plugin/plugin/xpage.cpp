@@ -6,6 +6,7 @@ XPage::XPage(QWidget *parent) : QWidget(parent)
 {
     mUri = "data";
     m_pPlugin = NULL;
+    m_pPref = NULL;
     mbMissionWorking = false;
 
     mAttr = page_attr_unk;
@@ -46,6 +47,14 @@ void XPage::attachPlugin( XPlugin *pPlugin )
 }
 XPlugin *XPage::pulgin()
 { return m_pPlugin; }
+
+void XPage::attachPref( SysPara *pPref )
+{
+    Q_ASSERT( NULL != pPref );
+    m_pPref = pPref;
+}
+SysPara * XPage::pref()
+{ return m_pPref; }
 
 void XPage::adapteToUserMode( sysPara::eSysMode mode )
 {
@@ -106,7 +115,14 @@ int XPage::diff()
 
 void XPage::onSetting( XSetting setting )
 {
-    if ( setting.mSetting == XPage::e_setting_opened )
+    if ( setting.mSetting == XPage::e_setting_op_able )
+    {
+        check_para1();
+
+        //! enable/disable
+        setOperAble( setting.mPara1.toBool() );
+    }
+    else if ( setting.mSetting == XPage::e_setting_opened )
     {
         check_para1();
 
@@ -123,6 +139,10 @@ void XPage::onSetting( XSetting setting )
         { enterMission(); }
         else
         { exitMission(); }
+    }
+    else if ( setting.mSetting == XPage::e_setting_update_ui )
+    {
+        updateUi();
     }
     else
     {}
@@ -270,11 +290,14 @@ void XPage::enterMission()
 void XPage::exitMission()
 {}
 
+void XPage::setOperAble( bool b )
+{
+    setEnabled( b );
+}
+
 void XPage::setOpened( bool b )
 {
-#ifndef QT_DEBUG
     setEnabled( b );
-#endif
 }
 
 void XPage::slot_plugin_setting_changed( XSetting setting )

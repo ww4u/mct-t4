@@ -20,8 +20,8 @@ WorkingApi::WorkingApi( QObject *parent ) : QObject( parent )
 
 WorkingApi::~WorkingApi()
 {
-    if ( NULL != m_pTimer )
-    { delete m_pTimer; }
+//    if ( NULL != m_pTimer )
+//    { delete m_pTimer; }
 }
 
 void WorkingApi::setType( WorkingApi::eWorkingType type )
@@ -115,33 +115,36 @@ void XPluginWorkingThread::run()
         }
 
         //! proc
-        int ret;
-        foreach( WorkingApi *pApi, mApis )
-        {
-            Q_ASSERT( NULL != pApi );
-            Q_ASSERT( NULL != pApi->m_pObj );
-
-            procApi( pApi );
-
-            //! remove
-            if ( pApi->mWorkingType == WorkingApi::e_work_loop )
-            {  }
-            else
-            {
-                delete pApi;
-                mMutex.lock();
-                mApis.removeAll( pApi );
-                mMutex.unlock();
-            }
-
-//            mMutex.unlock();
-            if ( mTickms > 0 )
-            { QThread::msleep( mTickms ); }
-        }
+        procApis();
     }
 
-    qDeleteAll( mApis );
+    delete_all( mApis );
     logDbg();
+}
+
+void XPluginWorkingThread::procApis()
+{
+    foreach( WorkingApi *pApi, mApis )
+    {
+        Q_ASSERT( NULL != pApi );
+        Q_ASSERT( NULL != pApi->m_pObj );
+
+        procApi( pApi );
+
+        //! remove
+        if ( pApi->mWorkingType == WorkingApi::e_work_loop )
+        {  }
+        else
+        {
+            delete pApi;
+            mMutex.lock();
+            mApis.removeAll( pApi );
+            mMutex.unlock();
+        }
+
+        if ( mTickms > 0 )
+        { QThread::msleep( mTickms ); }
+    }
 }
 
 void XPluginWorkingThread::procApi( WorkingApi *pApi )
@@ -168,13 +171,19 @@ void XPluginWorkingThread::procApi( WorkingApi *pApi )
 
             //! call the api
             if ( pApi->m_pProcDo )
-            {  ret = (pApi->m_pObj->*(pApi->m_pProcDo))( pApi->m_pContext ); }
+            {
+                ret = (pApi->m_pObj->*(pApi->m_pProcDo))( pApi->m_pContext );
+                logDbg()<<ret;
+            }
             else
             { ret = 0; }
 
             //! msg api
             if ( pApi->m_pOnMsg )
-            { ret = (pApi->m_pObj->*(pApi->m_pOnMsg))( pApi->mVar ); }
+            {
+                ret = (pApi->m_pObj->*(pApi->m_pOnMsg))( pApi->mVar );
+                logDbg()<<ret;
+            }
 
             if ( pApi->m_pPostDo )
             {  (pApi->m_pObj->*(pApi->m_pPostDo))( pApi->m_pContext, ret ); }
@@ -196,8 +205,46 @@ XPluginUpdateingThread::XPluginUpdateingThread( QObject *parent )
 XPluginUpdateingThread::~XPluginUpdateingThread()
 {}
 
-void XPluginUpdateingThread::run()
+bool XPluginUpdateingThread::event( QEvent *event )
 {
+    if ( event->type() == QEvent::User )
+    {
+        logDbg()<<thread()<<QThread::currentThreadId();
+        event->accept();
+        return true;
+    }
+    else
+    {
+        return QThread::event( event );
+    }
+}
+
+void XPluginUpdateingThread::slot_timer_op( QTimer *pTimer, int tmo, bool b )
+{
+    Q_ASSERT( NULL != pTimer );
+logDbg()<<tmo<<b;
+    logDbg()<<QThread::currentThread()<<pTimer->thread()<<QThread::currentThreadId();
+//    if ( b )
+//    { pTimer->start(tmo); }
+//    else
+//    { pTimer->stop();}
+}
+
+void XPluginUpdateingThread::slot_timeout()
+{
+    logDbg()<<QThread::currentThread()<<m_pTimer->thread()<<QThread::currentThreadId();
+}
+
+void XPluginUpdateingThread::run()
+{logDbg()<<QThread::currentThreadId();
+
+    m_pTimer = new QTimer();
+    m_pTimer->moveToThread( this );
+    m_pTimer->start( 3000 );
+
+    connect( m_pTimer, SIGNAL(timeout()),
+             this, SLOT(slot_timeout()) );
+
     QThread::run();
     qDeleteAll( mApis );
     logDbg();

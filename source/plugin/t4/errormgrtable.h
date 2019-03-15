@@ -18,6 +18,9 @@ namespace mrx_t4 {
 class ErrorMgrTable : public XPage
 {
     Q_OBJECT
+public:
+    static int calcResponse(int reaction, int outputAble);
+    static int parseResponse(int response,int *reaction, int *outputAble);
 
 public:
     explicit ErrorMgrTable(QWidget *parent = 0);

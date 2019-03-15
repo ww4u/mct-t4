@@ -28,12 +28,34 @@
                         else\
                         { return ret; }
 
-#define robot_var() pRobo->deviceVi(), pRobo->robotHandle()
-#define device_var() pRobo->deviceVi(), pRobo->deviceHandle()
+#define robot_var() (ViSession)pRobo->deviceVi(), pRobo->robotHandle()
+#define device_var() (ViSession)pRobo->deviceVi(), pRobo->deviceHandle()
+
+#define self_check_connect() \
+                        if ( isOpened() )\
+                        {}\
+                        else\
+                        { return; }
+
+#define self_check_connect_ret( ret ) \
+                        if ( isOpened() )\
+                        {}\
+                        else\
+                        { return ret; }
+
+#define self_robot_var()  (ViSession)deviceVi(),robotHandle()
+#define self_device_var()    (ViSession)deviceVi(),deviceHandle()
 
 #define on_post_setting( cls, onSetting )    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&cls::onSetting), var );
 
+#define on_post_setting_emerge( cls, onSetting ) m_pPlugin->attachEmergencyWorking( this, (XPage::onMsg)(&cls::onSetting), var );
+
 #define wave_table  0
+#define distance_error      (0.001)
+
+#define guess_dist_calc_time_ms( dist )    (dist * 1000)
+
+#define guess_dist_time_ms( ts, dist )     ( (ts)*1000 + guess_dist_calc_time_ms(dist) )
 
 namespace mrx_t4 {
 class ActionTable;
@@ -49,6 +71,7 @@ public:
         e_setting_terminal = XPage::e_setting_user,
         e_setting_current,
         e_add_record,
+        e_edit_record,
         e_setting_record,
     };
 
@@ -99,6 +122,8 @@ protected:
     int _diffProc();
     int diffProc();
 
+    int onStop( QVariant var );
+
 public:
     int robotHandle();
     int deviceHandle();
@@ -106,11 +131,23 @@ public:
 public:
     int currentRecordIndex();
 
-protected:
-//    mrx_t4::RecordTable mRecordTable;
+    //! api
+public:
+    static double eulaDistance( double x, double y, double z,
+                                double x1, double y1, double z1 );
+public:
+    int relMove( QString para,
+                 double x, double y, double z,
+                 double pw, double h,
+                 double v, double a );
+    int absMove( QString para,
+                 double x, double y, double z,
+                 double pw, double h,
+                 double v, double a );
 
+public:
     TreeModel* m_pRecordModel;
-
+protected:
     ErrorMgrModel mErrorConfigTable;
 
     int mRobotHandle;

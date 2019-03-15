@@ -66,6 +66,8 @@ Q_SIGNALS:
     void signal_enter_working( WorkingApi *api);
     void signal_exit_working( WorkingApi *api, int );
 
+    void signal_updating();
+
 protected Q_SLOTS:
     void slot_api_proc( QObject *pApi );
     void slot_api_operate( QObject *pApi, bool b );
@@ -81,6 +83,7 @@ protected:
     virtual void run();
 
 protected:
+    void procApis();
     void procApi( WorkingApi *pApi );
 
 protected:
@@ -98,12 +101,23 @@ protected:
 class XPluginUpdateingThread : public XPluginWorkingThread
 {
     Q_OBJECT
+
 public:
     XPluginUpdateingThread( QObject *parent =  Q_NULLPTR );
     virtual ~XPluginUpdateingThread();
 
+public:
+    virtual bool event( QEvent *event );
+
+protected Q_SLOTS:
+    void slot_timer_op( QTimer *pTimer, int tmo, bool b );
+    void slot_timeout();
+
 protected:
     virtual void run();
+
+protected:
+    QTimer *m_pTimer;
 };
 
 #endif // XPLUGINWORKINGTHREAD_H

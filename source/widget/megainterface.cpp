@@ -13,6 +13,16 @@
 #define ICON_WIDTH      64
 #define ICON_HEIGHT     64
 
+QString MegaInterface::megaMrxTypeToString( int type )
+{
+    if ( type == MRX_TYPE_T4 )
+    { return "MRX-T4"; }
+    else if ( type == MRX_TYPE_H2 )
+    { return "MRX-H2"; }
+    else
+    { return ""; }
+}
+
 MegaInterface::MegaInterface(SysPara *pPara, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::MegaInterface), m_pPara( pPara )
@@ -30,6 +40,8 @@ MegaInterface::MegaInterface(SysPara *pPara, QWidget *parent) :
 
     m_model = new QStandardItemModel(ui->tableView);
     ui->tableView->setModel(m_model);
+    ui->tableView->horizontalHeader()->setDefaultAlignment( Qt::AlignLeft );
+    ui->tableView->horizontalHeader()->setDefaultSectionSize( 150 );
 
     //! context menu
     ui->tableView->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -334,18 +346,23 @@ void MegaInterface::on_pushButton_Scan_clicked()
                 if ( idCnt < 1 )
                 { break; }
 
-                char roboType[64];
+//                char roboType[64];
+                QString strType;
                 for ( int i = 0; i < idCnt; i++ )
                 {
                     logDbg()<<roboIds[i];
-                    ret = mrgGetRobotType( visa, roboIds[i], roboType );
-                    if ( ret == 0 )
-                    { }
+                    ret = mrgGetRobotType( visa, roboIds[i] );
+                    if ( ret < 0 || ret >= MRX_TYPE_UNKOWN )
+                    { continue; }
                     else
+                    {  }
+
+                    strType = megaMrxTypeToString( ret );
+                    if ( strType.length() < 1 )
                     { continue; }
 
                     tInfo.mId = roboIds[i];
-                    tInfo.mRoboModel = QString("%1").arg( roboType );
+                    tInfo.mRoboModel = QString("%1").arg( strType );
                     tInfo.mRoboSN = "";
 
                     sysInfo( IDN );

@@ -78,6 +78,8 @@ signals:
     void signal_progress( const QString &info, bool b, int now, int mi, int ma );
 
 private slots:
+    void slot_plugin_operable( bool b );
+
     void slot_request_sysOpPanel();
     void slot_save_sysPref();
 
@@ -92,7 +94,6 @@ private slots:
 
     void slot_progress( const QString &info, bool b, int now, int mi, int ma );
     void slot_progress_canceled();
-
 
     void slot_focus_in( const QString &model,
                         const QString &name );

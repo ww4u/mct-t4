@@ -5,16 +5,16 @@
 
 #include "../../plugin/plugin/xplugin.h"
 
-#include "../../device/MegaRobot.h"
-#include "../../device/mrqDevice.h"
-#include "../../device/errorcode.h"
 
+#include "../../device/MegaGateway.h"
 
 #include "../../plugin/t4/t4.h"
 
 #include "comassist.h"
 
 #include "../model/debugtable.h"
+
+#define WIDGET_MONITOR_INDEX 5
 
 namespace mrx_t4{
 
@@ -38,6 +38,10 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     m_pDebugContextMenu = NULL;
     m_pMonitorContextMenu = NULL;
 
+    m_pActionExportImage = NULL;
+    m_pActionExportData = NULL;
+    m_pActionCopy = NULL;
+
     //! data cache
 //    m_pCaches[0] = new DataCache( this ); m_pCaches[0]->mWSema.release();
     new_cache( 0 );
@@ -48,6 +52,12 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
 
     ui->spinActTerminal->setSuffix( char_deg );
     ui->spinActWrist->setSuffix( char_deg );
+
+    ui->spinTerminalTarget->setSuffix( char_deg );
+    ui->spinWristTarget->setSuffix( char_deg );
+
+    ui->actPosTerminal->setSuffix( char_deg );
+    ui->actPosWrist->setSuffix( char_deg );
 
     //! set model
     ui->logout->setModel( pModel );
@@ -62,6 +72,10 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     //! build connect
     connect( &mDebugTable, SIGNAL(signal_data_changed()),
              this, SLOT(slot_debug_table_changed()) );
+
+    connect( &mDebugTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+             this, SLOT(slot_debug_table_changed()) );
+
     connect( ui->tvDebug, SIGNAL(activated( const QModelIndex &)),
              this, SLOT(slot_debug_table_changed()) );
     connect( ui->tvDebug, SIGNAL(clicked( const QModelIndex &)),
@@ -121,7 +135,44 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
 
 T4OpPanel::~T4OpPanel()
 {
+    mSeqMutex.lock();
+    delete_all( mSeqList );
+    mSeqMutex.unlock();
+
     delete ui;
+}
+
+bool T4OpPanel::event(QEvent *e)
+{
+    //! proc me
+    if ( e->type() >= QEvent::User )
+    {
+        do
+        {
+            OpEvent *pEvent = (OpEvent*)e;
+            if ( NULL == pEvent )
+            { break; }
+
+            if ( (int)pEvent->type() == OpEvent::debug_enter )
+            {
+                on_debug_enter( pEvent->mVar1.toInt(), pEvent->mVar2.toInt()  );
+            }
+            else if ( (int)pEvent->type() == OpEvent::debug_exit )
+            {   on_debug_exit( pEvent->mVar1.toInt(), pEvent->mVar2.toInt() ); }
+            else if ( (int)pEvent->type() == OpEvent::monitor_event )
+            {
+                updateMonitor( e );
+            }
+            else
+            {}
+
+        }while( 0 );
+
+        e->accept();
+        return true;
+    }
+    else
+    { return XPage::event( e ); }
 }
 
 #define config_chart( wig, title )  ui->wig->chart()->setTitle( title );\
@@ -129,6 +180,19 @@ T4OpPanel::~T4OpPanel()
                                     ui->wig->chart()->series2()->setPen(QPen(Qt::blue));
 void T4OpPanel::setupUi()
 {
+    //! delegate
+    m_pISpinDelegateId = new iSpinDelegate( this );
+    m_pDSpinDelegateTime = new dSpinDelegate( this );
+
+    m_pISpinDelegateId->setMax( 31 );
+    m_pISpinDelegateId->setMin( 1 );
+
+    m_pDSpinDelegateTime->setMax( 1000 );
+    m_pDSpinDelegateTime->setMin( 0 );
+
+    ui->tvDebug->setItemDelegateForColumn( 0, m_pISpinDelegateId );
+    ui->tvDebug->setItemDelegateForColumn( 1, m_pDSpinDelegateTime );
+
     //! config the obj name
     QStringList strList;
     strList <<"logout"
@@ -144,10 +208,11 @@ void T4OpPanel::setupUi()
     for ( int i = 0; i < ui->tabWidget->count(); i++ )
     { ui->tabWidget->widget( i )->setObjectName( strList.at( i ) ); }
 
+    //! terminal
+    ui->joint5->setAngleVisible( true, false );
+
+
     //! config the chart
-//    ui->jointChart1->chart()->setTitle( tr("Basement") );
-//    ui->jointChart1->chart()->series1()->setPen(QPen(Qt::red));
-//    ui->jointChart1->chart()->series2()->setPen(QPen(Qt::blue));
     config_chart( jointChart1, tr("Basement") );
     config_chart( jointChart2, tr("Big Arm") );
     config_chart( jointChart3, tr("Little Arm") );
@@ -162,6 +227,10 @@ void T4OpPanel::setupUi()
     mJointCharts.append( ui->jointChart4 );
 
     mJointCharts.append( ui->jointChart5 );
+
+    //! disabled ui
+    //! \todo for coord control
+    ui->groupBox_14->setVisible( false );
 }
 
 void T4OpPanel::retranslateUi()
@@ -183,20 +252,14 @@ void T4OpPanel::retranslateUi()
     ui->jointChart4->chart()->setTitle( tr("Wrist") );
 
     ui->jointChart5->chart()->setTitle( tr("Terminal") );
-}
 
-bool T4OpPanel::event(QEvent *e)
-{
-    Q_ASSERT( NULL != e );
-
-    if ( e->type() == MONITOR_EVENT  )
-    {
-        updateMonitor( e );
-        e->accept();
-        return true;
-    }
-
-    return XPage::event( e );
+    //! monitor context
+    if ( NULL != m_pActionExportImage )
+    { m_pActionExportImage->setText(tr("Exmport image...")); }
+    if ( NULL != m_pActionExportData )
+    { m_pActionExportData->setText(tr("Exmport data...")); }
+    if ( NULL != m_pActionCopy )
+    { m_pActionCopy->setText(tr("Copy")); }
 }
 
 void T4OpPanel::focusInEvent(QFocusEvent *event)
@@ -273,21 +336,17 @@ int T4OpPanel::posRefreshProc( void *pContext )
     //! to local
     MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
     Q_ASSERT( NULL != pRobo );
-
+//logDbg()<<QThread::currentThreadId();
     if ( pRobo->isOpened() )
     {}
     else
     { return -1; }
 
     do
-    {//logDbg()<<QThread::currentThreadId();
-//        if ( isVisible() )
-//        {}
-//        else
-//        { return -1; }
-
+    {
         int ret;
-        float x,y,z;
+        float fx,fy,fz;
+        double dx,dy,dz;
         //! record now
         int rec;
         ret = mrgGetRobotCurrentRecord( robot_var(),
@@ -301,38 +360,42 @@ int T4OpPanel::posRefreshProc( void *pContext )
         }
 
         ret = mrgGetRobotTargetPosition( robot_var(),
-                                         &x, &y, &z );
+                                         &fx, &fy, &fz );
         if ( ret != 0 )
         { sysError( tr("Target read fail") ); break; }
         else
         {
-            ui->doubleSpinBox_target_position_x->setValue( x );
-            ui->doubleSpinBox_target_position_y->setValue( x );
-            ui->doubleSpinBox_target_position_z->setValue( x );
+            ui->doubleSpinBox_target_position_x->setValue( fx );
+            ui->doubleSpinBox_target_position_y->setValue( fy );
+            ui->doubleSpinBox_target_position_z->setValue( fz );
         }
 
         //! x,y,z now
         ret = mrgGetRobotCurrentPosition( robot_var(),
-                                          &x, &y, &z );
+                                          &fx, &fy, &fz );
         if ( ret != 0 )
         { sysError( tr("Current read fail") ); break; }
         {
             //! act
-            ui->actPosX->setValue( x );
-            ui->actPosY->setValue( y );
-            ui->actPosZ->setValue( z );
+            ui->actPosX->setValue( fx );
+            ui->actPosY->setValue( fy );
+            ui->actPosZ->setValue( fz );
 
-            ui->doubleSpinBox_homing_actual_pos_x->setValue( x );
-            ui->doubleSpinBox_homing_actual_pos_y->setValue( y );
-            ui->doubleSpinBox_homing_actual_pos_z->setValue( z );
+            ui->doubleSpinBox_homing_actual_pos_x->setValue( fx );
+            ui->doubleSpinBox_homing_actual_pos_y->setValue( fy );
+            ui->doubleSpinBox_homing_actual_pos_z->setValue( fz );
 
-            ui->spinActX->setValue( x );
-            ui->spinActY->setValue( y );
-            ui->spinActZ->setValue( z );
+            ui->doubleSpinBox_debug_posX->setValue( fx );
+            ui->doubleSpinBox_debug_posY->setValue( fy );
+            ui->doubleSpinBox_debug_posZ->setValue( fz );
+
+            ui->spinActX->setValue( fx );
+            ui->spinActY->setValue( fy );
+            ui->spinActZ->setValue( fz );
         }
 
         //! angle now
-        float angles[4];
+        float angles[5];
         ret = mrgGetRobotCurrentAngle( robot_var(),
                                        angles );
         if ( ret <= 0 )
@@ -344,8 +407,6 @@ int T4OpPanel::posRefreshProc( void *pContext )
             ui->joint2->setAngle( angles[1] );
             ui->joint3->setAngle( angles[2] );
             ui->joint4->setAngle( angles[3] );
-
-            //! \todo joint5
 
             //! delta angles
             double dAngles[4];
@@ -360,6 +421,22 @@ int T4OpPanel::posRefreshProc( void *pContext )
             ui->joint3->setdAngle( dAngles[2] );
             ui->joint4->setdAngle( dAngles[3] );
         }
+
+        //! joint5
+        ret = mrgGetRobotToolPosition( robot_var(), angles );
+        if ( ret < 0 )
+        { break; }
+        else
+        {
+            ui->spinActTerminal->setValue( angles[0] );
+            ui->joint5->setAngle( angles[0] );
+            ui->actPosTerminal->setValue( angles[0] );
+        }
+
+        //! \todo joint5 target
+
+        //! \todo wrist current and target
+
 
         //! home valid?
         ret = mrgGetRobotHomeRequire( robot_var() );
@@ -400,7 +477,7 @@ int T4OpPanel::monitorRefreshProc( void *pContext )
     //! to local
     MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
     Q_ASSERT( NULL != pRobo );
-
+//logDbg()<<QThread::currentThreadId();
     if ( pRobo->isOpened() )
     {}
     else
@@ -414,7 +491,7 @@ int T4OpPanel::monitorRefreshProc( void *pContext )
     {
         //! get from device
         //! \todo
-        ret = mrgMRQReportQueue_Query( robot_var(), joint, 0, array);
+        ret = mrgMRQReportQueue_Query( device_var(), joint, 0, array);
         if ( ret <= 0 )
         {
             sysError( tr("Monitor update fail") );
@@ -451,7 +528,7 @@ int T4OpPanel::monitorRefreshProc( void *pContext )
 //        m_pCaches[joint]->mRSema.release();
         do
         {
-            OpEvent *refreshEvent = new OpEvent( MONITOR_EVENT );
+            OpEvent *refreshEvent = new OpEvent( OpEvent::monitor_event );
             if ( NULL == refreshEvent )
             {
                 m_pCaches[joint]->mWSema.release();
@@ -471,9 +548,11 @@ int T4OpPanel::monitorRefreshProc( void *pContext )
 void T4OpPanel::attachWorkings()
 {
     //! attach
-    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::posRefreshProc), NULL, 5000 );
+    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::posRefreshProc), NULL,
+                         m_pPref->refreshIntervalMs() );
 
-    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ), NULL, 1000 );
+    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ), NULL,
+                         m_pPref->refreshIntervalMs() );
 }
 
 void T4OpPanel::updateUi()
@@ -488,6 +567,8 @@ void T4OpPanel::updateUi()
     //! checked
     ui->controllerStatus->setMctChecked( pRobo->mbMctEn );
     ui->controllerStatus->setDevicePower( pRobo->mbAxisPwr );
+
+    logDbg()<<pRobo->mbMctEn<<pRobo->mbAxisPwr;
 }
 
 void T4OpPanel::updateData()
@@ -507,7 +588,7 @@ void T4OpPanel::onSetting(XSetting setting)
 {
     XPage::onSetting( setting );
 
-    if ( setting.mSetting == XPage::e_setting_op_able )
+ /*   if ( setting.mSetting == XPage::e_setting_op_able )
     {
         check_para1();
 
@@ -516,7 +597,7 @@ void T4OpPanel::onSetting(XSetting setting)
         ui->controllerStatus->setDevicePowerEnable( setting.mPara1.toBool() );
     }
 
-    else if ( (int)setting.mSetting == (int)MRX_T4::e_setting_terminal )
+    else */if ( (int)setting.mSetting == (int)MRX_T4::e_setting_terminal )
     {
         if ( setting.mPara1.isValid() )
         {}
@@ -536,13 +617,18 @@ void T4OpPanel::onSetting(XSetting setting)
 
 void T4OpPanel::enterMission()
 {
-//    setEnabled( false );
+    QList<int> exceptWidget;
+    exceptWidget<<WIDGET_MONITOR_INDEX;
+
     ui->controllerStatus->setEnabled( false );
 
     //! \note the page 1 is logout
     for( int i = 1; i < ui->tabWidget->count();i++ )
     {
-        ui->tabWidget->widget( i )->setEnabled( false );
+        if ( exceptWidget.contains( i) )
+        {}
+        else
+        { ui->tabWidget->widget( i )->setEnabled( false ); }
     }
 }
 void T4OpPanel::exitMission( )
@@ -554,6 +640,17 @@ void T4OpPanel::exitMission( )
     for( int i = 0; i < ui->tabWidget->count();i++ )
     {
         ui->tabWidget->widget( i )->setEnabled( true );
+    }
+}
+
+void T4OpPanel::setOperAble( bool b )
+{
+    ui->controllerStatus->setDevicePowerEnable( b );
+
+    //! \note the page 1 is logout
+    for( int i = 1; i < ui->tabWidget->count();i++ )
+    {
+        ui->tabWidget->widget( i )->setEnabled( b );
     }
 }
 
@@ -595,6 +692,14 @@ logDbg()<<QThread::currentThreadId()
       <<vars.at(1).toDouble()
       <<vars.at(2).toDouble();
 
+        float dist =  MRX_T4::eulaDistance( 0,0,0,
+                                        vars.at(0).toDouble(),
+                                        vars.at(1).toDouble(),
+                                        vars.at(2).toDouble() );
+
+        //! percent * max speed
+        float t = dist / ( vars.at(3).toDouble() * pRobo->mMaxTerminalSpeed );
+logDbg()<<t<<vars.at(3).toDouble()<<dist<<guess_dist_time_ms( t, dist );
         //! wait idle
         //! \todo speed
         int ret = mrgRobotRelMove( robot_var(),
@@ -602,8 +707,8 @@ logDbg()<<QThread::currentThreadId()
                                    vars.at(0).toDouble(),
                                    vars.at(1).toDouble(),
                                    vars.at(2).toDouble(),
-                                   1,
-                                   60000
+                                   t,
+                                   guess_dist_time_ms( t, dist )
                                    );
 
     logDbg()<<ret;
@@ -617,9 +722,25 @@ int T4OpPanel::onHoming( QVariant var )
     int ret;
 logDbg();
     ret = mrgRobotGoHome( robot_var(),
-                          pRobo->mHomeSpeed,
+//                          pRobo->mHomeSpeed,
                           pRobo->mHomeTimeout*1000 );
 logDbg();
+    return ret;
+}
+
+int T4OpPanel::onFolding( QVariant var )
+{
+    check_connect_ret( -1 );
+
+    int ret;
+
+    ret = mrgGetRobotFold( robot_var(),
+                           wave_table,
+                           pRobo->mPackagesAxes[0],
+                           pRobo->mPackagesAxes[1],
+                           pRobo->mPackagesAxes[2],
+                           pRobo->mPackagesAxes[3]
+                           );
     return ret;
 }
 
@@ -642,7 +763,7 @@ int T4OpPanel::onJointStep( QVariant var /*int jId, int dir*/ )
 
     double spd = pRobo->mMaxJointSpeed * ui->spinVel->value() / 100.0;
 
-    int ret = mrgMRQAdjust( device_var(), jId, dir * stp, stp/spd, 0 );
+    int ret = mrgMRQAdjust( device_var(), jId, 0, dir * stp, stp/spd, guess_dist_time_ms( stp/spd, stp ) );
 
     return ret;
 }
@@ -651,6 +772,101 @@ int T4OpPanel::onJointZero( QVariant var )
     //! \todo
     return 0;
 }
+
+int T4OpPanel::onSequence( QVariant var )
+{
+    check_connect_ret( -1 );
+logDbg()<<QThread::currentThreadId();
+    //! proc the sequence
+
+    int ret = _onSequence( var );
+
+    //! exec fail
+    if ( ret != 0 )
+    {
+        sysError( tr("Exec fail") );
+    }
+
+    mSeqMutex.lock();
+        delete_all( mSeqList );
+    mSeqMutex.unlock();
+
+    return ret;
+}
+
+int T4OpPanel::_onSequence( QVariant var )
+{
+    int ret;
+    do
+    {
+        for( int i = 0; i < mSeqList.size(); i++ )
+        {
+            if ( QThread::currentThread()->isInterruptionRequested() )
+            { return 0; }
+
+            //! enter
+            post_debug_enter( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
+
+            ret = procSequence( mSeqList.at( i ) );
+
+            if ( ret == 0 )
+            {
+                if ( mSeqList.at(i)->delay > 0 )
+                {
+                    //! sleep s
+                    QThread::sleep( mSeqList.at(i)->delay );
+                }
+                else
+                {}
+
+                //! exit
+                post_debug_exit( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
+            }
+            //! exec fail
+            else
+            {
+                //! exit
+                post_debug_exit( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
+
+                return -1;
+            }
+
+        }
+    }while( ui->chkCyclic->isChecked() );
+
+    return 0;
+}
+
+//int vRow;
+//QString mType;
+//double x, y, z, pw, h, a, v;
+//double delay;
+int T4OpPanel::procSequence( SequenceItem* pItem )
+{
+    Q_ASSERT( NULL != pItem );
+    check_connect_ret( -1 );
+    int ret;
+    if ( str_is( pItem->mType, "PA") )
+    {
+        ret = pRobo->absMove( "",
+                              pItem->x, pItem->y, pItem->z,
+                              pItem->pw, pItem->h,
+                              pItem->v, pItem->a );
+    }
+    else if ( str_is( pItem->mType, "PRA")
+              || str_is( pItem->mType, "PRN"))
+    {
+        ret = pRobo->relMove( "",
+                              pItem->x, pItem->y, pItem->z,
+                              pItem->pw, pItem->h,
+                              pItem->v, pItem->a );
+    }
+    else
+    { return -1; }
+
+    return ret;
+}
+
 
 int T4OpPanel::exportDataSets( QTextStream &stream,
                                QStringList &headers,
@@ -710,11 +926,14 @@ void T4OpPanel::slot_mct_checked( bool b )
 void T4OpPanel::slot_pwr_checked( bool b )
 {
     check_connect( );
-
-    int ret = mrgMRQDriverState( device_var(), 0, b );
+    int ret;
+    for ( int jId = 0; jId < 5; jId++ )
+    {
+        ret = mrgMRQDriverState( device_var(), jId, b );
+    }
 
     if ( ret != 0 )
-    { sysError( tr("power") );}
+    { sysError( tr("power config fail") );}
 }
 void T4OpPanel::slot_ack_error()
 {
@@ -865,35 +1084,40 @@ void T4OpPanel::slot_monitorContextMenuRequested( const QPoint &)
         if ( NULL == m_pMonitorContextMenu )
         { return; }
 
-        QAction *actionExportImage = m_pMonitorContextMenu->addAction(tr("Export image..."));
-        if ( NULL == actionExportImage )
+        m_pActionExportImage = m_pMonitorContextMenu->addAction(tr("Export image..."));
+        if ( NULL == m_pActionExportImage )
         {
             delete m_pMonitorContextMenu;
             m_pMonitorContextMenu = NULL;
             return;
         }
 
-        QAction *actionExportData = m_pMonitorContextMenu->addAction(tr("Export data..."));
-        if ( NULL == actionExportData )
+        m_pActionExportData = m_pMonitorContextMenu->addAction(tr("Export data..."));
+        if ( NULL == m_pActionExportData )
         {
             delete m_pMonitorContextMenu;
             m_pMonitorContextMenu = NULL;
             return;
         }
 
-        QAction *actionCopy = m_pMonitorContextMenu->addAction(tr("Copy"));
-        if ( NULL == actionCopy )
+        m_pActionCopy = m_pMonitorContextMenu->addAction(tr("Copy"));
+        if ( NULL == m_pActionCopy )
         {
             delete m_pMonitorContextMenu;
             m_pMonitorContextMenu = NULL;
             return;
         }
 
-        connect(actionExportImage, SIGNAL(triggered(bool)),
+        //! set icon
+        m_pActionExportImage->setIcon( QIcon(":/res/image/icon/xingzhuang-tupian.png") );
+        m_pActionExportData->setIcon( QIcon(":/res/image/icon/activity.png") );
+        m_pActionCopy->setIcon( QIcon(":/res/image/icon/fuzhi.png") );
+
+        connect(m_pActionExportImage, SIGNAL(triggered(bool)),
                 this, SLOT( slot_monitorExportImage() ) );
-        connect(actionExportData, SIGNAL(triggered(bool)),
+        connect(m_pActionExportData, SIGNAL(triggered(bool)),
                 this, SLOT( slot_monitorExportData() ) );
-        connect(actionCopy, SIGNAL(triggered(bool)),
+        connect(m_pActionCopy, SIGNAL(triggered(bool)),
                 this, SLOT( slot_monitorCopy() ) );
     }
     else
@@ -992,7 +1216,6 @@ void T4OpPanel::slot_monitorCopy()
     { return; }
 
     clipboard->setImage( pixmap.toImage() );
-
 }
 
 //void T4OpPanel::on_pushButton_2_clicked()
@@ -1039,6 +1262,14 @@ void T4OpPanel::on_pushButton_starting_home_clicked()
     m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onHoming), var );
 }
 
+
+void T4OpPanel::on_btnFold_clicked()
+{
+    QVariant var;
+
+    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onFolding), var );
+}
+
 void T4OpPanel::on_toolSingleAdd_clicked()
 {
     //! add to the record
@@ -1059,10 +1290,30 @@ void T4OpPanel::on_toolSingleAdd_clicked()
     m_pPlugin->emit_setting_changed( (eXSetting)(MRX_T4::e_add_record), var );
 }
 
-void T4OpPanel::on_toolButton_15_clicked()
+void T4OpPanel::on_toolSingleEdit_clicked()
 {
-    on_toolSingleAdd_clicked();
+    //! add to the record
+    Q_ASSERT( NULL != m_pPlugin );
+
+    QVariant var;
+    QList<QVariant> coords;
+
+    coords.append( ui->spinActX->value() );
+    coords.append( ui->spinActY->value() );
+    coords.append( ui->spinActZ->value() );
+
+    coords.append( ui->spinActWrist->value() );
+    coords.append( ui->spinActTerminal->value() );
+
+    var.setValue( coords );
+
+    m_pPlugin->emit_setting_changed( (eXSetting)(MRX_T4::e_edit_record), var );
 }
+
+//void T4OpPanel::on_toolButton_15_clicked()
+//{
+//    on_toolSingleAdd_clicked();
+//}
 
 //! debug tab
 void T4OpPanel::on_btnImport_clicked()
@@ -1148,7 +1399,7 @@ void T4OpPanel::on_btnAdd_clicked()
 
     //! delay
     modelIndex = pModel->index( cRow, 1 );
-    pModel->setData( modelIndex, 0 );
+    pModel->setData( modelIndex, ui->spinDly->value() );
 
     logDbg();
 }
@@ -1373,11 +1624,149 @@ on_joint_actions( 5 )
 
 void T4OpPanel::on_tabWidget_currentChanged(int index)
 {
-//    emit signal_focus_changed( );
     emit signal_focus_changed( m_pPlugin->model(),
                                ui->tabWidget->currentWidget()->objectName() );
 }
 
+//! sequence
+int T4OpPanel::buildSequence( QList<SequenceItem*> &list )
+{
+    check_connect_ret( -1 );
+
+    //! export the debug list
+    QVariant var1, var2;
+    SequenceItem *pItem;
+    bool bOk;
+
+    int id;
+    double delay;
+
+    QList< QVector<QVariant> > varList;
+    QVector<QVariant> var;
+    for ( int i = 0; i < ui->tvDebug->model()->rowCount(); i++ )
+    {
+
+        var1 = ui->tvDebug->model()->data(  ui->tvDebug->model()->index(i,0) );
+        var2 = ui->tvDebug->model()->data(  ui->tvDebug->model()->index(i,1) );
+
+        //! valid?
+        if ( !var1.isValid() || !var2.isValid() )
+        { return -1; }
+
+        //! return
+        id = var1.toInt( &bOk );
+        if ( !bOk ){ return -1; }
+        delay = var2.toDouble( &bOk );
+        if ( !bOk ){ return -1; }
+
+        //! plane tree
+        varList.clear();
+        //! \note id from 1
+        pRobo->m_pRecordModel->planeTree(
+                                            pRobo->m_pRecordModel->index( id - 1, 0 ),
+                                            varList
+                                        );
+
+        //! create the sequence list
+//        headers<<"id"<<"type"<<"coord"<<"para"
+//               <<"x"<<"y"<<"z"<<"w"<<"h"<<"v"<<"a"
+//               <<"comment";
+        for( int j = 0; j < varList.size(); j++ )
+        {
+            pItem = new SequenceItem();
+            if ( NULL == pItem )
+            { return -1; }
+
+            pItem->id = id;
+            pItem->vRow = i;
+
+            var = varList.at(j);
+            pItem->mType = var.at( 1 ).toString();
+            pItem->x = var.at( 4 ).toDouble();
+            pItem->y = var.at( 5 ).toDouble();
+            pItem->z = var.at( 6 ).toDouble();
+
+            pItem->pw = var.at( 7 ).toDouble();
+            pItem->h = var.at( 8 ).toDouble();
+
+            pItem->v = var.at( 9 ).toDouble();
+            pItem->a = var.at( 10 ).toDouble();
+
+            pItem->delay = delay;
+
+            list.append( pItem );
+        }
+    }
+
+    return 0;
 }
+
+void T4OpPanel::post_debug_enter( int id, int r )
+{
+    OpEvent *pEvent= new OpEvent( OpEvent::debug_enter, id, r );
+    if ( NULL == pEvent )
+    { return; }
+
+    qApp->postEvent( this, pEvent );
+//
+
+}
+void T4OpPanel::post_debug_exit( int id, int r )
+{
+
+}
+
+void T4OpPanel::on_debug_enter( int id, int r )
+{
+//    ui->tvDebug->setCurrentIndex( ui->tvDebug->model()->index( i, 0 ) );
+    logDbg()<<id<<r;
+    ui->tvDebug->selectRow( r );
+    ui->doubleSpinBox_debugRecord->setValue( id );
+}
+void T4OpPanel::on_debug_exit( int id, int r )
+{
+//    ui->tvDebug->setCurrentIndex( ui->tvDebug->model()->index( i-1, 0 ) );
+}
+
+//! start the run thread
+void T4OpPanel::on_toolButton_debugRun_clicked()
+{
+    //! build
+    mSeqMutex.lock();
+        delete_all( mSeqList );
+        buildSequence( mSeqList );
+    mSeqMutex.unlock();
+
+    logDbg()<<mSeqList.size();
+    for ( int i = 0; i < mSeqList.size(); i++ )
+    {
+        logDbg()<<i
+                <<mSeqList.at(i)->vRow
+                <<mSeqList.at(i)->mType
+                <<mSeqList.at(i)->x
+                <<mSeqList.at(i)->y
+                <<mSeqList.at(i)->z
+                <<mSeqList.at(i)->v
+                <<mSeqList.at(i)->pw
+                <<mSeqList.at(i)->h
+                <<mSeqList.at(i)->a;
+
+    }
+
+    if ( mSeqList.size() > 0 )
+    {}
+    else
+    { return; }
+
+    //! vars
+    QVariant var;
+logDbg()<<QThread::currentThreadId();
+    on_post_setting( T4OpPanel, onSequence );
+}
+
+
+}
+
+
 
 

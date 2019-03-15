@@ -654,7 +654,7 @@ void H2Ops::on_pushButton_starting_home_clicked()
     auto func = [=](int &result)
     {
         //不等待
-        int ret = mrgRobotGoHome(mViHandle, mRobotName, velocity, -1);
+        int ret = mrgRobotGoHome(mViHandle, mRobotName, /*velocity,*/ -1);
         qDebug() << "mrgRobotGoHome" << ret;
 
         while(1)
@@ -1030,21 +1030,21 @@ void H2Ops::updateTabOpreate()
     ui->doubleSpinBox_RecordNumber->setValue( record );
 
     //! 更新目标位置
-    float fx = -1, fy = -1, fz = -1;
-    ret =  mrgGetRobotTargetPosition(mViHandle, mRobotName, &fx, &fy, &fz);
+    double dx = -1, dy = -1, dz = -1;
+    ret =  mrgGetRobotTargetPosition(mViHandle, mRobotName, &dx, &dy, &dz);
 //    qDebug() << "mrgGetRobotTargetPosition" << ret << dx << dy;
-    ui->doubleSpinBox_target_position_x->setValue( fx );
-    ui->doubleSpinBox_target_position_y->setValue( fy );
+    ui->doubleSpinBox_target_position_x->setValue( dx );
+    ui->doubleSpinBox_target_position_y->setValue( dy );
 
     //! 更新当前位置
-
+    float fx = -1, fy = -1, fz = -1;
     ret = mrgGetRobotCurrentPosition(mViHandle, mRobotName, &fx, &fy, &fz);
     qDebug() << "mrgGetRobotCurrentPosition1:" << ret << fx << fy;
     ui->doubleSpinBox_actual_position_x->setValue(fx);
     ui->doubleSpinBox_actual_position_y->setValue(fy);
 
     //! 更新当前里程
-    double dx = -1, dy = -1, dz = -1;
+//    double dx = -1, dy = -1, dz = -1;
     ret = mrgGetRobotCurrentMileage(mViHandle, mRobotName, &dx, &dy, &dz);
     qDebug() << "mrgGetRobotCurrentMileage:" << ret << dx << dy;
     ui->doubleSpinBox_Mileage_x->setValue( dx );

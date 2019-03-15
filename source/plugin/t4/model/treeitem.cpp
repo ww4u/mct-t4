@@ -236,3 +236,6 @@ void TreeItem::setLevel( int level )
 { mLevel = level; }
 int TreeItem::level()
 { return mLevel; }
+
+QVector<QVariant> &TreeItem::dataSets()
+{ return itemData; }

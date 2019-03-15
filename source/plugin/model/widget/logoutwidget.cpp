@@ -53,6 +53,9 @@ void LogoutWidget::retranslateUi()
     m_pClearAction->setText( tr("Clear") );
     m_pSelectAllAction->setText( tr("Select All") );
     m_pCopyAction->setText( tr("Copy") );
+
+    m_pClearAction->setIcon( QIcon(":/res/image/icon/trash.png") );
+    m_pCopyAction->setIcon( QIcon(":/res/image/icon/fuzhi.png") );
 }
 
 void LogoutWidget::slot_contextmenu( const QPoint &pt )

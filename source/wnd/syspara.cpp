@@ -17,6 +17,7 @@ void SysPara::init()
 
     mIntfIndex = 0;
     mStyleIndex = 0;
+    mRefreshIndex = 4;
 
     mSysMode = 0;   //! operator
 
@@ -70,6 +71,23 @@ int SysPara::load( const QString &fileName )
     return ret;
 }
 
+int SysPara::refreshIntervalMs()
+{
+    //! 0.1 0.2 0.5
+    //! 1 2 5
+    //! 10 20 50
+    int interval[]={
+        10000, 5000, 2000,
+        1000, 500, 200,
+        100, 50, 20
+    };
+
+    if ( mRefreshIndex < 0 || mRefreshIndex >= sizeof(interval)/sizeof(interval[0]) )
+    { return interval[0]; }
+    else
+    { return interval[ mRefreshIndex ]; }
+}
+
 int SysPara::serialOut( QXmlStreamWriter &writer )
 {
     writer.writeStartElement( "common" );
@@ -82,6 +100,8 @@ int SysPara::serialOut( QXmlStreamWriter &writer )
         writer.writeTextElement( "auto_login", QString::number( mbAutoLogin ) );
 
         writer.writeTextElement( "intf", QString::number(mIntfIndex) );
+        writer.writeTextElement( "refresh",QString::number( mRefreshIndex ));
+
         writer.writeTextElement( "sys_mode", QString::number(mSysMode) );
     writer.writeEndElement();
 
@@ -117,6 +137,8 @@ int SysPara::serialIn( QXmlStreamReader &reader )
                 { mbAutoLogin = reader.readElementText().toInt() > 0; }
                 else if ( reader.name() == "intf" )
                 { mIntfIndex = reader.readElementText().toInt(); }
+                else if ( reader.name() == "refresh" )
+                { mRefreshIndex = reader.readElementText().toInt(); }
                 else if ( reader.name() == "sys_mode" )
                 { mSysMode = reader.readElementText().toInt(); }
                 else

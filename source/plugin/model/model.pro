@@ -13,8 +13,10 @@ SOURCES = \
     errmgrmodel.cpp \
     delegate\comboxdelegate.cpp \
     delegate\checkdelegate.cpp \
+    delegate\dspindelegate.cpp \
     megaloglistmodel.cpp \
-    widget/logoutwidget.cpp
+    widget/logoutwidget.cpp \
+    delegate/ispindelegate.cpp
 
 
 HEADERS = \
@@ -23,8 +25,10 @@ HEADERS = \
     errmgrmodel.h \
     delegate\comboxdelegate.h \
     delegate\checkdelegate.h \
+    delegate\dspindelegate.h \
     megaloglistmodel.h \
-    widget/logoutwidget.h
+    widget/logoutwidget.h \
+    delegate/ispindelegate.h
 
 
 

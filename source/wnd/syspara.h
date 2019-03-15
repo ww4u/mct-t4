@@ -16,6 +16,9 @@ public:
     int save( const QString &fileName );
     int load( const QString &fileName );
 
+public:
+    int refreshIntervalMs();
+
 protected:
     int serialOut( QXmlStreamWriter &writer );
     int serialIn( QXmlStreamReader &reader );
@@ -27,6 +30,7 @@ public:
 
     bool mbAutoExpand, mbAutoLoad, mbAutoSearch, mbAutoLogin;
     int mIntfIndex;
+    int mRefreshIndex;
 
     int mSysMode;
 

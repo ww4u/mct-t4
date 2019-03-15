@@ -48,7 +48,8 @@ SOURCES = \
     advpara.cpp \
     comassist.cpp \
     model\treeitem.cpp \
-    model\treemodel.cpp
+    model\treemodel.cpp \
+    t4oppanel_sequence.cpp
 
 
 HEADERS = \
@@ -95,6 +96,9 @@ FORMS += \
     coordinate.ui \
     coordpara.ui \
     advpara.ui
+
+#LIBS += -L"../../../lib"
+#LIBS += -lmrx-device
 
 RESOURCES += ../../../res/res.qrc
 

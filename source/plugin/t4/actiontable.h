@@ -9,6 +9,9 @@
 #include "./model/iodelegate.h"
 #include "../model/delegate/comboxdelegate.h"
 
+#include "../../model/delegate/dspindelegate.h"
+//#include "../../model/delegate/dspindelegate.h"
+
 namespace Ui {
 class ActionTable;
 }
@@ -46,18 +49,29 @@ public:
 
 protected:
     void addRecord( XSetting setting );
+    void editRecord( XSetting setting );
     void doSave();
     void doLoad();
 
 protected:
     int onToHere( QVariant var );
 
+    int relToHere( QList<QVariant> &vars );
+    int absToHere( QList<QVariant> &vars );
+
 private:
     Ui::ActionTable *ui;
 //    IODelegate *m_pIDelegate, *m_pODelegate;
     ComboxDelegate *m_pTypeDelegate;
+    dSpinDelegate *m_pDelegateXYZ;
+    dSpinDelegate *m_pDelegatePw;
+    dSpinDelegate *m_pDelegateH;
+    dSpinDelegate *m_pDelegateV;
+    dSpinDelegate *m_pDelegateA;
+
 
     QMenu *m_pContextMenu;
+    QAction *m_pActionToHere;
     QAction *m_pActionAddBefore, *m_pActionAddBelow;
     QAction *m_pActionDelete;
 

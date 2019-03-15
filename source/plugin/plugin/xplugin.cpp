@@ -6,13 +6,20 @@ XPlugin::XPlugin( QObject *parent ) : XPluginIntf( parent )
 {
     m_pRootWidgetItem = NULL;
     m_pDock = NULL;
+    m_pPref = NULL;
     m_pPanelWidget = NULL;
     m_pViewObj = NULL;
-
+logDbg()<<QThread::currentThreadId();
     //! updateing
-    m_pUpdateWorking = new XPluginUpdateingThread( this );
+//    m_pUpdateWorking = new XPluginUpdateingThread(  );
+    m_pUpdateWorking = new XPluginWorkingThread( this );
+//    m_pUpdateWorking->moveToThread( m_pUpdateWorking );
     m_pUpdateWorking->attachMutex( &mUpdateMutex );
     m_pUpdateWorking->start();
+    m_pUpdateWorking->setTick( 1000 );
+
+//    m_pMapper = new QSignalMapper();
+//    m_pMapper->moveToThread( m_pUpdateWorking );
 
     m_pMissionWorking = new XPluginWorkingThread( this );
     m_pMissionWorking->attachMutex( &mMissionMutex );
@@ -35,15 +42,15 @@ XPlugin::XPlugin( QObject *parent ) : XPluginIntf( parent )
     connect( this, SIGNAL(signal_api_operate(QObject*,bool)),
              m_pUpdateWorking, SLOT(slot_api_operate(QObject*,bool)));
 
-    //! maped object
-    connect( &mMapper, SIGNAL(mapped(QObject*)),
-             m_pUpdateWorking, SLOT(slot_api_proc(QObject*)) );
+//    //! maped object
+//    connect( m_pMapper, SIGNAL(mapped(QObject*)),
+//             m_pUpdateWorking, SLOT(slot_api_proc(QObject*)), Qt::QueuedConnection );
 }
 
 XPlugin::~XPlugin()
 {
-//    m_pUpdateWorking->requestInterruption();
-    m_pUpdateWorking->quit( );
+    m_pUpdateWorking->requestInterruption();
+//    m_pUpdateWorking->quit( );
     m_pUpdateWorking->wait();
 
     m_pMissionWorking->requestInterruption();
@@ -192,6 +199,11 @@ int XPlugin::download()
 int XPlugin::diff()
 { return 0; }
 
+void XPlugin::emit_timer_op( QTimer *pTimer, int tmo, bool b )
+{
+    emit signal_timer_op( pTimer, tmo, b );
+}
+
 void XPlugin::emit_setting_changed( XPage::eXSetting setting, bool b )
 {
     XSetting lSetting;
@@ -239,6 +251,14 @@ QWidget *XPlugin::panel()
     return m_pPanelWidget;
 }
 
+void XPlugin::attachPref( SysPara *pPref )
+{
+    Q_ASSERT( NULL != pPref );
+    m_pPref = pPref;
+}
+SysPara * XPlugin::pref()
+{ return m_pPref; }
+
 QString XPlugin::homePath()
 {
     return QDir::homePath() + "/AppData/Roaming/mct/" + model() + "/" + SN();
@@ -280,7 +300,39 @@ void XPlugin::attachUpdateWorking( XPage *pObj,
 //    Q_ASSERT( m_pUpdateWorking );
 //    m_pUpdateWorking->attach( pApi );
 }
+
 void XPlugin::attachUpdateWorking(
+                    XPage *pObj,
+                    XPage::procDo proc,
+                    XPage::preDo pre,
+                    XPage::postDo post,
+                    void *pContext,
+                    int tmoms
+                    )
+{
+    Q_ASSERT( NULL != pObj );
+
+    WorkingApi *pApi = new WorkingApi();
+    if ( NULL == pApi )
+    { return; }
+
+    pApi->m_pIsEnabled = isEnabled;
+
+    pApi->m_pProcDo = proc;
+    pApi->m_pContext = pContext;
+    pApi->m_pObj = pObj;
+
+    pApi->m_pPreDo = pre;
+    pApi->m_pPostDo = post;
+
+    m_pUpdateWorking->attach( pApi );
+    if ( m_pUpdateWorking->isRunning() )
+    {}
+    else
+    { m_pUpdateWorking->start(); }
+}
+
+void XPlugin::_attachUpdateWorking(
                     XPage *pObj,
                     XPage::procDo proc,
                     XPage::preDo pre,
@@ -311,12 +363,19 @@ void XPlugin::attachUpdateWorking(
         if ( tmoms > 0 )
         {
             //! in the update working thread
-            QTimer *pTimer = new QTimer( m_pUpdateWorking );
-            if ( NULL == pTimer )
-            { break; }
+//            QTimer *pTimer = new QTimer( );
+//            if ( NULL == pTimer )
+//            { break; }
+//            logDbg()<<QThread::currentThreadId();
+//            logDbg()<<pTimer->thread()<<thread()<<m_pUpdateWorking;
+//            pTimer->moveToThread( m_pUpdateWorking );
+//            logDbg()<<pTimer->thread();
 
-            pApi->m_pTimer = pTimer;
-            pTimer->setInterval( tmoms );
+//            pApi->m_pTimer = pTimer;
+//            pTimer->setInterval( tmoms );
+//            emit signal_timer_op( pTimer, tmoms, true );
+//            emit_timer_op( pTimer, tmoms, true );
+//            pTimer->start();
 
             //! connect
 //            connect( pTimer, SIGNAL(timeout()),
@@ -324,10 +383,14 @@ void XPlugin::attachUpdateWorking(
 //            connect( pTimer, SIGNAL(timeout()),
 //                     m_pUpdateWorking,  [=]{ slot_api_proc( pApi); } );
 
+//            m_pUpdateWorking->po
+            QEvent *pEvent = new QEvent( QEvent::User );
+            qApp->postEvent( m_pUpdateWorking, pEvent );
+
             //! mapped
-            connect( pTimer, SIGNAL(timeout()),
-                     &mMapper, SLOT(map()));
-            mMapper.setMapping( pTimer, pApi );
+//            connect( pTimer, SIGNAL(timeout()),
+//                     m_pMapper, SLOT(map()));
+//            m_pMapper->setMapping( pTimer, pApi );
 
             //! enable
             emit signal_api_operate( pApi, true );
@@ -363,6 +426,10 @@ void XPlugin::attachMissionWorking( XPage *pObj,
 
     Q_ASSERT( m_pMissionWorking!=NULL );
     m_pMissionWorking->attach( pApi );
+    if ( m_pMissionWorking->isRunning() )
+    {}
+    else
+    { m_pMissionWorking->start(); }
 }
 
 void XPlugin::attachEmergencyWorking( XPage *pObj,
@@ -387,6 +454,10 @@ void XPlugin::attachEmergencyWorking( XPage *pObj,
 
     Q_ASSERT( m_pEmergencyWorking );
     m_pEmergencyWorking->attach( pApi );
+    if ( m_pEmergencyWorking->isRunning() )
+    {}
+    else
+    { m_pEmergencyWorking->start(); }
 }
 
 void XPlugin::attachBgWorking(

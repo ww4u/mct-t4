@@ -21,6 +21,11 @@ public:
 
     virtual void updateUi();
     virtual void updateData();
+
+    virtual int upload();
+    virtual int download();
+    virtual int diff();
+
 protected:
     virtual void spyEdited();
     virtual void retranslateUi();

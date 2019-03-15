@@ -109,6 +109,9 @@ public:
 public:
     void setColumnReadonly( int col, bool b=true );
 
+    void planeTree( const QModelIndex &index, QList<QVector<QVariant>> &varList );
+    void planeTree( TreeItem *par, QList<QVector<QVariant>> &varList );
+
     int loadIn( const QString &fileName );
     int exportOut( const QString &fileName );
 

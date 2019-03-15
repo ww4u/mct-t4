@@ -111,7 +111,12 @@ QVariant DebugModel::headerData(int section, Qt::Orientation orientation, int ro
     { return QVariant(); }
 
     if ( orientation == Qt::Horizontal )
-    { return QVariant( DebugItem::header(section)); }
+    {
+        if ( role == Qt::TextAlignmentRole )
+        { return Qt::AlignLeft; }
+        else
+        { return QVariant( DebugItem::header(section)); }
+    }
     else
     { return QVariant(section);}
 }

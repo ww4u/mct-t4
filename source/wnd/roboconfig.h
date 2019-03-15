@@ -31,6 +31,7 @@ signals:
 //    void signalDeviceConnect(bool);
 
     void signal_plugins_changed();
+    void signal_plugins_operable( bool b );
 
     void signal_request_sysOpPanel();
     void signal_save_sysPref();

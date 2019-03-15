@@ -56,6 +56,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     //! default
     mPref.init();
 
+    logDbg()<<ui->menuOperate->thread();
+
     setupWorkArea();
 
     setupMenu();
@@ -90,6 +92,9 @@ void MainWindow::setupWorkArea()
     ui->centralWidget->insertTab( 0, m_roboConfig, tr("Pref") );
 
     //! connect
+
+    connect( m_roboConfig, SIGNAL(signal_plugins_operable(bool)),
+             this, SLOT(slot_plugin_operable(bool)) );
     connect( m_roboConfig, SIGNAL(signal_request_sysOpPanel()),
              this, SLOT(slot_request_sysOpPanel()) );
     connect( m_roboConfig, SIGNAL(signal_save_sysPref()),
@@ -194,8 +199,6 @@ void MainWindow::setupStatusBar()
     ui->statusBar->insertWidget( 2, m_pLabConVer, 0 );
 }
 
-
-
 void MainWindow::buildConnection()
 {
     connect( this, SIGNAL(signal_pref_changed()),
@@ -255,7 +258,8 @@ void MainWindow::loadConfig()
     {
 #ifdef QT_DEBUG
         mPref.mSysMode = 1;
-    break;
+        setSysMode( sysPara::e_sys_admin );
+        break;
 #endif
 
         //! skip, use the last mode
@@ -353,9 +357,9 @@ void MainWindow::changeStyle()
     }
     else
     {
-#ifndef QT_DEBUG
+//#ifndef QT_DEBUG
         setUiStyle( qApp->applicationDirPath() + "/style/classic.qss" );
-#endif
+//#endif
     }
 }
 
@@ -376,6 +380,18 @@ void MainWindow::setUiStyle(const QString &styleFile)
     }
     else
     { sysError( tr("Style apply fail") );}
+}
+
+void MainWindow::slot_plugin_operable( bool b )
+{
+    ui->actionDownload->setEnabled( b );
+    ui->actionUpload->setEnabled( b );
+    ui->actionStop->setEnabled( b );
+    ui->actionSync->setEnabled( b );
+
+    ui->actionStore->setEnabled( b );
+
+    m_pStopWidget->setEnabled( b );
 }
 
 void MainWindow::slot_request_sysOpPanel()
@@ -448,7 +464,12 @@ void MainWindow::slot_style_changed()
 
 void MainWindow::slot_logout( const QString &str, int lev )
 {
-    mLogModel.append( str, (LogStr::eLogLevel)lev );
+    //! \note add the time stamp
+    QString fullStr;
+
+    fullStr = QDateTime::currentDateTime().toString( "yyyy/M/d h:m:s.z ") + str;
+
+    mLogModel.append( fullStr, (LogStr::eLogLevel)lev );
 }
 
 void MainWindow::slot_status( const QString &str )

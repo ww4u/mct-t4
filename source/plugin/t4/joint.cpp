@@ -59,6 +59,22 @@ void Joint::setJointName( const QString &name )
 {
     ui->groupBox->setTitle( name );
     ui->groupBox->setToolTip( name );
+
+    ui->btnZero->setToolTip( ui->groupBox->title() + " " + tr("To zero") );
+    ui->jogAdd->setToolTip( name + " " + tr("Jog +") );
+    ui->jogSub->setToolTip( name + " " + tr("Jog -") );
+    ui->singleAdd->setToolTip( name + " " + tr("Step +") );
+    ui->singleSub->setToolTip( name + " " + tr("Step -") );
+
+    ui->spinAbs->setToolTip( name + " " + tr("Encoder angle") );
+    ui-> spinDelta->setToolTip( name + " " + tr("Delta angle") );
+}
+
+void Joint::setAngleVisible( bool bAbs, bool bDelta )
+{
+    ui->spinAbs->setVisible( bAbs );
+    ui->spinDelta->setVisible( bDelta );
+    ui->label_2->setVisible( bDelta );
 }
 
 void Joint::setAngle( double angle )
@@ -70,3 +86,4 @@ void Joint::setdAngle( double v )
 { ui->spinDelta->setValue( v); }
 double Joint::getdAngle()
 { return ui->spinDelta->value(); }
+

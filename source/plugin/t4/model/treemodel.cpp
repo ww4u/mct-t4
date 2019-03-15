@@ -104,6 +104,10 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
+//    //! center
+//    if ( role == Qt::TextAlignmentRole )
+//    { return QVariant( Qt::AlignCenter ); }
+
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
@@ -156,8 +160,15 @@ TreeItem *TreeModel::getItem(const QModelIndex &index) const
 QVariant TreeModel::headerData(int section, Qt::Orientation orientation,
                                int role) const
 {
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return rootItem->data(section);
+    if (orientation == Qt::Horizontal )
+    {
+        if ( role == Qt::DisplayRole )
+        { return rootItem->data(section); }
+//        else if ( role == Qt::TextAlignmentRole )
+//        { return Qt::AlignCenter; }
+        else
+        {}
+    }
 
     return QVariant();
 }
@@ -329,6 +340,38 @@ bool TreeModel::setHeaderData(int section, Qt::Orientation orientation,
     return result;
 }
 
+void TreeModel::planeTree( const QModelIndex &index, QList<QVector<QVariant>> &varList )
+{
+    TreeItem *pItem;
+
+    pItem = getItem( index );
+    if ( NULL == pItem )
+    { return; }
+
+    planeTree( pItem, varList );
+}
+
+void TreeModel::planeTree( TreeItem *par, QList<QVector<QVariant>> &varList )
+{
+    if ( NULL == par )
+    { return; }
+    else
+    {
+        if ( par->childCount() > 0 )
+        {
+            varList.append( par->dataSets() );
+
+            //! for each child
+            for( int i = 0; i < par->childCount(); i++ )
+            {
+                planeTree( par->child(i), varList );
+            }
+        }
+        else
+        { varList.append( par->dataSets() ); }
+    }
+}
+
 void TreeModel::setColumnReadonly( int col, bool b )
 {
     if ( mReadonlyMap.contains( col ) )
@@ -393,7 +436,7 @@ int TreeModel::exportOut( const QString &fileName )
     MDataSet dataSet;
     dataSet.setModel( "MRX-T4" );
     QStringList headers;
-    headers<<"id"<<"type"<<"coord"<<"para"
+    headers<<"id"<<"type"<<"coordinate"<<"para"
            <<"x"<<"y"<<"z"<<"w"<<"h"<<"v"<<"a"
            <<"comment";
     dataSet.setHeaders( headers );
@@ -465,7 +508,7 @@ int TreeModel::_loadIn( MDataSet &dataSet )
             ret = -1;
             break;
         }
-        logDbg()<<i<<dataSet.sections();
+//        logDbg()<<i<<dataSet.sections();
         ret = _loadIn( &dataSet, pSection, pLocalRoot );
         if ( ret != 0 )
         { break; }
@@ -527,7 +570,7 @@ int TreeModel::_loadIn( MDataSet *pDataSet,
 
         get_int( "id", i, 0 );
         get_str( "type", i, "PA" );
-        get_str( "coord", i, "" );
+        get_str( "coordinate", i, "" );
         get_str( "para", i, "" );
 //        get_int( i, 0 );
 //        get_int( i, 0 );

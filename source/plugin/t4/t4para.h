@@ -44,6 +44,7 @@ public:
 
 public:
     void init();
+    void rst();
     double velocity();
 
 public:
@@ -53,7 +54,7 @@ public:
 public:
     const static int _axis_cnt = 5;
     eTerminalType mTerminalType;
-    double mAxisCurrents[ T4Para::_axis_cnt ];
+    float mAxisCurrents[ T4Para::_axis_cnt ];
 
     double mAxisZero[ T4Para::_axis_cnt ];
 
@@ -75,6 +76,8 @@ public:
     double mMaxJointSpeed, mMaxTerminalSpeed;
 
     bool mbAxisPwr, mbMctEn;
+
+    float mPackagesAxes[4];     //! four delta angles for package
 };
 
 #endif // T4PARA_H

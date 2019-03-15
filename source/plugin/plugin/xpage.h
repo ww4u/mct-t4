@@ -3,6 +3,8 @@
 
 #include <QtWidgets>
 #include "../../sys/sysapi.h"
+#include "../../wnd/syspara.h"
+
 #include "../../../include/mystd.h"
 
 class XPlugin;
@@ -33,7 +35,7 @@ public:
         e_setting_unk = 0,
         e_setting_op_able,
         e_setting_opened,
-
+        e_setting_update_ui,
         e_setting_mission_working,
 
         e_setting_user = 1024,
@@ -60,6 +62,9 @@ protected:
 public:
     void attachPlugin( XPlugin *pPlugin );
     XPlugin *pulgin();
+
+    void attachPref( SysPara *pPref );
+    SysPara * pref();
 
     virtual void adapteToUserMode( sysPara::eSysMode mode );
     PageAttr pageAttr();
@@ -124,6 +129,7 @@ protected:
     virtual void enterMission();
     virtual void exitMission();
 
+    virtual void setOperAble( bool b );
     virtual void setOpened( bool b );
 
 signals:
@@ -145,6 +151,7 @@ protected:
     QList< int > mSpySetting;
 
     XPlugin *m_pPlugin;
+    SysPara *m_pPref;
 
     PageAttr mAttr;
 

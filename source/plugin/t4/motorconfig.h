@@ -20,6 +20,9 @@ public:
     virtual void adapteToUserMode( sysPara::eSysMode mode );
     virtual void updateUi();
     virtual void updateData();
+
+    virtual int upload();
+    virtual int download();
 protected:
     virtual void spyEdited();
     virtual void retranslateUi();

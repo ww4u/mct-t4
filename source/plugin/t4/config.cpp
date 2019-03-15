@@ -3,6 +3,16 @@
 #include "ui_config.h"
 
 #include "t4.h"
+#include "../../device/MegaGateway.h"
+
+
+#define ABS_ANGLE_TO_DEG( angle )   (360.0f*(angle))/((1<<18)-1)
+#define INC_ANGLE_TO_DEG( angle )   (360.0f*(angle))/(1<<18)
+
+#define VALUE_TO_ABS_ANGLE( val )   (quint32)( (val) * ((1<<18)-1) / 360.0f )
+#define VALUE_TO_INC_ANGLE( val )   (quint32)( (val) * ((1<<18)) / 360.0f )
+
+#define pnVALUE_TO_ABS_ANGLE( val )   (qint32)( (val) * ((1<<18)-1) / 360.0f )
 
 namespace mrx_t4 {
 
@@ -17,8 +27,25 @@ Config::Config(QWidget *parent) :
     spyEdited();
 
     set_page_rstable();
-    //! post set
-//    on_cmbTypeTerminal_currentIndexChanged( ui->cmbTypeTerminal->currentIndex() );
+
+    //! \note to the first page
+    ui->tabWidget->setCurrentIndex( 0 );
+
+    //! deg
+    ui->spinZero0->setSuffix( char_deg );
+    ui->spinZero1->setSuffix( char_deg );
+    ui->spinZero2->setSuffix( char_deg );
+    ui->spinZero3->setSuffix( char_deg );
+
+    ui->spinL0->setSuffix( char_deg );
+    ui->spinL1->setSuffix( char_deg );
+    ui->spinL2->setSuffix( char_deg );
+    ui->spinL3->setSuffix( char_deg );
+
+    ui->spinU0->setSuffix( char_deg );
+    ui->spinU1->setSuffix( char_deg );
+    ui->spinU2->setSuffix( char_deg );
+    ui->spinU3->setSuffix( char_deg );
 }
 
 Config::~Config()
@@ -96,6 +123,143 @@ void Config::updateData()
     get_upper( 1 );
     get_upper( 2 );
     get_upper( 3 );
+}
+
+int Config::upload()
+{
+    check_connect_ret( -1 );
+
+    int ret, val;
+    double angle;
+
+    //! get zero
+    QList<QDoubleSpinBox*> spins;
+    spins<<ui->spinZero0<<ui->spinZero1<<ui->spinZero2<<ui->spinZero3;
+    for ( int i = 0; i < 4; i++ )
+    {
+        ret = mrgMRQAbsEncoderZeroValue_Query( device_var(),
+                                                i,
+                                                &val );
+        if ( ret != 0 )
+        { return -1; }
+
+        //! convert the value
+        angle = ABS_ANGLE_TO_DEG( val );
+        spins[i]->setValue( angle );
+    }
+
+    //! limit
+    QList<QDoubleSpinBox*> downSpins, upSpins;
+    downSpins<<ui->spinL0<<ui->spinL1<<ui->spinL2<<ui->spinL3;
+    upSpins<<ui->spinU0<<ui->spinU1<<ui->spinU2<<ui->spinU3;
+    for ( int i = 0; i < 4; i++ )
+    {
+        //! down
+        mrgMRQAbsEncoderAlarmDownLimit_Query( device_var(),
+                                        i,
+                                        &val );
+        if ( ret != 0 )
+        { return -1; }
+
+        //! convert the value
+        angle = ABS_ANGLE_TO_DEG( val );
+        downSpins[i]->setValue( angle );
+
+        //! up
+        mrgMRQAbsEncoderAlarmUpLimit_Query( device_var(),
+                                        i,
+                                        &val );
+        if ( ret != 0 )
+        { return -1; }
+
+        //! convert the value
+        angle = ABS_ANGLE_TO_DEG( val );
+        upSpins[i]->setValue( angle );
+    }
+
+    //! arm length
+    //! \todo
+//    float link[5];
+//    int linkCnt;
+//    ret = mrgGetRobotLinks( robot_var(), link, &linkCnt );
+//    if ( ret != 0 )
+//    { logDbg(); return -1; }
+
+//    ui->spinBase->setValue( link[0] );
+//    ui->spinBA->setValue( link[1] );
+//    ui->spinLA->setValue( link[2] );
+
+    return 0;
+}
+int Config::download()
+{
+    check_connect_ret( -1 );
+
+    int ret, val;
+    double angle;
+
+    //! tool set
+//    ret = mrgRobotToolSet( )
+
+    //! set zero
+    QList<QDoubleSpinBox*> spins;
+    spins<<ui->spinZero0<<ui->spinZero1<<ui->spinZero2<<ui->spinZero3;
+    for ( int i = 0; i < 4; i++ )
+    {
+        angle = spins[i]->value();
+
+        //! convert the value
+        val = VALUE_TO_ABS_ANGLE( angle );
+
+        ret = mrgMRQAbsEncoderZeroValue( device_var(),
+                                                i,
+                                                val );
+        if ( ret != 0 )
+        { return -1; }
+    }
+
+    //! limit
+    QList<QDoubleSpinBox*> downSpins, upSpins;
+    downSpins<<ui->spinL0<<ui->spinL1<<ui->spinL2<<ui->spinL3;
+    upSpins<<ui->spinU0<<ui->spinU1<<ui->spinU2<<ui->spinU3;
+    for ( int i = 0; i < 4; i++ )
+    {
+        //! down
+        angle = downSpins[i]->value();
+        val = pnVALUE_TO_ABS_ANGLE( angle );
+
+        mrgMRQAbsEncoderAlarmDownLimit( device_var(),
+                                        i,
+                                        val );
+        if ( ret != 0 )
+        { return -1; }
+
+        //! up
+        angle = upSpins[i]->value();
+        val = pnVALUE_TO_ABS_ANGLE( angle );
+
+        mrgMRQAbsEncoderAlarmUpLimit( device_var(),
+                                        i,
+                                        val );
+        if ( ret != 0 )
+        { return -1; }
+    }
+
+    //! arm length
+    float links[]={
+                    (float)ui->spinBase->value(),
+                    (float)ui->spinBA->value(),
+                    (float)ui->spinLA->value()
+                };
+    ret = mrgSetRobotLinks( robot_var(), links, 3 );
+    if ( ret != 0 )
+    { return -1; }
+
+    return 0;
+}
+int Config::diff()
+{
+    return 0;
 }
 
 void Config::spyEdited()

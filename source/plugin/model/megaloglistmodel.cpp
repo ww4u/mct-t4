@@ -8,7 +8,8 @@ MegaLogListModel::MegaLogListModel(QObject *parent)
 }
 MegaLogListModel::~MegaLogListModel()
 {
-    clear();
+//    clear();
+    delete_all( mItemList );
 }
 
 int MegaLogListModel::rowCount(const QModelIndex &parent) const
@@ -168,5 +169,7 @@ void MegaLogListModel::append( const QString &content,
 }
 void MegaLogListModel::clear()
 {
+    beginResetModel();
     delete_all( mItemList );
+    endResetModel();
 }

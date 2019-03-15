@@ -25,7 +25,11 @@
 #define STRCASECMP          _stricmp
 #define STRTOK_S            strtok_s
 
-#else //_WIN32
+//#include <windows.h>
+#include "assist.h"
+#define Sleep( n )        localSleep( n )
+
+#else
 
 #define STRCASECMP          strcasecmp
 #define STRTOK_S            strtok_r

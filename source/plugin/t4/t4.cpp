@@ -59,7 +59,7 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
 
     //! record table
     QStringList headerList;
-    headerList<<"id"<<"type"<<"coord"<<"para"
+    headerList<<"id"<<"type"<<"coordinate"<<"para."
               <<"x(mm)"<<"y(mm)"<<"z(mm)"
               <<QString("w(%1)").arg(char_deg)<<QString("h(%1)").arg( char_deg )
               <<QString("v(mm/s)")<<QString("a(mm/s%1)").arg(char_square)<<"comment";
@@ -68,6 +68,7 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
 
     m_pRecordModel = new TreeModel( headerList,"" );
     m_pRecordModel->setColumnReadonly( 0 );
+    m_pRecordModel->setColumnReadonly( 2 );
 #ifndef QT_DEBUG
     rstRecordTable();
 #else
@@ -92,8 +93,11 @@ QWidget *MRX_T4::createOpsPanel( QAbstractListModel *pModel,
     //! manage the plugin
     mPluginWidgets.append( pPanel );
 
+    pPanel->attachPref( m_pPref );
+
     pPanel->attachPlugin( this );
     pPanel->attachWorkings();
+
 
     return pPanel;
 }

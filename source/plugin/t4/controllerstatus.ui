@@ -221,6 +221,9 @@
           <property name="text">
            <string>MCT</string>
           </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item>
@@ -242,6 +245,9 @@
           </property>
           <property name="text">
            <string>Enable</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
           </property>
          </widget>
         </item>

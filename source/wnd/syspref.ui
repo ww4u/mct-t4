@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>230</height>
+    <width>291</width>
+    <height>235</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,7 +27,7 @@
        <string>Pref</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0">
+       <item row="0" column="0" colspan="2">
         <widget class="QCheckBox" name="chkAutoExpand">
          <property name="layoutDirection">
           <enum>Qt::LeftToRight</enum>
@@ -37,14 +37,14 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
+       <item row="1" column="0" colspan="2">
         <widget class="QCheckBox" name="chkAutoLoad">
          <property name="text">
           <string>Auto Load last</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
+       <item row="5" column="1">
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -57,19 +57,88 @@
          </property>
         </spacer>
        </item>
-       <item row="2" column="0">
+       <item row="2" column="0" colspan="2">
         <widget class="QCheckBox" name="chkAutoSearch">
          <property name="text">
           <string>Auto search on startup</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
+       <item row="3" column="0" colspan="2">
         <widget class="QCheckBox" name="chkAutoLogin">
          <property name="text">
           <string>Auto Login</string>
          </property>
         </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Data Refresh rate</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QComboBox" name="cmbRefresh">
+         <item>
+          <property name="text">
+           <string>0.1Hz</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>0.2Hz</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>0.5Hz</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>1Hz</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2Hz</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>5Hz</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>10Hz</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>20Hz</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>50Hz</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="4" column="2">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>

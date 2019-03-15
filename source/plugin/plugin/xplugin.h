@@ -7,10 +7,9 @@
 #include <QDockWidget>
 #include <QThread>
 
-#include "../../../source/wnd/syspref.h"
+#include "../../../source/wnd/syspara.h"
 #include "xpage.h"
 #include "xpluginintf.h"
-
 
 //! macros
 #define new_widget( type, var, txt, icon ) \
@@ -18,6 +17,7 @@ do{ \
     var = new type;\
     Q_ASSERT( NULL != var ); \
     var->adapteToUserMode(sysMode());\
+    var->attachPref( m_pPref );\
     var->attachPlugin( this );\
     var->attachWorkings(); \
     var->setObjectName( txt );\
@@ -70,6 +70,7 @@ signals:
     void signal_request_load();
 
     void signal_api_operate( QObject *pApi, bool );
+    void signal_timer_op( QTimer *pTimer, int tmo, bool );
 
 public:
     virtual QTreeWidgetItem* createPrefPages( QStackedWidget *stack );
@@ -107,6 +108,8 @@ public:
 
 
 public:
+    void emit_timer_op( QTimer *pTimer, int tmo, bool b );
+
     void emit_setting_changed( XPage::eXSetting setting, bool b );
     void emit_setting_changed( XPage::eXSetting setting, QVariant var );
 
@@ -118,6 +121,9 @@ public:
 
     void attachDock( QDockWidget *pDock );
     void attachPanel( QWidget *pPanel );
+
+    void attachPref( SysPara *pPref );
+    SysPara * pref();
 
     QWidget *panel();
 
@@ -132,6 +138,14 @@ public:
                         int tmoms = 100
                         );
     void attachUpdateWorking( XPage *pObj,
+                        XPage::procDo proc,
+                        XPage::preDo pre,
+                        XPage::postDo post,
+                        void *pContext = NULL,
+                        int tmoms = 100
+                        );
+
+    void _attachUpdateWorking( XPage *pObj,
                         XPage::procDo proc,
                         XPage::preDo pre,
                         XPage::postDo post,
@@ -162,16 +176,23 @@ protected:
 
     QList<QWidget*> mPluginWidgets;
     void *m_pViewObj;
+
+    SysPara *m_pPref;
+
 public:
     XPluginWorkingThread *m_pEmergencyWorking;
     XPluginWorkingThread *m_pMissionWorking;
     XPluginWorkingThread *m_pUpdateWorking;
 
+//    XPluginWorkingThread *m_pPoolWorking;
+//    XPluginWorkingThread *m_pPoolWorking;
+
     XPluginBgThread *m_pBgWorking;
 
     QMutex mEmergMutex, mMissionMutex, mUpdateMutex;
 
-    QSignalMapper mMapper;
+//    QSignalMapper mMapper;
+//    QSignalMapper *m_pMapper;
 
 protected Q_SLOTS:
     virtual void slot_save_setting();

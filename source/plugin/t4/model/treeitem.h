@@ -84,6 +84,7 @@ public:
     void setLevel( int level );
     int level();
 
+    QVector<QVariant> &dataSets();
 private:
     QList<TreeItem*> childItems;
     QVector<QVariant> itemData;     //! id,type,para,x,y,z,w,h,a,v,comment

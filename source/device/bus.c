@@ -1,4 +1,4 @@
-#include <stdafx.h>
+#include "stdafx.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -558,9 +558,9 @@ int busFindDevice(int bus, char *output, int len,int method)
     All instruments   "?*INSTR"
     All resources     "?*"
     */
-    if (bus == 0)
+    if (bus == BUS_LAN)
     {
-        if (method == 0)
+        if (method == METHOD_VISA)
         {
             status = viFindRsrc(defaultRM, "TCPIP[0-9]*::?*INSTR", &findList, &numInstrs, instrDescriptor);
             if (status < VI_SUCCESS)
@@ -581,7 +581,7 @@ int busFindDevice(int bus, char *output, int len,int method)
                 strcat(output, instrDescriptor);
             }    /* end while */
         }
-        else if (method == 1)
+        else if (method == METHOD_UDP)
         {
             char ip_list[256][100];
             char * ptr = NULL;
@@ -593,7 +593,7 @@ int busFindDevice(int bus, char *output, int len,int method)
             }
         }
     }
-    else if (bus == 1) //USBTMC
+    else if (bus == BUS_USB) //USBTMC
     {
         status = viFindRsrc(defaultRM, "USB0::?*::INSTR", &findList, &numInstrs, instrDescriptor);
         if (status < VI_SUCCESS)
@@ -629,8 +629,7 @@ int busOpenDevice(char * ip, int timeout)
         printf("Could not open a session to the VISA Resource Manager!\n");
         return 0;
     }
-//    status = viOpen(defaultRM, ip, VI_NO_LOCK, VI_TMO_IMMEDIATE, &vi);
-    status = viOpen(defaultRM, ip, VI_NO_LOCK, timeout, &vi);
+    status = viOpen(defaultRM, ip, VI_NO_LOCK, VI_TMO_IMMEDIATE, &vi);
     if (status < VI_SUCCESS)
     {
         vi = -1;
@@ -639,8 +638,10 @@ int busOpenDevice(char * ip, int timeout)
     }
     if (_strnicmp(ip, "USB",3)== 0)
     {
-        viSetAttribute(vi, VI_ATTR_TERMCHAR, 0x0D);
-        viSetAttribute(vi, VI_ATTR_TERMCHAR_EN, VI_TRUE);
+        viSetAttribute(vi, VI_ATTR_TERMCHAR, 0x0A);
+        viSetAttribute(vi, VI_ATTR_TERMCHAR_EN, VI_FALSE);
+        viSetAttribute(vi, VI_ATTR_SEND_END_EN, VI_TRUE);
+        viSetAttribute(vi, VI_ATTR_IO_PROT, 1);
     }
     else if (_strnicmp(ip, "TCPIP", 5) == 0)
     {
@@ -688,6 +689,7 @@ int busCloseDevice(ViSession vi)
 
 unsigned int busWrite(ViSession vi, char * buf, unsigned int len)
 {
+    //返回VI_ERROR_CONN_LOST 表示断开连接
     ViUInt32 retCount;
     LOCK();
     if(viWrite(vi, (ViBuf)buf, len, &retCount) != VI_SUCCESS)
@@ -701,6 +703,7 @@ unsigned int busWrite(ViSession vi, char * buf, unsigned int len)
 
 unsigned int busRead(ViSession vi, char * buf, unsigned int len)
 {
+    //返回VI_ERROR_CONN_LOST 表示断开连接
     ViUInt32 retCount = 0;
     LOCK();
     viRead(vi, (ViBuf)buf, len, &retCount); //有可能返回错误码，但读到了数据，只是数据 还没有读完！！！！

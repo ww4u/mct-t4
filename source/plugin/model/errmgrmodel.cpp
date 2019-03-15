@@ -252,7 +252,6 @@ Qt::ItemFlags ErrorMgrModel::flags(const QModelIndex &index) const
     }
     else if ( col == 5 )
     {
-//        return enable_flags( mItems[row]->mActionList.size() > 1 );
         return enable_flags( mItems[row]->mbActionAble );
     }
     else if ( col == 6 )
@@ -265,18 +264,6 @@ Qt::ItemFlags ErrorMgrModel::flags(const QModelIndex &index) const
     }
     else
     { return false; }
-
-//    //! \todo for other columns
-//    int flag = Qt::NoItemFlags;
-
-//    //! get item
-//    eColumnAttr attr;
-//    attr = mItems.at( index.row() )->columnAttr( index.column() );
-//    if ( is_bit1( attr, column_editable) )
-//    { flag |= Qt::ItemIsEditable; }
-
-////    return QAbstractItemModel::flags(index) | (Qt::ItemFlag)flag;
-//    return QAbstractItemModel::flags(index) | (Qt::ItemIsEditable);
 }
 
 bool ErrorMgrModel::insertRows(int position, int rows, const QModelIndex &parent)

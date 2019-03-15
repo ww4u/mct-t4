@@ -1,6 +1,8 @@
 #include "motorconfig.h"
 #include "ui_motorconfig.h"
 #include "t4.h"
+#include "../../device/MegaGateway.h"
+
 namespace mrx_t4 {
 
 MotorConfig::MotorConfig(QWidget *parent) :
@@ -53,6 +55,60 @@ void MotorConfig::updateData()
     get_current( 3 );
 
     get_current( 4 );
+}
+
+int MotorConfig::upload()
+{
+    check_connect_ret( -1 );
+
+    int ret;
+
+    QDoubleSpinBox *spins[]={
+        ui->doubleSpinBox0,
+        ui->doubleSpinBox1,
+        ui->doubleSpinBox2,
+        ui->doubleSpinBox3,
+        ui->doubleSpinBox4,
+    };
+
+    float current;
+    for ( int i = 0; i < pRobo->_axis_cnt; i++ )
+    {
+        ret = mrgMRQDriverCurrent_Query( device_var(),
+                                         i,
+                                         &current );
+        if ( ret != 0 )
+        { return ret; }
+
+        spins[i]->setValue( current );
+    }
+
+    return 0;
+}
+int MotorConfig::download()
+{
+    check_connect_ret( -1 );
+
+    int ret;
+
+    QDoubleSpinBox *spins[]={
+        ui->doubleSpinBox0,
+        ui->doubleSpinBox1,
+        ui->doubleSpinBox2,
+        ui->doubleSpinBox3,
+        ui->doubleSpinBox4,
+    };
+
+    for ( int i = 0; i < pRobo->_axis_cnt; i++ )
+    {
+        ret = mrgMRQDriverCurrent( device_var(),
+                                   i,
+                                   spins[i]->value() );
+        if ( ret != 0 )
+        { return ret; }
+    }
+
+    return 0;
 }
 
 void MotorConfig::spyEdited()

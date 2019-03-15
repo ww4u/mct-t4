@@ -9,7 +9,6 @@
 
 #include "helppanel.h"
 #include "aboutdlg.h"
-#include "h2ops.h"
 #include "roboconfig.h"
 #include "stopwidget.h"
 

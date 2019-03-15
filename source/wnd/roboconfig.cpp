@@ -2,7 +2,7 @@
 #include "ui_roboconfig.h"
 
 #include "mystd.h"
-#include "h2robo.h"
+//#include "h2robo.h"
 #include "xthread.h"
 #include "welcomepage.h"
 

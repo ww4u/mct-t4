@@ -48,9 +48,9 @@ HEADERS += ../include/mystd.h           \
     ../source/wnd/mainwindow.h          \
     ../source/wnd/aboutdlg.h            \
     ../source/wnd/roboconfig.h          \
-    ../source/wnd/xrobo.h               \
+#    ../source/wnd/xrobo.h               \
     ../source/wnd/helppanel.h           \
-    ../source/wnd/xconfig.h             \
+#    ../source/wnd/xconfig.h             \
     ../source/widget/megalcdnumber.h    \
     ../source/widget/megamessagebox.h   \
     ../source/widget/megasplinechart.h  \
@@ -79,9 +79,9 @@ SOURCES += ../source/main/main.cpp      \
     ../source/wnd/mainwindow.cpp        \
     ../source/wnd/aboutdlg.cpp          \
     ../source/wnd/helppanel.cpp         \
-    ../source/wnd/xconfig.cpp           \
+#    ../source/wnd/xconfig.cpp           \
     ../source/wnd/roboconfig.cpp        \
-    ../source/wnd/xrobo.cpp             \
+#    ../source/wnd/xrobo.cpp             \
     ../source/widget/megalcdnumber.cpp  \
     ../source/widget/megamessagebox.cpp \
     ../source/widget/megasplinechart.cpp\

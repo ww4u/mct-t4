@@ -2,7 +2,7 @@
 #define ROBO_CONFIG_H
 
 #include <QtWidgets>
-#include "xrobo.h"
+//#include "xrobo.h"
 #include "megainterface.h"
 #include "MegaGateway.h"
 

@@ -68,6 +68,9 @@
      <string>Help(&amp;H)</string>
     </property>
     <addaction name="actionAbout"/>
+    <addaction name="actionRead_me"/>
+    <addaction name="actionErrant"/>
+    <addaction name="actionFAQ"/>
    </widget>
    <widget class="QMenu" name="menuToo">
     <property name="title">
@@ -315,10 +318,24 @@
     <string>Pref</string>
    </property>
   </action>
+  <action name="actionErrant">
+   <property name="text">
+    <string>Errant...</string>
+   </property>
+  </action>
+  <action name="actionFAQ">
+   <property name="text">
+    <string>FAQ...</string>
+   </property>
+  </action>
+  <action name="actionRead_me">
+   <property name="text">
+    <string>Read me...</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="../../res/res.qrc"/>
   <include location="../../res/res.qrc"/>
  </resources>
  <connections>

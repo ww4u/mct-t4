@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     //! default
     mPref.init();
 
-    logDbg()<<ui->menuOperate->thread();
+//    logDbg()<<ui->menuOperate->thread();
 
     setupWorkArea();
 
@@ -190,9 +190,9 @@ void MainWindow::setupToolBar()
 
 void MainWindow::setupStatusBar()
 {
-    m_pLabStatus = new QLabel("MegaRobo Configuration Tool");
+    m_pLabStatus = new QLabel("MEGAROBO Configuration Tool");
     m_pLabMctVer = new QLabel( QString("Version: %1  ").arg( qApp->applicationVersion() ) );
-    m_pLabConVer = new QLabel( "Build: " __DATE__ );
+    m_pLabConVer = new QLabel( );
 
     ui->statusBar->insertWidget( 0, m_pLabStatus, 1 );
     ui->statusBar->insertWidget( 1, m_pLabMctVer, 0 );
@@ -289,6 +289,13 @@ void MainWindow::loadConfig()
 
     }while( 0 );
 
+    //! sys mode
+    if ( mPref.mSysMode == 0 )
+    { m_pLabConVer->setText( tr("Operator") ); }
+    else
+    { m_pLabConVer->setText( tr("Administrator") ); }
+    setSysMode( (sysPara::eSysMode)mPref.mSysMode );
+
     //! post startup
     QTimer::singleShot( 0, this, SLOT(slot_post_startup()) );
 }
@@ -382,6 +389,22 @@ void MainWindow::setUiStyle(const QString &styleFile)
     { sysError( tr("Style apply fail") );}
 }
 
+void MainWindow::explorerDocFile( const QString &fileName )
+{
+    QStringList args;
+    QString str;
+    str = QCoreApplication::applicationDirPath()
+            + QDir::separator()
+            + QStringLiteral("doc")
+            + QDir::separator()
+            + fileName;
+    str.replace("/","\\");
+    args<<str;
+
+    //! \todo linux
+    QProcess::execute( "explorer.exe", args );
+}
+
 void MainWindow::slot_plugin_operable( bool b )
 {
     ui->actionDownload->setEnabled( b );
@@ -391,7 +414,7 @@ void MainWindow::slot_plugin_operable( bool b )
 
     ui->actionStore->setEnabled( b );
 
-    m_pStopWidget->setEnabled( b );
+//    m_pStopWidget->setEnabled( b );
 }
 
 void MainWindow::slot_request_sysOpPanel()
@@ -667,4 +690,17 @@ void MainWindow::on_actiontest_triggered()
 //    m_roboConfig->rootItem()->addChild( pRoboRoot );
 }
 
+void MainWindow::on_actionErrant_triggered()
+{
+    explorerDocFile( "errant.txt");
+}
 
+void MainWindow::on_actionFAQ_triggered()
+{
+    explorerDocFile( "faq.txt");
+}
+
+void MainWindow::on_actionRead_me_triggered()
+{
+    explorerDocFile( "readme.txt");
+}

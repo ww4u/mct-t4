@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>844</width>
-    <height>372</height>
+    <height>360</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,7 +35,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>5</number>
+      <number>3</number>
      </property>
      <property name="elideMode">
       <enum>Qt::ElideNone</enum>
@@ -97,30 +97,7 @@
           <string>Dynamic Data</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_11">
-          <item row="5" column="1">
-           <spacer name="verticalSpacer_7">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_12">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="text">
-             <string>Record Number:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
+          <item row="4" column="2">
            <widget class="QGroupBox" name="groupBox_13">
             <property name="title">
              <string>Actual</string>
@@ -328,7 +305,64 @@
             </layout>
            </widget>
           </item>
-          <item row="4" column="0">
+          <item row="5" column="2">
+           <spacer name="verticalSpacer_7">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_12">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Record Number:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="spinBox_RecordNumber">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="frame">
+             <bool>false</bool>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="specialValueText">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0" colspan="2">
            <widget class="QGroupBox" name="groupBox_12">
             <property name="title">
              <string>Target</string>
@@ -536,40 +570,6 @@
             </layout>
            </widget>
           </item>
-          <item row="1" column="1">
-           <widget class="QSpinBox" name="spinBox_RecordNumber">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="frame">
-             <bool>false</bool>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::NoButtons</enum>
-            </property>
-            <property name="specialValueText">
-             <string notr="true"/>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
        </item>
@@ -664,20 +664,7 @@
           <string>Digital Inputs</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="2" column="1">
-           <widget class="QRadioButton" name="radioButton_11">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Enable Drive</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
+          <item row="3" column="2">
            <widget class="QRadioButton" name="radioButton_12">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -690,7 +677,20 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
+          <item row="2" column="2">
+           <widget class="QRadioButton" name="radioButton_11">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Enable Drive</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
            <widget class="QRadioButton" name="radioButton_10">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -700,32 +700,6 @@
             </property>
             <property name="text">
              <string>Start Record Execution</string>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QRadioButton" name="radioButton_8">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Record Bit5</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
-           <widget class="QRadioButton" name="radioButton_9">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Reserved</string>
             </property>
            </widget>
           </item>
@@ -739,70 +713,6 @@
             </property>
             <property name="text">
              <string>Record Number:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QRadioButton" name="radioButton_2">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Record Bit2</string>
-            </property>
-            <property name="autoExclusive">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QRadioButton" name="radioButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Record Bit1</string>
-            </property>
-            <property name="autoExclusive">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QRadioButton" name="radioButton_4">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Record Bit4</string>
-            </property>
-            <property name="autoExclusive">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QRadioButton" name="radioButton_3">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Record Bit3</string>
-            </property>
-            <property name="autoExclusive">
-             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -826,6 +736,96 @@
             </property>
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0" colspan="2">
+           <widget class="QRadioButton" name="radioButton_9">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Reserved</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0" colspan="2">
+           <widget class="QRadioButton" name="radioButton_8">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Record Bit5</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0" colspan="2">
+           <widget class="QRadioButton" name="radioButton_4">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Record Bit4</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="2">
+           <widget class="QRadioButton" name="radioButton_3">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Record Bit3</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="2">
+           <widget class="QRadioButton" name="radioButton_2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Record Bit2</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" colspan="2">
+           <widget class="QRadioButton" name="radioButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Record Bit1</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -1238,6 +1238,12 @@
        </property>
        <item>
         <widget class="QGroupBox" name="groupBox_5">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
           <string/>
          </property>
@@ -1262,6 +1268,9 @@
               <property name="text">
                <string>X,Y,Z</string>
               </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
              </widget>
             </item>
             <item row="1" column="0">
@@ -1269,12 +1278,21 @@
               <property name="text">
                <string>Terminal</string>
               </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
              </widget>
             </item>
             <item row="0" column="1">
              <widget class="QDoubleSpinBox" name="spinActX">
               <property name="enabled">
                <bool>false</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
               <property name="buttonSymbols">
                <enum>QAbstractSpinBox::NoButtons</enum>
@@ -1298,6 +1316,12 @@
               <property name="enabled">
                <bool>false</bool>
               </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="buttonSymbols">
                <enum>QAbstractSpinBox::NoButtons</enum>
               </property>
@@ -1316,6 +1340,12 @@
              <widget class="QDoubleSpinBox" name="spinActY">
               <property name="enabled">
                <bool>false</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
               <property name="buttonSymbols">
                <enum>QAbstractSpinBox::NoButtons</enum>
@@ -1339,6 +1369,12 @@
               <property name="enabled">
                <bool>false</bool>
               </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="buttonSymbols">
                <enum>QAbstractSpinBox::NoButtons</enum>
               </property>
@@ -1361,12 +1397,21 @@
               <property name="text">
                <string>Wrist</string>
               </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
              </widget>
             </item>
             <item row="1" column="3">
              <widget class="QDoubleSpinBox" name="spinActWrist">
               <property name="enabled">
                <bool>false</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
               <property name="buttonSymbols">
                <enum>QAbstractSpinBox::NoButtons</enum>
@@ -1566,7 +1611,7 @@
                 </widget>
                </item>
                <item row="1" column="3">
-                <widget class="QToolButton" name="toolSingleYP">
+                <widget class="QToolButton" name="toolSingleYN">
                  <property name="toolTip">
                   <string>Step -Y</string>
                  </property>
@@ -1606,7 +1651,7 @@
                 </widget>
                </item>
                <item row="1" column="0">
-                <widget class="QToolButton" name="toolSingleYN">
+                <widget class="QToolButton" name="toolSingleYP">
                  <property name="toolTip">
                   <string>Step +Y</string>
                  </property>
@@ -1884,19 +1929,6 @@
               </layout>
              </widget>
             </item>
-            <item>
-             <spacer name="horizontalSpacer_4">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
            </layout>
           </item>
          </layout>
@@ -1904,6 +1936,12 @@
        </item>
        <item>
         <widget class="QGroupBox" name="groupBox_6">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>1</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="title">
           <string/>
          </property>
@@ -1939,6 +1977,19 @@
          </layout>
         </widget>
        </item>
+       <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tab_5">
@@ -1966,6 +2017,9 @@
        </property>
        <item>
         <widget class="QScrollArea" name="scrollArea">
+         <property name="sizeAdjustPolicy">
+          <enum>QAbstractScrollArea::AdjustToContents</enum>
+         </property>
          <property name="widgetResizable">
           <bool>true</bool>
          </property>
@@ -1975,7 +2029,7 @@
             <x>0</x>
             <y>0</y>
             <width>802</width>
-            <height>328</height>
+            <height>316</height>
            </rect>
           </property>
           <property name="contextMenuPolicy">

@@ -112,6 +112,8 @@
                                              else \
                                              { control->setEnabled(false);}
 
+#define manual_enable_edit( control, b )    { control->setEnabled(b); }
+
 //! spy
 #define spy_control_edit( control )   connect( control, SIGNAL(editingFinished()), this, SLOT(slot_modified())); enable_edit( control );
 //#define spy_control_combox( control ) connect( control, SIGNAL(currentIndexChanged(int)), this, SLOT(slot_modified())); enable_edit( control );

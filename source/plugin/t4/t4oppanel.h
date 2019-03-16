@@ -329,12 +329,6 @@ private slots:
 
     joint_action( joint5 )
 
-//    void on_cmbStepXx_activated(int index);
-
-//protected Q_SLOTS:
-//    virtual void slot_enter_mission( WorkingApi *pApi );
-//    virtual void slot_exit_mission( WorkingApi *pApi, int ret );
-
     void on_tabWidget_currentChanged(int index);
 
     void on_toolButton_debugRun_clicked();

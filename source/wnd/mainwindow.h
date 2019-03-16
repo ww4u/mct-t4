@@ -69,6 +69,8 @@ protected:
     void changeStyle();
     void setUiStyle(const QString &styleFile);
 
+    void explorerDocFile( const QString &fileName );
+
 signals:
     void signal_pref_changed();
     void signal_logout( const QString &str, int lev );
@@ -108,6 +110,12 @@ private slots:
     void on_actionPref_triggered();
 
     void on_actiontest_triggered();
+
+    void on_actionErrant_triggered();
+
+    void on_actionFAQ_triggered();
+
+    void on_actionRead_me_triggered();
 
 private:
     Ui::MainWindow *ui;

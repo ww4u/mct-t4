@@ -58,6 +58,7 @@ protected:
 
 protected:
     virtual void retranslateUi();
+    virtual void onPluginChanged();
 
 public:
     void attachPlugin( XPlugin *pPlugin );

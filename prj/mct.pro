@@ -142,7 +142,8 @@ RESOURCES += ../res/res.qrc
 RC_ICONS = ../res/image/megarobo.ico
 
 DISTFILES += ../build/doc/readme.txt \
-             ../build/doc/errant.txt
+             ../build/doc/errant.txt \
+             ../build/doc/faq.txt
 
 #TRANSLATIONS += ../res/ts/mct_zh_CN.ts \
 #                ../res/ts/mct_EN.ts \

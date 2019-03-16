@@ -15,7 +15,7 @@
 #include "../model/debugtable.h"
 
 #define WIDGET_MONITOR_INDEX 5
-
+#define DEFAULT_PAGE_INDEX 4
 namespace mrx_t4{
 
 static double _stepRatio[]={ 0.1,0.2,0.5,
@@ -127,9 +127,9 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     mTerminalRelations.append( ui->spinActTerminal );
     mTerminalRelations.append( ui->joint5 );
     mTerminalRelations.append( ui->jointChart5 );
+
     //! spys
     spySetting( MRX_T4::e_setting_terminal );
-
     spySetting( MRX_T4::e_setting_record );
 }
 
@@ -325,6 +325,11 @@ void T4OpPanel::spyEdited()
     };
 
     install_spy();
+
+    manual_enable_edit( ui->spinVel, true );
+    manual_enable_edit( ui->spinDly, true );
+    manual_enable_edit( ui->cmbStepXx, true );
+    manual_enable_edit( ui->sliderVel, true );
 
     //! modified
     connect( ui->controllerStatus, SIGNAL(signal_request_save()),
@@ -568,7 +573,8 @@ void T4OpPanel::updateUi()
     ui->controllerStatus->setMctChecked( pRobo->mbMctEn );
     ui->controllerStatus->setDevicePower( pRobo->mbAxisPwr );
 
-    logDbg()<<pRobo->mbMctEn<<pRobo->mbAxisPwr;
+    //! default page
+    ui->tabWidget->setCurrentIndex( DEFAULT_PAGE_INDEX );
 }
 
 void T4OpPanel::updateData()

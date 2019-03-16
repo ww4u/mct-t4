@@ -32,6 +32,9 @@ void XPage::focusInEvent(QFocusEvent *event)
 void XPage::retranslateUi()
 {}
 
+void XPage::onPluginChanged()
+{}
+
 void XPage::attachPlugin( XPlugin *pPlugin )
 {
     Q_ASSERT( NULL != pPlugin );
@@ -39,11 +42,12 @@ void XPage::attachPlugin( XPlugin *pPlugin )
     mUri = "data";
     m_pPlugin = pPlugin;
 
-
     //! virtual
     connectPlugin();
 
     updateUi();
+
+    onPluginChanged();
 }
 XPlugin *XPage::pulgin()
 { return m_pPlugin; }

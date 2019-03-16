@@ -759,6 +759,11 @@ void RoboConfig::slot_plugin_setting_changed( XSetting setting )
             emit signal_plugins_operable( false );
         }
     }
+    else if ( setting.mSetting == XPage::e_setting_mission_working )
+    {
+        bool bOperable = setting.mPara1.toBool();
+        emit signal_plugins_operable( !bOperable );
+    }
     else
     {}
 }

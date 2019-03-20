@@ -59,16 +59,16 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
 
     //! record table
     QStringList headerList;
-    headerList<<"id"<<"type"<<"coordinate"<<"para."
+    headerList<<"id"<<"type"
+              //<<"coordinate"<<"para."
               <<"x(mm)"<<"y(mm)"<<"z(mm)"
               <<QString("w(%1)").arg(char_deg)<<QString("h(%1)").arg( char_deg )
-              <<QString("v(mm/s)")<<QString("a(mm/s%1)").arg(char_square)<<"comment";
+              <<QString("v(%)")<<QString("Line")<<"comment";
 
 //    headerList<<"id"<<"type"<<"coord";
 
     m_pRecordModel = new TreeModel( headerList,"" );
     m_pRecordModel->setColumnReadonly( 0 );
-    m_pRecordModel->setColumnReadonly( 2 );
 #ifndef QT_DEBUG
     rstRecordTable();
 #else
@@ -150,10 +150,8 @@ void MRX_T4::onSetting(XSetting setting)
 
         Q_ASSERT( NULL != m_pRootWidgetItem );
         if ( setting.mPara1.toBool() )
-//        { m_pRootWidgetItem->setIcon( 0, QIcon(":/res/image/icon/guanlianshebei.png") );}
         { m_pRootWidgetItem->setIcon( 0, QIcon(":/res/image/h2product/connect.png") );}
         else
-//        { m_pRootWidgetItem->setIcon( 0, QIcon(":/res/image/icon/tupianjiazaishibai.png") );}
         { m_pRootWidgetItem->setIcon( 0, QIcon(":/res/image/h2product/disconnect.png") );}
     }
 }

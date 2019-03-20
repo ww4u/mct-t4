@@ -42,6 +42,9 @@ void sysProgress( const QString &info, bool b, int now, int mi, int ma )
     MainWindow::requestProgress( info, b, now, mi, ma );
 }
 
+void sysPrompt( const QString &info )
+{ MainWindow::requestPrompt( info ); }
+
 void sysShowStatus(const QString &statusInfo)
 {
     MainWindow::showStatus(statusInfo);

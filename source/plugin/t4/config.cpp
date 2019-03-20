@@ -53,6 +53,21 @@ Config::~Config()
     delete ui;
 }
 
+void Config::setOperAble( bool b )
+{
+    //! for each page operate able
+    setOpened( b );
+
+}
+void Config::setOpened( bool b )
+{
+    //! for each page operate
+    for ( int i = 0; i < ui->tabWidget->count(); i++ )
+    {
+        ui->tabWidget->widget(i)->setEnabled( b );
+    }
+}
+
 void Config::adapteToUserMode( sysPara::eSysMode mode )
 {
     bool bAdminEn;
@@ -102,6 +117,10 @@ void Config::updateUi()
     ui->spinBase->setValue( selfPara->mArmLength[0] );
     ui->spinBA->setValue( selfPara->mArmLength[1] );
     ui->spinLA->setValue( selfPara->mArmLength[2] );
+
+    //! slow
+    ui->spinMult->setValue( selfPara->mSlowMult );
+    ui->spinDiv->setValue( selfPara->mSlowDiv );
 }
 
 void Config::updateData()
@@ -123,6 +142,9 @@ void Config::updateData()
     get_upper( 1 );
     get_upper( 2 );
     get_upper( 3 );
+
+    selfPara->mSlowMult = ui->spinMult->value();
+    selfPara->mSlowDiv = ui->spinDiv->value();
 }
 
 int Config::upload()
@@ -188,6 +210,17 @@ int Config::upload()
 //    ui->spinBase->setValue( link[0] );
 //    ui->spinBA->setValue( link[1] );
 //    ui->spinLA->setValue( link[2] );
+
+    //! slow ratio
+    int a, b;
+    ret = mrgMRQMotorGearRatio_Query( device_var(),
+                                4,
+                                &a, &b );
+    if ( ret == 0 )
+    {
+        ui->spinMult->setValue( a );
+        ui->spinDiv->setValue( b );
+    }
 
     return 0;
 }
@@ -278,7 +311,8 @@ void Config::spyEdited()
     };
 
     QSpinBox *spinBoxes[]={
-
+        ui->spinMult,
+        ui->spinDiv
     };
 
     QDoubleSpinBox *doubleSpinBoxes[]={
@@ -312,11 +346,16 @@ void Config::on_cmbTypeTerminal_currentIndexChanged(int index)
 {
     QIcon icon = ui->cmbTypeTerminal->itemIcon( index );
     if ( icon.isNull() )
-    { ui->labelTerminalImg->setVisible( false );}
+    {
+        ui->labelTerminalImg->setVisible( false );
+        ui->gpSlow->setVisible( false );
+    }
     else
     {
         ui->labelTerminalImg->setPixmap( icon.pixmap( 160,160 ) );
         ui->labelTerminalImg->setVisible( true );
+
+        ui->gpSlow->setVisible( true );
     }
 
     //! validate the terminal

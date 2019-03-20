@@ -34,6 +34,9 @@ void WorkingApi::setClass( WorkingApi::eWorkingClass cls )
 WorkingApi::eWorkingClass WorkingApi::getClass()
 { return mWorkingClass; }
 
+void WorkingApi::setDescription( const QString &desc )
+{ mDescription = desc; }
+
 XPluginWorkingThread::XPluginWorkingThread( QObject *parent ) : QThread( parent )
 {
     m_pWorkMutex = NULL;
@@ -173,7 +176,12 @@ void XPluginWorkingThread::procApi( WorkingApi *pApi )
             if ( pApi->m_pProcDo )
             {
                 ret = (pApi->m_pObj->*(pApi->m_pProcDo))( pApi->m_pContext );
-                logDbg()<<ret;
+                if ( ret != 0 )
+                {
+                    logDbg()<<ret;
+                    if ( pApi->mDescription.length() > 0 )
+                    { sysPrompt( pApi->mDescription + " " + tr("execute fail") ); }
+                }
             }
             else
             { ret = 0; }
@@ -183,6 +191,8 @@ void XPluginWorkingThread::procApi( WorkingApi *pApi )
             {
                 ret = (pApi->m_pObj->*(pApi->m_pOnMsg))( pApi->mVar );
                 logDbg()<<ret;
+                if ( ret != 0 && pApi->mDescription.length() > 0 )
+                { sysPrompt( pApi->mDescription + " " + tr("execute fail") ); logDbg(); }
             }
 
             if ( pApi->m_pPostDo )

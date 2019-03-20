@@ -13,6 +13,9 @@ void T4Para::init()
     {
         mAxisZero[i] = 0;
     }
+
+    mSlowMult = 25;
+    mSlowDiv = 1;
 }
 
 //! keep the axis zero
@@ -25,6 +28,18 @@ void T4Para::rst()
     mAxisCurrents[2] = 3.5;
     mAxisCurrents[3] = 1.8;
     mAxisCurrents[4] = 1.5;
+
+    mAxisIdleCurrents[0] = 0.5;
+    mAxisIdleCurrents[1] = 0.5;
+    mAxisIdleCurrents[2] = 0.5;
+    mAxisIdleCurrents[3] = 0.5;
+    mAxisIdleCurrents[4] = 0.5;
+
+    mAxisSwitchTimes[0] = 0.5;
+    mAxisSwitchTimes[1] = 0.5;
+    mAxisSwitchTimes[2] = 0.5;
+    mAxisSwitchTimes[3] = 0.5;
+    mAxisSwitchTimes[4] = 0.5;
 
     //! \note not change the zero
 
@@ -70,6 +85,7 @@ void T4Para::rst()
     mPackagesAxes[1] = -18.8;
     mPackagesAxes[2] = -57.4;
     mPackagesAxes[3] = -103;
+
 }
 
 double T4Para::velocity()
@@ -87,6 +103,9 @@ int T4Para::serialOut( QXmlStreamWriter &writer )
     {
         writer.writeStartElement("axis");
             writer.writeTextElement( "current", QString::number( mAxisCurrents[i]) );
+            writer.writeTextElement( "idle_current", QString::number( mAxisIdleCurrents[i]) );
+            writer.writeTextElement( "switch_time", QString::number( mAxisSwitchTimes[i]) );
+
             writer.writeTextElement( "zero", QString::number( mAxisZero[i]) );
 
             writer.writeTextElement( "upper", QString::number( mAxisSoftUpper[i]) );
@@ -153,6 +172,12 @@ int T4Para::serialOut( QXmlStreamWriter &writer )
         writer.writeTextElement( "mct_enable", QString::number( mbMctEn ) );
     writer.writeEndElement();
 
+    //! slow
+    writer.writeStartElement("slow");
+        writer.writeTextElement( "mult", QString::number( mSlowMult ) );
+        writer.writeTextElement( "div", QString::number( mSlowDiv ) );
+    writer.writeEndElement();
+
     return 0;
 }
 int T4Para::serialIn( QXmlStreamReader &reader )
@@ -182,6 +207,19 @@ int T4Para::serialIn( QXmlStreamReader &reader )
                     Q_ASSERT( axisId <= _axis_cnt );
                     mAxisCurrents[ axisId - 1] = reader.readElementText().toDouble();
                 }
+
+                else if ( reader.name() == "idle_current" )
+                {
+                    Q_ASSERT( axisId <= _axis_cnt );
+                    mAxisIdleCurrents[ axisId - 1] = reader.readElementText().toDouble();
+                }
+
+                else if ( reader.name() == "switch_time" )
+                {
+                    Q_ASSERT( axisId <= _axis_cnt );
+                    mAxisSwitchTimes[ axisId - 1] = reader.readElementText().toDouble();
+                }
+
                 else if ( reader.name() == "zero" )
                 {
                     Q_ASSERT( axisId <= _axis_cnt );
@@ -305,6 +343,18 @@ int T4Para::serialIn( QXmlStreamReader &reader )
                 { mbAxisPwr = reader.readElementText().toInt() > 0; }
                 else if ( reader.name() == "mct_enable" )
                 { mbMctEn = reader.readElementText().toInt() > 0; }
+                else
+                { reader.skipCurrentElement(); }
+            }
+        }
+        else if ( reader.name() == "slow" )
+        {
+            while( reader.readNextStartElement() )
+            {
+                if ( reader.name() == "mult" )
+                { mSlowMult = reader.readElementText().toInt(); }
+                else if ( reader.name() == "div" )
+                { mSlowDiv = reader.readElementText().toInt(); }
                 else
                 { reader.skipCurrentElement(); }
             }

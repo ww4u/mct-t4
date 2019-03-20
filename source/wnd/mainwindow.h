@@ -13,6 +13,7 @@
 #include "stopwidget.h"
 
 #include "syslogout.h"
+#include "prompt.h"
 
 #include "../plugin/model/megaloglistmodel.h"
 
@@ -41,6 +42,7 @@ public:
     static MainWindow *_pBackendProxy;
     static void requestLogout( const QString &str, LogStr::eLogLevel lev );
     static void requestProgress( const QString &info, bool b, int now, int mi=0, int ma = 100 );
+    static void requestPrompt( const QString &info );
 
     static void showStatus(const QString str);
 
@@ -51,6 +53,7 @@ public:
     void emit_logout( const QString &info, int level );
     void emit_status( const QString &str );
     void emit_progress( const QString &info, bool b, int now, int mi, int ma );
+    void emit_prompt( const QString &info );
 
 protected:
     void retranslateUi();
@@ -68,6 +71,7 @@ protected:
     void changeLanguage();
     void changeStyle();
     void setUiStyle(const QString &styleFile);
+    QString languageSuffix();
 
     void explorerDocFile( const QString &fileName );
 
@@ -77,6 +81,7 @@ signals:
     void signal_status( const QString &str );
 
     void signal_progress( const QString &info, bool b, int now, int mi, int ma );
+    void signal_prompt( const QString &info );
 
 private slots:
     void slot_plugin_operable( bool b );
@@ -89,12 +94,16 @@ private slots:
     void slot_lang_changed();
     void slot_style_changed();
 
+    void slot_emergency_stop();
+
     void slot_logout( const QString &str, int lev );
 
     void slot_status(const QString &str);
 
     void slot_progress( const QString &info, bool b, int now, int mi, int ma );
     void slot_progress_canceled();
+
+    void slot_prompt( const QString &info );
 
     void slot_focus_in( const QString &model,
                         const QString &name );
@@ -130,6 +139,7 @@ private:
     QDockWidget *m_pDockOps;
 
     QProgressDialog *m_pProgress;
+    Prompt *m_pPrompt;
 
     QDockWidget *m_pDockHelp;
     HelpPanel *m_pHelpPanel;

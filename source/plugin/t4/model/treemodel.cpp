@@ -125,6 +125,14 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
         int childId = item->childNumber();
         return QString("%1").arg( childId + 1 );
     }
+    //! display percent v
+    else if ( index.column() == 7 )
+    {
+        if ( role == Qt::DisplayRole )
+        { return QString("%1%").arg( item->data(index.column()).toDouble() ); }
+        else
+        {}
+    }
     else
     {}
 
@@ -436,8 +444,9 @@ int TreeModel::exportOut( const QString &fileName )
     MDataSet dataSet;
     dataSet.setModel( "MRX-T4" );
     QStringList headers;
-    headers<<"id"<<"type"<<"coordinate"<<"para"
-           <<"x"<<"y"<<"z"<<"w"<<"h"<<"v"<<"a"
+    headers<<"id"<<"type"
+           //<<"coordinate"<<"para"
+           <<"x"<<"y"<<"z"<<"w"<<"h"<<"v"<<"mode"
            <<"comment";
     dataSet.setHeaders( headers );
 
@@ -570,8 +579,8 @@ int TreeModel::_loadIn( MDataSet *pDataSet,
 
         get_int( "id", i, 0 );
         get_str( "type", i, "PA" );
-        get_str( "coordinate", i, "" );
-        get_str( "para", i, "" );
+//        get_str( "coordinate", i, "" );
+//        get_str( "para", i, "" );
 //        get_int( i, 0 );
 //        get_int( i, 0 );
 
@@ -582,7 +591,7 @@ int TreeModel::_loadIn( MDataSet *pDataSet,
         get_double( "h",i, 0 );
 
         get_double( "v",i, 0 );
-        get_double( "a",i, 0 );
+        get_bool( "mode",i, 0 );
         get_str( "comment",i, 0 );
 
         if ( i == 0 )

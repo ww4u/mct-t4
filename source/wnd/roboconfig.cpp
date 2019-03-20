@@ -69,7 +69,6 @@ void RoboConfig::setupUi()
 
 void RoboConfig::retranslateUi()
 {
-//    ui->buttonBox->button(QDialogButtonBox::Reset)->setText(tr("Reset"));
     ui->retranslateUi(this);
     m_pRootNode->setText( 0, tr("Project"));
 }
@@ -474,6 +473,10 @@ logDbg();
 
     on_treeWidget_currentItemChanged( ui->treeWidget->currentItem(),
                                       NULL );
+
+    //! hide the reset and download
+//    ui->buttonBox->button( QDialogButtonBox::Reset )->setVisible( false );
+
 }
 
 void RoboConfig::cancelBgWorking()
@@ -490,6 +493,14 @@ QTreeWidgetItem *RoboConfig::rootItem()
 QStackedWidget *RoboConfig::stackWidget()
 { return ui->stackedWidget; }
 
+bool RoboConfig::downloadVisible()
+{
+    return m_pPref->mSysMode == 1;
+}
+bool RoboConfig::resetVisible()
+{
+    return m_pPref->mSysMode == 1;
+}
 
 void RoboConfig::stackPageChange( QTreeWidgetItem *current,
                       QTreeWidgetItem *previous )
@@ -513,7 +524,7 @@ void RoboConfig::stackPageChange( QTreeWidgetItem *current,
         { bV = has_attr( pPage->pageAttr(), XPage::page_rst_able ); }
         else
         { bV = false; }
-        ui->buttonBox->button( QDialogButtonBox::Reset )->setVisible( bV );
+        ui->buttonBox->button( QDialogButtonBox::Reset )->setVisible( bV && resetVisible() );
     }
 }
 void RoboConfig::panelPageChange( QTreeWidgetItem *current,
@@ -715,7 +726,7 @@ void RoboConfig::plginsClose()
 }
 
 void RoboConfig::pluginsStop()
-{
+{   
     foreach_plugin()
         mPluginList[i]->stop();
     end_foreach_plugin()

@@ -279,13 +279,14 @@ void XPlugin::unlockWorking()
 
 void XPlugin::attachUpdateWorking( XPage *pObj,
                              XPage::procDo proc,
+                             const QString &desc,
                              void *pContext,
                              int tmoms
                     )
 {
     Q_ASSERT( NULL != pObj );
 
-    attachUpdateWorking( pObj, proc, NULL, NULL, pContext, tmoms );
+    attachUpdateWorking( pObj, proc, NULL, NULL, desc, pContext, tmoms );
 
 //    WorkingApi *pApi = new WorkingApi();
 //    if ( NULL == pApi )
@@ -306,6 +307,7 @@ void XPlugin::attachUpdateWorking(
                     XPage::procDo proc,
                     XPage::preDo pre,
                     XPage::postDo post,
+                    const QString &desc,
                     void *pContext,
                     int tmoms
                     )
@@ -324,6 +326,8 @@ void XPlugin::attachUpdateWorking(
 
     pApi->m_pPreDo = pre;
     pApi->m_pPostDo = post;
+
+    pApi->mDescription = desc;
 
     m_pUpdateWorking->attach( pApi );
     if ( m_pUpdateWorking->isRunning() )
@@ -337,6 +341,7 @@ void XPlugin::_attachUpdateWorking(
                     XPage::procDo proc,
                     XPage::preDo pre,
                     XPage::postDo post,
+                    const QString &desc,
                     void *pContext,
                     int tmoms
                     )
@@ -355,6 +360,8 @@ void XPlugin::_attachUpdateWorking(
 
     pApi->m_pPreDo = pre;
     pApi->m_pPostDo = post;
+
+    pApi->mDescription = desc;
 
     do
     {
@@ -406,7 +413,8 @@ void XPlugin::_attachUpdateWorking(
 
 void XPlugin::attachMissionWorking( XPage *pObj,
                     XPage::onMsg onmsg,
-                    QVariant var
+                    QVariant var,
+                    const QString &desc
                     )
 {
     Q_ASSERT( NULL != pObj );
@@ -423,6 +431,7 @@ void XPlugin::attachMissionWorking( XPage *pObj,
     pApi->mVar = var;
 
     pApi->setType( WorkingApi::e_work_single );
+    pApi->setDescription( desc );
 
     Q_ASSERT( m_pMissionWorking!=NULL );
     m_pMissionWorking->attach( pApi );
@@ -434,7 +443,8 @@ void XPlugin::attachMissionWorking( XPage *pObj,
 
 void XPlugin::attachEmergencyWorking( XPage *pObj,
                     XPage::onMsg onmsg,
-                    QVariant var
+                    QVariant var,
+                    const QString &desc
                     )
 {
     Q_ASSERT( NULL != pObj );
@@ -451,6 +461,7 @@ void XPlugin::attachEmergencyWorking( XPage *pObj,
     pApi->mVar = var;
 
     pApi->setType( WorkingApi::e_work_single );
+    pApi->setDescription( desc );
 
     Q_ASSERT( m_pEmergencyWorking );
     m_pEmergencyWorking->attach( pApi );
@@ -461,7 +472,8 @@ void XPlugin::attachEmergencyWorking( XPage *pObj,
 }
 
 void XPlugin::attachBgWorking(
-                    XPlugin::bgProc proc
+                    XPlugin::bgProc proc,
+                    const QString &desc
                     )
 {
     Q_ASSERT( NULL != m_pBgWorking );

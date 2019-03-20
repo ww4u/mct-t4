@@ -29,6 +29,8 @@ void sysError( const QString &info , const int &val);
 
 void sysProgress( const QString &info, bool b, int now = 0, int mi=0, int ma=100 );
 
+void sysPrompt( const QString &info );
+
 void sysShowStatus(const QString &statusInfo);
 
 bool copyFileToPath(QString sourceDir ,QString toDir, bool coverFileIfExist);

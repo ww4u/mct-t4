@@ -131,6 +131,9 @@
    <property name="text">
     <string>&amp;Stop</string>
    </property>
+   <property name="toolTip">
+    <string>Emergency Stop</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+E</string>
    </property>

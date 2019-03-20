@@ -46,9 +46,9 @@
 #define self_robot_var()  (ViSession)deviceVi(),robotHandle()
 #define self_device_var()    (ViSession)deviceVi(),deviceHandle()
 
-#define on_post_setting( cls, onSetting )    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&cls::onSetting), var );
+#define on_post_setting( cls, onSetting, desc )    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&cls::onSetting), var, desc );
 
-#define on_post_setting_emerge( cls, onSetting ) m_pPlugin->attachEmergencyWorking( this, (XPage::onMsg)(&cls::onSetting), var );
+#define on_post_setting_emerge( cls, onSetting, desc ) m_pPlugin->attachEmergencyWorking( this, (XPage::onMsg)(&cls::onSetting), var, desc );
 
 #define wave_table  0
 #define distance_error      (0.001)
@@ -56,6 +56,8 @@
 #define guess_dist_calc_time_ms( dist )    (dist * 1000)
 
 #define guess_dist_time_ms( ts, dist )     ( (ts)*1000 + guess_dist_calc_time_ms(dist) )
+
+#define rel_to_abs_speed( rel ) ( rel/100.0*pRobo->mMaxTerminalSpeed )
 
 namespace mrx_t4 {
 class ActionTable;
@@ -139,11 +141,11 @@ public:
     int relMove( QString para,
                  double x, double y, double z,
                  double pw, double h,
-                 double v, double a );
+                 double v, bool bLine );
     int absMove( QString para,
                  double x, double y, double z,
                  double pw, double h,
-                 double v, double a );
+                 double v, bool bLine );
 
 public:
     TreeModel* m_pRecordModel;

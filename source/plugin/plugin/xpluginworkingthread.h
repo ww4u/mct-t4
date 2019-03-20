@@ -34,6 +34,8 @@ public:
     void setClass( WorkingApi::eWorkingClass cls );
     WorkingApi::eWorkingClass getClass();
 
+    void setDescription( const QString &desc );
+
 public:
     eWorkingType mWorkingType;
     eWorkingClass mWorkingClass;
@@ -49,6 +51,7 @@ public:
     XPage::isEnable m_pIsEnabled;
 
     QTimer *m_pTimer;
+    QString mDescription;
 };
 
 //Q_DECLARE_METATYPE( WorkingApi * )

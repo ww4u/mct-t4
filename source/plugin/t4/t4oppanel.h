@@ -68,7 +68,8 @@ public:
     int id;     //! record id
     int vRow;
     QString mType;
-    double x, y, z, pw, h, a, v;
+    double x, y, z, pw, h, v;
+    bool bLine;
     double delay;
 
 public:
@@ -82,8 +83,9 @@ public:
         z = 0;
         pw =0;
         h = 0;
-        a = 200;
         v = 100;
+
+        bLine = false;
 
         delay = 0;
     }
@@ -99,10 +101,10 @@ public:
         z = item.z;
         pw =item.pw;
         h = item.h;
-        a = item.a;
         v = item.v;
 
         delay = item.delay;
+        bLine = item.bLine;
 
         return *this;
     }
@@ -145,6 +147,7 @@ public:
         debug_enter = QEvent::User + 1,
         debug_exit,
         monitor_event,
+        update_pose,
     };
 
 public:
@@ -172,6 +175,26 @@ public:
     }
 };
 
+class CPose
+{
+public:
+    double x, y, z, w, h;
+};
+
+class RefreshPara
+{
+public:
+    CPose poseNow;
+    double angles[5];
+    double deltaAngles[5];
+
+    int recNow;
+
+    CPose poseAim;
+
+    bool bHomeValid;
+};
+
 class T4OpPanel : public XPage
 {
     Q_OBJECT
@@ -192,8 +215,10 @@ protected:
     virtual void focusInEvent(QFocusEvent *event);
 
 protected:
-    void updateMonitor(QEvent *e );
+    void updateMonitor( QEvent *e );
     virtual void spyEdited();
+
+    void updateRefreshPara( QEvent *e );
 
 public:
     int posRefreshProc( void *pContext );
@@ -254,6 +279,8 @@ private:
 protected:
     DebugTable mDebugTable;
     DiagnosisTable mDiagTable;
+
+    RefreshPara mRefreshPara;
 
     QList<QWidget*> mTerminalRelations;
     QMenu *m_pDebugContextMenu;

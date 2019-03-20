@@ -5,6 +5,9 @@ dSpinDelegate::dSpinDelegate( QObject *parent ) : QStyledItemDelegate(parent)
     mDecimal = 3;
     mMax = INT_MAX;
     mMin = INT_MIN;
+
+    mPrefix = "";
+    mSuffix = "";
 }
 
 dSpinDelegate::dSpinDelegate(double mi, double ma, QObject *parent ): QStyledItemDelegate(parent)
@@ -12,6 +15,9 @@ dSpinDelegate::dSpinDelegate(double mi, double ma, QObject *parent ): QStyledIte
     mDecimal = 3;
     mMin = mi;
     mMax = ma;
+
+    mPrefix = "";
+    mSuffix = "";
 }
 
 QWidget *dSpinDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option,
@@ -24,6 +30,9 @@ QWidget *dSpinDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem
     pSpinBox->setDecimals( mDecimal );
     pSpinBox->setMaximum( mMax );
     pSpinBox->setMinimum( mMin );
+
+    pSpinBox->setPrefix( mPrefix );
+    pSpinBox->setSuffix( mSuffix );
 
     return pSpinBox;
 }
@@ -62,4 +71,9 @@ void dSpinDelegate::setMin( double v )
 { mMin = v; }
 void dSpinDelegate::setDecimal( int d )
 { mDecimal = d; }
+
+void dSpinDelegate::sePrefix( const QString &pre )
+{ mPrefix = pre; }
+void dSpinDelegate::setSuffix( const QString &sur )
+{ mSuffix = sur; }
 

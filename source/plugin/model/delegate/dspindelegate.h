@@ -26,9 +26,13 @@ public:
     void setMin( double v );
     void setDecimal( int d );
 
+    void sePrefix( const QString &pre );
+    void setSuffix( const QString &sur );
+
 protected:
     int mDecimal;
     double mMax, mMin;
+    QString mPrefix, mSuffix;
 };
 
 #endif // DSPINDELEGATE_H

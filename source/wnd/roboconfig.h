@@ -24,20 +24,13 @@ public:
     ~RoboConfig();
 
 signals:
-//    void signalCurrentRobotChanged(QString,int,int,int);
     void signal_focus_in( const QString &model, const QString &help );
-//    void signalDataChanged();
-//    void signal_record_selected(int);
-//    void signalDeviceConnect(bool);
 
     void signal_plugins_changed();
     void signal_plugins_operable( bool b );
 
     void signal_request_sysOpPanel();
     void signal_save_sysPref();
-
-//    void changeLanguage(QString qmFile);
-//    void addDeviceWithIP(QString strID);
 protected:
     void setupUi();
 
@@ -55,6 +48,9 @@ public:
 
     QTreeWidgetItem *rootItem();
     QStackedWidget *stackWidget();
+
+    bool downloadVisible();
+    bool resetVisible();
 
 protected:
     void stackPageChange( QTreeWidgetItem *current, QTreeWidgetItem *previous );
@@ -92,15 +88,10 @@ public slots:
 
     void slot_plugins_stop();
 
-//    void slotSetOneRecord(int row,QString type,double x,double y,double v,double a);
-
 private slots:
     void on_treeWidget_currentItemChanged(QTreeWidgetItem *current,
                                           QTreeWidgetItem *previous);
     void on_buttonBox_clicked(QAbstractButton *button);
-
-//    void slot_current_changed( QTreeWidgetItem* pre,QTreeWidgetItem* nxt );
-//    void slot_open_close(QString strIP);
 
     void slotAddNewRobot( const QStringList &strDevInfo );
 
@@ -135,37 +126,8 @@ private:
     XPlugin *m_pCurPlugin;
     QTreeWidgetItem *m_pCurTreeItem;
 
-//    class RobotInfo
-//    {
-//    public:
-//        XRobo*  m_Robo;
-//        int     m_Visa;
-//        int     m_DeviceName;
-//        int     m_RoboName;
-//        QString m_strDevInfo;
-//    };
-
     QTreeWidgetItem *m_pRootNode;
-//    QList<RobotInfo> m_RobotList;
-//    int mIndex;
-
     QList<XPlugin*> mPluginList;
-
-
-//    void loadXmlConfig();
-
-//    void createRobot(const QString &strDevInfo, const QString &model="" );
-
-
-//    int  deviceOpen(QString strIP);
-//    int  deviceClose();
-//    int  setApply();
-
-
-//    QMenu *m_menu;
-//    QTranslator m_translator;
-
-
 };
 
 #endif // H2CONFIG_H

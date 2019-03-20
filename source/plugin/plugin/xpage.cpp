@@ -167,44 +167,48 @@ void XPage::showFocusHelp()
 }
 
 void XPage::attachUpdateWorking( XPage::procDo proc,
+                                 const QString &desc,
                                  void *pContext,
                                  int tmoms
                     )
 {
     Q_ASSERT( NULL != m_pPlugin );
 
-    m_pPlugin->attachUpdateWorking( this, proc, pContext, tmoms );
+    m_pPlugin->attachUpdateWorking( this, proc, desc, pContext, tmoms );
 }
 void XPage::attachUpdateWorking( XPage::procDo proc,
                     XPage::preDo pre,
                     XPage::postDo post,
+                    const QString &desc,
                     void *pContext,
                     int tmoms
                     )
 {
     Q_ASSERT( NULL != m_pPlugin );
 
-    m_pPlugin->attachUpdateWorking( this, proc, pre, post, pContext,tmoms );
+    m_pPlugin->attachUpdateWorking( this, proc, pre, post, desc, pContext,tmoms );
 }
 
 void XPage::attachMissionWorking( XPage *pObj,
                     XPage::onMsg onmsg,
-                    QVariant var
+                    QVariant var,
+                    const QString &desc
                     )
 {
     Q_ASSERT( NULL != m_pPlugin );
 
-    m_pPlugin->attachMissionWorking( this, onmsg, var );
+    m_pPlugin->attachMissionWorking( this, onmsg, var, desc );
 }
 
 void XPage::attachEmergencyWorking( XPage *pObj,
                     XPage::onMsg onmsg,
-                    QVariant var
+                    QVariant var,
+                    const QString &desc
                     )
 {
     Q_ASSERT( NULL != m_pPlugin );
 
-    m_pPlugin->attachEmergencyWorking( this, onmsg, var );
+    m_pPlugin->attachEmergencyWorking( this, onmsg, var, desc );
 }
 
 void XPage::setUri( const QString &uri )

@@ -33,18 +33,21 @@ ActionTable::ActionTable(QWidget *parent) :
     m_pDelegateXYZ = new dSpinDelegate( -1000, 1000, this );
     m_pDelegatePw = new dSpinDelegate( -360, 360, this );
     m_pDelegateH = new dSpinDelegate( -360, 360, this );
-    m_pDelegateV = new dSpinDelegate( 1, 1000, this );
-    m_pDelegateA = new dSpinDelegate( 1, 1000, this );
+    m_pDelegateV = new dSpinDelegate( 1, 100, this );
+    m_pDelegateV->setSuffix( "%" );
 
+    m_pCheckDelegate = new CheckDelegate( shape_check, this );
+    m_pCheckDelegate->setAlignment( Qt::AlignLeft );
+
+    ui->view->setItemDelegateForColumn( 2, m_pDelegateXYZ );
+    ui->view->setItemDelegateForColumn( 3, m_pDelegateXYZ );
     ui->view->setItemDelegateForColumn( 4, m_pDelegateXYZ );
-    ui->view->setItemDelegateForColumn( 5, m_pDelegateXYZ );
-    ui->view->setItemDelegateForColumn( 6, m_pDelegateXYZ );
 
-    ui->view->setItemDelegateForColumn( 7, m_pDelegatePw );
-    ui->view->setItemDelegateForColumn( 8, m_pDelegateH );
+    ui->view->setItemDelegateForColumn( 5, m_pDelegatePw );
+    ui->view->setItemDelegateForColumn( 6, m_pDelegateH );
 
-    ui->view->setItemDelegateForColumn( 9, m_pDelegateV );
-    ui->view->setItemDelegateForColumn( 10, m_pDelegateA );
+    ui->view->setItemDelegateForColumn( 7, m_pDelegateV );
+    ui->view->setItemDelegateForColumn( 8, m_pCheckDelegate );
 
     m_pContextMenu = NULL;
 
@@ -330,7 +333,7 @@ void ActionTable::editRecord( XSetting setting )
     //! x/y/z/pw/h
     for ( int i = 0; i < 5; i++ )
     {
-        modelIndex = pModel->index( cRow, i + 4, index.parent() );
+        modelIndex = pModel->index( cRow, i + 2, index.parent() );
         pModel->setData( modelIndex, vals.at( i ) );
     }
 
@@ -401,7 +404,7 @@ logDbg()<<QThread::currentThreadId()
       <<vars.at(4).toDouble()
       <<vars.at(5).toDouble()
       <<vars.at(6).toDouble()
-      <<vars.at(7).toDouble();
+      <<vars.at(7).toBool();
 
     if ( str_is( vars.at(0).toString(), "PA" ) )
     {
@@ -421,16 +424,16 @@ logDbg()<<QThread::currentThreadId()
 
 }
 
-//! \todo line move
 int ActionTable::relToHere( QList<QVariant> &vars )
 {
     check_connect_ret( -1 );
 
     int ret;
+    //! \note the speed
     ret = pRobo->relMove( "",
                           vars.at(1).toDouble(), vars.at(2).toDouble(), vars.at(3).toDouble(),
                           vars.at(4).toDouble(), vars.at(5).toDouble(),
-                          vars.at(6).toDouble(), vars.at(7).toDouble()
+                          rel_to_abs_speed( vars.at(6).toDouble() ), vars.at(7).toBool()
                           );
     return ret;
 }
@@ -442,7 +445,7 @@ int ActionTable::absToHere( QList<QVariant> &vars )
     ret = pRobo->absMove( "",
                           vars.at(1).toDouble(), vars.at(2).toDouble(), vars.at(3).toDouble(),
                           vars.at(4).toDouble(), vars.at(5).toDouble(),
-                          vars.at(6).toDouble(), vars.at(7).toDouble()
+                          rel_to_abs_speed( vars.at(6).toDouble() ), vars.at(7).toBool()
                           );
 
     return ret;
@@ -480,7 +483,7 @@ void ActionTable::slot_toHere()
     else
     { return; }
 
-    QVariant type, x, y, z, pw, h, v, a;
+    QVariant type, x, y, z, pw, h, v, line;
     QList<QVariant> vars;
 
     TreeItem *pItem = (TreeItem*)index.internalPointer();
@@ -488,19 +491,19 @@ void ActionTable::slot_toHere()
     { return; }
 
     get_data( type, 1 );
-    get_data( x, 4 );
-    get_data( y, 5 );
-    get_data( z, 6 );
-    get_data( pw, 7 );
+    get_data( x, 2 );
+    get_data( y, 3 );
+    get_data( z, 4 );
+    get_data( pw, 5 );
 
-    get_data( h, 8 );
-    get_data( v, 9 );
-    get_data( a, 10 );
+    get_data( h, 6 );
+    get_data( v, 7 );
+    get_data( line, 8 );
 
     QVariant var( vars );
 
     //! action
-    on_post_setting( ActionTable, onToHere );
+    on_post_setting( ActionTable, onToHere, tr("To here") );
 }
 
 void ActionTable::slot_add_before()
@@ -760,9 +763,9 @@ void ActionTable::slot_customContextMenuRequested(const QPoint &pos)
 
         //! change the to here
         QString strToHereSuffix;
-        strToHereSuffix = QString("(%1,%2,%3)").arg( pItem->data(4).toDouble(),0,'f',2 )
-                                               .arg( pItem->data(5).toDouble(),0,'f',2 )
-                                               .arg( pItem->data(6).toDouble(),0,'f',2 );
+        strToHereSuffix = QString("(%1,%2,%3)").arg( pItem->data(2).toDouble(),0,'f',2 )
+                                               .arg( pItem->data(3).toDouble(),0,'f',2 )
+                                               .arg( pItem->data(4).toDouble(),0,'f',2 );
 
         //! PA && RA
         if ( str_is( pItem->data( 1 ).toString(), "PA") )

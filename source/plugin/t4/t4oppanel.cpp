@@ -160,9 +160,9 @@ bool T4OpPanel::event(QEvent *e)
             else if ( (int)pEvent->type() == OpEvent::debug_exit )
             {   on_debug_exit( pEvent->mVar1.toInt(), pEvent->mVar2.toInt() ); }
             else if ( (int)pEvent->type() == OpEvent::monitor_event )
-            {
-                updateMonitor( e );
-            }
+            { updateMonitor( e ); }
+            else if ( (int)pEvent->type() == OpEvent::update_pose )
+            { updateRefreshPara( e ); }
             else
             {}
 
@@ -336,6 +336,57 @@ void T4OpPanel::spyEdited()
              this, SLOT(slot_modified()) );
 }
 
+void T4OpPanel::updateRefreshPara( QEvent *e )
+{
+    //! record now
+    ui->spinBox_RecordNumber->setValue( mRefreshPara.recNow );
+    ui->spinRecNow->setValue( mRefreshPara.recNow );
+
+    //! target
+    ui->doubleSpinBox_target_position_x->setValue( mRefreshPara.poseAim.x );
+    ui->doubleSpinBox_target_position_y->setValue( mRefreshPara.poseAim.y );
+    ui->doubleSpinBox_target_position_z->setValue( mRefreshPara.poseAim.z );
+
+    //! actual
+    ui->actPosX->setValue( mRefreshPara.poseNow.x );
+    ui->actPosY->setValue( mRefreshPara.poseNow.y );
+    ui->actPosZ->setValue( mRefreshPara.poseNow.z );
+
+    ui->doubleSpinBox_homing_actual_pos_x->setValue( mRefreshPara.poseNow.x );
+    ui->doubleSpinBox_homing_actual_pos_y->setValue( mRefreshPara.poseNow.y );
+    ui->doubleSpinBox_homing_actual_pos_z->setValue( mRefreshPara.poseNow.z );
+
+    ui->doubleSpinBox_debug_posX->setValue( mRefreshPara.poseNow.x );
+    ui->doubleSpinBox_debug_posY->setValue( mRefreshPara.poseNow.y );
+    ui->doubleSpinBox_debug_posZ->setValue( mRefreshPara.poseNow.z );
+
+    ui->spinActX->setValue( mRefreshPara.poseNow.x );
+    ui->spinActY->setValue( mRefreshPara.poseNow.y );
+    ui->spinActZ->setValue( mRefreshPara.poseNow.z );
+
+    //! angles
+    //! joint
+    ui->joint1->setAngle( mRefreshPara.angles[0] );
+    ui->joint2->setAngle( mRefreshPara.angles[1] );
+    ui->joint3->setAngle( mRefreshPara.angles[2] );
+    ui->joint4->setAngle( mRefreshPara.angles[3] );
+    ui->joint5->setAngle( mRefreshPara.angles[4] );
+
+    //! delta
+    ui->joint1->setdAngle( mRefreshPara.deltaAngles[0] );
+    ui->joint2->setdAngle( mRefreshPara.deltaAngles[1] );
+    ui->joint3->setdAngle( mRefreshPara.deltaAngles[2] );
+    ui->joint4->setdAngle( mRefreshPara.deltaAngles[3] );
+
+    //! hand
+    ui->spinActTerminal->setValue( mRefreshPara.angles[4] );
+    ui->actPosTerminal->setValue( mRefreshPara.angles[4] );
+
+    //! home valid
+    ui->radHome->setChecked( mRefreshPara.bHomeValid );
+    ui->radioButton_homing_valid->setChecked( mRefreshPara.bHomeValid );
+}
+
 int T4OpPanel::posRefreshProc( void *pContext )
 {
     //! to local
@@ -345,7 +396,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
     if ( pRobo->isOpened() )
     {}
     else
-    { return -1; }
+    { return 0; }
 
     do
     {
@@ -360,8 +411,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
         { sysError( tr("Record read fail") ); break; }
         else
         {
-            ui->spinBox_RecordNumber->setValue( rec );
-            ui->spinRecNow->setValue( rec );
+            mRefreshPara.recNow = rec;
         }
 
         ret = mrgGetRobotTargetPosition( robot_var(),
@@ -370,9 +420,9 @@ int T4OpPanel::posRefreshProc( void *pContext )
         { sysError( tr("Target read fail") ); break; }
         else
         {
-            ui->doubleSpinBox_target_position_x->setValue( fx );
-            ui->doubleSpinBox_target_position_y->setValue( fy );
-            ui->doubleSpinBox_target_position_z->setValue( fz );
+            mRefreshPara.poseAim.x = fx;
+            mRefreshPara.poseAim.y = fy;
+            mRefreshPara.poseAim.z = fz;
         }
 
         //! x,y,z now
@@ -381,22 +431,9 @@ int T4OpPanel::posRefreshProc( void *pContext )
         if ( ret != 0 )
         { sysError( tr("Current read fail") ); break; }
         {
-            //! act
-            ui->actPosX->setValue( fx );
-            ui->actPosY->setValue( fy );
-            ui->actPosZ->setValue( fz );
-
-            ui->doubleSpinBox_homing_actual_pos_x->setValue( fx );
-            ui->doubleSpinBox_homing_actual_pos_y->setValue( fy );
-            ui->doubleSpinBox_homing_actual_pos_z->setValue( fz );
-
-            ui->doubleSpinBox_debug_posX->setValue( fx );
-            ui->doubleSpinBox_debug_posY->setValue( fy );
-            ui->doubleSpinBox_debug_posZ->setValue( fz );
-
-            ui->spinActX->setValue( fx );
-            ui->spinActY->setValue( fy );
-            ui->spinActZ->setValue( fz );
+            mRefreshPara.poseNow.x = fx;
+            mRefreshPara.poseNow.y = fy;
+            mRefreshPara.poseNow.z = fz;
         }
 
         //! angle now
@@ -407,11 +444,10 @@ int T4OpPanel::posRefreshProc( void *pContext )
         { break; }
         else
         {
-            //! joint
-            ui->joint1->setAngle( angles[0] );
-            ui->joint2->setAngle( angles[1] );
-            ui->joint3->setAngle( angles[2] );
-            ui->joint4->setAngle( angles[3] );
+            mRefreshPara.angles[0] = angles[0];
+            mRefreshPara.angles[1] = angles[1];
+            mRefreshPara.angles[2] = angles[2];
+            mRefreshPara.angles[3] = angles[3];
 
             //! delta angles
             double dAngles[4];
@@ -421,10 +457,10 @@ int T4OpPanel::posRefreshProc( void *pContext )
                 dAngles[ i ] = normalizeDegreeN180_180( angles[ i ] - pRobo->mAxisZero[i] ) * dir[i];
             }
 
-            ui->joint1->setdAngle( dAngles[0] );
-            ui->joint2->setdAngle( dAngles[1] );
-            ui->joint3->setdAngle( dAngles[2] );
-            ui->joint4->setdAngle( dAngles[3] );
+            mRefreshPara.deltaAngles[0] = dAngles[0];
+            mRefreshPara.deltaAngles[1] = dAngles[1];
+            mRefreshPara.deltaAngles[2] = dAngles[2];
+            mRefreshPara.deltaAngles[3] = dAngles[3];
         }
 
         //! joint5
@@ -433,9 +469,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
         { break; }
         else
         {
-            ui->spinActTerminal->setValue( angles[0] );
-            ui->joint5->setAngle( angles[0] );
-            ui->actPosTerminal->setValue( angles[0] );
+            mRefreshPara.angles[4] = angles[0];
         }
 
         //! \todo joint5 target
@@ -457,9 +491,13 @@ int T4OpPanel::posRefreshProc( void *pContext )
                 break;
             }
 
-            ui->radHome->setChecked( bHomeValid );
-            ui->radioButton_homing_valid->setChecked( bHomeValid );
+            mRefreshPara.bHomeValid = bHomeValid;
         }
+
+        //! post refresh
+        OpEvent *updateEvent = new OpEvent( OpEvent::update_pose );
+        if ( NULL != updateEvent )
+        { qApp->postEvent( this, updateEvent ); }
 
         return 0;
 
@@ -486,7 +524,7 @@ int T4OpPanel::monitorRefreshProc( void *pContext )
     if ( pRobo->isOpened() )
     {}
     else
-    { return -1; }
+    { return 0; }
 
     unsigned int array[1024] = {0};
     int ret, v1, v2;
@@ -519,8 +557,8 @@ int T4OpPanel::monitorRefreshProc( void *pContext )
         {
             for(int i=0; i < ret; i++)
             {
-                v1 = (array[i] >> 8) & 0xFF;
-                v2 = array[i] & 0xFF;
+                v1 = (array[i] >> 8) & 0xFF;        //! SG
+                v2 = array[i] & 0xFF;               //! SE
                 if( v1>=0 && v1<=100 && v2>=0 && v2<=100 )
                 {
     //                jointCharts[joint]->dataAppend(v1,v2);
@@ -553,10 +591,14 @@ int T4OpPanel::monitorRefreshProc( void *pContext )
 void T4OpPanel::attachWorkings()
 {
     //! attach
-    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::posRefreshProc), NULL,
+    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::posRefreshProc),
+                         tr("Position refresh"),
+                         NULL,
                          m_pPref->refreshIntervalMs() );
 
-    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ), NULL,
+    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ),
+                         tr("Monitor refresh"),
+                         NULL,
                          m_pPref->refreshIntervalMs() );
 }
 
@@ -682,7 +724,7 @@ void T4OpPanel::_step( double x, double y, double z )
     QVariant var( vars );
 
 //    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onStep), var );
-    on_post_setting( T4OpPanel, onStep );
+    on_post_setting( T4OpPanel, onStep, tr("Step") );
     logDbg()<<QThread::currentThreadId();
 }
 
@@ -768,7 +810,7 @@ int T4OpPanel::onJointStep( QVariant var /*int jId, int dir*/ )
     double stp = _stepRatio[ ui->cmbStepXx->currentIndex() ];
 
     double spd = pRobo->mMaxJointSpeed * ui->spinVel->value() / 100.0;
-
+    logDbg()<<spd<<stp/spd<<pRobo->mMaxJointSpeed;
     int ret = mrgMRQAdjust( device_var(), jId, 0, dir * stp, stp/spd, guess_dist_time_ms( stp/spd, stp ) );
 
     return ret;
@@ -845,7 +887,7 @@ int T4OpPanel::_onSequence( QVariant var )
 
 //int vRow;
 //QString mType;
-//double x, y, z, pw, h, a, v;
+//double x, y, z, pw, h, v, line;
 //double delay;
 int T4OpPanel::procSequence( SequenceItem* pItem )
 {
@@ -857,7 +899,7 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
         ret = pRobo->absMove( "",
                               pItem->x, pItem->y, pItem->z,
                               pItem->pw, pItem->h,
-                              pItem->v, pItem->a );
+                              rel_to_abs_speed( pItem->v ), pItem->bLine );
     }
     else if ( str_is( pItem->mType, "PRA")
               || str_is( pItem->mType, "PRN"))
@@ -865,7 +907,7 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
         ret = pRobo->relMove( "",
                               pItem->x, pItem->y, pItem->z,
                               pItem->pw, pItem->h,
-                              pItem->v, pItem->a );
+                              rel_to_abs_speed( pItem->v ), pItem->bLine );
     }
     else
     { return -1; }
@@ -1572,14 +1614,14 @@ void T4OpPanel::on_joint##id##_signal_single_add_clicked() \
     QList<QVariant> vars;\
     vars<<(id-1)<<1; \
     QVariant var( vars );\
-    on_post_setting( T4OpPanel, onJointStep );\
+    on_post_setting( T4OpPanel, onJointStep, tr("Joint step") );\
 } \
 void T4OpPanel::on_joint##id##_signal_single_sub_clicked() \
 { \
     QList<QVariant> vars;\
     vars<<(id-1)<<-1; \
     QVariant var( vars );\
-    on_post_setting( T4OpPanel, onJointStep );\
+    on_post_setting( T4OpPanel, onJointStep, tr("Joint step") );\
 }
 
 on_joint_actions( 1 )
@@ -1688,15 +1730,15 @@ int T4OpPanel::buildSequence( QList<SequenceItem*> &list )
 
             var = varList.at(j);
             pItem->mType = var.at( 1 ).toString();
-            pItem->x = var.at( 4 ).toDouble();
-            pItem->y = var.at( 5 ).toDouble();
-            pItem->z = var.at( 6 ).toDouble();
+            pItem->x = var.at( 2 ).toDouble();
+            pItem->y = var.at( 3 ).toDouble();
+            pItem->z = var.at( 4 ).toDouble();
 
-            pItem->pw = var.at( 7 ).toDouble();
-            pItem->h = var.at( 8 ).toDouble();
+            pItem->pw = var.at( 5 ).toDouble();
+            pItem->h = var.at( 6 ).toDouble();
 
-            pItem->v = var.at( 9 ).toDouble();
-            pItem->a = var.at( 10 ).toDouble();
+            pItem->v = var.at( 7 ).toDouble();
+            pItem->bLine = var.at( 8 ).toBool();
 
             pItem->delay = delay;
 
@@ -1755,7 +1797,7 @@ void T4OpPanel::on_toolButton_debugRun_clicked()
                 <<mSeqList.at(i)->v
                 <<mSeqList.at(i)->pw
                 <<mSeqList.at(i)->h
-                <<mSeqList.at(i)->a;
+                <<mSeqList.at(i)->bLine;
 
     }
 
@@ -1767,7 +1809,7 @@ void T4OpPanel::on_toolButton_debugRun_clicked()
     //! vars
     QVariant var;
 logDbg()<<QThread::currentThreadId();
-    on_post_setting( T4OpPanel, onSequence );
+    on_post_setting( T4OpPanel, onSequence, "Debug" );
 }
 
 

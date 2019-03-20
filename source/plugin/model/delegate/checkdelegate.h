@@ -34,8 +34,11 @@ public:
     void setShape( checkShape shp );
     checkShape shape();
 
+    void setAlignment(  Qt::Alignment align );
+    Qt::Alignment alignment();
 protected:
     checkShape mShape;
+    Qt::Alignment mAlign;
 
     QSize mPrimSize;
 };

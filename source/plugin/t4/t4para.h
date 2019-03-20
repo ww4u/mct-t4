@@ -55,6 +55,8 @@ public:
     const static int _axis_cnt = 5;
     eTerminalType mTerminalType;
     float mAxisCurrents[ T4Para::_axis_cnt ];
+    float mAxisIdleCurrents[ T4Para::_axis_cnt ];
+    float mAxisSwitchTimes[ T4Para::_axis_cnt ];
 
     double mAxisZero[ T4Para::_axis_cnt ];
 
@@ -76,6 +78,8 @@ public:
     double mMaxJointSpeed, mMaxTerminalSpeed;
 
     bool mbAxisPwr, mbMctEn;
+
+    int mSlowMult, mSlowDiv;
 
     float mPackagesAxes[4];     //! four delta angles for package
 };

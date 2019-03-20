@@ -91,8 +91,8 @@ void Chart::dataAppend(double v1, double v2)
 //! last data
 void Chart::endChangeData()
 {
-    m_series1->setName( QString::number(m_y1,'f',2) + " %");
-    m_series2->setName( QString::number(m_y2,'f',2) + " %");
+    m_series1->setName( "SG " + QString::number(m_y1,'f',1) + "%");
+    m_series2->setName( "SE " + QString::number(m_y2,'f',1) + "%");
 
     if ( m_series1->count() > 0 )
     { m_series1->replace( mData1 ); }

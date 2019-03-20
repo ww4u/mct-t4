@@ -56,7 +56,7 @@
 #include <QVariant>
 
 #include "../../../include/mydebug.h"
-#include "../../model/megatablemodel.h"
+//#include "../plugin/model/megatablemodel.h"
 #include "../../mrp/mdataset.h"
 
 class TreeItem;

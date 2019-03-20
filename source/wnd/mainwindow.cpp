@@ -28,6 +28,14 @@ void MainWindow::requestProgress( const QString &info, bool b, int now, int mi, 
     MainWindow::_pBackendProxy->emit_progress( info, b, now, mi, ma );
 }
 
+void MainWindow::requestPrompt( const QString &info )
+{
+    if( NULL == MainWindow::_pBackendProxy )
+    { return; }
+
+    MainWindow::_pBackendProxy->emit_prompt( info );
+}
+
 void MainWindow::showStatus( const QString str)
 {
     if( NULL == MainWindow::_pBackendProxy )
@@ -50,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     m_pDockHelp  = NULL;
     m_pHelpPanel = NULL;
     m_pProgress  = NULL;
+    m_pPrompt = NULL;
 
     m_pSysLogout = NULL;
 
@@ -216,7 +225,7 @@ void MainWindow::buildConnection()
     connect(ui->actionConnect,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotConnect()));
 
     connect( m_pStopWidget, SIGNAL(signal_stop_clicked(bool)),
-             m_roboConfig, SLOT(slot_plugins_stop()));
+             this, SLOT(slot_emergency_stop()));
 
     //! connect menu
     connect( m_pEnAction, SIGNAL(triggered(bool)), this, SLOT(slot_lang_changed()) );
@@ -242,6 +251,10 @@ void MainWindow::buildConnection()
              this, SLOT(slot_progress(const QString &,bool,int,int,int)),
              Qt::QueuedConnection );
 
+    //! prompt
+    connect( this, SIGNAL(signal_prompt(const QString&)),
+             this, SLOT(slot_prompt(const QString &)),
+             Qt::QueuedConnection );
 
 }
 
@@ -257,8 +270,8 @@ void MainWindow::loadConfig()
     do
     {
 #ifdef QT_DEBUG
-        mPref.mSysMode = 1;
-        setSysMode( sysPara::e_sys_admin );
+        mPref.mSysMode = 0;
+        setSysMode( sysPara::eSysMode( mPref.mSysMode ) );
         break;
 #endif
 
@@ -389,6 +402,19 @@ void MainWindow::setUiStyle(const QString &styleFile)
     { sysError( tr("Style apply fail") );}
 }
 
+QString MainWindow::languageSuffix()
+{
+    //! english
+    if ( mPref.mLangIndex == 0 )
+    {}
+    else if ( mPref.mLangIndex == 1 )
+    { return "_ch"; }
+    else
+    {}
+
+    return "";
+}
+
 void MainWindow::explorerDocFile( const QString &fileName )
 {
     QStringList args;
@@ -407,10 +433,11 @@ void MainWindow::explorerDocFile( const QString &fileName )
 
 void MainWindow::slot_plugin_operable( bool b )
 {
-    ui->actionDownload->setEnabled( b );
+    ui->actionDownload->setEnabled( b && m_roboConfig->downloadVisible() );
     ui->actionUpload->setEnabled( b );
     ui->actionStop->setEnabled( b );
-    ui->actionSync->setEnabled( b );
+    ui->actionConnect->setEnabled( b );
+    ui->actionSync->setEnabled( b && m_roboConfig->downloadVisible() );
 
     ui->actionStore->setEnabled( b );
 
@@ -444,8 +471,6 @@ void MainWindow::slot_post_startup()
     { m_pMegaAction->setChecked( true ); }
     else
     { m_pClasAction->setChecked( true ); }
-
-//    changeStyle();
 
     Q_ASSERT( NULL != m_roboConfig );
     m_roboConfig->postStartup();
@@ -483,6 +508,15 @@ void MainWindow::slot_style_changed()
     changeStyle();
 
     emit signal_pref_changed();
+}
+
+void MainWindow::slot_emergency_stop()
+{
+    m_pStopWidget->setEnabled( false );
+        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+            m_roboConfig->slot_plugins_stop();
+        QApplication::restoreOverrideCursor();
+    m_pStopWidget->setEnabled( true );
 }
 
 void MainWindow::slot_logout( const QString &str, int lev )
@@ -530,11 +564,29 @@ void MainWindow::slot_progress_canceled()
     m_roboConfig->cancelBgWorking();
 }
 
+void MainWindow::slot_prompt( const QString &info )
+{
+    //! prompt info
+    if ( NULL == m_pPrompt )
+    {
+        m_pPrompt = new Prompt( this );
+        if ( NULL == m_pPrompt )
+        { return; }
+    }
+
+    //! show the item
+    m_pPrompt->addInfo( info );
+    if ( !m_pPrompt->isVisible() )
+    { m_pPrompt->show(); }
+}
+
 //! mrx-t4/info.html
 void MainWindow::slot_focus_in( const QString &model,
                                 const QString &name )
 {
-    QString strName =  QApplication::applicationDirPath() + "/help/" + model + "/" + name + ".html";
+
+
+    QString strName =  QApplication::applicationDirPath() + "/help/" + model + languageSuffix() + "/" + name + ".html";
     if ( name.length() <= 0 )
     { return; }
 
@@ -588,9 +640,10 @@ void MainWindow::emit_status( const QString &str )
 { emit signal_status( str ); }
 
 void MainWindow::emit_progress( const QString &info, bool b, int now, int mi, int ma )
-{
-    emit signal_progress( info, b, now, mi, ma );
-}
+{ emit signal_progress( info, b, now, mi, ma ); }
+
+void MainWindow::emit_prompt( const QString &info )
+{ emit signal_prompt( info ); }
 
 void MainWindow::retranslateUi()
 {

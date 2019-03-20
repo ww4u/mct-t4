@@ -273,7 +273,7 @@ double MRX_T4::eulaDistance( double x, double y, double z,
 int MRX_T4::relMove( QString para,
              double x, double y, double z,
              double pw, double h,
-             double v, double a )
+             double v, bool bLine )
 {
     self_check_connect_ret( -1 );
 
@@ -290,7 +290,20 @@ int MRX_T4::relMove( QString para,
     float t = qAbs( dist ) / v;
 
     logDbg()<<x<<y<<z<<t<<guess_dist_time_ms( t, dist );
-    ret = mrgRobotRelMove( self_robot_var(),
+    if ( bLine )
+    {
+        ret = mrgRobotRelMoveL( self_robot_var(),
+                          wave_table,
+                          x,
+                          y,
+                          z,
+                          t,
+                          guess_dist_time_ms( t, dist )
+                          );
+    }
+    else
+    {
+        ret = mrgRobotRelMove( self_robot_var(),
                                wave_table,
                                x,
                                y,
@@ -298,6 +311,7 @@ int MRX_T4::relMove( QString para,
                                t,
                                guess_dist_time_ms( t, dist )
                                );
+    }
 
     return ret;
 }
@@ -305,7 +319,7 @@ int MRX_T4::relMove( QString para,
 int MRX_T4::absMove( QString para,
              double x, double y, double z,
              double pw, double h,
-             double v, double a )
+             double v, bool bLine )
 {
     self_check_connect_ret( -1 );
 
@@ -334,7 +348,21 @@ int MRX_T4::absMove( QString para,
     float t = qAbs( dist ) / v;
 
     logDbg()<<x<<y<<z<<t<<guess_dist_time_ms( t, dist );
-    ret = mrgRobotMove( self_robot_var(),
+
+    if ( bLine )
+    {
+        ret = mrgRobotMoveL( self_robot_var(),
+                             wave_table,
+                             x,
+                             y,
+                             z,
+                             t,
+                             guess_dist_time_ms( v, dist )
+                             );
+    }
+    else
+    {
+        ret = mrgRobotMove( self_robot_var(),
                                wave_table,
                                x,
                                y,
@@ -342,6 +370,7 @@ int MRX_T4::absMove( QString para,
                                t,
                                guess_dist_time_ms( v, dist )
                                );
+    }
 
     return ret;
 }

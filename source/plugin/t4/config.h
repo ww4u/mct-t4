@@ -17,6 +17,9 @@ public:
     explicit Config(QWidget *parent = 0);
     ~Config();
 
+    virtual void setOperAble( bool b );
+    virtual void setOpened( bool b );
+
     virtual void adapteToUserMode( sysPara::eSysMode mode );
 
     virtual void updateUi();

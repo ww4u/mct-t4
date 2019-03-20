@@ -49,7 +49,7 @@ SOURCES = \
     comassist.cpp \
     model\treeitem.cpp \
     model\treemodel.cpp \
-    t4oppanel_sequence.cpp
+    motorcurrent.cpp
 
 
 HEADERS = \
@@ -77,7 +77,8 @@ HEADERS = \
     advpara.h \
     comassist.h \
     model\treeitem.h \
-    model\treemodel.h
+    model\treemodel.h \
+    motorcurrent.h
 
 FORMS += \
     t4oppanel.ui \
@@ -95,7 +96,8 @@ FORMS += \
     scripteditor.ui \
     coordinate.ui \
     coordpara.ui \
-    advpara.ui
+    advpara.ui \
+    motorcurrent.ui
 
 #LIBS += -L"../../../lib"
 #LIBS += -lmrx-device

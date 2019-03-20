@@ -134,6 +134,7 @@ public:
 
     void attachUpdateWorking( XPage *pObj,
                         XPage::procDo proc,
+                        const QString &desc="",
                         void *pContext = NULL,
                         int tmoms = 100
                         );
@@ -141,6 +142,7 @@ public:
                         XPage::procDo proc,
                         XPage::preDo pre,
                         XPage::postDo post,
+                        const QString &desc="",
                         void *pContext = NULL,
                         int tmoms = 100
                         );
@@ -149,23 +151,27 @@ public:
                         XPage::procDo proc,
                         XPage::preDo pre,
                         XPage::postDo post,
+                        const QString &desc="",
                         void *pContext = NULL,
                         int tmoms = 100
                         );
 
     void attachMissionWorking( XPage *pObj,
                         XPage::onMsg onmsg,
-                        QVariant var
+                        QVariant var,
+                        const QString &desc=""
                         );
 
     void attachEmergencyWorking( XPage *pObj,
                         XPage::onMsg onmsg,
-                        QVariant var
+                        QVariant var,
+                        const QString &desc=""
                         );
 
     //! plugin
     void attachBgWorking(
-                        XPlugin::bgProc proc
+                        XPlugin::bgProc proc,
+                        const QString &desc=""
                         );
     void cancelBgWorking();
 

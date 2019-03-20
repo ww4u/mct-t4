@@ -10,7 +10,7 @@
 #include "../model/delegate/comboxdelegate.h"
 
 #include "../../model/delegate/dspindelegate.h"
-//#include "../../model/delegate/dspindelegate.h"
+#include "../../model/delegate/checkdelegate.h"
 
 namespace Ui {
 class ActionTable;
@@ -67,7 +67,8 @@ private:
     dSpinDelegate *m_pDelegatePw;
     dSpinDelegate *m_pDelegateH;
     dSpinDelegate *m_pDelegateV;
-    dSpinDelegate *m_pDelegateA;
+//    dSpinDelegate *m_pDelegateA;
+    CheckDelegate *m_pCheckDelegate;
 
 
     QMenu *m_pContextMenu;

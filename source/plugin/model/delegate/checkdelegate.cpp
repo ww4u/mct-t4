@@ -6,6 +6,8 @@
 CheckDelegate::CheckDelegate( checkShape shp,
                               QObject *parent ) : QStyledItemDelegate(parent)
 {
+    mAlign = Qt::AlignCenter;
+
     mShape = shp;
 
     mPrimSize.setWidth( 0 );
@@ -69,12 +71,19 @@ void CheckDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 void CheckDelegate::updateEditorGeometry(QWidget *editor,
     const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    QRect localRect;
+    if ( mAlign == Qt::AlignCenter )
+    {
+        QRect localRect;
 
-    localRect = option.rect;
-    localRect.setX( option.rect.left() + ( option.rect.width() - mPrimSize.width() ) / 2 );
+        localRect = option.rect;
+        localRect.setX( option.rect.left() + ( option.rect.width() - mPrimSize.width() ) / 2 );
 
-    editor->setGeometry( localRect );
+        editor->setGeometry( localRect );
+    }
+    else
+    {
+        editor->setGeometry( option.rect );
+    }
 }
 
 void CheckDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -107,7 +116,10 @@ void CheckDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     { optBtn.state = QStyle::State_Off | QStyle::State_Enabled; }
 
     //! tune the rect
-    optBtn.rect.setX( optBtn.rect.left() + ( option.rect.width() - mPrimSize.width())/2 );
+    if ( mAlign == Qt::AlignCenter )
+    { optBtn.rect.setX( optBtn.rect.left() + ( option.rect.width() - mPrimSize.width())/2 ); }
+    else
+    { }
 
     painter->save();
 
@@ -132,15 +144,7 @@ void CheckDelegate::setShape( checkShape shp )
 checkShape CheckDelegate::shape()
 { return mShape; }
 
-//myInvertButton::myInvertButton(QWidget *parent ) : QPushButton(parent)
-//{
-//    setCheckable( true );
-
-//    connect( this, SIGNAL(toggled(bool)),
-//             this, SLOT(slot_toggled(bool)));
-//}
-
-//void myInvertButton::slot_toggled( bool bCheck )
-//{
-//    setText( bCheck ? tr("true"):tr("false") );
-//}
+void CheckDelegate::setAlignment(  Qt::Alignment align )
+{ mAlign = align; }
+Qt::Alignment CheckDelegate::alignment()
+{ return mAlign; }

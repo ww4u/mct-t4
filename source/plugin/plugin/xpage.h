@@ -87,24 +87,28 @@ public:
     void showFocusHelp();
 
     void attachUpdateWorking( XPage::procDo proc,
+                              const QString &desc = "",
                               void *pContext = NULL,
                               int tmo = 100
                         );
     void attachUpdateWorking( XPage::procDo proc,
                         XPage::preDo pre,
                         XPage::postDo post,
+                        const QString &desc = "",
                         void *pContext = NULL,
                         int tmo = 100
                         );
 
     void attachMissionWorking( XPage *pObj,
                         XPage::onMsg onmsg,
-                        QVariant var
+                        QVariant var,
+                        const QString &desc = ""
                         );
 
     void attachEmergencyWorking( XPage *pObj,
                         XPage::onMsg onmsg,
-                        QVariant var
+                        QVariant var,
+                        const QString &desc = ""
                         );
 
 protected:

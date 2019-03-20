@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 TARGET = mct
 TEMPLATE = app
 #qt >= 5.10
-VERSION = 0.0.0.1
+VERSION = 0.0.0.2
 
 CONFIG += C++11 #use lambda
 
@@ -36,21 +36,10 @@ HEADERS += ../include/mystd.h           \
     ../source/sys/xthread.h             \
     ../source/mrp/mdatarow.h            \
     ../source/mrp/mdataset.h            \
-    ../source/model/comboxdelegate.h    \
-    ../source/model/checkdelegate.h     \
-    ../source/model/doublespinboxdelegate.h \
-    ../source/model/diagnosisitem.h     \
-    ../source/model/diagnosismodel.h    \
-    ../source/model/errmgritem.h        \
-    ../source/model/errmgrmodel.h       \
-    ../source/model/debugitem.h         \
-    ../source/model/debugmodel.h        \
     ../source/wnd/mainwindow.h          \
     ../source/wnd/aboutdlg.h            \
     ../source/wnd/roboconfig.h          \
-#    ../source/wnd/xrobo.h               \
     ../source/wnd/helppanel.h           \
-#    ../source/wnd/xconfig.h             \
     ../source/widget/megalcdnumber.h    \
     ../source/widget/megamessagebox.h   \
     ../source/widget/megasplinechart.h  \
@@ -60,28 +49,18 @@ HEADERS += ../include/mystd.h           \
     ../source/wnd/syspref.h \
     ../source/wnd/syspara.h \
     ../source/wnd/welcomepage.h \
-    ../source/wnd/stopwidget.h
+    ../source/wnd/stopwidget.h \
+    ../source/wnd/prompt.h
 
 SOURCES += ../source/main/main.cpp      \
     ../source/sys/sysapi.cpp            \
     ../source/sys/xthread.cpp           \
     ../source/mrp/mdatarow.cpp          \
     ../source/mrp/mdataset.cpp          \
-    ../source/model/diagnosisitem.cpp   \
-    ../source/model/diagnosismodel.cpp  \
-    ../source/model/errmgritem.cpp      \
-    ../source/model/errmgrmodel.cpp     \
-    ../source/model/debugitem.cpp       \
-    ../source/model/debugmodel.cpp      \
-    ../source/model/comboxdelegate.cpp  \
-    ../source/model/checkdelegate.cpp   \
-    ../source/model/doublespinboxdelegate.cpp \
     ../source/wnd/mainwindow.cpp        \
     ../source/wnd/aboutdlg.cpp          \
     ../source/wnd/helppanel.cpp         \
-#    ../source/wnd/xconfig.cpp           \
     ../source/wnd/roboconfig.cpp        \
-#    ../source/wnd/xrobo.cpp             \
     ../source/widget/megalcdnumber.cpp  \
     ../source/widget/megamessagebox.cpp \
     ../source/widget/megasplinechart.cpp\
@@ -91,7 +70,8 @@ SOURCES += ../source/main/main.cpp      \
     ../source/wnd/syspref.cpp \
     ../source/wnd/syspara.cpp \
     ../source/wnd/welcomepage.cpp \
-    ../source/wnd/stopwidget.cpp
+    ../source/wnd/stopwidget.cpp \
+    ../source/wnd/prompt.cpp
 
 !win32: HEADERS += ../source/device/vxi11/vxi11.h
 !win32: HEADERS += ../source/device/vxi11/vxi11_user.h
@@ -108,7 +88,8 @@ FORMS += ../source/wnd/mainwindow.ui    \
     ../source/wnd/syslogout.ui \
     ../source/wnd/syspref.ui \
     ../source/wnd/welcomepage.ui \
-    ../source/wnd/stopwidget.ui
+    ../source/wnd/stopwidget.ui \
+    ../source/wnd/prompt.ui
 
 INCLUDEPATH += ../include
 INCLUDEPATH += ../source/sys

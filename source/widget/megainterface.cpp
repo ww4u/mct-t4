@@ -171,6 +171,9 @@ void MegaInterface::slotShowSearchResult( QVariant var )
         t_item = new QStandardItem( info.mRoboModel );
         m_model->setItem( rowCnt, 4, t_item );
 
+//        t_item = new QStandardItem( info.mId );
+//        m_model->setItem( rowCnt, 5, t_item );
+
         rowCnt++;
     }
 }

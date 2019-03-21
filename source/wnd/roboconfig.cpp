@@ -74,6 +74,7 @@ void RoboConfig::retranslateUi()
 }
 
 //! add each robo
+//! "addr,model,sn,firmwareVer,mechanicalVer"
 void RoboConfig::slotAddNewRobot( const QStringList & strDevInfo)
 {
     //! remove the befores

@@ -53,6 +53,8 @@ public:
     explicit XPage(QWidget *parent = nullptr);
 
 protected:
+    virtual bool event(QEvent *event);
+
     virtual void changeEvent(QEvent *event);
     virtual void focusInEvent(QFocusEvent *event);
 

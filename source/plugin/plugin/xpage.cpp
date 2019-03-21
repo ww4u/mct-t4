@@ -10,6 +10,20 @@ XPage::XPage(QWidget *parent) : QWidget(parent)
     mbMissionWorking = false;
 
     mAttr = page_attr_unk;
+
+    setFocusPolicy( Qt::WheelFocus );
+}
+
+bool XPage::event(QEvent *event)
+{
+    if ( event->type() == QEvent::FocusIn )
+    {logDbg();
+        focusInEvent( (QFocusEvent*)event );
+    }
+    else
+    {}
+
+    return QWidget::event( event );
 }
 
 void XPage::changeEvent(QEvent *event)

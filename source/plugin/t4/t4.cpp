@@ -63,7 +63,7 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
               //<<"coordinate"<<"para."
               <<"x(mm)"<<"y(mm)"<<"z(mm)"
               <<QString("w(%1)").arg(char_deg)<<QString("h(%1)").arg( char_deg )
-              <<QString("v(%)")<<QString("Line")<<"comment";
+              <<QString("v(%)")<<("Line")<<"comment";
 
 //    headerList<<"id"<<"type"<<"coord";
 

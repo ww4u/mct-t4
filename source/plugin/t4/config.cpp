@@ -231,6 +231,10 @@ int Config::download()
     int ret, val;
     double angle;
 
+    //! \todo
+    //! \note
+    return 0;
+
     //! tool set
 //    ret = mrgRobotToolSet( )
 

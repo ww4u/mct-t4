@@ -18,6 +18,9 @@ public:
 
     void attachLogModel( QAbstractListModel *pModel );
 
+protected:
+    virtual bool event( QEvent *event );
+
 Q_SIGNALS:
     void signal_focus_in( const QString &model, const QString &help );
 

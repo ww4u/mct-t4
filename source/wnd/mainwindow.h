@@ -155,6 +155,8 @@ private:
     MegaLogListModel mLogModel;
 
     QTranslator mTranslator;
+
+    QString mHelpModel, mHelpName;
 };
 
 #endif // MAINWINDOW_H

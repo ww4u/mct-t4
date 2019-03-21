@@ -72,9 +72,7 @@ ActionTable::ActionTable(QWidget *parent) :
 
     ui->view->setItemDelegateForColumn( 1, m_pTypeDelegate );
 
-    //! connection
-    connect( ui->view, SIGNAL(customContextMenuRequested(const QPoint &)),
-             this, SLOT(slot_customContextMenuRequested(const QPoint &)));
+    buildConnection();
 
     spySetting( MRX_T4::e_add_record );
     spySetting( MRX_T4::e_edit_record );
@@ -88,6 +86,13 @@ ActionTable::~ActionTable()
 void ActionTable::retranslateUi()
 {
     ui->retranslateUi( this );
+}
+
+void ActionTable::buildConnection()
+{
+    //! connection
+    connect( ui->view, SIGNAL(customContextMenuRequested(const QPoint &)),
+             this, SLOT(slot_customContextMenuRequested(const QPoint &)));
 }
 
 void ActionTable::setModel( QAbstractItemModel *pModel )
@@ -516,7 +521,7 @@ void ActionTable::slot_add_before()
     for ( int i = 0; i < ui->view->model()->columnCount(); i++ )
     {
         iterIndex = ui->view->model()->index( index.row(), i, index.parent() );
-        vars<<ui->view->model()->data( iterIndex );
+        vars<<ui->view->model()->data( iterIndex, raw_data_role );
     }
 
     if ( ui->view->model()->insertRow( index.row(), index.parent() ) )
@@ -530,6 +535,10 @@ void ActionTable::slot_add_before()
         iterIndex = ui->view->model()->index( index.row(), i, index.parent() );
         ui->view->model()->setData( iterIndex, vars.at(i) );
     }
+
+    //! current
+    ui->view->selectionModel()->setCurrentIndex( ui->view->model()->index( index.row(), 0, index.parent() ),
+                               QItemSelectionModel::ClearAndSelect );
 
     return;
 }
@@ -548,7 +557,7 @@ void ActionTable::slot_add_below()
     for ( int i = 0; i < ui->view->model()->columnCount(); i++ )
     {
         iterIndex = ui->view->model()->index( index.row(), i, index.parent() );
-        vars<<ui->view->model()->data( iterIndex );
+        vars<<ui->view->model()->data( iterIndex, raw_data_role );
     }
 
     //! section
@@ -556,13 +565,18 @@ void ActionTable::slot_add_below()
     QModelIndex parIndex;
     if ( pItem->level() == 1 )
     {
-        if ( ui->view->model()->insertRow( 0 , index ) )
+        //! parIndex
+        parIndex = ui->view->model()->index( index.row(), 0, index.parent() );
+
+        //! insert child
+        if ( ui->view->model()->insertRow( 0, parIndex ) )
         { }
         else
         { return; }
 
         logDbg()<<index;
-        parIndex = ui->view->model()->index( index.row(), 0, index.parent() );
+//        parIndex = ui->view->model()->index( index.row(), 0, index.parent() );
+//        parIndex = index;
         logDbg()<<parIndex;
         dstRow = 0;
     }
@@ -578,22 +592,25 @@ void ActionTable::slot_add_below()
         dstRow = index.row() + 1;
     }
 
+    ui->view->selectionModel()->setCurrentIndex( ui->view->model()->index( dstRow, 0, parIndex ),
+                               QItemSelectionModel::ClearAndSelect );
+
     //! add data
     bool bRet;
     for ( int i = 0; i < ui->view->model()->columnCount(); i++ )
     {
         iterIndex = ui->view->model()->index( dstRow, i, parIndex );
-        logDbg()<<iterIndex<<parIndex;
+
         bRet = ui->view->model()->setData( iterIndex, vars.at(i) );
         if ( !bRet )
-        { return; }
+        { logDbg()<<iterIndex<<parIndex<<vars.at(i); return; }
     }
 
-    //! set current
-    ui->view->setCurrentIndex( ui->view->model()->index( dstRow, 0, parIndex ) );
-    ui->view->expanded( ui->view->model()->index( dstRow, 0, parIndex ) );
+    logDbg();
+
     return;
 }
+
 void ActionTable::slot_delete()
 {
     QModelIndex index = ui->view->selectionModel()->currentIndex();

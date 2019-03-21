@@ -436,7 +436,7 @@ void MainWindow::slot_plugin_operable( bool b )
     ui->actionDownload->setEnabled( b && m_roboConfig->downloadVisible() );
     ui->actionUpload->setEnabled( b );
     ui->actionStop->setEnabled( b );
-    ui->actionConnect->setEnabled( b );
+//    ui->actionConnect->setEnabled( b );
     ui->actionSync->setEnabled( b && m_roboConfig->downloadVisible() );
 
     ui->actionStore->setEnabled( b );
@@ -474,6 +474,8 @@ void MainWindow::slot_post_startup()
 
     Q_ASSERT( NULL != m_roboConfig );
     m_roboConfig->postStartup();
+
+    m_pHelpAction->triggered(true);
 
 }
 
@@ -584,7 +586,8 @@ void MainWindow::slot_prompt( const QString &info )
 void MainWindow::slot_focus_in( const QString &model,
                                 const QString &name )
 {
-
+    mHelpModel = model;
+    mHelpName = name;
 
     QString strName =  QApplication::applicationDirPath() + "/help/" + model + languageSuffix() + "/" + name + ".html";
     if ( name.length() <= 0 )
@@ -618,6 +621,10 @@ void MainWindow::changeEvent( QEvent * event )
         ui->retranslateUi( this );
 
         retranslateUi();
+
+        //! help changed
+        if ( mHelpModel.length() > 0 && mHelpName.length() > 0 )
+        { slot_focus_in( mHelpModel, mHelpName); }
 
         //! \todo for each plugin and widgets
 //        for ( int i = 0; i < ui->widget->count(); i++ )

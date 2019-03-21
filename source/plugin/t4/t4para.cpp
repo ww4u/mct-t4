@@ -3,6 +3,8 @@
 T4Para::T4Para()
 {
     init();
+
+    rst();
 }
 
 void T4Para::init()

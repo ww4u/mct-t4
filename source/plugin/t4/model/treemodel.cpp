@@ -108,7 +108,9 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 //    if ( role == Qt::TextAlignmentRole )
 //    { return QVariant( Qt::AlignCenter ); }
 
-    if (role != Qt::DisplayRole && role != Qt::EditRole)
+    if (role != Qt::DisplayRole
+            && role != Qt::EditRole
+            && role != raw_data_role )
         return QVariant();
 
     //! special column
@@ -136,6 +138,11 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
     else
     {}
 
+    //! only for data
+    if ( role == raw_data_role )
+    { return item->data(index.column()); }
+
+    //! else
     return item->data(index.column());
 }
 
@@ -217,6 +224,7 @@ bool TreeModel::insertRows(int position, int rows, const QModelIndex &parent)
     bool success;
 
     beginInsertRows(parent, position, position + rows - 1);
+//    beginInsertRows( parent, position, parentItem->childCount() + rows - 1 );
     success = parentItem->insertChildren(position, rows, rootItem->columnCount());
     endInsertRows();
 
@@ -637,7 +645,7 @@ int TreeModel::_fmtSection( TreeItem *section,
 int TreeModel::_fmtItem( TreeItem *pItem,
                          QString &ary )
 {
-    ary = QString("%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12")
+    ary = QString("%1,%2,%3,%4,%5,%6,%7,%8,%9,%10")
             .arg( pItem->data(0).toInt() )
             .arg( pItem->data(1).toString() )
             .arg( pItem->data(2).toString() )
@@ -646,10 +654,8 @@ int TreeModel::_fmtItem( TreeItem *pItem,
             .arg( pItem->data(5).toDouble() )
             .arg( pItem->data(6).toDouble() )
             .arg( pItem->data(7).toDouble() )
-            .arg( pItem->data(8).toDouble() )
-            .arg( pItem->data(9).toDouble() )
-            .arg( pItem->data(10).toDouble() )
-            .arg( pItem->data(11).toString() )
+            .arg( pItem->data(8).toInt() )
+            .arg( pItem->data(9).toString() )
             ;
     return 0;
 }

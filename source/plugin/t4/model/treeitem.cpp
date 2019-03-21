@@ -61,7 +61,8 @@
 //! [0]
 TreeItem::TreeItem(const QVector<QVariant> &data,
                    TreeItem *parent,
-                   int level ) : mLevel( level )
+                   int level,
+                   int dst ) : mLevel( level )
 {
     parentItem = parent;
     itemData = data;
@@ -69,7 +70,7 @@ TreeItem::TreeItem(const QVector<QVariant> &data,
     //! link the child
     if ( NULL != parentItem )
     {
-        parent->attach( this );
+        parent->attach( this, dst );
 
         setLevel( parent->level() + 1 );
     }
@@ -134,20 +135,20 @@ bool TreeItem::insertChildren(int position, int count, int columns)
 
     for (int row = 0; row < count; ++row) {
         QVector<QVariant> data(columns);
-        TreeItem *item = new TreeItem(data, this);
+        TreeItem *item = new TreeItem(data, this );
         if ( NULL == item )
         { return false; }
 
-        //! add to end
+        //! have added to end
         //! insert again
         TreeItem *lastItem;
         lastItem = childItems.takeLast();
         if ( position < childCount() )
-        { childItems.insert( position+row, lastItem ); }
+        { childItems.insert( position, lastItem ); }
         else
         { childItems.append( lastItem ); }
 
-        qDebug()<<__FUNCTION__<<__LINE__<<childItems.size()<<position;
+//        qDebug()<<__FUNCTION__<<__LINE__<<childItems.size()<<position;
 
 //        childItems.insert(position, item);
     }
@@ -219,7 +220,7 @@ bool TreeItem::setData(int column, const QVariant &value)
 
 void TreeItem::attach( TreeItem *child, int dst  )
 {
-    if ( dst < 0 )
+    if ( dst < 0 || dst > childItems.size() )
     { childItems.append( child ); }
     else
     { childItems.insert( dst, child ); }

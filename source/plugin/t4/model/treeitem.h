@@ -61,7 +61,8 @@ class TreeItem
 public:
     explicit TreeItem(const QVector<QVariant> &data,
                       TreeItem *parent = 0,
-                      int level = 0 );
+                      int level = 0,
+                      int dst = -1 );
     ~TreeItem();
 
     TreeItem *child(int number);

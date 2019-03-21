@@ -29,6 +29,8 @@ public:
 protected:
     virtual void retranslateUi();
 
+    void buildConnection();
+
 public:
     void setModel( QAbstractItemModel *pModel );
 
@@ -82,6 +84,9 @@ private:
 
     QAction *m_pActionResize;
 
+Q_SIGNALS:
+
+
 protected Q_SLOTS:
     void slot_request_save();
     void slot_request_load();
@@ -91,6 +96,7 @@ protected Q_SLOTS:
     void slot_toHere();
     void slot_add_before();
     void slot_add_below();
+
     void slot_delete();
 
     void slot_up();

@@ -1651,7 +1651,7 @@ EXPORT_API int CALL mrgMRQPVTModifyDuty_Query(ViSession vi, int name,
 *name:设备名称(SEND_ID)
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
-*state:是否末速度保持。 0不保持；1保持
+*state:是否末速度保持。 1不保持；0保持
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQPVTEndState(ViSession vi, int name, int ch, int wavetable, int state)

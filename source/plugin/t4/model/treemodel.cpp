@@ -286,9 +286,19 @@ bool TreeModel::moveRows(const QModelIndex &sourceParent, int sourceRow,
 //    if ( parentItem != parentItem2 )
 //    { return false; }
 
-    beginMoveRows( sourceParent, sourceRow,
+    if ( sourceRow + count - 1 + 1 == destinationChild )
+    {
+        beginMoveRows( sourceParent, sourceRow,
+                   sourceRow + count - 1,
+                   destinationParent, destinationChild +1);
+    }
+    else
+    {
+        beginMoveRows( sourceParent, sourceRow,
                    sourceRow + count - 1,
                    destinationParent, destinationChild );
+    }
+
 
         QList<TreeItem* > items;
         //! take

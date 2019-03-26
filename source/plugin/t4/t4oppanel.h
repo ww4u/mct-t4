@@ -121,7 +121,11 @@ class T4OpPanel;
 
 #define joint_action( joint )  void on_##joint##_signal_zero_clicked();\
 void on_##joint##_signal_single_add_clicked(); \
-void on_##joint##_signal_single_sub_clicked();
+void on_##joint##_signal_single_sub_clicked(); \
+void on_##joint##_signal_jog_add_pressed(); \
+void on_##joint##_signal_jog_add_released(); \
+void on_##joint##_signal_jog_sub_pressed(); \
+void on_##joint##_signal_jog_sub_released();
 
 namespace mrx_t4{
 
@@ -251,6 +255,7 @@ protected:
 
     int onJointStep( QVariant var );
     int onJointZero( QVariant var );
+    int onJointJog( QVariant var );
 
     int onSequence( QVariant var );
     int _onSequence( QVariant var );

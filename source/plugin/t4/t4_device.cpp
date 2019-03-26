@@ -1,6 +1,6 @@
 #include <float.h>
 #include "t4.h"
-#include "../../device/MegaGateway.h"
+#include "../../device/libMegaGateway/src/MegaGateway.h"
 #include "../../../include/mystd.h"
 
 #include "../../plugin/xpluginworkingthread.h"

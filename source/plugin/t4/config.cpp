@@ -201,15 +201,15 @@ int Config::upload()
 
     //! arm length
     //! \todo
-//    float link[5];
-//    int linkCnt;
-//    ret = mrgGetRobotLinks( robot_var(), link, &linkCnt );
-//    if ( ret != 0 )
-//    { logDbg(); return -1; }
+    float link[5];
+    int linkCnt;
+    ret = mrgGetRobotLinks( robot_var(), link, &linkCnt );
+    if ( ret != 0 )
+    { logDbg(); return -1; }
 
-//    ui->spinBase->setValue( link[0] );
-//    ui->spinBA->setValue( link[1] );
-//    ui->spinLA->setValue( link[2] );
+    ui->spinBase->setValue( link[0] );
+    ui->spinBA->setValue( link[1] );
+    ui->spinLA->setValue( link[2] );
 
     //! slow ratio
     int a, b;

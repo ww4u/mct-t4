@@ -3,7 +3,7 @@
 #include "ui_errormgrtable.h"
 #include "../../plugin/t4/t4.h"
 
-#include "../../device/MegaGateway.h"
+#include "../../device/libMegaGateway/src/MegaGateway.h"
 
 namespace mrx_t4 {
 

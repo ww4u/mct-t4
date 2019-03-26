@@ -6,7 +6,7 @@
 #include "../../plugin/plugin/xplugin.h"
 
 
-#include "../../device/MegaGateway.h"
+#include "../../device/libMegaGateway/src/MegaGateway.h"
 
 #include "../../plugin/t4/t4.h"
 
@@ -591,15 +591,15 @@ int T4OpPanel::monitorRefreshProc( void *pContext )
 void T4OpPanel::attachWorkings()
 {
     //! attach
-    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::posRefreshProc),
-                         tr("Position refresh"),
-                         NULL,
-                         m_pPref->refreshIntervalMs() );
+//    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::posRefreshProc),
+//                         tr("Position refresh"),
+//                         NULL,
+//                         m_pPref->refreshIntervalMs() );
 
-    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ),
-                         tr("Monitor refresh"),
-                         NULL,
-                         m_pPref->refreshIntervalMs() );
+//    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ),
+//                         tr("Monitor refresh"),
+//                         NULL,
+//                         m_pPref->refreshIntervalMs() );
 }
 
 void T4OpPanel::updateUi()
@@ -665,19 +665,19 @@ void T4OpPanel::onSetting(XSetting setting)
 
 void T4OpPanel::enterMission()
 {
-    QList<int> exceptWidget;
-    exceptWidget<<WIDGET_MONITOR_INDEX;
+//    QList<int> exceptWidget;
+//    exceptWidget<<WIDGET_MONITOR_INDEX;
 
-    ui->controllerStatus->setEnabled( false );
+//    ui->controllerStatus->setEnabled( false );
 
-    //! \note the page 1 is logout
-    for( int i = 1; i < ui->tabWidget->count();i++ )
-    {
-        if ( exceptWidget.contains( i) )
-        {}
-        else
-        { ui->tabWidget->widget( i )->setEnabled( false ); }
-    }
+//    //! \note the page 1 is logout
+//    for( int i = 1; i < ui->tabWidget->count();i++ )
+//    {
+//        if ( exceptWidget.contains( i) )
+//        {}
+//        else
+//        { ui->tabWidget->widget( i )->setEnabled( false ); }
+//    }
 }
 void T4OpPanel::exitMission( )
 {
@@ -812,13 +812,52 @@ int T4OpPanel::onJointStep( QVariant var /*int jId, int dir*/ )
     double spd = pRobo->mMaxJointSpeed * ui->spinVel->value() / 100.0;
     logDbg()<<spd<<stp/spd<<pRobo->mMaxJointSpeed;
     int ret = mrgMRQAdjust( device_var(), jId, 0, dir * stp, stp/spd, guess_dist_time_ms( stp/spd, stp ) );
-
     return ret;
 }
 int T4OpPanel::onJointZero( QVariant var )
-{
+{logDbg();
+    check_connect_ret( -1 );
+
+    int jId, dir;
+
+    QList<QVariant> vars;
+
+    vars = var.toList();
+    jId = vars[0].toInt();
+    dir = vars[1].toInt();
+
     //! \todo
-    return 0;
+    //! joint home speed
+    int ret = mrgRobotJointHome( robot_var(),
+                       jId,
+                       20,
+                       guess_dist_time_ms( 360/20, 20 ) );
+
+    return ret;
+}
+
+int T4OpPanel::onJointJog( QVariant var )
+{
+    check_connect_ret( -1 );
+
+    int jId, dir, btnId;
+
+    QList<QVariant> vars;
+
+    vars = var.toList();
+    jId = vars[0].toInt();
+    dir = vars[1].toInt();
+    btnId = vars[2].toInt();
+
+    double speed = pRobo->mMaxJointSpeed * ui->spinVel->value() / 100.0;
+
+    int ret = -1;
+    if(btnId){
+        ret = mrgRobotJointMoveOn( robot_var(), jId, speed*dir);
+    }else{
+        ret = mrgRobotStop( robot_var(), 0);
+    }
+    return ret;
 }
 
 int T4OpPanel::onSequence( QVariant var )
@@ -1422,7 +1461,7 @@ void T4OpPanel::on_btnAdd_clicked()
     int cRow;
     QModelIndex index = ui->tvDebug->currentIndex();
     if ( index.isValid() )
-    { cRow = index.row(); }
+    { cRow = index.row() + 1; }
     else
     { cRow = pModel->rowCount(); }
 
@@ -1524,8 +1563,7 @@ void T4OpPanel::on_btnRead_clicked()
 
     int ret;
     ret = mrgErrorLogUpload( pRobo->deviceVi(), 0,
-                             ary.data(),
-                             ary.size() );
+                             ary.data());
     //! fill the model
     if ( ret > 0 )
     {
@@ -1607,7 +1645,10 @@ void T4OpPanel::on_btnExport_2_clicked()
 #define on_joint_actions( id ) \
 void T4OpPanel::on_joint##id##_signal_zero_clicked() \
 {\
-    \
+    QList<QVariant> vars;\
+    vars<<(id-1)<<1; \
+    QVariant var( vars );\
+    on_post_setting( T4OpPanel, onJointZero, tr("Joint zero") );\
 }\
 void T4OpPanel::on_joint##id##_signal_single_add_clicked() \
 { \
@@ -1622,7 +1663,37 @@ void T4OpPanel::on_joint##id##_signal_single_sub_clicked() \
     vars<<(id-1)<<-1; \
     QVariant var( vars );\
     on_post_setting( T4OpPanel, onJointStep, tr("Joint step") );\
+}\
+void T4OpPanel::on_joint##id##_signal_jog_add_pressed() \
+{logDbg();\
+    QList<QVariant> vars;\
+    vars<<(id-1)<<1<<1; \
+    QVariant var( vars );\
+    on_post_setting( T4OpPanel, onJointJog, tr("Jog +") );\
+}\
+void T4OpPanel::on_joint##id##_signal_jog_add_released()\
+{logDbg();\
+    QList<QVariant> vars;\
+    vars<<(id-1)<<1<<0; \
+    QVariant var( vars );\
+    on_post_setting( T4OpPanel, onJointJog, tr("Jog + end") );\
+}\
+void T4OpPanel::on_joint##id##_signal_jog_sub_pressed() \
+{logDbg();\
+    QList<QVariant> vars;\
+    vars<<(id-1)<<-1<<1; \
+    QVariant var( vars );\
+    on_post_setting( T4OpPanel, onJointJog, tr("Jog -") );\
+}\
+void T4OpPanel::on_joint##id##_signal_jog_sub_released()\
+{logDbg();\
+    QList<QVariant> vars;\
+    vars<<(id-1)<<-1<<0; \
+    QVariant var( vars );\
+    on_post_setting( T4OpPanel, onJointJog, tr("Jog - end") );\
 }
+
+
 
 on_joint_actions( 1 )
 on_joint_actions( 2 )

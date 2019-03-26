@@ -247,7 +247,6 @@ void MegaInterface::soltActionClose()
     mrgIdentify(visa, 0);
     mrgCloseGateWay(visa);
 }
-
 void MegaInterface::slotSelectDevices()
 {
     //! only one item

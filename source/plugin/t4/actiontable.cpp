@@ -3,7 +3,7 @@
 #include "ui_actiontable.h"
 
 #include "../../plugin/t4/t4.h"
-#include "../../device/MegaGateway.h"
+#include "MegaGateway.h"
 
 #include "../model/treeitem.h"
 #include "../model/treemodel.h"
@@ -188,11 +188,13 @@ int ActionTable::upload()
         }
 
         //! read data
-        int ret = mrgStorageMotionFileContextRead( pRobo->deviceVi(),
-                                               fileAry.toLatin1().data(),
-                                               ary.data(),
-                                               capacity );
-
+        //! \todo
+//        int ret = mrgStorageMotionFileContextRead( pRobo->deviceVi(),
+//                                               fileAry.toLatin1().data(),
+//                                               ary.data(),
+//                                               capacity );
+        int ret;
+        return 0;
         if ( ret <= 0 )
         {
             sysError( tr("File read fail") + " " + fileAry );

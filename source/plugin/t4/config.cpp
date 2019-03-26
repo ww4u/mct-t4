@@ -3,7 +3,7 @@
 #include "ui_config.h"
 
 #include "t4.h"
-#include "../../device/MegaGateway.h"
+#include "MegaGateway.h"
 
 
 #define ABS_ANGLE_TO_DEG( angle )   (360.0f*(angle))/((1<<18)-1)

@@ -104,6 +104,8 @@ INCLUDEPATH += ../source/plugin
 
 win32:INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include"
 
+INCLUDEPATH += "G:/work/mct/source/device/libMegaGateway/src"
+
 # libs
 LIBS += -L"../lib"
 

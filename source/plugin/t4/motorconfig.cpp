@@ -1,7 +1,7 @@
 #include "motorconfig.h"
 #include "ui_motorconfig.h"
 #include "t4.h"
-#include "../../device/MegaGateway.h"
+#include "MegaGateway.h"
 
 namespace mrx_t4 {
 

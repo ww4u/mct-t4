@@ -36,6 +36,8 @@ public:
 
     void setDescription( const QString &desc );
 
+    void setMission( bool b );
+
 public:
     eWorkingType mWorkingType;
     eWorkingClass mWorkingClass;
@@ -52,6 +54,7 @@ public:
 
     QTimer *m_pTimer;
     QString mDescription;
+    bool mbMission;
 };
 
 //Q_DECLARE_METATYPE( WorkingApi * )

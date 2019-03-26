@@ -16,6 +16,8 @@ WorkingApi::WorkingApi( QObject *parent ) : QObject( parent )
     m_pIsEnabled = NULL;
 
     m_pTimer = NULL;
+
+    mbMission = true;
 }
 
 WorkingApi::~WorkingApi()
@@ -36,6 +38,9 @@ WorkingApi::eWorkingClass WorkingApi::getClass()
 
 void WorkingApi::setDescription( const QString &desc )
 { mDescription = desc; }
+
+void WorkingApi::setMission( bool b )
+{ mbMission = b; }
 
 XPluginWorkingThread::XPluginWorkingThread( QObject *parent ) : QThread( parent )
 {
@@ -155,7 +160,10 @@ void XPluginWorkingThread::procApi( WorkingApi *pApi )
     Q_ASSERT( NULL != pApi );
     int ret;
 
-    emit signal_enter_working( pApi );
+    bool bMission = ( pApi->mbMission );
+
+    if ( bMission )
+    { emit signal_enter_working( pApi ); }
 
         do
         {
@@ -205,7 +213,8 @@ void XPluginWorkingThread::procApi( WorkingApi *pApi )
 
         //! \note delete in this thread
         //! alert to be used in slot
-    emit signal_exit_working( pApi, ret );
+    if ( bMission )
+    { emit signal_exit_working( pApi, ret ); }
 }
 
 XPluginUpdateingThread::XPluginUpdateingThread( QObject *parent )

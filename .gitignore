@@ -8,7 +8,10 @@ log/
 debug/
 *.lib
 #*.a
-*.dll
+#*.dll
+build/3rdlib
+build/qlibd
+build/qlibr
 Makefile
 Makefile.*
 .vs/

@@ -664,23 +664,22 @@ void T4OpPanel::onSetting(XSetting setting)
 
 void T4OpPanel::enterMission()
 {
-//    QList<int> exceptWidget;
-//    exceptWidget<<WIDGET_MONITOR_INDEX;
+    QList<int> exceptWidget;
+    exceptWidget<<WIDGET_MONITOR_INDEX;
 
-//    ui->controllerStatus->setEnabled( false );
+    ui->controllerStatus->setEnabled( false );
 
-//    //! \note the page 1 is logout
-//    for( int i = 1; i < ui->tabWidget->count();i++ )
-//    {
-//        if ( exceptWidget.contains( i) )
-//        {}
-//        else
-//        { ui->tabWidget->widget( i )->setEnabled( false ); }
-//    }
+    //! \note the page 1 is logout
+    for( int i = 1; i < ui->tabWidget->count();i++ )
+    {
+        if ( exceptWidget.contains( i) )
+        {}
+        else
+        { ui->tabWidget->widget( i )->setEnabled( false ); }
+    }
 }
 void T4OpPanel::exitMission( )
 {
-//    setEnabled( true );
     ui->controllerStatus->setEnabled( true );
 
 
@@ -1670,28 +1669,28 @@ void T4OpPanel::on_joint##id##_signal_jog_add_pressed() \
     QList<QVariant> vars;\
     vars<<(id-1)<<1<<1; \
     QVariant var( vars );\
-    on_post_setting( T4OpPanel, onJointJog, tr("Jog +") );\
+    on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Jog +") );\
 }\
 void T4OpPanel::on_joint##id##_signal_jog_add_released()\
 {logDbg();\
     QList<QVariant> vars;\
     vars<<(id-1)<<1<<0; \
     QVariant var( vars );\
-    on_post_setting( T4OpPanel, onJointJog, tr("Jog + end") );\
+    on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Jog + end") );\
 }\
 void T4OpPanel::on_joint##id##_signal_jog_sub_pressed() \
 {logDbg();\
     QList<QVariant> vars;\
     vars<<(id-1)<<-1<<1; \
     QVariant var( vars );\
-    on_post_setting( T4OpPanel, onJointJog, tr("Jog -") );\
+    on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Jog -") );\
 }\
 void T4OpPanel::on_joint##id##_signal_jog_sub_released()\
 {logDbg();\
     QList<QVariant> vars;\
     vars<<(id-1)<<-1<<0; \
     QVariant var( vars );\
-    on_post_setting( T4OpPanel, onJointJog, tr("Jog - end") );\
+    on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Jog - end") );\
 }
 
 
@@ -1702,45 +1701,6 @@ on_joint_actions( 3 )
 on_joint_actions( 4 )
 
 on_joint_actions( 5 )
-
-////! joint op.
-//void T4OpPanel::on_joint1_signal_zero_clicked()
-//{
-//    //! \todo
-//}
-//void T4OpPanel::on_joint1_signal_single_add_clicked()
-//{ jointStep( 0, 1 ); }
-//void T4OpPanel::on_joint1_signal_single_sub_clicked()
-//{ jointStep( 0, -1 );  }
-
-//void T4OpPanel::on_joint2_signal_zero_clicked()
-//{}
-//void on_joint2_signal_single_add_clicked();
-//void on_joint2_signal_single_sub_clicked();
-
-//void on_joint3_signal_zero_clicked();
-//void on_joint3_signal_single_add_clicked();
-//void on_joint3_signal_single_sub_clicked();
-
-//void on_joint4_signal_zero_clicked();
-//void on_joint4_signal_single_add_clicked();
-//void on_joint4_signal_single_sub_clicked();
-
-//void on_joint5_signal_zero_clicked();
-//void on_joint5_signal_single_add_clicked();
-//void on_joint5_signal_single_sub_clicked();
-
-//void T4OpPanel::slot_enter_mission( WorkingApi *pApi )
-//{
-//    enterMission();
-//}
-//void T4OpPanel::slot_exit_mission( WorkingApi *pApi, int ret )
-//{
-//    exitMission( ret );
-
-//    //! exit
-//    XPage::slot_exit_mission( pApi, ret );
-//}
 
 void T4OpPanel::on_tabWidget_currentChanged(int index)
 {
@@ -1879,7 +1839,6 @@ void T4OpPanel::on_toolButton_debugRun_clicked()
 
     //! vars
     QVariant var;
-logDbg()<<QThread::currentThreadId();
     on_post_setting( T4OpPanel, onSequence, "Debug" );
 }
 

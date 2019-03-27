@@ -159,7 +159,8 @@ public:
     void attachMissionWorking( XPage *pObj,
                         XPage::onMsg onmsg,
                         QVariant var,
-                        const QString &desc=""
+                        const QString &desc="",
+                        bool bMission = true
                         );
 
     void attachEmergencyWorking( XPage *pObj,

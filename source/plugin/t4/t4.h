@@ -46,7 +46,10 @@
 #define self_robot_var()  (ViSession)deviceVi(),robotHandle()
 #define self_device_var()    (ViSession)deviceVi(),deviceHandle()
 
-#define on_post_setting( cls, onSetting, desc )    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&cls::onSetting), var, desc );
+#define _on_post_setting( cls, onSetting, desc, bMission )    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&cls::onSetting), var, desc, bMission );
+
+#define on_post_setting( cls, onSetting, desc )    _on_post_setting( cls, onSetting, desc, true )
+#define on_post_setting_n_mission( cls, onSetting, desc )    _on_post_setting( cls, onSetting, desc, false )
 
 #define on_post_setting_emerge( cls, onSetting, desc ) m_pPlugin->attachEmergencyWorking( this, (XPage::onMsg)(&cls::onSetting), var, desc );
 

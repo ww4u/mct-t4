@@ -118,6 +118,7 @@
         <file>image/t4/timg.jpg</file>
         <file>image/t4/motor.png</file>
         <file>image/t4/workspace.png</file>
+        <file>image/t4/mrx-mrx-t4_geo.png</file>
 
     </qresource>
 </RCC>

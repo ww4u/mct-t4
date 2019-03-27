@@ -414,7 +414,8 @@ void XPlugin::_attachUpdateWorking(
 void XPlugin::attachMissionWorking( XPage *pObj,
                     XPage::onMsg onmsg,
                     QVariant var,
-                    const QString &desc
+                    const QString &desc,
+                    bool bMission
                     )
 {
     Q_ASSERT( NULL != pObj );
@@ -432,6 +433,7 @@ void XPlugin::attachMissionWorking( XPage *pObj,
 
     pApi->setType( WorkingApi::e_work_single );
     pApi->setDescription( desc );
+    pApi->setMission( bMission );
 
     Q_ASSERT( m_pMissionWorking!=NULL );
     m_pMissionWorking->attach( pApi );

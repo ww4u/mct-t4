@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,7 +6,7 @@
 
 #define SEND_BUF  (100)
 
-EXPORT_API int CALL getXIn(ViSession vi, unsigned int *pScan )
+int getXIn(ViSession vi, unsigned int *pScan )
 {
     int retlen = 0;
     char args[SEND_BUF];
@@ -22,7 +22,7 @@ EXPORT_API int CALL getXIn(ViSession vi, unsigned int *pScan )
 }
 
 //! id from 0
-EXPORT_API int CALL setYOut(ViSession vi, int id, int v )
+int setYOut(ViSession vi, int id, int v )
 {
     char args[SEND_BUF];
     snprintf(args, SEND_BUF, "PROJECT:YWRITE Y%d, %s\n", (id+1), v ? "H":"L");

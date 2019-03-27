@@ -48,6 +48,11 @@ Joint::Joint(QWidget *parent) :
     //! zero
     connect( ui->btnZero, SIGNAL(clicked(bool)),
              this, SIGNAL(signal_zero_clicked()));
+
+    //！ enable
+    ui->btnZero->setEnabled(true);
+    ui->jogAdd->setEnabled(true);
+    ui->jogSub->setEnabled(true);
 }
 
 Joint::~Joint()

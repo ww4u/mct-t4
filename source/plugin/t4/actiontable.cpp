@@ -3,7 +3,7 @@
 #include "ui_actiontable.h"
 
 #include "../../plugin/t4/t4.h"
-#include "../../device/libMegaGateway/src/MegaGateway.h"
+#include "MegaGateway.h"
 
 #include "../model/treeitem.h"
 #include "../model/treemodel.h"

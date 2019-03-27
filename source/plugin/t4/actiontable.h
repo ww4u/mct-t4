@@ -57,6 +57,7 @@ protected:
 
 protected:
     int onToHere( QVariant var );
+    int onHoming( QVariant var );
 
     int relToHere( QList<QVariant> &vars );
     int absToHere( QList<QVariant> &vars );
@@ -82,6 +83,8 @@ private:
 
     QAction *m_pActionExpandAll, *m_pActionCollapseAll;
 
+    QAction *m_pActionHoming;
+
     QAction *m_pActionResize;
 
 Q_SIGNALS:
@@ -104,6 +107,8 @@ protected Q_SLOTS:
 
     void slot_expandAll();
     void slot_collapseAll();
+
+    void slot_homing();
 
     void slot_resize();
 

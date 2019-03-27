@@ -62,6 +62,8 @@ ActionTable::ActionTable(QWidget *parent) :
     m_pActionExpandAll = NULL;
     m_pActionCollapseAll = NULL;
 
+    m_pActionHoming = NULL;
+
     m_pActionResize = NULL;
 
     m_pTypeDelegate = new ComboxDelegate( 0, this );
@@ -427,7 +429,18 @@ logDbg()<<QThread::currentThreadId()
 
 
 }
+int ActionTable::onHoming( QVariant var )
+{
+    check_connect_ret( -1 );
 
+    int ret;
+logDbg();
+    ret = mrgRobotGoHome( robot_var(),
+//                          pRobo->mHomeSpeed,
+                          pRobo->mHomeTimeout*1000 );
+logDbg();
+    return ret;
+}
 int ActionTable::relToHere( QList<QVariant> &vars )
 {
     check_connect_ret( -1 );
@@ -649,7 +662,13 @@ void ActionTable::slot_collapseAll()
 {
     ui->view->collapseAll();
 }
+//! \todo
+void ActionTable::slot_homing()
+{logDbg();
+    QVariant var;
 
+    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&ActionTable::onHoming), var );
+}
 void ActionTable::slot_resize()
 {
     for (int column = 0; column < ui->view->model()->columnCount(); ++column)
@@ -698,6 +717,10 @@ void ActionTable::slot_customContextMenuRequested(const QPoint &pos)
             m_pActionExpandAll = m_pContextMenu->addAction( tr("All Expand") );
             m_pActionCollapseAll = m_pContextMenu->addAction( tr("All Collapse") );
 
+            m_pContextMenu->addSeparator();
+            m_pActionHoming = m_pContextMenu->addAction( tr("Homing") );
+
+
 //            m_pContextMenu->addSeparator();
 //            m_pActionResize = m_pContextMenu->addAction( tr("Auto Resize") );
 //            m_pContextMenu->addSeparator();
@@ -723,6 +746,9 @@ void ActionTable::slot_customContextMenuRequested(const QPoint &pos)
                     this, SLOT( slot_expandAll() ) );
             connect(m_pActionCollapseAll, SIGNAL(triggered(bool)),
                     this, SLOT( slot_collapseAll() ) );
+
+            connect(m_pActionHoming, SIGNAL(triggered(bool)),
+                    this, SLOT( slot_homing() ) );
 
 //            connect(m_pActionResize, SIGNAL(triggered(bool)),
 //                    this, SLOT( slot_resize() ) );

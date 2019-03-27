@@ -5,6 +5,8 @@ WelcomePage::WelcomePage(QWidget *parent) :
     XPage(parent),
     ui(new Ui::WelcomePage)
 {
+    setContextHelp("welcome");
+
     ui->setupUi(this);
 }
 

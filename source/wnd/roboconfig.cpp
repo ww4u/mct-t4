@@ -262,6 +262,13 @@ void RoboConfig::slotShowContextmenu(const QPoint& pos)
     if(curItem == NULL)
     { return; }
 
+    //! is root?
+    QVariant vRoot = curItem->data(0,Qt::UserRole+2);
+    if ( vRoot.isValid() )
+    {}
+    else
+    { return; }
+
     //! plugin
     QVariant var = curItem->data(0,Qt::UserRole+1);
     if ( var.isValid() )
@@ -278,7 +285,6 @@ void RoboConfig::slotShowContextmenu(const QPoint& pos)
     m_pCurTreeItem = ui->treeWidget->currentItem();
 
     //! robo type
-//    if( "H2Product*" == QString("%1").arg(var.typeName()) )
     {
         if(m_pRoboContextMenu != NULL)
         {}

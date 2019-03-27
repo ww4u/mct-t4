@@ -96,99 +96,104 @@
         <translation type="unfinished">末端配置</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/config.ui" line="35"/>
+        <location filename="../../source/plugin/t4/config.ui" line="48"/>
         <source>Type</source>
         <translation type="unfinished">类型</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/config.ui" line="43"/>
+        <location filename="../../source/plugin/t4/config.ui" line="56"/>
         <source>MRX-F2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/config.ui" line="52"/>
+        <location filename="../../source/plugin/t4/config.ui" line="65"/>
         <source>MRX-F3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/config.ui" line="61"/>
+        <location filename="../../source/plugin/t4/config.ui" line="74"/>
         <source>MRX-AXIS5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/config.ui" line="70"/>
+        <location filename="../../source/plugin/t4/config.ui" line="83"/>
         <source>MRX-TIP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/config.ui" line="79"/>
+        <location filename="../../source/plugin/t4/config.ui" line="92"/>
         <source>User</source>
         <translation type="unfinished">用户定义</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/config.ui" line="126"/>
-        <source>terminal image</source>
+        <location filename="../../source/plugin/t4/config.ui" line="107"/>
+        <source>Slow Ratio</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/config.ui" line="137"/>
+        <location filename="../../source/plugin/t4/config.ui" line="133"/>
+        <source>:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/config.ui" line="176"/>
         <source>Zero</source>
         <translation type="unfinished">零位</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/config.ui" line="140"/>
+        <location filename="../../source/plugin/t4/config.ui" line="179"/>
         <source>Joint Zero Configuration</source>
         <translation type="unfinished">关节零位配置</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/config.ui" line="146"/>
-        <location filename="../../source/plugin/t4/config.ui" line="372"/>
-        <location filename="../../source/plugin/t4/config.ui" line="455"/>
+        <location filename="../../source/plugin/t4/config.ui" line="185"/>
+        <location filename="../../source/plugin/t4/config.ui" line="411"/>
+        <location filename="../../source/plugin/t4/config.ui" line="494"/>
         <source>Big Arm</source>
         <translation type="unfinished">大臂</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/config.ui" line="167"/>
-        <location filename="../../source/plugin/t4/config.ui" line="267"/>
+        <location filename="../../source/plugin/t4/config.ui" line="206"/>
+        <location filename="../../source/plugin/t4/config.ui" line="306"/>
         <source>Wrist</source>
         <translation type="unfinished">腕</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/config.ui" line="214"/>
-        <location filename="../../source/plugin/t4/config.ui" line="352"/>
-        <location filename="../../source/plugin/t4/config.ui" line="421"/>
+        <location filename="../../source/plugin/t4/config.ui" line="253"/>
+        <location filename="../../source/plugin/t4/config.ui" line="391"/>
+        <location filename="../../source/plugin/t4/config.ui" line="460"/>
         <source>Little Arm</source>
         <translation type="unfinished">小臂</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/config.ui" line="221"/>
-        <location filename="../../source/plugin/t4/config.ui" line="311"/>
-        <location filename="../../source/plugin/t4/config.ui" line="448"/>
+        <location filename="../../source/plugin/t4/config.ui" line="260"/>
+        <location filename="../../source/plugin/t4/config.ui" line="350"/>
+        <location filename="../../source/plugin/t4/config.ui" line="487"/>
         <source>Basement</source>
         <translation type="unfinished">基座</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/config.ui" line="248"/>
+        <location filename="../../source/plugin/t4/config.ui" line="287"/>
         <source>Limit</source>
         <translation type="unfinished">限位</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/config.ui" line="251"/>
+        <location filename="../../source/plugin/t4/config.ui" line="290"/>
         <source>Soft limitation</source>
         <translation type="unfinished">软限位</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/config.ui" line="398"/>
+        <location filename="../../source/plugin/t4/config.ui" line="437"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td width=&quot;89&quot; style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;/&gt;&lt;td width=&quot;179&quot; style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;Angle(Degree)&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;Wrist&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;[-180,180]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;Little Arm&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;[-60,90]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;Big Arm&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;[-80,20]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;Basement&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;[-170,170]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/config.ui" line="409"/>
+        <location filename="../../source/plugin/t4/config.ui" line="448"/>
         <source>Arm</source>
         <translation type="unfinished">臂长</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/config.ui" line="415"/>
+        <location filename="../../source/plugin/t4/config.ui" line="454"/>
         <source>Arm Length</source>
         <translation type="unfinished">臂长</translation>
     </message>
@@ -217,7 +222,7 @@
     </message>
     <message>
         <location filename="../../source/plugin/t4/controllerstatus.ui" line="92"/>
-        <location filename="../../source/plugin/t4/controllerstatus.ui" line="244"/>
+        <location filename="../../source/plugin/t4/controllerstatus.ui" line="247"/>
         <source>Enable</source>
         <translation type="unfinished"></translation>
     </message>
@@ -247,7 +252,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/controllerstatus.ui" line="263"/>
+        <location filename="../../source/plugin/t4/controllerstatus.ui" line="269"/>
         <source>Acknowledge Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -382,207 +387,16 @@
 <context>
     <name>H2Action</name>
     <message>
-        <location filename="../../source/wnd/h2action.ui" line="14"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2action.cpp" line="20"/>
-        <source>PA</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2action.cpp" line="20"/>
-        <source>PRN</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2action.cpp" line="20"/>
-        <source>PRA</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2action.cpp" line="221"/>
         <source>Run</source>
-        <translation type="unfinished">运行</translation>
+        <translation type="obsolete">运行</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="240"/>
-        <location filename="../../source/wnd/h2action.cpp" line="248"/>
         <source>warning</source>
-        <translation type="unfinished">警告</translation>
+        <translation type="obsolete">警告</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2action.cpp" line="240"/>
-        <source>Device motor uneable</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2action.cpp" line="248"/>
-        <source>Device Homing Invalid</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2action.cpp" line="312"/>
-        <source>tips</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2action.cpp" line="312"/>
-        <source>Run Success!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2action.cpp" line="315"/>
-        <location filename="../../source/wnd/h2action.cpp" line="318"/>
-        <location filename="../../source/wnd/h2action.cpp" line="321"/>
         <source>error</source>
-        <translation type="unfinished">错误</translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2action.cpp" line="315"/>
-        <source>Get current position error!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2action.cpp" line="318"/>
-        <source>Running error!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2action.cpp" line="321"/>
-        <source>Type error!</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>H2Configuration</name>
-    <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="20"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="88"/>
-        <source>Mechanics</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="109"/>
-        <source>WorkSpace X-Stroke:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="153"/>
-        <source>WorkSpace Y-Stroke:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="172"/>
-        <source>Size:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="191"/>
-        <source>Family:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="258"/>
-        <source>Small</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="263"/>
-        <source>Big</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="320"/>
-        <location filename="../../source/wnd/h2configuration.ui" line="369"/>
-        <source> mm</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="401"/>
-        <source>Motor Position</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="419"/>
-        <source>Bottom(B)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2configuration.ui" line="441"/>
-        <source>Top(T)</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>H2ErrMgr</name>
-    <message>
-        <location filename="../../source/wnd/h2errmgr.ui" line="14"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>H2Homing</name>
-    <message>
-        <location filename="../../source/wnd/h2homing.ui" line="14"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2homing.ui" line="70"/>
-        <source>Homing Method</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2homing.ui" line="94"/>
-        <source>Direction:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2homing.ui" line="120"/>
-        <source>First in direction of X,then Y</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2homing.ui" line="146"/>
-        <source>Movement:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2homing.ui" line="178"/>
-        <source>Block</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2homing.ui" line="204"/>
-        <source>Target:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2homing.ui" line="261"/>
-        <source>Homing is always executed in dirrection of the corner,where the Axis Zero Point is defined to be.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2homing.ui" line="320"/>
-        <source>Parameters</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2homing.ui" line="344"/>
-        <source>Search Velocity:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2homing.ui" line="421"/>
-        <source>Force Limit:</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">错误</translation>
     </message>
 </context>
 <context>
@@ -619,356 +433,213 @@
     </message>
 </context>
 <context>
-    <name>H2JogMode</name>
-    <message>
-        <location filename="../../source/wnd/h2jogmode.ui" line="14"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2jogmode.ui" line="50"/>
-        <source>Jog Mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2jogmode.ui" line="114"/>
-        <source>Crawling Velocity:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2jogmode.ui" line="133"/>
-        <source>Crawling Time:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2jogmode.ui" line="247"/>
-        <source>Maximum Velocity:</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>H2Measurement</name>
-    <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="14"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="85"/>
-        <source>Coordinate System</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="103"/>
-        <source>Axes Zero Point:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="129"/>
-        <source>Corner Point 1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="134"/>
-        <source>Corner Point 2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="139"/>
-        <source>Corner Point 3</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="144"/>
-        <source>Corner Point 4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="167"/>
-        <source>Zero Points and End Positions</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="185"/>
-        <source>SW Limit Positive:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="421"/>
-        <source>X-Axis</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="443"/>
-        <source>Project Zero Point:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="462"/>
-        <source>SW Limit Negative:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2measurement.ui" line="539"/>
-        <source>Y-Axis</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>H2Ops</name>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="35"/>
-        <location filename="../../source/wnd/h2ops.ui" line="35"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="139"/>
-        <location filename="../../source/wnd/h2ops.ui" line="139"/>
         <source>Logout</source>
         <translation type="unfinished">输出</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="189"/>
-        <location filename="../../source/wnd/h2ops.ui" line="189"/>
         <source>Operate</source>
         <translation type="unfinished">操作</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="207"/>
-        <location filename="../../source/wnd/h2ops.ui" line="207"/>
         <source>Dynamic Data</source>
         <translation type="unfinished">动态数据</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="311"/>
-        <location filename="../../source/wnd/h2ops.ui" line="311"/>
         <source>Mileage X-Axis:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="321"/>
-        <location filename="../../source/wnd/h2ops.ui" line="321"/>
         <source>Target Position X:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="331"/>
         <location filename="../../source/plugin/h2/h2ops.ui" line="802"/>
-        <location filename="../../source/wnd/h2ops.ui" line="331"/>
-        <location filename="../../source/wnd/h2ops.ui" line="802"/>
         <source>Record Number:</source>
         <translation type="unfinished">动作号:</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="433"/>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1204"/>
-        <location filename="../../source/wnd/h2ops.ui" line="433"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1204"/>
         <source>Actual Position Y:</source>
         <translation type="unfinished">当前位置Y:</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="443"/>
-        <location filename="../../source/wnd/h2ops.ui" line="443"/>
         <source>Mileage Y-Axis:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="502"/>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1234"/>
-        <location filename="../../source/wnd/h2ops.ui" line="502"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1234"/>
         <source>Actual Position X:</source>
         <translation type="unfinished">当前位置X:</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="512"/>
-        <location filename="../../source/wnd/h2ops.ui" line="512"/>
         <source>Target Position Y:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="630"/>
-        <location filename="../../source/wnd/h2ops.ui" line="630"/>
         <source>Additional States</source>
         <translation type="unfinished">扩展状态</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="645"/>
-        <location filename="../../source/wnd/h2ops.ui" line="645"/>
         <source>Extern Stop(ES)</source>
         <translation type="unfinished">外部停止</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="664"/>
-        <location filename="../../source/wnd/h2ops.ui" line="664"/>
         <source>Home Valid</source>
         <translation type="unfinished">零位有效</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="704"/>
-        <location filename="../../source/wnd/h2ops.ui" line="704"/>
         <source>Digital IO</source>
         <translation type="unfinished">数字输入输出</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="725"/>
-        <location filename="../../source/wnd/h2ops.ui" line="725"/>
         <source>Digital Inputs</source>
         <translation type="unfinished">数字输入</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="737"/>
-        <location filename="../../source/wnd/h2ops.ui" line="737"/>
         <source>Enable Drive</source>
         <translation type="unfinished">驱动打开</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="750"/>
-        <location filename="../../source/wnd/h2ops.ui" line="750"/>
         <source>Reset Fault</source>
         <translation type="unfinished">复位失败</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="763"/>
-        <location filename="../../source/wnd/h2ops.ui" line="763"/>
         <source>Start Record Execution</source>
         <translation type="unfinished">动作运行开始</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="776"/>
-        <location filename="../../source/wnd/h2ops.ui" line="776"/>
         <source>Record Bit5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="789"/>
-        <location filename="../../source/wnd/h2ops.ui" line="789"/>
         <source>Reserved</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="828"/>
-        <location filename="../../source/wnd/h2ops.ui" line="828"/>
         <source>Record Bit2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="844"/>
-        <location filename="../../source/wnd/h2ops.ui" line="844"/>
         <source>Record Bit1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="860"/>
-        <location filename="../../source/wnd/h2ops.ui" line="860"/>
         <source>Record Bit4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="876"/>
-        <location filename="../../source/wnd/h2ops.ui" line="876"/>
         <source>Record Bit3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="902"/>
-        <location filename="../../source/wnd/h2ops.ui" line="902"/>
         <source>Digital Outputs</source>
         <translation type="unfinished">数字输出</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="914"/>
-        <location filename="../../source/wnd/h2ops.ui" line="914"/>
         <source>Moiton Complete(MC)</source>
         <translation type="unfinished">运行结束</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="930"/>
-        <location filename="../../source/wnd/h2ops.ui" line="930"/>
         <source>24V Load Voltage</source>
         <translation type="unfinished">24V</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="946"/>
-        <location filename="../../source/wnd/h2ops.ui" line="946"/>
         <source>Acknowledge Start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="962"/>
-        <location filename="../../source/wnd/h2ops.ui" line="962"/>
         <source>Fault</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="978"/>
-        <location filename="../../source/wnd/h2ops.ui" line="978"/>
         <source>Ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1018"/>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1049"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1018"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1049"/>
         <source>Homing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1067"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1067"/>
         <source>Homing Valid</source>
         <translation type="unfinished">零位有效</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1086"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1086"/>
         <source>Target:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1148"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1148"/>
         <source>Direction:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1217"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1217"/>
         <source>Move  to Zero Point Position</source>
         <translation type="unfinished">回零位</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1220"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1220"/>
         <source>Starting Home</source>
         <translation type="unfinished">开始回零</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1274"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1274"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="1213"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="1222"/>
         <source>Run to Project Zero Point</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1285"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1285"/>
         <source>Manual</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1315"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1315"/>
         <source>Manual Control</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1347"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1347"/>
         <source>Y-Axis</source>
         <translation type="unfinished"></translation>
     </message>
@@ -977,22 +648,16 @@
         <location filename="../../source/plugin/h2/h2ops.ui" line="1389"/>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1441"/>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1535"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1363"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1389"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1441"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1535"/>
         <source>Clicked Move</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1415"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1415"/>
         <source>Jog:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1428"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1428"/>
         <source>Single Step:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1001,409 +666,222 @@
         <location filename="../../source/plugin/h2/h2ops.ui" line="1509"/>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1561"/>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1686"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1470"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1509"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1561"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1686"/>
         <source>Pressed Move Release Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1496"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1496"/>
         <source>Current Position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1593"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1593"/>
         <source>Increament:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1706"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1706"/>
         <source>Stop Moving</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1732"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1732"/>
         <source>Apply as point</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1751"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1751"/>
         <source>X-Axis</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1773"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1773"/>
         <source>Velocity:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1904"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1904"/>
         <source>Monitor</source>
         <translation type="unfinished">监视</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1923"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1923"/>
         <source>Debug</source>
         <translation type="unfinished">调试</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1949"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1949"/>
         <source>Delay Time:</source>
         <translation type="unfinished">延迟时间:</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1993"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1993"/>
         <source>Running</source>
         <translation type="unfinished">运行中</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="1996"/>
-        <location filename="../../source/wnd/h2ops.ui" line="1996"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="930"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="943"/>
         <source>Run  Sequence</source>
         <translation type="unfinished">顺序运行</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="2015"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2015"/>
         <source>Import</source>
         <translation type="unfinished">导入</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="2048"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2048"/>
         <source>Move Down</source>
         <translation type="unfinished">下移</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="2068"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2068"/>
         <source>Move Up</source>
         <translation type="unfinished">上移</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="2088"/>
         <location filename="../../source/plugin/h2/h2ops.ui" line="2546"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2088"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2546"/>
         <source>Export</source>
         <translation type="unfinished">导出</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="2111"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2111"/>
         <source>Cyclic</source>
         <translation type="unfinished">循环</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="2170"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2170"/>
         <source>Delete all record</source>
         <translation type="unfinished">删除所有动作</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="2190"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2190"/>
         <source>Remove the current record</source>
         <translation type="unfinished">删除当前动作</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="2223"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2223"/>
         <source>add a new record</source>
         <translation type="unfinished">添加新动作</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="2265"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2265"/>
         <source>Status</source>
         <translation type="unfinished">状态</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="2286"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2286"/>
         <source>RecordNumber:</source>
         <translation type="unfinished">动作号:</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="2305"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2305"/>
         <source>Position X:</source>
         <translation type="unfinished">位置X:</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="2324"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2324"/>
         <source>Position Y:</source>
         <translation type="unfinished">位置Y:</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="2405"/>
         <location filename="../../source/plugin/h2/h2ops.ui" line="2442"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2405"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2442"/>
         <source> mm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="2459"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2459"/>
         <source>Diagnosis</source>
         <translation type="unfinished">诊断</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="2483"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2483"/>
         <source>Read from the controller</source>
         <translation type="unfinished">从控制器读取</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2ops.ui" line="2503"/>
-        <location filename="../../source/wnd/h2ops.ui" line="2503"/>
         <source>Deleta all</source>
         <translation type="unfinished">删除所有</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="80"/>
         <source>Clear</source>
-        <translation type="unfinished">清除</translation>
+        <translation type="obsolete">清除</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="81"/>
         <source>Select All</source>
-        <translation type="unfinished">选择全部</translation>
+        <translation type="obsolete">选择全部</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="82"/>
         <source>Copy</source>
-        <translation type="unfinished">复制</translation>
+        <translation type="obsolete">复制</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="93"/>
-        <source>Energy1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="94"/>
-        <source>Energy2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="272"/>
-        <source>Apply as point </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="370"/>
-        <source>tips</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="370"/>
-        <source>Success!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="373"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="578"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="644"/>
         <source>error</source>
-        <translation type="unfinished">错误</translation>
+        <translation type="obsolete">错误</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="373"/>
-        <source>Failured!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="547"/>
-        <source>load completed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="562"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="637"/>
-        <source>save completed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="578"/>
-        <source>Error log upload error!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="644"/>
-        <source>failure</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="693"/>
-        <location filename="../../source/wnd/h2ops.cpp" line="703"/>
-        <source>Start Go Home</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="696"/>
-        <source>Stop Go Home</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="946"/>
-        <source>Stop Sequence</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2ops.cpp" line="1216"/>
         <source>Stop</source>
-        <translation type="unfinished">停止</translation>
-    </message>
-</context>
-<context>
-    <name>H2Product</name>
-    <message>
-        <location filename="../../source/wnd/h2product.ui" line="14"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2product.ui" line="88"/>
-        <source>Product</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2product.ui" line="151"/>
-        <source>ID：</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2product.ui" line="181"/>
-        <source>SN:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2product.ui" line="285"/>
-        <source>Type:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2product.ui" line="365"/>
-        <source>Version:</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>H2Robo</name>
-    <message>
-        <location filename="../../source/wnd/h2robo.cpp" line="45"/>
-        <source>Configuration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2robo.cpp" line="46"/>
-        <source>Measurements</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2robo.cpp" line="47"/>
-        <source>Homing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2robo.cpp" line="48"/>
-        <source>Jog Mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2robo.cpp" line="49"/>
-        <source>Record Table</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/h2robo.cpp" line="50"/>
-        <source>Error Management</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">停止</translation>
     </message>
 </context>
 <context>
     <name>H2Status</name>
     <message>
         <location filename="../../source/plugin/h2/h2status.ui" line="38"/>
-        <location filename="../../source/wnd/h2status.ui" line="38"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2status.ui" line="65"/>
-        <location filename="../../source/wnd/h2status.ui" line="65"/>
         <source>Device Status</source>
         <translation type="unfinished">设备状态</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2status.ui" line="92"/>
-        <location filename="../../source/wnd/h2status.ui" line="92"/>
         <source>Operation Mode</source>
         <translation type="unfinished">运行方式</translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2status.ui" line="102"/>
-        <location filename="../../source/wnd/h2status.ui" line="102"/>
         <source>Ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2status.ui" line="131"/>
         <location filename="../../source/plugin/h2/h2status.ui" line="283"/>
-        <location filename="../../source/wnd/h2status.ui" line="131"/>
-        <location filename="../../source/wnd/h2status.ui" line="283"/>
         <source>Enable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2status.ui" line="147"/>
-        <location filename="../../source/wnd/h2status.ui" line="147"/>
         <source>MC</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2status.ui" line="160"/>
-        <location filename="../../source/wnd/h2status.ui" line="160"/>
         <source>TO</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2status.ui" line="186"/>
-        <location filename="../../source/wnd/h2status.ui" line="186"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2status.ui" line="202"/>
-        <location filename="../../source/wnd/h2status.ui" line="202"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2status.ui" line="261"/>
-        <location filename="../../source/wnd/h2status.ui" line="261"/>
         <source>MCT</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/h2/h2status.ui" line="302"/>
-        <location filename="../../source/wnd/h2status.ui" line="302"/>
         <source>Acknowledge Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1411,110 +889,18 @@
 <context>
     <name>HEADER</name>
     <message>
-        <location filename="../../source/model/debugitem.cpp" line="8"/>
-        <location filename="../../source/model/diagnosisitem.cpp" line="6"/>
-        <location filename="../../source/model/errmgritem.cpp" line="6"/>
+        <location filename="../../source/plugin/model/debugitem.cpp" line="8"/>
         <source>No.</source>
         <translation type="unfinished">序号</translation>
     </message>
     <message>
-        <location filename="../../source/model/debugitem.cpp" line="9"/>
+        <location filename="../../source/plugin/model/debugitem.cpp" line="9"/>
         <source>Delay(s)</source>
         <translation type="unfinished">延迟(s)</translation>
     </message>
     <message>
-        <location filename="../../source/model/diagnosisitem.cpp" line="7"/>
-        <location filename="../../source/model/h2actionitem.cpp" line="6"/>
         <source>Type</source>
-        <translation type="unfinished">类型</translation>
-    </message>
-    <message>
-        <location filename="../../source/model/diagnosisitem.cpp" line="8"/>
-        <source>Timestamp</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/model/diagnosisitem.cpp" line="9"/>
-        <source>Additional Info</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/model/diagnosisitem.cpp" line="10"/>
-        <source>Counter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/model/diagnosisitem.cpp" line="11"/>
-        <source>Message</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/model/errmgritem.cpp" line="7"/>
-        <source>Error Text</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/model/errmgritem.cpp" line="8"/>
-        <source>Error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/model/errmgritem.cpp" line="9"/>
-        <source>Warning</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/model/errmgritem.cpp" line="10"/>
-        <source>Information</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/model/errmgritem.cpp" line="11"/>
-        <source>Reaction on error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/model/errmgritem.cpp" line="12"/>
-        <source>Output stage on</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/model/errmgritem.cpp" line="13"/>
-        <source>Save diagnosis</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/model/h2actionitem.cpp" line="7"/>
-        <source>Target X</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/model/h2actionitem.cpp" line="8"/>
-        <source>Target Y</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/model/h2actionitem.cpp" line="9"/>
-        <source>Velocity</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/model/h2actionitem.cpp" line="10"/>
-        <source>Acceleration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/model/h2actionitem.cpp" line="11"/>
-        <source>Comment</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>HelpPanel</name>
-    <message>
-        <location filename="../../source/wnd/helppanel.ui" line="20"/>
-        <source>MEGAROBO</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">类型</translation>
     </message>
 </context>
 <context>
@@ -1555,9 +941,9 @@
     </message>
     <message>
         <location filename="../../source/plugin/t4/joint.ui" line="50"/>
-        <location filename="../../source/plugin/t4/joint.ui" line="143"/>
-        <location filename="../../source/plugin/t4/joint.ui" line="163"/>
-        <location filename="../../source/plugin/t4/joint.ui" line="180"/>
+        <location filename="../../source/plugin/t4/joint.ui" line="149"/>
+        <location filename="../../source/plugin/t4/joint.ui" line="169"/>
+        <location filename="../../source/plugin/t4/joint.ui" line="186"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1567,32 +953,63 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/joint.ui" line="105"/>
+        <location filename="../../source/plugin/t4/joint.ui" line="108"/>
         <source>Zero</source>
         <translation type="unfinished">回零</translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/joint.cpp" line="68"/>
+        <source>To zero</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/joint.cpp" line="69"/>
+        <source>Jog +</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/joint.cpp" line="70"/>
+        <source>Jog -</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/joint.cpp" line="71"/>
+        <source>Step +</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/joint.cpp" line="72"/>
+        <source>Step -</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/joint.cpp" line="74"/>
+        <source>Encoder angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/joint.cpp" line="75"/>
+        <source>Delta angle</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>LogIn</name>
     <message>
-        <location filename="../../source/wnd/login.ui" line="14"/>
         <source>LogIn</source>
-        <translation type="unfinished">登录</translation>
+        <translation type="obsolete">登录</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/login.ui" line="42"/>
         <source>Operator</source>
-        <translation type="unfinished">操作员</translation>
+        <translation type="obsolete">操作员</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/login.ui" line="51"/>
         <source>Administrator</source>
-        <translation type="unfinished">管理员</translation>
+        <translation type="obsolete">管理员</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/login.ui" line="96"/>
         <source>Auto login</source>
-        <translation type="unfinished">自动登录</translation>
+        <translation type="obsolete">自动登录</translation>
     </message>
 </context>
 <context>
@@ -1619,34 +1036,49 @@
 <context>
     <name>MRX_T4</name>
     <message>
-        <location filename="../../source/plugin/t4/t4_device.cpp" line="34"/>
+        <location filename="../../source/plugin/t4/t4_device.cpp" line="40"/>
         <source>Robot</source>
         <translation type="unfinished">机器人</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4_device.cpp" line="42"/>
+        <location filename="../../source/plugin/t4/t4_device.cpp" line="48"/>
         <source>Device</source>
         <translation type="unfinished">设备</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4_device.cpp" line="48"/>
+        <location filename="../../source/plugin/t4/t4_device.cpp" line="54"/>
         <source>Zero Angle update fail</source>
         <translation type="unfinished">零位角度更新失败</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4_device.cpp" line="61"/>
+        <location filename="../../source/plugin/t4/t4_device.cpp" line="67"/>
         <source>Current read fail</source>
         <translation type="unfinished">电机电流读取失败</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4_device.cpp" line="123"/>
+        <location filename="../../source/plugin/t4/t4_device.cpp" line="80"/>
+        <source>Data report state fail</source>
+        <translation type="unfinished">状态数据读取失败</translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4_device.cpp" line="110"/>
+        <source>Stop fail</source>
+        <translation type="unfinished">停止失败</translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4_device.cpp" line="168"/>
         <source>Upload fail</source>
         <translation type="unfinished">上传设置失败</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4_device.cpp" line="162"/>
+        <location filename="../../source/plugin/t4/t4_device.cpp" line="217"/>
         <source>Download fail</source>
         <translation type="unfinished">下载设置失败</translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4_device.cpp" line="335"/>
+        <source>Position read fail</source>
+        <translation type="unfinished">位置读取失败</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/t4_serial.cpp" line="33"/>
@@ -1658,364 +1090,156 @@
         <source>Config load fail</source>
         <translation type="unfinished">配置加载失败</translation>
     </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4.cpp" line="45"/>
+        <source>MRX-T4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4.cpp" line="46"/>
+        <source>Configuration</source>
+        <translation type="unfinished">配置</translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4.cpp" line="47"/>
+        <source>Misc</source>
+        <translation type="unfinished">其他</translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4.cpp" line="49"/>
+        <source>Motor</source>
+        <translation type="unfinished">电机</translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4.cpp" line="50"/>
+        <source>Record Table</source>
+        <translation type="unfinished">动作表</translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4.cpp" line="51"/>
+        <source>Error Management</source>
+        <translation type="unfinished">错误管理</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="29"/>
-        <location filename="../../source/wnd/mainwindow.cpp" line="132"/>
-        <location filename="../../source/wnd/mainwindow.cpp" line="477"/>
-        <source>MEGAROBO</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>&amp;File</source>
         <translation type="obsolete">文件(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="154"/>
-        <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="47"/>
         <source>File(&amp;F)</source>
-        <translation type="unfinished">文件(&amp;F)</translation>
+        <translation type="obsolete">文件(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="55"/>
         <source>Operate(&amp;O)</source>
-        <translation type="unfinished">操作(&amp;O)</translation>
+        <translation type="obsolete">操作(&amp;O)</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="68"/>
         <source>Help(&amp;H)</source>
-        <translation type="unfinished">帮助(&amp;H)</translation>
+        <translation type="obsolete">帮助(&amp;H)</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="74"/>
         <source>Tool(&amp;T)</source>
-        <translation type="unfinished">工具(&amp;T)</translation>
+        <translation type="obsolete">工具(&amp;T)</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="82"/>
         <source>View(&amp;V)</source>
-        <translation type="unfinished">视图(&amp;V)</translation>
+        <translation type="obsolete">视图(&amp;V)</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="130"/>
-        <source>&amp;Stop</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="133"/>
-        <source>Ctrl+E</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="138"/>
-        <source>&amp;Exit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="141"/>
-        <source>Ctrl+Q</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="146"/>
-        <source>&amp;About</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="149"/>
-        <source>Ctrl+I</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="163"/>
-        <source>&amp;Upload</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="166"/>
-        <source>Ctrl+U</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="175"/>
-        <source>&amp;Download</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="178"/>
-        <source>Ctrl+D</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="187"/>
-        <source>S&amp;tore</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="190"/>
-        <source>Ctrl+T</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="199"/>
-        <source>S&amp;ync</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="202"/>
-        <source>Ctrl+Y</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="210"/>
-        <source>&amp;Chinese</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="221"/>
-        <source>&amp;English</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="232"/>
-        <source>&amp;MEGAROBO</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="243"/>
-        <source>&amp;Classic</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="252"/>
-        <source>&amp;Search</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="255"/>
         <source>SearchDevice</source>
-        <translation type="unfinished">搜索设备</translation>
+        <translation type="obsolete">搜索设备</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="258"/>
-        <source>Ctrl+F</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="267"/>
-        <location filename="../../source/wnd/mainwindow.ui" line="270"/>
         <source>Connect</source>
-        <translation type="unfinished">连接</translation>
+        <translation type="obsolete">连接</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="273"/>
-        <source>Ctrl+L</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="281"/>
-        <source>MRX-H2:[0.0.0.0]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="286"/>
-        <source>&amp;Reboot</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="289"/>
-        <source>Ctrl+Alt+R</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="294"/>
-        <source>&amp;Poweroff</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="297"/>
-        <source>Ctrl+Alt+P</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="302"/>
-        <source>&amp;Wifi</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="307"/>
-        <source>test</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.ui" line="316"/>
-        <location filename="../../source/wnd/mainwindow.cpp" line="85"/>
         <source>Pref</source>
-        <translation type="unfinished">属性</translation>
+        <translation type="obsolete">属性</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="94"/>
-        <source>Ops</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="112"/>
         <source>Help</source>
-        <translation type="unfinished">帮助</translation>
+        <translation type="obsolete">帮助</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="118"/>
-        <source>&amp;ShowHelp</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="126"/>
-        <source>Chinese</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="128"/>
-        <source>English</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="134"/>
-        <location filename="../../source/wnd/mainwindow.cpp" line="476"/>
-        <source>Classic</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="137"/>
-        <source>Language</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="140"/>
         <source>Style</source>
-        <translation type="unfinished">风格</translation>
+        <translation type="obsolete">风格</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="289"/>
         <source>Invalid language</source>
-        <translation type="unfinished">无效语言</translation>
+        <translation type="obsolete">无效语言</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="352"/>
         <source>Style apply fail</source>
-        <translation type="unfinished">风格设置失败</translation>
+        <translation type="obsolete">风格设置失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="512"/>
         <source>Pref save fail</source>
-        <translation type="unfinished">设置存储失败</translation>
+        <translation type="obsolete">设置存储失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="523"/>
         <source>Pref load fail</source>
-        <translation type="unfinished">设置加载失败</translation>
+        <translation type="obsolete">设置加载失败</translation>
     </message>
 </context>
 <context>
     <name>MegaDeleteAffirmMessageBox</name>
     <message>
-        <location filename="../../source/widget/megamessagebox.cpp" line="47"/>
         <source>Affirm to delete?</source>
-        <translation type="unfinished">确认删除?</translation>
+        <translation type="obsolete">确认删除?</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megamessagebox.cpp" line="48"/>
         <source>Affirm</source>
-        <translation type="unfinished">确认</translation>
+        <translation type="obsolete">确认</translation>
     </message>
 </context>
 <context>
     <name>MegaInterface</name>
     <message>
-        <location filename="../../source/widget/megainterface.ui" line="29"/>
-        <source>Interface</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/widget/megainterface.ui" line="81"/>
         <source>LAN</source>
-        <translation type="unfinished">网络</translation>
+        <translation type="obsolete">网络</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.ui" line="90"/>
-        <source>USB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/widget/megainterface.ui" line="131"/>
         <source>Scan</source>
-        <translation type="unfinished">搜索</translation>
+        <translation type="obsolete">搜索</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="63"/>
-        <location filename="../../source/widget/megainterface.cpp" line="78"/>
         <source>Identify ON</source>
-        <translation type="unfinished">打开识别</translation>
+        <translation type="obsolete">打开识别</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="64"/>
-        <location filename="../../source/widget/megainterface.cpp" line="79"/>
         <source>Identify OFF</source>
-        <translation type="unfinished">关闭识别</translation>
+        <translation type="obsolete">关闭识别</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="101"/>
         <source>error</source>
-        <translation type="unfinished">错误</translation>
+        <translation type="obsolete">错误</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="101"/>
         <source>open device error</source>
-        <translation type="unfinished">打开设备失败</translation>
+        <translation type="obsolete">打开设备失败</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="123"/>
-        <source>IP</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/widget/megainterface.cpp" line="124"/>
-        <location filename="../../source/widget/megainterface.cpp" line="132"/>
         <source>Type</source>
-        <translation type="unfinished">类型</translation>
+        <translation type="obsolete">类型</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="125"/>
-        <location filename="../../source/widget/megainterface.cpp" line="133"/>
         <source>SN</source>
-        <translation type="unfinished">序列号</translation>
+        <translation type="obsolete">序列号</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="126"/>
-        <location filename="../../source/widget/megainterface.cpp" line="134"/>
         <source>Version</source>
-        <translation type="unfinished">版本</translation>
+        <translation type="obsolete">版本</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="127"/>
-        <location filename="../../source/widget/megainterface.cpp" line="135"/>
         <source>Model</source>
-        <translation type="unfinished">型号</translation>
+        <translation type="obsolete">型号</translation>
     </message>
     <message>
-        <location filename="../../source/widget/megainterface.cpp" line="131"/>
-        <source>USBID</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/widget/megainterface.cpp" line="303"/>
         <source>Open fail!</source>
-        <translation type="unfinished">打开失败!</translation>
+        <translation type="obsolete">打开失败!</translation>
     </message>
 </context>
 <context>
@@ -2027,42 +1251,78 @@
     </message>
     <message>
         <location filename="../../source/plugin/t4/motorconfig.ui" line="24"/>
+        <location filename="../../source/plugin/t4/motorconfig.ui" line="37"/>
         <source>Current</source>
         <translation type="unfinished">电流</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/motorconfig.ui" line="30"/>
-        <location filename="../../source/plugin/t4/motorconfig.ui" line="43"/>
-        <location filename="../../source/plugin/t4/motorconfig.ui" line="82"/>
-        <location filename="../../source/plugin/t4/motorconfig.ui" line="95"/>
-        <location filename="../../source/plugin/t4/motorconfig.ui" line="108"/>
-        <source>A</source>
+        <location filename="../../source/plugin/t4/motorconfig.ui" line="44"/>
+        <source>Idle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/motorconfig.ui" line="140"/>
+        <location filename="../../source/plugin/t4/motorconfig.ui" line="77"/>
         <source>Basement</source>
         <translation type="unfinished">基座</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/motorconfig.ui" line="147"/>
+        <location filename="../../source/plugin/t4/motorconfig.ui" line="84"/>
         <source>Big Arm</source>
         <translation type="unfinished">大臂</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/motorconfig.ui" line="154"/>
+        <location filename="../../source/plugin/t4/motorconfig.ui" line="91"/>
         <source>Little Arm</source>
         <translation type="unfinished">小臂</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/motorconfig.ui" line="161"/>
+        <location filename="../../source/plugin/t4/motorconfig.ui" line="105"/>
         <source>Wrist</source>
         <translation type="unfinished">腕</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/motorconfig.ui" line="168"/>
+        <location filename="../../source/plugin/t4/motorconfig.ui" line="112"/>
+        <source>Switch time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/motorconfig.ui" line="98"/>
         <source>Terminal</source>
         <translation type="unfinished">末端</translation>
+    </message>
+</context>
+<context>
+    <name>MotorCurrent</name>
+    <message>
+        <location filename="../../source/plugin/t4/motorcurrent.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/motorcurrent.ui" line="20"/>
+        <source>Drive current</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/motorcurrent.ui" line="23"/>
+        <location filename="../../source/plugin/t4/motorcurrent.ui" line="39"/>
+        <source>A</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/motorcurrent.ui" line="36"/>
+        <source>Idle current</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/motorcurrent.ui" line="52"/>
+        <source>Driver and idle switch time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/motorcurrent.ui" line="55"/>
+        <source>s</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2080,55 +1340,9 @@
         <translation type="unfinished">延迟</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/model/recordtable.cpp" line="15"/>
         <location filename="../../source/plugin/model/diagnosistable.cpp" line="25"/>
         <source>Type</source>
         <translation type="unfinished">类型</translation>
-    </message>
-    <message>
-        <location filename="../../source/plugin/t4/model/recordtable.cpp" line="16"/>
-        <source>Para.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/plugin/t4/model/recordtable.cpp" line="17"/>
-        <source>X(mm)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/plugin/t4/model/recordtable.cpp" line="18"/>
-        <source>Y(mm)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/plugin/t4/model/recordtable.cpp" line="19"/>
-        <source>Z(mm)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/plugin/t4/model/recordtable.cpp" line="20"/>
-        <source>Pw(</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/plugin/t4/model/recordtable.cpp" line="21"/>
-        <source>H(</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/plugin/t4/model/recordtable.cpp" line="22"/>
-        <source>Velocity(mm/s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/plugin/t4/model/recordtable.cpp" line="23"/>
-        <source>Acceleration(mm/s</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/plugin/t4/model/recordtable.cpp" line="24"/>
-        <source>Comment</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../source/plugin/model/diagnosistable.cpp" line="6"/>
@@ -2193,21 +1407,6 @@
         <source>Save diagnosis</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <location filename="../../source/sys/sysapi.cpp" line="114"/>
-        <source>create fail</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="315"/>
-        <source>Info</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/mainwindow.cpp" line="316"/>
-        <source>language loss</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>QuadWiget</name>
@@ -2220,94 +1419,64 @@
 <context>
     <name>RoboConfig</name>
     <message>
-        <location filename="../../source/wnd/roboconfig.ui" line="32"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="58"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="72"/>
         <source>Project</source>
-        <translation type="unfinished">工程</translation>
+        <translation type="obsolete">工程</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="110"/>
         <source>removed</source>
-        <translation type="unfinished">移除</translation>
+        <translation type="obsolete">移除</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="196"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="254"/>
         <source>is not opened</source>
-        <translation type="unfinished">没有打开</translation>
+        <translation type="obsolete">没有打开</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="204"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="262"/>
         <source>download fail</source>
-        <translation type="unfinished">下载失败</translation>
+        <translation type="obsolete">下载失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="366"/>
         <source>warning</source>
-        <translation type="unfinished">警告</translation>
+        <translation type="obsolete">警告</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="366"/>
         <source>unable</source>
-        <translation type="unfinished">不可用</translation>
+        <translation type="obsolete">不可用</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="495"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="1234"/>
         <source>Connect</source>
-        <translation type="unfinished">连接</translation>
+        <translation type="obsolete">连接</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="500"/>
-        <location filename="../../source/wnd/roboconfig.cpp" line="1239"/>
         <source>Disconnect</source>
-        <translation type="unfinished">断开连接</translation>
+        <translation type="obsolete">断开连接</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="505"/>
         <source>Delete</source>
-        <translation type="unfinished">删除</translation>
+        <translation type="obsolete">删除</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="513"/>
-        <source>Explorer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="546"/>
         <source>Open fail</source>
-        <translation type="unfinished">打开失败</translation>
+        <translation type="obsolete">打开失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="604"/>
         <source>Reset</source>
-        <translation type="unfinished">复位</translation>
+        <translation type="obsolete">复位</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="604"/>
         <source>Sure to reset all?</source>
-        <translation type="unfinished">确认复位?</translation>
+        <translation type="obsolete">确认复位?</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="1018"/>
         <source>No model</source>
-        <translation type="unfinished">没有这个型号</translation>
+        <translation type="obsolete">没有这个型号</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="1065"/>
         <source>open fail</source>
-        <translation type="unfinished">打开失败</translation>
+        <translation type="obsolete">打开失败</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/roboconfig.cpp" line="1191"/>
         <source>connect fail</source>
-        <translation type="unfinished">连接失败</translation>
+        <translation type="obsolete">连接失败</translation>
     </message>
 </context>
 <context>
@@ -2336,58 +1505,33 @@
     </message>
 </context>
 <context>
-    <name>StopWidget</name>
-    <message>
-        <location filename="../../source/wnd/stopwidget.ui" line="14"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/stopwidget.ui" line="60"/>
-        <source>...</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>SysLogout</name>
     <message>
-        <location filename="../../source/wnd/syslogout.ui" line="14"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/syslogout.ui" line="27"/>
         <source>Logout</source>
-        <translation type="unfinished">输出</translation>
+        <translation type="obsolete">输出</translation>
     </message>
 </context>
 <context>
     <name>SysPref</name>
     <message>
-        <location filename="../../source/wnd/syspref.ui" line="14"/>
-        <location filename="../../source/wnd/syspref.ui" line="27"/>
         <source>Pref</source>
-        <translation type="unfinished">属性</translation>
+        <translation type="obsolete">属性</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/syspref.ui" line="36"/>
         <source>Auto Expand</source>
-        <translation type="unfinished">自动扩展</translation>
+        <translation type="obsolete">自动扩展</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/syspref.ui" line="43"/>
         <source>Auto Load last</source>
-        <translation type="unfinished">自动加载上次工程</translation>
+        <translation type="obsolete">自动加载上次工程</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/syspref.ui" line="63"/>
         <source>Auto search on startup</source>
-        <translation type="unfinished">启动时自动搜索</translation>
+        <translation type="obsolete">启动时自动搜索</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/syspref.ui" line="70"/>
         <source>Auto Login</source>
-        <translation type="unfinished">自动登录</translation>
+        <translation type="obsolete">自动登录</translation>
     </message>
 </context>
 <context>
@@ -2413,57 +1557,60 @@
         <translation type="unfinished">动态数据</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="119"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="741"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="327"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="715"/>
         <source>Record Number:</source>
         <translation type="unfinished">动作号:</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="126"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="103"/>
         <source>Actual</source>
         <translation type="unfinished">当前</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="181"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="389"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="158"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="423"/>
         <source>X:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="188"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="396"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="165"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="430"/>
         <source>Wrist:</source>
         <translation type="unfinished">腕:</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="195"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="403"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="172"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="437"/>
         <source>Z:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="248"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="456"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="225"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="490"/>
         <source>Terminal:</source>
         <translation type="unfinished">末端:</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="270"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="478"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1283"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1324"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1346"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="247"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="512"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1301"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1354"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1382"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2559"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2633"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2668"/>
         <source>mm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="286"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="494"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="263"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="528"/>
         <source>Y:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="334"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="368"/>
         <source>Target</source>
         <translation type="unfinished">目标</translation>
     </message>
@@ -2493,12 +1640,12 @@
         <translation type="unfinished">数字输入</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="676"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="689"/>
         <source>Enable Drive</source>
         <translation type="unfinished">驱动打开</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="689"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="676"/>
         <source>Reset Fault</source>
         <translation type="unfinished">复位失败</translation>
     </message>
@@ -2508,32 +1655,32 @@
         <translation type="unfinished">动作运行开始</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="715"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="764"/>
         <source>Record Bit5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="728"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="751"/>
         <source>Reserved</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="754"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="809"/>
         <source>Record Bit2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="770"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="825"/>
         <source>Record Bit1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="786"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="777"/>
         <source>Record Bit4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="802"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="793"/>
         <source>Record Bit3</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2571,7 +1718,7 @@
         <location filename="../../source/plugin/t4/t4oppanel.ui" line="941"/>
         <location filename="../../source/plugin/t4/t4oppanel.ui" line="962"/>
         <source>Homing</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">回零</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/t4oppanel.ui" line="1063"/>
@@ -2619,217 +1766,292 @@
         <translation type="unfinished">控制面板</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1263"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1269"/>
         <source>X,Y,Z</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1270"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1279"/>
         <source>Terminal</source>
         <translation type="unfinished">末端</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1362"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1398"/>
         <source>Wrist</source>
         <translation type="unfinished">腕</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1399"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1444"/>
         <source>Base</source>
         <translation type="unfinished">基座</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1409"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1454"/>
         <source>Tool</source>
         <translation type="unfinished">工具</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1416"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1461"/>
         <source>Object</source>
         <translation type="unfinished">工件</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1423"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1468"/>
         <source>User</source>
         <translation type="unfinished">用户</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1455"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1484"/>
+        <source>Speed</source>
+        <translation type="unfinished">速度</translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1503"/>
         <source>%</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1469"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1516"/>
+        <source>Step mm or degree</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1520"/>
         <source>X 0.1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1474"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1525"/>
         <source>X 0.2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1479"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1530"/>
         <source>X 0.5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1484"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1535"/>
         <source>X 1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1489"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1540"/>
         <source>X 2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1494"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1545"/>
         <source>X 5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1499"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1550"/>
         <source>X 10</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1504"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1555"/>
         <source>X 20</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1509"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1560"/>
         <source>X 50</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1514"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1565"/>
         <source>X 100</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1545"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1562"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1579"/>
         <location filename="../../source/plugin/t4/t4oppanel.ui" line="1596"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1613"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1630"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1647"/>
         <location filename="../../source/plugin/t4/t4oppanel.ui" line="1676"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1696"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1716"/>
+        <source>Step +Z</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1599"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1619"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1639"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1659"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1679"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1699"/>
         <location filename="../../source/plugin/t4/t4oppanel.ui" line="1736"/>
         <location filename="../../source/plugin/t4/t4oppanel.ui" line="1756"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1776"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1796"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1822"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1845"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1868"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1891"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1914"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1937"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1875"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1616"/>
+        <source>Step -Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1636"/>
+        <source>Step +X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1656"/>
+        <source>Step +Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1696"/>
+        <source>Step -X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1733"/>
+        <source>Add Below</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1753"/>
+        <source>Edit the current item</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1819"/>
+        <source>Continous +Z</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1842"/>
+        <source>Continous +X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1865"/>
+        <source>Continous +Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1888"/>
+        <source>Continous -Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1911"/>
+        <source>Continous -X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1934"/>
+        <source>Continous -Z</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2022"/>
         <source>Monitor</source>
         <translation type="unfinished">监视</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="1969"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2119"/>
         <source>Debug</source>
         <translation type="unfinished">调试</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2000"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2150"/>
         <source>Delay Time:</source>
         <translation type="unfinished">延迟时间:</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2029"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2179"/>
         <source>Import</source>
         <translation type="unfinished">导入</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2061"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2211"/>
         <source>Running</source>
         <translation type="unfinished">运行中</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2064"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2214"/>
         <source>Run  Sequence</source>
         <translation type="unfinished">顺序运行</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2083"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2233"/>
         <source>Move Down</source>
         <translation type="unfinished">下移</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2103"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2253"/>
         <source>Delete all record</source>
         <translation type="unfinished">删除所有动作</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2169"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2319"/>
         <source>Move Up</source>
         <translation type="unfinished">上移</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2192"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2342"/>
         <source>Cyclic</source>
         <translation type="unfinished">循环</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2205"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2554"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2355"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2739"/>
         <source>Export</source>
         <translation type="unfinished">导出</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2238"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2388"/>
         <source>Remove the current record</source>
         <translation type="unfinished">删除当前动作</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2258"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2408"/>
         <source>add a new record</source>
         <translation type="unfinished">添加新动作</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2306"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2456"/>
         <source>Status</source>
         <translation type="unfinished">状态</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2327"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2477"/>
         <source>RecordNumber:</source>
         <translation type="unfinished">动作号:</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2346"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2496"/>
         <source>Position X:</source>
         <translation type="unfinished">位置X:</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2365"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2515"/>
         <source>Position Y:</source>
         <translation type="unfinished">位置Y:</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2446"/>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2483"/>
-        <source> mm</source>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2646"/>
+        <source>Position Z:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2502"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2687"/>
         <source>Diagnosis</source>
         <translation type="unfinished">诊断</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2514"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2699"/>
         <source>Read from the controller</source>
         <translation type="unfinished">从控制器读取</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2534"/>
+        <location filename="../../source/plugin/t4/t4oppanel.ui" line="2719"/>
         <source>Deleta all</source>
         <translation type="unfinished">删除所有</translation>
     </message>
@@ -2843,77 +2065,173 @@
     </message>
 </context>
 <context>
-    <name>WelcomePage</name>
+    <name>XPluginWorkingThread</name>
     <message>
-        <location filename="../../source/wnd/welcomepage.ui" line="14"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/wnd/welcomepage.ui" line="42"/>
-        <source>www.megarobo.tech</source>
+        <location filename="../../source/plugin/plugin/xpluginworkingthread.cpp" line="191"/>
+        <location filename="../../source/plugin/plugin/xpluginworkingthread.cpp" line="203"/>
+        <source>execute fail</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>aboutDlg</name>
     <message>
-        <location filename="../../source/wnd/aboutdlg.ui" line="20"/>
         <source>About</source>
-        <translation type="unfinished">关于</translation>
+        <translation type="obsolete">关于</translation>
     </message>
     <message>
-        <location filename="../../source/wnd/aboutdlg.ui" line="77"/>
         <source>MEGAROBO Config Tool</source>
-        <translation type="unfinished">MEGAROBO配置工具</translation>
+        <translation type="obsolete">MEGAROBO配置工具</translation>
+    </message>
+</context>
+<context>
+    <name>mrx_t4</name>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1651"/>
+        <source>Joint zero</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../source/wnd/aboutdlg.ui" line="84"/>
-        <source>0.0.2</source>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1658"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1665"/>
+        <source>Joint step</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1672"/>
+        <source>Jog +</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1679"/>
+        <source>Jog + end</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1686"/>
+        <source>Jog -</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1693"/>
+        <source>Jog - end</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>mrx_t4::ActionTable</name>
     <message>
-        <location filename="../../source/plugin/t4/actiontable.cpp" line="136"/>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="174"/>
+        <source>Too many files</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="188"/>
+        <source>File do not exist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="199"/>
+        <source>File read fail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="225"/>
         <source>Record load fail</source>
         <translation type="unfinished">记录加载失败</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/actiontable.cpp" line="151"/>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="240"/>
         <source>Record save fail</source>
         <translation type="unfinished">记录存储失败</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/actiontable.cpp" line="249"/>
-        <location filename="../../source/plugin/t4/actiontable.cpp" line="259"/>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="355"/>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="365"/>
         <source>Save record fail</source>
         <translation type="unfinished">记录存储失败</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/actiontable.cpp" line="268"/>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="374"/>
         <source>save fail</source>
         <translation type="unfinished">存储失败</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/actiontable.cpp" line="279"/>
-        <location filename="../../source/plugin/t4/actiontable.cpp" line="286"/>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="385"/>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="392"/>
         <source>Load record fail</source>
         <translation type="unfinished">记录加载失败</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/actiontable.cpp" line="314"/>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="426"/>
+        <source>Invalid input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="523"/>
+        <source>To here</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="701"/>
+        <source>Add Before</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="702"/>
+        <source>Add Below</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="703"/>
+        <source>Delete</source>
+        <translation type="unfinished">删除</translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="710"/>
+        <source>Up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="711"/>
+        <source>Down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="717"/>
+        <source>All Expand</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="718"/>
+        <source>All Collapse</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="721"/>
+        <source>Homing</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="814"/>
+        <source>To:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="816"/>
+        <source>Step:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Position read fail</source>
-        <translation type="unfinished">位置读取失败</translation>
+        <translation type="obsolete">位置读取失败</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/actiontable.cpp" line="326"/>
         <source>Time too short</source>
-        <translation type="unfinished">时间太短</translation>
+        <translation type="obsolete">时间太短</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/actiontable.cpp" line="411"/>
+        <location filename="../../source/plugin/t4/actiontable.cpp" line="695"/>
         <source>To Here</source>
         <translation type="unfinished">去这里</translation>
     </message>
@@ -2921,22 +2239,22 @@
 <context>
     <name>mrx_t4::ErrorMgrTable</name>
     <message>
-        <location filename="../../source/plugin/t4/errormgrtable.cpp" line="150"/>
+        <location filename="../../source/plugin/t4/errormgrtable.cpp" line="239"/>
         <source>Save record fail</source>
         <translation type="unfinished">存储失败</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/errormgrtable.cpp" line="165"/>
+        <location filename="../../source/plugin/t4/errormgrtable.cpp" line="254"/>
         <source>save fail</source>
         <translation type="unfinished">存储失败</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/errormgrtable.cpp" line="177"/>
+        <location filename="../../source/plugin/t4/errormgrtable.cpp" line="266"/>
         <source>Load record fail</source>
         <translation type="unfinished">加载失败</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/errormgrtable.cpp" line="184"/>
+        <location filename="../../source/plugin/t4/errormgrtable.cpp" line="273"/>
         <source>load fail</source>
         <translation type="unfinished">加载失败</translation>
     </message>
@@ -2944,27 +2262,27 @@
 <context>
     <name>mrx_t4::Info</name>
     <message>
-        <location filename="../../source/plugin/t4/info.cpp" line="49"/>
+        <location filename="../../source/plugin/t4/info.cpp" line="51"/>
         <source>Model</source>
         <translation type="unfinished">型号</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/info.cpp" line="50"/>
+        <location filename="../../source/plugin/t4/info.cpp" line="52"/>
         <source>SN</source>
         <translation type="unfinished">序列号</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/info.cpp" line="51"/>
+        <location filename="../../source/plugin/t4/info.cpp" line="53"/>
         <source>Addr</source>
         <translation type="unfinished">地址</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/info.cpp" line="52"/>
+        <location filename="../../source/plugin/t4/info.cpp" line="54"/>
         <source>Firmware</source>
         <translation type="unfinished">固件版本</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/info.cpp" line="53"/>
+        <location filename="../../source/plugin/t4/info.cpp" line="55"/>
         <source>Mechanical</source>
         <translation type="unfinished">机械版本</translation>
     </message>
@@ -2972,154 +2290,166 @@
 <context>
     <name>mrx_t4::T4OpPanel</name>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="136"/>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="158"/>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="165"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="215"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="241"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="248"/>
         <source>Basement</source>
         <translation type="unfinished">基座</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="137"/>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="159"/>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="166"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="216"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="242"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="249"/>
         <source>Big Arm</source>
         <translation type="unfinished">大臂</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="138"/>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="160"/>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="167"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="217"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="243"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="250"/>
         <source>Little Arm</source>
         <translation type="unfinished">小臂</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="139"/>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="161"/>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="168"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="218"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="244"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="251"/>
         <source>Wrist</source>
         <translation type="unfinished">腕</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="141"/>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="163"/>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="170"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="220"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="246"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="253"/>
         <source>Terminal</source>
         <translation type="unfinished">末端</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="276"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="257"/>
+        <source>Exmport image...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="259"/>
+        <source>Exmport data...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="410"/>
         <source>Record read fail</source>
         <translation type="unfinished">记录读取失败</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="286"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="419"/>
         <source>Target read fail</source>
         <translation type="unfinished">目标读取失败</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="298"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="431"/>
         <source>Current read fail</source>
         <translation type="unfinished">当前位置读取失败</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="354"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="489"/>
         <source>Homeing status</source>
         <translation type="unfinished">回零状态</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="400"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="539"/>
         <source>Monitor update fail</source>
         <translation type="unfinished">监视更新失败</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="696"/>
         <source>power</source>
-        <translation type="unfinished">驱动状态</translation>
+        <translation type="obsolete">驱动状态</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="704"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1029"/>
         <source>ack_error</source>
         <translation type="unfinished">响应错误</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="717"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1042"/>
         <source> save fail</source>
         <translation type="unfinished"> 存储失败</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="731"/>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="749"/>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="756"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1056"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1074"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1081"/>
         <source> load fail</source>
         <translation type="unfinished"> 读取失败</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="820"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1145"/>
         <source>To Here</source>
         <translation type="unfinished">去这里</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="847"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1172"/>
         <source>Export image...</source>
         <translation type="unfinished">导出图片...</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="855"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1180"/>
         <source>Export data...</source>
         <translation type="unfinished">导出数据...</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="863"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="261"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1188"/>
         <source>Copy</source>
         <translation type="unfinished">复制</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="887"/>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="901"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="725"/>
+        <source>Step</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="872"/>
+        <source>Exec fail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1021"/>
+        <source>power config fail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1217"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1231"/>
         <source>Export</source>
         <translation type="unfinished">导出</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="889"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1219"/>
         <source>Image Files (*.png *.jpg *.bmp)</source>
         <translation type="unfinished">图片 (*.png *.jpg *.bmp)</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="903"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1233"/>
         <source>Data (*.csv)</source>
         <translation type="unfinished">数据 (*.csv)</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="918"/>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1065"/>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1088"/>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1281"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1248"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1422"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1445"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1639"/>
         <source>save fail</source>
         <translation type="unfinished">存储失败</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1052"/>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1075"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1409"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1432"/>
         <source>Debug(*.dbg)</source>
         <translation type="unfinished">调试(*.dbg)</translation>
     </message>
     <message>
-        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1268"/>
+        <location filename="../../source/plugin/t4/t4oppanel.cpp" line="1626"/>
         <source>Diagnosis(*.dia)</source>
         <translation type="unfinished">诊断(*.dia)</translation>
-    </message>
-</context>
-<context>
-    <name>myInvertButton</name>
-    <message>
-        <location filename="../../source/model/checkdelegate.cpp" line="146"/>
-        <source>true</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../source/model/checkdelegate.cpp" line="146"/>
-        <source>false</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

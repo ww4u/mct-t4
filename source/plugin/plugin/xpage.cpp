@@ -39,7 +39,6 @@ void XPage::changeEvent(QEvent *event)
 
 void XPage::focusInEvent(QFocusEvent *event)
 {
-    Q_ASSERT( NULL != m_pPlugin );
     showFocusHelp();
 }
 

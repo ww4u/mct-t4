@@ -30,6 +30,7 @@ enum {
 enum {
     STYLE_MEGAROBO,
     STYLE_CLASSIC,
+    STYLE_SYSTEM,
 };
 
 class MainWindow : public QMainWindow
@@ -132,7 +133,8 @@ private:
     StopWidget *m_pStopWidget;
 
     //! lang/style action
-    QAction *m_pChAction, *m_pEnAction, *m_pMegaAction, *m_pClasAction;
+    QAction *m_pChAction, *m_pEnAction, *m_pTrChAction;
+    QAction *m_pMegaAction, *m_pClasAction, *m_pSystemAction;
 
     QLabel *m_pLabStatus, *m_pLabMctVer, *m_pLabConVer;
 

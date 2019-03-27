@@ -25,7 +25,7 @@ do{ \
     QTreeWidgetItem *plwItem = new QTreeWidgetItem();   \
     Q_ASSERT( NULL != plwItem ); \
     plwItem->setIcon( 0, QIcon( icon) ); \
-    plwItem->setText( 0, tr(txt) ); \
+    plwItem->setText( 0, (txt) ); \
     plwItem->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(var) ) ); \
     plwItem->setData( 0, Qt::UserRole + 1, QVariant( QVariant::fromValue(this) ) ); \
     pRoot->addChild(plwItem); \
@@ -44,7 +44,7 @@ do{ \
     \
     \
     root->setIcon( 0, QIcon( icon) ); \
-    root->setText( 0, tr(txt) ); \
+    root->setText( 0, (txt) ); \
     root->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(var) ) ); \
     stack->addWidget( var ); \
     mPluginWidgets.append( var ); \

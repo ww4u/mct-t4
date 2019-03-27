@@ -150,12 +150,16 @@ void MainWindow::setupMenu()
     m_pChAction->setCheckable( true );
     m_pEnAction = langGroup->addAction( tr("English") );
     m_pEnAction->setCheckable( true );
+    m_pTrChAction = langGroup->addAction( tr("Traditional Chinese") );
+    m_pTrChAction->setCheckable( true );
 
     QActionGroup * styleGroup = new QActionGroup(ui->menuView);
     m_pMegaAction = styleGroup->addAction( tr("MEGAROBO") );
     m_pMegaAction->setCheckable( true );
     m_pClasAction = styleGroup->addAction( tr("Classic") );
     m_pClasAction->setCheckable( true );
+    m_pSystemAction = styleGroup->addAction( tr("System") );
+    m_pSystemAction->setCheckable( true );
 
     ui->menuView->addSection( tr("Language") );
     ui->menuView->addActions( langGroup->actions() );
@@ -183,7 +187,6 @@ void MainWindow::setupToolBar()
     ui->mainToolBar->addSeparator();
     m_pStopWidget = new StopWidget();
     ui->mainToolBar->addWidget( m_pStopWidget );
-
 
 //    ui->mainToolBar->addAction( ui->actionStop );
 //    ui->mainToolBar->addAction( ui->actionIP );
@@ -230,9 +233,12 @@ void MainWindow::buildConnection()
     //! connect menu
     connect( m_pEnAction, SIGNAL(triggered(bool)), this, SLOT(slot_lang_changed()) );
     connect( m_pChAction, SIGNAL(triggered(bool)), this, SLOT(slot_lang_changed()) );
+    connect( m_pTrChAction, SIGNAL(triggered(bool)), this, SLOT(slot_lang_changed()) );
 
     connect( m_pMegaAction, SIGNAL(triggered(bool)), this, SLOT(slot_style_changed()) );
     connect( m_pClasAction, SIGNAL(triggered(bool)), this, SLOT(slot_style_changed()) );
+    connect( m_pSystemAction, SIGNAL(triggered(bool)), this, SLOT(slot_style_changed()) );
+
 
     //! logout
     connect( this, SIGNAL(signal_logout(const QString &,int)),
@@ -332,6 +338,11 @@ void MainWindow::changeLanguage()
             area = QLocale::China;
 //            qmFile = ":/res/ts/qt_CN.qm";
         }
+        else if ( mPref.mLangIndex == LANG_TR_CN )
+        {
+            lang = QLocale::Chinese;
+            area = QLocale::Taiwan;
+        }
         else
         {
             lang = QLocale::AnyLanguage;
@@ -372,14 +383,15 @@ void MainWindow::changeStyle()
 {
     if ( mPref.mStyleIndex == STYLE_MEGAROBO )
     {
-
         setUiStyle( qApp->applicationDirPath() + "/style/mega.qss" );
+    }
+    else if ( mPref.mStyleIndex == STYLE_CLASSIC )
+    {
+        setUiStyle( qApp->applicationDirPath() + "/style/classic.qss" );
     }
     else
     {
-//#ifndef QT_DEBUG
-        setUiStyle( qApp->applicationDirPath() + "/style/classic.qss" );
-//#endif
+        qApp->setStyleSheet("");
     }
 }
 
@@ -435,12 +447,14 @@ void MainWindow::slot_plugin_operable( bool b )
 {
     ui->actionDownload->setEnabled( b && m_roboConfig->downloadVisible() );
     ui->actionUpload->setEnabled( b );
-    ui->actionStop->setEnabled( b );
-//    ui->actionConnect->setEnabled( b );
+
     ui->actionSync->setEnabled( b && m_roboConfig->downloadVisible() );
 
     ui->actionStore->setEnabled( b );
 
+    //! \todo plugin opened
+    //! plugin operable
+//    ui->actionStop->setEnabled( b );
 //    m_pStopWidget->setEnabled( b );
 }
 
@@ -461,16 +475,20 @@ void MainWindow::slot_post_startup()
     //! change the language
     if ( mPref.mLangIndex == 0 )
     { m_pEnAction->setChecked( true ); }
-    else
+    else if ( mPref.mLangIndex == 1 )
     { m_pChAction->setChecked( true ); }
+    else
+    { m_pTrChAction->setChecked( true); }
 
 //    changeLanguage();
 
     //! change the style
     if ( mPref.mStyleIndex == 0 )
     { m_pMegaAction->setChecked( true ); }
-    else
+    else if ( mPref.mStyleIndex == 1 )
     { m_pClasAction->setChecked( true ); }
+    else
+    { m_pSystemAction->setChecked( true); }
 
     Q_ASSERT( NULL != m_roboConfig );
     m_roboConfig->postStartup();
@@ -489,8 +507,10 @@ void MainWindow::slot_lang_changed()
 {
     if ( m_pEnAction->isChecked() )
     { mPref.mLangIndex = LANG_EN; }
-    else
+    else if ( m_pChAction->isChecked() )
     { mPref.mLangIndex = LANG_CN; }
+    else
+    { mPref.mLangIndex = LANG_TR_CN; }
 
     changeLanguage();
 
@@ -502,9 +522,13 @@ void MainWindow::slot_style_changed()
     {
         mPref.mStyleIndex = STYLE_MEGAROBO;
     }
-    else
+    else if ( m_pClasAction->isChecked() )
     {
         mPref.mStyleIndex = STYLE_CLASSIC;
+    }
+    else
+    {
+        mPref.mStyleIndex = STYLE_SYSTEM;
     }
 
     changeStyle();
@@ -656,6 +680,7 @@ void MainWindow::retranslateUi()
 {
     m_pClasAction->setText( tr("Classic") );
     m_pMegaAction->setText( tr("MEGAROBO") );
+    m_pSystemAction->setText( tr("System") );
 
     m_pHelpAction->setText(tr("Show Help"));
 }

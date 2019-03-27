@@ -15,8 +15,8 @@ VERSION = 0.0.0.2
 
 CONFIG += C++11 #use lambda
 
-#release:DEFINES += QT_NO_WARNING_OUTPUT \
-#                   QT_NO_DEBUG_OUTPUT
+release:DEFINES += QT_NO_WARNING_OUTPUT \
+                   QT_NO_DEBUG_OUTPUT
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -104,6 +104,8 @@ INCLUDEPATH += ../source/plugin
 
 win32:INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include"
 
+INCLUDEPATH += "../source/device/libMegaGateway/src"
+
 # libs
 LIBS += -L"../lib"
 
@@ -126,7 +128,7 @@ DISTFILES += ../build/doc/readme.txt \
              ../build/doc/errant.txt \
              ../build/doc/faq.txt
 
-#TRANSLATIONS += ../res/ts/mct_zh_CN.ts \
-#                ../res/ts/mct_EN.ts \
-#                ../res/ts/mct_zh_TW.ts
+TRANSLATIONS += ../res/ts/mct_zh_CN.ts \
+                ../res/ts/mct_EN.ts \
+                ../res/ts/mct_zh_TW.ts
 

@@ -5,8 +5,7 @@
 
 #include "../../plugin/plugin/xplugin.h"
 
-
-#include "../../device/libMegaGateway/src/MegaGateway.h"
+#include "MegaGateway.h"
 
 #include "../../plugin/t4/t4.h"
 
@@ -1562,8 +1561,10 @@ void T4OpPanel::on_btnRead_clicked()
     ary.reserve( 4096 );
 
     int ret;
+
     ret = mrgErrorLogUpload( pRobo->deviceVi(), 0,
                              ary.data());
+
     //! fill the model
     if ( ret > 0 )
     {
@@ -1837,14 +1838,13 @@ void T4OpPanel::post_debug_exit( int id, int r )
 
 void T4OpPanel::on_debug_enter( int id, int r )
 {
-//    ui->tvDebug->setCurrentIndex( ui->tvDebug->model()->index( i, 0 ) );
     logDbg()<<id<<r;
     ui->tvDebug->selectRow( r );
     ui->doubleSpinBox_debugRecord->setValue( id );
 }
 void T4OpPanel::on_debug_exit( int id, int r )
 {
-//    ui->tvDebug->setCurrentIndex( ui->tvDebug->model()->index( i-1, 0 ) );
+
 }
 
 //! start the run thread

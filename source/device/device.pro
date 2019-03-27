@@ -1,9 +1,11 @@
 TEMPLATE=lib
 CONFIG += static
+CONFIG += c++11
 QT += core
 
 TARGET = ../../../lib/mrx-device
 
+DEFINES += _LIB_DEVICE
 
 win32 {
 # visa
@@ -13,6 +15,8 @@ INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include"
 #DEFINES += NI_VISA
 #DEFINES += ARCH_32
 }
+
+INCLUDEPATH += ./libMegaGateway/src
 
 OBJECTS_DIR = ./obj
 MOC_DIR = ./obj

@@ -1,8 +1,10 @@
 TEMPLATE=lib
 QT       += gui widgets
 CONFIG += static
-
+CONFIG += c++11
 TARGET = ../../../../lib/mrx-t4
+
+DEFINES += QT_DEPRECATED_WARNINGS
 
 INCLUDEPATH += ./widget
 INCLUDEPATH += ../model/widget
@@ -17,6 +19,8 @@ INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include"
 }
 
 INCLUDEPATH += "../../widget"
+
+INCLUDEPATH += "../../device/libMegaGateway/src"
 
 OBJECTS_DIR = ./obj
 MOC_DIR = ./obj
@@ -98,9 +102,6 @@ FORMS += \
     coordpara.ui \
     advpara.ui \
     motorcurrent.ui
-
-#LIBS += -L"../../../lib"
-#LIBS += -lmrx-device
 
 RESOURCES += ../../../res/res.qrc
 

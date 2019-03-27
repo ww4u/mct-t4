@@ -7,10 +7,10 @@ extern "C" {
 
 
 #include "bus.h"
-#include "export.h"
+//#include "export.h"
 
-EXPORT_API int CALL getXIn(ViSession vi, unsigned int *pScan );
-EXPORT_API int CALL setYOut(ViSession vi, int id, int v );
+int getXIn(ViSession vi, unsigned int *pScan );
+int setYOut(ViSession vi, int id, int v );
 
 #if defined(__cplusplus) || defined(__cplusplus__)
 }

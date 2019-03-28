@@ -31,6 +31,13 @@
    cmd：要发送的设置命令
    返回值：0表示执行成功，－1表示失败
 
+** int mrgGateWayRead(ViSession  vi, char * output, int wantlen);
+   向网关发送读取命令。
+   vi :设备句柄
+   output:查询命令的返回
+   wantlen:期望查询命令返回的长度，即output的长度
+   返回值：实际返回的数据长度
+
 ** int mrgGateWayQuery(ViSession  vi, char *cmd, char *output, int wantlen);
    向网关直接发送查询命令。
    vi :设备句柄
@@ -370,7 +377,6 @@
    wavetable:波表索引，－1表示使用默认索引（调用mrgSetRobotWavetable设置的波表索引）
    返回值：0表示停止成功，否则表示停止失败
 
-
 ** int mrgRobotWaitReady(ViSession vi, int name, int wavetable, int timeout_ms);
    等待机器人的特定波表的ready状态（等待模块设备解算完成）
    vi :visa设备句柄
@@ -645,7 +651,6 @@
    timeout_ms:等等解算完成的超时时间。若timeout_ms＝－1，表示不等待解算完成。timeout_ms ＝ 0，表示无限等待。
    返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示等待超时
 
-
 ** int mrgRobotMotionFileExport(ViSession vi, int name, int location, char* filename);
    将系统中的运动数据，导出成文件
    vi :visa设备句柄
@@ -704,6 +709,32 @@
    position:末端执行器的位置(相对于机械零点),单位:角度.
    返回值：0表示执行正确, 否则执行失败
 
+** int mrgRobotGetToolType(ViSession vi, int robotname, int * type);
+   查询末端执行器类型
+   vi :visa设备句柄
+   name: 机器人名称
+   type: 末端执行器类型 0->爪子
+   dev : 末端执行器对应的通道设备 (1@513), 哪个设备的哪个轴
+   返回值：0表示执行成功，－1：表示出错
+
+** int mrgRobotToolExeMode(ViSession vi, int name, int mode); 
+   末端执行器执行模式
+   vi :visa设备句柄
+   name: 机器人名称
+   mode: 末端执行器执行模式. 0:正常模式; 1:先张开,再闭合到目标位置
+   返回值：0表示执行成功，－1：表示出错，
+
+
+ 
+ 
+ /*
+** int mrgRobotToolExeMode_Query(ViSession vi, int name, int* mode);
+   查询末端执行器执行模式
+   vi :visa设备句柄
+   name: 机器人名称
+   mode: 末端执行器执行模式. 0:正常模式; 1:先张开,再闭合到目标位置
+   返回值：0表示执行成功，－1：表示出错
+
 ** int mrgGetRobotCurrentAngle(ViSession vi, int name, float *angles);
    获取机器人当前各关节的角度值
    vi :visa设备句柄
@@ -736,6 +767,15 @@
    timeout_ms:表示等待回零结束的超时时间. 如果为-1,表示不等待. 0表示无限等待. >0 表示等待的超时时间. 单位:ms
    返回值：0表示执行成功， －1：表示执行失败
 
+** int mrgRobotJointMoveOn(ViSession vi, int name, int axi, float speed);
+   控制机器人某一个轴持续运动
+   vi :visa设备句柄
+   name: 机器人名称
+   axi :轴索引
+   speed: 轴运行的速度,单位: 度/秒
+   wavetable : 波表
+   返回值：0表示执行成功， －1：表示执行失败
+   
 ** int mrgGetRobotJointAngle(ViSession vi, int name, int joint, float *angle);
    获取机器人各关节的当前角度
    vi :visa设备句柄
@@ -831,8 +871,7 @@
    ch：通道号
    state：状态
    返回值：0表示执行成功，－1表示失败
-   
-   
+      
 ** int mrgMRQMotionStateReport_Query(ViSession vi, int name, int ch,int *state);
    查询上报状态
    vi :visa设备句柄
@@ -1135,6 +1174,24 @@
    t:PVT 点的时间值
    返回值：0表示执行成功，－1表示失败
 
+** int mrgMRQPVTLoad(ViSession vi, int name, int ch, int wavetable, float * p, float * v, float *t, int step, int line);
+   PVT下载
+   vi :visa设备句柄
+   name:设备名称(SEND_ID)
+   ch：通道号
+   wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+   state:  
+   返回值：0表示执行成功，－1表示失败
+
+** int mrgMRQPVTRun(ViSession vi, int name, int ch, int wavetable, int timeout_ms);
+   运行PVT
+   vi :visa设备句柄
+   name:设备名称(SEND_ID)
+   ch：通道号
+   wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
+   timeout_ms:等待运行结束的超时时间,-1表示不等待. 0表示无限等待.
+   返回值：0表示执行成功，－1表示失败
+
 ** int mrgMRQPVTState(ViSession vi, int name, int ch, int wavetable, int state);
    设置当前PVT的状态
    vi :visa设备句柄
@@ -1160,6 +1217,14 @@
    ch：通道号
    wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
    state:期望等待的状态   0:POWERON; 1:IDLE;2:CALCING;3:CALCEND; 4:STANDBY,5:RUNNING,6:ERROR;
+   返回值：0表示执行成功，－1表示失败
+
+** int mrgMRQPVTStateWaitEnd(ViSession vi, int name, int ch, int wavetable,int timeout_ms);
+   等待当前PVT的解算结束状态或运行结束状态
+   vi :visa设备句柄
+   name:设备名称(SEND_ID)
+   ch：通道号
+   wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
    返回值：0表示执行成功，－1表示失败
 
 ** int mrgMRQPVTTimeScale(ViSession vi, int name, int ch, int wavetable, int speedup, int speedcut);
@@ -1329,7 +1394,6 @@
    wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
    pattern:模式
    返回值：0表示执行成功，－1表示失败
-
 
 ** int mrgMRQPVTStopMode(ViSession vi, int name, int ch, int wavetable, int type);
    设置急停方式,立即停止或者减速停止
@@ -2066,7 +2130,6 @@
    value:编码器零位值(编码器线数)
    返回值：0表示执行成功，－1表示失败
 
-
 ** int mrgMRQUartConfig(ViSession vi, int num, int name, int baud,char parity, int wordlen, int stopbit);
    设置串口应用配置，配置校验位、数据位、停止位
    vi :visa设备句柄
@@ -2302,6 +2365,21 @@
 
 
 * system.h
+** int mrgSysGetSoftVersion(ViSession vi, char * version);
+   查询 MRH-T 软件版本号
+   vi :visa设备句柄
+   返回值：0回读正确;否则回读失败
+
+** int mrgSysGetBackBoardSoftVersion(ViSession vi,char * version); 
+   查询 MRH-T 背板的软件版本号
+   vi :visa设备句柄
+   返回值：0回读正确;否则回读失败
+
+** int mrgSysGetBackBoardHardVersion(ViSession vi, char * version); 
+   查询 MRH-T 背板的硬件版本号
+   vi :visa设备句柄
+   返回值：0回读正确;否则回读失败
+
 ** int mrgSysStartCan(ViSession vi);
    启动MARH的CAN口
    vi :visa设备句柄
@@ -2318,6 +2396,12 @@
    baud:波特率 1000000,800000,500000,250000,125000,100000
    返回值：0表示执行成功，－1表示失败
 
+** int mrgSysConfCan_Query(ViSession vi, int* baud);
+   获取MRH的CAN口波特率
+   vi :visa设备句柄
+   baud:波特率 1000000,800000,500000,250000,125000,100000
+   返回值：0表示执行成功，－1表示失败
+
 ** int mrgSysModeSwitch(ViSession vi, int mode);
    切换 MRH-T 的模式
    vi :visa设备句柄
@@ -2328,6 +2412,30 @@
    查询 MRH-T 的模式
    vi :visa设备句柄
    返回值：MRH-T 的模式
+
+** int mrgSysInstructionMode(ViSession vi, int mode);
+   设置指令表的模式 按行执行或者按段执行
+   vi :visa设备句柄
+   mode:指令表执行模式，取值范围： [0, 1]. 0表示按行执行,1表示按段执行
+   返回值：0表示执行成功，－1表示失败
+
+** int mrgSysInstructionMode_Query(ViSession vi, int* mode); 
+   查询指令表的模式
+   vi :visa设备句柄
+   mode:指令表执行模式，取值范围： [0, 1]. 0表示按行执行,1表示按段执行
+   返回值：0表示执行成功,否则表示执行失败
+
+** int mrgSysSetNetworkIPMode(ViSession vi,int mode);
+   设置网络的IP模式 
+   vi :visa设备句柄
+   mode : IP 模式 0->静态IP; 1->DHCP
+   返回值：0设置成功,-1设置失败
+
+** int mrgSysGetNetworkIPMode(ViSession vi, int* mode); 
+   获取网络的IP模式
+   vi :visa设备句柄
+   mode : IP 模式 0->静态IP; 1->DHCP
+   返回值：0执行成功,否则执行失败
 
 ** int mrgSysWifiScan(ViSession vi, char *result, int len);
    扫描可用的WIFI
@@ -2410,7 +2518,6 @@
    state:  0->OFF| 1->ON
    返回值：0表示执行成功；－1表示执行失败
    紧急停止时,会自动设置此标志位
-
 
 ** int mrgSysUpdateFileSearch(ViSession vi, char *fileList);
    vi :visa设备句柄

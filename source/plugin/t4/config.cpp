@@ -46,6 +46,7 @@ Config::Config(QWidget *parent) :
     ui->spinU1->setSuffix( char_deg );
     ui->spinU2->setSuffix( char_deg );
     ui->spinU3->setSuffix( char_deg );
+
 }
 
 Config::~Config()
@@ -213,13 +214,22 @@ int Config::upload()
 
     //! slow ratio
     int a, b;
-    ret = mrgMRQMotorGearRatio_Query( device_var(),
-                                4,
-                                &a, &b );
-    if ( ret == 0 )
-    {
-        ui->spinMult->setValue( a );
-        ui->spinDiv->setValue( b );
+    char type[1]={0};
+    //int ret = mrgRobotGetToolType(device_var(), type);
+    if( int(type[0]) == TERMINAL_TYPE::USER ){
+        ret = mrgMRQMotorGearRatio_Query( device_var(),
+                                    4,
+                                    &a, &b );
+        if ( ret == 0 )
+        {
+            ui->spinMult->setValue( a );
+            ui->spinDiv->setValue( b );
+            ui->gpSlow->setVisible( true );
+        }else{
+            return ret;
+        }
+    }else{
+        ui->gpSlow->setVisible( false );
     }
 
     return 0;
@@ -231,13 +241,18 @@ int Config::download()
     int ret, val;
     double angle;
 
-    //! \todo
-    //! \note
-    return 0;
+    //! set terminal
+    int type = ui->cmbTypeTerminal->currentIndex();
 
-    //! tool set
-//    ret = mrgRobotToolSet( )
+    char t[4] = {0};
+    itoa(robot_var_handle(), t, 10);
 
+    QByteArray baStr("4@");
+    baStr.append(t);
+    ret = mrgRobotToolSet( robot_var(), type, baStr.data());
+    if(ret != 0){
+        return -1;
+    }
     //! set zero
     QList<QDoubleSpinBox*> spins;
     spins<<ui->spinZero0<<ui->spinZero1<<ui->spinZero2<<ui->spinZero3;
@@ -251,7 +266,7 @@ int Config::download()
         ret = mrgMRQAbsEncoderZeroValue( device_var(),
                                                 i,
                                                 val );
-        if ( ret != 0 )
+logDbg();        if ( ret != 0 )
         { return -1; }
     }
 
@@ -347,7 +362,7 @@ void Config::retranslateUi()
 }
 
 void Config::on_cmbTypeTerminal_currentIndexChanged(int index)
-{
+{logDbg();
     QIcon icon = ui->cmbTypeTerminal->itemIcon( index );
     if ( icon.isNull() )
     {
@@ -358,8 +373,11 @@ void Config::on_cmbTypeTerminal_currentIndexChanged(int index)
     {
         ui->labelTerminalImg->setPixmap( icon.pixmap( 160,160 ) );
         ui->labelTerminalImg->setVisible( true );
-
-        ui->gpSlow->setVisible( true );
+        if( index == TERMINAL_TYPE::USER ){
+            ui->gpSlow->setVisible( true );
+        }else{
+            ui->gpSlow->setVisible( false );
+        }
     }
 
     //! validate the terminal

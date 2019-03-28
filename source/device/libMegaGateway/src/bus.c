@@ -26,7 +26,7 @@ int busFindDevice(int bus, char *output, int len,int method)
 		else if (method == 1)
 		{
 			char ip_list[256][100];
-			int status = socketFindResources(ip_list, 256, 500);
+            int status = socketFindResources(ip_list, 500);
             int i;
             for (i = 0; i < status; i++)
 			{
@@ -206,7 +206,7 @@ ViSession busOpenSocket(const char *pName, const char *addr, unsigned int port)
 /* strHostIp:返回的IP地址
  *  len: IP地址数组长度
  */
-int getHostIpAddr(char strHostIp[][100], int len)
+int getHostIpAddr(char strHostIp[][100])
 {
 	struct ifreq ifr;
 	struct ifconf ifc;

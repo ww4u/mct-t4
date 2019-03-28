@@ -107,7 +107,6 @@ int mrgDeleteRobot(ViSession vi, int name)
  * 说明：对T4来说: links[0] 基座高度;links[1] 大臂长度 ;links[2] 小臂长度 
  *  对H2来说: links[0] 宽;links[1] 高 ;links[2] 滑块宽度;links[3] 滑块高度,links[4] 模具类型;links[5] 齿数;
  */
-#include <QDebug>
 int mrgSetRobotLinks(ViSession vi, int name,float * links,int link_count)
 {
 	char args[SEND_BUF];
@@ -123,7 +122,6 @@ int mrgSetRobotLinks(ViSession vi, int name,float * links,int link_count)
 		strcat(as8Links, tmp);
 	}
 	snprintf(args, SEND_BUF, "ROBOT:LINK %d,(%s)\n", name, as8Links);
-        qDebug() << args;
 	if (busWrite(vi, args, strlen(args)) <= 0)
 	{
 		return -1;
@@ -520,7 +518,7 @@ int mrgGetRobotProjectZero(ViSession vi, int name,float * x,float *y,float *z)
 	p = STRTOK_S(ret, ",", &pNext);
 	while (p)
 	{
-		values[count++] = strtod(p, NULL);
+        values[count++] = strtof(p, NULL);
 		p = STRTOK_S(NULL, ",", &pNext);
 	}
 	*x = values[0];
@@ -569,7 +567,7 @@ int mrgGetRobotAxisZero(ViSession vi, int name, float * x, float *y, float *z)
 	p = STRTOK_S(ret, ",", &pNext);
 	while (p)
 	{
-		values[count++] = strtod(p, NULL);
+        values[count++] = strtof(p, NULL);
 		p = STRTOK_S(NULL, ",", &pNext);
 	}
 	*x = values[0];
@@ -620,7 +618,7 @@ int mrgGetRobotSoftWareLimit(ViSession vi, int name,int type, float * x, float *
 	p = STRTOK_S(ret, ",", &pNext);
 	while (p)
 	{
-		values[count++] = strtod(p, NULL);
+        values[count++] = strtof(p, NULL);
 		p = STRTOK_S(NULL, ",", &pNext);
 	}
 	*x = values[0];
@@ -2016,7 +2014,7 @@ int mrgRobotJointMove(ViSession vi, int name, int axi, float position,float time
 {
     int retlen = 0;
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:JOINT:MOVE %d,%d,%f\n", name, axi, speed);
+    snprintf(args, SEND_BUF, "ROBOT:JOINT:MOVE:HOLD %d,%d,%f\n", name, axi, speed);
     if ((retlen = busWrite(vi, args, strlen(args))) == 0)
     {
         return -1;

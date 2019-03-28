@@ -2,11 +2,11 @@
 
 #define SEND_BUF  (100)
 /*
- * è®¾ç½®ç³»ç»Ÿä¸ºå·¥ç¨‹æ¨¡å¼
- * vi :visaè®¾å¤‡å¥æŸ„
+ * ÉèÖÃÏµÍ³Îª¹¤³ÌÄ£Ê½
+ * vi :visaÉè±¸¾ä±ú
  * state: 0->OFF| 1->ON
- * è¿”å›å€¼ï¼š0è¡¨ç¤ºæ‰§è¡ŒæˆåŠŸï¼›ï¼1è¡¨ç¤ºæ‰§è¡Œå¤±è´¥
- * è¯´æ˜: åªæœ‰åœ¨å·¥ç¨‹æ¨¡å¼ä¸‹,æ‰å…è®¸è¯»å–IOçŠ¶æ€
+ * ·µ»ØÖµ£º0±íÊ¾Ö´ĞĞ³É¹¦£»£­1±íÊ¾Ö´ĞĞÊ§°Ü
+ * ËµÃ÷: Ö»ÓĞÔÚ¹¤³ÌÄ£Ê½ÏÂ,²ÅÔÊĞí¶ÁÈ¡IO×´Ì¬
  */
 int mrgSetProjectMode(ViSession vi, int state)
 {
@@ -19,10 +19,10 @@ int mrgSetProjectMode(ViSession vi, int state)
 	return 0;
 }
 /*
- * æŸ¥è¯¢å¤–éƒ¨IOçš„çŠ¶æ€
- * vi :visaè®¾å¤‡å¥æŸ„
- * state: æ¯ä¸€ä½è¡¨ç¤ºä¸€ä¸ªIOçš„çŠ¶æ€
- * è¿”å›å€¼ï¼š0è¡¨ç¤ºæ‰§è¡ŒæˆåŠŸï¼›ï¼1è¡¨ç¤ºæ‰§è¡Œå¤±è´¥
+ * ²éÑ¯Íâ²¿IOµÄ×´Ì¬
+ * vi :visaÉè±¸¾ä±ú
+ * state: Ã¿Ò»Î»±íÊ¾Ò»¸öIOµÄ×´Ì¬
+ * ·µ»ØÖµ£º0±íÊ¾Ö´ĞĞ³É¹¦£»£­1±íÊ¾Ö´ĞĞÊ§°Ü
  */
 int mrgProjectGetXinState(ViSession vi, unsigned int *state)
 {
@@ -40,12 +40,12 @@ int mrgProjectGetXinState(ViSession vi, unsigned int *state)
 	return 0;
 }
 /*
-* è®¾ç½®ç³»ç»Ÿçš„å¤–éƒ¨è¾“å‡ºIOçš„çŠ¶æ€
-* vi :visaè®¾å¤‡å¥æŸ„
+* ÉèÖÃÏµÍ³µÄÍâ²¿Êä³öIOµÄ×´Ì¬
+* vi :visaÉè±¸¾ä±ú
 * index: 0->YOUT1; 1->YOUT2
 * state: 0->low| 1->high
-* è¿”å›å€¼ï¼š0è¡¨ç¤ºæ‰§è¡ŒæˆåŠŸï¼›ï¼1è¡¨ç¤ºæ‰§è¡Œå¤±è´¥
-* è¯´æ˜: ä¸æ”¯æŒ åŒæ—¶å†™å‡ºYOUT
+* ·µ»ØÖµ£º0±íÊ¾Ö´ĞĞ³É¹¦£»£­1±íÊ¾Ö´ĞĞÊ§°Ü
+* ËµÃ÷: ²»Ö§³Ö Í¬Ê±Ğ´³öYOUT
 */
 int mrgProjectSetYout(ViSession vi, int index, int state)
 {
@@ -59,10 +59,10 @@ int mrgProjectSetYout(ViSession vi, int index, int state)
     return 0;
 }
 /*
- * è®¾ç½®ç³»ç»Ÿçš„åºåˆ—å·
- * vi :visaè®¾å¤‡å¥æŸ„
- * serial: åºåˆ—å·
- * è¿”å›å€¼ï¼š0è¡¨ç¤ºæ‰§è¡ŒæˆåŠŸï¼›ï¼1è¡¨ç¤ºæ‰§è¡Œå¤±è´¥
+ * ÉèÖÃÏµÍ³µÄĞòÁĞºÅ
+ * vi :visaÉè±¸¾ä±ú
+ * serial: ĞòÁĞºÅ
+ * ·µ»ØÖµ£º0±íÊ¾Ö´ĞĞ³É¹¦£»£­1±íÊ¾Ö´ĞĞÊ§°Ü
  */
 int mrgProjectSetSerialNum(ViSession vi, char * serial)
 {
@@ -75,10 +75,10 @@ int mrgProjectSetSerialNum(ViSession vi, char * serial)
 	return 0;
 }
 /*
- * æŸ¥è¯¢ç³»ç»Ÿçš„åºåˆ—å·
- * vi :visaè®¾å¤‡å¥æŸ„
- * serial: åºåˆ—å·
- * è¿”å›å€¼ï¼šè¿”å›åºåˆ—å·çš„é•¿åº¦
+ * ²éÑ¯ÏµÍ³µÄĞòÁĞºÅ
+ * vi :visaÉè±¸¾ä±ú
+ * serial: ĞòÁĞºÅ
+ * ·µ»ØÖµ£º·µ»ØĞòÁĞºÅµÄ³¤¶È
  */
 int mrgProjectGetSerialNum(ViSession vi, char * serial)
 {
@@ -94,4 +94,22 @@ int mrgProjectGetSerialNum(ViSession vi, char * serial)
 	as8Ret[retLen - 1] = 0;
 	strcpy(serial, as8Ret);
 	return retLen-1;
+}
+
+/*
+* Ğ´ÈëÉè±¸µÄĞòÁĞºÅ
+* idn :·µ»ØµÄÉè±¸ÃèÊö·û
+* len£ºidn»º´æ³¤¶È
+* ·µ»ØÖµ£º
+* ËµÃ÷£º´Ëº¯ÊıÎª¹¤³Ì½Ó¿Úº¯Êı£¬²»¶ÔÍâ¿ª·Å
+*/
+int mrgWriteDeviceSerial(ViSession  vi, int name, char * serial)
+{
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "PROJECT:DEVICE:SN %d,%s\n", name, serial);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
 }

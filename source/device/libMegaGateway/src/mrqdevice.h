@@ -877,7 +877,7 @@ int mrgMRQReportState(ViSession vi, int name, int ch, int funs, int state);
 *state1状态on/off
 *返回值：0表示执行成功，－1表示失败
 */
-int mrgMRQReportState_Query(ViSession vi, int name, int ch, int funs, char *state);
+int mrgMRQReportState_Query(ViSession vi, int name, int ch, int funs, int *state);
 /*
 *设置上报周期
 *vi :visa设备句柄

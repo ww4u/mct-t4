@@ -40,6 +40,14 @@ private:
     Ui::Config *ui;
 };
 
+enum TERMINAL_TYPE {
+    MRX_F2,
+    MRX_F3,
+    MRX_AXIS5,
+    MRX_TIP,
+    USER
+};
+
 }
 
 #endif // CONFIG_H

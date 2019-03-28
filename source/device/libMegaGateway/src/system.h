@@ -8,6 +8,21 @@ extern "C" {
 #endif
 	
 /*
+* 识别网关设备（ON时，LED1常亮；OFF时LED闪烁）
+* vi :visa设备句柄
+* name：机器人
+* state：识别状态
+* 返回值：0表示执行成功，－1表示失败
+*/
+ int mrgIdentify(ViSession vi, int state);
+/*
+*切换 MRH - T 的模式
+*vi :visa设备句柄
+*mode : MRH - T 的模式，取值范围： [0,1]
+* 返回值：0表示执行成功，－1表示失败
+*/
+ int mrgModeSwitch(ViSession vi, int mode);
+/*
 *查询 MRH-T 软件版本号
 *vi :visa设备句柄
 *返回值：0回读正确;否则回读失败

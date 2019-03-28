@@ -303,22 +303,6 @@ int mrgGetFirmWareFpga(ViSession vi, int name, char *buf)
 	return 0;
 }
 /*
- * 查询网关设备的*IDN。
- * idn :返回的设备描述符
- * len：idn缓存长度
- * 返回值：查找到的设备个数
- */
-int mrgWriteDeviceSerial(ViSession  vi, int name, char * serial)
-{
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "PROJECT:DEVICE:SN %d,%s\n", name, serial);
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
-}
-/*
  * 获取指定设备的序列号
  * vi :visa设备句柄
  * serial：返回设备序列号的存储区
@@ -338,74 +322,4 @@ int mrgGetDeviceSerialNumber(ViSession vi, int name, char * serial)
 		return 0;
 	}
 }
-/*
- * 识别网关设备（ON时，LED1常亮；OFF时LED闪烁）
- * vi :visa设备句柄
- * name：机器人
- * state：识别状态
- * 返回值：0表示执行成功，－1表示失败
- */
-int  mrgIdentify(ViSession vi, int state)
-{
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "SYSTEM:IDENTIFY %s\n", state ? "ON" : "OFF");
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
-}
-/*
- *切换 MRH - T 的模式
- *vi :visa设备句柄
- *mode : MRH - T 的模式，取值范围： [0,1]
- * 返回值：0表示执行成功，－1表示失败
- */
-int mrgModeSwitch(ViSession vi, int mode)
-{
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "SYSTEM:MODe:SWITch %d\n", mode);
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
-}
-/*
- *读取MRHT的IO状态
- *vi :visa设备句柄
- *state : xin的状态,低四位
- * 返回值：0表示执行成功，－1表示失败
- */
-int mrgGetXinState(ViSession vi, int* state)
-{
-	char args[SEND_BUF];
-	char as8Ret[100] = { 0 };
-	int len = 0;
-	snprintf(args, SEND_BUF, "PROJ:XREAD? 0");
-	if ((len = busQuery(vi, args, strlen(args), as8Ret, 20)) == 0) {
-		return -1;
-	}
-	else {
-		as8Ret[len - 1] = '\0';
-		*state = atoi(as8Ret);
-		return 0;
-	}
-}
-/*
- *设置MRHT的IO输出状态
- *vi :visa设备句柄
- *yout : 0表示Y1,1表示Y2
- *state : YOUT的状态,0表示低电平,1表示高电平
- * 返回值：0表示执行成功，－1表示失败
- */
-int mrgSetYoutState(ViSession vi, int yout,int state)
-{
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "PROJ:YWRITE %s,%s", yout?"Y2":"Y1", state?"H":"L");
-	if (busWrite(vi, args, strlen(args)) <= 0)
-	{
-		return -1;
-	}
-	return 0;
-}
+

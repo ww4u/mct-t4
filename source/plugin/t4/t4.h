@@ -30,6 +30,7 @@
 
 #define robot_var() (ViSession)pRobo->deviceVi(), pRobo->robotHandle()
 #define device_var() (ViSession)pRobo->deviceVi(), pRobo->deviceHandle()
+#define robot_var_handle() pRobo->robotHandle()
 
 #define self_check_connect() \
                         if ( isOpened() )\

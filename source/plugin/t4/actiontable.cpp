@@ -415,13 +415,12 @@ logDbg()<<QThread::currentThreadId()
       <<vars.at(5).toDouble()
       <<vars.at(6).toDouble()
       <<vars.at(7).toBool();
-
     if ( str_is( vars.at(0).toString(), "PA" ) )
     {
         return absToHere( vars );
     }
-    else if ( str_is( vars.at(0).toString(), "RRA" )
-              || str_is( vars.at(0).toString(), "RRN" ))
+    else if ( str_is( vars.at(0).toString(), "PRA" )
+              || str_is( vars.at(0).toString(), "PRN" ))
     {
         return relToHere( vars );
     }
@@ -430,7 +429,6 @@ logDbg()<<QThread::currentThreadId()
         sysError( tr("Invalid input") );
         return -1;
     }
-
 
 }
 int ActionTable::onHoming( QVariant var )
@@ -446,7 +444,7 @@ logDbg();
     return ret;
 }
 int ActionTable::relToHere( QList<QVariant> &vars )
-{
+{logDbg();
     check_connect_ret( -1 );
 
     int ret;
@@ -459,7 +457,7 @@ int ActionTable::relToHere( QList<QVariant> &vars )
     return ret;
 }
 int ActionTable::absToHere( QList<QVariant> &vars )
-{
+{logDbg();
     check_connect_ret( -1 );
 
     int ret;

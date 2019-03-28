@@ -14,6 +14,7 @@ build/qlibd
 build/qlibr
 Makefile
 Makefile.*
+prj/ui_*.h
 .vs/
 *.user
 *.qmake.*

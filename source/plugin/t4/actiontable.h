@@ -70,9 +70,9 @@ private:
     dSpinDelegate *m_pDelegatePw;
     dSpinDelegate *m_pDelegateH;
     dSpinDelegate *m_pDelegateV;
-//    dSpinDelegate *m_pDelegateA;
-    CheckDelegate *m_pCheckDelegate;
 
+    CheckDelegate *m_pCheckDelegate;
+    dSpinDelegate *m_pDelegateTime;
 
     QMenu *m_pContextMenu;
     QAction *m_pActionToHere;

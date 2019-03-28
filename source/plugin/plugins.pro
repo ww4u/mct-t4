@@ -5,5 +5,5 @@ SUBDIRS = ./t4/t4.pro \
           ./plugin/plugin.pro \
           ./factory/factory.pro \
           ./model/model.pro \
-          ../device/device.pro \
-          ../../prj/mct.pro
+          ../device/device.pro
+#          ../../prj/mct.pro

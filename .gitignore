@@ -7,6 +7,7 @@ log/
 *.qm
 debug/
 *.lib
+lib/*.a
 #*.a
 #*.dll
 build/3rdlib
@@ -14,6 +15,8 @@ build/qlibd
 build/qlibr
 Makefile
 Makefile.*
+prj/ui_*.h
+prj/*.rc
 .vs/
 *.user
 *.qmake.*

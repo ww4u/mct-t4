@@ -768,7 +768,6 @@ int T4OpPanel::onHoming( QVariant var )
     int ret;
 logDbg();
     ret = mrgRobotGoHome( robot_var(),
-//                          pRobo->mHomeSpeed,
                           pRobo->mHomeTimeout*1000 );
 logDbg();
     return ret;

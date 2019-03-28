@@ -84,7 +84,10 @@ void XPlugin::setActive( )
 
     m_pDock->setWidget( m_pPanelWidget );
 }
+void XPlugin::retranslateUi()
+{
 
+}
 void XPlugin::rstErrorMgrTable()
 {}
 void XPlugin::rstRecordTable()

@@ -34,6 +34,7 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
     m_pRootWidgetItem = new QTreeWidgetItem();
     QTreeWidgetItem *pRoot;
     pRoot = m_pRootWidgetItem;
+    mTreeItems.append( m_pRootWidgetItem );
 
     //! attach user role
     m_pRootWidgetItem->setData( 0, Qt::UserRole+1, QVariant::fromValue( this ) );
@@ -103,7 +104,15 @@ QWidget *MRX_T4::createOpsPanel( QAbstractListModel *pModel,
 
     return pPanel;
 }
-
+void MRX_T4::retranslateUi()
+{logDbg();
+    mTreeItems.at(0)->setText( 0, tr("MRX-T4") ) ;
+    mTreeItems.at(1)->setText( 0, tr("Configuration") ) ;
+    mTreeItems.at(2)->setText( 0, tr("Misc") ) ;
+    mTreeItems.at(3)->setText( 0, tr("Motor") ) ;
+    mTreeItems.at(4)->setText( 0, tr("Record Table") ) ;
+    mTreeItems.at(5)->setText( 0, tr("Error Management") ) ;
+}
 //! mgr table
 void MRX_T4::rstErrorMgrTable()
 {

@@ -38,7 +38,7 @@ Source: "plugins\platforms\*"; DestDir: "{app}\plugins\platforms"
 Source: "plugins\styles\*"; DestDir: "{app}\plugins\styles" 
 
 Source: "doc\*"; DestDir: "{app}\doc";  Flags: recursesubdirs 
-Source: "C:\Users\wangzhiyan\AppData\Roaming\mct\*"; DestDir: "{userappdata}\mct"; Flags: recursesubdirs                        
+Source: "C:\Users\lwq\AppData\Roaming\mct\*"; DestDir: "{userappdata}\mct"; Flags: recursesubdirs                        
 
 [Dirs]
 ;Name: "{app}\temp"

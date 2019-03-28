@@ -369,6 +369,7 @@ void MainWindow::changeLanguage()
                               ".qm")
              && qApp->installTranslator(&mTranslator) )
         {
+            m_roboConfig->retranslateUi();
         }
         else
         {

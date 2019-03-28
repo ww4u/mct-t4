@@ -28,6 +28,7 @@ do{ \
     plwItem->setText( 0, (txt) ); \
     plwItem->setData( 0, Qt::UserRole, QVariant( QVariant::fromValue(var) ) ); \
     plwItem->setData( 0, Qt::UserRole + 1, QVariant( QVariant::fromValue(this) ) ); \
+    mTreeItems.append( plwItem );\
     pRoot->addChild(plwItem); \
     stack->addWidget( var );     \
     mPluginWidgets.append( var ); \
@@ -78,6 +79,7 @@ public:
                                      QWidget *parent=nullptr );
 
     virtual void setActive( );
+    virtual void retranslateUi();
 
     virtual void rstErrorMgrTable();
     virtual void rstRecordTable();
@@ -182,6 +184,8 @@ protected:
     QDockWidget *m_pDock;
 
     QList<QWidget*> mPluginWidgets;
+    QList<QTreeWidgetItem*> mTreeItems;
+
     void *m_pViewObj;
 
     SysPara *m_pPref;

@@ -23,6 +23,8 @@ public:
     explicit RoboConfig(QWidget *parent = 0);
     ~RoboConfig();
 
+    void retranslateUi();
+
 signals:
     void signal_focus_in( const QString &model, const QString &help );
 
@@ -34,7 +36,6 @@ signals:
 protected:
     void setupUi();
 
-    void retranslateUi();
 
 public:
     void attachOpDock( QDockWidget *pDock );

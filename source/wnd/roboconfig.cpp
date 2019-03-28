@@ -71,6 +71,9 @@ void RoboConfig::retranslateUi()
 {
     ui->retranslateUi(this);
     m_pRootNode->setText( 0, tr("Project"));
+    foreach (XPlugin* xPlug, mPluginList){
+        xPlug->retranslateUi();
+    }
 }
 
 //! add each robo

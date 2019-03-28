@@ -88,6 +88,8 @@ public:
     virtual QTreeWidgetItem* createPrefPages( QStackedWidget *stack );
     virtual QWidget *createOpsPanel( QAbstractListModel *pModel,
                                      QWidget *parent=nullptr );
+    virtual void retranslateUi();
+
 public:
     virtual void rstErrorMgrTable();
     virtual void rstRecordTable();
@@ -160,6 +162,7 @@ protected:
 
 private:
     mrx_t4::ActionTable *m_pRecordView;
+
 
 };
 

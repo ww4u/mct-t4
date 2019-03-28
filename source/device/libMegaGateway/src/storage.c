@@ -13,7 +13,7 @@ int mrgStorageMotionFileQuery(ViSession vi, int location, char* fileList, int le
 {
 	int retlen = 0;
 	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "STOR:FIL:MOT:%s?\n", (location == 0) ? "LOC" : "EXTER");
+    snprintf(args, SEND_BUF, "STORage:FIL:MOT:%s?\n", (location == 0) ? "LOC" : "EXTER");
 	if ((retlen = busQuery(vi, args, strlen(args), fileList, len)) == 0) {
 		return -1;
 	}
@@ -39,7 +39,7 @@ int mrgStorageMotionFileQuery(ViSession vi, int location, char* fileList, int le
 int mrgStorageMotionFileDelete(ViSession vi, char* fileName)
 {
 	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "STOR:FIL:MOT:DEL %s\n", fileName);
+    snprintf(args, SEND_BUF, "STORage:FIL:MOT:DEL %s\n", fileName);
 	if ((busWrite(vi, args, strlen(args))) == 0) {
 		return -1;
 	}
@@ -59,7 +59,7 @@ int mrgStorageMotionFileContextRead(ViSession vi, char* filename, char* context)
 	int retlen = 0, count = 0, lenOfLen = 0, readLen = 0, left = 0;
 	char args[SEND_BUF];
 	char as8Ret[1024],as8StrLen[20];
-	snprintf(args, SEND_BUF, "STORage:FILe:MOTion:CONTEXT:READ? %s\n", filename);
+    snprintf(args, SEND_BUF, "STORage:FILe:MOTion:CONTEXT:READ? %s\n", filename);
 	if (busWrite(vi, args, strlen(args)) == 0)
 	{
 		return 0;

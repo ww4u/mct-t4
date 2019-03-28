@@ -45,6 +45,14 @@ int mrgProjectSetSerialNum(ViSession vi, char * serial);
 * 返回值：返回序列号的长度
 */
 int mrgProjectGetSerialNum(ViSession vi, char * serial);
+/*
+* 写入设备的序列号
+* idn :返回的设备描述符
+* len：idn缓存长度
+* 返回值：
+* 说明：此函数为工程接口函数，不对外开放
+*/
+ int mrgWriteDeviceSerial(ViSession  vi, int name, char * serial);
 
 #if defined(__cplusplus) || defined(__cplusplus__)
 }

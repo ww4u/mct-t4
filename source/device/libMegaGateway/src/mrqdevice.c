@@ -551,8 +551,7 @@ int mrgMRQMotionReverse_Query(ViSession vi, int name,int * reverse)
  * timeout_ms:等待超时时间。-1表示不等待运行结束；0表示无限等待
  *返回值：0表示执行成功，－1表示失败
  */
-int mrgMRQAdjust(ViSession vi, int name, int ch, int wavetable,
-		 float position, float time,int timeout_ms)
+int mrgMRQAdjust(ViSession vi,int name,int ch,int wavetable,float position, float time,int timeout_ms)
 {
 	mrgMRQPVTConfig(vi, name, ch, wavetable, 1); //clear
 	mrgMRQPVTValue(vi, name, ch, wavetable, 0.0, 0.0, 0.0);//第一个点
@@ -568,10 +567,11 @@ int mrgMRQAdjust(ViSession vi, int name, int ch, int wavetable,
 		return -1;
 	}
 	mrgMRQPVTState(vi, name, ch, wavetable, MTSWITCH_RUN); //
-	if (mrgMRQPVTStateWait(vi, name, ch, wavetable, MTSTATE_CALCEND, timeout_ms) != 0)//等待计算结束
+    if (mrgMRQPVTStateWaitEnd(vi, name, ch, wavetable, timeout_ms) != 0)
 	{
 		return -1;
 	}
+    mrgMRQPVTState(vi, name, ch, wavetable, MTSWITCH_RESET); //
 	return 0;
 }
 /*
@@ -2045,7 +2045,7 @@ int mrgMRQLostStepLineConfig_Query(ViSession vi, int name,
 	p = STRTOK_S(NULL, ",", &pNext);
 	if(p)
 	{
-		*threshold = strtod(p,NULL);
+		*threshold = strtof(p,NULL);
 	}
 	p = STRTOK_S(NULL, ",", &pNext);
 	if(p)
@@ -2194,8 +2194,8 @@ int mrgMRQLostStepThreshold_Query(ViSession vi, int name,
 		as8Ret[retLen - 1] = '\0';
 	}
 
-	*value = atof(as8Ret);
-	return 0;
+    *value = strtof(as8Ret,NULL);
+    return 0;
 }
 /*
  *设置当步数偏差超过LOSTNUM后的响应方式
@@ -2291,11 +2291,11 @@ int mrgMRQReportConfig_Query(ViSession vi, int name, int ch, int funs, int *stat
 		p = STRTOK_S(NULL, ",", &pNext);
 		if(p)
 		{
-			*period = strtod(p,NULL);
+			*period = strtof(p,NULL);
 		}
 		else
 		{
-			*period = 0.0;
+			*period = 0.0f;
 		}
 	}
 	else{
@@ -2351,20 +2351,33 @@ int mrgMRQReportState(ViSession vi, int name, int ch, int funs, int state)
  *state:状态on/off
  *返回值：0表示执行成功，－1表示失败
  */
-int mrgMRQReportState_Query(ViSession vi, int name, int ch, int funs, char *state)
+int mrgMRQReportState_Query(ViSession vi, int name, int ch, int funs, int *state)
 {
-	char args[SEND_BUF];
-	int retLen = 0;
-	snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:STATe? %d,%d,%s\n",
-		 name, ch, changeReportFuncToString(funs));
-    if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
-		return -1;
-	}
-	else
-	{
-        state[retLen - 1] = '\0';
-	}
-	return 0;
+    char args[SEND_BUF];
+    int retLen = 0;
+    char tmp[20];
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:STATe? %d,%d,%s\n",
+					name, ch, changeReportFuncToString(funs));
+    if ((retLen = busQuery(vi, args, strlen(args), tmp, 10)) == 0) {
+        return -1;
+    }
+    else
+    {
+        tmp[retLen - 1] = '\0';
+        if (STRCASECMP(tmp, "OFF") == 0 || STRCASECMP(tmp, "0") == 0)
+        {
+            *state = 0;
+        }
+        else if (STRCASECMP(tmp, "ON") == 0 || STRCASECMP(tmp, "1") == 0)
+        {
+            *state = 1;
+        }
+        else
+        {
+            return -1;
+        }
+    }
+    return 0;
 }
 /*
  *设置上报周期
@@ -2377,13 +2390,13 @@ int mrgMRQReportState_Query(ViSession vi, int name, int ch, int funs, char *stat
  */
 int mrgMRQReportPeriod(ViSession vi, int name, int ch, int funs, int period)
 {
-	char args[SEND_BUF];
-	snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:PERiod %d,%d,%s,%f\n", 
-		 name, ch, changeReportFuncToString(funs), period);
-	if (busWrite(vi, args, strlen(args)) == 0) {
-		return -1;
-	}
-	return 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:PERiod %d,%d,%s,%d\n", 
+						name, ch, changeReportFuncToString(funs), period);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+        return -1;
+    }
+    return 0;
 }
 /*
  *查询上报周期
@@ -2602,7 +2615,7 @@ int mrgMRQTriggerLevelConfig_Query(ViSession vi, int name,
 	p = STRTOK_S(NULL, ",", &pNext);
 	if(p)
 	{
-		*period = strtod(p,NULL);
+		*period = strtof(p,NULL);
 	}
 	p = STRTOK_S(NULL, ",", &pNext);
 	if(p)
@@ -2885,8 +2898,8 @@ int mrgMRQTriggerLevelPeriod_Query(ViSession vi, int name,
 		as8Ret[retLen - 1] = '\0';
 	}
 
-	*period = strtod(as8Ret,NULL);
-	return 0;
+    *period = strtof(as8Ret,NULL);
+    return 0;
 }
 /*
  *查询驱动板配置
@@ -2943,7 +2956,7 @@ int mrgMRQDriverConfig_Query(ViSession vi, int name, int ch,
 	p = STRTOK_S(NULL, ",", &pNext);
 	if(p)
 	{
-		*current = strtod(p,NULL);
+		*current = strtof(p,NULL);
 	}
 	else
 	{
@@ -3045,7 +3058,7 @@ int mrgMRQDriverCurrent_Query(ViSession vi, int name, int ch, float *current)
 	{
 		as8Ret[retLen - 1] = '\0';
 	}
-	*current = atof(as8Ret);
+    *current = strtof(as8Ret,NULL);
 	return 0;
 }
 /*
@@ -3087,8 +3100,8 @@ int mrgMRQDriverIdleCurrent_Query(ViSession vi, int name, int ch, float *current
 		as8Ret[retLen - 1] = '\0';
 	}
 
-	*current = atof(as8Ret);
-	return 0;
+    *current = strtof(as8Ret,NULL);
+    return 0;
 }
 /*
  *设置电机微步数
@@ -4723,8 +4736,8 @@ int mrgMRQNewDriverCurrent_Query(ViSession vi, int name, float *current)
 		state[retLen - 1] = '\0';
 	}
 
-	*current = atof(state);
-	return 0;
+    *current = strtof(state,NULL);
+    return 0;
 }
 /*
  *设置电机微步数（只支持10轴）

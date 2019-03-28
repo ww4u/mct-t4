@@ -574,6 +574,7 @@
  </widget>
  <resources>
   <include location="../../../res/res.qrc"/>
+  <include location="../../../res/res.qrc"/>
  </resources>
  <connections/>
 </ui>

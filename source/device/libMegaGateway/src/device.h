@@ -135,14 +135,6 @@ int mrgGateWayRead(ViSession  vi, char * output, int wantlen);
 */
  int mrgGetFirmWareFpga(ViSession vi, int name, char *buf);
 /*
-* 写入设备的序列号
-* idn :返回的设备描述符
-* len：idn缓存长度
-* 返回值：
-* 说明：此函数为工程接口函数，不对外开放
-*/
- int mrgWriteDeviceSerial(ViSession  vi, int name, char * serial);
-/*
 * 获取指定设备的序列号
 * vi :visa设备句柄
 * serial：返回设备序列号的存储区
@@ -150,40 +142,6 @@ int mrgGateWayRead(ViSession  vi, char * output, int wantlen);
 * 返回值：0表示执行成功，－1表示失败
 */
  int mrgGetDeviceSerialNumber(ViSession vi, int name, char * serial);
-
-
-/*
-* 识别网关设备（ON时，LED1常亮；OFF时LED闪烁）
-* vi :visa设备句柄
-* name：机器人
-* state：识别状态
-* 返回值：0表示执行成功，－1表示失败
-*/
- int mrgIdentify(ViSession vi, int state);
-
-/*
-*切换 MRH - T 的模式
-*vi :visa设备句柄
-*mode : MRH - T 的模式，取值范围： [0,1]
-* 返回值：0表示执行成功，－1表示失败
-*/
- int mrgModeSwitch(ViSession vi, int mode);
-/*
-*读取MRHT的IO状态
-*vi :visa设备句柄
-*state : xin的状态,低四位
-* 返回值：0表示执行成功，－1表示失败
-*/
- int mrgGetXinState(ViSession vi, int* state);
-/*
-*设置MRHT的IO输出状态
-*vi :visa设备句柄
-*yout : 0表示Y1,1表示Y2
-*state : YOUT的状态,0表示低电平,1表示高电平
-* 返回值：0表示执行成功，－1表示失败
-*/
- int mrgSetYoutState(ViSession vi, int yout, int state);
-
 
 #if defined(__cplusplus) || defined(__cplusplus__)
 }

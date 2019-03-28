@@ -276,7 +276,7 @@ int MRX_T4::relMove( QString para,
              double x, double y, double z,
              double pw, double h,
              double v, bool bLine )
-{
+{logDbg();
     self_check_connect_ret( -1 );
 
     int ret;

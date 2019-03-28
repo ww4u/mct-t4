@@ -6,7 +6,7 @@
     <message>
         <location filename="../../source/plugin/t4/actiontable.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -14,68 +14,68 @@
     <message>
         <location filename="../../source/plugin/t4/advpara.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/advpara.ui" line="21"/>
         <source>Misc</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/advpara.ui" line="27"/>
         <source>Home</source>
-        <translation type="unfinished"></translation>
+        <translation>回零</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/advpara.ui" line="33"/>
         <source>Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>速度</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/advpara.ui" line="50"/>
         <source>Timeout</source>
-        <translation type="unfinished"></translation>
+        <translation>超時</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/advpara.ui" line="57"/>
         <source>s</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/advpara.ui" line="73"/>
         <source>Motion</source>
-        <translation type="unfinished"></translation>
+        <translation>運動</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/advpara.ui" line="89"/>
         <source>Default Acceleration</source>
-        <translation type="unfinished"></translation>
+        <translation>默認加速度</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/advpara.ui" line="96"/>
         <source>Default Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>默認速度</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/advpara.ui" line="103"/>
         <location filename="../../source/plugin/t4/advpara.ui" line="175"/>
         <source>mm/s</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/advpara.ui" line="145"/>
         <source>Max</source>
-        <translation type="unfinished"></translation>
+        <translation>最大</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/advpara.ui" line="151"/>
         <source>Joint Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>關節速度</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/advpara.ui" line="158"/>
         <source>Terminal Speed</source>
-        <translation type="unfinished"></translation>
+        <translation>末端速度</translation>
     </message>
 </context>
 <context>
@@ -83,119 +83,119 @@
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="24"/>
         <source>Terminal</source>
-        <translation type="unfinished"></translation>
+        <translation>末端</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="27"/>
         <source>Terminal configuration</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="48"/>
         <source>Type</source>
-        <translation type="unfinished"></translation>
+        <translation>類型</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="56"/>
         <source>MRX-F2</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="65"/>
         <source>MRX-F3</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="74"/>
         <source>MRX-AXIS5</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="83"/>
         <source>MRX-TIP</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="92"/>
         <source>User</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="107"/>
         <source>Slow Ratio</source>
-        <translation type="unfinished"></translation>
+        <translation>減速比</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="133"/>
         <source>:</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="176"/>
         <source>Zero</source>
-        <translation type="unfinished"></translation>
+        <translation>零位</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="179"/>
         <source>Joint Zero Configuration</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="185"/>
         <location filename="../../source/plugin/t4/config.ui" line="411"/>
         <location filename="../../source/plugin/t4/config.ui" line="494"/>
         <source>Big Arm</source>
-        <translation type="unfinished"></translation>
+        <translation>大臂</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="206"/>
         <location filename="../../source/plugin/t4/config.ui" line="306"/>
         <source>Wrist</source>
-        <translation type="unfinished"></translation>
+        <translation>腕</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="253"/>
         <location filename="../../source/plugin/t4/config.ui" line="391"/>
         <location filename="../../source/plugin/t4/config.ui" line="460"/>
         <source>Little Arm</source>
-        <translation type="unfinished"></translation>
+        <translation>小臂</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="260"/>
         <location filename="../../source/plugin/t4/config.ui" line="350"/>
         <location filename="../../source/plugin/t4/config.ui" line="487"/>
         <source>Basement</source>
-        <translation type="unfinished"></translation>
+        <translation>基座</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="287"/>
         <source>Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>限位</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="290"/>
         <source>Soft limitation</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="437"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td width=&quot;89&quot; style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;/&gt;&lt;td width=&quot;179&quot; style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;Angle(Degree)&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;Wrist&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;[-180,180]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;Little Arm&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;[-60,90]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;Big Arm&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;[-80,20]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;Basement&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;[-170,170]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="448"/>
         <source>Arm</source>
-        <translation type="unfinished"></translation>
+        <translation>臂長</translation>
     </message>
     <message>
         <location filename="../../source/plugin/t4/config.ui" line="454"/>
         <source>Arm Length</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">臂長</translation>
     </message>
 </context>
 <context>

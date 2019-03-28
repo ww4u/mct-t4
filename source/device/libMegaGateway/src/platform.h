@@ -16,18 +16,18 @@
 #undef NTDDI_VERSION
 #define NTDDI_VERSION NTDDI_WINXPSP3
 #endif
-#include <WINSOCK2.H>
 #include <windows.h>
+#include <WINSOCK2.H>
 #include <IPHlpApi.h>
-
-//#ifdef _LIB_DEVICE
-//#endif
 
 #include "visatype.h"
 #include "visa.h"
 
 #define STRCASECMP(x,y)		_stricmp(x,y)
 #define STRTOK_S(x,y,z)		strtok_s(x,y,z)
+
+#include "../../assist.h"
+#define Sleep(x)            localSleep( x )
 
 #else
 //////////////////////////////////

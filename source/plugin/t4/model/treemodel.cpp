@@ -179,8 +179,6 @@ QVariant TreeModel::headerData(int section, Qt::Orientation orientation,
     {
         if ( role == Qt::DisplayRole )
         { return rootItem->data(section); }
-//        else if ( role == Qt::TextAlignmentRole )
-//        { return Qt::AlignCenter; }
         else
         {}
     }
@@ -224,7 +222,6 @@ bool TreeModel::insertRows(int position, int rows, const QModelIndex &parent)
     bool success;
 
     beginInsertRows(parent, position, position + rows - 1);
-//    beginInsertRows( parent, position, parentItem->childCount() + rows - 1 );
     success = parentItem->insertChildren(position, rows, rootItem->columnCount());
     endInsertRows();
 
@@ -418,45 +415,6 @@ int TreeModel::loadIn( const QString &fileName )
     return _loadIn( dataSet );
 }
 
-//MDataSet dataSet;
-//dataSet.setModel( "MRX-T4" );
-//QStringList headers;
-//headers<<"type"<<"coord"<<"para"<<"di"<<"do"
-//       <<"x"<<"y"<<"z"<<"w"<<"h"<<"v"<<"a"<<"comment";
-//dataSet.setHeaders( headers );
-
-//MDataSection *pSection;
-//pSection = dataSet.addSection();
-//if ( NULL == pSection )
-//{ return -1; }
-
-//bool bRet;
-//QString strRow;
-//for ( int i = 0; i < mItems.size(); i++ )
-//{
-//    strRow = QString("%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12,%13").arg( mItems.at(i)->mType )
-//                                                      .arg( mItems.at(i)->mCoord )
-//                                                      .arg( mItems.at(i)->mPara )
-//                                                      .arg( mItems.at(i)->mDi )
-//                                                      .arg( mItems.at(i)->mDo )
-//                                                      .arg( mItems.at(i)->mX )
-//                                                      .arg( mItems.at(i)->mY )
-//                                                      .arg( mItems.at(i)->mZ )
-//                                                      .arg( mItems.at(i)->mPw )
-//                                                      .arg( mItems.at(i)->mH )
-//                                                      .arg( mItems.at(i)->mVel )
-//                                                      .arg( mItems.at(i)->mAcc )
-//                                                      .arg( mItems.at(i)->mComment );
-
-//    bRet = pSection->addRow(strRow );
-//    if ( bRet )
-//    {}
-//    else
-//    { return -1; }
-//}
-
-//return dataSet.save( fileName );
-
 int TreeModel::exportOut( const QString &fileName )
 {
     MDataSet dataSet;
@@ -465,6 +423,7 @@ int TreeModel::exportOut( const QString &fileName )
     headers<<"id"<<"type"
            //<<"coordinate"<<"para"
            <<"x"<<"y"<<"z"<<"w"<<"h"<<"v"<<"mode"
+           <<"delay"
            <<"comment";
     dataSet.setHeaders( headers );
 
@@ -610,6 +569,7 @@ int TreeModel::_loadIn( MDataSet *pDataSet,
 
         get_double( "v",i, 0 );
         get_bool( "mode",i, 0 );
+        get_double( "delay",i, 0 );
         get_str( "comment",i, 0 );
 
         if ( i == 0 )
@@ -655,7 +615,7 @@ int TreeModel::_fmtSection( TreeItem *section,
 int TreeModel::_fmtItem( TreeItem *pItem,
                          QString &ary )
 {
-    ary = QString("%1,%2,%3,%4,%5,%6,%7,%8,%9,%10")
+    ary = QString("%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11")
             .arg( pItem->data(0).toInt() )
             .arg( pItem->data(1).toString() )
             .arg( pItem->data(2).toString() )
@@ -665,7 +625,8 @@ int TreeModel::_fmtItem( TreeItem *pItem,
             .arg( pItem->data(6).toDouble() )
             .arg( pItem->data(7).toDouble() )
             .arg( pItem->data(8).toInt() )
-            .arg( pItem->data(9).toString() )
+            .arg( pItem->data(9).toDouble() )
+            .arg( pItem->data(10).toString() )
             ;
     return 0;
 }

@@ -110,7 +110,7 @@ QTableView,QTableWidget,QTreeView {
 	 selection-background-color: #00a3d9;
 	 gridline-color: #1f2a3b;
 	 
-	 alternate-background-color: #1f2a3b;
+	 alternate-background-color: #0f1a2b;
      border: none;
   }
 QTableView QTableCornerButton::section
@@ -128,11 +128,13 @@ QHeaderView::section
 {
 	background-color: #2c3d4f;
 	color: white;
-	border-color: #2c3d4f;
-	border: none;
+	/*border-color: #1f2a3b;*/
+	border: 1px solid;
+	border-color: #1f2a3b;
 	padding: 5px,5px,5px,5px;
 	width: 20px;
-	height: 20px;
+	height: 25px;
+	font: 18px;
 }
 
 
@@ -536,9 +538,15 @@ QTreeView#view
 	font: 19px;
 }
 
+QTreeView::item {
+   border: 1px solid #1f2a3b;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+}
+
 QTreeView::item:hover, QListWidget::item:hover{
   background: #00a0e0;
-  /* border: 2px solid #00a0e0; */
+  /*border: 1px solid #1f2a3b */
   color:white;
   /*border:none;*/
 }
@@ -570,7 +578,7 @@ QTreeView::item:hover, QListWidget::item:hover{
   
 
 QListView::item:alternate {
-  background: #1f2a3b;
+  background: #0f1a2b;
 }
 
 QDockWidget::close-button, QDockWidget::float-button {

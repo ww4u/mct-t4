@@ -36,6 +36,9 @@ ActionTable::ActionTable(QWidget *parent) :
     m_pDelegateV = new dSpinDelegate( 1, 100, this );
     m_pDelegateV->setSuffix( "%" );
 
+    m_pDelegateTime = new dSpinDelegate( 0, 1000, this );
+    m_pDelegateTime->setSuffix( "s" );
+
     m_pCheckDelegate = new CheckDelegate( shape_check, this );
     m_pCheckDelegate->setAlignment( Qt::AlignLeft );
 
@@ -48,6 +51,7 @@ ActionTable::ActionTable(QWidget *parent) :
 
     ui->view->setItemDelegateForColumn( 7, m_pDelegateV );
     ui->view->setItemDelegateForColumn( 8, m_pCheckDelegate );
+    ui->view->setItemDelegateForColumn( 9, m_pDelegateTime );
 
     m_pContextMenu = NULL;
 
@@ -719,7 +723,6 @@ void ActionTable::slot_customContextMenuRequested(const QPoint &pos)
 
             m_pContextMenu->addSeparator();
             m_pActionHoming = m_pContextMenu->addAction( tr("Homing") );
-
 
 //            m_pContextMenu->addSeparator();
 //            m_pActionResize = m_pContextMenu->addAction( tr("Auto Resize") );

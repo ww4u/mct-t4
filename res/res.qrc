@@ -120,6 +120,8 @@
         <file>image/t4/workspace.png</file>
         <file>image/t4/mrx-mrx-t4_geo.png</file>
 
+        <file>image/image/full.png</file>
+
     </qresource>
 </RCC>
 

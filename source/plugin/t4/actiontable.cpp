@@ -131,11 +131,11 @@ void ActionTable::onSetting(XSetting setting)
     XPage::onSetting( setting );
 
     if ( (int)setting.mSetting == (int)MRX_T4::e_add_record )
-    {logDbg();
+    {
         addRecord( setting );
     }
     else if ( (int)setting.mSetting == (int)MRX_T4::e_edit_record )
-    {logDbg();
+    {
         editRecord( setting );
     }
     else

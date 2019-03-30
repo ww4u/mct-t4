@@ -111,19 +111,26 @@ int XPluginWorkingThread::tick()
 
 void XPluginWorkingThread::run()
 {
-    forever
+    try
     {
-        if ( isInterruptionRequested() )
-        { break; }
-
-        if ( mApis.size() < 1 )
+        forever
         {
-            QThread::msleep( XPluginWorkingThread::_tickms);
-            continue;
-        }
+            if ( isInterruptionRequested() )
+            { break; }
 
-        //! proc
-        procApis();
+            if ( mApis.size() < 1 )
+            {
+                QThread::msleep( XPluginWorkingThread::_tickms);
+                continue;
+            }
+
+            //! proc
+            procApis();
+        }
+    }
+    catch( QException &e )
+    {
+        logDbg();
     }
 
     delete_all( mApis );
@@ -136,6 +143,9 @@ void XPluginWorkingThread::procApis()
     {
         Q_ASSERT( NULL != pApi );
         Q_ASSERT( NULL != pApi->m_pObj );
+
+        if ( isInterruptionRequested() )
+        { return; }
 
         procApi( pApi );
 
@@ -177,34 +187,39 @@ void XPluginWorkingThread::procApi( WorkingApi *pApi )
             if ( NULL != m_pWorkMutex  )
             { m_pWorkMutex->lock(); }
 
-            if ( pApi->m_pPreDo )
-            {  (pApi->m_pObj->*(pApi->m_pPreDo))( pApi->m_pContext ); }
-
-            //! call the api
-            if ( pApi->m_pProcDo )
+            try
             {
-                ret = (pApi->m_pObj->*(pApi->m_pProcDo))( pApi->m_pContext );
-                if ( ret != 0 )
+                if ( pApi->m_pPreDo )
+                {  (pApi->m_pObj->*(pApi->m_pPreDo))( pApi->m_pContext ); }
+
+                //! call the api
+                if ( pApi->m_pProcDo )
                 {
-                    logDbg()<<ret;
-                    if ( pApi->mDescription.length() > 0 )
-                    { sysPrompt( pApi->mDescription + " " + tr("execute fail") ); }
+                    ret = (pApi->m_pObj->*(pApi->m_pProcDo))( pApi->m_pContext );
+                    if ( ret != 0 )
+                    {
+                        logDbg()<<ret;
+                        if ( pApi->mDescription.length() > 0 )
+                        { sysPrompt( pApi->mDescription + " " + tr("execute fail") ); }
+                    }
                 }
-            }
-            else
-            { ret = 0; }
+                else
+                { ret = 0; }
 
-            //! msg api
-            if ( pApi->m_pOnMsg )
-            {
-                ret = (pApi->m_pObj->*(pApi->m_pOnMsg))( pApi->mVar );
-                logDbg()<<ret;
-                if ( ret != 0 && pApi->mDescription.length() > 0 )
-                { sysPrompt( pApi->mDescription + " " + tr("execute fail") ); logDbg(); }
-            }
+                //! msg api
+                if ( pApi->m_pOnMsg )
+                {
+                    ret = (pApi->m_pObj->*(pApi->m_pOnMsg))( pApi->mVar );
+                    logDbg()<<ret;
+                    if ( ret != 0 && pApi->mDescription.length() > 0 )
+                    { sysPrompt( pApi->mDescription + " " + tr("execute fail") ); logDbg(); }
+                }
 
-            if ( pApi->m_pPostDo )
-            {  (pApi->m_pObj->*(pApi->m_pPostDo))( pApi->m_pContext, ret ); }
+                if ( pApi->m_pPostDo )
+                {  (pApi->m_pObj->*(pApi->m_pPostDo))( pApi->m_pContext, ret ); }
+            }
+            catch( QException &e )
+            {}
 
             if ( NULL != m_pWorkMutex )
             { m_pWorkMutex->unlock(); }
@@ -264,7 +279,12 @@ void XPluginUpdateingThread::run()
     connect( m_pTimer, SIGNAL(timeout()),
              this, SLOT(slot_timeout()) );
 
-    QThread::run();
+    try
+    {
+        QThread::run();
+    }
+    catch( QException &e )
+    {}
     qDeleteAll( mApis );
     logDbg();
 }

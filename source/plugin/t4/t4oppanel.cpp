@@ -34,6 +34,17 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
 
     setupUi();
 
+    //! add comment
+    QString strRaw, strDecimal, strComment;
+    for ( int i = 0; i < ui->cmbStepXx->count(); i++ )
+    {
+        strRaw = ui->cmbStepXx->itemText( i );
+        strDecimal = strRaw;
+        strDecimal.remove(0,1);        //! remove the X
+        strComment = QString("%1 [%2%3 or mm]").arg(strRaw).arg( strDecimal).arg( char_deg );
+        mStepxList<<strComment;
+    }
+
     m_pDebugContextMenu = NULL;
     m_pMonitorContextMenu = NULL;
 
@@ -236,6 +247,12 @@ void T4OpPanel::retranslateUi()
 {
     //! base ui
     ui->retranslateUi( this );
+
+    //! cmb stepx
+    for( int i = 0; i < mStepxList.size(); i++ )
+    {
+        ui->cmbStepXx->setItemText( i, mStepxList.at( i ) );
+    }
 
     //! joint name
     ui->joint1->setJointName( tr("Basement") );

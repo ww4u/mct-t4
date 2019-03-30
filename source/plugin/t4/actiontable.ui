@@ -40,6 +40,9 @@
      <property name="allColumnsShowFocus">
       <bool>true</bool>
      </property>
+     <attribute name="headerMinimumSectionSize">
+      <number>20</number>
+     </attribute>
     </widget>
    </item>
   </layout>

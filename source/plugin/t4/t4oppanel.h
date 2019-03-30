@@ -281,6 +281,8 @@ private:
     iSpinDelegate *m_pISpinDelegateId;
     dSpinDelegate *m_pDSpinDelegateTime;
 
+    QStringList mStepxList;
+
 protected:
     DebugTable mDebugTable;
     DiagnosisTable mDiagTable;

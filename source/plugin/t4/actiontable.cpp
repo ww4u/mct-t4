@@ -89,6 +89,16 @@ ActionTable::~ActionTable()
     delete ui;
 }
 
+void ActionTable::keyReleaseEvent(QKeyEvent *event)
+{
+    if ( event->key()==Qt::Key_Insert )
+    { logDbg(); }
+    else if ( event->key()==Qt::Key_Delete )
+    { logDbg(); }
+    else
+    { XPage::keyReleaseEvent( event ); }
+}
+
 void ActionTable::retranslateUi()
 {
     ui->retranslateUi( this );

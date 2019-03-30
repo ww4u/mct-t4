@@ -27,6 +27,9 @@ public:
     ~ActionTable();
 
 protected:
+    virtual void keyReleaseEvent(QKeyEvent *event);
+
+protected:
     virtual void retranslateUi();
 
     void buildConnection();

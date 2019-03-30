@@ -28,12 +28,12 @@ void MainWindow::requestProgress( const QString &info, bool b, int now, int mi, 
     MainWindow::_pBackendProxy->emit_progress( info, b, now, mi, ma );
 }
 
-void MainWindow::requestPrompt( const QString &info )
+void MainWindow::requestPrompt( const QString &info, int lev )
 {
     if( NULL == MainWindow::_pBackendProxy )
     { return; }
 
-    MainWindow::_pBackendProxy->emit_prompt( info );
+    MainWindow::_pBackendProxy->emit_prompt( info, lev );
 }
 
 void MainWindow::showStatus( const QString str)
@@ -86,6 +86,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 MainWindow::~MainWindow()
 {
     delete ui;
+
+    if ( NULL != m_pPrompt )
+    { m_pPrompt->close(); }
 
     if ( NULL != m_pHelpPanel )
     { delete m_pHelpPanel; }
@@ -258,8 +261,8 @@ void MainWindow::buildConnection()
              Qt::QueuedConnection );
 
     //! prompt
-    connect( this, SIGNAL(signal_prompt(const QString&)),
-             this, SLOT(slot_prompt(const QString &)),
+    connect( this, SIGNAL(signal_prompt(const QString&, int )),
+             this, SLOT(slot_prompt(const QString &, int )),
              Qt::QueuedConnection );
 
 }
@@ -589,7 +592,7 @@ void MainWindow::slot_progress_canceled()
     m_roboConfig->cancelBgWorking();
 }
 
-void MainWindow::slot_prompt( const QString &info )
+void MainWindow::slot_prompt( const QString &info, int lev )
 {
     //! prompt info
     if ( NULL == m_pPrompt )
@@ -600,7 +603,7 @@ void MainWindow::slot_prompt( const QString &info )
     }
 
     //! show the item
-    m_pPrompt->addInfo( info );
+    m_pPrompt->addInfo( info, lev );
     if ( !m_pPrompt->isVisible() )
     { m_pPrompt->show(); }
 }
@@ -672,8 +675,8 @@ void MainWindow::emit_status( const QString &str )
 void MainWindow::emit_progress( const QString &info, bool b, int now, int mi, int ma )
 { emit signal_progress( info, b, now, mi, ma ); }
 
-void MainWindow::emit_prompt( const QString &info )
-{ emit signal_prompt( info ); }
+void MainWindow::emit_prompt( const QString &info, int lev )
+{ emit signal_prompt( info, lev ); }
 
 void MainWindow::retranslateUi()
 {

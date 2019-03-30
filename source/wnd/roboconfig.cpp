@@ -130,7 +130,7 @@ void RoboConfig::slotDownload()
         }
     }
     if ( failCnt == 0 )
-    { sysPrompt( tr("Download success") ); }
+    { sysPrompt( tr("Download success"), 0 ); }
 }
 
 void RoboConfig::slotUpload()
@@ -159,7 +159,7 @@ void RoboConfig::slotUpload()
     }
 
     if ( failCnt == 0 )
-    { sysPrompt( tr("Upload success") ); }
+    { sysPrompt( tr("Upload success"), 0 ); }
 }
 
 void RoboConfig::slotStore()
@@ -388,15 +388,19 @@ void RoboConfig::slotActionRst()
 
 void RoboConfig::slotActionDelete()
 {
-    //! delete + remove the root
-    mPluginList.removeAll( m_pCurPlugin );
-    plugin_changed();
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-    delete m_pCurPlugin;
+        //! delete + remove the root
+        mPluginList.removeAll( m_pCurPlugin );
+        plugin_changed();
 
-    Q_ASSERT( NULL != m_pCurTreeItem );
-    ui->treeWidget->removeItemWidget( m_pCurTreeItem, 0 );
-    delete m_pCurTreeItem;
+        delete m_pCurPlugin;
+
+        Q_ASSERT( NULL != m_pCurTreeItem );
+        ui->treeWidget->removeItemWidget( m_pCurTreeItem, 0 );
+        delete m_pCurTreeItem;
+
+    QApplication::restoreOverrideCursor();
 }
 
 void RoboConfig::slotActionExplorer()

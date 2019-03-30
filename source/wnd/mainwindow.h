@@ -43,7 +43,7 @@ public:
     static MainWindow *_pBackendProxy;
     static void requestLogout( const QString &str, LogStr::eLogLevel lev );
     static void requestProgress( const QString &info, bool b, int now, int mi=0, int ma = 100 );
-    static void requestPrompt( const QString &info );
+    static void requestPrompt( const QString &info, int lev=2 );
 
     static void showStatus(const QString str);
 
@@ -54,7 +54,7 @@ public:
     void emit_logout( const QString &info, int level );
     void emit_status( const QString &str );
     void emit_progress( const QString &info, bool b, int now, int mi, int ma );
-    void emit_prompt( const QString &info );
+    void emit_prompt( const QString &info, int );
 
 protected:
     void retranslateUi();
@@ -82,7 +82,7 @@ signals:
     void signal_status( const QString &str );
 
     void signal_progress( const QString &info, bool b, int now, int mi, int ma );
-    void signal_prompt( const QString &info );
+    void signal_prompt( const QString &info, int lev );
 
 private slots:
     void slot_plugin_operable( bool b );
@@ -104,7 +104,7 @@ private slots:
     void slot_progress( const QString &info, bool b, int now, int mi, int ma );
     void slot_progress_canceled();
 
-    void slot_prompt( const QString &info );
+    void slot_prompt( const QString &info, int  );
 
     void slot_focus_in( const QString &model,
                         const QString &name );

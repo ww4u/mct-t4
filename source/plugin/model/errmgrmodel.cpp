@@ -61,7 +61,6 @@ ErrorMgrModel::ErrorMgrModel() : MegaTableModel()
 
 ErrorMgrModel::~ErrorMgrModel()
 {
-//    removeRows( 0, mItems.size(), QModelIndex() );
     qDeleteAll( mItems );
 }
 
@@ -92,8 +91,8 @@ QVariant ErrorMgrModel::data(const QModelIndex &index, int role) const
     }
     else if ( role == Qt::BackgroundColorRole )
     { return backRole(index); }
-    else if ( role == Qt::TextAlignmentRole )
-    { return QVariant( Qt::AlignCenter ); }
+//    else if ( role == Qt::TextAlignmentRole )
+//    { return QVariant( Qt::AlignCenter ); }
     else
     { return QVariant(); }
 

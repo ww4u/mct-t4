@@ -89,18 +89,6 @@ ErrorMgrTable::ErrorMgrTable(QWidget *parent) :
 
     ui->tableView->setItemDelegateForColumn( 6, m_pCheckDelegate );
     ui->tableView->setItemDelegateForColumn( 7, m_pCheckDelegate );
-
-    //! width
-    ui->tableView->setColumnWidth( 0, 20 );
-    ui->tableView->setColumnWidth( 1, 100 );
-
-    ui->tableView->setColumnWidth( 2, 20 );
-    ui->tableView->setColumnWidth( 3, 20 );
-    ui->tableView->setColumnWidth( 4, 20 );
-
-    ui->tableView->setColumnWidth( 5, 100 );
-    ui->tableView->setColumnWidth( 6, 20 );
-    ui->tableView->setColumnWidth( 7, 20 );
 }
 
 ErrorMgrTable::~ErrorMgrTable()
@@ -113,6 +101,8 @@ void ErrorMgrTable::retranslateUi()
     ui->retranslateUi( this );
 }
 
+#define def_width     80
+#define wider1_width  200
 void ErrorMgrTable::setModel( QAbstractTableModel *pModel )
 {
     Q_ASSERT( NULL != pModel );
@@ -128,6 +118,18 @@ void ErrorMgrTable::setModel( QAbstractTableModel *pModel )
 //        connect( pMegaModel, SIGNAL(signal_data_changed()),
 //                 this, SLOT(slot_data_changed()) );
     }
+
+    //! width
+    ui->tableView->setColumnWidth( 0, def_width );
+    ui->tableView->setColumnWidth( 1, wider1_width );
+
+    ui->tableView->setColumnWidth( 2, def_width );
+    ui->tableView->setColumnWidth( 3, def_width );
+    ui->tableView->setColumnWidth( 4, def_width );
+
+    ui->tableView->setColumnWidth( 5, wider1_width );
+    ui->tableView->setColumnWidth( 6, def_width );
+    ui->tableView->setColumnWidth( 7, def_width );
 }
 
 void ErrorMgrTable::rst()

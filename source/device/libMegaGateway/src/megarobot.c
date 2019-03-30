@@ -2,6 +2,7 @@
 //
 #include "megarobot.h"
 #include "mrqdevice.h"
+#include "device.h"
 
 #define     SEND_BUF        (100)
 #define     DELAYTIME       (100)  //! 查询延时时间
@@ -429,25 +430,69 @@ int mrgGetRobotCount(ViSession vi)
  */
 int mrgGetRobotName(ViSession vi,int *robotnames)
 {
-	char args[SEND_BUF];
-	char names[100];
-	char *p, *pNext;
-	int retlen = 0,count = 0;
-	snprintf(args, SEND_BUF, "ROBOT:NAME?\n");
-	if ((retlen = busQuery(vi, args, strlen(args), names, 100)) == 0) {
-		return -1;
-	}
-	else {
-		names[retlen - 1] = '\0';
-	}
-	p = STRTOK_S(names, ",", &pNext);
-	while (p)
-	{
-		*robotnames++ = atoi(p);
-		p = STRTOK_S(NULL, ",", &pNext);
-		count++;
-	}
-	return count;
+    char args[SEND_BUF];
+    char names[100];
+    char *p, *pNext;
+    int retlen = 0,count = 0;
+    snprintf(args, SEND_BUF, "ROBOT:NAME?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), names, 100)) > 0) {
+  names[retlen - 1] = '\0';
+        p = STRTOK_S(names, ",", &pNext);
+        while (p)
+        {
+            *robotnames++ = atoi(p);
+            p = STRTOK_S(NULL, ",", &pNext);
+            count++;
+        }
+        return count;
+    }
+
+    if(count <= 0 || robotnames[0] == 0)
+    {
+        char buff[128] = "";
+        int i,j;
+        int deviceList[32] = {0};
+        int deviceName = 0;
+        int channelCount =0;
+        int robotName = 0;
+
+        count = mrgFindDevice(vi, 800);
+        if(count <= 0){
+            return -2;
+        }
+
+        mrgGetDeviceName(vi, deviceList);
+        for(i=0,j=0; i<count && j<count; i++)
+        {
+            deviceName = deviceList[i];
+            mrgGetDeviceType(vi, deviceName,buff);
+            //memset(buff, 0, sizeof(buff));
+            if(strcasecmp(buff,"MRQM2304") == 0 ||strcasecmp(buff,"MRQM2302") == 0 )
+            {
+                //! 构建一个H2
+                memset(buff, 0, sizeof(buff));
+                sprintf(buff,"0@%d,1@%d", deviceName, deviceName);
+                if(0 == mrgBuildRobot(vi, "MRX-H2", buff, &robotName ) )
+                {
+                    robotnames[j++] = robotName;
+                }
+            }
+            else if(strcasecmp(buff,"MRQM2305") == 0 ||strcasecmp(buff,"MRQT2305") == 0)
+            {
+                //! 构建一个T4
+                memset(buff, 0, sizeof(buff));
+                sprintf(buff,"0@%d,1@%d,2@%d,3@%d,4@%d",
+                        deviceName, deviceName, deviceName, deviceName, deviceName);
+                if(0 == mrgBuildRobot(vi, "MRX-T4", buff, &robotName ) )
+                {
+                    robotnames[j++] = robotName;
+                }
+            }
+        }
+        count = j;
+    }
+
+    return count;
 }
 /*
  * 查询当前机器人的所使用的设备

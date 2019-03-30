@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>465</width>
+    <width>471</width>
     <height>53</height>
    </rect>
   </property>
@@ -44,23 +44,6 @@
       <property name="bottomMargin">
        <number>0</number>
       </property>
-      <item row="0" column="4">
-       <widget class="QToolButton" name="singleSub">
-        <property name="text">
-         <string>...</string>
-        </property>
-        <property name="icon">
-         <iconset resource="../../../res/res.qrc">
-          <normaloff>:/res/image/icon/arrow-left.png</normaloff>:/res/image/icon/arrow-left.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>24</width>
-          <height>24</height>
-         </size>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="7">
        <widget class="QLabel" name="label_2">
         <property name="layoutDirection">
@@ -71,23 +54,6 @@
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="5">
-       <widget class="QToolButton" name="singleAdd">
-        <property name="text">
-         <string>...</string>
-        </property>
-        <property name="icon">
-         <iconset resource="../../../res/res.qrc">
-          <normaloff>:/res/image/icon/arrow-right.png</normaloff>:/res/image/icon/arrow-right.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>24</width>
-          <height>24</height>
-         </size>
         </property>
        </widget>
       </item>
@@ -122,13 +88,14 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QToolButton" name="btnZero">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
+      <item row="0" column="5">
+       <widget class="QToolButton" name="singleAdd">
         <property name="text">
-         <string>Zero</string>
+         <string>...</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../../res/res.qrc">
+          <normaloff>:/res/image/icon/add.png</normaloff>:/res/image/icon/add.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -169,26 +136,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
-       <widget class="QToolButton" name="jogSub">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>...</string>
-        </property>
-        <property name="icon">
-         <iconset resource="../../../res/res.qrc">
-          <normaloff>:/res/image/icon/arrow-left-2.png</normaloff>:/res/image/icon/arrow-left-2.png</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>24</width>
-          <height>24</height>
-         </size>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="3">
        <widget class="QToolButton" name="jogAdd">
         <property name="enabled">
@@ -199,7 +146,60 @@
         </property>
         <property name="icon">
          <iconset resource="../../../res/res.qrc">
-          <normaloff>:/res/image/icon/arrow-right-2.png</normaloff>:/res/image/icon/arrow-right-2.png</iconset>
+          <normaloff>:/res/image/icon/arrowright.png</normaloff>:/res/image/icon/arrowright.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QToolButton" name="btnZero">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Zero</string>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QToolButton" name="jogSub">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>...</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../../res/res.qrc">
+          <normaloff>:/res/image/icon/arrowleft.png</normaloff>:/res/image/icon/arrowleft.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>24</width>
+          <height>24</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QToolButton" name="singleSub">
+        <property name="text">
+         <string>...</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../../res/res.qrc">
+          <normaloff>:/res/image/icon/subtract.png</normaloff>:/res/image/icon/subtract.png</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -216,7 +216,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>40</width>
+          <width>5</width>
           <height>20</height>
          </size>
         </property>
@@ -228,7 +228,6 @@
   </layout>
  </widget>
  <resources>
-  <include location="../../../res/res.qrc"/>
   <include location="../../../res/res.qrc"/>
  </resources>
  <connections/>

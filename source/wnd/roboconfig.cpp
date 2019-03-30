@@ -108,6 +108,7 @@ void RoboConfig::slotAddNewRobot( const QStringList & strDevInfo)
 void RoboConfig::slotDownload()
 {
     int ret;
+    int failCnt = 0;
     //! for each plugin
     for ( int i = 0; i < mPluginList.size(); i++ )
     {
@@ -124,14 +125,18 @@ void RoboConfig::slotDownload()
         ret = mPluginList.at(i)->download();
         if ( ret != 0 )
         {
-            sysError( mPluginList.at(i)->SN() + " " + tr("download fail") );
+            sysPrompt( mPluginList.at(i)->SN() + " " + tr("download fail") );
+            failCnt++;
         }
     }
+    if ( failCnt == 0 )
+    { sysPrompt( tr("Download success") ); }
 }
 
 void RoboConfig::slotUpload()
 {
     int ret;
+    int failCnt = 0;
     //! for each plugin
     for ( int i = 0; i < mPluginList.size(); i++ )
     {
@@ -147,9 +152,14 @@ void RoboConfig::slotUpload()
         ret = mPluginList.at(i)->upload();
         if ( ret != 0 )
         {
-            sysError( mPluginList.at(i)->SN() + " " + tr("download fail") );
+            sysPrompt( mPluginList.at(i)->SN() + " " + tr("upload fail") );
+            failCnt++;
         }
+
     }
+
+    if ( failCnt == 0 )
+    { sysPrompt( tr("Upload success") ); }
 }
 
 void RoboConfig::slotStore()
@@ -534,7 +544,10 @@ void RoboConfig::stackPageChange( QTreeWidgetItem *current,
         { bV = has_attr( pPage->pageAttr(), XPage::page_rst_able ); }
         else
         { bV = false; }
+
+        //! modify the reset attribute
         ui->buttonBox->button( QDialogButtonBox::Reset )->setVisible( bV && resetVisible() );
+        ui->buttonBox->button( QDialogButtonBox::Reset )->setEnabled( pPage->isEnabled() );
     }
 }
 void RoboConfig::panelPageChange( QTreeWidgetItem *current,

@@ -1990,7 +1990,7 @@
         <widget class="QGroupBox" name="groupBox_6">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>1</horstretch>
+           <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
@@ -2835,7 +2835,6 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../../res/res.qrc"/>
   <include location="../../../res/res.qrc"/>
  </resources>
  <connections>

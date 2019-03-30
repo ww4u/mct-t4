@@ -85,10 +85,22 @@ ErrorMgrTable::ErrorMgrTable(QWidget *parent) :
     ui->tableView->setItemDelegateForColumn( 3, m_pRadioDelegate );
     ui->tableView->setItemDelegateForColumn( 4, m_pRadioDelegate );
 
+    ui->tableView->setItemDelegateForColumn( 5, m_pComboxDelegate );
+
     ui->tableView->setItemDelegateForColumn( 6, m_pCheckDelegate );
     ui->tableView->setItemDelegateForColumn( 7, m_pCheckDelegate );
 
-    ui->tableView->setItemDelegateForColumn( 5, m_pComboxDelegate );
+    //! width
+    ui->tableView->setColumnWidth( 0, 20 );
+    ui->tableView->setColumnWidth( 1, 100 );
+
+    ui->tableView->setColumnWidth( 2, 20 );
+    ui->tableView->setColumnWidth( 3, 20 );
+    ui->tableView->setColumnWidth( 4, 20 );
+
+    ui->tableView->setColumnWidth( 5, 100 );
+    ui->tableView->setColumnWidth( 6, 20 );
+    ui->tableView->setColumnWidth( 7, 20 );
 }
 
 ErrorMgrTable::~ErrorMgrTable()

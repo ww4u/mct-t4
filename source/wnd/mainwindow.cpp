@@ -481,8 +481,6 @@ void MainWindow::slot_post_startup()
     else
     { m_pTrChAction->setChecked( true); }
 
-//    changeLanguage();
-
     //! change the style
     if ( mPref.mStyleIndex == 0 )
     { m_pMegaAction->setChecked( true ); }

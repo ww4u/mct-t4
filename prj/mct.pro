@@ -81,6 +81,7 @@ SOURCES += ../source/main/main.cpp      \
 
 
 FORMS += ../source/wnd/mainwindow.ui    \
+    ../source/wnd/aboutdlg.ui           \
     ../source/wnd/helppanel.ui          \
     ../source/wnd/roboconfig.ui         \
     ../source/widget/megainterface.ui \

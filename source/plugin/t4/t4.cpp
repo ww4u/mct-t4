@@ -46,12 +46,12 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
     mrx_t4::ErrorMgrTable *pErrCfgTable;
 
     new_root_widget( mrx_t4::Info, pWig, tr("MRX-T4"), ":/res/image/icon/205.png", m_pRootWidgetItem );
-    new_widget( mrx_t4::Config, pWig, tr("Configuration"), ":/res/image/icon/205.png" );
-    new_widget( mrx_t4::AdvPara, pWig, tr("Misc"), ":/res/image/icon/205.png" );
+    new_widget( mrx_t4::Config, pWig, tr("Configuration"), ":/res/image/icon/config.png" );
+    new_widget( mrx_t4::AdvPara, pWig, tr("Misc"), ":/res/image/icon/qita.png" );
 //    new_widget( mrx_t4::Coordinate, pWig, tr("Coordinate"), ":/res/image/icon/205.png" );
-    new_widget( mrx_t4::MotorConfig, pWig, tr("Motor"), ":/res/image/icon/205.png" );
-    new_widget( mrx_t4::ActionTable, m_pRecordView, tr("Record Table"), ":/res/image/icon/activity.png" );
-    new_widget( mrx_t4::ErrorMgrTable, pErrCfgTable, tr("Error Management"), ":/res/image/icon/205.png" );
+    new_widget( mrx_t4::MotorConfig, pWig, tr("Motor"), ":/res/image/icon/motor.png" );
+    new_widget( mrx_t4::ActionTable, m_pRecordView, tr("Record Table"), ":/res/image/icon/table.png" );
+    new_widget( mrx_t4::ErrorMgrTable, pErrCfgTable, tr("Error Management"), ":/res/image/icon/ErrorSetting.png" );
 //    new_widget( mrx_t4::TracePlot, pWig, tr("Trace"), ":/res/image/icon/409.png" );logDbg();
 //    new_widget( mrx_t4::ScriptEditor, pWig, tr("Script"), ":/res/image/icon/activity.png" );logDbg();
 

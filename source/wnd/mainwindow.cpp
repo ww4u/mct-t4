@@ -230,6 +230,10 @@ void MainWindow::buildConnection()
     connect(ui->actionSearch,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotSearch()));
     connect(ui->actionConnect,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotConnect()));
 
+    //! default disable
+    ui->actionDownload->setEnabled(false);
+    ui->actionUpload->setEnabled(false);
+
     connect( m_pStopWidget, SIGNAL(signal_stop_clicked(bool)),
              this, SLOT(slot_emergency_stop()));
 

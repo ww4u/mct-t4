@@ -293,17 +293,21 @@ void MegaInterface::on_pushButton_Scan_clicked()
 
         char buff[4096] = "";
 
-        int devCnt;
+        int ret;
         if(m_devType == TYPE_LAN)
-        { devCnt = mrgFindGateWay(0, buff, sizeof(buff), 1); }
+        { ret = mrgFindGateWay(0, buff, sizeof(buff), 1); }
         else if(m_devType == TYPE_USB)
-        { devCnt = mrgFindGateWay(1, buff, sizeof(buff), 1); }
+        { ret = mrgFindGateWay(1, buff, sizeof(buff), 1); }
         else
         { return; }
 
+        if( ret !=0 ){
+                    sysError("Find GateWay fail");
+                    return;
+                }
+
         //! split
         strFindDevices = QString("%1").arg(buff);
-        sysInfo( strFindDevices );
 
         int idCnt;
         RoboInfo tInfo;

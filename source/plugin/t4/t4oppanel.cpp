@@ -255,16 +255,16 @@ void T4OpPanel::retranslateUi()
     }
 
     //! joint name
-    ui->joint1->setJointName( tr("Basement") );
-    ui->joint2->setJointName( tr("Big Arm") );
-    ui->joint3->setJointName( tr("Little Arm") );
+    ui->joint1->setJointName( tr("Base") );
+    ui->joint2->setJointName( tr("Shoulder") );
+    ui->joint3->setJointName( tr("Elbow") );
     ui->joint4->setJointName( tr("Wrist") );
 
     ui->joint5->setJointName( tr("Terminal") );
 
-    ui->jointChart1->chart()->setTitle( tr("Basement") );
-    ui->jointChart2->chart()->setTitle( tr("Big Arm") );
-    ui->jointChart3->chart()->setTitle( tr("Little Arm") );
+    ui->jointChart1->chart()->setTitle( tr("Base") );
+    ui->jointChart2->chart()->setTitle( tr("Shoulder") );
+    ui->jointChart3->chart()->setTitle( tr("Elbow") );
     ui->jointChart4->chart()->setTitle( tr("Wrist") );
 
     ui->jointChart5->chart()->setTitle( tr("Terminal") );

@@ -26,7 +26,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>MEGAROBO</string>
+   <string>MCT-MRX-T4</string>
   </property>
   <widget class="QTabWidget" name="centralWidget">
    <property name="tabBarAutoHide">

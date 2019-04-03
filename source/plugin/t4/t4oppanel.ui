@@ -22,6 +22,9 @@
      <property name="frameShadow">
       <enum>QFrame::Plain</enum>
      </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
      <property name="widgetResizable">
       <bool>true</bool>
      </property>
@@ -30,11 +33,26 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>844</width>
-        <height>356</height>
+        <width>820</width>
+        <height>347</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_11">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="ControllerStatus" name="controllerStatus" native="true"/>
        </item>
@@ -2105,7 +2123,7 @@
                 <x>0</x>
                 <y>0</y>
                 <width>802</width>
-                <height>312</height>
+                <height>321</height>
                </rect>
               </property>
               <property name="contextMenuPolicy">

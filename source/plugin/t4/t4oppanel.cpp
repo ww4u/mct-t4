@@ -654,20 +654,20 @@ int T4OpPanel::pingTick( void *pContext )
 void T4OpPanel::attachWorkings()
 {
     //! attach
-    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::posRefreshProc),
-                         tr("Position refresh"),
-                         NULL,
-                         m_pPref->refreshIntervalMs() );
+//    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::posRefreshProc),
+//                         tr("Position refresh"),
+//                         NULL,
+//                         m_pPref->refreshIntervalMs() );
 
-    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ),
-                         tr("Monitor refresh"),
-                         NULL,
-                         m_pPref->refreshIntervalMs() );
+//    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ),
+//                         tr("Monitor refresh"),
+//                         NULL,
+//                         m_pPref->refreshIntervalMs() );
 
-    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::pingTick ),
-                         tr("ping tick"),
-                         NULL,
-                         m_pPref->refreshIntervalMs() );
+//    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::pingTick ),
+//                         tr("ping tick"),
+//                         NULL,
+//                         m_pPref->refreshIntervalMs() );
 }
 
 void T4OpPanel::updateUi()
@@ -924,6 +924,15 @@ int T4OpPanel::onJointJog( QVariant var )
         ret = mrgRobotStop( robot_var(), 0);
     }
     return ret;
+}
+
+void T4OpPanel::onJointJogEnd( )
+{
+    int ret = m_pPlugin->stop();
+    if ( ret != 0 )
+    {
+        sysError( tr("Jog end fail") );
+    }
 }
 
 int T4OpPanel::onSequence( QVariant var )
@@ -1760,7 +1769,8 @@ void T4OpPanel::on_joint##id##_signal_jog_add_released()\
     QList<QVariant> vars;\
     vars<<(id-1)<<1<<0; \
     QVariant var( vars );\
-    on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Jog + end") );\
+    onJointJogEnd();\
+    \
 }\
 void T4OpPanel::on_joint##id##_signal_jog_sub_pressed() \
 {logDbg();\
@@ -1774,10 +1784,11 @@ void T4OpPanel::on_joint##id##_signal_jog_sub_released()\
     QList<QVariant> vars;\
     vars<<(id-1)<<-1<<0; \
     QVariant var( vars );\
-    on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Jog - end") );\
+    onJointJogEnd();\
 }
 
-
+//on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Jog + end") );
+//on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Jog - end") );
 
 on_joint_actions( 1 )
 on_joint_actions( 2 )
@@ -1841,12 +1852,11 @@ int T4OpPanel::buildSequence( QList<SequenceItem*> &list )
             if ( NULL == pItem )
             { return -1; }
 
-            pItem->bValid = var.at(0).toBool();
-
             pItem->id = id;
             pItem->vRow = i;
 
             var = varList.at(j);
+            pItem->bValid = var.at(0).toBool();
             pItem->mType = var.at( 2 ).toString();
             pItem->x = var.at( 3 ).toDouble();
             pItem->y = var.at( 4 ).toDouble();

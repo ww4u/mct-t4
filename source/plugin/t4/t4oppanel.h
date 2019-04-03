@@ -262,6 +262,7 @@ protected:
     int onJointStep( QVariant var );
     int onJointZero( QVariant var );
     int onJointJog( QVariant var );
+    void onJointJogEnd( );
 
     int onSequence( QVariant var );
     int _onSequence( QVariant var );

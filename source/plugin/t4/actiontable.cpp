@@ -612,18 +612,21 @@ void ActionTable::slot_toHere()
     if ( NULL == pItem )
     { return; }
 
-    get_data( type, 1 );
-    get_data( x, 2 );
-    get_data( y, 3 );
-    get_data( z, 4 );
-    get_data( pw, 5 );
+//    QVector<QVariant> varDataset = pItem->dataSets();
 
-    get_data( h, 6 );
-    get_data( v, 7 );
-    get_data( line, 8 );
+    get_data( type, 2 );
+    get_data( x, 3 );
+    get_data( y, 4 );
+    get_data( z, 5 );
+    get_data( pw, 6 );
+
+    get_data( h, 7 );
+    get_data( v, 8 );
+    get_data( line, 9 );
 
     QVariant var( vars );
 
+    Q_ASSERT( NULL != m_pPlugin );
     //! action
     on_post_setting( ActionTable, onToHere, tr("To here") );
 }
@@ -809,7 +812,7 @@ void ActionTable::slot_customContextMenuRequested(const QPoint &pos)
 
             m_pActionAddBefore->setIcon( QIcon(":/res/image/icon/xiangshangzhanhang.png") );
             m_pActionAddBelow->setIcon( QIcon(":/res/image/icon/xiangxiazhanhang.png") );
-            m_pActionDelete->setIcon( QIcon(":/res/image/icon/trash.png") );
+            m_pActionDelete->setIcon( QIcon(":/res/image/icon/delete.png") );
 
             m_pContextMenu->addSeparator();
             m_pActionUp = m_pContextMenu->addAction( tr("Up") );

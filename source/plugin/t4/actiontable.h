@@ -59,6 +59,10 @@ protected:
     void doLoad();
 
 protected:
+    void updateControl();
+
+
+
     int onToHere( QVariant var );
     int onHoming( QVariant var );
 
@@ -116,6 +120,16 @@ protected Q_SLOTS:
     void slot_resize();
 
     void slot_customContextMenuRequested(const QPoint &pos);
+private slots:
+    void on_toolExport_clicked();
+    void on_toolImport_clicked();
+    void on_toolUp_clicked();
+    void on_toolDown_clicked();
+    void on_toolDel_clicked();
+    void on_toolClr_clicked();
+    void on_toolInsert_clicked();
+    void on_view_activated(const QModelIndex &index);
+    void on_view_clicked(const QModelIndex &index);
 };
 
 }

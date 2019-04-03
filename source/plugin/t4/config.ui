@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab_3">
       <attribute name="title">
@@ -573,7 +573,6 @@
   </layout>
  </widget>
  <resources>
-  <include location="../../../res/res.qrc"/>
   <include location="../../../res/res.qrc"/>
  </resources>
  <connections/>

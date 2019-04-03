@@ -39,7 +39,7 @@ void Info::updateUi()
     Q_ASSERT( NULL != m_pPlugin );
     mTableItems[1]->setData( Qt::DisplayRole, m_pPlugin->model() );
     mTableItems[3]->setData( Qt::DisplayRole, m_pPlugin->SN() );
-    mTableItems[5]->setData( Qt::DisplayRole, m_pPlugin->addr().split("::").at(1) );
+    mTableItems[5]->setData( Qt::DisplayRole, m_pPlugin->viewAddr() );
     mTableItems[7]->setData( Qt::DisplayRole, m_pPlugin->firmwareVer() );
     mTableItems[9]->setData( Qt::DisplayRole, m_pPlugin->mechanicalVer() );
 }

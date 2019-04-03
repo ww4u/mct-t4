@@ -26,8 +26,13 @@ public:
     void setModel( const QString &model );
     QString model();
 
+    //! internal addr
     void setAddr( const QString &addr );
     QString addr();
+
+    //! view addr
+    void setViewAddr( const QString &vAddr );
+    QString viewAddr();
 
     void setSN( const QString &sn );
     QString SN();
@@ -55,7 +60,8 @@ public:
 protected:
     bool mbOperateAble;
 
-    QString mModel, mAddr;
+    //! \note view addr for the user view
+    QString mModel, mAddr, mViewAddr;
     int mVi;
 
     QString mSN, mFirmwareVer, mMechanicalVer;

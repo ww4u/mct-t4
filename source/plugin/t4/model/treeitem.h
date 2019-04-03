@@ -85,6 +85,9 @@ public:
     void setLevel( int level );
     int level();
 
+    void setValid( bool b );
+    bool isValid();
+
     QVector<QVariant> &dataSets();
 private:
     QList<TreeItem*> childItems;
@@ -92,6 +95,7 @@ private:
     TreeItem *parentItem;
 
     int mLevel;
+    bool mbValid;                   //! valid?
 };
 //! [0]
 

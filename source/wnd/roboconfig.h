@@ -20,6 +20,9 @@ class RoboConfig : public QWidget
     Q_OBJECT
 
 public:
+    static QString extractIp( const QString &ip );
+
+public:
     explicit RoboConfig(QWidget *parent = 0);
     ~RoboConfig();
 
@@ -97,6 +100,12 @@ private slots:
     void slotAddNewRobot( const QStringList &strDevInfo );
 
     void slotShowContextmenu(const QPoint &pos);
+
+    void slotShowContextPrj( const QPoint &pos );
+    void slotShowContextPlugin( const QPoint &pos );
+
+    void slotActionDelAll();
+
     void slotActionOpen();
     void slotActionClose();
     void slotActionRst();
@@ -122,6 +131,9 @@ private:
 
     QMenu *m_pRoboContextMenu;
     QAction *m_pActionOpen, *m_pActionClose, *m_pActionRst;
+
+    QMenu *m_pProjectContextMenu;
+    QAction *m_pActionDelAll;
 
     //! info
     XPlugin *m_pCurPlugin;

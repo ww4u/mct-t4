@@ -56,8 +56,11 @@ public:
     void emit_progress( const QString &info, bool b, int now, int mi, int ma );
     void emit_prompt( const QString &info, int );
 
+    int loginRet();
 protected:
     void retranslateUi();
+
+    void adaptToUserRole();
 
     void savePref();
     void loadPref();
@@ -119,6 +122,8 @@ private slots:
 
     void on_actionPref_triggered();
 
+    void on_actionChange_Password_triggered();
+
     void on_actiontest_triggered();
 
     void on_actionErrant_triggered();
@@ -126,6 +131,8 @@ private slots:
     void on_actionFAQ_triggered();
 
     void on_actionRead_me_triggered();
+
+
 
 private:
     Ui::MainWindow *ui;
@@ -159,6 +166,8 @@ private:
     QTranslator mTranslator;
 
     QString mHelpModel, mHelpName;
+
+    int mLogInRet;
 };
 
 #endif // MAINWINDOW_H

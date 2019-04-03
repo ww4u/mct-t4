@@ -24,18 +24,6 @@ MotorConfig::~MotorConfig()
     delete ui;
 }
 
-void MotorConfig::adapteToUserMode( sysPara::eSysMode mode )
-{
-    bool bAdminEn;
-
-    if ( mode == sysPara::e_sys_admin )
-    { bAdminEn = true; }
-    else
-    { bAdminEn = false; }
-
-    setEnabled( bAdminEn );
-}
-
 //#define set_current( id )   ui->doubleSpinBox##id->setValue( selfPara->mAxisCurrents[id] );
 //#define get_current( id )   selfPara->mAxisCurrents[id] = ui->doubleSpinBox##id->value();
 

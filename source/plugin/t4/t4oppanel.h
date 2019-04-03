@@ -65,6 +65,7 @@ public:
 class SequenceItem
 {
 public:
+    bool bValid;
     int id;     //! record id
     int vRow;
     QString mType;
@@ -75,6 +76,8 @@ public:
 public:
     SequenceItem()
     {
+        bValid = false;
+
         id = 0;
         vRow = 0;
 
@@ -92,6 +95,7 @@ public:
 
     SequenceItem &operator=( const SequenceItem &item )
     {
+        bValid = item.bValid;
         vRow = item.vRow;
 
         mType = item.mType;
@@ -260,6 +264,7 @@ protected:
     int onSequence( QVariant var );
     int _onSequence( QVariant var );
 
+    bool procSequenceEn( SequenceItem* pItem );
     int procSequence( SequenceItem* pItem );
 
 

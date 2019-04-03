@@ -67,6 +67,8 @@ TreeItem::TreeItem(const QVector<QVariant> &data,
     parentItem = parent;
     itemData = data;
 
+    mbValid = true;
+
     //! link the child
     if ( NULL != parentItem )
     {
@@ -186,8 +188,26 @@ bool TreeItem::removeChildren(int position, int count)
     if (position < 0 || position + count > childItems.size())
         return false;
 
+    //! remove the item
     for (int row = 0; row < count; ++row)
-        delete childItems.takeAt(position);
+    {
+        //! leaf node
+        if ( childItems.at( position)->level() == 2 )
+        {
+            delete childItems.takeAt(position);
+        }
+        else if ( childItems.at( position)->level() == 1 )
+        {
+            childItems.at( position )->removeChildren( 0, childItems.at( position)->childCount() );
+
+            //! reset data
+            childItems.at( position )->setValid( false );
+        }
+        else
+        {
+            //! do nothing
+        }
+    }
 
     return true;
 }
@@ -214,6 +234,10 @@ bool TreeItem::setData(int column, const QVariant &value)
         return false;
 
     itemData[column] = value;
+
+    //! valid the data
+    setValid( true );
+
     return true;
 }
 //! [11]
@@ -238,5 +262,19 @@ void TreeItem::setLevel( int level )
 int TreeItem::level()
 { return mLevel; }
 
+void TreeItem::setValid( bool b )
+{ mbValid = b; }
+bool TreeItem::isValid()
+{ return mbValid; }
+
 QVector<QVariant> &TreeItem::dataSets()
-{ return itemData; }
+{
+    QVector<QVariant> dataset;
+
+    dataset = itemData;
+
+    //! \note add the validate
+    dataset.prepend( mbValid );
+
+    return dataset;
+}

@@ -115,6 +115,19 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 
     //! special column
     TreeItem *item = getItem(index);
+
+    if ( NULL == item )
+    { return QVariant(); }
+
+    //! check the validate
+    if ( item->isValid() )
+    { }
+    else if ( index.column() == 0 )
+    {  }
+    else
+    { return QVariant(); }
+
+    //! data
     if ( item->level() == 2 && index.column() == 0 )
     {
         int secId = item->parent()->data( 0 ).toInt();
@@ -420,7 +433,8 @@ int TreeModel::exportOut( const QString &fileName )
     MDataSet dataSet;
     dataSet.setModel( "MRX-T4" );
     QStringList headers;
-    headers<<"id"<<"type"
+    headers<<"valid"
+           <<"id"<<"type"
            //<<"coordinate"<<"para"
            <<"x"<<"y"<<"z"<<"w"<<"h"<<"v"<<"mode"
            <<"delay"
@@ -517,10 +531,12 @@ int TreeModel::_loadIn( MDataSet &dataSet )
     return 0;
 }
 
-#define get_v( colName, row, def, local )   col = pDataSet->columnIndex( colName );\
+#define _get_v( colName, row, def, local )  col = pDataSet->columnIndex( colName );\
                                             if ( col < 0 ){ return -1; }\
-                                   bRet = pSection->cellValue( row, col, local, def );\
-                                        if ( !bRet ){ logDbg(); return -1; }\
+                                            bRet = pSection->cellValue( row, col, local, def );\
+                                            if ( !bRet ){ logDbg(); return -1; }
+
+#define get_v( colName, row, def, local )   _get_v(colName, row, def, local);\
                                    vars<<local;
 
 #define get_str( colName, row, def )   get_v( colName, row, def, strV )
@@ -529,6 +545,7 @@ int TreeModel::_loadIn( MDataSet &dataSet )
 #define get_int( colName, row, def )   get_v( colName, row, def, iV )
 
 #define get_bool( colName, row, def )   get_v( colName, row, def, bV )
+#define _get_bool( colName, row, def )   _get_v( colName, row, def, bV )
 
 int TreeModel::_loadIn( MDataSet *pDataSet,
                         MDataSection *pSection,
@@ -582,6 +599,10 @@ int TreeModel::_loadIn( MDataSet *pDataSet,
 
         if ( NULL == pItem )
         { return -1; }
+
+        //! valid
+        _get_bool( "valid", i, true );
+        pItem->setValid( bV );
     }
 
     return 0;
@@ -615,7 +636,8 @@ int TreeModel::_fmtSection( TreeItem *section,
 int TreeModel::_fmtItem( TreeItem *pItem,
                          QString &ary )
 {
-    ary = QString("%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11")
+    ary = QString("%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12")
+            .arg( pItem->isValid() )
             .arg( pItem->data(0).toInt() )
             .arg( pItem->data(1).toString() )
             .arg( pItem->data(2).toString() )

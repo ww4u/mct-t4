@@ -2,6 +2,7 @@
 
 #include "xplugin.h"
 #include "xpluginworkingthread.h"
+//#include "../../../source/sys/sysapi.h"
 XPage::XPage(QWidget *parent) : QWidget(parent)
 {
     mUri = "data";
@@ -73,9 +74,19 @@ void XPage::attachPref( SysPara *pPref )
 SysPara * XPage::pref()
 { return m_pPref; }
 
+bool XPage::isQualified()
+{ return sysMode() == sysPara::e_sys_admin; }
+
 void XPage::adapteToUserMode( sysPara::eSysMode mode )
 {
+    bool bAdminEn;
 
+    if ( mode == sysPara::e_sys_admin )
+    { bAdminEn = true; }
+    else
+    { bAdminEn = false; }
+
+    setEnabled( bAdminEn );
 }
 
 XPage::PageAttr XPage::pageAttr()
@@ -313,12 +324,12 @@ void XPage::exitMission()
 
 void XPage::setOperAble( bool b )
 {
-    setEnabled( b );
+    setEnabled( b && isQualified() );
 }
 
 void XPage::setOpened( bool b )
 {
-    setEnabled( b );
+    setEnabled( b && isQualified() );
 }
 
 void XPage::slot_plugin_setting_changed( XSetting setting )

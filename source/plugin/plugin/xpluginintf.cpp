@@ -63,6 +63,11 @@ void XPluginIntf::setAddr( const QString &addr )
 QString XPluginIntf::addr()
 { return mAddr; }
 
+void XPluginIntf::setViewAddr( const QString &vAddr )
+{ mViewAddr = vAddr; }
+QString XPluginIntf::viewAddr()
+{ return mViewAddr; }
+
 void XPluginIntf::setSN( const QString &sn )
 { mSN = sn; }
 QString XPluginIntf::SN()

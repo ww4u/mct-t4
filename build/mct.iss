@@ -4,17 +4,17 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING .ISS SCRIPT FILES!
 
 #define appVersion "0.0.0.2"
-#define appPublisher "MCT"
+#define appPublisher "MCT-MRX-T4"
 
 [Setup]
-AppName=MCT
+AppName=MCT-MRX-T4
 AppVersion={#appVersion}
 AppPublisher={#appPublisher}
-DefaultDirName={pf}\MCT
+DefaultDirName={pf}\MCT-MRX-T4
 DefaultGroupName=MEGAROBO Technology
-UninstallDisplayIcon={app}\MCT
+;UninstallDisplayIcon={app}\MCT
 Compression=lzma2
-SolidCompression=yesOutputBaseFilename= "MCT{#appVersion}"
+SolidCompression=yesOutputBaseFilename= "MCT-MRX-T4{#appVersion}"
 PrivilegesRequired= admin
 
 ;OutputDir=userdocs:Inno Setup Examples Output
@@ -38,7 +38,7 @@ Source: "plugins\platforms\*"; DestDir: "{app}\plugins\platforms"
 Source: "plugins\styles\*"; DestDir: "{app}\plugins\styles" 
 
 Source: "doc\*"; DestDir: "{app}\doc";  Flags: recursesubdirs 
-Source: "C:\Users\lwq\AppData\Roaming\mct\*"; DestDir: "{userappdata}\mct"; Flags: recursesubdirs                        
+;Source: "C:\Users\lwq\AppData\Roaming\mct\*"; DestDir: "{userappdata}\mct"; Flags: recursesubdirs                        
 
 [Dirs]
 ;Name: "{app}\temp"
@@ -56,7 +56,7 @@ Filename: "{app}\doc\readme.txt"; Description: "View the readme file"; Flags: po
 Name: "desktopicon"; Description: "Create a desktop icon"; GroupDescription: "Additional Icons"; 
 
 [Icons]
-Name: "{commondesktop}\MCT"; Filename: "{app}\mct.exe"; Tasks: desktopicon
+Name: "{commondesktop}\MCT-MRX-T4"; Filename: "{app}\mct.exe"; Tasks: desktopicon
 
-Name: "{group}\MCT"; Filename: "{app}\mct.exe"
-Name: "{group}\Uninstall MCT"; Filename: "{uninstallexe}"
+Name: "{group}\MCT-MRX-T4"; Filename: "{app}\mct.exe"
+Name: "{group}\Uninstall MCT-MRX-T4"; Filename: "{uninstallexe}"

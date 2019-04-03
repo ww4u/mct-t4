@@ -13,10 +13,19 @@ public:
     };
 public:
     eSysMode mMode;
+
+    int mArgc;
+    char **mArgv;
 };
 
 void setSysMode( sysPara::eSysMode mode );
 sysPara::eSysMode sysMode();
+
+void sysSetArg( int argc, char **argv );
+int sysArgc();
+char** sysArgv( const QString &arg );
+
+bool sysHasArgv( const QString &arg );
 
 void sysInfo( const QString &str );
 void sysInfo(const QString &info, const QString &str2 );

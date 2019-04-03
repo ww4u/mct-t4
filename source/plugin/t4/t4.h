@@ -2,7 +2,7 @@
 #define MRX_T4_H
 
 #include <QObject>
-
+#include <float.h>
 #include "../plugin/xplugin.h"
 #include "../model/errmgrmodel.h"
 
@@ -62,6 +62,7 @@
 #define guess_dist_time_ms( ts, dist )     ( (ts)*1000 + guess_dist_calc_time_ms(dist) )
 
 #define rel_to_abs_speed( rel ) ( rel/100.0*pRobo->mMaxTerminalSpeed )
+
 
 namespace mrx_t4 {
 class ActionTable;

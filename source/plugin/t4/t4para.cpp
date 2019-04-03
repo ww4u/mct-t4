@@ -55,6 +55,9 @@ void T4Para::rst()
     mSpeed = 0.2;
     mCoord = e_coord_base;
 
+    mJointStepIndex = 6;
+    mJointSpeed = 0.2;
+
     for ( int i =0; i < 3; i++ )
     {
         mCoordPara[i].mPx = 0;
@@ -144,10 +147,16 @@ int T4Para::serialOut( QXmlStreamWriter &writer )
         writer.writeTextElement( "little_arm", QString::number( mArmLength[2] ) );
     writer.writeEndElement();
 
-    //! speed
+    //! robo speed
     writer.writeStartElement("speed");
         writer.writeTextElement( "percent", QString::number( mSpeed ) );
         writer.writeTextElement( "step", QString::number( mStepIndex ) );
+    writer.writeEndElement();
+
+    //! joint speed
+    writer.writeStartElement("joint_speed");
+        writer.writeTextElement( "percent", QString::number( mJointStepIndex ) );
+        writer.writeTextElement( "step", QString::number( mJointStepIndex ) );
     writer.writeEndElement();
 
     //! home
@@ -297,6 +306,18 @@ int T4Para::serialIn( QXmlStreamReader &reader )
                 { mSpeed = reader.readElementText().toDouble(); }
                 else if ( reader.name() == "step" )
                 { mStepIndex = reader.readElementText().toInt(); }
+                else
+                { reader.skipCurrentElement(); }
+            }
+        }
+        else if ( reader.name() == "joint_speed" )
+        {
+            while( reader.readNextStartElement() )
+            {
+                if ( reader.name() == "percent" )
+                { mJointSpeed = reader.readElementText().toDouble(); }
+                else if ( reader.name() == "step" )
+                { mJointStepIndex = reader.readElementText().toInt(); }
                 else
                 { reader.skipCurrentElement(); }
             }

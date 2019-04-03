@@ -62,9 +62,9 @@ Joint::~Joint()
 
 void Joint::setJointName( const QString &name )
 {
-    ui->groupBox->setTitle( name );
-    ui->groupBox->setToolTip( name );
-
+//    ui->groupBox->setTitle( name );
+//    ui->groupBox->setToolTip( name );
+    ui->label->setText( name );
     ui->btnZero->setToolTip( ui->groupBox->title() + " " + tr("To zero") );
     ui->jogAdd->setToolTip( name + " " + tr("Jog +") );
     ui->jogSub->setToolTip( name + " " + tr("Jog -") );

@@ -84,7 +84,7 @@ void T4Para::rst()
 
     //! \note the delta angle for
     mPackagesAxes[0] = 0;
-    mPackagesAxes[1] = -18.8;
+    mPackagesAxes[1] = 18.8;
     mPackagesAxes[2] = -57.4;
     mPackagesAxes[3] = -103;
 

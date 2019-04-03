@@ -3,7 +3,7 @@
 
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING .ISS SCRIPT FILES!
 
-#define appVersion "0.0.0.2"
+#define appVersion "0.0.0.3"
 #define appPublisher "MCT-MRX-T4"
 
 [Setup]
@@ -14,7 +14,7 @@ DefaultDirName={pf}\MCT-MRX-T4
 DefaultGroupName=MEGAROBO Technology
 ;UninstallDisplayIcon={app}\MCT
 Compression=lzma2
-SolidCompression=yesOutputBaseFilename= "MCT-MRX-T4{#appVersion}"
+SolidCompression=yesOutputBaseFilename= "MCT-MRX-T4 {#appVersion}"
 PrivilegesRequired= admin
 
 ;OutputDir=userdocs:Inno Setup Examples Output

@@ -654,20 +654,20 @@ int T4OpPanel::pingTick( void *pContext )
 void T4OpPanel::attachWorkings()
 {
     //! attach
-//    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::posRefreshProc),
-//                         tr("Position refresh"),
-//                         NULL,
-//                         m_pPref->refreshIntervalMs() );
+    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::posRefreshProc),
+                         tr("Position refresh"),
+                         NULL,
+                         m_pPref->refreshIntervalMs() );
 
-//    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ),
-//                         tr("Monitor refresh"),
-//                         NULL,
-//                         m_pPref->refreshIntervalMs() );
+    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ),
+                         tr("Monitor refresh"),
+                         NULL,
+                         m_pPref->refreshIntervalMs() );
 
-//    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::pingTick ),
-//                         tr("ping tick"),
-//                         NULL,
-//                         m_pPref->refreshIntervalMs() );
+    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::pingTick ),
+                         tr("ping tick"),
+                         NULL,
+                         m_pPref->refreshIntervalMs() );
 }
 
 void T4OpPanel::updateUi()

@@ -68,8 +68,8 @@ void SysPref::on_buttonBox_clicked(QAbstractButton *button)
 {
     //! reset
     if ( ui->buttonBox->buttonRole( button ) ==  QDialogButtonBox::ResetRole )
-    {qDebug()<<__FUNCTION__;
-        init();
+    {
+        reset();
 
         updateUi();
     }

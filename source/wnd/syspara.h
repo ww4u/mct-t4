@@ -3,14 +3,21 @@
 
 #include <QtCore>
 
+enum SysUserMode
+{
+    sys_user_operator,
+    sys_user_administrator,
+};
 
 class SysPara
 {
 public:
     SysPara();
 
-public:
+protected:
     void init();
+public:
+    void reset();
 
 public:
     int save( const QString &fileName );
@@ -33,6 +40,8 @@ public:
     int mRefreshIndex;
 
     int mSysMode;
+
+    QByteArray mPw;
 
     //! addr,model,sn
     //! addr,model,sn

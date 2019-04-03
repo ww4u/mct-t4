@@ -17,7 +17,6 @@ public:
     explicit MotorConfig(QWidget *parent = 0);
     ~MotorConfig();
 
-    virtual void adapteToUserMode( sysPara::eSysMode mode );
     virtual void updateUi();
     virtual void updateData();
 

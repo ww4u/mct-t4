@@ -8,6 +8,17 @@
 
 #define plugin_changed()    emit signal_plugins_changed();
 
+//! tcpip::172.16.3.25::inst0::INSTR
+QString RoboConfig::extractIp( const QString &ip )
+{
+    QStringList strList = ip.split("::",QString::SkipEmptyParts );
+    logDbg()<<strList;
+    if ( strList.size() >= 3 )
+    { return strList.at(1); }
+    else
+    { return ip; }
+}
+
 RoboConfig::RoboConfig(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::RoboConfig)
@@ -24,6 +35,9 @@ RoboConfig::RoboConfig(QWidget *parent) :
     m_pActionOpen = NULL;
     m_pActionClose = NULL;
     m_pActionRst = NULL;
+
+    m_pProjectContextMenu = NULL;
+    m_pActionDelAll = NULL;
 
     ui->setupUi(this);
 
@@ -275,6 +289,58 @@ void RoboConfig::slotShowContextmenu(const QPoint& pos)
     if(curItem == NULL)
     { return; }
 
+    //! prj node
+    if ( curItem == m_pRootNode )
+    {
+        slotShowContextPrj( pos );
+        return;
+    }
+
+    //! is root?
+    QVariant vRoot = curItem->data( 0, Qt::UserRole+2 );
+    if ( vRoot.isValid() )
+    {}
+    else
+    { return; }
+
+    slotShowContextPlugin( pos );
+}
+
+void RoboConfig::slotShowContextPrj( const QPoint &pos )
+{
+    //! project
+    {
+        if ( m_pProjectContextMenu != NULL )
+        {}
+        else
+        {
+            m_pProjectContextMenu = new QMenu( ui->treeWidget );
+            if ( NULL == m_pProjectContextMenu )
+            { return; }
+
+            m_pActionDelAll = m_pProjectContextMenu->addAction( tr("Delete all") );
+            if ( NULL == m_pActionDelAll )
+            { return; }
+            m_pActionDelAll->setIcon( QIcon(":/res/image/icon/trash.png") );
+
+            //! connect
+            connect(m_pActionDelAll, SIGNAL(triggered(bool)), this, SLOT(slotActionDelAll()));
+        }
+
+        //! plugins enabled
+        m_pActionDelAll->setEnabled( mPluginList.size() > 0 );
+
+        //! pop proc
+        m_pProjectContextMenu->exec(QCursor::pos());
+    }
+}
+void RoboConfig::slotShowContextPlugin( const QPoint &pos )
+{
+    //! current item
+    QTreeWidgetItem* curItem = ui->treeWidget->itemAt(pos);
+    if(curItem == NULL)
+    { return; }
+
     //! is root?
     QVariant vRoot = curItem->data(0,Qt::UserRole+2);
     if ( vRoot.isValid() )
@@ -360,6 +426,39 @@ void RoboConfig::slotShowContextmenu(const QPoint& pos)
         //! pop proc
         m_pRoboContextMenu->exec(QCursor::pos());
     }
+}
+
+void RoboConfig::slotActionDelAll()
+{
+    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+//        //! delete + remove the root
+//        mPluginList.removeAll( m_pCurPlugin );
+//        plugin_changed();
+
+//        delete m_pCurPlugin;
+
+
+        delete_all( mPluginList )
+        plugin_changed();
+
+        QList<QTreeWidgetItem*> childs;
+        for ( int i = 0; i < m_pRootNode->childCount(); i++ )
+        {
+            childs.append( m_pRootNode->child( i ) );
+        }
+
+        foreach( QTreeWidgetItem *pItem, childs )
+        {
+            m_pRootNode->removeChild( pItem );
+            delete pItem;
+        }
+
+//        Q_ASSERT( NULL != m_pCurTreeItem );
+//        ui->treeWidget->removeItemWidget( m_pCurTreeItem, 0 );
+//        delete m_pCurTreeItem;
+
+    QApplication::restoreOverrideCursor();
 }
 
 void RoboConfig::slotActionOpen()
@@ -610,6 +709,8 @@ void RoboConfig::createRobot( const QStringList &strInfos )
 
     //! config plugin
     plugin->setAddr( strInfos.at(0) );
+    //! extract the ip
+    plugin->setViewAddr( extractIp( strInfos.at(0) ) );
     plugin->setModel( strInfos.at(1) );
 
     plugin->setSN( strInfos.at(2) );
@@ -634,14 +735,13 @@ void RoboConfig::createRobot( const QStringList &strInfos )
     plugin->attachDock( m_pOpDock );
     plugin->attachPanel( pWig );
 
-logDbg();
     //! pref pages
     //! \note pRoboRoot is managed by the tree
     QTreeWidgetItem *pRoboRoot = plugin->createPrefPages( stackWidget() );logDbg()<<pRoboRoot;
-    pRoboRoot->setToolTip( 0, plugin->addr() );
+    pRoboRoot->setToolTip( 0, plugin->viewAddr() );
     plugin->setViewObj( pRoboRoot );
     rootItem()->addChild( pRoboRoot );
-logDbg();
+
     //! auto expand
     rootItem()->setExpanded( true );
     { pRoboRoot->setExpanded( m_pPref->mbAutoExpand ); }

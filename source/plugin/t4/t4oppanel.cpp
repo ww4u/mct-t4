@@ -908,34 +908,50 @@ int T4OpPanel::_onSequence( QVariant var )
             //! enter
             post_debug_enter( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
 
-            ret = procSequence( mSeqList.at( i ) );
-
-            if ( ret == 0 )
+            //! enable?
+            if ( procSequenceEn( mSeqList.at( i )) )
             {
-                if ( mSeqList.at(i)->delay > 0 )
-                {
-                    //! sleep s
-                    QThread::sleep( mSeqList.at(i)->delay );
-                }
-                else
-                {}
+                ret = procSequence( mSeqList.at( i ) );
 
-                //! exit
-                post_debug_exit( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
+                if ( ret == 0 )
+                {
+                    if ( mSeqList.at(i)->delay > 0 )
+                    {
+                        //! sleep s
+                        QThread::sleep( mSeqList.at(i)->delay );
+                    }
+                    else
+                    {}
+
+                    //! exit
+                    post_debug_exit( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
+                }
+                //! exec fail
+                else
+                {
+                    //! exit
+                    post_debug_exit( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
+
+                    return -1;
+                }
             }
-            //! exec fail
             else
             {
-                //! exit
                 post_debug_exit( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
-
-                return -1;
             }
 
         }
     }while( ui->chkCyclic->isChecked() );
 
     return 0;
+}
+
+bool T4OpPanel::procSequenceEn( SequenceItem* pItem )
+{
+    Q_ASSERT( NULL != pItem );
+    check_connect_ret( false );
+
+    return ( pItem->bValid );
 }
 
 //int vRow;
@@ -1773,20 +1789,22 @@ int T4OpPanel::buildSequence( QList<SequenceItem*> &list )
             if ( NULL == pItem )
             { return -1; }
 
+            pItem->bValid = var.at(0).toBool();
+
             pItem->id = id;
             pItem->vRow = i;
 
             var = varList.at(j);
-            pItem->mType = var.at( 1 ).toString();
-            pItem->x = var.at( 2 ).toDouble();
-            pItem->y = var.at( 3 ).toDouble();
-            pItem->z = var.at( 4 ).toDouble();
+            pItem->mType = var.at( 2 ).toString();
+            pItem->x = var.at( 3 ).toDouble();
+            pItem->y = var.at( 4 ).toDouble();
+            pItem->z = var.at( 5 ).toDouble();
 
-            pItem->pw = var.at( 5 ).toDouble();
-            pItem->h = var.at( 6 ).toDouble();
+            pItem->pw = var.at( 6 ).toDouble();
+            pItem->h = var.at( 7 ).toDouble();
 
-            pItem->v = var.at( 7 ).toDouble();
-            pItem->bLine = var.at( 8 ).toBool();
+            pItem->v = var.at( 8 ).toDouble();
+            pItem->bLine = var.at( 9 ).toBool();
 
             pItem->delay = delay;
 

@@ -5,10 +5,17 @@
 
 SysPara::SysPara()
 {
+    init();
 
+    reset();
 }
 
 void SysPara::init()
+{
+    mPw = qCompress("root");
+}
+
+void SysPara::reset()
 {
     mbAutoExpand = true;
     mbAutoLoad = true;
@@ -20,7 +27,6 @@ void SysPara::init()
     mRefreshIndex = 4;
 
     mSysMode = 0;   //! operator
-
 }
 
 int SysPara::save( const QString &fileName )
@@ -103,6 +109,7 @@ int SysPara::serialOut( QXmlStreamWriter &writer )
         writer.writeTextElement( "refresh",QString::number( mRefreshIndex ));
 
         writer.writeTextElement( "sys_mode", QString::number(mSysMode) );
+        writer.writeTextElement( "code", mPw.toBase64() );
     writer.writeEndElement();
 
     writer.writeStartElement( "plugins");
@@ -141,6 +148,8 @@ int SysPara::serialIn( QXmlStreamReader &reader )
                 { mRefreshIndex = reader.readElementText().toInt(); }
                 else if ( reader.name() == "sys_mode" )
                 { mSysMode = reader.readElementText().toInt(); }
+                else if ( reader.name() == "code" )
+                { mPw = (QByteArray::fromBase64( reader.readElementText().toLatin1() )); }
                 else
                 { reader.skipCurrentElement(); }
             }

@@ -65,6 +65,7 @@ public:
 class SequenceItem
 {
 public:
+    bool bValid;
     int id;     //! record id
     int vRow;
     QString mType;
@@ -75,6 +76,8 @@ public:
 public:
     SequenceItem()
     {
+        bValid = false;
+
         id = 0;
         vRow = 0;
 
@@ -92,6 +95,7 @@ public:
 
     SequenceItem &operator=( const SequenceItem &item )
     {
+        bValid = item.bValid;
         vRow = item.vRow;
 
         mType = item.mType;
@@ -152,6 +156,7 @@ public:
         debug_exit,
         monitor_event,
         update_pose,
+        communicate_fail,
     };
 
 public:
@@ -230,6 +235,7 @@ public:
 
     int monitorRefreshProc( void *pContext );
 
+    int pingTick( void *pContext );
 public:
     virtual void attachWorkings();
 
@@ -260,6 +266,7 @@ protected:
     int onSequence( QVariant var );
     int _onSequence( QVariant var );
 
+    bool procSequenceEn( SequenceItem* pItem );
     int procSequence( SequenceItem* pItem );
 
 

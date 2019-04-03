@@ -71,6 +71,8 @@ void Config::setOpened( bool b )
 
 void Config::adapteToUserMode( sysPara::eSysMode mode )
 {
+//    XPage::adapteToUserMode( mode );
+
     bool bAdminEn;
 
     if ( mode == sysPara::e_sys_admin )
@@ -338,6 +340,16 @@ void Config::spyEdited()
         ui->spinBase,
         ui->spinBA,
         ui->spinLA,
+
+        ui->spinZero0,
+        ui->spinZero1,
+        ui->spinZero2,
+        ui->spinZero3,
+
+        ui->spinL0,ui->spinU0,
+        ui->spinL1,ui->spinU1,
+        ui->spinL2,ui->spinU2,
+        ui->spinL3,ui->spinU3,
     };
 
     QComboBox *comboxes[]={

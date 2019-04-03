@@ -92,9 +92,19 @@ ActionTable::~ActionTable()
 void ActionTable::keyReleaseEvent(QKeyEvent *event)
 {
     if ( event->key()==Qt::Key_Insert )
-    { logDbg(); }
+    {
+        if ( ui->toolInsert->isEnabled() )
+        { on_toolInsert_clicked(); }
+        else
+        {}
+    }
     else if ( event->key()==Qt::Key_Delete )
-    { logDbg(); }
+    {
+        if ( ui->toolDel->isEnabled() )
+        { on_toolDel_clicked(); }
+        else
+        {}
+    }
     else
     { XPage::keyReleaseEvent( event ); }
 }
@@ -134,6 +144,9 @@ void ActionTable::setModel( QAbstractItemModel *pModel )
     if (hasCurrent) {
         ui->view->closePersistentEditor( ui->view->selectionModel()->currentIndex());
     }
+
+//    adapteToUserMode( sysMode() );
+//    setEnabled( false );
 }
 
 void ActionTable::onSetting(XSetting setting)
@@ -404,6 +417,86 @@ void ActionTable::doLoad()
     if ( ret != 0 )
     {
         sysError( tr("Load record fail") );
+    }
+}
+
+//! change the status by the current item
+void ActionTable::updateControl()
+{
+    //! \todo
+    QModelIndex index = ui->view->currentIndex();
+    if ( index.isValid() )
+    {}
+    else
+    { return; }
+
+    TreeItem *pItem = static_cast<TreeItem*>( index.internalPointer() );
+    if ( NULL == pItem )
+    { return; }
+
+    TreeItem *pParent = pItem->parent();
+    if ( NULL == pParent )
+    { return; }
+
+    //! menu
+    if ( m_pContextMenu != NULL )
+    {
+        if ( pItem->level() == 1 )
+        {
+            m_pActionAddBefore->setEnabled( false );
+            m_pActionAddBelow->setEnabled( true );
+            m_pActionDelete->setEnabled( true );
+        }
+        else if ( pItem->level() == 2 )
+        {
+            m_pActionAddBefore->setEnabled( true );
+            m_pActionAddBelow->setEnabled( true );
+            m_pActionDelete->setEnabled( true );
+        }
+        else
+        { return; }
+
+        //! rst
+        m_pActionUp->setEnabled( true );
+        m_pActionDown->setEnabled( true );
+        if ( index.row() < 1 )
+        { m_pActionUp->setEnabled( false ); }
+
+        if ( index.row() >= pParent->childCount() - 1 )
+        { m_pActionDown->setEnabled( false ); }
+
+        //! change the to here
+        QString strToHereSuffix;
+        strToHereSuffix = QString("(%1,%2,%3)").arg( pItem->data(2).toDouble(),0,'f',2 )
+                                               .arg( pItem->data(3).toDouble(),0,'f',2 )
+                                               .arg( pItem->data(4).toDouble(),0,'f',2 );
+
+        //! PA && RA
+        if ( str_is( pItem->data( 1 ).toString(), "PA") )
+        { m_pActionToHere->setText( tr("To:") + " " + strToHereSuffix ); }
+        else
+        { m_pActionToHere->setText( tr("Step:") + " " + strToHereSuffix );}
+
+        m_pActionToHere->setVisible( pItem->isValid() );
+    }
+
+    //! tool button
+    {
+        if ( pItem->level() == 1 )
+        { ui->toolDel->setEnabled( true ); }
+        else if ( pItem->level() == 2 )
+        { ui->toolDel->setEnabled( true ); }
+        else
+        {}
+
+        //! rst
+        ui->toolUp->setEnabled( true );
+        ui->toolDown->setEnabled( true );
+        if ( index.row() < 1 )
+        { ui->toolUp->setEnabled( false ); }
+
+        if ( index.row() >= pParent->childCount() - 1 )
+        { ui->toolDown->setEnabled( false ); }
     }
 }
 
@@ -774,60 +867,145 @@ void ActionTable::slot_customContextMenuRequested(const QPoint &pos)
         //! \todo
 //        ui->view->selectRow( ui->view->currentIndex().row() );
 
-//        ui->view->sele
-        QModelIndex index = ui->view->currentIndex();
-        if ( index.isValid() )
-        {}
-        else
-        { return; }
+        updateControl();
 
-        TreeItem *pItem = static_cast<TreeItem*>( index.internalPointer() );
-        if ( NULL == pItem )
-        { return; }
+//        QModelIndex index = ui->view->currentIndex();
+//        if ( index.isValid() )
+//        {}
+//        else
+//        { return; }
 
-        TreeItem *pParent = pItem->parent();
-        if ( NULL == pParent )
-        { return; }
+//        TreeItem *pItem = static_cast<TreeItem*>( index.internalPointer() );
+//        if ( NULL == pItem )
+//        { return; }
 
-        //! menu
-        if ( pItem->level() == 1 )
-        {
-            m_pActionAddBefore->setEnabled( false );
-            m_pActionAddBelow->setEnabled( true );
-            m_pActionDelete->setEnabled( false );
-        }
-        else if ( pItem->level() == 2 )
-        {
-            m_pActionAddBefore->setEnabled( true );
-            m_pActionAddBelow->setEnabled( true );
-            m_pActionDelete->setEnabled( true );
-        }
-        else
-        { return; }
+//        TreeItem *pParent = pItem->parent();
+//        if ( NULL == pParent )
+//        { return; }
 
-        //! rst
-        m_pActionUp->setEnabled( true );
-        m_pActionDown->setEnabled( true );
-        if ( index.row() < 1 )
-        { m_pActionUp->setEnabled( false ); }
+//        //! menu
+//        if ( pItem->level() == 1 )
+//        {
+//            m_pActionAddBefore->setEnabled( false );
+//            m_pActionAddBelow->setEnabled( true );
+//            m_pActionDelete->setEnabled( false );
+//        }
+//        else if ( pItem->level() == 2 )
+//        {
+//            m_pActionAddBefore->setEnabled( true );
+//            m_pActionAddBelow->setEnabled( true );
+//            m_pActionDelete->setEnabled( true );
+//        }
+//        else
+//        { return; }
 
-        if ( index.row() >= pParent->childCount() - 1 )
-        { m_pActionDown->setEnabled( false ); }
+//        //! rst
+//        m_pActionUp->setEnabled( true );
+//        m_pActionDown->setEnabled( true );
+//        if ( index.row() < 1 )
+//        { m_pActionUp->setEnabled( false ); }
 
-        //! change the to here
-        QString strToHereSuffix;
-        strToHereSuffix = QString("(%1,%2,%3)").arg( pItem->data(2).toDouble(),0,'f',2 )
-                                               .arg( pItem->data(3).toDouble(),0,'f',2 )
-                                               .arg( pItem->data(4).toDouble(),0,'f',2 );
+//        if ( index.row() >= pParent->childCount() - 1 )
+//        { m_pActionDown->setEnabled( false ); }
 
-        //! PA && RA
-        if ( str_is( pItem->data( 1 ).toString(), "PA") )
-        { m_pActionToHere->setText( tr("To:") + " " + strToHereSuffix ); }
-        else
-        { m_pActionToHere->setText( tr("Step:") + " " + strToHereSuffix );}
+//        //! change the to here
+//        QString strToHereSuffix;
+//        strToHereSuffix = QString("(%1,%2,%3)").arg( pItem->data(2).toDouble(),0,'f',2 )
+//                                               .arg( pItem->data(3).toDouble(),0,'f',2 )
+//                                               .arg( pItem->data(4).toDouble(),0,'f',2 );
+
+//        //! PA && RA
+//        if ( str_is( pItem->data( 1 ).toString(), "PA") )
+//        { m_pActionToHere->setText( tr("To:") + " " + strToHereSuffix ); }
+//        else
+//        { m_pActionToHere->setText( tr("Step:") + " " + strToHereSuffix );}
 
         m_pContextMenu->exec(QCursor::pos());
     }
 }
 
+void ActionTable::on_toolExport_clicked()
+{
+    QString str = QFileDialog::getSaveFileName( this, tr("Save"), m_pPlugin->homePath(), tr( "Record (*.mrp)") );
+    if ( str.isEmpty() )
+    { return; }
+
+    //! do save
+    TreeModel *pTable = (TreeModel*)ui->view->model();
+    if ( NULL == pTable )
+    {
+        sysError( tr("Save record fail") );
+        return;
+    }
+
+    int ret = pTable->exportOut( str );
+    if ( ret != 0 )
+    {
+        sysError( tr("Save record fail") );
+    }
 }
+
+void ActionTable::on_toolImport_clicked()
+{
+    QString str = QFileDialog::getOpenFileName( this, tr("Open"), m_pPlugin->homePath(), tr( "Record (*.mrp)") );
+    if ( str.isEmpty() )
+    { return; }logDbg()<<str;
+
+    //! do load
+    TreeModel *pTable = (TreeModel*)ui->view->model();
+    if ( NULL == pTable )
+    {
+        sysError( tr("Load record fail") );
+        return;
+    }
+
+    int ret = pTable->loadIn( str );
+    if ( ret != 0 )
+    {
+        sysError( tr("Load record fail") );
+    }
+}
+
+void ActionTable::on_toolUp_clicked()
+{
+    slot_up();
+}
+
+void ActionTable::on_toolDown_clicked()
+{
+    slot_down();
+}
+
+void ActionTable::on_toolDel_clicked()
+{
+    slot_delete();
+}
+
+void ActionTable::on_toolClr_clicked()
+{
+    //! remove all
+    //! keep the node
+    ui->view->model()->removeRows( 0, ui->view->model()->rowCount() );
+}
+
+void ActionTable::on_toolInsert_clicked()
+{
+    slot_add_below();
+}
+
+void ActionTable::on_view_activated(const QModelIndex &index)
+{
+    updateControl();
+}
+
+void ActionTable::on_view_clicked(const QModelIndex &index)
+{
+    updateControl();
+}
+
+}
+
+
+
+
+

@@ -173,6 +173,16 @@ bool T4OpPanel::event(QEvent *e)
             { updateMonitor( e ); }
             else if ( (int)pEvent->type() == OpEvent::update_pose )
             { updateRefreshPara( e ); }
+            else if ( (int)pEvent->type() == OpEvent::communicate_fail )
+            {
+                //! close the plugin
+
+                sysPrompt( tr("Communicate fail") );
+
+                m_pPlugin->stop();
+                m_pPlugin->close();
+
+            }
             else
             {}
 
@@ -604,6 +614,43 @@ int T4OpPanel::monitorRefreshProc( void *pContext )
     return 0;
 }
 
+int T4OpPanel::pingTick( void *pContext )
+{
+    //! to local
+    MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
+    Q_ASSERT( NULL != pRobo );
+
+    if ( pRobo->isOpened() )
+    {}
+    else
+    { return 0; }
+
+    int ret;
+    char idn[128];
+    for ( int i = 0; i < 3; i++ )
+    {
+        ret = mrgGateWayIDNQuery( (ViSession)pRobo->deviceVi(), idn );
+        //! read fail
+        if ( ret != 0 )
+        {}
+        else
+        { return 0; }
+    }
+
+    //! try fail
+    OpEvent *commFailEvent = new OpEvent( OpEvent::communicate_fail );
+    if ( NULL == commFailEvent )
+    {
+        return 0;
+    }
+    else
+    { }
+    //! post event
+    qApp->postEvent( this, commFailEvent );
+
+    return 0;
+}
+
 void T4OpPanel::attachWorkings()
 {
     //! attach
@@ -614,6 +661,11 @@ void T4OpPanel::attachWorkings()
 
     attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ),
                          tr("Monitor refresh"),
+                         NULL,
+                         m_pPref->refreshIntervalMs() );
+
+    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::pingTick ),
+                         tr("ping tick"),
                          NULL,
                          m_pPref->refreshIntervalMs() );
 }
@@ -908,34 +960,50 @@ int T4OpPanel::_onSequence( QVariant var )
             //! enter
             post_debug_enter( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
 
-            ret = procSequence( mSeqList.at( i ) );
-
-            if ( ret == 0 )
+            //! enable?
+            if ( procSequenceEn( mSeqList.at( i )) )
             {
-                if ( mSeqList.at(i)->delay > 0 )
-                {
-                    //! sleep s
-                    QThread::sleep( mSeqList.at(i)->delay );
-                }
-                else
-                {}
+                ret = procSequence( mSeqList.at( i ) );
 
-                //! exit
-                post_debug_exit( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
+                if ( ret == 0 )
+                {
+                    if ( mSeqList.at(i)->delay > 0 )
+                    {
+                        //! sleep s
+                        QThread::sleep( mSeqList.at(i)->delay );
+                    }
+                    else
+                    {}
+
+                    //! exit
+                    post_debug_exit( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
+                }
+                //! exec fail
+                else
+                {
+                    //! exit
+                    post_debug_exit( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
+
+                    return -1;
+                }
             }
-            //! exec fail
             else
             {
-                //! exit
                 post_debug_exit( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
-
-                return -1;
             }
 
         }
     }while( ui->chkCyclic->isChecked() );
 
     return 0;
+}
+
+bool T4OpPanel::procSequenceEn( SequenceItem* pItem )
+{
+    Q_ASSERT( NULL != pItem );
+    check_connect_ret( false );
+
+    return ( pItem->bValid );
 }
 
 //int vRow;
@@ -1773,20 +1841,22 @@ int T4OpPanel::buildSequence( QList<SequenceItem*> &list )
             if ( NULL == pItem )
             { return -1; }
 
+            pItem->bValid = var.at(0).toBool();
+
             pItem->id = id;
             pItem->vRow = i;
 
             var = varList.at(j);
-            pItem->mType = var.at( 1 ).toString();
-            pItem->x = var.at( 2 ).toDouble();
-            pItem->y = var.at( 3 ).toDouble();
-            pItem->z = var.at( 4 ).toDouble();
+            pItem->mType = var.at( 2 ).toString();
+            pItem->x = var.at( 3 ).toDouble();
+            pItem->y = var.at( 4 ).toDouble();
+            pItem->z = var.at( 5 ).toDouble();
 
-            pItem->pw = var.at( 5 ).toDouble();
-            pItem->h = var.at( 6 ).toDouble();
+            pItem->pw = var.at( 6 ).toDouble();
+            pItem->h = var.at( 7 ).toDouble();
 
-            pItem->v = var.at( 7 ).toDouble();
-            pItem->bLine = var.at( 8 ).toBool();
+            pItem->v = var.at( 8 ).toDouble();
+            pItem->bLine = var.at( 9 ).toBool();
 
             pItem->delay = delay;
 

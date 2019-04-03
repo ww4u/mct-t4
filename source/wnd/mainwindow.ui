@@ -78,6 +78,7 @@
     </property>
     <addaction name="actionWifi"/>
     <addaction name="actionPref"/>
+    <addaction name="actionChange_Password"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -334,6 +335,18 @@
   <action name="actionRead_me">
    <property name="text">
     <string>Read me...</string>
+   </property>
+  </action>
+  <action name="actionChange_Password">
+   <property name="icon">
+    <iconset resource="../../res/res.qrc">
+     <normaloff>:/res/image/icon/51.png</normaloff>:/res/image/icon/51.png</iconset>
+   </property>
+   <property name="text">
+    <string>Change Password</string>
+   </property>
+   <property name="toolTip">
+    <string>Change administrator password</string>
    </property>
   </action>
  </widget>

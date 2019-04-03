@@ -6,6 +6,7 @@
 
 #include "login.h"
 #include "syspref.h"
+#include "changedpw.h"
 
 #define pref_file_path  QDir::homePath() + "/AppData/Roaming/mct"
 #define pref_file_name  pref_file_path + "/mct_pref.xml"
@@ -49,6 +50,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 {
     ui->setupUi(this);
 
+    mLogInRet = QDialog::Accepted;
+
     m_pLabStatus = NULL;
     m_pLabMctVer = NULL;
     m_pLabConVer = NULL;
@@ -63,10 +66,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     m_pSysLogout = NULL;
 
     //! default
-    mPref.init();
-
-//    logDbg()<<ui->menuOperate->thread();
-
     setupWorkArea();
 
     setupMenu();
@@ -279,22 +278,25 @@ void MainWindow::loadConfig()
     changeLanguage();
 
     changeStyle();
-
+logDbg();
     do
     {
-#ifdef QT_DEBUG
-        mPref.mSysMode = 0;
-        setSysMode( sysPara::eSysMode( mPref.mSysMode ) );
-        break;
-#endif
+//#ifdef QT_DEBUG
+//        mPref.mSysMode = 0;
+//        setSysMode( sysPara::eSysMode( mPref.mSysMode ) );
+//        break;
+//#endif
 
         //! skip, use the last mode
         if ( mPref.mbAutoLogin )
         { break; }
-
+logDbg();
         //! log in
         LogIn logIn;
-        if ( logIn.exec() == QDialog::Accepted )
+        logIn.setPw( mPref.mPw );
+
+        mLogInRet = logIn.exec();
+        if ( mLogInRet == QDialog::Accepted )
         {
             if ( logIn.getUserRole() == 0 )
             { setSysMode( sysPara::e_sys_user ); }
@@ -306,10 +308,11 @@ void MainWindow::loadConfig()
             mPref.mbAutoLogin = logIn.getAutoLogin();
 
             QTimer::singleShot( 0, this, SLOT( slot_save_sysPref()) );
+
         }
         else
         {
-            QTimer::singleShot( 0, qApp, SLOT(quit()) );
+//            QTimer::singleShot( 0, qApp, SLOT(quit()) );
             return;
         }
 
@@ -480,6 +483,8 @@ void MainWindow::slot_save_sysPref()
 //! change the language
 void MainWindow::slot_post_startup()
 {
+    adaptToUserRole();
+
     //! change the language
     if ( mPref.mLangIndex == 0 )
     { m_pEnAction->setChecked( true ); }
@@ -682,6 +687,9 @@ void MainWindow::emit_progress( const QString &info, bool b, int now, int mi, in
 void MainWindow::emit_prompt( const QString &info, int lev )
 { emit signal_prompt( info, lev ); }
 
+int MainWindow::loginRet()
+{ return mLogInRet; }
+
 void MainWindow::retranslateUi()
 {
     m_pClasAction->setText( tr("Classic") );
@@ -689,6 +697,11 @@ void MainWindow::retranslateUi()
     m_pSystemAction->setText( tr("System") );
 
     m_pHelpAction->setText(tr("Show Help"));
+}
+
+void MainWindow::adaptToUserRole()
+{
+    ui->actionChange_Password->setVisible( mPref.mSysMode == sys_user_administrator );
 }
 
 void MainWindow::savePref()
@@ -760,6 +773,19 @@ void MainWindow::on_actionPref_triggered()
     {}
 }
 
+void MainWindow::on_actionChange_Password_triggered()
+{
+    ChangedPw  changePwWnd;
+
+    if ( changePwWnd.exec() == QDialog::Accepted )
+    {
+        mPref.mPw = qCompress( changePwWnd.getPw().toLatin1() );
+        savePref();
+    }
+    else
+    {}
+}
+
 //! test used
 #include "../plugin/factory/pluginfactory.h"
 void MainWindow::on_actiontest_triggered()
@@ -795,3 +821,5 @@ void MainWindow::on_actionRead_me_triggered()
 {
     explorerDocFile( "readme.txt");
 }
+
+

@@ -173,6 +173,16 @@ bool T4OpPanel::event(QEvent *e)
             { updateMonitor( e ); }
             else if ( (int)pEvent->type() == OpEvent::update_pose )
             { updateRefreshPara( e ); }
+            else if ( (int)pEvent->type() == OpEvent::communicate_fail )
+            {
+                //! close the plugin
+
+                sysPrompt( tr("Communicate fail") );
+
+                m_pPlugin->stop();
+                m_pPlugin->close();
+
+            }
             else
             {}
 
@@ -604,6 +614,43 @@ int T4OpPanel::monitorRefreshProc( void *pContext )
     return 0;
 }
 
+int T4OpPanel::pingTick( void *pContext )
+{
+    //! to local
+    MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
+    Q_ASSERT( NULL != pRobo );
+
+    if ( pRobo->isOpened() )
+    {}
+    else
+    { return 0; }
+
+    int ret;
+    char idn[128];
+    for ( int i = 0; i < 3; i++ )
+    {
+        ret = mrgGateWayIDNQuery( (ViSession)pRobo->deviceVi(), idn );
+        //! read fail
+        if ( ret != 0 )
+        {}
+        else
+        { return 0; }
+    }
+
+    //! try fail
+    OpEvent *commFailEvent = new OpEvent( OpEvent::communicate_fail );
+    if ( NULL == commFailEvent )
+    {
+        return 0;
+    }
+    else
+    { }
+    //! post event
+    qApp->postEvent( this, commFailEvent );
+
+    return 0;
+}
+
 void T4OpPanel::attachWorkings()
 {
     //! attach
@@ -614,6 +661,11 @@ void T4OpPanel::attachWorkings()
 
     attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ),
                          tr("Monitor refresh"),
+                         NULL,
+                         m_pPref->refreshIntervalMs() );
+
+    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::pingTick ),
+                         tr("ping tick"),
                          NULL,
                          m_pPref->refreshIntervalMs() );
 }

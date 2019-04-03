@@ -156,6 +156,7 @@ public:
         debug_exit,
         monitor_event,
         update_pose,
+        communicate_fail,
     };
 
 public:
@@ -234,6 +235,7 @@ public:
 
     int monitorRefreshProc( void *pContext );
 
+    int pingTick( void *pContext );
 public:
     virtual void attachWorkings();
 

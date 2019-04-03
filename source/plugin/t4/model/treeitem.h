@@ -88,7 +88,7 @@ public:
     void setValid( bool b );
     bool isValid();
 
-    QVector<QVariant> &dataSets();
+    QVector<QVariant> dataSets();
 private:
     QList<TreeItem*> childItems;
     QVector<QVariant> itemData;     //! id,type,para,x,y,z,w,h,a,v,comment

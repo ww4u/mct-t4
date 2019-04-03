@@ -267,7 +267,7 @@ void TreeItem::setValid( bool b )
 bool TreeItem::isValid()
 { return mbValid; }
 
-QVector<QVariant> &TreeItem::dataSets()
+QVector<QVariant> TreeItem::dataSets()
 {
     QVector<QVariant> dataset;
 

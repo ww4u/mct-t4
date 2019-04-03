@@ -1841,12 +1841,11 @@ int T4OpPanel::buildSequence( QList<SequenceItem*> &list )
             if ( NULL == pItem )
             { return -1; }
 
-            pItem->bValid = var.at(0).toBool();
-
             pItem->id = id;
             pItem->vRow = i;
 
             var = varList.at(j);
+            pItem->bValid = var.at(0).toBool();
             pItem->mType = var.at( 2 ).toString();
             pItem->x = var.at( 3 ).toDouble();
             pItem->y = var.at( 4 ).toDouble();

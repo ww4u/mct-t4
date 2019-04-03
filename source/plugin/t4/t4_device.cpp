@@ -80,6 +80,13 @@ logDbg()<<mAddr;
            sysError( tr("Data report state fail") );
            break;
        }
+
+//       ret = mrgMRQReportState( self_device_var(), i, 0, 0 );
+//       if ( ret != 0 )
+//       {
+//           sysError( tr("Data report state fail") );
+//           break;
+//       }
     }
 
     return 0;

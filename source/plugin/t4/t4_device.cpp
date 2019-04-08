@@ -72,28 +72,29 @@ logDbg()<<mAddr;
     //! \note
     //! \todo
     //! config the data
-    for ( int i = 0; i < T4Para::_axis_cnt; i++ )
+    int dataOnOff;
+    if ( sysHasArgv("-noupdate") )
+    { dataOnOff = 0; }
+    else
+    { dataOnOff = 1; }
+
     {
-       ret = mrgMRQReportState( self_device_var(), i, 0, 1 );
-       if ( ret != 0 )
-       {
-           sysError( tr("Data report state fail") );
-           break;
-       }
+        for ( int i = 0; i < T4Para::_axis_cnt; i++ )
+        {
+           ret = mrgMRQReportState( self_device_var(), i, 0, dataOnOff );
+           if ( ret != 0 )
+           {
+               sysError( tr("Data report state fail") );
+               break;
+           }
 
-//       ret = mrgMRQReportPeriod( self_device_var(), i, 0, 1000 );
-//       if ( ret != 0 )
-//       {
-//           sysError( tr("Data report state fail") );
-//           break;
-//       }
-
-//       ret = mrgMRQReportState( self_device_var(), i, 0, 0 );
-//       if ( ret != 0 )
-//       {
-//           sysError( tr("Data report state fail") );
-//           break;
-//       }
+           ret = mrgMRQReportPeriod( self_device_var(), i, 0, 1000 );
+           if ( ret != 0 )
+           {
+               sysError( tr("Data report state fail") );
+               break;
+           }
+        }
     }
 
     return 0;

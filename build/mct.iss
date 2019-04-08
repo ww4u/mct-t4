@@ -14,7 +14,9 @@ DefaultDirName={pf}\MCT-MRX-T4
 DefaultGroupName=MEGAROBO Technology
 ;UninstallDisplayIcon={app}\MCT
 Compression=lzma2
+
 SolidCompression=yesOutputBaseFilename= "MCT-MRX-T4 {#appVersion}"
+
 PrivilegesRequired= admin
 
 ;OutputDir=userdocs:Inno Setup Examples Output

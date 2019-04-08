@@ -666,6 +666,9 @@ int T4OpPanel::pingTick( void *pContext )
 
 void T4OpPanel::attachWorkings()
 {
+    if ( sysHasArgv("-noupdate") )
+    { return; }
+
     //! attach
     attachUpdateWorking( (XPage::procDo)( &T4OpPanel::posRefreshProc),
                          tr("Position refresh"),

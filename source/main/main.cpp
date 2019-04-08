@@ -1,13 +1,14 @@
 
 #include <QApplication>
 #include "../source/wnd/mainwindow.h"
+#include "../source/sys/sysapi.h"
 
-
-//#define MCTVERSION "0.0.1.4"
-
+//! -noupdate
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    sysSetArg( argc, argv );
 
     //! --splash
     QPixmap pixmap( ":res/image/image/full.png" );

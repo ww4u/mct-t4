@@ -247,11 +247,9 @@ int Config::download()
     int type = ui->cmbTypeTerminal->currentIndex();
 
     char t[4] = {0};
-    itoa(robot_var_handle(), t, 10);
 
-    QByteArray baStr("4@");
-    baStr.append(t);
-    ret = mrgRobotToolSet( robot_var(), type, baStr.data());
+    QString baStr = QString("4@%1").arg( robot_var_handle() );
+    ret = mrgRobotToolSet( robot_var(), type, baStr.toLatin1().data() );
     if(ret != 0){
         return -1;
     }

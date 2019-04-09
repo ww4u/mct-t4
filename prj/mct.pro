@@ -132,7 +132,7 @@ DISTFILES += ../build/doc/readme.txt \
              ../build/doc/errant.txt \
              ../build/doc/faq.txt
 
-TRANSLATIONS += ../res/ts/mct_zh_CN.ts \
-                ../res/ts/mct_EN.ts \
-                ../res/ts/mct_zh_TW.ts
+#TRANSLATIONS += ../res/ts/mct_zh_CN.ts \
+#                ../res/ts/mct_EN.ts \
+#                ../res/ts/mct_zh_TW.ts
 

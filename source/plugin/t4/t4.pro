@@ -53,7 +53,8 @@ SOURCES = \
     comassist.cpp \
     model\treeitem.cpp \
     model\treemodel.cpp \
-    motorcurrent.cpp
+    motorcurrent.cpp \
+    controlbar.cpp
 
 
 HEADERS = \
@@ -82,7 +83,8 @@ HEADERS = \
     comassist.h \
     model\treeitem.h \
     model\treemodel.h \
-    motorcurrent.h
+    motorcurrent.h \
+    controlbar.h
 
 FORMS += \
     t4oppanel.ui \
@@ -101,7 +103,8 @@ FORMS += \
     coordinate.ui \
     coordpara.ui \
     advpara.ui \
-    motorcurrent.ui
+    motorcurrent.ui \
+    controlbar.ui
 
 RESOURCES += ../../../res/res.qrc
 

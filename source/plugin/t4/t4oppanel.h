@@ -291,6 +291,7 @@ private:
 
     QStringList mStepxList;
     QStringList mJointStepxList;
+
 protected:
     DebugTable mDebugTable;
     DiagnosisTable mDiagTable;
@@ -374,9 +375,6 @@ private slots:
     void on_tabWidget_currentChanged(int index);
 
     void on_toolButton_debugRun_clicked();
-
-    void on_horizontalSlider_valueChanged(int value);
-    void on_spinBox_valueChanged(int arg1);
 };
 
 }

@@ -36,16 +36,24 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
 
     //! add comment
     QString strRaw, strDecimal, strComment;
-    for ( int i = 0; i < ui->cmbStepXx->count(); i++ )
-    {
-        strRaw = ui->cmbStepXx->itemText( i );
+//    for ( int i = 0; i < ui->cmbStepXx->count(); i++ )
+//    {
+//        strRaw = ui->cmbStepXx->itemText( i );
+//        strDecimal = strRaw;
+//        strDecimal.remove(0,1);        //! remove the X
+//        strComment = QString("%1 [%2%3]").arg(strRaw).arg( strDecimal).arg( char_deg );
+//        mStepxList<<strComment;
+//    }
+    for ( int i = 0; i < ui->roboControlBar->count(); i++ ){
+        strRaw = ui->roboControlBar->combContent( i );
         strDecimal = strRaw;
         strDecimal.remove(0,1);        //! remove the X
-        strComment = QString("%1 [%2%3]").arg(strRaw).arg( strDecimal).arg( char_deg );
+        strComment = QString("%1 [%2%3 or mm]").arg(strRaw).arg( strDecimal).arg( char_deg );
         mStepxList<<strComment;
     }
-    for ( int i = 0; i < ui->cmbStepXx->count(); i++ ){
-        strRaw = ui->comboBox->itemText( i );
+
+    for ( int i = 0; i < ui->controlBar->count(); i++ ){
+        strRaw = ui->controlBar->combContent( i );
         strDecimal = strRaw;
         strDecimal.remove(0,1);        //! remove the X
         strComment = QString("%1 [%2%3 or mm]").arg(strRaw).arg( strDecimal).arg( char_deg );
@@ -268,16 +276,17 @@ void T4OpPanel::retranslateUi()
     //! cmb stepx
     for( int i = 0; i < mStepxList.size(); i++ )
     {
-        ui->cmbStepXx->setItemText( i, mStepxList.at( i ) );
+//        ui->cmbStepXx->setItemText( i, mStepxList.at( i ) );
+        ui->roboControlBar->setItemText( i, mStepxList.at( i ) );
     }
-    for( int i = 0; i < mStepxList.size(); i++ ){
-        ui->comboBox->setItemText( i, mJointStepxList.at( i ));
+    for( int i = 0; i < mJointStepxList.size(); i++ ){
+        ui->controlBar->setItemText( i, mJointStepxList.at( i ));
     }
     //! joint name
+    ui->joint4->setJointName( tr("Wrist") );
     ui->joint1->setJointName( tr("Base") );
     ui->joint2->setJointName( tr("Shoulder") );
     ui->joint3->setJointName( tr("Elbow") );
-    ui->joint4->setJointName( tr("Wrist") );
 
     ui->joint5->setJointName( tr("Terminal") );
 
@@ -341,34 +350,34 @@ void T4OpPanel::spyEdited()
 
     };
 
-    QSpinBox *spinBoxes[]={
-        ui->spinVel
-    };
+//    QSpinBox *spinBoxes[]={
+//        ui->spinVel
+//    };
 
     QDoubleSpinBox *doubleSpinBoxes[]={
         ui->spinDly,
 
     };
 
-    QComboBox *comboxes[]={
-        ui->cmbStepXx
-    };
+//    QComboBox *comboxes[]={
+//        ui->cmbStepXx
+//    };
 
-    QSlider *sliders[]
-    {
-        ui->sliderVel
-    };
+//    QSlider *sliders[]
+//    {
+//        ui->sliderVel
+//    };
 
     install_spy();
 
-    manual_enable_edit( ui->spinVel, true );
+//    manual_enable_edit( ui->spinVel, true );
     manual_enable_edit( ui->spinDly, true );
-    manual_enable_edit( ui->cmbStepXx, true );
-    manual_enable_edit( ui->sliderVel, true );
+//    manual_enable_edit( ui->cmbStepXx, true );
+//    manual_enable_edit( ui->sliderVel, true );
 
-    manual_enable_edit( ui->comboBox, true );
-    manual_enable_edit( ui->spinBox, true );
-    manual_enable_edit( ui->horizontalSlider, true );
+//    manual_enable_edit( ui->comboBox, true );
+//    manual_enable_edit( ui->spinBox, true );
+//    manual_enable_edit( ui->horizontalSlider, true );
 
     //! modified
     connect( ui->controllerStatus, SIGNAL(signal_request_save()),
@@ -688,13 +697,22 @@ void T4OpPanel::updateUi()
     MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
     Q_ASSERT( NULL != pRobo );
 
-    ui->cmbStepXx->setCurrentIndex( pRobo->mStepIndex );
-    ui->spinVel->setValue( pRobo->mSpeed );
-    ui->sliderVel->setValue( pRobo->mSpeed );
+//    ui->cmbStepXx->setCurrentIndex( pRobo->mStepIndex );
+//    ui->spinVel->setValue( pRobo->mSpeed );
+//    ui->sliderVel->setValue( pRobo->mSpeed );
 
-    ui->comboBox->setCurrentIndex( pRobo->mJointStepIndex );
-    ui->spinBox->setValue( pRobo->mJointSpeed );
-    ui->horizontalSlider->setValue( pRobo->mJointSpeed );
+//    ui->comboBox->setCurrentIndex( pRobo->mJointStepIndex );
+//    ui->spinBox->setValue( pRobo->mJointSpeed );
+//    ui->horizontalSlider->setValue( pRobo->mJointSpeed );
+
+    ui->roboControlBar->setCurrentIndex( pRobo->mStepIndex );
+    ui->roboControlBar->setSpeed( pRobo->mSpeed );
+
+    ui->controlBar->setCurrentIndex( pRobo->mJointStepIndex );
+    ui->controlBar->setSpeed( pRobo->mJointSpeed );
+
+    ui->controlBar->setCurrentIndex( pRobo->mJointStepIndex );
+    ui->controlBar->setSpeed( pRobo->mJointSpeed );
 
     //! checked
     ui->controllerStatus->setMctChecked( pRobo->mbMctEn );
@@ -709,12 +727,15 @@ void T4OpPanel::updateData()
     MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
     Q_ASSERT( NULL != pRobo );
 
-    //! save
-    pRobo->mStepIndex = ui->cmbStepXx->currentIndex();
-    pRobo->mSpeed = ui->spinVel->value();
+    //! save robo
+//    pRobo->mStepIndex = ui->cmbStepXx->currentIndex();
+//    pRobo->mSpeed = ui->spinVel->value();
+    pRobo->mJointStepIndex = ui->roboControlBar->stepIndex();
+    pRobo->mJointSpeed = ui->roboControlBar->getSpeed();
 
-    pRobo->mJointStepIndex = ui->comboBox->currentIndex();
-    pRobo->mJointSpeed = ui->spinBox->value();
+    //! save joint
+    pRobo->mJointStepIndex = ui->controlBar->stepIndex();
+    pRobo->mJointSpeed = ui->controlBar->getSpeed();
 
     pRobo->mbMctEn = ui->controllerStatus->isMctChecked();
     pRobo->mbAxisPwr = ui->controllerStatus->isDevicePowerEnable();
@@ -803,10 +824,14 @@ void T4OpPanel::_step( double x, double y, double z )
 {
     QList<QVariant> vars;
 
-    Q_ASSERT( ui->cmbStepXx->currentIndex() < sizeof_array( _stepRatio) );
-    double rat = _stepRatio[ ui->cmbStepXx->currentIndex() ];
+//    Q_ASSERT( ui->cmbStepXx->currentIndex() < sizeof_array( _stepRatio) );
+//    double rat = _stepRatio[ ui->cmbStepXx->currentIndex() ];
 
-    vars<<x * rat <<y * rat <<z * rat <<ui->spinVel->value() / 100.0;
+//    vars<<x * rat <<y * rat <<z * rat <<ui->spinVel->value() / 100.0;
+
+    Q_ASSERT( ui->roboControlBar->stepIndex() < sizeof_array( _stepRatio) );
+    double rat = _stepRatio[ ui->roboControlBar->stepIndex() ];
+    vars<<x * rat <<y * rat <<z * rat <<ui->roboControlBar->getSpeed() / 100.0;
 
     QVariant var( vars );
 
@@ -892,11 +917,18 @@ int T4OpPanel::onJointStep( QVariant var /*int jId, int dir*/ )
 
     float t, p;
 
-    Q_ASSERT( ui->comboBox->currentIndex() < sizeof_array( _stepRatio) );
-    double stp = _stepRatio[ ui->comboBox->currentIndex() ];
+//    Q_ASSERT( ui->comboBox->currentIndex() < sizeof_array( _stepRatio) );
+//    double stp = _stepRatio[ ui->comboBox->currentIndex() ];
 
-    double spd = pRobo->mMaxJointSpeed * ui->spinBox->value() / 100.0;
-    logDbg()<<spd<<stp/spd<<pRobo->mMaxJointSpeed;
+//    double spd = pRobo->mMaxJointSpeed * ui->spinBox->value() / 100.0;
+//    logDbg()<<spd<<stp/spd<<pRobo->mMaxJointSpeed;
+
+    Q_ASSERT( ui->controlBar->stepIndex() < sizeof_array( _stepRatio) );
+    double stp = _stepRatio[ ui->controlBar->stepIndex() ];
+
+    double spd = pRobo->mMaxJointSpeed * ui->controlBar->getSpeed() / 100.0;
+    logDbg()<<stp<<spd<<pRobo->mMaxJointSpeed;
+
     int ret = mrgMRQAdjust( device_var(), jId, 0, dir * stp, stp/spd, guess_dist_time_ms( stp/spd, stp ) );
     return ret;
 }
@@ -914,10 +946,16 @@ int T4OpPanel::onJointZero( QVariant var )
 
     //! \todo
     //! joint home speed
-    int ret = mrgRobotJointHome( robot_var(),
-                       jId,
-                       20,
-                       guess_dist_time_ms( 360/20, 20 ) );
+    int ret = 0;
+    if( jId == 4 ){
+        //! terminal home
+        ret = mrgRobotToolGoHome( robot_var(), guess_dist_time_ms( 360/20, 20 ) );
+    }else{
+        ret = mrgRobotJointHome( robot_var(),
+                                 jId,
+                                 20,
+                                 guess_dist_time_ms( 360/20, 20 ) );
+    }
 
     return ret;
 }
@@ -935,7 +973,9 @@ int T4OpPanel::onJointJog( QVariant var )
     dir = vars[1].toInt();
     btnId = vars[2].toInt();
 
-    double speed = pRobo->mMaxJointSpeed * ui->spinBox->value() / 100.0;
+    //double speed = pRobo->mMaxJointSpeed * ui->spinBox->value() / 100.0;
+    double speed = pRobo->mMaxJointSpeed * ui->controlBar->getSpeed() / 100.0;
+    logDbg() << speed;
 
     int ret = -1;
     if(btnId){
@@ -1959,15 +1999,4 @@ void T4OpPanel::on_toolButton_debugRun_clicked()
 }
 
 
-}
-
-
-void mrx_t4::T4OpPanel::on_horizontalSlider_valueChanged(int value)
-{
-    ui->spinBox->setValue( value );
-}
-
-void mrx_t4::T4OpPanel::on_spinBox_valueChanged(int arg1)
-{
-    ui->horizontalSlider->setValue( arg1 );
 }

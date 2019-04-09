@@ -129,17 +129,17 @@ for ( int i = 0; i < sizeof_array(checkBoxes); i++ )\
 for ( int i = 0; i < sizeof_array(radBoxes); i++ )\
 { spy_control_checkbox( radBoxes[i] ); }\
 for ( int i = 0; i < sizeof_array(edits); i++ )\
-{ spy_control_edit( edits[i] ); }\
-\
-for ( int i = 0; i < sizeof_array(spinBoxes); i++ )\
-{ spy_control_edit( spinBoxes[i] ); }\
-\
-for ( int i = 0; i < sizeof_array(doubleSpinBoxes); i++ )\
-{ spy_control_edit( doubleSpinBoxes[i] ); }\
-\
-for ( int i = 0; i < sizeof_array(comboxes); i++ )\
-{ spy_control_combox( comboxes[i] ); } \
-for ( int i = 0; i < sizeof_array(sliders); i++ )\
-{ spy_control_slider( sliders[i] ); }
+{ spy_control_edit( edits[i] ); }
+//\
+//for ( int i = 0; i < sizeof_array(spinBoxes); i++ )\
+//{ spy_control_edit( spinBoxes[i] ); }\
+//\
+//for ( int i = 0; i < sizeof_array(doubleSpinBoxes); i++ )\
+//{ spy_control_edit( doubleSpinBoxes[i] ); }\
+//\
+//for ( int i = 0; i < sizeof_array(comboxes); i++ )\
+//{ spy_control_combox( comboxes[i] ); } \
+//for ( int i = 0; i < sizeof_array(sliders); i++ )\
+//{ spy_control_slider( sliders[i] ); }
 
 #endif

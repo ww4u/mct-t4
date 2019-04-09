@@ -63,10 +63,12 @@ public:
     double mAxisSoftUpper[ T4Para::_axis_cnt ];
     double mAxisSoftLower[ T4Para::_axis_cnt ];
 
+    //! robot para
     int mStepIndex;
     double mSpeed;      //! percent
     eCoordinateType mCoord;
 
+    //! joint para
     int mJointStepIndex;
     double mJointSpeed;
 

@@ -155,7 +155,7 @@ int T4Para::serialOut( QXmlStreamWriter &writer )
 
     //! joint speed
     writer.writeStartElement("joint_speed");
-        writer.writeTextElement( "percent", QString::number( mJointStepIndex ) );
+        writer.writeTextElement( "percent", QString::number( mJointSpeed ) );
         writer.writeTextElement( "step", QString::number( mJointStepIndex ) );
     writer.writeEndElement();
 

@@ -55,7 +55,10 @@ typedef unsigned long ViSession;
 #define STRCASECMP(x,y)		strcasecmp(x,y)
 #define STRTOK_S(x,y,z)     	strtok_r(x,y,z)
 //#define _strnicmp           strncasecmp
-#define Sleep(x)            usleep( ((x) * 1000) )
+//#define Sleep(x)            usleep( ((x) * 1000) )
+
+#include "../../assist.h"
+#define Sleep(x)            localSleep( x )
 
 
 #endif //_WIN32

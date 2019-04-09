@@ -1,7 +1,7 @@
 #include "sysapi.h"
 #include "mainwindow.h"
 
-static sysPara _sysPara = { sysPara::e_sys_user };
+static sysPara _sysPara = { sysPara::e_sys_user, 0, 0 };
 
 void setSysMode( sysPara::eSysMode mode )
 {
@@ -9,6 +9,27 @@ void setSysMode( sysPara::eSysMode mode )
 }
 sysPara::eSysMode sysMode()
 { return _sysPara.mMode; }
+
+void sysSetArg( int argc, char **argv )
+{
+    _sysPara.mArgc = argc;
+    _sysPara.mArgv = argv;
+}
+int sysArgc()
+{ return _sysPara.mArgc; }
+char** sysArgv()
+{ return _sysPara.mArgv; }
+
+bool sysHasArgv( const QString &arg )
+{
+    for ( int i = 1; i < _sysPara.mArgc; i++ )
+    {
+        if ( str_is( arg, _sysPara.mArgv[i]) )
+        { return true; }
+    }
+
+    return false;
+}
 
 void sysInfo( const QString &str )
 { MainWindow::requestLogout( str, LogStr::log_info ); }

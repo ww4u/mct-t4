@@ -73,6 +73,7 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
 
     m_pRecordModel = new TreeModel( headerList,"" );
     m_pRecordModel->setColumnReadonly( 0 );
+
 #ifndef QT_DEBUG
     rstRecordTable();
 #else

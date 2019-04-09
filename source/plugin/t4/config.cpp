@@ -246,8 +246,9 @@ int Config::download()
     //! set terminal
     int type = ui->cmbTypeTerminal->currentIndex();
 
-    QString str = QString("4@%1").arg(robot_var_handle());
-    ret = mrgRobotToolSet( robot_var(), type, str.toLatin1().data());
+    QString baStr = QString("4@%1").arg( robot_var_handle() );
+    ret = mrgRobotToolSet( robot_var(), type, baStr.toLatin1().data() );
+
     if(ret != 0){
         return -1;
     }

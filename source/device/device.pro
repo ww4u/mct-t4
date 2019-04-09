@@ -26,5 +26,10 @@ SOURCES = \
     assist.cpp
 HEADERS = \ 
     assist.h
-    
+
+linux-arm* {
+SOURCES += ./vxi11/vxi11_clnt.c \
+            ./vxi11/vxi11_user.c \
+            ./vxi11/vxi11_xdr.c
+}
 

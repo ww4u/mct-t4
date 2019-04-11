@@ -409,6 +409,8 @@ QLineEdit:read-only
 
 {
 	background-color : gray;
+	/*background-color : transparent;*/
+	color: white;
 }
 
 QProgressBar {

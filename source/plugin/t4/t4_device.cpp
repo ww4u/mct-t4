@@ -8,6 +8,7 @@
 #include "../../plugin/xpluginworkingthread.h"
 
 #include "actiontable.h"
+#include "t4oppanel.h"
 
 int MRX_T4::open()
 {
@@ -145,6 +146,17 @@ void MRX_T4::rst()
     slot_save_setting();
 }
 
+void MRX_T4::home()
+{
+    Q_ASSERT( NULL != m_pOpPanel );
+    m_pOpPanel->home();
+}
+void MRX_T4::fold()
+{
+    Q_ASSERT( NULL != m_pOpPanel );
+    m_pOpPanel->fold();
+}
+
 int MRX_T4::upload()
 {
     attachBgWorking( (XPlugin::bgProc)(&MRX_T4::uploadProc) );
@@ -261,6 +273,34 @@ int MRX_T4::onStop( QVariant var )
 {
     return 0;
 }
+
+//int MRX_T4::onHoming( QVariant var )
+//{
+//    _check_connect_ret( this, -1 );
+
+//    int ret;
+
+//    ret = mrgRobotGoHome( robot_var(),
+//                          pRobo->mHomeTimeout*1000 );
+
+//    return ret;
+//}
+
+//int MRX_T4::onFolding( QVariant var )
+//{
+//    _check_connect_ret( this, -1 );
+
+//    int ret;
+
+//    ret = mrgGetRobotFold( robot_var(),
+//                           wave_table,
+//                           pRobo->mPackagesAxes[0],
+//                           pRobo->mPackagesAxes[1],
+//                           pRobo->mPackagesAxes[2],
+//                           pRobo->mPackagesAxes[3]
+//                           );
+//    return ret;
+//}
 
 int MRX_T4::robotHandle()
 { return mRobotHandle; }

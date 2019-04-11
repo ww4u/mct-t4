@@ -245,6 +245,9 @@ public:
 
     virtual void onSetting(XSetting setting);
 
+    void home();
+    void fold();
+
 protected:
     double localSpeed();
     double localStep();
@@ -354,8 +357,8 @@ protected Q_SLOTS:
 //    void on_toolSingleZN_clicked();
 
 private slots:
-    void on_pushButton_starting_home_clicked();
-    void on_btnFold_clicked();
+//    void on_pushButton_starting_home_clicked();
+//    void on_btnFold_clicked();
 
     void on_toolSingleAdd_clicked();
     void on_toolSingleEdit_clicked();

@@ -12,7 +12,7 @@
 
 #define selfPara  ((MRX_T4*)m_pPlugin)
 
-#define check_connect() MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;\
+#define _check_connect( p ) MRX_T4 *pRobo = (MRX_T4*)p;\
                         Q_ASSERT( NULL != pRobo );\
                         \
                         if ( pRobo->isOpened() )\
@@ -20,13 +20,19 @@
                         else\
                         { return; }
 
-#define check_connect_ret( ret ) MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;\
+#define _check_connect_ret( p, ret ) MRX_T4 *pRobo = (MRX_T4*)p;\
                         Q_ASSERT( NULL != pRobo );\
                         \
                         if ( pRobo->isOpened() )\
                         {}\
                         else\
                         { return ret; }
+
+#define check_connect() _check_connect( m_pPlugin )
+
+#define check_connect_ret( ret ) _check_connect_ret( m_pPlugin, ret )
+
+
 
 #define robot_var() (ViSession)pRobo->deviceVi(), pRobo->robotHandle()
 #define device_var() (ViSession)pRobo->deviceVi(), pRobo->deviceHandle()
@@ -66,6 +72,7 @@
 
 namespace mrx_t4 {
 class ActionTable;
+class T4OpPanel;
 }
 
 class MRX_T4 : public XPlugin, public T4Para
@@ -117,6 +124,9 @@ public:
 
     virtual void rst();
 
+    virtual void home();
+    virtual void fold();
+
     virtual int upload();
     virtual int download();
     virtual int diff();
@@ -132,6 +142,8 @@ protected:
     int diffProc();
 
     int onStop( QVariant var );
+//    int onHoming( QVariant var );
+//    int onFolding( QVariant var );
 
 public:
     int robotHandle();
@@ -164,7 +176,7 @@ protected:
 
 private:
     mrx_t4::ActionTable *m_pRecordView;
-
+    mrx_t4::T4OpPanel *m_pOpPanel;
 
 };
 

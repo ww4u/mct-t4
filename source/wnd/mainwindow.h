@@ -132,8 +132,6 @@ private slots:
 
     void on_actionRead_me_triggered();
 
-
-
 private:
     Ui::MainWindow *ui;
 

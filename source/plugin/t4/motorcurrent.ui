@@ -19,6 +19,9 @@
      <property name="toolTip">
       <string>Drive current</string>
      </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
      <property name="suffix">
       <string>A</string>
      </property>
@@ -35,6 +38,9 @@
      <property name="toolTip">
       <string>Idle current</string>
      </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
+     </property>
      <property name="suffix">
       <string>A</string>
      </property>
@@ -50,6 +56,9 @@
     <widget class="QDoubleSpinBox" name="spinSwitchTime">
      <property name="toolTip">
       <string>Driver and idle switch time</string>
+     </property>
+     <property name="buttonSymbols">
+      <enum>QAbstractSpinBox::NoButtons</enum>
      </property>
      <property name="suffix">
       <string>s</string>

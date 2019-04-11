@@ -77,6 +77,7 @@ protected:
     void plginsClose();
 
     void pluginsStop();
+    void pluginHome();
 
 public slots:
     void slotDownload();
@@ -91,6 +92,7 @@ public slots:
     void slotWifi();
 
     void slot_plugins_stop();
+    void slot_plugin_home();
 
 private slots:
     void on_treeWidget_currentItemChanged(QTreeWidgetItem *current,
@@ -109,6 +111,10 @@ private slots:
     void slotActionOpen();
     void slotActionClose();
     void slotActionRst();
+
+    void slotActionHome();
+    void slotActionFold();
+
     void slotActionDelete();
     void slotActionExplorer();
 

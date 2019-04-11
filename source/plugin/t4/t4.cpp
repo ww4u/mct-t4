@@ -18,6 +18,7 @@ MRX_T4::MRX_T4( QObject *parent ) : XPlugin( parent )
 
     m_pRecordModel = NULL;
     m_pRecordView = NULL;
+    m_pOpPanel = NULL;
 
     mAttr = plugin_attr_foldable;
 }
@@ -91,22 +92,19 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
 QWidget *MRX_T4::createOpsPanel( QAbstractListModel *pModel,
                                  QWidget *parent )
 {
-    mrx_t4::T4OpPanel *pPanel;
-
-    pPanel = new mrx_t4::T4OpPanel( pModel, parent );
-    Q_ASSERT( NULL != pPanel );
-    pPanel->setObjectName( "panel" );
+    m_pOpPanel = new mrx_t4::T4OpPanel( pModel, parent );
+    Q_ASSERT( NULL != m_pOpPanel );
+    m_pOpPanel->setObjectName( "panel" );
 
     //! manage the plugin
-    mPluginWidgets.append( pPanel );
+    mPluginWidgets.append( m_pOpPanel );
 
-    pPanel->attachPref( m_pPref );
+    m_pOpPanel->attachPref( m_pPref );
 
-    pPanel->attachPlugin( this );
-    pPanel->attachWorkings();
+    m_pOpPanel->attachPlugin( this );
+    m_pOpPanel->attachWorkings();
 
-
-    return pPanel;
+    return m_pOpPanel;
 }
 void MRX_T4::retranslateUi()
 {

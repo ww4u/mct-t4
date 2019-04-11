@@ -34,6 +34,9 @@ QWidget *dSpinDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem
     pSpinBox->setPrefix( mPrefix );
     pSpinBox->setSuffix( mSuffix );
 
+    //! \note no button style
+    pSpinBox->setButtonSymbols( QAbstractSpinBox::NoButtons );
+
     return pSpinBox;
 }
 

@@ -9,6 +9,14 @@ class Joint;
 
 class Joint : public QWidget
 {
+public:
+    enum ViewMode
+    {
+        view_unk,
+        view_angle,
+        view_distance,
+    };
+
     Q_OBJECT
 
 public:
@@ -28,6 +36,9 @@ Q_SIGNALS:
     void signal_single_sub_released();
 
 public:
+    void setViewMode( Joint::ViewMode v );
+    Joint::ViewMode viewMode();
+
     void setJointName( const QString &name );
 
     void setAngleVisible( bool bAbs, bool bDelta );
@@ -38,7 +49,12 @@ public:
     void setdAngle( double v );
     double getdAngle();
 
+    void setDistance( double d );
+    double getDistance();
+
 protected:
+    ViewMode mViewMode;
+    bool mbDeltaVisible;
 
 private:
     Ui::Joint *ui;

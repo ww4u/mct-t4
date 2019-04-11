@@ -51,7 +51,8 @@ HEADERS += ../include/mystd.h           \
     ../source/wnd/welcomepage.h \
     ../source/wnd/stopwidget.h \
     ../source/wnd/prompt.h \
-    ../source/wnd/changedpw.h
+    ../source/wnd/changedpw.h \
+    ../source/wnd/spacewidget.h
 
 SOURCES += ../source/main/main.cpp      \
     ../source/sys/sysapi.cpp            \
@@ -73,7 +74,8 @@ SOURCES += ../source/main/main.cpp      \
     ../source/wnd/welcomepage.cpp \
     ../source/wnd/stopwidget.cpp \
     ../source/wnd/prompt.cpp \
-    ../source/wnd/changedpw.cpp
+    ../source/wnd/changedpw.cpp \
+    ../source/wnd/spacewidget.cpp
 
 !win32: HEADERS += ../source/device/vxi11/vxi11.h
 !win32: HEADERS += ../source/device/vxi11/vxi11_user.h
@@ -93,7 +95,8 @@ FORMS += ../source/wnd/mainwindow.ui    \
     ../source/wnd/welcomepage.ui \
     ../source/wnd/stopwidget.ui \
     ../source/wnd/prompt.ui \
-    ../source/wnd/changedpw.ui
+    ../source/wnd/changedpw.ui \
+    ../source/wnd/spacewidget.ui
 
 INCLUDEPATH += ../include
 INCLUDEPATH += ../source/sys

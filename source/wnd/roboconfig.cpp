@@ -227,6 +227,9 @@ void RoboConfig::slot_plugins_stop()
     pluginsStop();
 }
 
+void RoboConfig::slot_plugin_home()
+{ pluginHome(); }
+
 void RoboConfig::slotWifi()
 {
 //    if(mIndex < 0) return;
@@ -424,6 +427,10 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
             connect(m_pActionOpen, SIGNAL(triggered(bool)), this, SLOT(slotActionOpen()));
             connect(m_pActionClose, SIGNAL(triggered(bool)), this, SLOT(slotActionClose()));
             connect(m_pActionRst, SIGNAL(triggered(bool)), this, SLOT(slotActionRst()));
+
+            connect(m_pActionHome, SIGNAL(triggered(bool)), this, SLOT(slotActionHome()));
+            connect(m_pActionFold, SIGNAL(triggered(bool)), this, SLOT(slotActionFold()));
+
             connect(actionDelete, SIGNAL(triggered(bool)), this, SLOT(slotActionDelete()));
             connect(actionExplorer, SIGNAL(triggered(bool)), this, SLOT(slotActionExplorer()));
         }
@@ -457,13 +464,6 @@ void RoboConfig::slotActionDelAll()
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-//        //! delete + remove the root
-//        mPluginList.removeAll( m_pCurPlugin );
-//        plugin_changed();
-
-//        delete m_pCurPlugin;
-
-
         delete_all( mPluginList )
         plugin_changed();
 
@@ -478,10 +478,6 @@ void RoboConfig::slotActionDelAll()
             m_pRootNode->removeChild( pItem );
             delete pItem;
         }
-
-//        Q_ASSERT( NULL != m_pCurTreeItem );
-//        ui->treeWidget->removeItemWidget( m_pCurTreeItem, 0 );
-//        delete m_pCurTreeItem;
 
     QApplication::restoreOverrideCursor();
 }
@@ -508,6 +504,17 @@ void RoboConfig::slotActionRst()
 {
     Q_ASSERT( NULL != m_pCurPlugin );
     m_pCurPlugin->rst();
+}
+
+void RoboConfig::slotActionHome()
+{
+    Q_ASSERT( NULL != m_pCurPlugin );
+    m_pCurPlugin->home();
+}
+void RoboConfig::slotActionFold()
+{
+    Q_ASSERT( NULL != m_pCurPlugin );
+    m_pCurPlugin->fold();
 }
 
 void RoboConfig::slotActionDelete()
@@ -882,6 +889,19 @@ void RoboConfig::pluginsStop()
     foreach_plugin()
         mPluginList[i]->stop();
     end_foreach_plugin()
+}
+
+void RoboConfig::pluginHome()
+{
+    //! home the active plugin
+    if ( mPluginList.size() > 1 )
+    {
+        QMessageBox::information( this, tr("Too many device"), tr("Operate the device from the node") );
+    }
+    else
+    {
+        mPluginList[0]->home();
+    }
 }
 
 void RoboConfig::slot_plugins_changed()

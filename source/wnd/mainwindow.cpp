@@ -7,6 +7,7 @@
 #include "login.h"
 #include "syspref.h"
 #include "changedpw.h"
+#include "spacewidget.h"
 
 #define pref_file_path  QDir::homePath() + "/AppData/Roaming/mct"
 #define pref_file_name  pref_file_path + "/mct_pref.xml"
@@ -187,6 +188,10 @@ void MainWindow::setupToolBar()
 //    ui->mainToolBar->addWidget( new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum)
 //                                );
 
+    SpaceWidget *pSpac = new SpaceWidget();
+    ui->mainToolBar->addWidget( pSpac );
+    ui->mainToolBar->addAction( ui->actionHome );
+
     ui->mainToolBar->addSeparator();
     m_pStopWidget = new StopWidget();
     ui->mainToolBar->addWidget( m_pStopWidget );
@@ -229,6 +234,9 @@ void MainWindow::buildConnection()
     connect(ui->actionSync,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotSync()));
     connect(ui->actionSearch,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotSearch()));
     connect(ui->actionConnect,SIGNAL(triggered(bool)), m_roboConfig, SLOT(slotConnect()));
+
+    connect( ui->actionHome, SIGNAL(triggered(bool)),
+             m_roboConfig, SLOT(slot_plugin_home()) );
 
     //! default disable
     ui->actionDownload->setEnabled(false);
@@ -463,6 +471,8 @@ void MainWindow::slot_plugin_operable( bool b )
     ui->actionSync->setEnabled( b && m_roboConfig->downloadVisible() );
 
     ui->actionStore->setEnabled( b );
+
+    ui->actionHome->setEnabled( b );
 
     //! \todo plugin opened
     //! plugin operable
@@ -822,5 +832,4 @@ void MainWindow::on_actionRead_me_triggered()
 {
     explorerDocFile( "readme.txt");
 }
-
 

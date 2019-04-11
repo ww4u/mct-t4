@@ -195,6 +195,11 @@ void XPlugin::updateUi()
 void XPlugin::rst()
 {}
 
+void XPlugin::home()
+{}
+void XPlugin::fold()
+{}
+
 int XPlugin::upload()
 { return 0; }
 int XPlugin::download()

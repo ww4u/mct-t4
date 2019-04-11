@@ -67,9 +67,6 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     new_cache( 3 );
     new_cache( 4 );
 
-    ui->spinActTerminal->setSuffix( char_deg );
-    ui->spinActWrist->setSuffix( char_deg );
-
     ui->spinTerminalTarget->setSuffix( char_deg );
     ui->spinWristTarget->setSuffix( char_deg );
 
@@ -134,14 +131,15 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     retranslateUi();
 
     //! terminal relations
-    mTerminalRelations.append( ui->label_26 );
-    mTerminalRelations.append( ui->spinActTerminal );
     mTerminalRelations.append( ui->joint5 );
     mTerminalRelations.append( ui->jointChart5 );
 
     //! spys
     spySetting( MRX_T4::e_setting_terminal );
     spySetting( MRX_T4::e_setting_record );
+
+    //! sync ui
+    switchCoordMode();
 }
 
 T4OpPanel::~T4OpPanel()
@@ -383,9 +381,9 @@ void T4OpPanel::updateRefreshPara( QEvent *e )
     ui->doubleSpinBox_debug_posY->setValue( mRefreshPara.poseNow.y );
     ui->doubleSpinBox_debug_posZ->setValue( mRefreshPara.poseNow.z );
 
-    ui->spinActX->setValue( mRefreshPara.poseNow.x );
-    ui->spinActY->setValue( mRefreshPara.poseNow.y );
-    ui->spinActZ->setValue( mRefreshPara.poseNow.z );
+    ui->joint3->setDistance( mRefreshPara.poseNow.x );
+    ui->joint2->setDistance( mRefreshPara.poseNow.y );
+    ui->joint1->setDistance( mRefreshPara.poseNow.z );
 
     //! angles
     //! joint
@@ -402,7 +400,6 @@ void T4OpPanel::updateRefreshPara( QEvent *e )
     ui->joint4->setdAngle( mRefreshPara.deltaAngles[3] );
 
     //! hand
-    ui->spinActTerminal->setValue( mRefreshPara.angles[4] );
     ui->actPosTerminal->setValue( mRefreshPara.angles[4] );
 
     //! home valid
@@ -720,6 +717,19 @@ void T4OpPanel::onSetting(XSetting setting)
     }
     else
     {}
+}
+
+void T4OpPanel::home()
+{
+    QVariant var;
+
+    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onHoming), var );
+}
+void T4OpPanel::fold()
+{
+    QVariant var;
+
+    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onFolding), var );
 }
 
 double T4OpPanel::localSpeed()
@@ -1154,6 +1164,14 @@ void T4OpPanel::switchCoordMode()
         ui->joint1->setJointName( "Base" );
         ui->joint2->setJointName( "Shoulder" );
         ui->joint3->setJointName( "Elbow" );
+
+        ui->joint1->setAngleVisible( true, true );
+        ui->joint2->setAngleVisible( true, true );
+        ui->joint3->setAngleVisible( true, true );
+
+        ui->joint1->setViewMode( Joint::view_angle );
+        ui->joint2->setViewMode( Joint::view_angle );
+        ui->joint3->setViewMode( Joint::view_angle );
     }
     //! x/y/z
     else
@@ -1161,6 +1179,14 @@ void T4OpPanel::switchCoordMode()
         ui->joint1->setJointName( "Z" );
         ui->joint2->setJointName( "Y" );
         ui->joint3->setJointName( "X" );
+
+        ui->joint1->setAngleVisible( false, false );
+        ui->joint2->setAngleVisible( false, false );
+        ui->joint3->setAngleVisible( false, false );
+
+        ui->joint1->setViewMode( Joint::view_distance );
+        ui->joint2->setViewMode( Joint::view_distance );
+        ui->joint3->setViewMode( Joint::view_distance );
     }
 
     //! \todo other apis
@@ -1507,20 +1533,19 @@ void T4OpPanel::slot_monitorCopy()
 //    _step( 0, 0, -1 );
 //}
 
-void T4OpPanel::on_pushButton_starting_home_clicked()
-{
-    QVariant var;
+//void T4OpPanel::on_pushButton_starting_home_clicked()
+//{
+//    QVariant var;
 
-    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onHoming), var );
-}
+//    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onHoming), var );
+//}
 
+//void T4OpPanel::on_btnFold_clicked()
+//{
+//    QVariant var;
 
-void T4OpPanel::on_btnFold_clicked()
-{
-    QVariant var;
-
-    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onFolding), var );
-}
+//    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onFolding), var );
+//}
 
 void T4OpPanel::on_toolSingleAdd_clicked()
 {
@@ -1530,12 +1555,12 @@ void T4OpPanel::on_toolSingleAdd_clicked()
     QVariant var;
     QList<QVariant> coords;
 
-    coords.append( ui->spinActX->value() );
-    coords.append( ui->spinActY->value() );
-    coords.append( ui->spinActZ->value() );
+    coords.append( ui->joint3->getDistance() );
+    coords.append( ui->joint2->getDistance() );
+    coords.append( ui->joint1->getDistance() );
 
-    coords.append( ui->spinActWrist->value() );
-    coords.append( ui->spinActTerminal->value() );
+    coords.append( ui->joint4->getdAngle() );
+    coords.append( ui->joint5->getAngle() );
 
     var.setValue( coords );
 
@@ -1550,12 +1575,12 @@ void T4OpPanel::on_toolSingleEdit_clicked()
     QVariant var;
     QList<QVariant> coords;
 
-    coords.append( ui->spinActX->value() );
-    coords.append( ui->spinActY->value() );
-    coords.append( ui->spinActZ->value() );
+    coords.append( ui->joint3->getDistance() );
+    coords.append( ui->joint2->getDistance() );
+    coords.append( ui->joint1->getDistance() );
 
-    coords.append( ui->spinActWrist->value() );
-    coords.append( ui->spinActTerminal->value() );
+    coords.append( ui->joint4->getdAngle() );
+    coords.append( ui->joint5->getAngle() );
 
     var.setValue( coords );
 
@@ -1941,8 +1966,11 @@ int T4OpPanel::buildSequence( QList<SequenceItem*> &list )
             pItem->v = var.at( 8 ).toDouble();
             pItem->bLine = var.at( 9 ).toBool();
 
-            //! \note the delay is in each delay
-            pItem->delay = delay;
+            pItem->delay = var.at( 10 ).toDouble();
+
+            //! \note the last one
+            if ( j == varList.size() - 1 )
+            { pItem->delay += delay; }
 
             list.append( pItem );
         }

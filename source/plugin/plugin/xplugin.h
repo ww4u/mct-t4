@@ -103,6 +103,8 @@ public:
     virtual void updateUi();
 
     virtual void rst();
+    virtual void home();
+    virtual void fold();
 
     virtual int upload();
     virtual int download();

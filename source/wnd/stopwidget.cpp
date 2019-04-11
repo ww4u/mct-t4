@@ -9,9 +9,6 @@ StopWidget::StopWidget(QWidget *parent) :
 
     connect( ui->toolButton, SIGNAL(clicked(bool)),
              this, SIGNAL(signal_stop_clicked(bool)) );
-
-    connect( ui->tbtZero, SIGNAL(clicked(bool)),
-             this, SIGNAL(signal_zero_clicked(bool)));
 }
 
 StopWidget::~StopWidget()

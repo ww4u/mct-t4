@@ -7,6 +7,8 @@ Joint::Joint(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    mbDeltaVisible = true;
+
     //! delta
     ui->label_2->setText( QChar(0x2206) );
     ui->spinAbs->setSuffix( char_deg );
@@ -34,13 +36,41 @@ Joint::Joint(QWidget *parent) :
              this, SIGNAL(signal_zero_clicked()));
 
     //！ enable
-    ui->btnZero->setEnabled(true);
+    ui->btnZero->setVisible(false);
+
+    setViewMode( view_angle );
 }
 
 Joint::~Joint()
 {
     delete ui;
 }
+
+void Joint::setViewMode( Joint::ViewMode v )
+{
+    mViewMode = v;
+
+    if ( mViewMode == view_angle )
+    {
+        ui->spinAbs->setVisible( true );
+        ui->spinDelta->setVisible( mbDeltaVisible );
+        ui->label_2->setVisible( mbDeltaVisible );
+
+        ui->spinDist->setVisible( false );
+    }
+    else if ( mViewMode == view_distance )
+    {
+        ui->spinAbs->setVisible( false );
+        ui->spinDelta->setVisible( false );
+        ui->label_2->setVisible( false );
+
+        ui->spinDist->setVisible( true );
+    }
+    else
+    {}
+}
+Joint::ViewMode Joint::viewMode()
+{ return mViewMode; }
 
 void Joint::setJointName( const QString &name )
 {
@@ -58,6 +88,8 @@ void Joint::setAngleVisible( bool bAbs, bool bDelta )
     ui->spinAbs->setVisible( bAbs );
     ui->spinDelta->setVisible( bDelta );
     ui->label_2->setVisible( bDelta );
+
+    mbDeltaVisible = bDelta;
 }
 
 void Joint::setAngle( double angle )
@@ -70,3 +102,7 @@ void Joint::setdAngle( double v )
 double Joint::getdAngle()
 { return ui->spinDelta->value(); }
 
+void Joint::setDistance( double d )
+{ ui->spinDist->setValue(d); }
+double Joint::getDistance()
+{ return ui->spinDist->value(); }

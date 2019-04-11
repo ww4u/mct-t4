@@ -395,7 +395,9 @@ void TreeModel::planeTree( TreeItem *par, QList<QVector<QVariant>> &varList )
     {
         if ( par->childCount() > 0 )
         {
-            varList.append( par->dataSets() );
+            //! \note trim the invalid
+            if ( par->isValid() )
+            { varList.append( par->dataSets() ); }
 
             //! for each child
             for( int i = 0; i < par->childCount(); i++ )
@@ -404,7 +406,10 @@ void TreeModel::planeTree( TreeItem *par, QList<QVector<QVariant>> &varList )
             }
         }
         else
-        { varList.append( par->dataSets() ); }
+        {
+            if ( par->isValid() )
+            { varList.append( par->dataSets() ); }
+        }
     }
 }
 

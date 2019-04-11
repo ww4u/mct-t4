@@ -55,6 +55,7 @@
      <string>Operate(&amp;O)</string>
     </property>
     <addaction name="actionStop"/>
+    <addaction name="actionHome"/>
     <addaction name="separator"/>
     <addaction name="actionUpload"/>
     <addaction name="actionDownload"/>
@@ -107,7 +108,7 @@
    <property name="iconSize">
     <size>
      <width>48</width>
-     <height>36</height>
+     <height>48</height>
     </size>
    </property>
    <property name="toolButtonStyle">
@@ -347,6 +348,15 @@
    </property>
    <property name="toolTip">
     <string>Change administrator password</string>
+   </property>
+  </action>
+  <action name="actionHome">
+   <property name="icon">
+    <iconset resource="../../res/res.qrc">
+     <normaloff>:/res/image/icon/address.png</normaloff>:/res/image/icon/address.png</iconset>
+   </property>
+   <property name="text">
+    <string>Home</string>
    </property>
   </action>
  </widget>

@@ -1160,7 +1160,7 @@ void T4OpPanel::switchCoordMode()
     {
         ui->joint1->setJointName( "Z" );
         ui->joint2->setJointName( "Y" );
-        ui->joint2->setJointName( "X" );
+        ui->joint3->setJointName( "X" );
     }
 
     //! \todo other apis

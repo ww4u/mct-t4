@@ -21,20 +21,11 @@ Q_SIGNALS:
     void signal_single_add_clicked();
     void signal_single_sub_clicked();
 
-    void signal_jog_add_clicked();
-    void signal_jog_sub_clicked();
-
     void signal_single_add_pressed();
     void signal_single_add_released();
 
     void signal_single_sub_pressed();
     void signal_single_sub_released();
-
-    void signal_jog_add_pressed();
-    void signal_jog_add_released();
-
-    void signal_jog_sub_pressed();
-    void signal_jog_sub_released();
 
 public:
     void setJointName( const QString &name );

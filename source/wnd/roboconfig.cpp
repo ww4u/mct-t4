@@ -36,6 +36,9 @@ RoboConfig::RoboConfig(QWidget *parent) :
     m_pActionClose = NULL;
     m_pActionRst = NULL;
 
+    m_pActionHome = NULL;
+    m_pActionFold = NULL;
+
     m_pProjectContextMenu = NULL;
     m_pActionDelAll = NULL;
 
@@ -388,6 +391,22 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
             if ( NULL == m_pActionRst )
             { gc_context_menu(); return; }
 
+            if ( NULL== m_pRoboContextMenu->addSeparator() )
+            { gc_context_menu(); return; }
+
+            m_pActionHome = m_pRoboContextMenu->addAction( tr("Home") );
+            m_pActionHome->setIcon( QIcon(":/res/image/icon/beauty.png") );
+            if ( NULL == m_pActionHome )
+            { gc_context_menu(); return; }
+
+            m_pActionFold = m_pRoboContextMenu->addAction( tr("Fold") );
+            m_pActionFold->setIcon( QIcon(":/res/image/icon/beauty.png") );
+            if ( NULL == m_pActionFold )
+            { gc_context_menu(); return; }
+
+            if ( NULL== m_pRoboContextMenu->addSeparator() )
+            { gc_context_menu(); return; }
+
             QAction *actionDelete = m_pRoboContextMenu->addAction(tr("Delete"));
             actionDelete->setIcon( QIcon(":/res/image/icon/trash.png") );
             if ( NULL == actionDelete )
@@ -415,12 +434,18 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
             m_pActionOpen->setVisible(false);
             m_pActionClose->setVisible(true);
             m_pActionRst->setVisible( true );
+
+            m_pActionHome->setVisible( true );
+            m_pActionFold->setVisible( m_pCurPlugin->isFoldable() );
         }
         else
         {
             m_pActionOpen->setVisible(true);
             m_pActionClose->setVisible(false);
             m_pActionRst->setVisible( false );
+
+            m_pActionHome->setVisible( false );
+            m_pActionFold->setVisible( false );
         }
 
         //! pop proc

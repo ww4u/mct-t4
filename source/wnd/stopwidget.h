@@ -17,7 +17,7 @@ public:
 
 Q_SIGNALS:
     void signal_stop_clicked( bool );
-
+    void signal_zero_clicked( bool );
 private:
     Ui::StopWidget *ui;
 };

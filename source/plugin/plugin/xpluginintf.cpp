@@ -4,6 +4,8 @@ XPluginIntf::XPluginIntf( QObject *parent ) : QObject( parent )
 {
     mVi = -1;
 
+    mAttr = plugin_attr_none;
+
     mbOperateAble = true;
 }
 
@@ -125,6 +127,11 @@ int XPluginIntf::stop()
 
 bool XPluginIntf::isOpened()
 { return ( mVi > 0 ); }
+
+bool XPluginIntf::isFoldable()
+{
+    return (mAttr & plugin_attr_foldable) == plugin_attr_foldable;
+}
 
 int XPluginIntf::deviceVi()
 { return mVi; }

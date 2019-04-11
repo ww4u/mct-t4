@@ -13,13 +13,13 @@
 
 #include "../model/debugtable.h"
 
-#define WIDGET_MONITOR_INDEX 5
-#define DEFAULT_PAGE_INDEX 4
+#define WIDGET_MONITOR_INDEX 4
+#define DEFAULT_PAGE_INDEX 3
 namespace mrx_t4{
 
-static double _stepRatio[]={ 0.1,0.2,0.5,
-                            1,2,5,
-                            10,20,50,
+static double _stepRatio[]={ 0.1,0.5,
+                            1,5,
+                            10,50,
                             100 };
 
 #define new_cache( id ) m_pCaches[id] = new DataCache( this ); \
@@ -44,13 +44,13 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
         strComment = QString("%1 [%2%3]").arg(strRaw).arg( strDecimal).arg( char_deg );
         mStepxList<<strComment;
     }
-    for ( int i = 0; i < ui->cmbStepXx->count(); i++ ){
-        strRaw = ui->comboBox->itemText( i );
-        strDecimal = strRaw;
-        strDecimal.remove(0,1);        //! remove the X
-        strComment = QString("%1 [%2%3 or mm]").arg(strRaw).arg( strDecimal).arg( char_deg );
-        mJointStepxList<<strComment;
-    }
+//    for ( int i = 0; i < ui->cmbStepXx->count(); i++ ){
+//        strRaw = ui->comboBox->itemText( i );
+//        strDecimal = strRaw;
+//        strDecimal.remove(0,1);        //! remove the X
+//        strComment = QString("%1 [%2%3 or mm]").arg(strRaw).arg( strDecimal).arg( char_deg );
+//        mJointStepxList<<strComment;
+//    }
 
     m_pDebugContextMenu = NULL;
     m_pMonitorContextMenu = NULL;
@@ -79,9 +79,6 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     //! set model
     ui->logout->setModel( pModel );
 
-    //! debug
-//    mDebugTable.createDebug();
-//    mDiagTable.createDebug();
 
     ui->tvDebug->setModel( &mDebugTable );
     ui->tvDiagnosis->setModel( &mDiagTable );
@@ -118,9 +115,6 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
              this, SLOT(slot_monitorContextMenuRequested(const QPoint &)) );
     connect( ui->jointChart5,SIGNAL(customContextMenuRequested(const QPoint &)),
              this, SLOT(slot_monitorContextMenuRequested(const QPoint &)) );
-
-//    connect( ui->tab_5, SIGNAL(customContextMenuRequested(const QPoint &)),
-//             this, SLOT(slot_monitorContextMenuRequested(const QPoint &)) );
 
     //! diagnosis
     connect( &mDiagTable, SIGNAL(signal_data_changed()),
@@ -225,7 +219,7 @@ void T4OpPanel::setupUi()
     strList <<"logout"
             <<"operate"
             <<"dio"
-            <<"homing"
+//            <<"homing"
             <<"control"
             <<"monitor"
             <<"debug"
@@ -270,9 +264,7 @@ void T4OpPanel::retranslateUi()
     {
         ui->cmbStepXx->setItemText( i, mStepxList.at( i ) );
     }
-    for( int i = 0; i < mStepxList.size(); i++ ){
-        ui->comboBox->setItemText( i, mJointStepxList.at( i ));
-    }
+
     //! joint name
     ui->joint1->setJointName( tr("Base") );
     ui->joint2->setJointName( tr("Shoulder") );
@@ -342,7 +334,7 @@ void T4OpPanel::spyEdited()
     };
 
     QSpinBox *spinBoxes[]={
-        ui->spinVel
+
     };
 
     QDoubleSpinBox *doubleSpinBoxes[]={
@@ -351,24 +343,20 @@ void T4OpPanel::spyEdited()
     };
 
     QComboBox *comboxes[]={
-        ui->cmbStepXx
+        ui->cmbStepXx,
+        ui->cmbSpeed
     };
 
     QSlider *sliders[]
     {
-        ui->sliderVel
+
     };
 
     install_spy();
 
-    manual_enable_edit( ui->spinVel, true );
     manual_enable_edit( ui->spinDly, true );
     manual_enable_edit( ui->cmbStepXx, true );
-    manual_enable_edit( ui->sliderVel, true );
-
-    manual_enable_edit( ui->comboBox, true );
-    manual_enable_edit( ui->spinBox, true );
-    manual_enable_edit( ui->horizontalSlider, true );
+    manual_enable_edit( ui->cmbSpeed, true );
 
     //! modified
     connect( ui->controllerStatus, SIGNAL(signal_request_save()),
@@ -390,10 +378,6 @@ void T4OpPanel::updateRefreshPara( QEvent *e )
     ui->actPosX->setValue( mRefreshPara.poseNow.x );
     ui->actPosY->setValue( mRefreshPara.poseNow.y );
     ui->actPosZ->setValue( mRefreshPara.poseNow.z );
-
-    ui->doubleSpinBox_homing_actual_pos_x->setValue( mRefreshPara.poseNow.x );
-    ui->doubleSpinBox_homing_actual_pos_y->setValue( mRefreshPara.poseNow.y );
-    ui->doubleSpinBox_homing_actual_pos_z->setValue( mRefreshPara.poseNow.z );
 
     ui->doubleSpinBox_debug_posX->setValue( mRefreshPara.poseNow.x );
     ui->doubleSpinBox_debug_posY->setValue( mRefreshPara.poseNow.y );
@@ -423,7 +407,6 @@ void T4OpPanel::updateRefreshPara( QEvent *e )
 
     //! home valid
     ui->radHome->setChecked( mRefreshPara.bHomeValid );
-    ui->radioButton_homing_valid->setChecked( mRefreshPara.bHomeValid );
 }
 
 int T4OpPanel::posRefreshProc( void *pContext )
@@ -692,12 +675,8 @@ void T4OpPanel::updateUi()
     Q_ASSERT( NULL != pRobo );
 
     ui->cmbStepXx->setCurrentIndex( pRobo->mStepIndex );
-    ui->spinVel->setValue( pRobo->mSpeed );
-    ui->sliderVel->setValue( pRobo->mSpeed );
-
-    ui->comboBox->setCurrentIndex( pRobo->mJointStepIndex );
-    ui->spinBox->setValue( pRobo->mJointSpeed );
-    ui->horizontalSlider->setValue( pRobo->mJointSpeed );
+    //! \todo the display format
+    ui->cmbSpeed->setCurrentText( QString("%1").arg( pRobo->mSpeed ) );
 
     //! checked
     ui->controllerStatus->setMctChecked( pRobo->mbMctEn );
@@ -714,10 +693,8 @@ void T4OpPanel::updateData()
 
     //! save
     pRobo->mStepIndex = ui->cmbStepXx->currentIndex();
-    pRobo->mSpeed = ui->spinVel->value();
+    pRobo->mSpeed = ui->cmbSpeed->currentText().toDouble();
 
-    pRobo->mJointStepIndex = ui->comboBox->currentIndex();
-    pRobo->mJointSpeed = ui->spinBox->value();
 
     pRobo->mbMctEn = ui->controllerStatus->isMctChecked();
     pRobo->mbAxisPwr = ui->controllerStatus->isDevicePowerEnable();
@@ -727,16 +704,7 @@ void T4OpPanel::onSetting(XSetting setting)
 {
     XPage::onSetting( setting );
 
- /*   if ( setting.mSetting == XPage::e_setting_op_able )
-    {
-        check_para1();
-
-        //! enable/disable
-        ui->tabWidget->setEnabled( setting.mPara1.toBool() );
-        ui->controllerStatus->setDevicePowerEnable( setting.mPara1.toBool() );
-    }
-
-    else */if ( (int)setting.mSetting == (int)MRX_T4::e_setting_terminal )
+    if ( (int)setting.mSetting == (int)MRX_T4::e_setting_terminal )
     {
         if ( setting.mPara1.isValid() )
         {}
@@ -753,6 +721,22 @@ void T4OpPanel::onSetting(XSetting setting)
     else
     {}
 }
+
+double T4OpPanel::localSpeed()
+{
+    return ui->cmbSpeed->currentText().toDouble();
+}
+
+double T4OpPanel::localStep()
+{
+    Q_ASSERT( ui->cmbStepXx->currentIndex() < sizeof_array( _stepRatio) );
+    return _stepRatio[ ui->cmbStepXx->currentIndex() ];
+}
+
+bool T4OpPanel::isContinous()
+{ return ui->chkContinous->isChecked(); }
+bool T4OpPanel::isCoordJoint()
+{ return ui->radCoordJoint->isChecked(); }
 
 void T4OpPanel::enterMission()
 {
@@ -802,18 +786,65 @@ void T4OpPanel::setOpened( bool b )
     { enterMission(); }
 }
 
+void T4OpPanel::stepProc( int jId, int dir )
+{
+    //! joint step
+    if ( isCoordJoint() || jId >= 4 )
+    {
+        QList<QVariant> vars;
+        vars<<(jId-1)<<1;
+        QVariant var( vars );
+        on_post_setting( T4OpPanel, onJointStep, tr("Joint step") );
+    }
+    //! x,y,z step
+    else
+    {
+        _step( jId == 3 ? dir : 0,
+               jId == 2 ? dir : 0,
+               jId == 1 ? dir : 0
+               );
+    }
+}
+
+void T4OpPanel::jogProc( int jId, int dir, bool b )
+{
+    //! jog on
+    if ( b )
+    {}
+    else
+    {
+        onJointJogEnd();
+        return;
+    }
+
+    //! joint jog
+    if ( isCoordJoint() || jId >= 4 )
+    {
+        QList<QVariant> vars;
+        vars<<(jId-1)<<dir<<1;
+        QVariant var( vars );
+        on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Jog +") );
+    }
+    //! x,y,z step
+    else
+    {
+//        _step( jId == 3 ? dir : 0,
+//               jId == 2 ? dir : 0,
+//               jId == 1 ? dir : 0,
+//               );
+    }
+}
+
 void T4OpPanel::_step( double x, double y, double z )
 {
     QList<QVariant> vars;
 
-    Q_ASSERT( ui->cmbStepXx->currentIndex() < sizeof_array( _stepRatio) );
-    double rat = _stepRatio[ ui->cmbStepXx->currentIndex() ];
+    double rat = localStep();
 
-    vars<<x * rat <<y * rat <<z * rat <<ui->spinVel->value() / 100.0;
+    vars<<x * rat <<y * rat <<z * rat <<localSpeed() / 100.0;
 
     QVariant var( vars );
 
-//    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onStep), var );
     on_post_setting( T4OpPanel, onStep, tr("Step") );
     logDbg()<<QThread::currentThreadId();
 }
@@ -895,10 +926,9 @@ int T4OpPanel::onJointStep( QVariant var /*int jId, int dir*/ )
 
     float t, p;
 
-    Q_ASSERT( ui->comboBox->currentIndex() < sizeof_array( _stepRatio) );
-    double stp = _stepRatio[ ui->comboBox->currentIndex() ];
+    double stp = localStep();
 
-    double spd = pRobo->mMaxJointSpeed * ui->spinBox->value() / 100.0;
+    double spd = pRobo->mMaxJointSpeed * localSpeed() / 100.0;
     logDbg()<<spd<<stp/spd<<pRobo->mMaxJointSpeed;
     int ret = mrgMRQAdjust( device_var(), jId, 0, dir * stp, stp/spd, guess_dist_time_ms( stp/spd, stp ) );
     return ret;
@@ -938,7 +968,7 @@ int T4OpPanel::onJointJog( QVariant var )
     dir = vars[1].toInt();
     btnId = vars[2].toInt();
 
-    double speed = pRobo->mMaxJointSpeed * ui->spinBox->value() / 100.0;
+    double speed = pRobo->mMaxJointSpeed * localSpeed() / 100.0;
 
     int ret = -1;
     if(btnId){
@@ -996,7 +1026,7 @@ int T4OpPanel::_onSequence( QVariant var )
             if ( procSequenceEn( mSeqList.at( i )) )
             {
                 ret = procSequence( mSeqList.at( i ) );
-
+                //! \todo the action delay
                 if ( ret == 0 )
                 {
                     if ( mSeqList.at(i)->delay > 0 )
@@ -1113,6 +1143,27 @@ int T4OpPanel::exportDataSets( QTextStream &stream,
     }
 
     return 0;
+}
+
+//! switch mode
+void T4OpPanel::switchCoordMode()
+{
+    //! joint
+    if ( ui->radCoordJoint->isChecked() )
+    {
+        ui->joint1->setJointName( "Base" );
+        ui->joint2->setJointName( "Shoulder" );
+        ui->joint3->setJointName( "Elbow" );
+    }
+    //! x/y/z
+    else
+    {
+        ui->joint1->setJointName( "Z" );
+        ui->joint2->setJointName( "Y" );
+        ui->joint2->setJointName( "X" );
+    }
+
+    //! \todo other apis
 }
 
 
@@ -1426,35 +1477,35 @@ void T4OpPanel::slot_monitorCopy()
 //    logDbg()<<ret;
 //}
 
-void T4OpPanel::on_toolSingleXN_clicked()
-{
-    _step( -1, 0, 0 );
-}
+//void T4OpPanel::on_toolSingleXN_clicked()
+//{
+//    _step( -1, 0, 0 );
+//}
 
-void T4OpPanel::on_toolSingleXP_clicked()
-{
-    _step( 1, 0, 0 );
-}
+//void T4OpPanel::on_toolSingleXP_clicked()
+//{
+//    _step( 1, 0, 0 );
+//}
 
-void T4OpPanel::on_toolSingleYP_clicked()
-{
-    _step( 0, 1, 0 );
-}
+//void T4OpPanel::on_toolSingleYP_clicked()
+//{
+//    _step( 0, 1, 0 );
+//}
 
-void T4OpPanel::on_toolSingleYN_clicked()
-{
-    _step( 0, -1, 0 );
-}
+//void T4OpPanel::on_toolSingleYN_clicked()
+//{
+//    _step( 0, -1, 0 );
+//}
 
-void T4OpPanel::on_toolSingleZP_clicked()
-{
-    _step( 0, 0, 1 );
-}
+//void T4OpPanel::on_toolSingleZP_clicked()
+//{
+//    _step( 0, 0, 1 );
+//}
 
-void T4OpPanel::on_toolSingleZN_clicked()
-{
-    _step( 0, 0, -1 );
-}
+//void T4OpPanel::on_toolSingleZN_clicked()
+//{
+//    _step( 0, 0, -1 );
+//}
 
 void T4OpPanel::on_pushButton_starting_home_clicked()
 {
@@ -1510,11 +1561,6 @@ void T4OpPanel::on_toolSingleEdit_clicked()
 
     m_pPlugin->emit_setting_changed( (eXSetting)(MRX_T4::e_edit_record), var );
 }
-
-//void T4OpPanel::on_toolButton_15_clicked()
-//{
-//    on_toolSingleAdd_clicked();
-//}
 
 //! debug tab
 void T4OpPanel::on_btnImport_clicked()
@@ -1768,50 +1814,54 @@ void T4OpPanel::on_joint##id##_signal_zero_clicked() \
 }\
 void T4OpPanel::on_joint##id##_signal_single_add_clicked() \
 { \
-    QList<QVariant> vars;\
-    vars<<(id-1)<<1; \
-    QVariant var( vars );\
-    on_post_setting( T4OpPanel, onJointStep, tr("Joint step") );\
+    if ( isContinous() ) \
+    { return;}\
+    else\
+    {}\
+\
+    stepProc( id, 1 );\
 } \
 void T4OpPanel::on_joint##id##_signal_single_sub_clicked() \
 { \
-    QList<QVariant> vars;\
-    vars<<(id-1)<<-1; \
-    QVariant var( vars );\
-    on_post_setting( T4OpPanel, onJointStep, tr("Joint step") );\
-}\
-void T4OpPanel::on_joint##id##_signal_jog_add_pressed() \
-{logDbg();\
-    QList<QVariant> vars;\
-    vars<<(id-1)<<1<<1; \
-    QVariant var( vars );\
-    on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Jog +") );\
-}\
-void T4OpPanel::on_joint##id##_signal_jog_add_released()\
-{logDbg();\
-    QList<QVariant> vars;\
-    vars<<(id-1)<<1<<0; \
-    QVariant var( vars );\
-    onJointJogEnd();\
+    if ( isContinous() ) \
+    { return;}\
+    else\
+    {}\
     \
+    stepProc( id, -1 );\
 }\
-void T4OpPanel::on_joint##id##_signal_jog_sub_pressed() \
-{logDbg();\
-    QList<QVariant> vars;\
-    vars<<(id-1)<<-1<<1; \
-    QVariant var( vars );\
-    on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Jog -") );\
+void T4OpPanel::on_joint##id##_signal_single_add_pressed() \
+{ \
+    if ( !isContinous() ) \
+    { return;}\
+    else\
+    {}\
+    jogProc( id, 1, true );\
 }\
-void T4OpPanel::on_joint##id##_signal_jog_sub_released()\
-{logDbg();\
-    QList<QVariant> vars;\
-    vars<<(id-1)<<-1<<0; \
-    QVariant var( vars );\
-    onJointJogEnd();\
+void T4OpPanel::on_joint##id##_signal_single_add_released() \
+{ \
+    if ( !isContinous() ) \
+    { return;}\
+    else\
+    {}\
+    jogProc( id, 1, false );\
+}\
+void T4OpPanel::on_joint##id##_signal_single_sub_pressed() \
+{ \
+    if ( !isContinous() ) \
+    { return;}\
+    else\
+    {}\
+    jogProc( id, -1, true );\
+}\
+void T4OpPanel::on_joint##id##_signal_single_sub_released() \
+{\
+    if ( !isContinous() ) \
+    { return;}\
+    else\
+    {}\
+    jogProc( id, -1, false );\
 }
-
-//on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Jog + end") );
-//on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Jog - end") );
 
 on_joint_actions( 1 )
 on_joint_actions( 2 )
@@ -1891,6 +1941,7 @@ int T4OpPanel::buildSequence( QList<SequenceItem*> &list )
             pItem->v = var.at( 8 ).toDouble();
             pItem->bLine = var.at( 9 ).toBool();
 
+            //! \note the delay is in each delay
             pItem->delay = delay;
 
             list.append( pItem );
@@ -1961,16 +2012,17 @@ void T4OpPanel::on_toolButton_debugRun_clicked()
     on_post_setting( T4OpPanel, onSequence, "Debug" );
 }
 
-
-}
-
-
-void mrx_t4::T4OpPanel::on_horizontalSlider_valueChanged(int value)
+void T4OpPanel::on_radCoordXyz_clicked()
 {
-    ui->spinBox->setValue( value );
+    switchCoordMode();
 }
 
-void mrx_t4::T4OpPanel::on_spinBox_valueChanged(int arg1)
+void T4OpPanel::on_radCoordJoint_clicked()
 {
-    ui->horizontalSlider->setValue( arg1 );
+    switchCoordMode();
 }
+
+}
+
+
+

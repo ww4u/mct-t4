@@ -114,7 +114,8 @@ void MainWindow::setupWorkArea()
     //! dock
     m_pDockOps = new QDockWidget( tr("Ops"), this );
     m_pDockOps->setAllowedAreas(  Qt::BottomDockWidgetArea );
-    m_pDockOps->setFeatures( QDockWidget::DockWidgetVerticalTitleBar | m_pDockOps->features() );
+
+//    m_pDockOps->setFeatures( QDockWidget::DockWidgetVerticalTitleBar | m_pDockOps->features() );
     addDockWidget( Qt::BottomDockWidgetArea, m_pDockOps );
 
     m_roboConfig->attachOpDock( m_pDockOps );

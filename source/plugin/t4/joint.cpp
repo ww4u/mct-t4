@@ -29,30 +29,12 @@ Joint::Joint(QWidget *parent) :
     connect( ui->singleAdd, SIGNAL(released()),
              this, SIGNAL( signal_single_add_released() ) );
 
-    //! jog
-    connect( ui->jogSub, SIGNAL(clicked(bool)),
-             this, SIGNAL( signal_jog_sub_clicked() ) );
-    connect( ui->jogAdd, SIGNAL(clicked(bool)),
-             this, SIGNAL( signal_jog_add_clicked() ) );
-
-    connect( ui->jogSub, SIGNAL(pressed()),
-             this, SIGNAL( signal_jog_sub_pressed() ) );
-    connect( ui->jogAdd, SIGNAL(pressed()),
-             this, SIGNAL( signal_jog_add_pressed() ) );
-
-    connect( ui->jogSub, SIGNAL(released()),
-             this, SIGNAL( signal_jog_sub_released() ) );
-    connect( ui->jogAdd, SIGNAL(released()),
-             this, SIGNAL( signal_jog_add_released() ) );
-
     //! zero
     connect( ui->btnZero, SIGNAL(clicked(bool)),
              this, SIGNAL(signal_zero_clicked()));
 
     //！ enable
     ui->btnZero->setEnabled(true);
-    ui->jogAdd->setEnabled(true);
-    ui->jogSub->setEnabled(true);
 }
 
 Joint::~Joint()
@@ -62,12 +44,8 @@ Joint::~Joint()
 
 void Joint::setJointName( const QString &name )
 {
-//    ui->groupBox->setTitle( name );
-//    ui->groupBox->setToolTip( name );
     ui->label->setText( name );
     ui->btnZero->setToolTip( ui->groupBox->title() + " " + tr("To zero") );
-    ui->jogAdd->setToolTip( name + " " + tr("Jog +") );
-    ui->jogSub->setToolTip( name + " " + tr("Jog -") );
     ui->singleAdd->setToolTip( name + " " + tr("Step +") );
     ui->singleSub->setToolTip( name + " " + tr("Step -") );
 

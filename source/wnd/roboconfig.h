@@ -131,6 +131,7 @@ private:
 
     QMenu *m_pRoboContextMenu;
     QAction *m_pActionOpen, *m_pActionClose, *m_pActionRst;
+    QAction *m_pActionHome, *m_pActionFold;
 
     QMenu *m_pProjectContextMenu;
     QAction *m_pActionDelAll;

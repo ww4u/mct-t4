@@ -2,7 +2,7 @@
 
 dSpinDelegate::dSpinDelegate( QObject *parent ) : QStyledItemDelegate(parent)
 {
-    mDecimal = 3;
+    mDecimal = 2;
     mMax = INT_MAX;
     mMin = INT_MIN;
 
@@ -12,7 +12,7 @@ dSpinDelegate::dSpinDelegate( QObject *parent ) : QStyledItemDelegate(parent)
 
 dSpinDelegate::dSpinDelegate(double mi, double ma, QObject *parent ): QStyledItemDelegate(parent)
 {
-    mDecimal = 3;
+    mDecimal = 2;
     mMin = mi;
     mMax = ma;
 

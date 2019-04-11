@@ -18,6 +18,8 @@ MRX_T4::MRX_T4( QObject *parent ) : XPlugin( parent )
 
     m_pRecordModel = NULL;
     m_pRecordView = NULL;
+
+    mAttr = plugin_attr_foldable;
 }
 
 MRX_T4::~MRX_T4()
@@ -62,10 +64,10 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
 
     //! record table
     QStringList headerList;
-    headerList<<"id"<<"type"
+    headerList<<"Record"<<"Type"
               //<<"coordinate"<<"para."
               <<"x(mm)"<<"y(mm)"<<"z(mm)"
-              <<QString("w(%1)").arg(char_deg)<<QString("h(%1)").arg( char_deg )
+              <<QString("Wrist(%1)").arg(char_deg)<<QString("Terminal(%1)").arg( char_deg )
               <<QString("v(%)")<<("Line")<<"Delay(s)"
               <<"comment";
 
@@ -107,13 +109,40 @@ QWidget *MRX_T4::createOpsPanel( QAbstractListModel *pModel,
     return pPanel;
 }
 void MRX_T4::retranslateUi()
-{logDbg();
+{
     mTreeItems.at(0)->setText( 0, tr("MRX-T4") ) ;
     mTreeItems.at(1)->setText( 0, tr("Configuration") ) ;
     mTreeItems.at(2)->setText( 0, tr("Misc") ) ;
     mTreeItems.at(3)->setText( 0, tr("Motor") ) ;
     mTreeItems.at(4)->setText( 0, tr("Record Table") ) ;
     mTreeItems.at(5)->setText( 0, tr("Error Management") ) ;
+
+    //! tree header
+//    headerList<<"Record"<<"Type"
+//              //<<"coordinate"<<"para."
+//              <<"x(mm)"<<"y(mm)"<<"z(mm)"
+//              <<QString("Wrist(%1)").arg(char_deg)<<QString("Terminal(%1)").arg( char_deg )
+//              <<QString("v(%)")<<("Line")<<"Delay(s)"
+//              <<"comment";
+    Q_ASSERT( NULL != m_pRecordModel );
+    m_pRecordModel->setHeaderData( 0, Qt::Horizontal,
+                                   tr("Record"), Qt::EditRole  );
+    m_pRecordModel->setHeaderData( 1, Qt::Horizontal,
+                                   tr("Type"), Qt::EditRole  );
+
+    m_pRecordModel->setHeaderData( 5, Qt::Horizontal,
+                                   tr("Wrist")+QString("(%1)").arg(char_deg), Qt::EditRole  );
+    m_pRecordModel->setHeaderData( 6, Qt::Horizontal,
+                                   tr("Terminal")+QString("(%1)").arg(char_deg), Qt::EditRole  );
+    m_pRecordModel->setHeaderData( 7, Qt::Horizontal,
+                                   tr("V")+"%", Qt::EditRole  );
+    m_pRecordModel->setHeaderData( 8, Qt::Horizontal,
+                                   tr("Line"), Qt::EditRole  );
+
+    m_pRecordModel->setHeaderData( 9, Qt::Horizontal,
+                                   tr("Delay")+"(s)", Qt::EditRole  );
+    m_pRecordModel->setHeaderData( 10, Qt::Horizontal,
+                                   tr("comment"), Qt::EditRole  );
 }
 //! mgr table
 void MRX_T4::rstErrorMgrTable()

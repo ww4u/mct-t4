@@ -126,10 +126,11 @@ class T4OpPanel;
 #define joint_action( joint )  void on_##joint##_signal_zero_clicked();\
 void on_##joint##_signal_single_add_clicked(); \
 void on_##joint##_signal_single_sub_clicked(); \
-void on_##joint##_signal_jog_add_pressed(); \
-void on_##joint##_signal_jog_add_released(); \
-void on_##joint##_signal_jog_sub_pressed(); \
-void on_##joint##_signal_jog_sub_released();
+void on_##joint##_signal_single_add_pressed(); \
+void on_##joint##_signal_single_sub_pressed(); \
+void on_##joint##_signal_single_add_released(); \
+void on_##joint##_signal_single_sub_released();
+
 
 namespace mrx_t4{
 
@@ -246,12 +247,18 @@ public:
 
 protected:
     double localSpeed();
+    double localStep();
+    bool   isContinous();
+    bool   isCoordJoint();
 
     virtual void enterMission();
     virtual void exitMission();
 
     virtual void setOperAble( bool b );
     virtual void setOpened( bool b );
+
+    void stepProc( int jId, int dir );
+    void jogProc( int jId, int dir, bool b );
 
     void _step( double x, double y, double z );
 
@@ -270,10 +277,12 @@ protected:
     bool procSequenceEn( SequenceItem* pItem );
     int procSequence( SequenceItem* pItem );
 
-
     int exportDataSets( QTextStream &stream,
                         QStringList &headers,
                         QList<PlotDataSets*> &dataSets );
+
+    void switchCoordMode();
+
 protected:
     int buildSequence( QList<SequenceItem*> &list );
 
@@ -337,12 +346,12 @@ protected Q_SLOTS:
     void slot_monitorExportData();
     void slot_monitorCopy();
 
-    void on_toolSingleXN_clicked();
-    void on_toolSingleXP_clicked();
-    void on_toolSingleYP_clicked();
-    void on_toolSingleYN_clicked();
-    void on_toolSingleZP_clicked();
-    void on_toolSingleZN_clicked();
+//    void on_toolSingleXN_clicked();
+//    void on_toolSingleXP_clicked();
+//    void on_toolSingleYP_clicked();
+//    void on_toolSingleYN_clicked();
+//    void on_toolSingleZP_clicked();
+//    void on_toolSingleZN_clicked();
 
 private slots:
     void on_pushButton_starting_home_clicked();
@@ -375,8 +384,8 @@ private slots:
 
     void on_toolButton_debugRun_clicked();
 
-    void on_horizontalSlider_valueChanged(int value);
-    void on_spinBox_valueChanged(int arg1);
+    void on_radCoordXyz_clicked();
+    void on_radCoordJoint_clicked();
 };
 
 }

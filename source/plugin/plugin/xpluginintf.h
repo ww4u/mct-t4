@@ -6,6 +6,12 @@
 
 class XPluginIntf : public QObject
 {
+public:
+    enum ePluginAttr{
+        plugin_attr_none = 0,
+        plugin_attr_foldable = 1,
+    };
+
     Q_OBJECT
 public:
     XPluginIntf( QObject *parent = nullptr );
@@ -54,6 +60,7 @@ public:
     virtual int stop();
 
     bool isOpened();
+    bool isFoldable();
 
     int deviceVi();
 
@@ -65,6 +72,8 @@ protected:
     int mVi;
 
     QString mSN, mFirmwareVer, mMechanicalVer;
+
+    ePluginAttr mAttr;
 
 };
 

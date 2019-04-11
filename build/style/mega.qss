@@ -619,3 +619,8 @@ QRadioButton#radError::indicator:checked, QRadioButton#radWarning::indicator:che
 	/*background-color:red;*/
 	image: url(:/res/image/widget/radiobutton_checked_red.png);
 }
+
+/* help panel */
+QTextEdit{
+	font: 16px;
+}

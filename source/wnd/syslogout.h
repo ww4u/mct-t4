@@ -29,6 +29,7 @@ protected:
 
 private:
     Ui::SysLogout *ui;
+//    QSize mLastSize, mCurSize;
 };
 
 #endif // SYSLOGOUT_H

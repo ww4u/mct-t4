@@ -49,6 +49,7 @@ public:
 
 protected:
     virtual void changeEvent( QEvent *event );
+    virtual void resizeEvent(QResizeEvent *event);
 
 public:
     void emit_logout( const QString &info, int level );

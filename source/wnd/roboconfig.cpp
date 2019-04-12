@@ -398,12 +398,12 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
             { gc_context_menu(); return; }
 
             m_pActionHome = m_pRoboContextMenu->addAction( tr("Home") );
-            m_pActionHome->setIcon( QIcon(":/res/image/icon/beauty.png") );
+            m_pActionHome->setIcon( QIcon(":/res/image/icon/address.png") );
             if ( NULL == m_pActionHome )
             { gc_context_menu(); return; }
 
             m_pActionFold = m_pRoboContextMenu->addAction( tr("Fold") );
-            m_pActionFold->setIcon( QIcon(":/res/image/icon/beauty.png") );
+            m_pActionFold->setIcon( QIcon(":/res/image/icon/stealth.png") );
             if ( NULL == m_pActionFold )
             { gc_context_menu(); return; }
 

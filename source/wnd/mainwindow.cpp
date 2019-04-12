@@ -9,6 +9,8 @@
 #include "changedpw.h"
 #include "spacewidget.h"
 
+#undef QT_NO_DEBUG_OUTPUT
+
 #define pref_file_path  QDir::homePath() + "/AppData/Roaming/mct"
 #define pref_file_name  pref_file_path + "/mct_pref.xml"
 
@@ -682,6 +684,26 @@ void MainWindow::changeEvent( QEvent * event )
 //                          );
 //        }
     }
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
+    //! calc the last ratio
+    if ( m_pDockHelp->isVisible() && event->oldSize().width() > 0 )
+    { resizeDocks( { m_pDockHelp }, { m_pHelpPanel->size().width() * event->size().width()/ event->oldSize().width() }, Qt::Horizontal  ); }
+
+    int h;
+    if ( m_pDockOps->isVisible() && event->oldSize().height() > 0 )
+    {
+        h = m_pSysLogout->size().height() * event->size().height()/ event->oldSize().height();
+        if ( h > 380 )
+        { h = 380; }
+        resizeDocks( { m_pDockOps }, { h }, Qt::Vertical  );
+    }
+    else
+    {}
+
+    QWidget::resizeEvent(event);
 }
 
 void MainWindow::emit_logout( const QString &info, int level )

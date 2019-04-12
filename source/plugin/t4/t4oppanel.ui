@@ -1030,7 +1030,7 @@
                 <item>
                  <widget class="QGroupBox" name="groupBox_16">
                   <property name="title">
-                   <string>Coordinate</string>
+                   <string/>
                   </property>
                   <layout class="QHBoxLayout" name="horizontalLayout_13">
                    <item>
@@ -1047,6 +1047,125 @@
                     <widget class="QRadioButton" name="radCoordJoint">
                      <property name="text">
                       <string>Joint</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="groupBox_3">
+                  <property name="title">
+                   <string/>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_8">
+                   <item row="0" column="1">
+                    <widget class="QComboBox" name="cmbStepXx">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="toolTip">
+                      <string>Step mm or degree</string>
+                     </property>
+                     <item>
+                      <property name="text">
+                       <string>X0.1</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>X0.5</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>X1</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>X5</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>X10</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>X50</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>X100</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_3">
+                     <property name="text">
+                      <string>Step</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="4">
+                    <widget class="QLabel" name="label_6">
+                     <property name="text">
+                      <string>%</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="3">
+                    <widget class="QComboBox" name="cmbSpeed">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="inputMethodHints">
+                      <set>Qt::ImhDigitsOnly</set>
+                     </property>
+                     <property name="editable">
+                      <bool>true</bool>
+                     </property>
+                     <item>
+                      <property name="text">
+                       <string>1</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>10</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>20</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>50</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>100</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QLabel" name="label_5">
+                     <property name="text">
+                      <string>Speed</string>
                      </property>
                     </widget>
                    </item>
@@ -1129,126 +1248,6 @@
               </item>
               <item>
                <widget class="Joint" name="joint1" native="true"/>
-              </item>
-              <item>
-               <widget class="QGroupBox" name="groupBox_3">
-                <property name="title">
-                 <string/>
-                </property>
-                <layout class="QGridLayout" name="gridLayout_8">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label_3">
-                   <property name="text">
-                    <string>Step</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QComboBox" name="cmbStepXx">
-                   <property name="toolTip">
-                    <string>Step mm or degree</string>
-                   </property>
-                   <item>
-                    <property name="text">
-                     <string>X0.1</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>X0.5</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>X1</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>X5</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>X10</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>X50</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>X100</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="0" column="4">
-                  <widget class="QLabel" name="label_6">
-                   <property name="text">
-                    <string>%</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="2">
-                  <widget class="QLabel" name="label_5">
-                   <property name="text">
-                    <string>Speed</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="3">
-                  <widget class="QComboBox" name="cmbSpeed">
-                   <property name="inputMethodHints">
-                    <set>Qt::ImhDigitsOnly</set>
-                   </property>
-                   <property name="editable">
-                    <bool>true</bool>
-                   </property>
-                   <item>
-                    <property name="text">
-                     <string>1</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>10</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>20</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>50</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
-                     <string>100</string>
-                    </property>
-                   </item>
-                  </widget>
-                 </item>
-                 <item row="0" column="5">
-                  <spacer name="horizontalSpacer">
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                   <property name="sizeHint" stdset="0">
-                    <size>
-                     <width>40</width>
-                     <height>20</height>
-                    </size>
-                   </property>
-                  </spacer>
-                 </item>
-                </layout>
-               </widget>
               </item>
               <item>
                <spacer name="verticalSpacer_9">

@@ -8,51 +8,51 @@ extern "C" {
 #endif
 
 /*
-* ÉèÖÃÏµÍ³Îª¹¤³ÌÄ£Ê½
-* vi :visaÉè±¸¾ä±ú
+* è®¾ç½®ç³»ç»Ÿä¸ºå·¥ç¨‹æ¨¡å¼
+* vi :visaè®¾å¤‡å¥æŸ„
 * state: 0->OFF| 1->ON
-* ·µ»ØÖµ£º0±íÊ¾Ö´ĞĞ³É¹¦£»£­1±íÊ¾Ö´ĞĞÊ§°Ü
-* ËµÃ÷: Ö»ÓĞÔÚ¹¤³ÌÄ£Ê½ÏÂ,²ÅÔÊĞí¶ÁÈ¡IO×´Ì¬
+* è¿”å›å€¼ï¼š0è¡¨ç¤ºæ‰§è¡ŒæˆåŠŸï¼›ï¼1è¡¨ç¤ºæ‰§è¡Œå¤±è´¥
+* è¯´æ˜: åªæœ‰åœ¨å·¥ç¨‹æ¨¡å¼ä¸‹,æ‰å…è®¸è¯»å–IOçŠ¶æ€
 */
-int mrgSetProjectMode(ViSession vi, int state);
+EXPORT_API int CALL mrgSetProjectMode(ViSession vi, int state);
 /*
-* ²éÑ¯Íâ²¿IOµÄ×´Ì¬
-* vi :visaÉè±¸¾ä±ú
-* state: Ã¿Ò»Î»±íÊ¾Ò»¸öIOµÄ×´Ì¬
-* ·µ»ØÖµ£º0±íÊ¾Ö´ĞĞ³É¹¦£»£­1±íÊ¾Ö´ĞĞÊ§°Ü
+* æŸ¥è¯¢å¤–éƒ¨IOçš„çŠ¶æ€
+* vi :visaè®¾å¤‡å¥æŸ„
+* state: æ¯ä¸€ä½è¡¨ç¤ºä¸€ä¸ªIOçš„çŠ¶æ€
+* è¿”å›å€¼ï¼š0è¡¨ç¤ºæ‰§è¡ŒæˆåŠŸï¼›ï¼1è¡¨ç¤ºæ‰§è¡Œå¤±è´¥
 */
-int mrgProjectGetXinState(ViSession vi, unsigned int *state);
+EXPORT_API int CALL mrgProjectGetXinState(ViSession vi, unsigned int *state);
 /*
-* ÉèÖÃÏµÍ³µÄÍâ²¿Êä³öIOµÄ×´Ì¬
-* vi :visaÉè±¸¾ä±ú
+* è®¾ç½®ç³»ç»Ÿçš„å¤–éƒ¨è¾“å‡ºIOçš„çŠ¶æ€
+* vi :visaè®¾å¤‡å¥æŸ„
 * index: 0->YOUT1; 1->YOUT2
 * state: 0->low| 1->high
-* ·µ»ØÖµ£º0±íÊ¾Ö´ĞĞ³É¹¦£»£­1±íÊ¾Ö´ĞĞÊ§°Ü
-* ËµÃ÷: Ö»ÓĞÔÚ¹¤³ÌÄ£Ê½ÏÂ,²ÅÔÊĞí¶ÁÈ¡IO×´Ì¬
+* è¿”å›å€¼ï¼š0è¡¨ç¤ºæ‰§è¡ŒæˆåŠŸï¼›ï¼1è¡¨ç¤ºæ‰§è¡Œå¤±è´¥
+* è¯´æ˜: åªæœ‰åœ¨å·¥ç¨‹æ¨¡å¼ä¸‹,æ‰å…è®¸è¯»å–IOçŠ¶æ€
 */
-int mrgProjectSetYout(ViSession vi, int index, int state);
+EXPORT_API int CALL mrgProjectSetYout(ViSession vi, int index, int state);
 /*
-* ÉèÖÃÏµÍ³µÄĞòÁĞºÅ
-* vi :visaÉè±¸¾ä±ú
-* serial: ĞòÁĞºÅ
-* ·µ»ØÖµ£º0±íÊ¾Ö´ĞĞ³É¹¦£»£­1±íÊ¾Ö´ĞĞÊ§°Ü
+* è®¾ç½®ç³»ç»Ÿçš„åºåˆ—å·
+* vi :visaè®¾å¤‡å¥æŸ„
+* serial: åºåˆ—å·
+* è¿”å›å€¼ï¼š0è¡¨ç¤ºæ‰§è¡ŒæˆåŠŸï¼›ï¼1è¡¨ç¤ºæ‰§è¡Œå¤±è´¥
 */
-int mrgProjectSetSerialNum(ViSession vi, char * serial);
+EXPORT_API int CALL mrgProjectSetSerialNum(ViSession vi, char * serial);
 /*
-* ²éÑ¯ÏµÍ³µÄĞòÁĞºÅ
-* vi :visaÉè±¸¾ä±ú
-* serial: ĞòÁĞºÅ
-* ·µ»ØÖµ£º·µ»ØĞòÁĞºÅµÄ³¤¶È
+* æŸ¥è¯¢ç³»ç»Ÿçš„åºåˆ—å·
+* vi :visaè®¾å¤‡å¥æŸ„
+* serial: åºåˆ—å·
+* è¿”å›å€¼ï¼šè¿”å›åºåˆ—å·çš„é•¿åº¦
 */
-int mrgProjectGetSerialNum(ViSession vi, char * serial);
+EXPORT_API int CALL mrgProjectGetSerialNum(ViSession vi, char * serial);
 /*
-* Ğ´ÈëÉè±¸µÄĞòÁĞºÅ
-* idn :·µ»ØµÄÉè±¸ÃèÊö·û
-* len£ºidn»º´æ³¤¶È
-* ·µ»ØÖµ£º
-* ËµÃ÷£º´Ëº¯ÊıÎª¹¤³Ì½Ó¿Úº¯Êı£¬²»¶ÔÍâ¿ª·Å
-*/
- int mrgWriteDeviceSerial(ViSession  vi, int name, char * serial);
+ * å†™å…¥è®¾å¤‡çš„åºåˆ—å·
+ * idn :è¿”å›çš„è®¾å¤‡æè¿°ç¬¦
+ * lenï¼šidnç¼“å­˜é•¿åº¦
+ * è¿”å›å€¼ï¼š
+ * è¯´æ˜ï¼šæ­¤å‡½æ•°ä¸ºå·¥ç¨‹æ¥å£å‡½æ•°ï¼Œä¸å¯¹å¤–å¼€æ”¾
+ */
+EXPORT_API int CALL mrgWriteDeviceSerial(ViSession  vi, int name, char * serial);
 
 #if defined(__cplusplus) || defined(__cplusplus__)
 }

@@ -72,7 +72,7 @@ public:
     double x, y, z, pw, h, v;
     bool bLine;
     double delay;
-    int mDo;    //! -1 INVALID
+    int mDo;    //!
 
 public:
     SequenceItem()

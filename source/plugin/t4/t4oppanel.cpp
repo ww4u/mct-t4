@@ -1081,6 +1081,7 @@ bool T4OpPanel::procSequenceEn( SequenceItem* pItem )
 //int vRow;
 //QString mType;
 //double x, y, z, pw, h, v, line;
+//do
 //double delay;
 int T4OpPanel::procSequence( SequenceItem* pItem )
 {
@@ -1104,6 +1105,8 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
     }
     else
     { return -1; }
+
+    //! \todo DO
 
     return ret;
 }
@@ -1965,8 +1968,8 @@ int T4OpPanel::buildSequence( QList<SequenceItem*> &list )
 
             pItem->v = var.at( 8 ).toDouble();
             pItem->bLine = var.at( 9 ).toBool();
-
-            pItem->delay = var.at( 10 ).toDouble();
+            pItem->mDo = var.at( 10 ).toInt();
+            pItem->delay = var.at( 11 ).toDouble();
 
             //! \note the last one
             if ( j == varList.size() - 1 )

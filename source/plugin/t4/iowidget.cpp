@@ -58,6 +58,7 @@ IOWidget::IOWidget(int w, QWidget *parent) :
     for ( i = 0; i < w; i++ )
     {
         mBits[i]->setVisible( true );
+        mBits[i]->setTristate();
     }
 
     //! find the w
@@ -78,18 +79,17 @@ void IOWidget::setData( quint32 dat )
 {
     for ( int i = 0; i < mWidth; i++ )
     {
-        mBits.at(i)->setChecked( (dat & 0x01) ? true : false );
+        mBits.at(i)->setCheckState( Qt::CheckState( dat & 0x03) );
 
-        dat >>= 1;
+        dat >>= 2;
     }
 }
-quint32 IOWidget::getData()
+quint32 IOWidget::getData( )
 {
     quint32 dat = 0;
     for ( int i = 0; i < mWidth; i++ )
     {
-        if ( mBits.at(i)->isChecked() )
-        { dat |= (1<<i); }
+        dat |= ( mBits.at(i)->checkState()<<(i*2));
     }
 
     return dat;

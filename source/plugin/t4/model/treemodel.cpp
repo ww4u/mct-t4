@@ -52,7 +52,7 @@
 
 #include "treeitem.h"
 #include "treemodel.h"
-
+#include "iodelegate.h"
 //! [0]
 TreeModel::TreeModel(const QStringList &headers, const QString &fileName, QObject *parent_obj)
 //    : MegaTableModel(parent_obj)
@@ -104,13 +104,10 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-//    //! center
-//    if ( role == Qt::TextAlignmentRole )
-//    { return QVariant( Qt::AlignCenter ); }
-
     if (role != Qt::DisplayRole
             && role != Qt::EditRole
-            && role != raw_data_role )
+            && role != raw_data_role
+            && role != valid_role )
         return QVariant();
 
     //! special column
@@ -118,6 +115,14 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 
     if ( NULL == item )
     { return QVariant(); }
+
+    //! check valid role
+    if ( role == valid_role )
+    {
+        return QVariant( item->isValid() );
+    }
+    else
+    {}
 
     //! check the validate
     if ( item->isValid() )
@@ -145,6 +150,14 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
     {
         if ( role == Qt::DisplayRole )
         { return QString("%1%").arg( item->data(index.column()).toDouble() ); }
+        else
+        {}
+    }
+    //!io delegate
+    else if ( index.column() == 9 )
+    {
+        if ( role == Qt::DisplayRole )
+        { return IODelegate::toString( item->data(index.column()).toInt(), 2 ); }
         else
         {}
     }
@@ -442,6 +455,7 @@ int TreeModel::exportOut( const QString &fileName )
            <<"id"<<"type"
            //<<"coordinate"<<"para"
            <<"x"<<"y"<<"z"<<"w"<<"h"<<"v"<<"mode"
+           <<"do"
            <<"delay"
            <<"comment";
     dataSet.setHeaders( headers );
@@ -581,7 +595,7 @@ int TreeModel::_loadIn( MDataSet *pDataSet,
 //        get_str( "coordinate", i, "" );
 //        get_str( "para", i, "" );
 //        get_int( i, 0 );
-//        get_int( i, 0 );
+
 
         get_double( "x",i, 0 );
         get_double( "y",i, 0 );
@@ -591,7 +605,10 @@ int TreeModel::_loadIn( MDataSet *pDataSet,
 
         get_double( "v",i, 0 );
         get_bool( "mode",i, 0 );
+
+        get_int( "do", i, 0 );
         get_double( "delay",i, 0 );
+
         get_str( "comment",i, 0 );
 
         if ( i == 0 )
@@ -641,7 +658,7 @@ int TreeModel::_fmtSection( TreeItem *section,
 int TreeModel::_fmtItem( TreeItem *pItem,
                          QString &ary )
 {
-    ary = QString("%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12")
+    ary = QString("%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12,%13")
             .arg( pItem->isValid() )
             .arg( pItem->data(0).toInt() )
             .arg( pItem->data(1).toString() )
@@ -652,8 +669,9 @@ int TreeModel::_fmtItem( TreeItem *pItem,
             .arg( pItem->data(6).toDouble() )
             .arg( pItem->data(7).toDouble() )
             .arg( pItem->data(8).toInt() )
-            .arg( pItem->data(9).toDouble() )
-            .arg( pItem->data(10).toString() )
+            .arg( pItem->data(9).toInt() )
+            .arg( pItem->data(10).toDouble() )
+            .arg( pItem->data(11).toString() )
             ;
     return 0;
 }

@@ -58,7 +58,6 @@ void CheckDelegate::setEditorData(QWidget *editor, const QModelIndex &index) con
     CHECK_WIDGET *pCheckBox = static_cast<CHECK_WIDGET*>(editor);
 
     pCheckBox->setChecked( b );
-//    pCheckBox->setText( b ? tr("true"):tr("false") );
 }
 void CheckDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
                   const QModelIndex &index) const
@@ -93,7 +92,8 @@ void CheckDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
     else
     { return; }
 
-    QVariant var = index.data( Qt::UserRole );
+    //! valid role
+    QVariant var = index.data( Qt::UserRole + 2 );
     if ( var.isValid() && var.type() == QVariant::Bool )
     {
         if ( var.toBool() )
@@ -102,7 +102,7 @@ void CheckDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
         { return; }
     }
     else
-    {}
+    {  }
 
     QStyleOption opt=option;
     QStyleOptionButton optBtn;

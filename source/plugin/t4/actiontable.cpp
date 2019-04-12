@@ -36,6 +36,8 @@ ActionTable::ActionTable(QWidget *parent) :
     m_pDelegateV = new dSpinDelegate( 1, 100, this );
     m_pDelegateV->setSuffix( "%" );
 
+    m_pODelegate = new IODelegate( 2 );
+
     m_pDelegateTime = new dSpinDelegate( 0, 1000, this );
     m_pDelegateTime->setSuffix( "s" );
 
@@ -51,7 +53,9 @@ ActionTable::ActionTable(QWidget *parent) :
 
     ui->view->setItemDelegateForColumn( 7, m_pDelegateV );
     ui->view->setItemDelegateForColumn( 8, m_pCheckDelegate );
-    ui->view->setItemDelegateForColumn( 9, m_pDelegateTime );
+
+    ui->view->setItemDelegateForColumn( 9, m_pODelegate );
+    ui->view->setItemDelegateForColumn( 10, m_pDelegateTime );
 
     m_pContextMenu = NULL;
 
@@ -73,7 +77,7 @@ ActionTable::ActionTable(QWidget *parent) :
     m_pTypeDelegate = new ComboxDelegate( 0, this );
 
     QStringList strList;
-    strList<<"PA"<<"PRA"<<"PRN";//<<"STOP"<<"CONTINUE"<<"ZERO";
+    strList<<"PA"<<"PRA"<<"PRN";
     m_pTypeDelegate->setItems( strList );
 
     ui->view->setItemDelegateForColumn( 1, m_pTypeDelegate );

@@ -71,7 +71,8 @@ protected:
 
 private:
     Ui::ActionTable *ui;
-//    IODelegate *m_pIDelegate, *m_pODelegate;
+//    IODelegate *m_pIDelegate;
+    IODelegate *m_pODelegate;
     ComboxDelegate *m_pTypeDelegate;
     dSpinDelegate *m_pDelegateXYZ;
     dSpinDelegate *m_pDelegatePw;

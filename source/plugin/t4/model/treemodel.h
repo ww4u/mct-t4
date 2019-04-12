@@ -62,7 +62,7 @@
 class TreeItem;
 
 #define raw_data_role   (Qt::UserRole + 1)
-
+#define valid_role      (Qt::UserRole + 2)
 //! [0]
 //class TreeModel : public MegaTableModel
 class TreeModel : public QAbstractItemModel

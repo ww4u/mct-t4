@@ -13,12 +13,16 @@ QString IODelegate::toString( quint32 _do, int w )
         if ( i != 0 )
         { str += ","; }
 
-        if ( _do & 0x01 )
+        if ( (_do & 0x3)==0x01 )
+        { str += "X"; }
+        else if ( (_do & 0x3)==0x2 )
         { str += "H"; }
-        else
+        else if ( (_do & 0x3)==0x0 )
         { str += "L"; }
+        else
+        {}
 
-        _do >>= 1;
+        _do >>= 2;
     }
     str += QString("[%1]").arg( w - 1);
 

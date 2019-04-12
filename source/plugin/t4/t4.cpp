@@ -69,7 +69,7 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
               //<<"coordinate"<<"para."
               <<"x(mm)"<<"y(mm)"<<"z(mm)"
               <<QString("Wrist(%1)").arg(char_deg)<<QString("Terminal(%1)").arg( char_deg )
-              <<QString("v(%)")<<("Line")<<"Delay(s)"
+              <<QString("v(%)")<<("Line")<<"Output"<<"Delay(s)"
               <<"comment";
 
 //    headerList<<"id"<<"type"<<"coord";
@@ -138,8 +138,12 @@ void MRX_T4::retranslateUi()
                                    tr("Line"), Qt::EditRole  );
 
     m_pRecordModel->setHeaderData( 9, Qt::Horizontal,
-                                   tr("Delay")+"(s)", Qt::EditRole  );
+                                   tr("Output"), Qt::EditRole  );
+
     m_pRecordModel->setHeaderData( 10, Qt::Horizontal,
+                                   tr("Delay")+"(s)", Qt::EditRole  );
+
+    m_pRecordModel->setHeaderData( 11, Qt::Horizontal,
                                    tr("comment"), Qt::EditRole  );
 }
 //! mgr table

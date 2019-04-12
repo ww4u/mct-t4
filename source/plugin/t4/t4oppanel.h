@@ -238,6 +238,8 @@ public:
     int monitorRefreshProc( void *pContext );
 
     int pingTick( void *pContext );
+
+    int refreshDiagnosisInfo( void *pContext );
 public:
     virtual void attachWorkings();
 

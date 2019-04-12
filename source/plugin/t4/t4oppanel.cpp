@@ -140,6 +140,8 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
 
     //! sync ui
     switchCoordMode();
+
+    ui->btnRead->setVisible(false);
 }
 
 T4OpPanel::~T4OpPanel()
@@ -644,6 +646,72 @@ int T4OpPanel::pingTick( void *pContext )
     return 0;
 }
 
+int T4OpPanel::refreshDiagnosisInfo( void *pContext )
+{
+    //! to local
+    MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
+    Q_ASSERT( NULL != pRobo );
+
+    if ( pRobo->isOpened() )
+    {}
+    else
+    { return 0; }
+
+    QByteArray ary;
+    ary.reserve( 4096 );
+
+    int ret;
+
+    ret = mrgErrorLogUpload( pRobo->deviceVi(), 0,
+                             ary.data());
+
+    //! fill the model
+    if ( ret > 0 )
+    {
+        //! remove all
+        ui->tvDiagnosis->model()->removeRows( 0, ui->tvDiagnosis->model()->rowCount() );
+
+        ary.resize( ret );
+
+        //! code, counter, info
+        QList<QByteArray> aryList = ary.split('\n');
+        QList<QByteArray> itemList;
+
+        //! model
+        DiagnosisTable *pModel = (DiagnosisTable*)ui->tvDiagnosis->model();
+
+        int code, counter;
+        bool bOk;
+
+        foreach( QByteArray item, aryList )
+        {
+            itemList = item.split(',');
+
+            if ( itemList.size() >= 3 )
+            {}
+            else
+            { continue; }
+
+            code = itemList.at(0).toInt( &bOk );
+            if ( !bOk )
+            { continue; }
+
+            counter = itemList.at(1).toInt( &bOk );
+            if ( !bOk )
+            { continue; }
+
+            pModel->append( code,
+                            counter,
+                            itemList.at(2)
+                        );
+        }
+        return 0;
+    }
+    else
+    //! \todo read error!
+    { return 0; }
+}
+
 void T4OpPanel::attachWorkings()
 {
     if ( sysHasArgv("-noupdate") )
@@ -662,6 +730,11 @@ void T4OpPanel::attachWorkings()
 
     attachUpdateWorking( (XPage::procDo)( &T4OpPanel::pingTick ),
                          tr("ping tick"),
+                         NULL,
+                         m_pPref->refreshIntervalMs() );
+    //! diagnosis
+    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::refreshDiagnosisInfo ),
+                         tr("Diagnosis refresh"),
                          NULL,
                          m_pPref->refreshIntervalMs() );
 }
@@ -1741,62 +1814,62 @@ void T4OpPanel::on_btnDown_clicked()
     }
 }
 
-//! diagnosis
+//! diagnosis   set invisiable
 void T4OpPanel::on_btnRead_clicked()
 {
-    check_connect();
+//    check_connect();
 
-    QByteArray ary;
-    ary.reserve( 4096 );
+//    QByteArray ary;
+//    ary.reserve( 4096 );
 
-    int ret;
+//    int ret;
 
-    ret = mrgErrorLogUpload( pRobo->deviceVi(), 0,
-                             ary.data());
+//    ret = mrgErrorLogUpload( pRobo->deviceVi(), 0,
+//                             ary.data());
 
-    //! fill the model
-    if ( ret > 0 )
-    {
-        //! remove all
-        ui->tvDiagnosis->model()->removeRows( 0, ui->tvDiagnosis->model()->rowCount() );
+//    //! fill the model
+//    if ( ret > 0 )
+//    {
+//        //! remove all
+//        ui->tvDiagnosis->model()->removeRows( 0, ui->tvDiagnosis->model()->rowCount() );
 
-        ary.resize( ret );
+//        ary.resize( ret );
 
-        //! code, counter, info
-        QList<QByteArray> aryList = ary.split('\n');
-        QList<QByteArray> itemList;
+//        //! code, counter, info
+//        QList<QByteArray> aryList = ary.split('\n');
+//        QList<QByteArray> itemList;
 
-        //! model
-        DiagnosisTable *pModel = (DiagnosisTable*)ui->tvDiagnosis->model();
+//        //! model
+//        DiagnosisTable *pModel = (DiagnosisTable*)ui->tvDiagnosis->model();
 
-        int code, counter;
-        bool bOk;
+//        int code, counter;
+//        bool bOk;
 
-        foreach( QByteArray item, aryList )
-        {
-            itemList = item.split(',');
+//        foreach( QByteArray item, aryList )
+//        {
+//            itemList = item.split(',');
 
-            if ( itemList.size() >= 3 )
-            {}
-            else
-            { continue; }
+//            if ( itemList.size() >= 3 )
+//            {}
+//            else
+//            { continue; }
 
-            code = itemList.at(0).toInt( &bOk );
-            if ( !bOk )
-            { continue; }
+//            code = itemList.at(0).toInt( &bOk );
+//            if ( !bOk )
+//            { continue; }
 
-            counter = itemList.at(1).toInt( &bOk );
-            if ( !bOk )
-            { continue; }
+//            counter = itemList.at(1).toInt( &bOk );
+//            if ( !bOk )
+//            { continue; }
 
-            pModel->append( code,
-                            counter,
-                            itemList.at(2)
-                        );
-        }
-    }
-    else
-    {}
+//            pModel->append( code,
+//                            counter,
+//                            itemList.at(2)
+//                        );
+//        }
+//    }
+//    else
+//    {}
 }
 
 void T4OpPanel::on_btnDelete_clicked()

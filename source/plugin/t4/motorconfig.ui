@@ -77,21 +77,21 @@
        <item row="5" column="0">
         <widget class="QLabel" name="label_4">
          <property name="text">
-          <string>Basement</string>
+          <string>Base</string>
          </property>
         </widget>
        </item>
        <item row="4" column="0">
         <widget class="QLabel" name="label_5">
          <property name="text">
-          <string>Big Arm</string>
+          <string>Shoulder</string>
          </property>
         </widget>
        </item>
        <item row="3" column="0">
         <widget class="QLabel" name="label_6">
          <property name="text">
-          <string>Little Arm</string>
+          <string>Elbow</string>
          </property>
         </widget>
        </item>

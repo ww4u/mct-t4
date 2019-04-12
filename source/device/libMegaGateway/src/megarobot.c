@@ -3,7 +3,6 @@
 #include "megarobot.h"
 #include "mrqdevice.h"
 #include "device.h"
-#include "assist.h"
 
 #define     SEND_BUF        (100)
 #define     DELAYTIME       (100)  //! 查询延时时间

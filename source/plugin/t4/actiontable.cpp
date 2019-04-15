@@ -232,7 +232,7 @@ int ActionTable::upload()
         }
 
         //! save the file
-        QFile file( m_pPlugin->homePath() + "/up_" + record_file_name );
+        QFile file( m_pPlugin->homePath() + "/" + record_file_name );
         if ( file.open( QIODevice::WriteOnly ) )
         {}
         else
@@ -261,6 +261,11 @@ int ActionTable::download()
     check_connect_ret( -1 );
 
     QString fileName = m_pPlugin->homePath() + "/" + record_file_name;
+
+    //! update local file
+    TreeModel *model = (TreeModel *)ui->view->model();
+    model->exportOut( fileName );
+
     QString fileOutName = m_pPlugin->model().toLower() + record_file_name;
     int ret = mrgStorageMotionFileSave( pRobo->deviceVi(),
                               fileName.toLatin1().data(),

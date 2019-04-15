@@ -2228,7 +2228,26 @@ EXPORT_API int CALL mrgGetRobotFold(ViSession vi, int name, int wavetable, float
 }
 
 /*
-* 控制机器人腕关节的转动角度(相对于90度的算法零位)
+* 获取机器人腕关节的姿态角度(相对于90度的算法零位)
+* vi :visa设备句柄
+* name: 机器人名称
+* angle: 腕关节角度(垂直向下时为零)
+* 返回值：零表示执行正确,-1表示执行错误
+*/
+EXPORT_API int CALL mrgGetRobotWristPose(ViSession vi, int name, float *angle)
+{
+  int ret = 0;
+  float f32JointAngle = 0.0f;
+  ret = mrgGetRobotJointAngle(vi, name, 3, &f32JointAngle);
+  if (ret <= 0)
+  {
+    return -1;
+  }
+  *angle = f32JointAngle - 90.0f;
+  return 0;
+}
+/*
+* 控制机器人腕关节的姿态角度(相对于90度的算法零位)
 * vi :visa设备句柄
 * name: 机器人名称
 * angle: 腕关节角度(垂直向下时为零)
@@ -2236,39 +2255,15 @@ EXPORT_API int CALL mrgGetRobotFold(ViSession vi, int name, int wavetable, float
 * timeout_ms: 表示等待执行的超时时间. 如果为-1,表示不等待. 0表示无限等待. >0 表示等待的超时时间. 单位:ms
 * 返回值：零表示执行正确,-1表示执行错误
 */
-EXPORT_API int CALL mrgSetRobotWristAngleZero(ViSession vi, int name, float angle,float time,int timeout_ms)
+EXPORT_API int CALL mrgSetRobotWristPose(ViSession vi, int name, float angle,float time,int timeout_ms)
 {
-    int retlen = 0;
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:JOINT:MOVE %d,%d,%f,%f\n", name, 3, angle - 90.0f, time);
-    if ((retlen = busWrite(vi, args, strlen(args))) == 0)
-    {
-        return -1;
-    }
-    if (timeout_ms < 0)
-    {
-        return 0;
-    }
-    return mrgRobotWaitEnd(vi, name, DEFAULT_WAVETABLE, timeout_ms);
-}
-/*
-* 获取机器人腕关节的当前角度(相对于90度的算法零位)
-* vi :visa设备句柄
-* name: 机器人名称
-* angle: 腕关节角度(垂直向下时为零)
-* 返回值：零表示执行正确,-1表示执行错误
-*/
-EXPORT_API int CALL mrgGetRobotWristAngleZero(ViSession vi, int name, float *angle)
-{
-    int retlen = 0;
-    char args[SEND_BUF];
-    char tmp[100];
-    snprintf(args, SEND_BUF, "ROBOT:JOINT:ANGLE? %d,%d\n", name, 3);
-    if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
-    {
-        return -1;
-    }
-    tmp[retlen] = 0;
-    *angle = atof(tmp) - 90.0f;
-    return 0;
+  int ret = 0;
+  float f32Current = 0.0f,f32Target = 0.0f;
+  ret = mrgGetRobotJointAngle(vi, name, 3, &f32Current);
+  if (ret <= 0)
+  {
+    return -1;
+  }
+  f32Target = 90.0f + angle - f32Current;
+  return mrgRobotJointMove(vi, name, 3, f32Target, time, timeout_ms);  
 }

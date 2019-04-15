@@ -753,7 +753,7 @@ EXPORT_API int CALL mrgGetRobotFold(ViSession vi, int name, int wavetable, float
 * timeout_ms: 表示等待执行的超时时间. 如果为-1,表示不等待. 0表示无限等待. >0 表示等待的超时时间. 单位:ms
 * 返回值：零表示执行正确,-1表示执行错误
 */
-EXPORT_API int CALL mrgSetRobotWristPose(ViSession vi, int name, float angle,float time,int timeout_ms)
+EXPORT_API int CALL mrgSetRobotWristPose(ViSession vi, int name, float angle,float time,int timeout_ms);
 /*
 * 获取机器人腕关节的当前角度(相对于90度的算法零位)
 * vi :visa设备句柄
@@ -761,7 +761,7 @@ EXPORT_API int CALL mrgSetRobotWristPose(ViSession vi, int name, float angle,flo
 * angle: 腕关节角度(垂直向下时为零)
 * 返回值：零表示执行正确,-1表示执行错误
 */
-EXPORT_API int CALL mrgGetRobotWristPose(ViSession vi, int name, float *angle)
+EXPORT_API int CALL mrgGetRobotWristPose(ViSession vi, int name, float *angle);
 #if defined(__cplusplus) || defined(__cplusplus__)
 }
 #endif

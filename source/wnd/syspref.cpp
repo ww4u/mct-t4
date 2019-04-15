@@ -20,6 +20,8 @@ SysPref::SysPref( const SysPara &para, QWidget *parent ) :
     mbAutoSearch = para.mbAutoSearch;
     mbAutoLogin = para.mbAutoLogin;
 
+    mbAutoRpp = para.mbAutoRpp;
+
     mIntfIndex = para.mIntfIndex;
     mRefreshIndex = para.mRefreshIndex;
     mStyleIndex = para.mStyleIndex;
@@ -52,6 +54,8 @@ void SysPref::updateUi()
     ui->chkAutoSearch->setChecked( mbAutoSearch );
     ui->chkAutoLogin->setChecked( mbAutoLogin );
 
+    ui->chkAutoRpp->setChecked( mbAutoRpp );
+
     ui->cmbRefresh->setCurrentIndex( mRefreshIndex );
 }
 void SysPref::updateData()
@@ -60,6 +64,8 @@ void SysPref::updateData()
     mbAutoLoad = ui->chkAutoLoad->isChecked();
     mbAutoSearch = ui->chkAutoSearch->isChecked();
     mbAutoLogin = ui->chkAutoLogin->isChecked();
+
+    mbAutoRpp = ui->chkAutoRpp->isChecked();
 
     mRefreshIndex = ui->cmbRefresh->currentIndex();
 }

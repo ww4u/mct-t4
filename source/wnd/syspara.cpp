@@ -21,6 +21,7 @@ void SysPara::reset()
     mbAutoLoad = true;
     mbAutoSearch = true;
     mbAutoLogin = false;
+    mbAutoRpp = true;
 
     mIntfIndex = 0;
     mStyleIndex = 0;
@@ -104,6 +105,7 @@ int SysPara::serialOut( QXmlStreamWriter &writer )
         writer.writeTextElement( "auto_load", QString::number( mbAutoLoad ) );
         writer.writeTextElement( "auto_search", QString::number( mbAutoSearch ) );
         writer.writeTextElement( "auto_login", QString::number( mbAutoLogin ) );
+        writer.writeTextElement( "auto_rpp", QString::number(mbAutoRpp) );
 
         writer.writeTextElement( "intf", QString::number(mIntfIndex) );
         writer.writeTextElement( "refresh",QString::number( mRefreshIndex ));
@@ -142,6 +144,8 @@ int SysPara::serialIn( QXmlStreamReader &reader )
                 { mbAutoSearch = reader.readElementText().toInt() > 0; }
                 else if ( reader.name() == "auto_login" )
                 { mbAutoLogin = reader.readElementText().toInt() > 0; }
+                else if ( reader.name() == "auto_rpp" )
+                { mbAutoRpp = reader.readElementText().toInt() > 0; }
                 else if ( reader.name() == "intf" )
                 { mIntfIndex = reader.readElementText().toInt(); }
                 else if ( reader.name() == "refresh" )

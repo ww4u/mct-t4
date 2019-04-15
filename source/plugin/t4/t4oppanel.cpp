@@ -14,7 +14,7 @@
 #include "../model/debugtable.h"
 
 #define WIDGET_MONITOR_INDEX 4
-#define DEFAULT_PAGE_INDEX 3
+#define DEFAULT_PAGE_INDEX 2
 namespace mrx_t4{
 
 static double _stepRatio[]={ 0.1,0.5,
@@ -216,11 +216,11 @@ void T4OpPanel::setupUi()
     QStringList strList;
     strList <<"logout"
             <<"operate"
-            <<"dio"
+//            <<"dio"
 //            <<"homing"
             <<"control"
-            <<"monitor"
             <<"debug"
+            <<"monitor"            
             <<"diagnosis"
               ;
     Q_ASSERT( strList.size() == ui->tabWidget->count() );
@@ -365,7 +365,6 @@ void T4OpPanel::updateRefreshPara( QEvent *e )
 {
     //! record now
     ui->spinBox_RecordNumber->setValue( mRefreshPara.recNow );
-    ui->spinRecNow->setValue( mRefreshPara.recNow );
 
     //! target
     ui->doubleSpinBox_target_position_x->setValue( mRefreshPara.poseAim.x );
@@ -1022,9 +1021,42 @@ logDbg()<<QThread::currentThreadId();
 int T4OpPanel::_onSequence( QVariant var )
 {
     int ret;
+
+    //! rpp
+    Q_ASSERT( NULL != m_pPlugin->pref() );
+    if ( m_pPlugin->pref()->mbAutoRpp )
+    {
+        check_connect_ret( -1 );
+        ret = mrgRobotGoHome( robot_var(),
+                              pRobo->mHomeTimeout*1000 );
+        if ( ret != 0 )
+        {
+            sysError( tr("RPP fail") );
+            return ret;
+        }
+    }
+
+    //! find the first line
+    int anchorSeq = -1;
+    for( int i = 0; i < mSeqList.size(); i++ )
+    {
+        if ( mSeqList.at(i)->mbAnchor )
+        {
+            anchorSeq = i;
+            break;
+        }
+    }
+
+    if ( anchorSeq < 0 )
+    {
+        sysError( tr("Anchor fail") );
+        return -2;
+    }
+
+    //! do loop
     do
     {
-        for( int i = 0; i < mSeqList.size(); i++ )
+        for( int i = anchorSeq; i < mSeqList.size(); i++, anchorSeq = 0 )
         {
             if ( QThread::currentThread()->isInterruptionRequested() )
             { return 0; }
@@ -1970,6 +2002,12 @@ int T4OpPanel::buildSequence( QList<SequenceItem*> &list )
             pItem->bLine = var.at( 9 ).toBool();
             pItem->mDo = var.at( 10 ).toInt();
             pItem->delay = var.at( 11 ).toDouble();
+
+            //! \note split the first anchor
+            if ( i == ui->tvDebug->currentIndex().row() && j == 0 )
+            { pItem->mbAnchor = true; }
+            else
+            { pItem->mbAnchor = false; }
 
             //! \note the last one
             if ( j == varList.size() - 1 )

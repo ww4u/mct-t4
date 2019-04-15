@@ -1,6 +1,9 @@
 
 #include <QThread>
 #include <QException>
+
+#include "assist.h"
+
 void localSleep( int ms )
 {
     while( ms > 0 )

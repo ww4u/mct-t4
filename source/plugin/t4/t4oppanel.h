@@ -72,7 +72,9 @@ public:
     double x, y, z, pw, h, v;
     bool bLine;
     double delay;
-    int mDo;    //!
+    int mDo;
+
+    bool mbAnchor;  //! the first line for running
 
 public:
     SequenceItem()
@@ -92,6 +94,9 @@ public:
         bLine = false;
 
         delay = 0;
+        mDo = 0;
+
+        mbAnchor = false;
     }
 
     SequenceItem &operator=( const SequenceItem &item )
@@ -110,6 +115,9 @@ public:
 
         delay = item.delay;
         bLine = item.bLine;
+        mDo = item.mDo;
+
+        mbAnchor = item.mbAnchor;
 
         return *this;
     }

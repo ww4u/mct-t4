@@ -2,7 +2,6 @@
 #+AUTHOR: nieshizhong
 #+OPTIONS: ^:nil
 
-
 * device.h
 ** int mrgFindGateWay(int  bus, char *output, int len, int method);
    查找网关。
@@ -157,13 +156,15 @@
 
 * megarobot.h
 ** MRX_TYPE(enum)
-   MRX_TYPE_T4 = 0
-   MRX_TYPE_AS
-   MRX_TYPE_H2
-   MRX_TYPE_DELTA
-   MRX_TYPE_RAW
-   MRX_TYPE_OTHER
-   MRX_TYPE_UNKOWN
+|-----------------+---|
+| MRX_TYPE_T4     | 0 |
+| MRX_TYPE_AS     | 1 |
+| MRX_TYPE_H2     | 2 |
+| MRX_TYPE_DELTA  | 3 |
+| MRX_TYPE_RAW    | 4 |
+| MRX_TYPE_OTHER  | 5 |
+| MRX_TYPE_UNKOWN | 6 |
+|-----------------+---|
 
 ** int mrgBuildRobot(ViSession vi, char *robotType, char *chlist, int *robotname);
    构建一个机器人
@@ -404,7 +405,17 @@
    返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示等待超时
    说明：绝对位置移动,末端保持不动
 
-** int mrgRobotMoveOn(ViSession vi, int name, int wavetable, int ax, float speed);
+** int mrgRobotMoveOn(ViSession vi, int name, int wavetable, float x, float y, float z, float speed);
+   机器人末端沿指定的方向持续运动
+   vi :visa设备句柄
+   name: 机器人名称
+   wavetable ：波表索引，－1表示使用默认索引（调用mrgSetRobotWavetable设置的波表索引）
+   x,y,z: 方向向量
+   speed : 移动的速度。单位： 度/秒。
+   返回值：0表示执行成功，否则表示过程中出错
+   说明：非阻塞函数
+
+** int mrgRobotAxisMoveOn(ViSession vi, int name, int wavetable, int ax, float speed);
    机器人末端沿指定的坐标轴持续运动
    vi :visa设备句柄
    name: 机器人名称
@@ -414,7 +425,7 @@
    返回值：0表示执行成功，否则表示过程中出错
    说明：非阻塞函数，此命令只对H2有效
 
-** int mrgRobotMoveJog(ViSession vi, int name, int wavetable, int ax, float cr_time, float cr_speed, float speed);
+** int mrgRobotAxisMoveJog(ViSession vi, int name, int wavetable, int ax, float cr_time, float cr_speed, float speed);
    机器人末端沿指定的坐标轴持续运动(阶跃运行）
    vi :visa设备句柄
    name: 机器人名称
@@ -813,6 +824,22 @@
    axi0 axi1,axi2,axi3：各轴相对于零点的角度值. axi0:基座; axi1:大臂;axi2:小臂;axi3:腕
    返回值：0表示执行成功， －1：表示执行失败
    此命令只对T4有效！！！！！
+
+** int mrgGetRobotWristPose(ViSession vi, int name, float *angle);
+   获取机器人腕关节的姿态角度(相对于90度的算法零位)
+   vi :visa设备句柄
+   name: 机器人名称
+   angle: 腕关节角度(垂直向下时为零)
+   返回值：零表示执行正确,-1表示执行错误
+
+** int mrgSetRobotWristPose(ViSession vi, int name, float angle,float time,int timeout_ms);
+  控制机器人腕关节的姿态角度(相对于90度的算法零位)
+  vi :visa设备句柄
+  name: 机器人名称
+  angle: 腕关节角度(垂直向下时为零)
+  time : 时间
+  timeout_ms: 表示等待执行的超时时间. 如果为-1,表示不等待. 0表示无限等待. >0 表示等待的超时时间. 单位:ms
+  返回值：零表示执行正确,-1表示执行错误
 
 
 * mrqdevice.h

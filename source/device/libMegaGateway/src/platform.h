@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h> 
+#include <math.h>
 
 #define strcpy_s(x,y,z)     	strncpy(x,z,y)
 
@@ -40,9 +41,6 @@
 #define STRCASECMP(x,y)		_stricmp(x,y)
 #define STRTOK_S(x,y,z)		strtok_s(x,y,z)
 
-#include "../../assist.h"
-#define Sleep( x )    localSleep( x );
-
 #define EXPORT_API __declspec(dllexport)
 #define CALL    __cdecl
 //#define CALL  __stdcall
@@ -73,9 +71,7 @@ typedef unsigned long ViSession;
 #define STRCASECMP(x,y)		strcasecmp(x,y)
 #define STRTOK_S(x,y,z)     	strtok_r(x,y,z)
 //#define _strnicmp           strncasecmp
-//#define Sleep(x)            usleep( ((x) * 1000) )
-#include "../../assist.h"
-#define Sleep( x )    localSleep( x );
+#define Sleep(x)            usleep( ((x) * 1000) )
 
 #define EXPORT_API 
 #define CALL

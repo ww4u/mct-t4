@@ -921,6 +921,32 @@ EXPORT_API int CALL mrgRobotMove(ViSession vi, int name,int wavetable, float x, 
     return mrgRobotWaitEnd(vi, name, wavetable, timeout_ms);
 }
 /*
+* 机器人末端沿指定的方向持续运动
+* vi :visa设备句柄
+* name: 机器人名称
+* wavetable ：波表索引，－1表示使用默认索引（调用mrgSetRobotWavetable设置的波表索引）
+* x,y,z: 方向向量
+* speed : 移动的速度。单位： 度/秒。
+* 返回值：0表示执行成功，否则表示过程中出错
+* 说明：非阻塞函数
+*/
+EXPORT_API int CALL mrgRobotMoveOn(ViSession vi, int name, int wavetable, float x, float y, float z, float speed)
+{
+    char args[SEND_BUF];
+    if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
+    {
+        snprintf(args, SEND_BUF, "ROBOT:MOVE:CONTInue %d,%f,%f,%f,%f,%d\n", name, x, y, z, speed, wavetable);
+    }
+    else
+    {
+        snprintf(args, SEND_BUF, "ROBOT:MOVE:CONTInue %d,%f,%f,%f,%f\n", name, x,y,z,speed);
+    }
+    if (busWrite(vi, args, strlen(args)) == 0) {
+        return -1;
+    }
+    return 0;
+}
+/*
 * 机器人末端沿指定的坐标轴持续运动
 * vi :visa设备句柄
 * name: 机器人名称
@@ -930,7 +956,7 @@ EXPORT_API int CALL mrgRobotMove(ViSession vi, int name,int wavetable, float x, 
 * 返回值：0表示执行成功，否则表示过程中出错
 * 说明：非阻塞函数
 */
-EXPORT_API int CALL mrgRobotMoveOn(ViSession vi, int name, int wavetable, int ax, float speed)
+EXPORT_API int CALL mrgRobotAxisMoveOn(ViSession vi, int name, int wavetable, int ax, float speed)
 {
     char args[SEND_BUF];
     if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
@@ -958,7 +984,7 @@ EXPORT_API int CALL mrgRobotMoveOn(ViSession vi, int name, int wavetable, int ax
 * 返回值：0表示执行成功，否则表示过程中出错
 * 说明：非阻塞函数
 */
-EXPORT_API int CALL mrgRobotMoveJog(ViSession vi, int name, int wavetable, int ax,float cr_time,float cr_speed, float speed)
+EXPORT_API int CALL mrgRobotAxisMoveJog(ViSession vi, int name, int wavetable, int ax,float cr_time,float cr_speed, float speed)
 {
     char args[SEND_BUF];
     if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
@@ -2236,34 +2262,43 @@ EXPORT_API int CALL mrgGetRobotFold(ViSession vi, int name, int wavetable, float
 */
 EXPORT_API int CALL mrgGetRobotWristPose(ViSession vi, int name, float *angle)
 {
-  int ret = 0;
-  float f32JointAngle = 0.0f;
-  ret = mrgGetRobotJointAngle(vi, name, 3, &f32JointAngle);
-  if (ret <= 0)
-  {
-    return -1;
-  }
-  *angle = f32JointAngle - 90.0f;
-  return 0;
+    int ret = 0;
+    float f32JointAngle = 0.0f;
+    ret = mrgGetRobotJointAngle(vi, name, 3, &f32JointAngle);
+    if (ret <= 0)
+    {
+        return -1;
+    }
+    *angle = f32JointAngle - 90.0f;
+    return 0;
 }
 /*
 * 控制机器人腕关节的姿态角度(相对于90度的算法零位)
 * vi :visa设备句柄
 * name: 机器人名称
 * angle: 腕关节角度(垂直向下时为零)
-* time : 时间
+* speed : 速度 (度/秒)
 * timeout_ms: 表示等待执行的超时时间. 如果为-1,表示不等待. 0表示无限等待. >0 表示等待的超时时间. 单位:ms
 * 返回值：零表示执行正确,-1表示执行错误
 */
-EXPORT_API int CALL mrgSetRobotWristPose(ViSession vi, int name, float angle,float time,int timeout_ms)
+EXPORT_API int CALL mrgSetRobotWristPose(ViSession vi, int name, float angle, float speed, int timeout_ms)
 {
-  int ret = 0;
-  float f32Current = 0.0f,f32Target = 0.0f;
-  ret = mrgGetRobotJointAngle(vi, name, 3, &f32Current);
-  if (ret <= 0)
-  {
-    return -1;
-  }
-  f32Target = 90.0f + angle - f32Current;
-  return mrgRobotJointMove(vi, name, 3, f32Target, time, timeout_ms);  
+    int ret = 0;
+    float f32Current = 0.0f, f32Target = 0.0f;
+    ret = mrgGetRobotJointAngle(vi, name, 3, &f32Current);
+    if (ret <= 0)
+    {
+        return -1;
+    }
+    f32Target = 90.0f + angle - f32Current;
+    //走一个最短距离
+    if (f32Target > 180.0f)
+    {
+        f32Target = f32Target - 360.0f;
+    }
+    else if (f32Target < -180.0f)
+    {
+        f32Target = 360.0f + f32Target;
+    }
+    return mrgRobotJointMove(vi, name, 3, f32Target, fabs(f32Target)/speed, timeout_ms);
 }

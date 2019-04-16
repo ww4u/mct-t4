@@ -379,13 +379,17 @@ class MageGateway(object):
     def mrgRobotMove(self, fd, roboname, wavetable, x, y, z, time, timeout_ms):
         return self._dll.mrgRobotMove(fd, roboname, wavetable, c_float(x), c_float(y), c_float(z), c_float(time), timeout_ms)
 
-### int mrgRobotMoveOn(ViSession vi, int name, int wavetable, int ax, float speed);
-    def mrgRobotMoveOn(self, fd, roboname, wavetable, ax, speed):
-        return self._dll.mrgRobotMoveOn(fd, roboname, wavetable, ax, c_float(speed))
+### int mrgRobotMoveOn(ViSession vi, int name, int wavetable, float x, float y, float z, float speed);
+    def mrgRobotMoveOn(self, fd, roboname, wavetable, x, y, z, speed):
+        return self._dll.mrgRobotMoveOn(fd, roboname, wavetable, c_float(x), c_float(y), c_float(z), c_float(speed))
 
-### int mrgRobotMoveJog(ViSession vi, int name, int wavetable, int ax, float cr_time, float cr_speed, float speed);
-    def mrgRobotMoveJog(self, fd, roboname, wavetable, ax, cr_time, cr_speed, speed):
-        return self._dll.mrgRobotMoveJog(fd, roboname, wavetable, ax, c_float(cr_time), c_float(cr_speed), c_float(speed))
+### int mrgRobotAxisMoveOn(ViSession vi, int name, int wavetable, int ax, float speed);
+    def mrgRobotAxisMoveOn(self, fd, roboname, wavetable, ax, speed):
+        return self._dll.mrgRobotAxisMoveOn(fd, roboname, wavetable, ax, c_float(speed))
+
+### int mrgRobotAxisMoveJog(ViSession vi, int name, int wavetable, int ax, float cr_time, float cr_speed, float speed);
+    def mrgRobotAxisMoveJog(self, fd, roboname, wavetable, ax, cr_time, cr_speed, speed):
+        return self._dll.mrgRobotAxisMoveJog(fd, roboname, wavetable, ax, c_float(cr_time), c_float(cr_speed), c_float(speed))
 
 ### int mrgRobotRelMove(ViSession vi, int name, int wavetable, float x, float y, float z, float time, int timeout_ms);
     def mrgRobotRelMove(self, fd, roboname, wavetable, x, y, z, time, timeout_ms):
@@ -658,6 +662,19 @@ class MageGateway(object):
 ### int mrgGetRobotFold(ViSession vi, int name, int wavetable, float axi0, float axi1, float axi2, float axi3);
     def mrgGetRobotFold(self, fd, roboname, wavetable, axi0, axi1, axi2, axi3):
         return self._dll.mrgGetRobotFold(fd, roboname, wavetable, c_float(axi0), c_float(axi1), c_float(axi2), c_float(axi3))
+
+### int mrgGetRobotWristPose(ViSession vi, int name, float *angle);
+    def mrgGetRobotWristPose(self, fd, roboname):
+        result = c_float(-1)
+        ret = self._dll.mrgGetRobotWristPose(fd, roboname, byref(result) )
+        if ret < 0:
+            return -1
+        else:
+            return result.value
+
+### int mrgSetRobotWristPose(ViSession vi, int name, float angle,float time,int timeout_ms);
+    def mrgSetRobotWristPose(self, fd, roboname, angle, time, timeout_ms):
+        return self._dll.mrgSetRobotWristPose(fd, roboname, c_float(angle), c_float(time), timeout_ms)
 
 ############################################################
 ### "mrqdevice.h"

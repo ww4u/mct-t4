@@ -46,11 +46,11 @@ if __name__ == "__main__":
     print( "device firmWareFpga:", firmWareFpga )
 
 
-    deviceSerialNumber = gateway.mrgGetDeviceSerialNumber(visa, deviceName)
-    print( "device deviceSerialNumber:", deviceSerialNumber )
+    # deviceSerialNumber = gateway.mrgGetDeviceSerialNumber(visa, deviceName)
+    # print( "device deviceSerialNumber:", deviceSerialNumber )
 
-    ret = gateway.mrgWriteDeviceSerial(visa, deviceName, "MRQM11040518C71111")
-    print("mrgWriteDeviceSerial", ret)
+    # ret = gateway.mrgWriteDeviceSerial(visa, deviceName, "MRQM11040518C71111")
+    # print("mrgWriteDeviceSerial", ret)
     
     deviceSerialNumber = gateway.mrgGetDeviceSerialNumber(visa, deviceName)
     print( "device deviceSerialNumber:", deviceSerialNumber )
@@ -76,18 +76,14 @@ if __name__ == "__main__":
 
 
 ################################
+##  H2 示例 
+    '''
     robotName = gateway.mrgBuildRobot(visa, "MRX-H2", 
                                             "0@%d,1@%d" % (deviceName, deviceName) )
     print("robot name:", robotName)
 
-
-    # robotName = gateway.mrgBuildRobotNamed(visa, "MRX-H2", 
-    #                                         "0@%d,1@%d" % (deviceName, deviceName),
-    #                                         886 )
-    # print("robot name:", robotName)
-
     ### 回零
-    gateway.mrgRobotGoHomeWithParam(visa, robotName, 100, 0)
+    gateway.mrgRobotGoHome(visa, robotName, 0)
     print( gateway.mrgGetRobotCurrentPosition(visa, robotName) )
 
     ### 走一圈
@@ -102,9 +98,16 @@ if __name__ == "__main__":
     
     gateway.mrgRobotRelMove(visa, robotName, -1, -100, 0, 0, 0.5, 0)
     print( gateway.mrgGetRobotCurrentPosition(visa, robotName) )
-    
+    '''
+################################
+##  T4 示例     
+    robotName = gateway.mrgBuildRobot(visa, "MRX-T4", 
+                                            "0@%d,1@%d,2@%d,3@%d,4@%d" % (deviceName, deviceName,deviceName, deviceName,deviceName) )
+    print("robot name:", robotName)
 
-
+    ### 回零
+    gateway.mrgRobotGoHome(visa, robotName, 0)
+    print( gateway.mrgGetRobotCurrentPosition(visa, robotName) )
 
 ################################
     ret =  gateway.mrgCloseGateWay(visa)

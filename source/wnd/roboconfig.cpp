@@ -41,6 +41,8 @@ RoboConfig::RoboConfig(QWidget *parent) :
 
     m_pActionReboot = NULL;
     m_pActionPowerOff = NULL;
+    m_pActionExportLog = NULL;
+    m_pActionUpdate = NULL;
 
     m_pProjectContextMenu = NULL;
     m_pActionDelAll = NULL;
@@ -93,6 +95,13 @@ void RoboConfig::retranslateUi()
     m_pRootNode->setText( 0, tr("Project"));
     foreach (XPlugin* xPlug, mPluginList){
         xPlug->retranslateUi();
+    }
+}
+
+void RoboConfig::userRoleChanged()
+{
+    foreach (XPlugin* xPlug, mPluginList){
+        xPlug->emit_setting_changed( XPage::e_setting_user_role, QVariant() );
     }
 }
 
@@ -434,10 +443,21 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
             if ( NULL== m_pRoboContextMenu->addSeparator() )
             { gc_context_menu(); return; }
 
+            m_pActionExportLog = m_pRoboContextMenu->addAction( tr("Export log...") );
+            if ( NULL == m_pActionExportLog )
+            { gc_context_menu(); return; }
+            m_pActionExportLog->setIcon( QIcon(":/res/image/icon/219.png") );
+
+            m_pActionUpdate = m_pRoboContextMenu->addAction( tr("Update...") );
+            if ( NULL == m_pActionUpdate )
+            { gc_context_menu(); return; }
+            m_pActionUpdate->setIcon( QIcon(":/res/image/icon/fuzhi.png") );
+
             QAction *actionExplorer = m_pRoboContextMenu->addAction( tr("Explorer") );
-            actionExplorer->setIcon( QIcon(":/res/image/icon/manage.png") );
             if ( NULL == actionExplorer )
             { gc_context_menu(); return; }
+            actionExplorer->setIcon( QIcon(":/res/image/icon/manage.png") );
+
 
             //! add action
             connect(m_pActionOpen, SIGNAL(triggered(bool)), this, SLOT(slotActionOpen()));
@@ -451,6 +471,8 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
             connect(m_pActionPowerOff, SIGNAL(triggered(bool)), this, SLOT(slotActionPoweroff()));
 
             connect(actionDelete, SIGNAL(triggered(bool)), this, SLOT(slotActionDelete()));
+            connect(m_pActionExportLog, SIGNAL(triggered(bool)),this, SLOT(slotActionExportLog()) );
+            connect(m_pActionUpdate, SIGNAL(triggered(bool)),this, SLOT(slotActionUpdate()) );
             connect(actionExplorer, SIGNAL(triggered(bool)), this, SLOT(slotActionExplorer()));
         }
 
@@ -466,6 +488,9 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
 
             m_pActionReboot->setVisible( m_pCurPlugin->isRebootable() );
             m_pActionPowerOff->setVisible( m_pCurPlugin->isPowerOffable() );
+
+            m_pActionExportLog->setVisible( true );
+            m_pActionUpdate->setVisible( true );
         }
         else
         {
@@ -478,6 +503,9 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
 
             m_pActionReboot->setVisible( false );
             m_pActionPowerOff->setVisible( false );
+
+            m_pActionExportLog->setVisible( false );
+            m_pActionUpdate->setVisible( false );
         }
 
         //! pop proc
@@ -568,6 +596,16 @@ void RoboConfig::slotActionDelete()
         delete m_pCurTreeItem;
 
     QApplication::restoreOverrideCursor();
+}
+
+void RoboConfig::slotActionExportLog()
+{
+    //! \todo api for export
+}
+
+void RoboConfig::slotActionUpdate()
+{
+    //! \todo update
 }
 
 void RoboConfig::slotActionExplorer()
@@ -686,11 +724,11 @@ QStackedWidget *RoboConfig::stackWidget()
 
 bool RoboConfig::downloadVisible()
 {
-    return m_pPref->mSysMode == 1;
+    return true;
 }
 bool RoboConfig::resetVisible()
 {
-    return m_pPref->mSysMode == 1;
+    return true;
 }
 
 void RoboConfig::stackPageChange( QTreeWidgetItem *current,
@@ -816,6 +854,9 @@ void RoboConfig::createRobot( const QStringList &strInfos )
 
     //! try load the setup from the local
     plugin->emit_load();
+
+    //! adapt the role
+    plugin->emit_setting_changed( XPage::e_setting_user_role, QVariant() );
 
     //! open
     if ( plugin->open() == 0 )

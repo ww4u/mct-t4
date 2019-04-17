@@ -27,6 +27,7 @@ public:
     ~RoboConfig();
 
     void retranslateUi();
+    void userRoleChanged();
 
 signals:
     void signal_focus_in( const QString &model, const QString &help );
@@ -119,6 +120,9 @@ private slots:
     void slotActionPoweroff();
 
     void slotActionDelete();
+
+    void slotActionExportLog();
+    void slotActionUpdate();
     void slotActionExplorer();
 
 //    void slotStoreEnd(int val);
@@ -141,6 +145,7 @@ private:
     QMenu *m_pRoboContextMenu;
     QAction *m_pActionOpen, *m_pActionClose, *m_pActionRst;
     QAction *m_pActionHome, *m_pActionFold, *m_pActionReboot, *m_pActionPowerOff;
+    QAction *m_pActionExportLog, *m_pActionUpdate;
 
     QMenu *m_pProjectContextMenu;
     QAction *m_pActionDelAll;

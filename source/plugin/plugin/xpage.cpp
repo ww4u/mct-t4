@@ -80,7 +80,7 @@ SysPara * XPage::pref()
 { return m_pPref; }
 
 bool XPage::isQualified()
-{ return sysMode() == sysPara::e_sys_admin; }
+{ return true; }
 
 void XPage::adapteToUserMode( sysPara::eSysMode mode )
 {
@@ -138,6 +138,9 @@ void XPage::updateUi()
 void XPage::updateData()
 {}
 
+void XPage::updateRole()
+{}
+
 //! exchange
 int XPage::upload()
 { return 0; }
@@ -174,9 +177,9 @@ void XPage::onSetting( XSetting setting )
         { exitMission(); }
     }
     else if ( setting.mSetting == XPage::e_setting_update_ui )
-    {
-        updateUi();
-    }
+    { updateUi(); }
+    else if ( setting.mSetting == XPage::e_setting_user_role )
+    { updateRole(); }
     else
     {}
 }

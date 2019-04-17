@@ -31,31 +31,31 @@ bool sysHasArgv( const QString &arg )
     return false;
 }
 
-void sysInfo( const QString &str )
-{ MainWindow::requestLogout( str, LogStr::log_info ); }
+void sysInfo( const QString &str, eOutHandle oHandle )
+{ MainWindow::requestLogout( str, LogStr::log_info, (int)oHandle ); }
 
-void sysInfo( const QString &info, const QString &str2 )
+void sysInfo( const QString &info, const QString &str2, eOutHandle oHandle )
 {
     QString str = QString("%1 %2").arg(info).arg(str2);
-    MainWindow::requestLogout( str, LogStr::log_info );
+    MainWindow::requestLogout( str, LogStr::log_info, (int)oHandle );
 }
 
-void sysInfo( const QString &info, const int &val )
+void sysInfo( const QString &info, const int &val, eOutHandle oHandle )
 {
     QString str = QString("%1 : %2").arg(info).arg(val);
-    MainWindow::requestLogout( str, LogStr::log_info );
+    MainWindow::requestLogout( str, LogStr::log_info, (int)oHandle );
 }
 
-void sysWarning( const QString &str )
-{ MainWindow::requestLogout( str, LogStr::log_warning ); }
+void sysWarning( const QString &str, eOutHandle oHandle )
+{ MainWindow::requestLogout( str, LogStr::log_warning, (int)oHandle ); }
 
-void sysError( const QString &str )
-{ MainWindow::requestLogout( str, LogStr::log_error ); }
+void sysError( const QString &str, eOutHandle oHandle )
+{ MainWindow::requestLogout( str, LogStr::log_error, (int)oHandle ); }
 
-void sysError( const QString &info , const int &val)
+void sysError( const QString &info , const int &val, eOutHandle oHandle )
 {
     QString str = QString("%1 : %2").arg(info).arg(val);
-    MainWindow::requestLogout( str, LogStr::log_error );
+    MainWindow::requestLogout( str, LogStr::log_error, (int)oHandle );
 }
 
 void sysProgress( const QString &info, bool b, int now, int mi, int ma )

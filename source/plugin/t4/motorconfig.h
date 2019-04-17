@@ -26,6 +26,8 @@ protected:
     virtual void spyEdited();
     virtual void retranslateUi();
 
+    virtual void updateRole();
+
 private:
     Ui::MotorConfig *ui;
 };

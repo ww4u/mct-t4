@@ -18,14 +18,13 @@ SysPref::SysPref( const SysPara &para, QWidget *parent ) :
     mbAutoExpand = para.mbAutoExpand;
     mbAutoLoad = para.mbAutoLoad;
     mbAutoSearch = para.mbAutoSearch;
-//    mbAutoLogin = para.mbAutoLogin;
 
     mbAutoRpp = para.mbAutoRpp;
 
     mIntfIndex = para.mIntfIndex;
     mRefreshIndex = para.mRefreshIndex;
     mStyleIndex = para.mStyleIndex;
-    mSysMode = para.mSysMode;
+//    mSysMode = para.mSysMode;
 
     mPlugins = para.mPlugins;
 

@@ -258,6 +258,8 @@ public:
     virtual void updateUi();
     virtual void updateData();
 
+    virtual void updateRole();
+
     virtual void onSetting(XSetting setting);
 
     void home();

@@ -41,7 +41,7 @@ public:
     int mIntfIndex;
     int mRefreshIndex;
 
-    int mSysMode;
+//    int mSysMode;
 
     QByteArray mPw;
 

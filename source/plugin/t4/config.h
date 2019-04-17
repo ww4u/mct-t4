@@ -33,6 +33,8 @@ protected:
     virtual void spyEdited();
     virtual void retranslateUi();
 
+    virtual void updateRole();
+
 private slots:
     void on_cmbTypeTerminal_currentIndexChanged(int index);
 

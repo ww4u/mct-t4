@@ -14,14 +14,18 @@
 #define pref_file_path  QDir::homePath() + "/AppData/Roaming/mct"
 #define pref_file_name  pref_file_path + "/mct_pref.xml"
 
+//! + time
+#define log_file_path   pref_file_path + "/log"
+#define log_file_name   log_file_path + "/" + QDateTime::currentDateTime().toString("yyyy_M_d")+".dat"
+
 MainWindow *MainWindow::_pBackendProxy = NULL;
 
-void MainWindow::requestLogout( const QString &str, LogStr::eLogLevel lev )
+void MainWindow::requestLogout( const QString &str, LogStr::eLogLevel lev, int oHandle )
 {
     if( NULL == MainWindow::_pBackendProxy )
     { return; }
 
-    MainWindow::_pBackendProxy->emit_logout( str, lev );
+    MainWindow::_pBackendProxy->emit_logout( str, lev, oHandle );
 }
 
 void MainWindow::requestProgress( const QString &info, bool b, int now, int mi, int ma  )
@@ -258,8 +262,8 @@ void MainWindow::buildConnection()
 
 
     //! logout
-    connect( this, SIGNAL(signal_logout(const QString &,int)),
-             this, SLOT(slot_logout(const QString &, int)),
+    connect( this, SIGNAL(signal_logout(const QString &,int, int )),
+             this, SLOT(slot_logout(const QString &, int, int )),
              Qt::QueuedConnection );
     connect( m_pSysLogout, SIGNAL(signal_focus_in(const QString &,const QString &)),
              this, SLOT(slot_focus_in(const QString &, const QString &)) );
@@ -293,8 +297,8 @@ logDbg();
     do
     {
 //#ifdef QT_DEBUG
-        mPref.mSysMode = 1;
-        setSysMode( sysPara::eSysMode( mPref.mSysMode ) );
+//        mPref.mSysMode = 0;
+//        setSysMode( sysPara::eSysMode( mPref.mSysMode ) );
 //        mLogInRet == QDialog::Accepted;
         break;
 //#endif
@@ -327,12 +331,8 @@ logDbg();
 
     }while( 0 );
 
-    //! sys mode
-    if ( mPref.mSysMode == 0 )
-    { m_pLabConVer->setText( tr("Operator") ); }
-    else
-    { m_pLabConVer->setText( tr("Administrator") ); }
-    setSysMode( (sysPara::eSysMode)mPref.mSysMode );
+    setSysMode( (sysPara::eSysMode)0 );
+    slot_role_changed();
 
     //! post startup
     QTimer::singleShot( 0, this, SLOT(slot_post_startup()) );
@@ -463,6 +463,15 @@ void MainWindow::explorerDocFile( const QString &fileName )
     QProcess::execute( "explorer.exe", args );
 }
 
+void MainWindow::slot_role_changed()
+{
+    //! sys mode
+    if ( sysMode() == 0 )
+    { m_pLabConVer->setText( tr("Operator") ); }
+    else
+    { m_pLabConVer->setText( tr("Administrator") ); }
+}
+
 void MainWindow::slot_plugin_operable( bool b )
 {
     ui->actionDownload->setEnabled( b && m_roboConfig->downloadVisible() );
@@ -567,14 +576,46 @@ void MainWindow::slot_emergency_stop()
     m_pStopWidget->setEnabled( true );
 }
 
-void MainWindow::slot_logout( const QString &str, int lev )
+void MainWindow::slot_logout( const QString &str, int lev, int outHandle )
 {
     //! \note add the time stamp
     QString fullStr;
 
-    fullStr = QDateTime::currentDateTime().toString( "yyyy/M/d h:m:s.z ") + str;
+    fullStr = QDateTime::currentDateTime().toString( "yyyy/M/d h:m:s.z, ") + str;
 
-    mLogModel.append( fullStr, (LogStr::eLogLevel)lev );
+    //! to console
+    if ( outHandle == 0 )
+    { mLogModel.append( fullStr, (LogStr::eLogLevel)lev ); }
+
+    //! to file
+    if ( outHandle == 1 )
+    {
+        QString lineStr = LogStr::toString( (LogStr::eLogLevel)lev ) + "," + fullStr + "\n";
+
+        //! sure the path
+        if ( assurePath( log_file_path ) != 0 )
+        { return; }
+
+        QFile file( log_file_name );
+        if ( file.open( QIODevice::Append ) )
+        {
+            do
+            {
+                QTextCodec *pCoder = QTextCodec::codecForName("UTF-8");
+                if ( NULL == pCoder )
+                { break; }
+
+                QTextEncoder *pEnc = pCoder->makeEncoder();
+                if ( NULL == pEnc )
+                { break; }
+
+                file.write( pEnc->fromUnicode( lineStr ) );
+                delete pEnc;
+            }while( 0 );
+
+            file.close();
+        }
+    }
 }
 
 void MainWindow::slot_status( const QString &str )
@@ -704,9 +745,9 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     QWidget::resizeEvent(event);
 }
 
-void MainWindow::emit_logout( const QString &info, int level )
+void MainWindow::emit_logout( const QString &info, int level, int oHandle )
 {
-    emit signal_logout( info, level );
+    emit signal_logout( info, level, oHandle );
 }
 
 void MainWindow::emit_status( const QString &str )
@@ -732,7 +773,7 @@ void MainWindow::retranslateUi()
 
 void MainWindow::adaptToUserRole()
 {
-    ui->actionChange_Password->setVisible( mPref.mSysMode == sys_user_administrator );
+    ui->actionChange_Password->setVisible( sysMode() == sysPara::e_sys_admin );
 }
 
 void MainWindow::savePref()
@@ -831,11 +872,9 @@ void MainWindow::on_actionSwitch_User_triggered()
         else
         { setSysMode( sysPara::e_sys_admin ); }
 
-        //! save mode
-        mPref.mSysMode = logIn.getUserRole();
-//        mPref.mbAutoLogin = logIn.getAutoLogin();
+        slot_role_changed();
 
-        //! \todo broadcast the user changed
+        m_roboConfig->userRoleChanged();
     }
     else
     {

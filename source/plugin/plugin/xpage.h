@@ -37,6 +37,7 @@ public:
         e_setting_opened,
         e_setting_update_ui,
         e_setting_mission_working,
+        e_setting_user_role,
 
         e_setting_user = 1024,
     };
@@ -82,6 +83,8 @@ public:
 
     virtual void updateUi();        //! data -> ui
     virtual void updateData();
+
+    virtual void updateRole();
 
     virtual int upload();
     virtual int download();

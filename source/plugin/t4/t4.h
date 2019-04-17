@@ -135,6 +135,9 @@ public:
     virtual int diff();
 
 protected:
+    virtual int onXEvent( XEvent *pEvent );
+
+protected:
     int _uploadProc();
     int uploadProc();
 

@@ -53,6 +53,48 @@ do{ \
 
 class XPluginWorkingThread;
 class XPluginBgThread;
+
+class XEvent : public QEvent
+{
+public:
+    enum XEventType
+    {
+        e_xevent_base = QEvent::User + 1,
+        e_xevent_start = QEvent::User + 1,
+        e_xevent_stop,
+        e_xevent_pause,
+        e_xevent_estop,
+
+        e_xevent_prompt,    //! v1: 0,1,2; v2: info
+
+        e_xevent_plugins = QEvent::User + 128,
+    };
+
+public:
+    XEvent( int tpe) : QEvent( (QEvent::Type)tpe )
+    {}
+
+    XEvent( int tpe, QVariant v1 ) : QEvent( (QEvent::Type)tpe )
+    { mVar1 = v1; }
+
+    XEvent( int tpe, QVariant v1, QVariant v2 ) : QEvent( (QEvent::Type)tpe )
+    {
+        mVar1 = v1;
+        mVar2 = v2;
+    }
+
+public:
+    QVariant mVar1;
+    QVariant mVar2;
+
+public:
+    void setPara( QVariant v1, QVariant v2 )
+    {
+        mVar1 = v1;
+        mVar2 = v2;
+    }
+};
+
 class XPlugin : public XPluginIntf
 {
     Q_OBJECT
@@ -181,8 +223,8 @@ public:
     void cancelBgWorking();
 
 protected:
-    //! on some event
-    void onXEvent( );
+    virtual bool event(QEvent *event);
+    virtual int onXEvent( XEvent *pEvent );
 
 protected:
     QTreeWidgetItem *m_pRootWidgetItem;

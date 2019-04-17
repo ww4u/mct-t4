@@ -433,7 +433,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
         ret = mrgGetRobotCurrentRecord( robot_var(),
                                         &rec );
         if ( ret != 0 )
-        { sysError( tr("Record read fail") ); break; }
+        { sysError( tr("Record read fail"), e_out_log ); break; }
         else
         {
             mRefreshPara.recNow = rec;
@@ -442,7 +442,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
         ret = mrgGetRobotTargetPosition( robot_var(),
                                          &fx, &fy, &fz );
         if ( ret != 0 )
-        { sysError( tr("Target read fail") ); break; }
+        { sysError( tr("Target read fail"), e_out_log ); break; }
         else
         {
             mRefreshPara.poseAim.x = fx;
@@ -454,7 +454,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
         ret = mrgGetRobotCurrentPosition( robot_var(),
                                           &fx, &fy, &fz );
         if ( ret != 0 )
-        { sysError( tr("Current read fail") ); break; }
+        { sysError( tr("Current read fail"), e_out_log ); break; }
         {
             mRefreshPara.poseNow.x = fx;
             mRefreshPara.poseNow.y = fy;
@@ -513,7 +513,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
             { bHomeValid = false; }
             else
             {
-                sysError( tr("Homeing status") );
+                sysError( tr("Homeing status"), e_out_log );
                 break;
             }
 
@@ -546,7 +546,7 @@ int T4OpPanel::monitorRefreshProc( void *pContext )
     //! to local
     MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
     Q_ASSERT( NULL != pRobo );
-//logDbg()<<QThread::currentThreadId();
+
     if ( pRobo->isOpened() )
     {}
     else
@@ -563,7 +563,7 @@ int T4OpPanel::monitorRefreshProc( void *pContext )
         ret = mrgMRQReportQueue_Query( device_var(), joint, 0, array);
         if ( ret <= 0 )
         {
-            sysError( tr("Monitor update fail") );
+            sysError( tr("Monitor update fail"), e_out_log );
             continue;
         }
 
@@ -773,6 +773,12 @@ void T4OpPanel::updateData()
 
     pRobo->mbMctEn = ui->controllerStatus->isMctChecked();
     pRobo->mbAxisPwr = ui->controllerStatus->isDevicePowerEnable();
+}
+
+void T4OpPanel::updateRole()
+{
+    //! \note the role changed
+    switchCoordMode();
 }
 
 void T4OpPanel::onSetting(XSetting setting)
@@ -1272,6 +1278,8 @@ int T4OpPanel::exportDataSets( QTextStream &stream,
 //! switch mode
 void T4OpPanel::switchCoordMode()
 {
+    bool bAbsAngleVisible = ( sysMode() == sysPara::e_sys_admin);
+
     //! joint
     if ( ui->radCoordJoint->isChecked() )
     {
@@ -1279,9 +1287,10 @@ void T4OpPanel::switchCoordMode()
         ui->joint2->setJointName( "Shoulder" );
         ui->joint3->setJointName( "Elbow" );
 
-        ui->joint1->setAngleVisible( true, true );
-        ui->joint2->setAngleVisible( true, true );
-        ui->joint3->setAngleVisible( true, true );
+        ui->joint1->setAngleVisible( bAbsAngleVisible, true );
+        ui->joint2->setAngleVisible( bAbsAngleVisible, true );
+        ui->joint3->setAngleVisible( bAbsAngleVisible, true );
+        ui->joint4->setAngleVisible( bAbsAngleVisible, true );
 
         ui->joint1->setViewMode( Joint::view_angle );
         ui->joint2->setViewMode( Joint::view_angle );
@@ -1297,6 +1306,7 @@ void T4OpPanel::switchCoordMode()
         ui->joint1->setAngleVisible( false, false );
         ui->joint2->setAngleVisible( false, false );
         ui->joint3->setAngleVisible( false, false );
+        ui->joint4->setAngleVisible( bAbsAngleVisible, true );
 
         ui->joint1->setViewMode( Joint::view_distance );
         ui->joint2->setViewMode( Joint::view_distance );

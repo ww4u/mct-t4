@@ -188,6 +188,13 @@ int MRX_T4::diff()
     return 0;
 }
 
+int MRX_T4::onXEvent( XEvent *pEvent )
+{
+    //! \todo stop/estop/
+
+    return XPlugin::onXEvent( pEvent );
+}
+
 int MRX_T4::_uploadProc()
 {
     //! foeach pages

@@ -19,6 +19,7 @@ INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include"
 }
 
 INCLUDEPATH += "../../widget"
+INCLUDEPATH += "./widget"
 
 INCLUDEPATH += "../../device/libMegaGateway/src"
 
@@ -53,7 +54,8 @@ SOURCES = \
     comassist.cpp \
     model\treeitem.cpp \
     model\treemodel.cpp \
-    motorcurrent.cpp
+    motorcurrent.cpp \
+    widget/ioindicator.cpp
 
 
 HEADERS = \
@@ -82,7 +84,8 @@ HEADERS = \
     comassist.h \
     model\treeitem.h \
     model\treemodel.h \
-    motorcurrent.h
+    motorcurrent.h \
+    widget/ioindicator.h
 
 FORMS += \
     t4oppanel.ui \
@@ -101,7 +104,8 @@ FORMS += \
     coordinate.ui \
     coordpara.ui \
     advpara.ui \
-    motorcurrent.ui
+    motorcurrent.ui \
+    widget/ioindicator.ui
 
 RESOURCES += ../../../res/res.qrc
 

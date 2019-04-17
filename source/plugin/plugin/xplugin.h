@@ -84,9 +84,6 @@ public:
     virtual void rstErrorMgrTable();
     virtual void rstRecordTable();
 
-//    virtual void ErrorMgrTable( QByteArray &ary );
-//    virtual void RecordTable( QByteArray &ary );
-
     virtual void onOperateAble( bool b );
 public:
     virtual int save( const QString &filename );
@@ -105,6 +102,9 @@ public:
     virtual void rst();
     virtual void home();
     virtual void fold();
+
+    virtual void reboot();
+    virtual void powerOff();
 
     virtual int upload();
     virtual int download();
@@ -179,6 +179,10 @@ public:
                         const QString &desc=""
                         );
     void cancelBgWorking();
+
+protected:
+    //! on some event
+    void onXEvent( );
 
 protected:
     QTreeWidgetItem *m_pRootWidgetItem;

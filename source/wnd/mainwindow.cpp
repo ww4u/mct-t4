@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 {
     ui->setupUi(this);
 
-    mLogInRet = QDialog::Accepted;
+//    mLogInRet = QDialog::Accepted;
 
     m_pLabStatus = NULL;
     m_pLabMctVer = NULL;
@@ -293,39 +293,37 @@ logDbg();
     do
     {
 //#ifdef QT_DEBUG
-//        mPref.mSysMode = 0;
-//        setSysMode( sysPara::eSysMode( mPref.mSysMode ) );
-//        break;
+        mPref.mSysMode = 1;
+        setSysMode( sysPara::eSysMode( mPref.mSysMode ) );
+//        mLogInRet == QDialog::Accepted;
+        break;
 //#endif
 
-        //! skip, use the last mode
-        if ( mPref.mbAutoLogin )
-        { break; }
-logDbg();
-        //! log in
-        LogIn logIn;
-        logIn.setPw( mPref.mPw );
+//        //! skip, use the last mode
+//        if ( mPref.mbAutoLogin )
+//        { break; }
 
-        mLogInRet = logIn.exec();
-        if ( mLogInRet == QDialog::Accepted )
-        {
-            if ( logIn.getUserRole() == 0 )
-            { setSysMode( sysPara::e_sys_user ); }
-            else
-            { setSysMode( sysPara::e_sys_admin ); }
+//        //! log in
+//        LogIn logIn;
+//        logIn.setPw( mPref.mPw );
 
-            //! save mode
-            mPref.mSysMode = logIn.getUserRole();
-            mPref.mbAutoLogin = logIn.getAutoLogin();
+//        mLogInRet = logIn.exec();
+//        if ( mLogInRet == QDialog::Accepted )
+//        {
+//            if ( logIn.getUserRole() == 0 )
+//            { setSysMode( sysPara::e_sys_user ); }
+//            else
+//            { setSysMode( sysPara::e_sys_admin ); }
 
-            QTimer::singleShot( 0, this, SLOT( slot_save_sysPref()) );
+//            //! save mode
+//            mPref.mSysMode = logIn.getUserRole();
 
-        }
-        else
-        {
-//            QTimer::singleShot( 0, qApp, SLOT(quit()) );
-            return;
-        }
+//            QTimer::singleShot( 0, this, SLOT( slot_save_sysPref()) );
+//        }
+//        else
+//        {
+//            return;
+//        }
 
     }while( 0 );
 
@@ -720,8 +718,8 @@ void MainWindow::emit_progress( const QString &info, bool b, int now, int mi, in
 void MainWindow::emit_prompt( const QString &info, int lev )
 { emit signal_prompt( info, lev ); }
 
-int MainWindow::loginRet()
-{ return mLogInRet; }
+//int MainWindow::loginRet()
+//{ return mLogInRet; }
 
 void MainWindow::retranslateUi()
 {
@@ -819,6 +817,32 @@ void MainWindow::on_actionChange_Password_triggered()
     {}
 }
 
+void MainWindow::on_actionSwitch_User_triggered()
+{
+    //! log in
+    LogIn logIn;
+    logIn.setPw( mPref.mPw );
+
+    int ret = logIn.exec();
+    if ( ret == QDialog::Accepted )
+    {
+        if ( logIn.getUserRole() == 0 )
+        { setSysMode( sysPara::e_sys_user ); }
+        else
+        { setSysMode( sysPara::e_sys_admin ); }
+
+        //! save mode
+        mPref.mSysMode = logIn.getUserRole();
+//        mPref.mbAutoLogin = logIn.getAutoLogin();
+
+        //! \todo broadcast the user changed
+    }
+    else
+    {
+        return;
+    }
+}
+
 //! test used
 #include "../plugin/factory/pluginfactory.h"
 void MainWindow::on_actiontest_triggered()
@@ -854,4 +878,5 @@ void MainWindow::on_actionRead_me_triggered()
 {
     explorerDocFile( "readme.txt");
 }
+
 

@@ -200,6 +200,11 @@ void XPlugin::home()
 void XPlugin::fold()
 {}
 
+void XPlugin::reboot()
+{}
+void XPlugin::powerOff()
+{}
+
 int XPlugin::upload()
 { return 0; }
 int XPlugin::download()

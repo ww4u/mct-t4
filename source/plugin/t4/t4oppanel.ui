@@ -112,7 +112,7 @@
          </widget>
          <widget class="QWidget" name="tab">
           <attribute name="title">
-           <string>Operate</string>
+           <string>Display</string>
           </attribute>
           <layout class="QHBoxLayout" name="horizontalLayout_6">
            <property name="spacing">
@@ -853,6 +853,9 @@
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
+                </property>
+                <property name="inputMethodHints">
+                 <set>Qt::ImhNone</set>
                 </property>
                 <property name="text">
                  <string>Reserved</string>

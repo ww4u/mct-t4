@@ -109,16 +109,6 @@
       </spacer>
      </item>
      <item>
-      <widget class="QCheckBox" name="chkAutoLogin">
-       <property name="layoutDirection">
-        <enum>Qt::RightToLeft</enum>
-       </property>
-       <property name="text">
-        <string>Auto login</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QDialogButtonBox" name="buttonBox">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>

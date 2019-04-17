@@ -20,7 +20,7 @@ MRX_T4::MRX_T4( QObject *parent ) : XPlugin( parent )
     m_pRecordView = NULL;
     m_pOpPanel = NULL;
 
-    mAttr = plugin_attr_foldable;
+    mAttr = (ePluginAttr)(plugin_attr_foldable | plugin_attr_reboot_able | plugin_attr_poweroff_able);
 }
 
 MRX_T4::~MRX_T4()
@@ -30,7 +30,6 @@ MRX_T4::~MRX_T4()
 
 //! role: page
 //! role+1: plugin
-
 QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
 {
     //! root

@@ -39,6 +39,9 @@ RoboConfig::RoboConfig(QWidget *parent) :
     m_pActionHome = NULL;
     m_pActionFold = NULL;
 
+    m_pActionReboot = NULL;
+    m_pActionPowerOff = NULL;
+
     m_pProjectContextMenu = NULL;
     m_pActionDelAll = NULL;
 
@@ -418,6 +421,19 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
             if ( NULL== m_pRoboContextMenu->addSeparator() )
             { gc_context_menu(); return; }
 
+            m_pActionReboot = m_pRoboContextMenu->addAction( tr("Reboot") );
+            m_pActionReboot->setIcon( QIcon(":/res/image/icon/332.png") );
+            if ( NULL == m_pActionReboot )
+            { gc_context_menu(); return; }
+
+            m_pActionPowerOff = m_pRoboContextMenu->addAction( tr("Power Off") );
+            m_pActionPowerOff->setIcon( QIcon(":/res/image/icon/246.png") );
+            if ( NULL == m_pActionPowerOff )
+            { gc_context_menu(); return; }
+
+            if ( NULL== m_pRoboContextMenu->addSeparator() )
+            { gc_context_menu(); return; }
+
             QAction *actionExplorer = m_pRoboContextMenu->addAction( tr("Explorer") );
             actionExplorer->setIcon( QIcon(":/res/image/icon/manage.png") );
             if ( NULL == actionExplorer )
@@ -430,6 +446,9 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
 
             connect(m_pActionHome, SIGNAL(triggered(bool)), this, SLOT(slotActionHome()));
             connect(m_pActionFold, SIGNAL(triggered(bool)), this, SLOT(slotActionFold()));
+
+            connect(m_pActionReboot, SIGNAL(triggered(bool)), this, SLOT(slotActionReboot()));
+            connect(m_pActionPowerOff, SIGNAL(triggered(bool)), this, SLOT(slotActionPoweroff()));
 
             connect(actionDelete, SIGNAL(triggered(bool)), this, SLOT(slotActionDelete()));
             connect(actionExplorer, SIGNAL(triggered(bool)), this, SLOT(slotActionExplorer()));
@@ -444,6 +463,9 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
 
             m_pActionHome->setVisible( true );
             m_pActionFold->setVisible( m_pCurPlugin->isFoldable() );
+
+            m_pActionReboot->setVisible( m_pCurPlugin->isRebootable() );
+            m_pActionPowerOff->setVisible( m_pCurPlugin->isPowerOffable() );
         }
         else
         {
@@ -453,6 +475,9 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
 
             m_pActionHome->setVisible( false );
             m_pActionFold->setVisible( false );
+
+            m_pActionReboot->setVisible( false );
+            m_pActionPowerOff->setVisible( false );
         }
 
         //! pop proc
@@ -515,6 +540,17 @@ void RoboConfig::slotActionFold()
 {
     Q_ASSERT( NULL != m_pCurPlugin );
     m_pCurPlugin->fold();
+}
+
+void RoboConfig::slotActionReboot()
+{
+    Q_ASSERT( NULL != m_pCurPlugin );
+    m_pCurPlugin->reboot();
+}
+void RoboConfig::slotActionPoweroff()
+{
+    Q_ASSERT( NULL != m_pCurPlugin );
+    m_pCurPlugin->powerOff();
 }
 
 void RoboConfig::slotActionDelete()

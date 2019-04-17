@@ -127,6 +127,9 @@ public:
     virtual void home();
     virtual void fold();
 
+    virtual void reboot();
+    virtual void powerOff();
+
     virtual int upload();
     virtual int download();
     virtual int diff();

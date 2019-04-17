@@ -212,6 +212,10 @@ public:
     CPose poseAim;
 
     bool bHomeValid;
+
+    //! \todo IOs, status
+
+    QString mRecordName;
 };
 
 class T4OpPanel : public XPage

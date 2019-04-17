@@ -49,6 +49,11 @@ void XPage::retranslateUi()
 void XPage::onPluginChanged()
 {}
 
+void XPage::translateUi()
+{
+    retranslateUi();
+}
+
 void XPage::attachPlugin( XPlugin *pPlugin )
 {
     Q_ASSERT( NULL != pPlugin );

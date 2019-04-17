@@ -55,9 +55,6 @@ int LogIn::getUserRole()
     return ui->comboBox->currentIndex();
 }
 
-bool LogIn::getAutoLogin()
-{ return ui->chkAutoLogin->isChecked(); }
-
 void LogIn::on_comboBox_currentIndexChanged(int index)
 {
     bool bV;

@@ -63,6 +63,8 @@ protected:
     virtual void onPluginChanged();
 
 public:
+    void translateUi();
+
     void attachPlugin( XPlugin *pPlugin );
     XPlugin *pulgin();
 

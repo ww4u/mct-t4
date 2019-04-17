@@ -22,7 +22,6 @@ public:
     void setPw( const QByteArray &ary );
 
     int getUserRole();
-    bool getAutoLogin();
 
 private slots:
     void on_comboBox_currentIndexChanged(int index);

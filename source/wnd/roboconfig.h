@@ -115,6 +115,9 @@ private slots:
     void slotActionHome();
     void slotActionFold();
 
+    void slotActionReboot();
+    void slotActionPoweroff();
+
     void slotActionDelete();
     void slotActionExplorer();
 
@@ -137,7 +140,7 @@ private:
 
     QMenu *m_pRoboContextMenu;
     QAction *m_pActionOpen, *m_pActionClose, *m_pActionRst;
-    QAction *m_pActionHome, *m_pActionFold;
+    QAction *m_pActionHome, *m_pActionFold, *m_pActionReboot, *m_pActionPowerOff;
 
     QMenu *m_pProjectContextMenu;
     QAction *m_pActionDelAll;

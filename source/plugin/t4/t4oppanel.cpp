@@ -257,6 +257,9 @@ void T4OpPanel::retranslateUi()
     //! base ui
     ui->retranslateUi( this );
 
+    //! to the control status
+    ui->controllerStatus->translateUi();
+
     //! cmb stepx
     for( int i = 0; i < mStepxList.size(); i++ )
     {
@@ -403,6 +406,8 @@ void T4OpPanel::updateRefreshPara( QEvent *e )
 
     //! home valid
     ui->radHome->setChecked( mRefreshPara.bHomeValid );
+
+    //! \todo IOs,status,warning,error
 }
 
 int T4OpPanel::posRefreshProc( void *pContext )
@@ -494,6 +499,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
 
         //! \todo wrist current and target
 
+        //! \todo device status: running/stoped/error_stoped
 
         //! home valid?
         ret = mrgGetRobotHomeRequire( robot_var() );

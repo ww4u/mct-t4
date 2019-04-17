@@ -90,6 +90,12 @@ void T4Para::rst()
     mPackagesAxes[1] = +18.8;
     mPackagesAxes[2] = -57.4;
     mPackagesAxes[3] = -103;
+
+    //! digital inputs name
+    if( listIoName.size() !=0 )
+        listIoName.clear();
+    listIoName << QString("recordBit1") << QString("recordBit2") << QString("recordBit3") << QString("recordBit4")
+               << QString("recordBit5") << QString("START") << QString("RESET");
 }
 
 double T4Para::velocity()
@@ -186,6 +192,11 @@ int T4Para::serialOut( QXmlStreamWriter &writer )
     writer.writeStartElement("slow");
         writer.writeTextElement( "mult", QString::number( mSlowMult ) );
         writer.writeTextElement( "div", QString::number( mSlowDiv ) );
+    writer.writeEndElement();
+
+    //! digital inputs
+    writer.writeStartElement("digital_inputs");
+        writer.writeTextElement("name", QString(listIoName.join(",")));
     writer.writeEndElement();
 
     return 0;
@@ -379,6 +390,13 @@ int T4Para::serialIn( QXmlStreamReader &reader )
                 { mSlowDiv = reader.readElementText().toInt(); }
                 else
                 { reader.skipCurrentElement(); }
+            }
+        }
+        else if ( reader.name() == "digital_inputs" )
+        {
+            if ( reader.name() == "name" ){
+                listIoName.clear();
+                listIoName = reader.readElementText().split( "," );
             }
         }
         else

@@ -15,6 +15,8 @@
 #include "../../model/delegate/dspindelegate.h"
 #include "../../model/delegate/ispindelegate.h"
 
+#include "iostate.h"
+
 //#define MONITOR_EVENT   (QEvent::Type)( QEvent::User + 1 )
 typedef QList<QPointF> PointList;
 
@@ -334,6 +336,11 @@ protected:
     QAction *m_pActionExportData;
     QAction *m_pActionCopy;
 
+    //! digital inputs
+    QMenu *m_pIOContextMenu;
+    QAction *m_pActionRename;
+    IoState *currentRenameObj;
+
 Q_SIGNALS:
 //    void signal_debug_enter( int i );
 //    void signal_debug_exit( int i );
@@ -359,6 +366,9 @@ protected Q_SLOTS:
     void slot_monitorExportImage();
     void slot_monitorExportData();
     void slot_monitorCopy();
+
+    void slot_digitalInputsCustomContextMenuRequested( const QPoint & );
+    void slot_Rename();
 
 //    void on_toolSingleXN_clicked();
 //    void on_toolSingleXP_clicked();

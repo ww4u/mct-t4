@@ -53,7 +53,9 @@ SOURCES = \
     comassist.cpp \
     model\treeitem.cpp \
     model\treemodel.cpp \
-    motorcurrent.cpp
+    motorcurrent.cpp \
+    iostate.cpp \
+    regexpinputdialog.cpp
 
 
 HEADERS = \
@@ -82,7 +84,9 @@ HEADERS = \
     comassist.h \
     model\treeitem.h \
     model\treemodel.h \
-    motorcurrent.h
+    motorcurrent.h \
+    iostate.h \
+    regexpinputdialog.h
 
 FORMS += \
     t4oppanel.ui \
@@ -101,7 +105,8 @@ FORMS += \
     coordinate.ui \
     coordpara.ui \
     advpara.ui \
-    motorcurrent.ui
+    motorcurrent.ui \
+    iostate.ui
 
 RESOURCES += ../../../res/res.qrc
 

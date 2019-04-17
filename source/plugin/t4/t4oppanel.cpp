@@ -13,6 +13,8 @@
 
 #include "../model/debugtable.h"
 
+#include "regexpinputdialog.h"
+
 #define WIDGET_MONITOR_INDEX 4
 #define DEFAULT_PAGE_INDEX 2
 namespace mrx_t4{
@@ -58,6 +60,10 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     m_pActionExportImage = NULL;
     m_pActionExportData = NULL;
     m_pActionCopy = NULL;
+
+    m_pIOContextMenu = NULL;
+    m_pActionRename = NULL;
+    currentRenameObj = NULL;
 
     //! data cache
 //    m_pCaches[0] = new DataCache( this ); m_pCaches[0]->mWSema.release();
@@ -142,6 +148,16 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     switchCoordMode();
 
     ui->btnRead->setVisible(false);
+
+    //! \todo
+    //! init digital inputs name
+    connect( ui->DIN1, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    connect( ui->DIN2, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    connect( ui->DIN3, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    connect( ui->DIN4, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    connect( ui->DIN5, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    connect( ui->START, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    connect( ui->RESET, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
 }
 
 T4OpPanel::~T4OpPanel()
@@ -260,10 +276,10 @@ void T4OpPanel::retranslateUi()
     ui->retranslateUi( this );
 
     //! cmb stepx
-    for( int i = 0; i < mStepxList.size(); i++ )
-    {
-        ui->cmbStepXx->setItemText( i, mStepxList.at( i ) );
-    }
+//    for( int i = 0; i < mStepxList.size(); i++ )
+//    {
+//        ui->cmbStepXx->setItemText( i, mStepxList.at( i ) );
+//    }
 
     //! joint name
     ui->joint1->setJointName( tr("Base") );
@@ -753,6 +769,15 @@ void T4OpPanel::updateUi()
 
     //! default page
     ui->tabWidget->setCurrentIndex( DEFAULT_PAGE_INDEX );
+
+    //! update digital inputs name
+    ui->DIN1->setName( pRobo->listIoName.at(0) );
+    ui->DIN2->setName( pRobo->listIoName.at(1) );
+    ui->DIN3->setName( pRobo->listIoName.at(2) );
+    ui->DIN4->setName( pRobo->listIoName.at(3) );
+    ui->DIN5->setName( pRobo->listIoName.at(4) );
+    ui->START->setName( pRobo->listIoName.at(5) );
+    ui->RESET->setName( pRobo->listIoName.at(6) );
 }
 
 void T4OpPanel::updateData()
@@ -1212,6 +1237,13 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
     { return -1; }
 
     //! \todo DO
+    int iVal = pItem->mDo;
+    for( int i = 0; i < 2; i++ ){
+        int t = iVal & 0x03;
+        //! set io state
+
+        iVal >> 2;
+    }
 
     return ret;
 }
@@ -1604,6 +1636,56 @@ void T4OpPanel::slot_monitorCopy()
     clipboard->setImage( pixmap.toImage() );
 }
 
+void T4OpPanel::slot_digitalInputsCustomContextMenuRequested( const QPoint &p )
+{logDbg();
+
+    IoState *pIoState = dynamic_cast<IoState *>(sender());
+
+    if( m_pIOContextMenu == NULL ){
+        m_pIOContextMenu = new QMenu( ui->groupBox );
+        if( m_pIOContextMenu ==NULL ){
+        return;
+    }
+    m_pActionRename = m_pIOContextMenu->addAction( tr( "Rename" ) );
+    if( m_pActionRename == NULL ){
+        delete m_pIOContextMenu;
+        m_pIOContextMenu = NULL;
+        return;
+    }
+    m_pActionRename->setIcon( QIcon(":/res/image/icon/stealth.png") );
+
+    connect( m_pActionRename, SIGNAL( triggered(bool)), this, SLOT(slot_Rename()) );
+
+    }else{
+    }
+    currentRenameObj = pIoState;
+    m_pIOContextMenu->exec(QCursor::pos());
+}
+
+void T4OpPanel::slot_Rename()
+{logDbg();
+
+    bool ok;
+    QRegExp regExp("\\w+");
+    regExp.setPatternSyntax(QRegExp::Wildcard);
+    QString text=RegExpInputDialog::getText(this, tr("Rename"), tr("New Name"), currentRenameObj->Name(), regExp, &ok);
+
+    if (ok && !text.isEmpty()){
+        if( currentRenameObj ){
+            currentRenameObj->setName( text );
+
+            //! update config.xml
+            MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
+            Q_ASSERT( pRobo != NULL );
+
+            pRobo->listIoName.clear();
+            pRobo->listIoName << ui->DIN1->Name() << ui->DIN2->Name() << ui->DIN3->Name() << ui->DIN4->Name()
+                              << ui->DIN5->Name() << ui->START->Name() << ui->RESET->Name();
+            //t->emit_save(); not work
+            pRobo->save( pRobo->homePath() + "/" + "config.xml" );
+        }
+    }
+}
 //void T4OpPanel::on_pushButton_2_clicked()
 //{
 //    int ret;

@@ -85,6 +85,9 @@ public:
     int mSlowMult, mSlowDiv;
 
     float mPackagesAxes[4];     //! four delta angles for package
+
+    //! digital inputs name
+    QStringList listIoName;
 };
 
 #endif // T4PARA_H

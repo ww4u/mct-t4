@@ -408,8 +408,8 @@ QPlainTextEdit:disabled, QLineEdit:disabled,QSpinBox:disabled,QDoubleSpinBox:dis
 QLineEdit:read-only
 
 {
-	background-color : gray;
-	/*background-color : transparent;*/
+	/*background-color : gray;*/
+	background-color : transparent;
 	color: white;
 }
 
@@ -556,6 +556,12 @@ QTreeView::item:hover, QListWidget::item:hover{
   /*border: 1px solid #1f2a3b */
   color:white;
   /*border:none;*/
+}
+
+QTreeWidget#tree_filetree,QListWidget#list_directory
+{
+background: white;
+color:black;
 }
 
  QTreeView::branch:has-siblings:!adjoins-item {

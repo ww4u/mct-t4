@@ -1,5 +1,4 @@
 
-#include "assist.h"
 #include "./libMegaGateway/src/bus.c"
 #include "./libMegaGateway/src/device.c"
 

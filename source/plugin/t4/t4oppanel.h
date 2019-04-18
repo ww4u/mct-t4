@@ -366,12 +366,8 @@ protected Q_SLOTS:
     void slot_monitorExportData();
     void slot_monitorCopy();
 
-//    void on_toolSingleXN_clicked();
-//    void on_toolSingleXP_clicked();
-//    void on_toolSingleYP_clicked();
-//    void on_toolSingleYN_clicked();
-//    void on_toolSingleZP_clicked();
-//    void on_toolSingleZN_clicked();
+    void slot_debug_delete();
+    void slot_debug_insert();
 
 private slots:
 //    void on_pushButton_starting_home_clicked();
@@ -380,7 +376,6 @@ private slots:
     void on_toolSingleAdd_clicked();
     void on_toolSingleEdit_clicked();
 
-//    void on_toolButton_15_clicked();
     void on_btnImport_clicked();
     void on_btnExport_clicked();
     void on_btnAdd_clicked();

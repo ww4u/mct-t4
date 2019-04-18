@@ -1,4 +1,5 @@
 #include "t4para.h"
+#include "../../include/mydef.h"
 
 T4Para::T4Para()
 {
@@ -31,11 +32,11 @@ void T4Para::rst()
     mAxisCurrents[3] = 1.8;
     mAxisCurrents[4] = 1.5;
 
-    mAxisIdleCurrents[0] = 0.5;
-    mAxisIdleCurrents[1] = 0.5;
-    mAxisIdleCurrents[2] = 0.5;
-    mAxisIdleCurrents[3] = 0.5;
-    mAxisIdleCurrents[4] = 0.5;
+    mAxisIdleCurrents[0] = 1;
+    mAxisIdleCurrents[1] = 1;
+    mAxisIdleCurrents[2] = 1;
+    mAxisIdleCurrents[3] = 1;
+    mAxisIdleCurrents[4] = 1;
 
     mAxisSwitchTimes[0] = 0.5;
     mAxisSwitchTimes[1] = 0.5;
@@ -45,10 +46,15 @@ void T4Para::rst()
 
     //! \note not change the zero
 
+    mbAxisSoftEnable = true;
+    mbAxisSafeEnable = true;
     for ( int i = 0; i < T4Para::_axis_cnt; i++ )
     {
         mAxisSoftUpper[ i ] = 180;
         mAxisSoftLower[ i ] = -180;
+
+        mAxisSafeUpper[ i ] = 180;
+        mAxisSafeLower[ i ] = -180;
     }
 
     mStepIndex = 6;
@@ -58,11 +64,11 @@ void T4Para::rst()
     mJointStepIndex = 6;
     mJointSpeed = 0.2;
 
-    for ( int i =0; i < 3; i++ )
+    for ( int i =0; i < sizeof_array(mCoordPara); i++ )
     {
-        mCoordPara[i].mPx = 0;
+        mCoordPara[i].mPx = 250;
         mCoordPara[i].mPy = 0;
-        mCoordPara[i].mPz = 0;
+        mCoordPara[i].mPz = 518.8;
 
         mCoordPara[i].mRa = 0;
         mCoordPara[i].mRb = 0;
@@ -103,6 +109,11 @@ int T4Para::serialOut( QXmlStreamWriter &writer )
         writer.writeTextElement( "type", QString::number( (int)mTerminalType ) );
     writer.writeEndElement();
 
+    writer.writeStartElement( "safe_limit" );
+        writer.writeTextElement( "soft_limit", QString::number( mbAxisSoftEnable) );
+        writer.writeTextElement( "safe_area", QString::number( mbAxisSafeEnable) );
+    writer.writeEndElement();
+
     for ( int i = 0; i < T4Para::_axis_cnt; i++ )
     {
         writer.writeStartElement("axis");
@@ -122,7 +133,7 @@ int T4Para::serialOut( QXmlStreamWriter &writer )
 
     writer.writeTextElement( "type", QString::number( (int)mCoord ) );
 
-    for ( int i = 0; i < 3; i++ )
+    for ( int i = 0; i < sizeof_array(mCoordPara); i++ )
     {
         writer.writeStartElement("para");
 
@@ -204,6 +215,20 @@ int T4Para::serialIn( QXmlStreamReader &reader )
                 { reader.skipCurrentElement(); }
             }
         }
+
+        else if ( reader.name() == "safe_limit" )
+        {
+            while( reader.readNextStartElement() )
+            {
+                if ( reader.name() == "soft_limit" )
+                { mbAxisSoftEnable = reader.readElementText().toInt() > 0; }
+                else if ( reader.name() == "safe_area" )
+                { mbAxisSafeEnable = reader.readElementText().toInt() > 0; }
+                else
+                { reader.skipCurrentElement(); }
+            }
+        }
+
         else if ( reader.name() == "axis" )
         {
             axisId++;

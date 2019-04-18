@@ -205,6 +205,9 @@ void MainWindow::setupToolBar()
 //    ui->mainToolBar->addAction( ui->actionStop );
 //    ui->mainToolBar->addAction( ui->actionIP );
 
+    //! \note view action
+    ui->menuView->addAction( ui->mainToolBar->toggleViewAction() );
+
 #ifdef _WIN32
     //! windows禁用这些功能
     ui->actionReboot->setVisible(false);

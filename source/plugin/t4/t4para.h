@@ -53,6 +53,8 @@ public:
 
 public:
     const static int _axis_cnt = 5;
+    const static int _limit_axis_cnt = 4;
+
     eTerminalType mTerminalType;
     float mAxisCurrents[ T4Para::_axis_cnt ];
     float mAxisIdleCurrents[ T4Para::_axis_cnt ];
@@ -60,8 +62,13 @@ public:
 
     double mAxisZero[ T4Para::_axis_cnt ];
 
+    bool mbAxisSoftEnable;
     double mAxisSoftUpper[ T4Para::_axis_cnt ];
     double mAxisSoftLower[ T4Para::_axis_cnt ];
+
+    bool mbAxisSafeEnable;
+    double mAxisSafeUpper[ T4Para::_axis_cnt ];
+    double mAxisSafeLower[ T4Para::_axis_cnt ];
 
     int mStepIndex;
     double mSpeed;      //! percent
@@ -70,7 +77,7 @@ public:
     int mJointStepIndex;
     double mJointSpeed;
 
-    Coordinate mCoordPara[3];
+    Coordinate mCoordPara[10+2];
 
     double mArmLength[3];
 

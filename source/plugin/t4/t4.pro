@@ -55,7 +55,10 @@ SOURCES = \
     model\treeitem.cpp \
     model\treemodel.cpp \
     motorcurrent.cpp \
-    widget/ioindicator.cpp
+    widget/ioindicator.cpp \
+    widget/keytableview.cpp \
+    widget/axislimit.cpp \
+    fileexplorer.cpp
 
 
 HEADERS = \
@@ -85,7 +88,10 @@ HEADERS = \
     model\treeitem.h \
     model\treemodel.h \
     motorcurrent.h \
-    widget/ioindicator.h
+    widget/ioindicator.h \
+    widget/keytableview.h \
+    widget/axislimit.h \
+    fileexplorer.h
 
 FORMS += \
     t4oppanel.ui \
@@ -105,7 +111,9 @@ FORMS += \
     coordpara.ui \
     advpara.ui \
     motorcurrent.ui \
-    widget/ioindicator.ui
+    widget/ioindicator.ui \
+    widget/axislimit.ui \
+    fileexplorer.ui
 
 RESOURCES += ../../../res/res.qrc
 

@@ -1,11 +1,15 @@
 #include "coordpara.h"
 #include "ui_coordpara.h"
-
+#include "../../include/mydef.h"
 CoordPara::CoordPara(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::CoordPara)
 {
     ui->setupUi(this);
+
+    ui->spinRa->setSuffix( char_deg );
+    ui->spinRb->setSuffix( char_deg );
+    ui->spinRc->setSuffix( char_deg );
 }
 
 CoordPara::~CoordPara()

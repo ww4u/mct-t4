@@ -20,10 +20,18 @@ public:
 
 public:
     virtual void updateUi();
+    virtual void updateData();
+
+    virtual int upload();
+    virtual int download();
+    virtual int diff();
 
 protected:
     virtual void spyEdited();
     virtual void retranslateUi();
+
+private slots:
+    void on_cmbUserCoord_currentIndexChanged(int index);
 
 private:
     Ui::Coordinate *ui;

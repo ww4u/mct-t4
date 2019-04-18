@@ -74,7 +74,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>3</number>
+          <number>1</number>
          </property>
          <property name="elideMode">
           <enum>Qt::ElideNone</enum>
@@ -425,22 +425,40 @@
                  <string>Target</string>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_15">
-                 <item row="2" column="1">
-                  <widget class="QDoubleSpinBox" name="doubleSpinBox_target_position_x">
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_13">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string>X:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="9" column="0">
+                  <widget class="QLabel" name="label_30">
+                   <property name="text">
+                    <string>Wrist:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="0">
+                  <widget class="QLabel" name="label_28">
+                   <property name="text">
+                    <string>Z:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="5" column="1">
+                  <widget class="QDoubleSpinBox" name="doubleSpinBox_target_position_z">
                    <property name="enabled">
                     <bool>false</bool>
                    </property>
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
-                   </property>
-                   <property name="font">
-                    <font>
-                     <weight>75</weight>
-                     <bold>true</bold>
-                    </font>
                    </property>
                    <property name="frame">
                     <bool>false</bool>
@@ -454,14 +472,8 @@
                    <property name="buttonSymbols">
                     <enum>QAbstractSpinBox::NoButtons</enum>
                    </property>
-                   <property name="specialValueText">
-                    <string notr="true"/>
-                   </property>
-                   <property name="prefix">
-                    <string notr="true"/>
-                   </property>
                    <property name="suffix">
-                    <string notr="true"> mm</string>
+                    <string>mm</string>
                    </property>
                    <property name="minimum">
                     <double>-100000000000.000000000000000</double>
@@ -471,31 +483,74 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="label_13">
+                 <item row="8" column="1">
+                  <widget class="QDoubleSpinBox" name="spinTerminalTarget">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="frame">
+                    <bool>false</bool>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   </property>
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                   <property name="buttonSymbols">
+                    <enum>QAbstractSpinBox::NoButtons</enum>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="9" column="1">
+                  <widget class="QDoubleSpinBox" name="spinWristTarget">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="frame">
+                    <bool>false</bool>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   </property>
+                   <property name="readOnly">
+                    <bool>true</bool>
+                   </property>
+                   <property name="buttonSymbols">
+                    <enum>QAbstractSpinBox::NoButtons</enum>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_14">
                    <property name="enabled">
                     <bool>false</bool>
                    </property>
                    <property name="text">
-                    <string>X:</string>
+                    <string>Y:</string>
                    </property>
                   </widget>
                  </item>
                  <item row="8" column="0">
-                  <widget class="QLabel" name="label_30">
+                  <widget class="QLabel" name="label_29">
                    <property name="text">
-                    <string>Wrist:</string>
+                    <string>Terminal:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="4" column="0">
-                  <widget class="QLabel" name="label_28">
-                   <property name="text">
-                    <string>Z:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
+                 <item row="3" column="1">
                   <widget class="QDoubleSpinBox" name="doubleSpinBox_target_position_y">
                    <property name="enabled">
                     <bool>false</bool>
@@ -541,23 +596,22 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="7" column="0">
-                  <widget class="QLabel" name="label_29">
-                   <property name="text">
-                    <string>Terminal:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="1">
-                  <widget class="QDoubleSpinBox" name="doubleSpinBox_target_position_z">
+                 <item row="2" column="1">
+                  <widget class="QDoubleSpinBox" name="doubleSpinBox_target_position_x">
                    <property name="enabled">
                     <bool>false</bool>
                    </property>
                    <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
                      <verstretch>0</verstretch>
                     </sizepolicy>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <weight>75</weight>
+                     <bold>true</bold>
+                    </font>
                    </property>
                    <property name="frame">
                     <bool>false</bool>
@@ -571,74 +625,20 @@
                    <property name="buttonSymbols">
                     <enum>QAbstractSpinBox::NoButtons</enum>
                    </property>
+                   <property name="specialValueText">
+                    <string notr="true"/>
+                   </property>
+                   <property name="prefix">
+                    <string notr="true"/>
+                   </property>
                    <property name="suffix">
-                    <string>mm</string>
+                    <string notr="true"> mm</string>
                    </property>
                    <property name="minimum">
                     <double>-100000000000.000000000000000</double>
                    </property>
                    <property name="maximum">
                     <double>100000000000.000000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="label_14">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="text">
-                    <string>Y:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="7" column="1">
-                  <widget class="QDoubleSpinBox" name="spinTerminalTarget">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="frame">
-                    <bool>false</bool>
-                   </property>
-                   <property name="alignment">
-                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                   </property>
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                   <property name="buttonSymbols">
-                    <enum>QAbstractSpinBox::NoButtons</enum>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="8" column="1">
-                  <widget class="QDoubleSpinBox" name="spinWristTarget">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="frame">
-                    <bool>false</bool>
-                   </property>
-                   <property name="alignment">
-                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                   </property>
-                   <property name="readOnly">
-                    <bool>true</bool>
-                   </property>
-                   <property name="buttonSymbols">
-                    <enum>QAbstractSpinBox::NoButtons</enum>
                    </property>
                   </widget>
                  </item>
@@ -2117,16 +2117,15 @@
    <container>1</container>
   </customwidget>
   <customwidget>
-
-   <class>IoState</class>
-   <extends>QWidget</extends>
-   <header>iostate.h</header>
-   <container>1</container>
-
    <class>KeyTableView</class>
    <extends>QTableView</extends>
    <header>keytableview.h</header>
-
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>IoState</class>
+   <extends>QWidget</extends>
+   <header>iostate.h</header>
   </customwidget>
  </customwidgets>
  <resources>

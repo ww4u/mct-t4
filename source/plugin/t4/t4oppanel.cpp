@@ -187,7 +187,9 @@ bool T4OpPanel::event(QEvent *e)
 
             if ( (int)pEvent->type() == OpEvent::debug_enter )
             {
-                on_debug_enter( pEvent->mVar1.toInt(), pEvent->mVar2.toInt()  );
+                on_debug_enter( pEvent->mVar1.toInt(),
+                                pEvent->mVar2.toInt(),
+                                pEvent->mVars );
             }
             else if ( (int)pEvent->type() == OpEvent::debug_exit )
             {   on_debug_exit( pEvent->mVar1.toInt(), pEvent->mVar2.toInt() ); }
@@ -836,13 +838,13 @@ void T4OpPanel::home()
 {
     QVariant var;
 
-    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onHoming), var );
+    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onHoming), var, tr("Homing") );
 }
 void T4OpPanel::fold()
 {
     QVariant var;
 
-    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onFolding), var );
+    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onFolding), var, tr("Folding") );
 }
 
 double T4OpPanel::localSpeed()
@@ -1011,7 +1013,7 @@ int T4OpPanel::onHoming( QVariant var )
     check_connect_ret( -1 );
 
     int ret;
-logDbg();
+logDbg()<<pRobo->mHomeTimeout;
     ret = mrgRobotGoHome( robot_var(),
                           pRobo->mHomeTimeout*1000 );
 logDbg();
@@ -1167,6 +1169,7 @@ int T4OpPanel::_onSequence( QVariant var )
     }
 
     //! do loop
+    QVariantList vars;
     do
     {
         for( int i = anchorSeq; i < mSeqList.size(); i++, anchorSeq = 0 )
@@ -1175,7 +1178,13 @@ int T4OpPanel::_onSequence( QVariant var )
             { return 0; }
 
             //! enter
-            post_debug_enter( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
+            vars.clear();
+            vars<<mSeqList.at(i)->x
+                <<mSeqList.at(i)->y
+                <<mSeqList.at(i)->z
+                <<mSeqList.at(i)->pw
+                <<mSeqList.at(i)->h;
+            post_debug_enter( mSeqList.at(i)->id, mSeqList.at(i)->vRow, vars );
 
             //! enable?
             if ( procSequenceEn( mSeqList.at( i )) )
@@ -2155,11 +2164,13 @@ int T4OpPanel::buildSequence( QList<SequenceItem*> &list )
     return 0;
 }
 
-void T4OpPanel::post_debug_enter( int id, int r )
+void T4OpPanel::post_debug_enter( int id, int r, QVariantList vars )
 {
     OpEvent *pEvent= new OpEvent( OpEvent::debug_enter, id, r );
     if ( NULL == pEvent )
     { return; }
+
+    pEvent->setVars( vars );
 
     qApp->postEvent( this, pEvent );
 //
@@ -2170,11 +2181,18 @@ void T4OpPanel::post_debug_exit( int id, int r )
 
 }
 
-void T4OpPanel::on_debug_enter( int id, int r )
+void T4OpPanel::on_debug_enter( int id, int r, QVariantList &vars )
 {
-    logDbg()<<id<<r;
     ui->tvDebug->selectRow( r );
     ui->doubleSpinBox_debugRecord->setValue( id );
+    ui->spinBox_RecordNumber->setValue( id );
+
+    ui->doubleSpinBox_target_position_x->setValue( vars.at(0).toDouble() );
+    ui->doubleSpinBox_target_position_y->setValue( vars.at(1).toDouble() );
+    ui->doubleSpinBox_target_position_z->setValue( vars.at(2).toDouble() );
+    ui->spinWristTarget->setValue( vars.at(3).toDouble() );
+    ui->spinTerminalTarget->setValue( vars.at(4).toDouble() );
+
 }
 void T4OpPanel::on_debug_exit( int id, int r )
 {

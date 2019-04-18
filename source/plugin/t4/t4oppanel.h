@@ -187,6 +187,7 @@ public:
 public:
     QVariant mVar1;
     QVariant mVar2;
+    QVariantList mVars;
 
 public:
     void setPara( QVariant v1, QVariant v2 )
@@ -194,6 +195,9 @@ public:
         mVar1 = v1;
         mVar2 = v2;
     }
+
+    void setVars( QVariantList &vars )
+    { mVars = vars; }
 };
 
 class CPose
@@ -308,10 +312,10 @@ protected:
 protected:
     int buildSequence( QList<SequenceItem*> &list );
 
-    void post_debug_enter( int id, int r );
+    void post_debug_enter( int id, int r, QVariantList list=QVariantList() );
     void post_debug_exit( int id, int r );
 
-    void on_debug_enter( int id, int r );
+    void on_debug_enter( int id, int r, QVariantList &vars );
     void on_debug_exit( int id, int r );
 
 private:

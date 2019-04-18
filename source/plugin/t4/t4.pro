@@ -57,7 +57,10 @@ SOURCES = \
     motorcurrent.cpp \
     iostate.cpp \
     regexpinputdialog.cpp \
-    widget/ioindicator.cpp
+    widget/ioindicator.cpp \
+    widget/keytableview.cpp \
+    widget/axislimit.cpp \
+    fileexplorer.cpp
 
 
 HEADERS = \
@@ -89,7 +92,10 @@ HEADERS = \
     motorcurrent.h \
     iostate.h \
     regexpinputdialog.h \
-    widget/ioindicator.h
+    widget/ioindicator.h \
+    widget/keytableview.h \
+    widget/axislimit.h \
+    fileexplorer.h
 
 FORMS += \
     t4oppanel.ui \
@@ -110,7 +116,9 @@ FORMS += \
     advpara.ui \
     motorcurrent.ui \
     iostate.ui \
-    widget/ioindicator.ui
+    widget/ioindicator.ui \
+    widget/axislimit.ui \
+    fileexplorer.ui
 
 RESOURCES += ../../../res/res.qrc
 

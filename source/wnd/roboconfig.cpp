@@ -855,9 +855,6 @@ void RoboConfig::createRobot( const QStringList &strInfos )
     //! try load the setup from the local
     plugin->emit_load();
 
-    //! adapt the role
-    plugin->emit_setting_changed( XPage::e_setting_user_role, QVariant() );
-
     //! open
     if ( plugin->open() == 0 )
     {}
@@ -865,6 +862,9 @@ void RoboConfig::createRobot( const QStringList &strInfos )
     {
         sysError(  strInfos.at(0) + " " + tr("open fail") );
     }
+
+    //! adapt the role
+    plugin->emit_setting_changed( XPage::e_setting_user_role, QVariant() );
 
     //! synclize the setup from the device
     //! \todo

@@ -354,7 +354,7 @@ EXPORT_API int CALL mrgSysWifiCheckState(ViSession vi, int timeout_ms)
     snprintf(args, SEND_BUF, "SYSTEM:NETWORK:WIFI:STATe?\n");
     while (time < timeout_ms)
     {
-        Sleep(200);
+        SLEEP(200);
         if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 1024)) <= 0)
         {
             continue;
@@ -632,7 +632,7 @@ EXPORT_API int CALL mrgSysUpdateFileStart(ViSession vi, char *filename)
         }
         if(ret == 1)
         {
-            Sleep(intervalTime);
+            SLEEP(intervalTime);
             time += intervalTime;
             continue;
         }

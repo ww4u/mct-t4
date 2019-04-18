@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>ControllerStatus</class>
  <widget class="QWidget" name="ControllerStatus">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -16,6 +19,9 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <widget class="QGroupBox" name="groupBox_9">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="minimumSize">
       <size>
        <width>0</width>
@@ -182,6 +188,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="btnAckError">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>2</horstretch>
@@ -219,19 +228,39 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="IoIndicator" name="radTo" native="true"/>
+       <widget class="IoIndicator" name="radTo" native="true">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
       <item row="3" column="0">
-       <widget class="IoIndicator" name="radMc" native="true"/>
+       <widget class="IoIndicator" name="radMc" native="true">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
       <item row="4" column="0">
-       <widget class="IoIndicator" name="radError" native="true"/>
+       <widget class="IoIndicator" name="radError" native="true">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
       <item row="5" column="0">
-       <widget class="IoIndicator" name="radWarning" native="true"/>
+       <widget class="IoIndicator" name="radWarning" native="true">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
       <item row="2" column="0">
-       <widget class="IoIndicator" name="radReady" native="true"/>
+       <widget class="IoIndicator" name="radReady" native="true">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
       <item row="0" column="0">
        <widget class="IoIndicator" name="radEn" native="true">

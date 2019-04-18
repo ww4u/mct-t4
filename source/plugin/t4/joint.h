@@ -54,6 +54,7 @@ public:
 
 protected:
     ViewMode mViewMode;
+    bool mAbsVisible;
     bool mbDeltaVisible;
 
 private:

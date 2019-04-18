@@ -1481,6 +1481,9 @@
                  <property name="alignment">
                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                  </property>
+                 <property name="buttonSymbols">
+                  <enum>QAbstractSpinBox::NoButtons</enum>
+                 </property>
                  <property name="specialValueText">
                   <string notr="true"/>
                  </property>
@@ -1624,9 +1627,18 @@
                 </spacer>
                </item>
                <item row="2" column="0" rowspan="10" colspan="17">
-                <widget class="QTableView" name="tvDebug">
+                <widget class="KeyTableView" name="tvDebug">
                  <property name="contextMenuPolicy">
                   <enum>Qt::DefaultContextMenu</enum>
+                 </property>
+                 <property name="dragEnabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="dragDropMode">
+                  <enum>QAbstractItemView::DragDrop</enum>
+                 </property>
+                 <property name="defaultDropAction">
+                  <enum>Qt::MoveAction</enum>
                  </property>
                  <property name="selectionMode">
                   <enum>QAbstractItemView::SingleSelection</enum>
@@ -2105,10 +2117,16 @@
    <container>1</container>
   </customwidget>
   <customwidget>
+
    <class>IoState</class>
    <extends>QWidget</extends>
    <header>iostate.h</header>
    <container>1</container>
+
+   <class>KeyTableView</class>
+   <extends>QTableView</extends>
+   <header>keytableview.h</header>
+
   </customwidget>
  </customwidgets>
  <resources>

@@ -7,10 +7,11 @@ Joint::Joint(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    mAbsVisible = true;
     mbDeltaVisible = true;
 
     //! delta
-    ui->label_2->setText( QChar(0x2206) );
+    ui->spinDelta->setPrefix( QChar(0x2206) );
     ui->spinAbs->setSuffix( char_deg );
     ui->spinDelta->setSuffix( char_deg );
 
@@ -52,9 +53,8 @@ void Joint::setViewMode( Joint::ViewMode v )
 
     if ( mViewMode == view_angle )
     {
-        ui->spinAbs->setVisible( true );
+        ui->spinAbs->setVisible( mAbsVisible );
         ui->spinDelta->setVisible( mbDeltaVisible );
-        ui->label_2->setVisible( mbDeltaVisible );
 
         ui->spinDist->setVisible( false );
     }
@@ -62,7 +62,6 @@ void Joint::setViewMode( Joint::ViewMode v )
     {
         ui->spinAbs->setVisible( false );
         ui->spinDelta->setVisible( false );
-        ui->label_2->setVisible( false );
 
         ui->spinDist->setVisible( true );
     }
@@ -87,8 +86,8 @@ void Joint::setAngleVisible( bool bAbs, bool bDelta )
 {
     ui->spinAbs->setVisible( bAbs );
     ui->spinDelta->setVisible( bDelta );
-    ui->label_2->setVisible( bDelta );
 
+    mAbsVisible = bAbs;
     mbDeltaVisible = bDelta;
 }
 

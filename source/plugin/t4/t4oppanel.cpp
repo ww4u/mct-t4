@@ -100,6 +100,11 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     connect( ui->tvDebug, SIGNAL(doubleClicked( const QModelIndex &)),
              this, SLOT(slot_debug_table_changed()) );
 
+    connect( ui->tvDebug, SIGNAL(signal_key_delete()),
+             this, SLOT(slot_debug_delete()) );
+    connect( ui->tvDebug, SIGNAL(signal_key_insert()),
+             this, SLOT(slot_debug_insert()) );
+
     connect( &mDebugTable, SIGNAL(signal_data_changed()),
              this, SLOT(slot_save_debug()) );
 
@@ -795,7 +800,6 @@ void T4OpPanel::updateData()
     pRobo->mStepIndex = ui->cmbStepXx->currentIndex();
     pRobo->mSpeed = ui->cmbSpeed->currentText().toDouble();
 
-
     pRobo->mbMctEn = ui->controllerStatus->isMctChecked();
     pRobo->mbAxisPwr = ui->controllerStatus->isDevicePowerEnable();
 }
@@ -876,7 +880,6 @@ void T4OpPanel::enterMission()
 void T4OpPanel::exitMission( )
 {
     ui->controllerStatus->setEnabled( true );
-
 
     for( int i = 0; i < ui->tabWidget->count();i++ )
     {
@@ -1702,56 +1705,17 @@ void T4OpPanel::slot_Rename()
         }
     }
 }
-//void T4OpPanel::on_pushButton_2_clicked()
-//{
-//    int ret;
-//    ret = m_pPlugin->save( "abc.xml" );
-//    logDbg()<<ret;
-//}
 
-//void T4OpPanel::on_toolSingleXN_clicked()
-//{
-//    _step( -1, 0, 0 );
-//}
-
-//void T4OpPanel::on_toolSingleXP_clicked()
-//{
-//    _step( 1, 0, 0 );
-//}
-
-//void T4OpPanel::on_toolSingleYP_clicked()
-//{
-//    _step( 0, 1, 0 );
-//}
-
-//void T4OpPanel::on_toolSingleYN_clicked()
-//{
-//    _step( 0, -1, 0 );
-//}
-
-//void T4OpPanel::on_toolSingleZP_clicked()
-//{
-//    _step( 0, 0, 1 );
-//}
-
-//void T4OpPanel::on_toolSingleZN_clicked()
-//{
-//    _step( 0, 0, -1 );
-//}
-
-//void T4OpPanel::on_pushButton_starting_home_clicked()
-//{
-//    QVariant var;
-
-//    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onHoming), var );
-//}
-
-//void T4OpPanel::on_btnFold_clicked()
-//{
-//    QVariant var;
-
-//    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onFolding), var );
-//}
+void T4OpPanel::slot_debug_delete()
+{
+    if ( ui->btnDel->isEnabled() )
+    { on_btnDel_clicked(); }
+}
+void T4OpPanel::slot_debug_insert()
+{
+    if ( ui->btnAdd->isEnabled() )
+    { on_btnAdd_clicked(); }
+}
 
 void T4OpPanel::on_toolSingleAdd_clicked()
 {
@@ -2220,6 +2184,10 @@ void T4OpPanel::on_debug_exit( int id, int r )
 //! start the run thread
 void T4OpPanel::on_toolButton_debugRun_clicked()
 {
+    //! invalid row
+    if ( !ui->tvDebug->currentIndex().isValid() && ui->tvDebug->model()->rowCount() > 0 )
+    { ui->tvDebug->selectRow( 0 ); }
+
     //! build
     mSeqMutex.lock();
         delete_all( mSeqList );

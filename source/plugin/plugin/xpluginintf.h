@@ -10,6 +10,8 @@ public:
     enum ePluginAttr{
         plugin_attr_none = 0,
         plugin_attr_foldable = 1,
+        plugin_attr_reboot_able = 2,
+        plugin_attr_poweroff_able = 4,
     };
 
     Q_OBJECT
@@ -61,6 +63,8 @@ public:
 
     bool isOpened();
     bool isFoldable();
+    bool isRebootable();
+    bool isPowerOffable();
 
     int deviceVi();
 

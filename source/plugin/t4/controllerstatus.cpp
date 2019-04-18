@@ -17,6 +17,16 @@ ControllerStatus::ControllerStatus(QWidget *parent) :
              this, SIGNAL(signal_ack_error()) );
 
     spyEdited();
+
+    //! debug
+    ui->radEn->setChecked( true );
+    ui->radError->setChecked( true );
+    ui->radWarning->setChecked( true );
+    ui->radReady->setChecked( true );
+
+    ui->radMc->setChecked( true );
+    ui->radTo->setChecked( true );
+
 }
 
 ControllerStatus::~ControllerStatus()
@@ -59,6 +69,34 @@ void ControllerStatus::spyEdited()
 
     install_spy();
 }
+
+void ControllerStatus::retranslateUi()
+{
+    //! base
+    ui->retranslateUi( this );
+
+    ui->radEn->setText( tr("Enable") );
+    ui->radReady->setText( tr("Ready") );
+    ui->radError->setText( tr("Error") );
+    ui->radMc->setText( tr("MC") );
+
+    ui->radTo->setText( tr("TO") );
+    ui->radWarning->setText( tr("Warning") );
+}
+
+void ControllerStatus::setOut( SysOut e, bool b )
+{}
+void ControllerStatus::setWorkingMode( const QString &mode )
+{ ui->edtOpMode->setText( mode ); }
+void ControllerStatus::setWarning( const QString &warning )
+{ ui->edtWarning->setText( warning ); }
+void ControllerStatus::setError( const QString &error )
+{ ui->edtError->setText( error ); }
+
+void ControllerStatus::setWorkingStatus( const QString &status )
+{ ui->labWorkingStatus->setText( status );}
+void ControllerStatus::setRecordName( const QString &name )
+{ ui->labReccordName->setText( name ); }
 
 void ControllerStatus::setMctChecked( bool b )
 { ui->chkMct->setChecked( b ); }

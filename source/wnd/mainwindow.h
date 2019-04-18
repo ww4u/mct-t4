@@ -41,7 +41,7 @@ public:
     ~MainWindow();
 
     static MainWindow *_pBackendProxy;
-    static void requestLogout( const QString &str, LogStr::eLogLevel lev );
+    static void requestLogout( const QString &str, LogStr::eLogLevel lev, int oHandle );
     static void requestProgress( const QString &info, bool b, int now, int mi=0, int ma = 100 );
     static void requestPrompt( const QString &info, int lev=2 );
 
@@ -52,12 +52,12 @@ protected:
     virtual void resizeEvent(QResizeEvent *event);
 
 public:
-    void emit_logout( const QString &info, int level );
+    void emit_logout( const QString &info, int level, int oHandle );
     void emit_status( const QString &str );
     void emit_progress( const QString &info, bool b, int now, int mi, int ma );
     void emit_prompt( const QString &info, int );
 
-    int loginRet();
+//    int loginRet();
 protected:
     void retranslateUi();
 
@@ -82,13 +82,14 @@ protected:
 
 signals:
     void signal_pref_changed();
-    void signal_logout( const QString &str, int lev );
+    void signal_logout( const QString &str, int lev, int outHandle );
     void signal_status( const QString &str );
 
     void signal_progress( const QString &info, bool b, int now, int mi, int ma );
     void signal_prompt( const QString &info, int lev );
 
 private slots:
+    void slot_role_changed();
     void slot_plugin_operable( bool b );
 
     void slot_request_sysOpPanel();
@@ -101,7 +102,9 @@ private slots:
 
     void slot_emergency_stop();
 
-    void slot_logout( const QString &str, int lev );
+    //! outHandle: 0, console
+    //!            1, log file
+    void slot_logout( const QString &str, int lev, int outHandle );
 
     void slot_status(const QString &str);
 
@@ -125,6 +128,8 @@ private slots:
 
     void on_actionChange_Password_triggered();
 
+    void on_actionSwitch_User_triggered();
+
     void on_actiontest_triggered();
 
     void on_actionErrant_triggered();
@@ -132,6 +137,8 @@ private slots:
     void on_actionFAQ_triggered();
 
     void on_actionRead_me_triggered();
+
+
 
 private:
     Ui::MainWindow *ui;
@@ -166,7 +173,7 @@ private:
 
     QString mHelpModel, mHelpName;
 
-    int mLogInRet;
+//    int mLogInRet;
 };
 
 #endif // MAINWINDOW_H

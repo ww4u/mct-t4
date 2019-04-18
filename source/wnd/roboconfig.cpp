@@ -39,6 +39,11 @@ RoboConfig::RoboConfig(QWidget *parent) :
     m_pActionHome = NULL;
     m_pActionFold = NULL;
 
+    m_pActionReboot = NULL;
+    m_pActionPowerOff = NULL;
+    m_pActionExportLog = NULL;
+    m_pActionUpdate = NULL;
+
     m_pProjectContextMenu = NULL;
     m_pActionDelAll = NULL;
 
@@ -90,6 +95,13 @@ void RoboConfig::retranslateUi()
     m_pRootNode->setText( 0, tr("Project"));
     foreach (XPlugin* xPlug, mPluginList){
         xPlug->retranslateUi();
+    }
+}
+
+void RoboConfig::userRoleChanged()
+{
+    foreach (XPlugin* xPlug, mPluginList){
+        xPlug->emit_setting_changed( XPage::e_setting_user_role, QVariant() );
     }
 }
 
@@ -418,10 +430,34 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
             if ( NULL== m_pRoboContextMenu->addSeparator() )
             { gc_context_menu(); return; }
 
+            m_pActionReboot = m_pRoboContextMenu->addAction( tr("Reboot") );
+            m_pActionReboot->setIcon( QIcon(":/res/image/icon/332.png") );
+            if ( NULL == m_pActionReboot )
+            { gc_context_menu(); return; }
+
+            m_pActionPowerOff = m_pRoboContextMenu->addAction( tr("Power Off") );
+            m_pActionPowerOff->setIcon( QIcon(":/res/image/icon/246.png") );
+            if ( NULL == m_pActionPowerOff )
+            { gc_context_menu(); return; }
+
+            if ( NULL== m_pRoboContextMenu->addSeparator() )
+            { gc_context_menu(); return; }
+
+            m_pActionExportLog = m_pRoboContextMenu->addAction( tr("Export log...") );
+            if ( NULL == m_pActionExportLog )
+            { gc_context_menu(); return; }
+            m_pActionExportLog->setIcon( QIcon(":/res/image/icon/219.png") );
+
+            m_pActionUpdate = m_pRoboContextMenu->addAction( tr("Update...") );
+            if ( NULL == m_pActionUpdate )
+            { gc_context_menu(); return; }
+            m_pActionUpdate->setIcon( QIcon(":/res/image/icon/fuzhi.png") );
+
             QAction *actionExplorer = m_pRoboContextMenu->addAction( tr("Explorer") );
-            actionExplorer->setIcon( QIcon(":/res/image/icon/manage.png") );
             if ( NULL == actionExplorer )
             { gc_context_menu(); return; }
+            actionExplorer->setIcon( QIcon(":/res/image/icon/manage.png") );
+
 
             //! add action
             connect(m_pActionOpen, SIGNAL(triggered(bool)), this, SLOT(slotActionOpen()));
@@ -431,7 +467,12 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
             connect(m_pActionHome, SIGNAL(triggered(bool)), this, SLOT(slotActionHome()));
             connect(m_pActionFold, SIGNAL(triggered(bool)), this, SLOT(slotActionFold()));
 
+            connect(m_pActionReboot, SIGNAL(triggered(bool)), this, SLOT(slotActionReboot()));
+            connect(m_pActionPowerOff, SIGNAL(triggered(bool)), this, SLOT(slotActionPoweroff()));
+
             connect(actionDelete, SIGNAL(triggered(bool)), this, SLOT(slotActionDelete()));
+            connect(m_pActionExportLog, SIGNAL(triggered(bool)),this, SLOT(slotActionExportLog()) );
+            connect(m_pActionUpdate, SIGNAL(triggered(bool)),this, SLOT(slotActionUpdate()) );
             connect(actionExplorer, SIGNAL(triggered(bool)), this, SLOT(slotActionExplorer()));
         }
 
@@ -444,6 +485,12 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
 
             m_pActionHome->setVisible( true );
             m_pActionFold->setVisible( m_pCurPlugin->isFoldable() );
+
+            m_pActionReboot->setVisible( m_pCurPlugin->isRebootable() );
+            m_pActionPowerOff->setVisible( m_pCurPlugin->isPowerOffable() );
+
+            m_pActionExportLog->setVisible( true );
+            m_pActionUpdate->setVisible( true );
         }
         else
         {
@@ -453,6 +500,12 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
 
             m_pActionHome->setVisible( false );
             m_pActionFold->setVisible( false );
+
+            m_pActionReboot->setVisible( false );
+            m_pActionPowerOff->setVisible( false );
+
+            m_pActionExportLog->setVisible( false );
+            m_pActionUpdate->setVisible( false );
         }
 
         //! pop proc
@@ -517,6 +570,17 @@ void RoboConfig::slotActionFold()
     m_pCurPlugin->fold();
 }
 
+void RoboConfig::slotActionReboot()
+{
+    Q_ASSERT( NULL != m_pCurPlugin );
+    m_pCurPlugin->reboot();
+}
+void RoboConfig::slotActionPoweroff()
+{
+    Q_ASSERT( NULL != m_pCurPlugin );
+    m_pCurPlugin->powerOff();
+}
+
 void RoboConfig::slotActionDelete()
 {
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
@@ -532,6 +596,16 @@ void RoboConfig::slotActionDelete()
         delete m_pCurTreeItem;
 
     QApplication::restoreOverrideCursor();
+}
+
+void RoboConfig::slotActionExportLog()
+{
+    //! \todo api for export
+}
+
+void RoboConfig::slotActionUpdate()
+{
+    //! \todo update
 }
 
 void RoboConfig::slotActionExplorer()
@@ -650,11 +724,11 @@ QStackedWidget *RoboConfig::stackWidget()
 
 bool RoboConfig::downloadVisible()
 {
-    return m_pPref->mSysMode == 1;
+    return true;
 }
 bool RoboConfig::resetVisible()
 {
-    return m_pPref->mSysMode == 1;
+    return true;
 }
 
 void RoboConfig::stackPageChange( QTreeWidgetItem *current,
@@ -780,6 +854,9 @@ void RoboConfig::createRobot( const QStringList &strInfos )
 
     //! try load the setup from the local
     plugin->emit_load();
+
+    //! adapt the role
+    plugin->emit_setting_changed( XPage::e_setting_user_role, QVariant() );
 
     //! open
     if ( plugin->open() == 0 )

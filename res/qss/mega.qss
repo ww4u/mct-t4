@@ -603,19 +603,27 @@ QDockWidget::close-button, QDockWidget::float-button {
   }
 
 /* \todo for images */
-QRadioButton#radEn::indicator:checked, QRadioButton#radTo::indicator:checked,
 QRadioButton#radES::indicator:checked {
 	/*background-color:green;*/
 	image: url(:/res/image/widget/radiobutton_checked_green.png);
 }
 
-QRadioButton#radReady::indicator:checked, QRadioButton#radMc::indicator:checked,
 QRadioButton#radHome::indicator:checked,QRadioButton#radioButton_homing_valid::indicator:checked {
 	/*background-color:yellow;*/
 	image: url(:/res/image/widget/radiobutton_checked_yellow.png);
 }
 
-QRadioButton#radError::indicator:checked, QRadioButton#radWarning::indicator:checked {
+IoIndicator#radEn > QRadioButton::indicator:checked, IoIndicator#radTo > QRadioButton::indicator:checked {
+	/*background-color:red;*/
+	image: url(:/res/image/widget/radiobutton_checked_green.png);
+}
+
+IoIndicator#radError > QRadioButton::indicator:checked, IoIndicator#radWarning > QRadioButton::indicator:checked {
 	/*background-color:red;*/
 	image: url(:/res/image/widget/radiobutton_checked_red.png);
+}
+
+IoIndicator#radReady > QRadioButton::indicator:checked, IoIndicator#radMc > QRadioButton::indicator:checked {
+	/*background-color:red;*/
+	image: url(:/res/image/widget/radiobutton_checked_yellow.png);
 }

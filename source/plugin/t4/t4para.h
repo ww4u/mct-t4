@@ -76,7 +76,7 @@ public:
 
     double mHomeSpeed, mHomeTimeout;
 
-    double mDefSpeed, mDefAcc;
+    double mMaxAcc, mMaxJerk;
 
     double mMaxJointSpeed, mMaxTerminalSpeed;
 

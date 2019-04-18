@@ -80,6 +80,7 @@
     <addaction name="actionWifi"/>
     <addaction name="actionPref"/>
     <addaction name="actionChange_Password"/>
+    <addaction name="actionSwitch_User"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -357,6 +358,15 @@
    </property>
    <property name="text">
     <string>Home</string>
+   </property>
+  </action>
+  <action name="actionSwitch_User">
+   <property name="icon">
+    <iconset resource="../../res/res.qrc">
+     <normaloff>:/res/image/icon/51.png</normaloff>:/res/image/icon/51.png</iconset>
+   </property>
+   <property name="text">
+    <string>Switch User...</string>
    </property>
   </action>
  </widget>

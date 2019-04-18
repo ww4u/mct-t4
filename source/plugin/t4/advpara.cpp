@@ -22,7 +22,7 @@ AdvPara::AdvPara(QWidget *parent) :
 
     ui->spinHomeSpeed->setSuffix( QString("%1/s").arg( char_deg )  );
     ui->spinAcc->setSuffix( QString("mm/s%1").arg( char_square ) );
-
+    ui->spinJerk->setSuffix( QString("mm/s%1").arg( char_trible ) );
     ui->spinJointSpeed->setSuffix( QString("%1/s").arg( char_deg ) );
 }
 
@@ -55,8 +55,8 @@ void AdvPara::updateUi()
     exchange_spin( spinHomeSpeed, pRobo->mHomeSpeed, bDir );
     exchange_spin( spinHomeTimeout, pRobo->mHomeTimeout, bDir )
 
-    exchange_spin( spinVel, pRobo->mDefSpeed, bDir )
-    exchange_spin( spinAcc, pRobo->mDefAcc, bDir )
+    exchange_spin( spinAcc, pRobo->mMaxAcc, bDir )
+    exchange_spin( spinJerk, pRobo->mMaxJerk, bDir )
 
     exchange_spin( spinJointSpeed, pRobo->mMaxJointSpeed, bDir )
     exchange_spin( spinTerminalSpeed, pRobo->mMaxTerminalSpeed, bDir )
@@ -72,8 +72,8 @@ void AdvPara::updateData()
     exchange_spin( spinHomeSpeed, pRobo->mHomeSpeed, bDir );
     exchange_spin( spinHomeTimeout, pRobo->mHomeTimeout, bDir )
 
-    exchange_spin( spinVel, pRobo->mDefSpeed, bDir )
-    exchange_spin( spinAcc, pRobo->mDefAcc, bDir )
+    exchange_spin( spinAcc, pRobo->mMaxAcc, bDir )
+    exchange_spin( spinJerk, pRobo->mMaxJerk, bDir )
 
     exchange_spin( spinJointSpeed, pRobo->mMaxJointSpeed, bDir )
     exchange_spin( spinTerminalSpeed, pRobo->mMaxTerminalSpeed, bDir )
@@ -102,8 +102,8 @@ void AdvPara::spyEdited()
         ui->spinHomeSpeed,
         ui->spinHomeTimeout,
 
-        ui->spinVel,
         ui->spinAcc,
+        ui->spinJerk,
 
         ui->spinJointSpeed,
         ui->spinTerminalSpeed,
@@ -127,5 +127,12 @@ void AdvPara::spyEdited()
 
 void AdvPara::retranslateUi()
 { ui->retranslateUi( this ); }
+
+void AdvPara::updateRole()
+{
+    bool bEditable = sysMode() == sysPara::e_sys_admin;
+
+    setEnabled( bEditable );
+}
 
 }

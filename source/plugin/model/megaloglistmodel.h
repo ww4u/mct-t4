@@ -12,6 +12,10 @@ public:
         log_warning,
         log_error
     };
+
+public:
+    static QString toString( eLogLevel lev );
+
 public:
     eLogLevel mLevel;
     QString mStr;

@@ -182,4 +182,11 @@ void MotorConfig::spyEdited()
 void MotorConfig::retranslateUi()
 { ui->retranslateUi( this ); }
 
+void MotorConfig::updateRole()
+{
+    bool bEditable = sysMode() == sysPara::e_sys_admin;
+
+    setEnabled( bEditable );
+}
+
 }

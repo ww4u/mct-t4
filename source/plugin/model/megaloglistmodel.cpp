@@ -1,6 +1,19 @@
 #include "megaloglistmodel.h"
 #include <QIcon>
 #include "../../../include/mystd.h"
+
+QString LogStr::toString( LogStr::eLogLevel lev )
+{
+    if ( lev == LogStr::log_info )
+    { return "Info"; }
+    else if ( lev == LogStr::log_warning )
+    { return "Warn"; }
+    else if ( lev == LogStr::log_error )
+    { return "Error"; }
+    else
+    { return ""; }
+}
+
 MegaLogListModel::MegaLogListModel(QObject *parent)
     : QAbstractListModel(parent)
 {

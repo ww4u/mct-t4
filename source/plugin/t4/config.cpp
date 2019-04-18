@@ -371,6 +371,14 @@ void Config::retranslateUi()
     ui->retranslateUi( this );
 }
 
+void Config::updateRole()
+{
+    bool bEditable = sysMode() == sysPara::e_sys_admin;
+
+    ui->tab_2->setEnabled( bEditable );
+    ui->tab->setEnabled( bEditable );
+}
+
 void Config::on_cmbTypeTerminal_currentIndexChanged(int index)
 {logDbg();
     QIcon icon = ui->cmbTypeTerminal->itemIcon( index );

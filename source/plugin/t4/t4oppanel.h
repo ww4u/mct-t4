@@ -214,6 +214,10 @@ public:
     CPose poseAim;
 
     bool bHomeValid;
+
+    //! \todo IOs, status
+
+    QString mRecordName;
 };
 
 class T4OpPanel : public XPage
@@ -255,6 +259,8 @@ public:
 
     virtual void updateUi();
     virtual void updateData();
+
+    virtual void updateRole();
 
     virtual void onSetting(XSetting setting);
 

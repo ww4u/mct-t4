@@ -157,6 +157,21 @@ void MRX_T4::fold()
     m_pOpPanel->fold();
 }
 
+void MRX_T4::reboot()
+{
+    //! close
+    close();
+
+    //! \todo api
+}
+void MRX_T4::powerOff()
+{
+    close();
+
+    //! \todo api
+
+}
+
 int MRX_T4::upload()
 {
     attachBgWorking( (XPlugin::bgProc)(&MRX_T4::uploadProc) );
@@ -171,6 +186,13 @@ int MRX_T4::diff()
 {
     attachBgWorking( (XPlugin::bgProc)(&MRX_T4::diffProc) );
     return 0;
+}
+
+int MRX_T4::onXEvent( XEvent *pEvent )
+{
+    //! \todo stop/estop/
+
+    return XPlugin::onXEvent( pEvent );
 }
 
 int MRX_T4::_uploadProc()

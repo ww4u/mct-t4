@@ -128,10 +128,17 @@ int XPluginIntf::stop()
 bool XPluginIntf::isOpened()
 { return ( mVi > 0 ); }
 
+#define has_attr( attr )    ( (mAttr & attr ) == attr )
 bool XPluginIntf::isFoldable()
 {
-    return (mAttr & plugin_attr_foldable) == plugin_attr_foldable;
+//    return (mAttr & plugin_attr_foldable) == plugin_attr_foldable;
+    return has_attr( plugin_attr_foldable );
 }
+
+bool XPluginIntf::isRebootable()
+{ return has_attr( plugin_attr_reboot_able ); }
+bool XPluginIntf::isPowerOffable()
+{ return has_attr( plugin_attr_poweroff_able ); }
 
 int XPluginIntf::deviceVi()
 { return mVi; }

@@ -200,6 +200,11 @@ void XPlugin::home()
 void XPlugin::fold()
 {}
 
+void XPlugin::reboot()
+{}
+void XPlugin::powerOff()
+{}
+
 int XPlugin::upload()
 { return 0; }
 int XPlugin::download()
@@ -495,6 +500,37 @@ void XPlugin::cancelBgWorking()
     Q_ASSERT( NULL != m_pBgWorking );
     m_pBgWorking->requestInterruption();
     m_pBgWorking->wait();
+}
+
+bool XPlugin::event(QEvent *pEvent)
+{
+    Q_ASSERT( NULL != pEvent );
+    if ( pEvent->type() >= XEvent::e_xevent_base
+         && pEvent->type() < XEvent::e_xevent_plugins )
+    {
+        int ret;
+
+        ret = onXEvent( (XEvent*)pEvent );
+
+        pEvent->accept();
+        return true;
+    }
+    else
+    { return XPluginIntf::event( pEvent); }
+}
+int XPlugin::onXEvent( XEvent *pEvent )
+{
+    //! \todo on the event msg
+
+    //! system
+    if ( pEvent->type() == XEvent::e_xevent_prompt )
+    {
+        //! str, level
+        sysPrompt( pEvent->mVar2.toString(), pEvent->mVar1.toInt() );
+        return 0;
+    }
+
+    return 0;
 }
 
 void XPlugin::slot_save_setting()

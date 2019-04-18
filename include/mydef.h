@@ -7,6 +7,7 @@
 
 #define char_deg                        QChar(0x00B0)
 #define char_square                     QChar(0x00B2)
+#define char_trible                     QChar(0x00B3)
 
 #define SINdeg( deg )           qSin( DEG_TO_RAD(deg) )
 #define COSdeg( deg )           qCos( DEG_TO_RAD(deg) )
@@ -107,10 +108,12 @@
                                         { val = control->value(); }
 
 
-#define enable_edit( control )               if ( sysMode() == sysPara::e_sys_admin )\
-                                             { control->setEnabled(true);}\
-                                             else \
-                                             { control->setEnabled(false);}
+#define enable_edit( control )
+
+//#define enable_edit( control )               if ( sysMode() == sysPara::e_sys_admin )\
+//                                             { control->setEnabled(true);}
+//                                             else \
+//                                             { control->setEnabled(false);}
 
 #define manual_enable_edit( control, b )    { control->setEnabled(b); }
 

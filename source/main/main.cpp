@@ -28,14 +28,14 @@ int main(int argc, char *argv[])
 
     splash.hide();
 
-    if ( w.loginRet() == QDialog::Accepted )
+//    if ( w.loginRet() == QDialog::Accepted )
     {
         w.show();
 
         return a.exec();
     }
-    else
-    { return 0; }
+//    else
+//    { return 0; }
 }
 
 

@@ -18,6 +18,12 @@ public:
     char **mArgv;
 };
 
+enum eOutHandle
+{
+    e_out_console,
+    e_out_log
+};
+
 void setSysMode( sysPara::eSysMode mode );
 sysPara::eSysMode sysMode();
 
@@ -27,14 +33,14 @@ char** sysArgv( const QString &arg );
 
 bool sysHasArgv( const QString &arg );
 
-void sysInfo( const QString &str );
-void sysInfo(const QString &info, const QString &str2 );
-void sysInfo( const QString &info, const int &val );
+void sysInfo( const QString &str, eOutHandle oHandle = e_out_console );
+void sysInfo(const QString &info, const QString &str2, eOutHandle oHandle = e_out_console );
+void sysInfo( const QString &info, const int &val, eOutHandle oHandle = e_out_console );
 
-void sysWarning( const QString &str );
+void sysWarning( const QString &str , eOutHandle oHandle = e_out_console);
 
-void sysError( const QString &str );
-void sysError( const QString &info , const int &val);
+void sysError( const QString &str, eOutHandle oHandle = e_out_console );
+void sysError( const QString &info , const int &val, eOutHandle oHandle = e_out_console );
 
 void sysProgress( const QString &info, bool b, int now = 0, int mi=0, int ma=100 );
 

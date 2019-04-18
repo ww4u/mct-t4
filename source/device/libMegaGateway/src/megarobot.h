@@ -774,6 +774,7 @@ EXPORT_API int CALL mrgGetRobotWristPose(ViSession vi, int name, float *angle);
 */
 EXPORT_API int CALL mrgSetRobotWristPose(ViSession vi, int name, float angle,float time,int timeout_ms);
 
+
 #if defined(__cplusplus) || defined(__cplusplus__)
 }
 #endif

@@ -76,8 +76,8 @@ void T4Para::rst()
     mHomeSpeed = 20;
     mHomeTimeout = 120;
 
-    mDefSpeed = 200;
-    mDefAcc = 10;
+    mMaxAcc = 10;
+    mMaxJerk = 10;
 
     mMaxJointSpeed =  180;
     mMaxTerminalSpeed = 250;
@@ -170,14 +170,11 @@ int T4Para::serialOut( QXmlStreamWriter &writer )
         writer.writeTextElement( "timeout", QString::number( mHomeTimeout ) );
     writer.writeEndElement();
 
-    //! default
-    writer.writeStartElement("motion");
-        writer.writeTextElement( "speed", QString::number( mDefSpeed ) );
-        writer.writeTextElement( "acc", QString::number( mDefAcc ) );
-    writer.writeEndElement();
-
     //! speed
     writer.writeStartElement("max_speed");
+    writer.writeTextElement( "acc", QString::number( mMaxAcc ) );
+        writer.writeTextElement( "jerk", QString::number( mMaxJerk ) );
+
         writer.writeTextElement( "joint", QString::number( mMaxJointSpeed ) );
         writer.writeTextElement( "terminal", QString::number( mMaxTerminalSpeed ) );
     writer.writeEndElement();
@@ -344,23 +341,15 @@ int T4Para::serialIn( QXmlStreamReader &reader )
                 { reader.skipCurrentElement(); }
             }
         }
-        else if ( reader.name() == "motion" )
-        {
-            while( reader.readNextStartElement() )
-            {
-                if ( reader.name() == "speed" )
-                { mDefSpeed = reader.readElementText().toDouble(); }
-                else if ( reader.name() == "acc" )
-                { mDefAcc = reader.readElementText().toInt(); }
-                else
-                { reader.skipCurrentElement(); }
-            }
-        }
         else if ( reader.name() == "max_speed" )
         {
             while( reader.readNextStartElement() )
             {
-                if ( reader.name() == "joint" )
+                if ( reader.name() == "acc" )
+                { mMaxAcc = reader.readElementText().toDouble(); }
+                else if ( reader.name() == "jerk" )
+                { mMaxJerk = reader.readElementText().toDouble(); }
+                else if ( reader.name() == "joint" )
                 { mMaxJointSpeed = reader.readElementText().toDouble(); }
                 else if ( reader.name() == "terminal" )
                 { mMaxTerminalSpeed = reader.readElementText().toInt(); }

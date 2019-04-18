@@ -297,6 +297,8 @@ protected:
     int onJointJog( QVariant var );
     void onJointJogEnd( );
 
+    int onTcpJog( QVariant var );
+
     int onSequence( QVariant var );
     int _onSequence( QVariant var );
 

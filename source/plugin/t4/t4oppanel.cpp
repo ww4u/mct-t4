@@ -937,25 +937,33 @@ void T4OpPanel::jogProc( int jId, int dir, bool b )
     {}
     else
     {
+        //! \todo stop2
         onJointJogEnd();
         return;
     }
 
     //! joint jog
+    QList<QVariant> vars;
     if ( isCoordJoint() || jId >= 4 )
     {
-        QList<QVariant> vars;
         vars<<(jId-1)<<dir<<1;
         QVariant var( vars );
-        on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Jog +") );
+        on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Joint jog") );
     }
     //! x,y,z step
     else
     {
-//        _step( jId == 3 ? dir : 0,
-//               jId == 2 ? dir : 0,
-//               jId == 1 ? dir : 0,
-//               );
+
+        QList<QVariant> vars;
+
+        vars<<(double)(jId == 3 ? dir : 0)
+            <<(double)(jId == 2 ? dir : 0)
+            <<(double)(jId == 1 ? dir : 0)
+            <<localSpeed();
+
+        QVariant var( vars );
+
+        on_post_setting_n_mission( T4OpPanel, onTcpJog, tr("TCP jog") );
     }
 }
 
@@ -1095,6 +1103,7 @@ int T4OpPanel::onJointJog( QVariant var )
     double speed = pRobo->mMaxJointSpeed * localSpeed() / 100.0;
 
     int ret = -1;
+    //! \todo stop2
     if(btnId){
         ret = mrgRobotJointMoveOn( robot_var(), jId, speed*dir);
     }else{
@@ -1110,6 +1119,22 @@ void T4OpPanel::onJointJogEnd( )
     {
         sysError( tr("Jog end fail") );
     }
+}
+
+int T4OpPanel::onTcpJog( QVariant var )
+{
+    check_connect_ret( -1 );
+
+    QList<QVariant> vars;
+
+    vars = var.toList();
+
+    return mrgRobotMoveOn( robot_var(), 0,
+                    vars.at(0).toDouble(),
+                    vars.at(1).toDouble(),
+                    vars.at(2).toDouble(),
+                    vars.at(3).toDouble() * pRobo->mMaxTerminalSpeed / 100 );
+
 }
 
 int T4OpPanel::onSequence( QVariant var )

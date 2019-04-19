@@ -74,8 +74,8 @@ public:
     double mSpeed;      //! percent
     eCoordinateType mCoord;
 
-    int mJointStepIndex;
-    double mJointSpeed;
+//    int mJointStepIndex;
+//    double mJointSpeed;
 
     Coordinate mCoordPara[10+2];
 

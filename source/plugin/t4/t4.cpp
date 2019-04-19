@@ -50,7 +50,7 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
 
     new_root_widget( mrx_t4::Info, pWig, tr("MRX-T4"), ":/res/image/icon/205.png", m_pRootWidgetItem );
     new_widget( mrx_t4::Config, pWig, tr("Configuration"), ":/res/image/icon/config.png" );
-    new_widget( mrx_t4::AdvPara, pWig, tr("Misc"), ":/res/image/icon/qita.png" );
+
     new_widget( mrx_t4::Coordinate, pWig, tr("Coordinate"), ":/res/image/icon/205.png" );
     new_widget( mrx_t4::MotorConfig, pWig, tr("Motor"), ":/res/image/icon/motor.png" );
     new_widget( mrx_t4::ActionTable, m_pRecordView, tr("Record Table"), ":/res/image/icon/table.png" );
@@ -58,6 +58,7 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
     new_widget( mrx_t4::FileExplorer, pWig, tr("File"), ":/res/image/icon/fuzhi.png" );
 //    new_widget( mrx_t4::TracePlot, pWig, tr("Trace"), ":/res/image/icon/409.png" );logDbg();
 //    new_widget( mrx_t4::ScriptEditor, pWig, tr("Script"), ":/res/image/icon/activity.png" );logDbg();
+    new_widget( mrx_t4::AdvPara, pWig, tr("Misc"), ":/res/image/icon/qita.png" );
 
     //! default
     QByteArray ary;
@@ -198,5 +199,26 @@ void MRX_T4::onSetting(XSetting setting)
         { m_pRootWidgetItem->setIcon( 0, QIcon(":/res/image/h2product/connect.png") );}
         else
         { m_pRootWidgetItem->setIcon( 0, QIcon(":/res/image/h2product/disconnect.png") );}
+    }
+    //! online
+    else if ( setting.mSetting == XPage::e_setting_online )
+    {
+        if ( setting.mPara1.isValid() )
+        {}
+        else
+        { return; }
+
+        Q_ASSERT( NULL != m_pRootWidgetItem );
+        if ( setting.mPara1.toBool() )
+        {}
+        else
+        {}
+
+        //! \todo disable home, fold
+
+    }
+    else
+    {
+
     }
 }

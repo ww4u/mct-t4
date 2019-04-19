@@ -760,6 +760,10 @@ void ActionTable::slot_up()
                                 index.row(),
                                 index.parent(),
                                 index.row() - 1 );
+
+    ui->view->setCurrentIndex( ui->view->model()->index( index.row()-1, 0, index.parent() ) );
+
+    on_view_activated( ui->view->currentIndex() );
 }
 void ActionTable::slot_down()
 {
@@ -769,6 +773,10 @@ void ActionTable::slot_down()
                                 index.row(),
                                 index.parent(),
                                 index.row() + 1 );
+
+    ui->view->setCurrentIndex( ui->view->model()->index( index.row()+1, 0, index.parent() ) );
+
+    on_view_activated( ui->view->currentIndex() );
 }
 
 void ActionTable::slot_expandAll()
@@ -797,6 +805,12 @@ void ActionTable::slot_resize()
 void ActionTable::slot_customContextMenuRequested(const QPoint &pos)
 {
     if ( mbMissionWorking )
+    { return; }
+
+    //! plugin on line
+    if ( m_pPlugin->isOnLine() )
+    {}
+    else
     { return; }
 
     //! valid

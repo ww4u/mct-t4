@@ -113,6 +113,8 @@ void MainWindow::setupWorkArea()
 
     connect( m_roboConfig, SIGNAL(signal_plugins_operable(bool)),
              this, SLOT(slot_plugin_operable(bool)) );
+    connect( m_roboConfig, SIGNAL(signal_plugins_online(bool)),
+             this, SLOT(slot_plugin_online(bool)) );
     connect( m_roboConfig, SIGNAL(signal_request_sysOpPanel()),
              this, SLOT(slot_request_sysOpPanel()) );
     connect( m_roboConfig, SIGNAL(signal_save_sysPref()),
@@ -166,8 +168,8 @@ void MainWindow::setupMenu()
     QActionGroup * styleGroup = new QActionGroup(ui->menuView);
     m_pMegaAction = styleGroup->addAction( tr("MEGAROBO") );
     m_pMegaAction->setCheckable( true );
-    m_pClasAction = styleGroup->addAction( tr("Classic") );
-    m_pClasAction->setCheckable( true );
+//    m_pClasAction = styleGroup->addAction( tr("Classic") );
+//    m_pClasAction->setCheckable( true );
     m_pSystemAction = styleGroup->addAction( tr("System") );
     m_pSystemAction->setCheckable( true );
 
@@ -260,7 +262,7 @@ void MainWindow::buildConnection()
     connect( m_pTrChAction, SIGNAL(triggered(bool)), this, SLOT(slot_lang_changed()) );
 
     connect( m_pMegaAction, SIGNAL(triggered(bool)), this, SLOT(slot_style_changed()) );
-    connect( m_pClasAction, SIGNAL(triggered(bool)), this, SLOT(slot_style_changed()) );
+//    connect( m_pClasAction, SIGNAL(triggered(bool)), this, SLOT(slot_style_changed()) );
     connect( m_pSystemAction, SIGNAL(triggered(bool)), this, SLOT(slot_style_changed()) );
 
 
@@ -492,6 +494,11 @@ void MainWindow::slot_plugin_operable( bool b )
 //    m_pStopWidget->setEnabled( b );
 }
 
+void MainWindow::slot_plugin_online( bool b )
+{
+    ui->actionHome->setEnabled( b );
+}
+
 void MainWindow::slot_request_sysOpPanel()
 {
     Q_ASSERT( NULL != m_pDockOps );
@@ -519,8 +526,8 @@ void MainWindow::slot_post_startup()
     //! change the style
     if ( mPref.mStyleIndex == 0 )
     { m_pMegaAction->setChecked( true ); }
-    else if ( mPref.mStyleIndex == 1 )
-    { m_pClasAction->setChecked( true ); }
+//    else if ( mPref.mStyleIndex == 1 )
+//    { m_pClasAction->setChecked( true ); }
     else
     { m_pSystemAction->setChecked( true); }
 
@@ -556,10 +563,10 @@ void MainWindow::slot_style_changed()
     {
         mPref.mStyleIndex = STYLE_MEGAROBO;
     }
-    else if ( m_pClasAction->isChecked() )
-    {
-        mPref.mStyleIndex = STYLE_CLASSIC;
-    }
+//    else if ( m_pClasAction->isChecked() )
+//    {
+//        mPref.mStyleIndex = STYLE_CLASSIC;
+//    }
     else
     {
         mPref.mStyleIndex = STYLE_SYSTEM;
@@ -767,7 +774,7 @@ void MainWindow::emit_prompt( const QString &info, int lev )
 
 void MainWindow::retranslateUi()
 {
-    m_pClasAction->setText( tr("Classic") );
+//    m_pClasAction->setText( tr("Classic") );
     m_pMegaAction->setText( tr("MEGAROBO") );
     m_pSystemAction->setText( tr("System") );
 

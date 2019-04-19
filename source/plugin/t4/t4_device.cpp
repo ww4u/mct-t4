@@ -10,6 +10,11 @@
 #include "actiontable.h"
 #include "t4oppanel.h"
 
+bool MRX_T4::isOnLine()
+{
+    return mbMctEn;
+}
+
 int MRX_T4::open()
 {
     int vi;

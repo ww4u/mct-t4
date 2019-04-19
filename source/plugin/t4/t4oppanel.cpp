@@ -918,6 +918,13 @@ void T4OpPanel::setOperAble( bool b )
     }
 }
 
+void T4OpPanel::setOnLine( bool b )
+{
+    //! \note disable the run
+    ui->tabWidget->widget( 2 )->setEnabled( b );
+    ui->toolButton_debugRun->setEnabled( b );
+}
+
 void T4OpPanel::setOpened( bool b )
 {
     //! enabled
@@ -1427,6 +1434,9 @@ void T4OpPanel::slot_pwr_checked( bool b )
 
     if ( ret != 0 )
     { sysError( tr("power config fail") );}
+
+    //! operable
+    pRobo->setOnLine( b );
 }
 void T4OpPanel::slot_ack_error()
 {

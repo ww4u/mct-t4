@@ -117,6 +117,8 @@ protected Q_SLOTS:
     void slot_load_setting();
 
 public:
+    virtual bool isOnLine();
+
     virtual int open();
     virtual void close();
 

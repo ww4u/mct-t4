@@ -128,6 +128,8 @@ public:
     virtual void rstRecordTable();
 
     virtual void onOperateAble( bool b );
+    virtual void onOnLine( bool b );
+
 public:
     virtual int save( const QString &filename );
     virtual int load( const QString &filename );

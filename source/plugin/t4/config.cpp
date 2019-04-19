@@ -262,46 +262,52 @@ int Config::download()
     }
 
     //! limit
-    double lmtL, lmtH;
-    for ( int i = 0; i < 4; i++ )
+    if ( ui->tabSoftLimit->isEnabled() )
     {
-        ret = ui->lmtSoftLimit->range( i, lmtL, lmtH );
-        if ( ret != 0 )
-        { return -1; }
+        double lmtL, lmtH;
+        for ( int i = 0; i < 4; i++ )
+        {
+            ret = ui->lmtSoftLimit->range( i, lmtL, lmtH );
+            if ( ret != 0 )
+            { return -1; }
 
-        //! down
-        val = pnVALUE_TO_ABS_ANGLE( lmtL );
+            //! down
+            val = pnVALUE_TO_ABS_ANGLE( lmtL );
 
-        ret = mrgMRQAbsEncoderAlarmDownLimit( device_var(),
-                                        i,
-                                        val );
-        if ( ret != 0 )
-        { return -1; }
+            ret = mrgMRQAbsEncoderAlarmDownLimit( device_var(),
+                                            i,
+                                            val );
+            if ( ret != 0 )
+            { return -1; }
 
-        //! up
-        val = pnVALUE_TO_ABS_ANGLE( lmtH );
+            //! up
+            val = pnVALUE_TO_ABS_ANGLE( lmtH );
 
-        ret = mrgMRQAbsEncoderAlarmUpLimit( device_var(),
-                                        i,
-                                        val );
-        if ( ret != 0 )
-        { return -1; }
+            ret = mrgMRQAbsEncoderAlarmUpLimit( device_var(),
+                                            i,
+                                            val );
+            if ( ret != 0 )
+            { return -1; }
 
-        //! on off
-        ret = mrgMRQAbsEncoderAlarmState( device_var(), i, ui->lmtSoftLimit->limitOn() );
+            //! on off
+            ret = mrgMRQAbsEncoderAlarmState( device_var(), i, ui->lmtSoftLimit->limitOn() );
+        }
     }
 
     //! \todo soft area
 
     //! arm length
-    float links[]={
+    if ( ui->tabArm->isEnabled() )
+    {
+        float links[]={
                     (float)ui->spinBase->value(),
                     (float)ui->spinBA->value(),
                     (float)ui->spinLA->value()
                 };
-    ret = mrgSetRobotLinks( robot_var(), links, 3 );
-    if ( ret != 0 )
-    { return -1; }
+        ret = mrgSetRobotLinks( robot_var(), links, 3 );
+        if ( ret != 0 )
+        { return -1; }
+    }
 
     return 0;
 }

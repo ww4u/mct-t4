@@ -282,6 +282,7 @@ protected:
     virtual void exitMission();
 
     virtual void setOperAble( bool b );
+    virtual void setOnLine( bool b );
     virtual void setOpened( bool b );
 
     void stepProc( int jId, int dir );

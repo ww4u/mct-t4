@@ -146,6 +146,13 @@ void XPage::onSetting( XSetting setting )
         //! enable/disable
         setOperAble( setting.mPara1.toBool() );
     }
+    else if ( setting.mSetting == XPage::e_setting_online )
+    {
+        check_para1();
+
+        //! enable/disable
+        setOnLine( setting.mPara1.toBool() );
+    }
     else if ( setting.mSetting == XPage::e_setting_opened )
     {
         check_para1();
@@ -321,6 +328,11 @@ void XPage::exitMission()
 void XPage::setOperAble( bool b )
 {
     setEnabled( b && isQualified() );
+}
+
+void XPage::setOnLine( bool b )
+{
+    //! \note
 }
 
 void XPage::setOpened( bool b )

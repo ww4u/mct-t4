@@ -103,6 +103,9 @@ void XPlugin::onOperateAble( bool b )
     emit_setting_changed( XPage::e_setting_op_able, b );
 }
 
+void XPlugin::onOnLine( bool b )
+{ emit_setting_changed( XPage::e_setting_online, b ); }
+
 int XPlugin::save( const QString &fileName )
 {
     QFile file( fileName );

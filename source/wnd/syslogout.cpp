@@ -1,5 +1,6 @@
 #include "syslogout.h"
 #include "ui_syslogout.h"
+
 #include "../../include/mydebug.h"
 SysLogout::SysLogout(QWidget *parent) :
     QWidget(parent),
@@ -20,6 +21,7 @@ void SysLogout::attachLogModel( QAbstractListModel *pModel )
     Q_ASSERT( NULL != pModel );
 
     ui->listView->setModel( pModel );
+
 }
 
 bool SysLogout::event(QEvent *event)
@@ -42,3 +44,5 @@ void SysLogout::focusInEvent(QFocusEvent *event)
 
     logDbg();
 }
+
+

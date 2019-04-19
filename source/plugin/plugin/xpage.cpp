@@ -82,18 +82,6 @@ SysPara * XPage::pref()
 bool XPage::isQualified()
 { return true; }
 
-void XPage::adapteToUserMode( sysPara::eSysMode mode )
-{
-    bool bAdminEn;
-
-    if ( mode == sysPara::e_sys_admin )
-    { bAdminEn = true; }
-    else
-    { bAdminEn = false; }
-
-    setEnabled( bAdminEn );
-}
-
 XPage::PageAttr XPage::pageAttr()
 { return mAttr; }
 
@@ -157,6 +145,13 @@ void XPage::onSetting( XSetting setting )
 
         //! enable/disable
         setOperAble( setting.mPara1.toBool() );
+    }
+    else if ( setting.mSetting == XPage::e_setting_online )
+    {
+        check_para1();
+
+        //! enable/disable
+        setOnLine( setting.mPara1.toBool() );
     }
     else if ( setting.mSetting == XPage::e_setting_opened )
     {
@@ -333,6 +328,11 @@ void XPage::exitMission()
 void XPage::setOperAble( bool b )
 {
     setEnabled( b && isQualified() );
+}
+
+void XPage::setOnLine( bool b )
+{
+    //! \note
 }
 
 void XPage::setOpened( bool b )

@@ -70,6 +70,61 @@ Qt::ItemFlags DebugModel::flags(const QModelIndex &index) const
     return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
 }
 
+QMimeData *DebugModel::mimeData(const QModelIndexList &indexes) const
+{
+    QMimeData *pMime;
+
+    pMime = new QMimeData();
+    if ( NULL == pMime )
+    { return NULL; }
+
+    QByteArray ary;
+
+    ary.setNum( indexes.at(0).row() );
+
+    pMime->setData( "debug/row", ary );
+logDbg()<<pMime;
+    return pMime;
+}
+
+QStringList DebugModel::mimeTypes() const
+{
+    QStringList strList;
+
+    strList<<"debug/row";
+logDbg()<<strList;
+    return strList;
+}
+
+bool DebugModel::dropMimeData(const QMimeData *data,
+                              Qt::DropAction action,
+                              int row,
+                              int column,
+                              const QModelIndex &parent )
+{logDbg()<<data;
+    if ( data->hasFormat("debug/row") )
+    {}
+    else
+    { return false; }
+
+    //! exchange the row
+    QByteArray ary;
+    ary = data->data( "debug/row" );
+    int srcRow = ary.toInt();
+
+    //! get src
+    DebugItem proxyItem = *mItems.at( srcRow );
+
+    removeRow( srcRow );
+
+    insertRow( row );
+
+    //! set data
+    *mItems.at( row ) = proxyItem;
+
+    return true;
+}
+
 bool DebugModel::insertRows(int position, int rows, const QModelIndex &parent)
 {
     if ( position < 0 || rows < 0 )

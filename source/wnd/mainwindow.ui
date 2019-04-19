@@ -103,6 +103,9 @@
    <property name="focusPolicy">
     <enum>Qt::ClickFocus</enum>
    </property>
+   <property name="windowTitle">
+    <string>Tool</string>
+   </property>
    <property name="movable">
     <bool>false</bool>
    </property>

@@ -157,18 +157,23 @@ void MegaInterface::slotShowSearchResult( QVariant var )
     {
 
         t_item = new QStandardItem( info.mAddr );
+        t_item->setData( info.mAddr, Qt::ToolTipRole );
         m_model->setItem( rowCnt, 0, t_item );
 
         t_item = new QStandardItem( info.mFMModel );
+        t_item->setData( info.mFMModel, Qt::ToolTipRole );
         m_model->setItem( rowCnt, 1, t_item );
 
         t_item = new QStandardItem( info.mFMSN );
+        t_item->setData( info.mFMSN, Qt::ToolTipRole );
         m_model->setItem( rowCnt, 2, t_item );
 
         t_item = new QStandardItem( info.mFMVer );
+        t_item->setData( info.mFMVer, Qt::ToolTipRole );
         m_model->setItem( rowCnt, 3, t_item );
 
         t_item = new QStandardItem( info.mRoboModel );
+        t_item->setData( info.mRoboModel, Qt::ToolTipRole );
         m_model->setItem( rowCnt, 4, t_item );
 
 //        t_item = new QStandardItem( info.mId );
@@ -176,43 +181,9 @@ void MegaInterface::slotShowSearchResult( QVariant var )
 
         rowCnt++;
     }
+
+    ui->tableView->setColumnWidth( 0, 200 );
 }
-
-//void MegaInterface::slotShowSearchResult(QString strDevices)
-//{
-//    QStringList strListHeader;
-//    if(m_devType == TYPE_LAN)
-//    {
-//        strListHeader << tr("IP") << tr("Manufacturer") << tr("Type") << tr("SN") << tr("Version");
-//    }
-//    else if(m_devType == TYPE_USB)
-//    {
-//        strListHeader << tr("USBID") << tr("Manufacturer") << tr("Type") << tr("SN") << tr("Version");
-//    }
-//    else
-//    { Q_ASSERT(false); }
-
-//    m_model->setHorizontalHeaderLabels(strListHeader);
-
-//    foreach (QString strDev, strDevices.split("::", QString::SkipEmptyParts))
-//    {
-//        int maxRow = m_model->rowCount();
-//        QStringList strListInfo = strDev.split(',', QString::SkipEmptyParts);
-//        for(int index=0; index<strListInfo.count(); index++)
-//        {
-//            QStandardItem *t_item = new QStandardItem(strListInfo.at(index));
-//            m_itemList.append(t_item);
-//            m_model->setItem(maxRow, index, t_item);
-//        }
-//    }
-
-//    //! 自动调整列宽
-//    ui->tableView->resizeColumnsToContents();
-//    for(int i = 0; i < ui->tableView->horizontalHeader()->count() - 1; i++){
-//        ui->tableView->setColumnWidth(i, ui->tableView->columnWidth(i) + 10);
-//    }
-//    ui->tableView->horizontalHeader()->setStretchLastSection(true);
-//}
 
 void MegaInterface::slotShowContextmenu(const QPoint& pos)
 {

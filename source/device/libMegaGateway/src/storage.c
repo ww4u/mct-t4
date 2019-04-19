@@ -161,7 +161,7 @@ int waitMotionFileWirteEnd(int vi)
     {
         if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0)
         {
-            Sleep(10);
+            SLEEP(10);
             time += 10;
             continue;
         }

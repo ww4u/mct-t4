@@ -17,9 +17,9 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
-     <widget class="QWidget" name="tab_3">
+     <widget class="QWidget" name="tabTerminal">
       <attribute name="title">
        <string>Terminal</string>
       </attribute>
@@ -177,7 +177,140 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_2">
+     <widget class="QWidget" name="tabSafeArea">
+      <attribute name="title">
+       <string>Safe Area</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_7">
+       <item row="0" column="0">
+        <widget class="AxisLimit" name="lmtSafeArea" native="true"/>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="label_18">
+         <property name="maximumSize">
+          <size>
+           <width>160</width>
+           <height>160</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="../../../res/res.qrc">:/res/image/t4/sinanju_pn_256px_nor@2x.png</pixmap>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td width=&quot;89&quot; style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;/&gt;&lt;td width=&quot;179&quot; style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;Angle(Degree)&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;Wrist&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;[-180,180]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;Elbow&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;[-60,90]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;Shoulder&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;[-80,20]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;Base&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;[-170,170]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <spacer name="verticalSpacer_6">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="2">
+        <spacer name="horizontalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabSoftLimit">
+      <attribute name="title">
+       <string>Soft Limit</string>
+      </attribute>
+      <attribute name="toolTip">
+       <string>Soft limitation</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="3" column="1">
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="4">
+        <spacer name="horizontalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="3" rowspan="2">
+        <widget class="QLabel" name="label_15">
+         <property name="maximumSize">
+          <size>
+           <width>160</width>
+           <height>160</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="../../../res/res.qrc">:/res/image/t4/sinanju_pn_256px_nor@2x.png</pixmap>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" colspan="3">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td width=&quot;89&quot; style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;/&gt;&lt;td width=&quot;179&quot; style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;Angle(Degree)&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;Wrist&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;[-180,180]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;Elbow&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;[-60,90]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;Shoulder&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;[-80,20]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;Base&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;[-170,170]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" rowspan="2" colspan="3">
+        <widget class="AxisLimit" name="lmtSoftLimit" native="true"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabZero">
       <attribute name="title">
        <string>Zero</string>
       </attribute>
@@ -300,192 +433,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_4">
-      <attribute name="title">
-       <string>Limit</string>
-      </attribute>
-      <attribute name="toolTip">
-       <string>Soft limitation</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout_4">
-       <item row="0" column="1">
-        <widget class="QDoubleSpinBox" name="spinL3">
-         <property name="buttonSymbols">
-          <enum>QAbstractSpinBox::NoButtons</enum>
-         </property>
-         <property name="minimum">
-          <double>-180.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>0.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_11">
-         <property name="text">
-          <string>Wrist</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="2">
-        <widget class="QDoubleSpinBox" name="spinU2">
-         <property name="buttonSymbols">
-          <enum>QAbstractSpinBox::NoButtons</enum>
-         </property>
-         <property name="maximum">
-          <double>90.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="spinL1">
-         <property name="buttonSymbols">
-          <enum>QAbstractSpinBox::NoButtons</enum>
-         </property>
-         <property name="minimum">
-          <double>-80.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>0.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QDoubleSpinBox" name="spinL2">
-         <property name="buttonSymbols">
-          <enum>QAbstractSpinBox::NoButtons</enum>
-         </property>
-         <property name="minimum">
-          <double>-60.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>0.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QDoubleSpinBox" name="spinL0">
-         <property name="buttonSymbols">
-          <enum>QAbstractSpinBox::NoButtons</enum>
-         </property>
-         <property name="minimum">
-          <double>-170.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>0.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_13">
-         <property name="text">
-          <string>Base</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="QDoubleSpinBox" name="spinU1">
-         <property name="buttonSymbols">
-          <enum>QAbstractSpinBox::NoButtons</enum>
-         </property>
-         <property name="maximum">
-          <double>20.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QDoubleSpinBox" name="spinU3">
-         <property name="buttonSymbols">
-          <enum>QAbstractSpinBox::NoButtons</enum>
-         </property>
-         <property name="maximum">
-          <double>180.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <spacer name="verticalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="3" column="2">
-        <widget class="QDoubleSpinBox" name="spinU0">
-         <property name="buttonSymbols">
-          <enum>QAbstractSpinBox::NoButtons</enum>
-         </property>
-         <property name="maximum">
-          <double>170.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_10">
-         <property name="text">
-          <string>Elbow</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="4">
-        <spacer name="horizontalSpacer_4">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_12">
-         <property name="text">
-          <string>Shoulder</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="3" rowspan="4">
-        <widget class="QLabel" name="label_15">
-         <property name="maximumSize">
-          <size>
-           <width>160</width>
-           <height>160</height>
-          </size>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="pixmap">
-          <pixmap resource="../../../res/res.qrc">:/res/image/t4/sinanju_pn_256px_nor@2x.png</pixmap>
-         </property>
-         <property name="scaledContents">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0" colspan="3">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td width=&quot;89&quot; style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;/&gt;&lt;td width=&quot;179&quot; style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;Angle(Degree)&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;Wrist&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;[-180,180]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;Elbow&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;[-60,90]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;Shoulder&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;[-80,20]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;Base&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:'宋体'; font-size:10.5pt;&quot;&gt;[-170,170]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="tabArm">
       <attribute name="title">
        <string>Arm</string>
       </attribute>
@@ -623,6 +571,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>AxisLimit</class>
+   <extends>QWidget</extends>
+   <header>axislimit.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../../../res/res.qrc"/>
  </resources>

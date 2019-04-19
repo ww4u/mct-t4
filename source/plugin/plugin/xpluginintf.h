@@ -31,6 +31,11 @@ public:
 
     virtual void onOperateAble( bool b );
 
+    void setOnLine( bool b );
+    bool onLine();
+
+    virtual void onOnLine( bool b );
+
     void setModel( const QString &model );
     QString model();
 
@@ -66,10 +71,13 @@ public:
     bool isRebootable();
     bool isPowerOffable();
 
+    virtual bool isOnLine();
+
     int deviceVi();
 
 protected:
     bool mbOperateAble;
+    bool mbOnLine;
 
     //! \note view addr for the user view
     QString mModel, mAddr, mViewAddr;

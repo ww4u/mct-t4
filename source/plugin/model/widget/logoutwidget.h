@@ -17,6 +17,7 @@ public:
     explicit LogoutWidget(QWidget *parent = 0);
     ~LogoutWidget();
 
+    virtual void setModel(QAbstractItemModel *model);
 protected:
     void setupUi();
     void buildConnection();
@@ -26,11 +27,13 @@ protected:
 
 
 protected Q_SLOTS:
+    void slot_current_changed( int );
     void slot_contextmenu( const QPoint &pt );
 
     void slot_clear();
     void slot_selectall();
     void slot_copy();
+
 
 private:
     Ui::LogoutWidget *ui;

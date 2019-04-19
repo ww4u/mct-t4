@@ -7,6 +7,7 @@ XPluginIntf::XPluginIntf( QObject *parent ) : QObject( parent )
     mAttr = plugin_attr_none;
 
     mbOperateAble = true;
+    mbOnLine = true;
 }
 
 //! addr
@@ -54,6 +55,18 @@ bool XPluginIntf::operateAble()
 
 void XPluginIntf::onOperateAble( bool b )
 {}
+
+void XPluginIntf::setOnLine( bool b )
+{
+    mbOnLine = b;
+
+    onOnLine( b );
+}
+bool XPluginIntf::onLine()
+{ return mbOnLine; }
+
+void XPluginIntf::onOnLine( bool b )
+{ }
 
 void XPluginIntf::setModel( const QString &model )
 { mModel = model; }
@@ -139,6 +152,9 @@ bool XPluginIntf::isRebootable()
 { return has_attr( plugin_attr_reboot_able ); }
 bool XPluginIntf::isPowerOffable()
 { return has_attr( plugin_attr_poweroff_able ); }
+
+bool XPluginIntf::isOnLine()
+{ return true; }
 
 int XPluginIntf::deviceVi()
 { return mVi; }

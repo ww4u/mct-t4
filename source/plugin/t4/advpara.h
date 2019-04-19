@@ -18,8 +18,6 @@ public:
     explicit AdvPara(QWidget *parent = 0);
     ~AdvPara();
 public:
-    virtual void adapteToUserMode( sysPara::eSysMode mode );
-
     virtual void updateUi();
     virtual void updateData();
 protected:

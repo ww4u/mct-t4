@@ -17,6 +17,7 @@ logDbg()<<QThread::currentThreadId();
     m_pUpdateWorking->attachMutex( &mUpdateMutex );
     m_pUpdateWorking->start();
     m_pUpdateWorking->setTick( 1000 );
+//    m_pUpdateWorking->setTick( 100 );
 
 //    m_pMapper = new QSignalMapper();
 //    m_pMapper->moveToThread( m_pUpdateWorking );
@@ -101,6 +102,9 @@ void XPlugin::onOperateAble( bool b )
 {
     emit_setting_changed( XPage::e_setting_op_able, b );
 }
+
+void XPlugin::onOnLine( bool b )
+{ emit_setting_changed( XPage::e_setting_online, b ); }
 
 int XPlugin::save( const QString &fileName )
 {

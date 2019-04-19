@@ -187,6 +187,7 @@ public:
 public:
     QVariant mVar1;
     QVariant mVar2;
+    QVariantList mVars;
 
 public:
     void setPara( QVariant v1, QVariant v2 )
@@ -194,6 +195,9 @@ public:
         mVar1 = v1;
         mVar2 = v2;
     }
+
+    void setVars( QVariantList &vars )
+    { mVars = vars; }
 };
 
 class CPose
@@ -218,6 +222,7 @@ public:
     //! \todo IOs, status
 
     QString mRecordName;
+    QString mRoboState;
 };
 
 class T4OpPanel : public XPage
@@ -277,6 +282,7 @@ protected:
     virtual void exitMission();
 
     virtual void setOperAble( bool b );
+    virtual void setOnLine( bool b );
     virtual void setOpened( bool b );
 
     void stepProc( int jId, int dir );
@@ -293,6 +299,8 @@ protected:
     int onJointJog( QVariant var );
     void onJointJogEnd( );
 
+    int onTcpJog( QVariant var );
+
     int onSequence( QVariant var );
     int _onSequence( QVariant var );
 
@@ -308,10 +316,10 @@ protected:
 protected:
     int buildSequence( QList<SequenceItem*> &list );
 
-    void post_debug_enter( int id, int r );
+    void post_debug_enter( int id, int r, QVariantList list=QVariantList() );
     void post_debug_exit( int id, int r );
 
-    void on_debug_enter( int id, int r );
+    void on_debug_enter( int id, int r, QVariantList &vars );
     void on_debug_exit( int id, int r );
 
 private:
@@ -365,6 +373,8 @@ protected Q_SLOTS:
     void slot_request_load();
 
     void slot_debug_table_changed();
+    void slot_debug_current_changed( int );
+
     void slot_customContextMenuRequested( const QPoint &);
     void slot_toHere();
 
@@ -376,12 +386,9 @@ protected Q_SLOTS:
     void slot_digitalInputsCustomContextMenuRequested( const QPoint & );
     void slot_Rename();
 
-//    void on_toolSingleXN_clicked();
-//    void on_toolSingleXP_clicked();
-//    void on_toolSingleYP_clicked();
-//    void on_toolSingleYN_clicked();
-//    void on_toolSingleZP_clicked();
-//    void on_toolSingleZN_clicked();
+    void slot_debug_delete();
+    void slot_debug_insert();
+
 
 private slots:
 //    void on_pushButton_starting_home_clicked();
@@ -390,7 +397,6 @@ private slots:
     void on_toolSingleAdd_clicked();
     void on_toolSingleEdit_clicked();
 
-//    void on_toolButton_15_clicked();
     void on_btnImport_clicked();
     void on_btnExport_clicked();
     void on_btnAdd_clicked();

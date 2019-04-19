@@ -23,7 +23,7 @@ public:
 
 class MegaLogListModel : public QAbstractListModel
 {
-    Q_OBJECT
+    Q_OBJECT    
 
 public:
     explicit MegaLogListModel(QObject *parent = nullptr);
@@ -40,6 +40,9 @@ public:
 public:
     void append( const QString &content, LogStr::eLogLevel lev=LogStr::log_info );
     void clear();
+
+Q_SIGNALS:
+    void signal_current_changed( int cur );
 
 private:
 //    QStringList mItemList;

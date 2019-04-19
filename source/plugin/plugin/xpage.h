@@ -34,6 +34,7 @@ public:
     {
         e_setting_unk = 0,
         e_setting_op_able,
+        e_setting_online,
         e_setting_opened,
         e_setting_update_ui,
         e_setting_mission_working,
@@ -74,7 +75,6 @@ public:
 
     bool isQualified();
 
-    virtual void adapteToUserMode( sysPara::eSysMode mode );
     PageAttr pageAttr();
     virtual void rst();
 
@@ -144,6 +144,7 @@ protected:
     virtual void exitMission();
 
     virtual void setOperAble( bool b );
+    virtual void setOnLine( bool b );
     virtual void setOpened( bool b );
 
 signals:

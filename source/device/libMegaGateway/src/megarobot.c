@@ -806,13 +806,13 @@ EXPORT_API int CALL mrgRobotWaitReady(ViSession vi, int name,int wavetable, int 
     }
     while (1)
     {
-        Sleep(DELAYTIME);
+        SLEEP(DELAYTIME);
         if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
             if (++error_count > 3)
             {
                 return -1;
             }
-            Sleep(DELAYTIME);
+            SLEEP(DELAYTIME);
             time += DELAYTIME;
             continue;
         }
@@ -824,7 +824,7 @@ EXPORT_API int CALL mrgRobotWaitReady(ViSession vi, int name,int wavetable, int 
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
-        Sleep(DELAYTIME);
+        SLEEP(DELAYTIME);
         time += DELAYTIME;
         if (timeout_ms > 0) {
             if (time > timeout_ms) {
@@ -866,7 +866,7 @@ EXPORT_API int CALL mrgRobotWaitEnd(ViSession vi, int name, int wavetable, int t
             {
                 return -1;
             }
-            Sleep(DELAYTIME);
+            SLEEP(DELAYTIME);
             time += DELAYTIME;
             continue;
         }
@@ -877,7 +877,7 @@ EXPORT_API int CALL mrgRobotWaitEnd(ViSession vi, int name, int wavetable, int t
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
-        Sleep(DELAYTIME);
+        SLEEP(DELAYTIME);
         time += DELAYTIME;
         if (timeout_ms > 0) {
             if (time > timeout_ms) {
@@ -1329,7 +1329,7 @@ EXPORT_API int CALL mrgRobotWaitHomeEnd(ViSession vi, int name, int timeout_ms)
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
-        Sleep(DELAYTIME);
+        SLEEP(DELAYTIME);
         time += DELAYTIME;
         if (timeout_ms != 0) {
             if (time > timeout_ms) {
@@ -1770,7 +1770,7 @@ EXPORT_API int CALL mrgRobotWaitToolExeEnd(ViSession vi, int name,int timeout_ms
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
-        Sleep(DELAYTIME);
+        SLEEP(DELAYTIME);
         time += DELAYTIME;
         if (timeout_ms > 0) {
             if (time > timeout_ms) {
@@ -1910,7 +1910,7 @@ EXPORT_API int CALL mrgRobotWaitToolHomeEnd(ViSession vi, int name, int timeout_
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
-        Sleep(DELAYTIME);
+        SLEEP(DELAYTIME);
         time += DELAYTIME;
         if (timeout_ms > 0) {
             if (time > timeout_ms) {

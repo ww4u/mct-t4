@@ -91,6 +91,7 @@ signals:
 private slots:
     void slot_role_changed();
     void slot_plugin_operable( bool b );
+    void slot_plugin_online( bool b );
 
     void slot_request_sysOpPanel();
     void slot_save_sysPref();
@@ -147,7 +148,8 @@ private:
 
     //! lang/style action
     QAction *m_pChAction, *m_pEnAction, *m_pTrChAction;
-    QAction *m_pMegaAction, *m_pClasAction, *m_pSystemAction;
+    QAction *m_pMegaAction, *m_pSystemAction;
+//    *m_pClasAction,
 
     QLabel *m_pLabStatus, *m_pLabMctVer, *m_pLabConVer;
 

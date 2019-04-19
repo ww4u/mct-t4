@@ -24,6 +24,9 @@ protected:
 Q_SIGNALS:
     void signal_focus_in( const QString &model, const QString &help );
 
+protected Q_SLOTS:
+
+
 protected:
     virtual void focusInEvent(QFocusEvent *event);
 

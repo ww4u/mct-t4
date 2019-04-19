@@ -21,6 +21,18 @@ LogoutWidget::~LogoutWidget()
 {
 }
 
+void LogoutWidget::setModel(QAbstractItemModel *model)
+{
+    Q_ASSERT( NULL != model );
+
+    MegaLogListModel *pLogModel = (MegaLogListModel*)model;
+
+    connect( pLogModel, SIGNAL(signal_current_changed(int)),
+             this, SLOT(slot_current_changed(int)) );
+
+    QListView::setModel( model );
+}
+
 void LogoutWidget::setupUi()
 {
     //! create menu
@@ -56,6 +68,11 @@ void LogoutWidget::retranslateUi()
 
     m_pClearAction->setIcon( QIcon(":/res/image/icon/trash.png") );
     m_pCopyAction->setIcon( QIcon(":/res/image/icon/fuzhi.png") );
+}
+
+void LogoutWidget::slot_current_changed( int cur )
+{
+    scrollTo( model()->index( cur, 0 ) );
 }
 
 void LogoutWidget::slot_contextmenu( const QPoint &pt )

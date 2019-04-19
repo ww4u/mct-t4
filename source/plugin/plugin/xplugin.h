@@ -11,12 +11,14 @@
 #include "xpage.h"
 #include "xpluginintf.h"
 
+//    var->adapteToUserMode(sysMode());
+//var->adapteToUserMode(sysMode());
+
 //! macros
 #define new_widget( type, var, txt, icon ) \
 do{ \
     var = new type;\
     Q_ASSERT( NULL != var ); \
-    var->adapteToUserMode(sysMode());\
     var->attachPref( m_pPref );\
     var->attachPlugin( this );\
     var->attachWorkings(); \
@@ -38,7 +40,6 @@ do{ \
 do{ \
     var = new type;\
     Q_ASSERT( NULL != var ); \
-    var->adapteToUserMode(sysMode());\
     var->attachPlugin( this );\
     var->attachWorkings();\
     var->setObjectName( txt );\
@@ -127,6 +128,8 @@ public:
     virtual void rstRecordTable();
 
     virtual void onOperateAble( bool b );
+    virtual void onOnLine( bool b );
+
 public:
     virtual int save( const QString &filename );
     virtual int load( const QString &filename );

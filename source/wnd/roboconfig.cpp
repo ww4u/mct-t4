@@ -483,8 +483,8 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
             m_pActionClose->setVisible(true);
             m_pActionRst->setVisible( true );
 
-            m_pActionHome->setVisible( true );
-            m_pActionFold->setVisible( m_pCurPlugin->isFoldable() );
+            m_pActionHome->setVisible( true && m_pCurPlugin->isOnLine() );
+            m_pActionFold->setVisible( m_pCurPlugin->isFoldable() && m_pCurPlugin->isOnLine() );
 
             m_pActionReboot->setVisible( m_pCurPlugin->isRebootable() );
             m_pActionPowerOff->setVisible( m_pCurPlugin->isPowerOffable() );
@@ -860,9 +860,6 @@ void RoboConfig::createRobot( const QStringList &strInfos )
     //! try load the setup from the local
     plugin->emit_load();
 
-    //! adapt the role
-    plugin->emit_setting_changed( XPage::e_setting_user_role, QVariant() );
-
     //! open
     if ( plugin->open() == 0 )
     {}
@@ -870,6 +867,9 @@ void RoboConfig::createRobot( const QStringList &strInfos )
     {
         sysError(  strInfos.at(0) + " " + tr("open fail") );
     }
+
+    //! adapt the role
+    plugin->emit_setting_changed( XPage::e_setting_user_role, QVariant() );
 
     //! synclize the setup from the device
     //! \todo
@@ -1023,6 +1023,13 @@ void RoboConfig::slot_plugin_setting_changed( XSetting setting )
 
             emit signal_plugins_operable( false );
         }
+    }
+    //! on line
+    else if ( setting.mSetting == XPage::e_setting_online )
+    {
+        bool bOnLine = setting.mPara1.toBool();
+
+        emit signal_plugins_online( bOnLine );
     }
     else if ( setting.mSetting == XPage::e_setting_mission_working )
     {

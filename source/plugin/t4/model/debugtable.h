@@ -37,6 +37,11 @@ public:
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role);
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
+    QMimeData *mimeData(const QModelIndexList &indexes) const;
+    QStringList mimeTypes() const;
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+//    Qt::DropActions supportedDropActions() const;
+
     virtual bool insertRows(int position, int rows, const QModelIndex &parent);
     virtual bool removeRows(int position, int rows, const QModelIndex &parent);
 

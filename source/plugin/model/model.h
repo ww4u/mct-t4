@@ -31,6 +31,7 @@ protected:
 
 Q_SIGNALS:
     void signal_data_changed();
+    void signal_current_changed( int row );
 
 protected:
     QStringList mHeaderList;

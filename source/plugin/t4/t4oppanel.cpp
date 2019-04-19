@@ -92,6 +92,12 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
 
     connect( &mDebugTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
              this, SLOT(slot_debug_table_changed()) );
+    connect( &mDebugTable, SIGNAL(signal_current_changed(int)),
+             this, SLOT(slot_debug_table_changed(int)) );
+
+    connect( &mDebugTable, SIGNAL(signal_current_changed(int)),
+             this, SLOT(slot_debug_current_changed(int)) );
+
 
     connect( ui->tvDebug, SIGNAL(activated( const QModelIndex &)),
              this, SLOT(slot_debug_table_changed()) );
@@ -99,6 +105,11 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
              this, SLOT(slot_debug_table_changed()) );
     connect( ui->tvDebug, SIGNAL(doubleClicked( const QModelIndex &)),
              this, SLOT(slot_debug_table_changed()) );
+
+    connect( ui->tvDebug, SIGNAL(signal_key_delete()),
+             this, SLOT(slot_debug_delete()) );
+    connect( ui->tvDebug, SIGNAL(signal_key_insert()),
+             this, SLOT(slot_debug_insert()) );
 
     connect( &mDebugTable, SIGNAL(signal_data_changed()),
              this, SLOT(slot_save_debug()) );
@@ -182,7 +193,9 @@ bool T4OpPanel::event(QEvent *e)
 
             if ( (int)pEvent->type() == OpEvent::debug_enter )
             {
-                on_debug_enter( pEvent->mVar1.toInt(), pEvent->mVar2.toInt()  );
+                on_debug_enter( pEvent->mVar1.toInt(),
+                                pEvent->mVar2.toInt(),
+                                pEvent->mVars );
             }
             else if ( (int)pEvent->type() == OpEvent::debug_exit )
             {   on_debug_exit( pEvent->mVar1.toInt(), pEvent->mVar2.toInt() ); }
@@ -426,6 +439,8 @@ void T4OpPanel::updateRefreshPara( QEvent *e )
     ui->radHome->setChecked( mRefreshPara.bHomeValid );
 
     //! \todo IOs,status,warning,error
+    ui->controllerStatus->setRecordName( mRefreshPara.mRecordName );
+    ui->controllerStatus->setWorkingStatus( mRefreshPara.mRoboState );
 }
 
 int T4OpPanel::posRefreshProc( void *pContext )
@@ -518,6 +533,16 @@ int T4OpPanel::posRefreshProc( void *pContext )
         //! \todo wrist current and target
 
         //! \todo device status: running/stoped/error_stoped
+        {
+            char roboStates[128];
+            ret = mrgRobotGetState( robot_var(), wave_table, roboStates );
+            if ( ret != 0 )
+            { break; }
+
+            mRefreshPara.mRoboState = QString( roboStates );
+        }
+
+        mRefreshPara.mRecordName = "Record Table";
 
         //! home valid?
         ret = mrgGetRobotHomeRequire( robot_var() );
@@ -795,7 +820,6 @@ void T4OpPanel::updateData()
     pRobo->mStepIndex = ui->cmbStepXx->currentIndex();
     pRobo->mSpeed = ui->cmbSpeed->currentText().toDouble();
 
-
     pRobo->mbMctEn = ui->controllerStatus->isMctChecked();
     pRobo->mbAxisPwr = ui->controllerStatus->isDevicePowerEnable();
 }
@@ -832,13 +856,13 @@ void T4OpPanel::home()
 {
     QVariant var;
 
-    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onHoming), var );
+    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onHoming), var, tr("Homing") );
 }
 void T4OpPanel::fold()
 {
     QVariant var;
 
-    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onFolding), var );
+    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onFolding), var, tr("Folding") );
 }
 
 double T4OpPanel::localSpeed()
@@ -877,7 +901,6 @@ void T4OpPanel::exitMission( )
 {
     ui->controllerStatus->setEnabled( true );
 
-
     for( int i = 0; i < ui->tabWidget->count();i++ )
     {
         ui->tabWidget->widget( i )->setEnabled( true );
@@ -893,6 +916,13 @@ void T4OpPanel::setOperAble( bool b )
     {
         ui->tabWidget->widget( i )->setEnabled( b );
     }
+}
+
+void T4OpPanel::setOnLine( bool b )
+{
+    //! \note disable the run
+    ui->tabWidget->widget( 2 )->setEnabled( b );
+    ui->toolButton_debugRun->setEnabled( b );
 }
 
 void T4OpPanel::setOpened( bool b )
@@ -932,25 +962,33 @@ void T4OpPanel::jogProc( int jId, int dir, bool b )
     {}
     else
     {
+        //! \todo stop2
         onJointJogEnd();
         return;
     }
 
     //! joint jog
+    QList<QVariant> vars;
     if ( isCoordJoint() || jId >= 4 )
     {
-        QList<QVariant> vars;
         vars<<(jId-1)<<dir<<1;
         QVariant var( vars );
-        on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Jog +") );
+        on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Joint jog") );
     }
     //! x,y,z step
     else
     {
-//        _step( jId == 3 ? dir : 0,
-//               jId == 2 ? dir : 0,
-//               jId == 1 ? dir : 0,
-//               );
+
+        QList<QVariant> vars;
+
+        vars<<(double)(jId == 3 ? dir : 0)
+            <<(double)(jId == 2 ? dir : 0)
+            <<(double)(jId == 1 ? dir : 0)
+            <<localSpeed();
+
+        QVariant var( vars );
+
+        on_post_setting_n_mission( T4OpPanel, onTcpJog, tr("TCP jog") );
     }
 }
 
@@ -1008,7 +1046,7 @@ int T4OpPanel::onHoming( QVariant var )
     check_connect_ret( -1 );
 
     int ret;
-logDbg();
+logDbg()<<pRobo->mHomeTimeout;
     ret = mrgRobotGoHome( robot_var(),
                           pRobo->mHomeTimeout*1000 );
 logDbg();
@@ -1090,6 +1128,7 @@ int T4OpPanel::onJointJog( QVariant var )
     double speed = pRobo->mMaxJointSpeed * localSpeed() / 100.0;
 
     int ret = -1;
+    //! \todo stop2
     if(btnId){
         ret = mrgRobotJointMoveOn( robot_var(), jId, speed*dir);
     }else{
@@ -1105,6 +1144,22 @@ void T4OpPanel::onJointJogEnd( )
     {
         sysError( tr("Jog end fail") );
     }
+}
+
+int T4OpPanel::onTcpJog( QVariant var )
+{
+    check_connect_ret( -1 );
+
+    QList<QVariant> vars;
+
+    vars = var.toList();
+
+    return mrgRobotMoveOn( robot_var(), 0,
+                    vars.at(0).toDouble(),
+                    vars.at(1).toDouble(),
+                    vars.at(2).toDouble(),
+                    vars.at(3).toDouble() * pRobo->mMaxTerminalSpeed / 100 );
+
 }
 
 int T4OpPanel::onSequence( QVariant var )
@@ -1164,6 +1219,7 @@ int T4OpPanel::_onSequence( QVariant var )
     }
 
     //! do loop
+    QVariantList vars;
     do
     {
         for( int i = anchorSeq; i < mSeqList.size(); i++, anchorSeq = 0 )
@@ -1172,7 +1228,13 @@ int T4OpPanel::_onSequence( QVariant var )
             { return 0; }
 
             //! enter
-            post_debug_enter( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
+            vars.clear();
+            vars<<mSeqList.at(i)->x
+                <<mSeqList.at(i)->y
+                <<mSeqList.at(i)->z
+                <<mSeqList.at(i)->pw
+                <<mSeqList.at(i)->h;
+            post_debug_enter( mSeqList.at(i)->id, mSeqList.at(i)->vRow, vars );
 
             //! enable?
             if ( procSequenceEn( mSeqList.at( i )) )
@@ -1327,6 +1389,8 @@ void T4OpPanel::switchCoordMode()
         ui->joint1->setViewMode( Joint::view_angle );
         ui->joint2->setViewMode( Joint::view_angle );
         ui->joint3->setViewMode( Joint::view_angle );
+
+        ui->label_2->setPixmap( QPixmap(":/res/image/t4/sinanju_pn_256px_nor@2x.png"));
     }
     //! x/y/z
     else
@@ -1343,6 +1407,8 @@ void T4OpPanel::switchCoordMode()
         ui->joint1->setViewMode( Joint::view_distance );
         ui->joint2->setViewMode( Joint::view_distance );
         ui->joint3->setViewMode( Joint::view_distance );
+
+        ui->label_2->setPixmap( QPixmap(":/res/image/t4/mrx-mrx-t4_geo.png"));
     }
 
     //! \todo other apis
@@ -1368,6 +1434,9 @@ void T4OpPanel::slot_pwr_checked( bool b )
 
     if ( ret != 0 )
     { sysError( tr("power config fail") );}
+
+    //! operable
+    pRobo->setOnLine( b );
 }
 void T4OpPanel::slot_ack_error()
 {
@@ -1479,6 +1548,13 @@ void T4OpPanel::slot_debug_table_changed()
     { ui->btnDown->setEnabled(true); }
     else
     { ui->btnDown->setEnabled( false ); }
+}
+
+void T4OpPanel::slot_debug_current_changed( int cur )
+{
+    QModelIndex index = ui->tvDebug->model()->index( cur,  ui->tvDebug->currentIndex().column() );
+
+    ui->tvDebug->setCurrentIndex( index );
 }
 
 void T4OpPanel::slot_customContextMenuRequested( const QPoint &pt )
@@ -1702,56 +1778,17 @@ void T4OpPanel::slot_Rename()
         }
     }
 }
-//void T4OpPanel::on_pushButton_2_clicked()
-//{
-//    int ret;
-//    ret = m_pPlugin->save( "abc.xml" );
-//    logDbg()<<ret;
-//}
 
-//void T4OpPanel::on_toolSingleXN_clicked()
-//{
-//    _step( -1, 0, 0 );
-//}
-
-//void T4OpPanel::on_toolSingleXP_clicked()
-//{
-//    _step( 1, 0, 0 );
-//}
-
-//void T4OpPanel::on_toolSingleYP_clicked()
-//{
-//    _step( 0, 1, 0 );
-//}
-
-//void T4OpPanel::on_toolSingleYN_clicked()
-//{
-//    _step( 0, -1, 0 );
-//}
-
-//void T4OpPanel::on_toolSingleZP_clicked()
-//{
-//    _step( 0, 0, 1 );
-//}
-
-//void T4OpPanel::on_toolSingleZN_clicked()
-//{
-//    _step( 0, 0, -1 );
-//}
-
-//void T4OpPanel::on_pushButton_starting_home_clicked()
-//{
-//    QVariant var;
-
-//    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onHoming), var );
-//}
-
-//void T4OpPanel::on_btnFold_clicked()
-//{
-//    QVariant var;
-
-//    m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onFolding), var );
-//}
+void T4OpPanel::slot_debug_delete()
+{
+    if ( ui->btnDel->isEnabled() )
+    { on_btnDel_clicked(); }
+}
+void T4OpPanel::slot_debug_insert()
+{
+    if ( ui->btnAdd->isEnabled() )
+    { on_btnAdd_clicked(); }
+}
 
 void T4OpPanel::on_toolSingleAdd_clicked()
 {
@@ -1852,9 +1889,17 @@ void T4OpPanel::on_btnAdd_clicked()
     int cRow;
     QModelIndex index = ui->tvDebug->currentIndex();
     if ( index.isValid() )
-    { cRow = index.row() + 1; }
+    { cRow = index.row() + 1;  }
     else
     { cRow = pModel->rowCount(); }
+
+    //! check current index
+    MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
+    Q_ASSERT( NULL != pRobo );
+    if ( pRobo->currentRecordIndex() >= 0 )
+    {}
+    else
+    { return; }
 
     //! insert
     if ( pModel->insertRow( cRow ) )
@@ -1867,13 +1912,7 @@ void T4OpPanel::on_btnAdd_clicked()
 
     //! id
     modelIndex = pModel->index( cRow, 0 );
-
-    MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
-    Q_ASSERT( NULL != pRobo );
-    if ( pRobo->currentRecordIndex() >= 0 )
     { pModel->setData( modelIndex, pRobo->currentRecordIndex() + 1 ); }
-    else
-    { return; }
 
     //! delay
     modelIndex = pModel->index( cRow, 1 );
@@ -2191,11 +2230,13 @@ int T4OpPanel::buildSequence( QList<SequenceItem*> &list )
     return 0;
 }
 
-void T4OpPanel::post_debug_enter( int id, int r )
+void T4OpPanel::post_debug_enter( int id, int r, QVariantList vars )
 {
     OpEvent *pEvent= new OpEvent( OpEvent::debug_enter, id, r );
     if ( NULL == pEvent )
     { return; }
+
+    pEvent->setVars( vars );
 
     qApp->postEvent( this, pEvent );
 //
@@ -2206,11 +2247,18 @@ void T4OpPanel::post_debug_exit( int id, int r )
 
 }
 
-void T4OpPanel::on_debug_enter( int id, int r )
+void T4OpPanel::on_debug_enter( int id, int r, QVariantList &vars )
 {
-    logDbg()<<id<<r;
     ui->tvDebug->selectRow( r );
     ui->doubleSpinBox_debugRecord->setValue( id );
+    ui->spinBox_RecordNumber->setValue( id );
+
+    ui->doubleSpinBox_target_position_x->setValue( vars.at(0).toDouble() );
+    ui->doubleSpinBox_target_position_y->setValue( vars.at(1).toDouble() );
+    ui->doubleSpinBox_target_position_z->setValue( vars.at(2).toDouble() );
+    ui->spinWristTarget->setValue( vars.at(3).toDouble() );
+    ui->spinTerminalTarget->setValue( vars.at(4).toDouble() );
+
 }
 void T4OpPanel::on_debug_exit( int id, int r )
 {
@@ -2220,6 +2268,10 @@ void T4OpPanel::on_debug_exit( int id, int r )
 //! start the run thread
 void T4OpPanel::on_toolButton_debugRun_clicked()
 {
+    //! invalid row
+    if ( !ui->tvDebug->currentIndex().isValid() && ui->tvDebug->model()->rowCount() > 0 )
+    { ui->tvDebug->selectRow( 0 ); }
+
     //! build
     mSeqMutex.lock();
         delete_all( mSeqList );

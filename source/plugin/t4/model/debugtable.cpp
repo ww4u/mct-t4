@@ -1,5 +1,6 @@
 #include "debugtable.h"
-
+#include <QMimeData>
+#include "../../include/mydebug.h"
 namespace mrx_t4{
 
 DebugTable::DebugTable( ): MegaTableModel( )
@@ -66,8 +67,78 @@ Qt::ItemFlags DebugTable::flags(const QModelIndex &index) const
     if (!index.isValid())
     { return Qt::ItemIsEnabled; }
 
-    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
+    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
 }
+
+QMimeData *DebugTable::mimeData(const QModelIndexList &indexes) const
+{
+    QMimeData *pMime;
+
+    pMime = new QMimeData();
+    if ( NULL == pMime )
+    { return NULL; }
+
+    QByteArray ary;
+
+    ary.setNum( indexes.at(0).row() );
+
+    pMime->setData( "debug/row", ary );
+
+    return pMime;
+}
+
+QStringList DebugTable::mimeTypes() const
+{
+    QStringList strList;
+
+    strList<<"debug/row";
+
+    return strList;
+}
+
+bool DebugTable::dropMimeData(const QMimeData *data,
+                              Qt::DropAction action,
+                              int row,
+                              int column,
+                              const QModelIndex &parent )
+{logDbg();
+    if ( data->hasFormat("debug/row") )
+    {}
+    else
+    { return false; }
+
+    //! exchange the row
+    QByteArray ary;
+    ary = data->data( "debug/row" );
+    int srcRow = ary.toInt();
+
+    logDbg()<<srcRow<<row<<column<<action;
+    if ( parent.isValid() )
+    { row = parent.row(); }
+    else
+    { return false; }
+
+    //! get src
+    DebugItem proxyItem = *mItems.at( srcRow );
+
+    removeRow( srcRow );
+
+    insertRow( row );
+
+    //! set data
+    *mItems.at( row ) = proxyItem;
+
+    emit signal_data_changed();
+
+    emit signal_current_changed( row );
+
+    return true;
+}
+
+//Qt::DropActions DebugTable::supportedDropActions() const
+//{
+//    return Qt::MoveAction;
+//}
 
 bool DebugTable::insertRows(int position, int rows, const QModelIndex &parent)
 {

@@ -222,6 +222,7 @@ public:
     //! \todo IOs, status
 
     QString mRecordName;
+    QString mRoboState;
 };
 
 class T4OpPanel : public XPage
@@ -371,6 +372,8 @@ protected Q_SLOTS:
     void slot_request_load();
 
     void slot_debug_table_changed();
+    void slot_debug_current_changed( int );
+
     void slot_customContextMenuRequested( const QPoint &);
     void slot_toHere();
 

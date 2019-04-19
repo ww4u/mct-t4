@@ -17,9 +17,9 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
-     <widget class="QWidget" name="tab_3">
+     <widget class="QWidget" name="tabTerminal">
       <attribute name="title">
        <string>Terminal</string>
       </attribute>
@@ -177,7 +177,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_5">
+     <widget class="QWidget" name="tabSafeArea">
       <attribute name="title">
        <string>Safe Area</string>
       </attribute>
@@ -242,7 +242,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_4">
+     <widget class="QWidget" name="tabSoftLimit">
       <attribute name="title">
        <string>Soft Limit</string>
       </attribute>
@@ -310,7 +310,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_2">
+     <widget class="QWidget" name="tabZero">
       <attribute name="title">
        <string>Zero</string>
       </attribute>
@@ -433,7 +433,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="tabArm">
       <attribute name="title">
        <string>Arm</string>
       </attribute>

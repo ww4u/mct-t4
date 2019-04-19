@@ -174,6 +174,8 @@ void MegaLogListModel::append( const QString &content,
     varList<<(int)logLev<<content;
     setData( index( mItemList.size() - 1, 0), varList );
 
+    //! last
+    emit signal_current_changed( mItemList.size() - 1 );
 
     //! append
 //    mItemList.append( pItem );

@@ -82,18 +82,6 @@ SysPara * XPage::pref()
 bool XPage::isQualified()
 { return true; }
 
-void XPage::adapteToUserMode( sysPara::eSysMode mode )
-{
-    bool bAdminEn;
-
-    if ( mode == sysPara::e_sys_admin )
-    { bAdminEn = true; }
-    else
-    { bAdminEn = false; }
-
-    setEnabled( bAdminEn );
-}
-
 XPage::PageAttr XPage::pageAttr()
 { return mAttr; }
 

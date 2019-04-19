@@ -58,21 +58,6 @@ void Config::setOpened( bool b )
     }
 }
 
-void Config::adapteToUserMode( sysPara::eSysMode mode )
-{
-//    XPage::adapteToUserMode( mode );
-
-    bool bAdminEn;
-
-    if ( mode == sysPara::e_sys_admin )
-    { bAdminEn = true; }
-    else
-    { bAdminEn = false; }
-
-    ui->tab_2->setEnabled( bAdminEn );
-    ui->tab_4->setEnabled( bAdminEn );
-}
-
 #define set_zero( id )  ui->spinZero##id->setValue( selfPara->mAxisZero[id] );
 
 #define get_zero( id )  selfPara->mAxisZero[id] = ui->spinZero##id->value();
@@ -257,20 +242,23 @@ int Config::download()
         return -1;
     }
     //! set zero
-    QList<QDoubleSpinBox*> spins;
-    spins<<ui->spinZero0<<ui->spinZero1<<ui->spinZero2<<ui->spinZero3;
-    for ( int i = 0; i < 4; i++ )
+    if( ui->tabZero->isEnabled() )
     {
-        angle = spins[i]->value();
+        QList<QDoubleSpinBox*> spins;
+        spins<<ui->spinZero0<<ui->spinZero1<<ui->spinZero2<<ui->spinZero3;
+        for ( int i = 0; i < 4; i++ )
+        {
+            angle = spins[i]->value();
 
-        //! convert the value
-        val = VALUE_TO_ABS_ANGLE( angle );
+            //! convert the value
+            val = VALUE_TO_ABS_ANGLE( angle );
 
-        ret = mrgMRQAbsEncoderZeroValue( device_var(),
-                                                i,
-                                                val );
-logDbg();        if ( ret != 0 )
-        { return -1; }
+            ret = mrgMRQAbsEncoderZeroValue( device_var(),
+                                                    i,
+                                                    val );
+            if ( ret != 0 )
+            { return -1; }
+        }
     }
 
     //! limit
@@ -378,9 +366,9 @@ void Config::updateRole()
 {
     bool bEditable = sysMode() == sysPara::e_sys_admin;
 
-    ui->tab_2->setEnabled( bEditable );
-    ui->tab->setEnabled( bEditable );
-    ui->tab_4->setEnabled( bEditable );
+    ui->tabZero->setEnabled( bEditable );
+    ui->tabSoftLimit->setEnabled( bEditable );
+    ui->tabArm->setEnabled( bEditable );
 }
 
 void Config::on_cmbTypeTerminal_currentIndexChanged(int index)

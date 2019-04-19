@@ -74,7 +74,6 @@ public:
 
     bool isQualified();
 
-    virtual void adapteToUserMode( sysPara::eSysMode mode );
     PageAttr pageAttr();
     virtual void rst();
 

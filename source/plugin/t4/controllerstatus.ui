@@ -50,7 +50,7 @@
       <item row="7" column="1" colspan="3">
        <widget class="QLabel" name="labWorkingStatus">
         <property name="text">
-         <string>TextLabel</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -279,7 +279,7 @@
       <item row="8" column="1" colspan="3">
        <widget class="QLabel" name="labReccordName">
         <property name="text">
-         <string>TextLabel</string>
+         <string/>
         </property>
        </widget>
       </item>

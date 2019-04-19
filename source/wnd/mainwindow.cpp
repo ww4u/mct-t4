@@ -738,8 +738,8 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     if ( m_pDockOps->isVisible() && event->oldSize().height() > 0 )
     {
         h = m_pSysLogout->size().height() * event->size().height()/ event->oldSize().height();
-        if ( h > 400 )
-        { h = 400; }
+        if ( h > 450 )
+        { h = 450; }
         resizeDocks( { m_pDockOps }, { h }, Qt::Vertical  );
     }
     else

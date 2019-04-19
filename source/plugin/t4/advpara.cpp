@@ -31,11 +31,6 @@ AdvPara::~AdvPara()
     delete ui;
 }
 
-void AdvPara::adapteToUserMode( sysPara::eSysMode mode )
-{
-    setEnabled( mode == sysPara::e_sys_admin );
-}
-
 void AdvPara::updateUi()
 {
     MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;

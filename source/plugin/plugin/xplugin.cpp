@@ -17,6 +17,7 @@ logDbg()<<QThread::currentThreadId();
     m_pUpdateWorking->attachMutex( &mUpdateMutex );
     m_pUpdateWorking->start();
     m_pUpdateWorking->setTick( 1000 );
+//    m_pUpdateWorking->setTick( 100 );
 
 //    m_pMapper = new QSignalMapper();
 //    m_pMapper->moveToThread( m_pUpdateWorking );

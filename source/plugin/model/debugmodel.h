@@ -20,6 +20,10 @@ public:
 
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
+    QMimeData *mimeData(const QModelIndexList &indexes) const;
+    QStringList mimeTypes() const;
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+
     virtual bool insertRows(int position, int rows, const QModelIndex &parent);
     virtual bool removeRows(int position, int rows, const QModelIndex &parent);
 

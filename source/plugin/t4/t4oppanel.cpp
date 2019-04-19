@@ -92,6 +92,12 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
 
     connect( &mDebugTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
              this, SLOT(slot_debug_table_changed()) );
+    connect( &mDebugTable, SIGNAL(signal_current_changed(int)),
+             this, SLOT(slot_debug_table_changed(int)) );
+
+    connect( &mDebugTable, SIGNAL(signal_current_changed(int)),
+             this, SLOT(slot_debug_current_changed(int)) );
+
 
     connect( ui->tvDebug, SIGNAL(activated( const QModelIndex &)),
              this, SLOT(slot_debug_table_changed()) );
@@ -433,6 +439,8 @@ void T4OpPanel::updateRefreshPara( QEvent *e )
     ui->radHome->setChecked( mRefreshPara.bHomeValid );
 
     //! \todo IOs,status,warning,error
+    ui->controllerStatus->setRecordName( mRefreshPara.mRecordName );
+    ui->controllerStatus->setWorkingStatus( mRefreshPara.mRoboState );
 }
 
 int T4OpPanel::posRefreshProc( void *pContext )
@@ -525,6 +533,16 @@ int T4OpPanel::posRefreshProc( void *pContext )
         //! \todo wrist current and target
 
         //! \todo device status: running/stoped/error_stoped
+        {
+            char roboStates[128];
+            ret = mrgRobotGetState( robot_var(), wave_table, roboStates );
+            if ( ret != 0 )
+            { break; }
+
+            mRefreshPara.mRoboState = QString( roboStates );
+        }
+
+        mRefreshPara.mRecordName = "Record Table";
 
         //! home valid?
         ret = mrgGetRobotHomeRequire( robot_var() );
@@ -1364,6 +1382,8 @@ void T4OpPanel::switchCoordMode()
         ui->joint1->setViewMode( Joint::view_angle );
         ui->joint2->setViewMode( Joint::view_angle );
         ui->joint3->setViewMode( Joint::view_angle );
+
+        ui->label_2->setPixmap( QPixmap(":/res/image/t4/sinanju_pn_256px_nor@2x.png"));
     }
     //! x/y/z
     else
@@ -1380,6 +1400,8 @@ void T4OpPanel::switchCoordMode()
         ui->joint1->setViewMode( Joint::view_distance );
         ui->joint2->setViewMode( Joint::view_distance );
         ui->joint3->setViewMode( Joint::view_distance );
+
+        ui->label_2->setPixmap( QPixmap(":/res/image/t4/mrx-mrx-t4_geo.png"));
     }
 
     //! \todo other apis
@@ -1516,6 +1538,13 @@ void T4OpPanel::slot_debug_table_changed()
     { ui->btnDown->setEnabled(true); }
     else
     { ui->btnDown->setEnabled( false ); }
+}
+
+void T4OpPanel::slot_debug_current_changed( int cur )
+{
+    QModelIndex index = ui->tvDebug->model()->index( cur,  ui->tvDebug->currentIndex().column() );
+
+    ui->tvDebug->setCurrentIndex( index );
 }
 
 void T4OpPanel::slot_customContextMenuRequested( const QPoint &pt )
@@ -1850,9 +1879,17 @@ void T4OpPanel::on_btnAdd_clicked()
     int cRow;
     QModelIndex index = ui->tvDebug->currentIndex();
     if ( index.isValid() )
-    { cRow = index.row() + 1; }
+    { cRow = index.row() + 1;  }
     else
     { cRow = pModel->rowCount(); }
+
+    //! check current index
+    MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
+    Q_ASSERT( NULL != pRobo );
+    if ( pRobo->currentRecordIndex() >= 0 )
+    {}
+    else
+    { return; }
 
     //! insert
     if ( pModel->insertRow( cRow ) )
@@ -1865,13 +1902,7 @@ void T4OpPanel::on_btnAdd_clicked()
 
     //! id
     modelIndex = pModel->index( cRow, 0 );
-
-    MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
-    Q_ASSERT( NULL != pRobo );
-    if ( pRobo->currentRecordIndex() >= 0 )
     { pModel->setData( modelIndex, pRobo->currentRecordIndex() + 1 ); }
-    else
-    { return; }
 
     //! delay
     modelIndex = pModel->index( cRow, 1 );

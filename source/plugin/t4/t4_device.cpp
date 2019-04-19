@@ -103,6 +103,9 @@ logDbg()<<mAddr;
         }
     }
 
+    //! \note upload the data from device
+    upload();
+
     return 0;
 }
 void MRX_T4::close()
@@ -241,6 +244,8 @@ int MRX_T4::uploadProc()
     sysProgress( "Uploading...", true, 0 );
 
     ret = _uploadProc();
+
+    sysProgress( "Uploading...", true, 50 );
 
     //! save
     if ( ret == 0 )

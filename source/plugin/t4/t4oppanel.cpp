@@ -577,7 +577,7 @@ int T4OpPanel::monitorRefreshProc( void *pContext )
         //! get from device
         //! \todo
         ret = mrgMRQReportQueue_Query( device_var(), joint, 0, array);
-        if ( ret <= 0 )
+        if ( ret < 0 )
         {
             sysError( tr("Monitor update fail"), e_out_log );
             continue;

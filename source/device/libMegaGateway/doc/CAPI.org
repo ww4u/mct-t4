@@ -844,30 +844,36 @@
 
 * mrqdevice.h
 ** enum RUN_STATE
-   RS_IDLE,  "IDLE"
-   RS_LOADING, "LOADING"
-   RS_READY,    "READY"
-   RS_RUNNING,  "RUNNING"
-   RS_STOP,    "STOP"
-   RS_ERROR,   "ERROR"
-   RS_RESERVE
+   |------------+-----------|
+   | RS_IDLE    | "IDLE"    |
+   | RS_LOADING | "LOADING" |
+   | RS_READY   | "READY"   |
+   | RS_RUNNING | "RUNNING" |
+   | RS_STOP    | "STOP"    |
+   | RS_ERROR   | "ERROR"   |
+   | RS_RESERVE |           |
+   |------------+-----------|
 
 ** enum MT_STATE
-   MTSTATE_POWERON,
-   MTSTATE_RESET,
-   MTSTATE_CALCING,
-   MTSTATE_CALCEND,
-   MTSTATE_STANDBY,
-   MTSTATE_RUNNING,
-   MTSTATE_ERROR,
-   MTSTATE_RESERVE,
+  |-----------------+---|
+  | MTSTATE_POWERON | 0 |
+  | MTSTATE_RESET   | 1 |
+  | MTSTATE_CALCING | 2 |
+  | MTSTATE_CALCEND | 3 |
+  | MTSTATE_STANDBY | 4 |
+  | MTSTATE_RUNNING | 5 |
+  | MTSTATE_ERROR   | 6 |
+  | MTSTATE_RESERVE | 7 |
+  |-----------------+---|
 
 ** enum MT_SWITCH
-   MTSWITCH_RESET,
-   MTSWITCH_STOP,
-   MTSWITCH_RUN,
-   MTSWITCH_PREPARE,
-   MTSWITCH_EMERGSTOP
+   |--------------------+---|
+   | MTSWITCH_RESET     | 0 |
+   | MTSWITCH_STOP      | 1 |
+   | MTSWITCH_RUN       | 2 |
+   | MTSWITCH_PREPARE   | 3 |
+   | MTSWITCH_EMERGSTOP | 4 |
+   |--------------------+---|
 
 ** int mrgMRQIdentify(ViSession vi, int name, int state);
    MRQ模块识别

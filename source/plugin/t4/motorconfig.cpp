@@ -98,6 +98,7 @@ int MotorConfig::upload()
         if ( ret != 0 )
         { return ret; }
 
+        //！ \todo switch time api
         currentWidgets[i]->setData( currents[i], iCurrents[i], 0 );
     }
 

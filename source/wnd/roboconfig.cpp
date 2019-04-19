@@ -552,11 +552,12 @@ void RoboConfig::slotActionClose()
     Q_ASSERT( NULL != m_pCurPlugin );
     m_pCurPlugin->close();
 }
-
+#include <qmessagebox.h>
 void RoboConfig::slotActionRst()
 {
     Q_ASSERT( NULL != m_pCurPlugin );
-    m_pCurPlugin->rst();
+    if ( QMessageBox::warning(this, tr("Warning"), tr("Confirm Reset?"), QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok )
+        m_pCurPlugin->rst();
 }
 
 void RoboConfig::slotActionHome()
@@ -573,29 +574,33 @@ void RoboConfig::slotActionFold()
 void RoboConfig::slotActionReboot()
 {
     Q_ASSERT( NULL != m_pCurPlugin );
-    m_pCurPlugin->reboot();
+    if( QMessageBox::warning(this, tr("Warning"), tr("Confirm Reboot?"), QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok )
+        m_pCurPlugin->reboot();
 }
 void RoboConfig::slotActionPoweroff()
 {
     Q_ASSERT( NULL != m_pCurPlugin );
-    m_pCurPlugin->powerOff();
+    if( QMessageBox::warning(this, tr("Warning"), tr("Confirm PowerOff?"), QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok )
+        m_pCurPlugin->powerOff();
 }
 
 void RoboConfig::slotActionDelete()
 {
-    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+    if(  QMessageBox::warning(this, tr("Warning"), tr("Confirm PowerOff?"), QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ){
+        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-        //! delete + remove the root
-        mPluginList.removeAll( m_pCurPlugin );
-        plugin_changed();
+            //! delete + remove the root
+            mPluginList.removeAll( m_pCurPlugin );
+            plugin_changed();
 
-        delete m_pCurPlugin;
+            delete m_pCurPlugin;
 
-        Q_ASSERT( NULL != m_pCurTreeItem );
-        ui->treeWidget->removeItemWidget( m_pCurTreeItem, 0 );
-        delete m_pCurTreeItem;
+            Q_ASSERT( NULL != m_pCurTreeItem );
+            ui->treeWidget->removeItemWidget( m_pCurTreeItem, 0 );
+            delete m_pCurTreeItem;
 
-    QApplication::restoreOverrideCursor();
+        QApplication::restoreOverrideCursor();
+    }
 }
 
 void RoboConfig::slotActionExportLog()

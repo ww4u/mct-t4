@@ -64,8 +64,8 @@
 #define distance_error      (0.001)
 
 #define guess_dist_calc_time_ms( dist )    (dist * 1000)
-
-#define guess_dist_time_ms( ts, dist )     ( (ts)*1000 + guess_dist_calc_time_ms(dist) )
+//! 运行时间+计算时间+交互时间
+#define guess_dist_time_ms( ts, dist )     ( (ts)*1000 + guess_dist_calc_time_ms(dist) + 500)
 
 #define rel_to_abs_speed( rel ) ( rel/100.0*pRobo->mMaxTerminalSpeed )
 

@@ -92,7 +92,6 @@ HEADERS = \
     widget/ioindicator.h
 
 FORMS += \
-    t4oppanel.ui \
     config.ui \
     motorconfig.ui \
     actiontable.ui \
@@ -110,7 +109,8 @@ FORMS += \
     advpara.ui \
     motorcurrent.ui \
     iostate.ui \
-    widget/ioindicator.ui
+    widget/ioindicator.ui \
+    t4oppanel.ui
 
 RESOURCES += ../../../res/res.qrc
 

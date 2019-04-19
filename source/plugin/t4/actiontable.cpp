@@ -210,7 +210,7 @@ int ActionTable::upload()
         QString fileList( QByteArray( fileListAry, fileListLen ) );
 
         //! check the file exist
-        QString fileAry = m_pPlugin->model().toLower() + "_" + record_file_name;
+        QString fileAry = m_pPlugin->model().toLower() + record_file_name;
 
         if ( fileList.contains( fileAry.toLatin1().data() ) )
         {}
@@ -264,13 +264,26 @@ int ActionTable::download()
 
     //! update local file
     TreeModel *model = (TreeModel *)ui->view->model();
-    model->exportOut( fileName );
+    int ret = model->exportOut( fileName );
+
+    QFile f( fileName );
+    if( !f.open(QIODevice::ReadOnly )){
+        sysError( tr("Record save fail") );
+        return -1;
+    }
+    QByteArray ba = f.readAll();
+    f.close();
 
     QString fileOutName = m_pPlugin->model().toLower() + record_file_name;
-    int ret = mrgStorageMotionFileSave( pRobo->deviceVi(),
-                              fileName.toLatin1().data(),
-                              fileOutName.toLatin1().data()
-                              );
+//    ret = mrgStorageMotionFileSave( pRobo->deviceVi(),
+//                              fileName.toLatin1().data(),
+//                              fileOutName.toLatin1().data()
+//                              );
+
+    ret = mrgStorageMotionFileSaveContext(pRobo->deviceVi(),
+                                          ba.data(),
+                                          ba.size(),
+                                          fileOutName.toLocal8Bit().data());
     if ( ret != 0 )
     {
         sysError( tr("Record save fail") );

@@ -105,6 +105,15 @@ void MRX_T4::close()
     lockWorking();
         if ( mVi > 0 )
         {
+            for ( int i = 0; i < T4Para::_axis_cnt; i++ )
+            {
+               int ret = mrgMRQReportState( self_device_var(), i, 0, 0 );
+               if ( ret != 0 )
+               {
+                   sysError( tr("Data report off fail") );
+                   continue;
+               }
+            }
             mrgCloseGateWay( mVi);
             mVi = -1;
         }

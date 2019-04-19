@@ -338,14 +338,21 @@ void T4OpPanel::updateMonitor(QEvent *e )
     //! proc the cache
     Q_ASSERT( m_pCaches[joint]->v1.size() == m_pCaches[joint]->v2.size() );
 
-    mJointCharts[joint]->chart()->beginChangeData();
-    for ( int i = 0; i < m_pCaches[joint]->v1.size(); i++ )
+    //! has data
+    if ( m_pCaches[joint]->v1.size() > 0 )
     {
-        mJointCharts[joint]->chart()->dataAppend( m_pCaches[joint]->v1.at(i),
-                                         m_pCaches[joint]->v2.at(i)
-                                        );
+        mJointCharts[joint]->chart()->beginChangeData();
+        for ( int i = 0; i < m_pCaches[joint]->v1.size(); i++ )
+        {
+            mJointCharts[joint]->chart()->dataAppend( m_pCaches[joint]->v1.at(i),
+                                             m_pCaches[joint]->v2.at(i)
+                                            );
+        }
+        mJointCharts[joint]->chart()->endChangeData();
     }
-    mJointCharts[joint]->chart()->endChangeData();
+    //! no data
+    else
+    {}
 
     m_pCaches[joint]->mWSema.release();
 }
@@ -600,10 +607,8 @@ int T4OpPanel::monitorRefreshProc( void *pContext )
     for( int joint = 0; joint < mJointCharts.size(); joint++ )
     {
         //! get from device
-        //! \todo
         ret = mrgMRQReportQueue_Query( device_var(), joint, 0, array);
 
-        //！ error
         if ( ret < 0 )
         {
             sysError( tr("Monitor update fail"), e_out_log );
@@ -619,12 +624,6 @@ int T4OpPanel::monitorRefreshProc( void *pContext )
         m_pCaches[joint]->v1.clear();
         m_pCaches[joint]->v2.clear();
 
-        //! debug used
-//        ret = rand() % 100;
-//        for ( int i = 0; i < ret; i++ )
-//        { array[i] = rand()%100; }
-
-//        logDbg()<<joint<<ret;
         //! update the data
         if ( ret > 0 )
         {

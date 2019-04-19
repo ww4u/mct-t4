@@ -208,6 +208,7 @@ void MainWindow::setupToolBar()
 //    ui->mainToolBar->addAction( ui->actionIP );
 
     //! \note view action
+    ui->menuView->addSeparator();
     ui->menuView->addAction( ui->mainToolBar->toggleViewAction() );
 
 #ifdef _WIN32

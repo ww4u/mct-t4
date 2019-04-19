@@ -57,12 +57,12 @@ void T4Para::rst()
         mAxisSafeLower[ i ] = -180;
     }
 
-    mStepIndex = 6;
-    mSpeed = 0.2;
+    mStepIndex = 5;
+    mSpeed = 20;
     mCoord = e_coord_base;
 
-    mJointStepIndex = 6;
-    mJointSpeed = 0.2;
+//    mJointStepIndex = 6;
+//    mJointSpeed = 0.2;
 
     for ( int i =0; i < sizeof_array(mCoordPara); i++ )
     {
@@ -169,11 +169,11 @@ int T4Para::serialOut( QXmlStreamWriter &writer )
         writer.writeTextElement( "step", QString::number( mStepIndex ) );
     writer.writeEndElement();
 
-    //! joint speed
-    writer.writeStartElement("joint_speed");
-        writer.writeTextElement( "percent", QString::number( mJointStepIndex ) );
-        writer.writeTextElement( "step", QString::number( mJointStepIndex ) );
-    writer.writeEndElement();
+//    //! joint speed
+//    writer.writeStartElement("joint_speed");
+//        writer.writeTextElement( "percent", QString::number( mJointStepIndex ) );
+//        writer.writeTextElement( "step", QString::number( mJointStepIndex ) );
+//    writer.writeEndElement();
 
     //! home
     writer.writeStartElement("home");
@@ -342,18 +342,18 @@ int T4Para::serialIn( QXmlStreamReader &reader )
                 { reader.skipCurrentElement(); }
             }
         }
-        else if ( reader.name() == "joint_speed" )
-        {
-            while( reader.readNextStartElement() )
-            {
-                if ( reader.name() == "percent" )
-                { mJointSpeed = reader.readElementText().toDouble(); }
-                else if ( reader.name() == "step" )
-                { mJointStepIndex = reader.readElementText().toInt(); }
-                else
-                { reader.skipCurrentElement(); }
-            }
-        }
+//        else if ( reader.name() == "joint_speed" )
+//        {
+//            while( reader.readNextStartElement() )
+//            {
+//                if ( reader.name() == "percent" )
+//                { mJointSpeed = reader.readElementText().toDouble(); }
+//                else if ( reader.name() == "step" )
+//                { mJointStepIndex = reader.readElementText().toInt(); }
+//                else
+//                { reader.skipCurrentElement(); }
+//            }
+//        }
         else if ( reader.name() == "home" )
         {
             while( reader.readNextStartElement() )

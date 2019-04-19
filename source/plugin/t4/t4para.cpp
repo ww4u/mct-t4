@@ -38,11 +38,11 @@ void T4Para::rst()
     mAxisIdleCurrents[3] = 1;
     mAxisIdleCurrents[4] = 1;
 
-    mAxisSwitchTimes[0] = 0.5;
-    mAxisSwitchTimes[1] = 0.5;
-    mAxisSwitchTimes[2] = 0.5;
-    mAxisSwitchTimes[3] = 0.5;
-    mAxisSwitchTimes[4] = 0.5;
+//    mAxisSwitchTimes[0] = 0.5;
+//    mAxisSwitchTimes[1] = 0.5;
+//    mAxisSwitchTimes[2] = 0.5;
+//    mAxisSwitchTimes[3] = 0.5;
+//    mAxisSwitchTimes[4] = 0.5;
 
     //! \note not change the zero
 
@@ -125,7 +125,7 @@ int T4Para::serialOut( QXmlStreamWriter &writer )
         writer.writeStartElement("axis");
             writer.writeTextElement( "current", QString::number( mAxisCurrents[i]) );
             writer.writeTextElement( "idle_current", QString::number( mAxisIdleCurrents[i]) );
-            writer.writeTextElement( "switch_time", QString::number( mAxisSwitchTimes[i]) );
+//            writer.writeTextElement( "switch_time", QString::number( mAxisSwitchTimes[i]) );
 
             writer.writeTextElement( "zero", QString::number( mAxisZero[i]) );
 
@@ -257,11 +257,11 @@ int T4Para::serialIn( QXmlStreamReader &reader )
                     mAxisIdleCurrents[ axisId - 1] = reader.readElementText().toDouble();
                 }
 
-                else if ( reader.name() == "switch_time" )
-                {
-                    Q_ASSERT( axisId <= _axis_cnt );
-                    mAxisSwitchTimes[ axisId - 1] = reader.readElementText().toDouble();
-                }
+//                else if ( reader.name() == "switch_time" )
+//                {
+//                    Q_ASSERT( axisId <= _axis_cnt );
+//                    mAxisSwitchTimes[ axisId - 1] = reader.readElementText().toDouble();
+//                }
 
                 else if ( reader.name() == "zero" )
                 {

@@ -15,12 +15,11 @@ public:
     explicit MotorCurrent(QWidget *parent = 0);
     ~MotorCurrent();
 
-    void setData( double dC, double iC, double sT );
-    void getData( double &dC, double &iC, double &sT );
+    void setData(double dC, double iC);
+    void getData(double &dC, double &iC);
 
     QDoubleSpinBox *doubleSpinCurrent();
     QDoubleSpinBox *doubleSpinIdleCurrent();
-    QDoubleSpinBox *doubleSpinSwitchTime();
 
 private:
     Ui::MotorCurrent *ui;

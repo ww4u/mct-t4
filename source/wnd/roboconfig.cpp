@@ -586,7 +586,7 @@ void RoboConfig::slotActionPoweroff()
 
 void RoboConfig::slotActionDelete()
 {
-    if(  QMessageBox::warning(this, tr("Warning"), tr("Confirm PowerOff?"), QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ){
+    if(  QMessageBox::warning(this, tr("Warning"), tr("Confirm Delete?"), QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ){
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
             //! delete + remove the root

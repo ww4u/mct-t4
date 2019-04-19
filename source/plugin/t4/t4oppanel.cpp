@@ -602,11 +602,17 @@ int T4OpPanel::monitorRefreshProc( void *pContext )
         //! get from device
         //! \todo
         ret = mrgMRQReportQueue_Query( device_var(), joint, 0, array);
+
+        //！ error
         if ( ret < 0 )
         {
             sysError( tr("Monitor update fail"), e_out_log );
-            continue;
+            break;
         }
+
+        //! no data
+        if( ret == 0 )
+            break;
 
         m_pCaches[joint]->mWSema.acquire();
 

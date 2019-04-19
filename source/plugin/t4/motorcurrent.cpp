@@ -13,22 +13,18 @@ MotorCurrent::~MotorCurrent()
     delete ui;
 }
 
-void MotorCurrent::setData( double dC, double iC, double sT )
+void MotorCurrent::setData( double dC, double iC)
 {
     ui->spinDriver->setValue( dC );
     ui->spinIdle->setValue( iC );
-    ui->spinSwitchTime->setValue( sT );
 }
-void MotorCurrent::getData( double &dC, double &iC, double &sT )
+void MotorCurrent::getData( double &dC, double &iC)
 {
     dC = ui->spinDriver->value();
     iC = ui->spinIdle->value();
-    sT = ui->spinSwitchTime->value();
 }
 
 QDoubleSpinBox *MotorCurrent::doubleSpinCurrent()
 { return ui->spinDriver; }
 QDoubleSpinBox *MotorCurrent::doubleSpinIdleCurrent()
 { return ui->spinIdle; }
-QDoubleSpinBox *MotorCurrent::doubleSpinSwitchTime()
-{ return ui->spinSwitchTime; }

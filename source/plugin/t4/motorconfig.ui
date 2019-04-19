@@ -24,44 +24,14 @@
        <string>Current</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
-       <property name="verticalSpacing">
-        <number>0</number>
-       </property>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_3">
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_5">
          <property name="text">
-          <string/>
+          <string>Shoulder</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QLabel" name="label_8">
-         <property name="text">
-          <string>Current</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QLabel" name="label_9">
-         <property name="text">
-          <string>Idle</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="2">
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="1" column="5">
+       <item row="1" column="4">
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -74,20 +44,6 @@
          </property>
         </spacer>
        </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>Base</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label_5">
-         <property name="text">
-          <string>Shoulder</string>
-         </property>
-        </widget>
-       </item>
        <item row="3" column="0">
         <widget class="QLabel" name="label_6">
          <property name="text">
@@ -95,43 +51,7 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Terminal</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>Wrist</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="3">
-        <widget class="QLabel" name="label_10">
-         <property name="text">
-          <string>Switch time</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1" colspan="3">
-        <widget class="MotorCurrent" name="current4" native="true"/>
-       </item>
-       <item row="2" column="1" colspan="3">
-        <widget class="MotorCurrent" name="current3" native="true"/>
-       </item>
-       <item row="3" column="1" colspan="3">
-        <widget class="MotorCurrent" name="current2" native="true"/>
-       </item>
-       <item row="4" column="1" colspan="3">
-        <widget class="MotorCurrent" name="current1" native="true"/>
-       </item>
-       <item row="5" column="1" colspan="3">
-        <widget class="MotorCurrent" name="current0" native="true"/>
-       </item>
-       <item row="0" column="4" rowspan="4">
+       <item row="0" column="3" rowspan="4">
         <widget class="QLabel" name="label_2">
          <property name="maximumSize">
           <size>
@@ -149,6 +69,104 @@
           <bool>true</bool>
          </property>
         </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Terminal</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>Wrist</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0" rowspan="2">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Base</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1" colspan="2">
+        <widget class="MotorCurrent" name="current3" native="true"/>
+       </item>
+       <item row="3" column="1" colspan="2">
+        <widget class="MotorCurrent" name="current2" native="true"/>
+       </item>
+       <item row="5" column="1" rowspan="2" colspan="2">
+        <widget class="MotorCurrent" name="current0" native="true"/>
+       </item>
+       <item row="4" column="1" colspan="2">
+        <widget class="MotorCurrent" name="current1" native="true"/>
+       </item>
+       <item row="0" column="0" colspan="3">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="minimumSize">
+            <size>
+             <width>48</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_8">
+           <property name="minimumSize">
+            <size>
+             <width>40</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Current</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_9">
+           <property name="minimumSize">
+            <size>
+             <width>40</width>
+             <height>40</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Idle</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="1" colspan="2">
+        <widget class="MotorCurrent" name="current4" native="true"/>
+       </item>
+       <item row="7" column="1">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>

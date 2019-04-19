@@ -58,7 +58,7 @@ public:
     eTerminalType mTerminalType;
     float mAxisCurrents[ T4Para::_axis_cnt ];
     float mAxisIdleCurrents[ T4Para::_axis_cnt ];
-    float mAxisSwitchTimes[ T4Para::_axis_cnt ];
+//    float mAxisSwitchTimes[ T4Para::_axis_cnt ];
 
     double mAxisZero[ T4Para::_axis_cnt ];
 

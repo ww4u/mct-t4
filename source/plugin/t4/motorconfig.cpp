@@ -28,14 +28,12 @@ MotorConfig::~MotorConfig()
 //#define get_current( id )   selfPara->mAxisCurrents[id] = ui->doubleSpinBox##id->value();
 
 #define set_current( id )   ui->current##id->setData( selfPara->mAxisCurrents[id],\
-                                                      selfPara->mAxisIdleCurrents[id],\
-                                                      selfPara->mAxisSwitchTimes[id]\
+                                                      selfPara->mAxisIdleCurrents[id]\
                                                         );
 
-#define get_current( id )   ui->current##id->getData( dc, ic, st );\
+#define get_current( id )   ui->current##id->getData( dc, ic);\
                             selfPara->mAxisCurrents[id] = dc;\
-                            selfPara->mAxisIdleCurrents[id] = ic;\
-                            selfPara->mAxisSwitchTimes[id] = st;
+                            selfPara->mAxisIdleCurrents[id] = ic;
 
 void MotorConfig::updateUi()
 {
@@ -99,7 +97,7 @@ int MotorConfig::upload()
         { return ret; }
 
         //！ \todo switch time api
-        currentWidgets[i]->setData( currents[i], iCurrents[i], 0 );
+        currentWidgets[i]->setData( currents[i], iCurrents[i]);
     }
 
     return 0;
@@ -119,10 +117,10 @@ int MotorConfig::download()
         ui->current4,
     };
 
-    double dc,ic,st;
+    double dc,ic;
     for ( int i = 0; i < pRobo->_axis_cnt; i++ )
     {
-        spins[i]->getData( dc, ic, st );
+        spins[i]->getData( dc, ic);
 
         ret = mrgMRQDriverCurrent( device_var(),
                                    i,
@@ -141,8 +139,7 @@ int MotorConfig::download()
 }
 
 #define current_spins( id ) ui->current##id->doubleSpinCurrent(),\
-                            ui->current##id->doubleSpinIdleCurrent(),\
-                            ui->current##id->doubleSpinSwitchTime()
+                            ui->current##id->doubleSpinIdleCurrent()
 void MotorConfig::spyEdited()
 {
     QGroupBox *gpBox[]=

@@ -94,14 +94,6 @@ logDbg()<<mAddr;
                break;
            }
 
-           //! angle
-           ret = mrgMRQReportState( self_device_var(), i, 5, dataOnOff );
-           if ( ret != 0 )
-           {
-               sysError( tr("Data report state fail") );
-               break;
-           }
-
 //           ret = mrgMRQReportPeriod( self_device_var(), i, 0, 1000 );
 //           if ( ret != 0 )
 //           {
@@ -130,13 +122,6 @@ void MRX_T4::close()
                    continue;
                }
 
-               //! angle
-               ret = mrgMRQReportState( self_device_var(), i, 5, 0 );
-               if ( ret != 0 )
-               {
-                   sysError( tr("Data report off fail") );
-                   continue;
-               }
             }
             mrgCloseGateWay( mVi);
             mVi = -1;

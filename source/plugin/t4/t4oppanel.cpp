@@ -450,13 +450,14 @@ void T4OpPanel::updateRefreshPara( QEvent *e )
     ui->controllerStatus->setWorkingStatus( mRefreshPara.mRoboState );
 }
 
-#define ABS_ANGLE_TO_DEG( angle )   (360.0f*(angle))/((1<<18)-1)
+//! \note 24bit encoder
+#define ABS_ANGLE_TO_DEG( angle )   (360.0f* ( (angle)&(0x0ffffff))) /((1<<18)-1)
 int T4OpPanel::posRefreshProc( void *pContext )
 {
     //! to local
     MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
     Q_ASSERT( NULL != pRobo );
-//logDbg()<<QThread::currentThreadId();
+
     if ( pRobo->isOpened() )
     {}
     else
@@ -502,28 +503,20 @@ int T4OpPanel::posRefreshProc( void *pContext )
 
         //! angle now
         float angles[5];
-//        ret = mrgGetRobotCurrentAngle( robot_var(),
 
-//
+        quint32 encData;
+        for ( int i = 0; i < 4; i++ )
+        {
+            ret = mrgMRQReportData_Query( device_var(), i, 5, &encData );
+            if ( ret <= 0 )
+            { break; }
 
-//        quint32 encData;
-//        for ( int i = 0; i < 4; i++ )
-//        {
-//            ret = mrgMRQReportData_Query( device_var(), i, 5, &encData );
-//            if ( ret != 0 )
-//            { break; }
-
-//            angles[i] = ABS_ANGLE_TO_DEG( encData );
-//        }
-//        if ( ret < 0 )
-//        { break; }
-
-        ret = mrgGetRobotJointAngle( robot_var(), -1,
-                                       angles );
-        if ( ret == 0 )
+            angles[i] = ABS_ANGLE_TO_DEG( encData );
+        }
+        if ( ret <= 0 )
         { break; }
 
-        else
+        //! convert
         {
             mRefreshPara.angles[0] = angles[0];
             mRefreshPara.angles[1] = angles[1];
@@ -1972,6 +1965,11 @@ void T4OpPanel::on_btnAdd_clicked()
     //! from index
     QModelIndex modelIndex;
 
+    //! current
+    modelIndex = pModel->index( cRow, 0 );
+    ui->tvDebug->setCurrentIndex( modelIndex );
+    ui->tvDebug->scrollTo( modelIndex );
+
     //! id
     modelIndex = pModel->index( cRow, 0 );
     { pModel->setData( modelIndex, pRobo->currentRecordIndex() + 1 ); }
@@ -1979,8 +1977,6 @@ void T4OpPanel::on_btnAdd_clicked()
     //! delay
     modelIndex = pModel->index( cRow, 1 );
     pModel->setData( modelIndex, ui->spinDly->value() );
-
-    logDbg();
 }
 
 void T4OpPanel::on_btnDel_clicked()

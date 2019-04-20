@@ -514,7 +514,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
 
             //! delta angles
             double dAngles[4];
-            int dir []= { -1, -1, 1, -1 };
+            int dir []= { 1, 1, 1, 1 };
             for ( int i = 0; i < 4; i++ )
             {
                 dAngles[ i ] = normalizeDegreeN180_180( angles[ i ] - pRobo->mAxisZero[i] ) * dir[i];
@@ -982,7 +982,7 @@ void T4OpPanel::stepProc( int jId, int dir )
     if ( isCoordJoint() || jId >= 4 )
     {
         QList<QVariant> vars;
-        vars<<(jId-1)<<1;
+        vars<<(jId-1)<<dir;
         QVariant var( vars );
         on_post_setting( T4OpPanel, onJointStep, tr("Joint step") );
     }

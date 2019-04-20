@@ -115,12 +115,13 @@ QWidget *MRX_T4::createOpsPanel( QAbstractListModel *pModel,
 }
 void MRX_T4::retranslateUi()
 {
+    //! \todo + item
     mTreeItems.at(0)->setText( 0, tr("MRX-T4") ) ;
     mTreeItems.at(1)->setText( 0, tr("Configuration") ) ;
-    mTreeItems.at(2)->setText( 0, tr("Misc") ) ;
-    mTreeItems.at(3)->setText( 0, tr("Motor") ) ;
-    mTreeItems.at(4)->setText( 0, tr("Record Table") ) ;
-    mTreeItems.at(5)->setText( 0, tr("Error Management") ) ;
+    mTreeItems.at(2)->setText( 0, tr("Motor") ) ;
+    mTreeItems.at(3)->setText( 0, tr("Record Table") ) ;
+//    mTreeItems.at(5)->setText( 0, tr("Error Management") ) ;
+    mTreeItems.at(4)->setText( 0, tr("Misc") ) ;
 
     //! tree header
 //    headerList<<"Record"<<"Type"

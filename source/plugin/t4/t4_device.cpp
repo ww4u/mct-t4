@@ -143,7 +143,8 @@ int MRX_T4::stop()
     m_pMissionWorking->requestInterruption();
     m_pMissionWorking->wait();
 
-    int ret = mrgSysSetEmergencyStop( mVi, 1 );
+//    int ret = mrgSysSetEmergencyStop( mVi, 1 );
+    int ret = mrgRobotStop( mVi, mRobotHandle, wave_table );
     if ( ret != 0 )
     { sysError( tr("Stop fail") );}
 

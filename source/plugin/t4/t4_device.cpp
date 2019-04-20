@@ -94,6 +94,14 @@ logDbg()<<mAddr;
                break;
            }
 
+           //! angle
+           ret = mrgMRQReportState( self_device_var(), i, 5, dataOnOff );
+           if ( ret != 0 )
+           {
+               sysError( tr("Data report state fail") );
+               break;
+           }
+
 //           ret = mrgMRQReportPeriod( self_device_var(), i, 0, 1000 );
 //           if ( ret != 0 )
 //           {
@@ -116,6 +124,14 @@ void MRX_T4::close()
             for ( int i = 0; i < T4Para::_axis_cnt; i++ )
             {
                int ret = mrgMRQReportState( self_device_var(), i, 0, 0 );
+               if ( ret != 0 )
+               {
+                   sysError( tr("Data report off fail") );
+                   continue;
+               }
+
+               //! angle
+               ret = mrgMRQReportState( self_device_var(), i, 5, 0 );
                if ( ret != 0 )
                {
                    sysError( tr("Data report off fail") );
@@ -151,6 +167,22 @@ int MRX_T4::stop()
     //! request the upload
 
 //    post_setting( )
+
+    return 0;
+}
+
+int MRX_T4::fStop()
+{
+    //! stop working
+    m_pMissionWorking->requestInterruption();
+    m_pMissionWorking->wait();
+
+    int ret = mrgSysSetEmergencyStop( mVi, 1 );
+    if ( ret != 0 )
+    { sysError( tr("Stop fail") );}
+
+    //! stop off
+    mrgSysSetEmergencyStop( mVi, 0 );
 
     return 0;
 }
@@ -224,18 +256,18 @@ int MRX_T4::onXEvent( XEvent *pEvent )
 }
 
 void MRX_T4::xevent_updateui( XEvent *pEvent )
-{
+{logDbg();
     //! cast to page
     QObject *pObj;
     pObj = pEvent->mVar1.value<QObject*>();
     if ( NULL == pObj )
-    { return; }
+    { logDbg(); return; }
 
     XPage *pPage = dynamic_cast<XPage*>(pObj);
     if ( NULL == pPage )
-    { return; }
+    { logDbg(); return; }
 
-    pPage->updateUi();
+    pPage->updateUi();logDbg();
 }
 
 int MRX_T4::_uploadProc()
@@ -270,7 +302,7 @@ int MRX_T4::_uploadProc()
                 {
                     XEvent *pEvent = new XEvent( MRX_T4::e_x_update_ui, QVariant::fromValue( (QObject*)pWig) );
                     if ( NULL == pEvent )
-                    { break; }
+                    { logDbg(); break; }
 
                     qApp->postEvent( this, pEvent );
 

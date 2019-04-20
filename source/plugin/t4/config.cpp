@@ -67,7 +67,7 @@ void Config::updateUi()
     //! set type
     ui->cmbTypeTerminal->setCurrentIndex( (int)selfPara->mTerminalType );
     on_cmbTypeTerminal_currentIndexChanged( ui->cmbTypeTerminal->currentIndex() );
-
+logDbg()<<selfPara->mAxisZero[0];
     //! zero
 //    ui->spinZero0->setValue( selfPara->mAxisZero[0] );
     set_zero( 0 );
@@ -136,8 +136,8 @@ int Config::upload()
     double angle;
 
     //! get zero
-    QList<QDoubleSpinBox*> spins;
-    spins<<ui->spinZero0<<ui->spinZero1<<ui->spinZero2<<ui->spinZero3;
+//    QList<QDoubleSpinBox*> spins;
+//    spins<<ui->spinZero0<<ui->spinZero1<<ui->spinZero2<<ui->spinZero3;
     for ( int i = 0; i < 4; i++ )
     {
         ret = mrgMRQAbsEncoderZeroValue_Query( device_var(),
@@ -148,7 +148,8 @@ int Config::upload()
 
         //! convert the value
         angle = ABS_ANGLE_TO_DEG( val );
-        spins[i]->setValue( angle );
+//        spins[i]->setValue( angle );
+        selfPara->mAxisZero[i] = angle;
     }
 
     //! limit
@@ -177,7 +178,10 @@ int Config::upload()
         //! convert the value
         lmtH = ABS_ANGLE_TO_DEG( val );
 
-        ui->lmtSoftLimit->setRange( i, lmtL, lmtH );
+//        ui->lmtSoftLimit->setRange( i, lmtL, lmtH );
+
+        selfPara->mAxisSoftLower[i] = lmtL;
+        selfPara->mAxisSoftUpper[i] = lmtH;
 
         ret = mrgMRQAbsEncoderAlarmState_Query( device_var(), i, &lmtOnOff );
         if ( ret != 0 )
@@ -185,7 +189,7 @@ int Config::upload()
 
         lmtsOnOff = lmtsOnOff && (lmtOnOff > 0 );
     }
-    ui->lmtSoftLimit->setLimitOn( lmtsOnOff );
+    selfPara->mbAxisSoftEnable = lmtsOnOff;
 
     //! \todo safe area
 
@@ -198,9 +202,14 @@ int Config::upload()
     if ( ret != 0 )
     { logDbg(); return -1; }
 
-    ui->spinBase->setValue( link[0] );
-    ui->spinBA->setValue( link[1] );
-    ui->spinLA->setValue( link[2] );
+//    ui->spinBase->setValue( link[0] );
+//    ui->spinBA->setValue( link[1] );
+//    ui->spinLA->setValue( link[2] );
+
+    for ( int al = 0; al < 3; al++ )
+    {
+        selfPara->mArmLength[al] = link[al];
+    }
 
     //! slow ratio
     int a, b;
@@ -212,14 +221,18 @@ int Config::upload()
                                     &a, &b );
         if ( ret == 0 )
         {
-            ui->spinMult->setValue( a );
-            ui->spinDiv->setValue( b );
-            ui->gpSlow->setVisible( true );
+//            ui->spinMult->setValue( a );
+//            ui->spinDiv->setValue( b );
+//            ui->gpSlow->setVisible( true );
+
+            selfPara->mSlowMult = a;
+            selfPara->mSlowDiv = b;
+
         }else{
             return ret;
         }
     }else{
-        ui->gpSlow->setVisible( false );
+//        ui->gpSlow->setVisible( false );
     }
 
     return 0;

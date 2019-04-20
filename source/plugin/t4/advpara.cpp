@@ -23,7 +23,12 @@ AdvPara::AdvPara(QWidget *parent) :
     ui->spinHomeSpeed->setSuffix( QString("%1/s").arg( char_deg )  );
     ui->spinAcc->setSuffix( QString("mm/s%1").arg( char_square ) );
     ui->spinJerk->setSuffix( QString("mm/s%1").arg( char_trible ) );
-    ui->spinJointSpeed->setSuffix( QString("%1/s").arg( char_deg ) );
+
+    ui->spinJoint0Speed->setSuffix( QString("%1/s").arg( char_deg ) );
+    ui->spinJoint1Speed->setSuffix( QString("%1/s").arg( char_deg ) );
+    ui->spinJoint2Speed->setSuffix( QString("%1/s").arg( char_deg ) );
+    ui->spinJoint3Speed->setSuffix( QString("%1/s").arg( char_deg ) );
+    ui->spinJoint4Speed->setSuffix( QString("%1/s").arg( char_deg ) );
 }
 
 AdvPara::~AdvPara()
@@ -53,7 +58,12 @@ void AdvPara::updateUi()
     exchange_spin( spinAcc, pRobo->mMaxAcc, bDir )
     exchange_spin( spinJerk, pRobo->mMaxJerk, bDir )
 
-    exchange_spin( spinJointSpeed, pRobo->mMaxJointSpeed, bDir )
+    exchange_spin( spinJoint0Speed, pRobo->mMaxJointSpeeds[0], bDir )
+    exchange_spin( spinJoint1Speed, pRobo->mMaxJointSpeeds[1], bDir )
+    exchange_spin( spinJoint2Speed, pRobo->mMaxJointSpeeds[2], bDir )
+    exchange_spin( spinJoint3Speed, pRobo->mMaxJointSpeeds[3], bDir )
+    exchange_spin( spinJoint4Speed, pRobo->mMaxJointSpeeds[4], bDir )
+
     exchange_spin( spinTerminalSpeed, pRobo->mMaxTerminalSpeed, bDir )
 }
 
@@ -70,7 +80,12 @@ void AdvPara::updateData()
     exchange_spin( spinAcc, pRobo->mMaxAcc, bDir )
     exchange_spin( spinJerk, pRobo->mMaxJerk, bDir )
 
-    exchange_spin( spinJointSpeed, pRobo->mMaxJointSpeed, bDir )
+    exchange_spin( spinJoint0Speed, pRobo->mMaxJointSpeeds[0], bDir )
+    exchange_spin( spinJoint1Speed, pRobo->mMaxJointSpeeds[1], bDir )
+    exchange_spin( spinJoint2Speed, pRobo->mMaxJointSpeeds[2], bDir )
+    exchange_spin( spinJoint3Speed, pRobo->mMaxJointSpeeds[3], bDir )
+    exchange_spin( spinJoint4Speed, pRobo->mMaxJointSpeeds[4], bDir )
+
     exchange_spin( spinTerminalSpeed, pRobo->mMaxTerminalSpeed, bDir )
 }
 
@@ -100,7 +115,12 @@ void AdvPara::spyEdited()
         ui->spinAcc,
         ui->spinJerk,
 
-        ui->spinJointSpeed,
+        ui->spinJoint0Speed,
+        ui->spinJoint1Speed,
+        ui->spinJoint2Speed,
+        ui->spinJoint3Speed,
+        ui->spinJoint4Speed,
+
         ui->spinTerminalSpeed,
     };
 

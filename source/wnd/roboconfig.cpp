@@ -971,7 +971,7 @@ void RoboConfig::plginsClose()
 void RoboConfig::pluginsStop()
 {   
     foreach_plugin()
-        mPluginList[i]->stop();
+        mPluginList[i]->fStop();
     end_foreach_plugin()
 }
 

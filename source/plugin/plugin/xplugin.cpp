@@ -513,7 +513,7 @@ bool XPlugin::event(QEvent *pEvent)
 {
     Q_ASSERT( NULL != pEvent );
     if ( pEvent->type() >= XEvent::e_xevent_base
-         && pEvent->type() < XEvent::e_xevent_plugins )
+         && pEvent->type() < XEvent::e_xevent_max )
     {
         int ret;
 

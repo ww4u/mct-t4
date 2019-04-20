@@ -487,7 +487,7 @@ void MainWindow::slot_plugin_operable( bool b )
 
     ui->actionStore->setEnabled( b );
 
-    ui->actionHome->setEnabled( b );
+    ui->actionHome->setVisible( b );    logDbg()<<b;
 
     //! \todo plugin opened
     //! plugin operable

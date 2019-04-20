@@ -45,8 +45,9 @@ Source: "doc\*"; DestDir: "{app}\doc";  Flags: recursesubdirs
 [Dirs]
 ;Name: "{app}\temp"
 
-[UninstallDelete]
 ;Type: filesandordirs; Name: "{app}\temp"
+[UninstallDelete]
+Type: files; Name: "{app}\*.xml"
 
 [Run]
 Filename: "{app}\doc\readme.txt"; Description: "View the readme file"; Flags: postinstall shellexec skipifsilent runascurrentuser waituntilterminated

@@ -65,6 +65,7 @@ public:
     virtual void close();
 
     virtual int stop();
+    virtual int fStop();
 
     bool isOpened();
     bool isFoldable();

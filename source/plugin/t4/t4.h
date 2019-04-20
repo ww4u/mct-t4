@@ -130,6 +130,7 @@ public:
     virtual void startup();
 
     virtual int stop();
+    virtual int fStop();
 
     virtual void rst();
 

@@ -450,6 +450,7 @@ void T4OpPanel::updateRefreshPara( QEvent *e )
     ui->controllerStatus->setWorkingStatus( mRefreshPara.mRoboState );
 }
 
+#define ABS_ANGLE_TO_DEG( angle )   (360.0f*(angle))/((1<<18)-1)
 int T4OpPanel::posRefreshProc( void *pContext )
 {
     //! to local
@@ -501,10 +502,27 @@ int T4OpPanel::posRefreshProc( void *pContext )
 
         //! angle now
         float angles[5];
-        ret = mrgGetRobotCurrentAngle( robot_var(),
+//        ret = mrgGetRobotCurrentAngle( robot_var(),
+
+//
+
+//        quint32 encData;
+//        for ( int i = 0; i < 4; i++ )
+//        {
+//            ret = mrgMRQReportData_Query( device_var(), i, 5, &encData );
+//            if ( ret != 0 )
+//            { break; }
+
+//            angles[i] = ABS_ANGLE_TO_DEG( encData );
+//        }
+//        if ( ret < 0 )
+//        { break; }
+
+        ret = mrgGetRobotJointAngle( robot_var(), -1,
                                        angles );
-        if ( ret <= 0 )
+        if ( ret == 0 )
         { break; }
+
         else
         {
             mRefreshPara.angles[0] = angles[0];
@@ -515,6 +533,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
             //! delta angles
             double dAngles[4];
             int dir []= { -1, -1, 1, -1 };
+//            double baseAngles[] = { 0, 180, 90, 90 };
             for ( int i = 0; i < 4; i++ )
             {
                 dAngles[ i ] = normalizeDegreeN180_180( angles[ i ] - pRobo->mAxisZero[i] ) * dir[i];
@@ -855,7 +874,7 @@ int T4OpPanel::upload()
 
     //! \note get power
     int ret, state;
-    ret = pRobo->mbAxisPwr = mrgMRQDriverState_Query( device_var(), 0, &state );
+    ret = mrgMRQDriverState_Query( device_var(), 0, &state );
     if ( ret == 0 )
     {
         pRobo->mbAxisPwr = state > 0 ;

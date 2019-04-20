@@ -70,6 +70,10 @@ public:
         e_xevent_prompt,    //! v1: 0,1,2; v2: info
 
         e_xevent_plugins = QEvent::User + 128,
+
+
+
+        e_xevent_max = QEvent::User + 512,
     };
 
 public:

@@ -40,6 +40,8 @@ QWidget *IODelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &o
     IOWidget *pWig = new IOWidget( mWidth, parent );
     Q_ASSERT( NULL != pWig );
 
+//    pWig->setWindowFlag( Qt::Popup, true );
+
     return pWig;
 }
 

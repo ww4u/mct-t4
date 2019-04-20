@@ -135,10 +135,11 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
     //! data
     if ( item->level() == 2 && index.column() == 0 )
     {
-        int secId = item->parent()->data( 0 ).toInt();
+        int secId = item->parent()->childNumber() + 1;
+
         int childId = item->childNumber();
 
-        return QString("%1.%2").arg( secId).arg( childId + 1 );
+        return QString("%1.%2").arg( secId ).arg( childId + 1 );
     }
     else if ( item->level() == 1 && index.column() == 0 )
     {

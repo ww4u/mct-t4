@@ -93,7 +93,7 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     connect( &mDebugTable, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
              this, SLOT(slot_debug_table_changed()) );
     connect( &mDebugTable, SIGNAL(signal_current_changed(int)),
-             this, SLOT(slot_debug_table_changed(int)) );
+             this, SLOT(slot_debug_table_changed()) );
 
     connect( &mDebugTable, SIGNAL(signal_current_changed(int)),
              this, SLOT(slot_debug_current_changed(int)) );
@@ -826,13 +826,46 @@ void T4OpPanel::updateData()
     pRobo->mSpeed = ui->cmbSpeed->currentText().toDouble();
 
     pRobo->mbMctEn = ui->controllerStatus->isMctChecked();
-    pRobo->mbAxisPwr = ui->controllerStatus->isDevicePowerEnable();
+    pRobo->mbAxisPwr = ui->controllerStatus->getDevicePower();
+}
+
+void T4OpPanel::startup()
+{
+    MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
+    Q_ASSERT( NULL != pRobo );
+
+    //! operate
+    setOperAble( pRobo->mbMctEn );
+
+    if ( pRobo->mbMctEn )
+    { setOnLine( pRobo->mbAxisPwr ); }
 }
 
 void T4OpPanel::updateRole()
 {
     //! \note the role changed
     switchCoordMode();
+}
+
+//! exchange
+int T4OpPanel::upload()
+{
+    MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
+    Q_ASSERT( NULL != pRobo );
+
+    //! \note get power
+    int ret, state;
+    ret = pRobo->mbAxisPwr = mrgMRQDriverState_Query( device_var(), 0, &state );
+    if ( ret == 0 )
+    {
+        pRobo->mbAxisPwr = state > 0 ;
+    }
+
+    return ret;
+}
+int T4OpPanel::download()
+{
+    return 0;
 }
 
 void T4OpPanel::onSetting(XSetting setting)
@@ -912,6 +945,7 @@ void T4OpPanel::exitMission( )
     }
 }
 
+#define local_on_line()  ( ui->controllerStatus->getDevicePower() && ui->controllerStatus->isMctChecked() )
 void T4OpPanel::setOperAble( bool b )
 {
     ui->controllerStatus->setDevicePowerEnable( b );
@@ -921,13 +955,15 @@ void T4OpPanel::setOperAble( bool b )
     {
         ui->tabWidget->widget( i )->setEnabled( b );
     }
+
+    ui->tabWidget->widget( 2 )->setEnabled( local_on_line() );
 }
 
 void T4OpPanel::setOnLine( bool b )
 {
     //! \note disable the run
-    ui->tabWidget->widget( 2 )->setEnabled( b );
-    ui->toolButton_debugRun->setEnabled( b );
+    ui->tabWidget->widget( 2 )->setEnabled( local_on_line() );
+    ui->toolButton_debugRun->setEnabled( local_on_line() );
 }
 
 void T4OpPanel::setOpened( bool b )
@@ -1431,6 +1467,7 @@ void T4OpPanel::slot_mct_checked( bool b )
 void T4OpPanel::slot_pwr_checked( bool b )
 {
     check_connect( );
+
     int ret;
     for ( int jId = 0; jId < 5; jId++ )
     {

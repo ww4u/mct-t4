@@ -126,6 +126,9 @@ void XPage::updateUi()
 void XPage::updateData()
 {}
 
+void XPage::startup()
+{}
+
 void XPage::updateRole()
 {}
 

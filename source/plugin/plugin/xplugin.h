@@ -65,6 +65,7 @@ public:
         e_xevent_stop,
         e_xevent_pause,
         e_xevent_estop,
+        e_xevent_startup,
 
         e_xevent_prompt,    //! v1: 0,1,2; v2: info
 
@@ -144,6 +145,7 @@ public:
 public:
     virtual void updateUi();
 
+    virtual void startup();
     virtual void rst();
     virtual void home();
     virtual void fold();

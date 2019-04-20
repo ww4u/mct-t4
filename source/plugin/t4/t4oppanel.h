@@ -264,8 +264,12 @@ public:
 
     virtual void updateUi();
     virtual void updateData();
+    virtual void startup();
 
     virtual void updateRole();
+
+    virtual int upload();
+    virtual int download();
 
     virtual void onSetting(XSetting setting);
 

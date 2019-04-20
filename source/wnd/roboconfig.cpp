@@ -66,6 +66,8 @@ RoboConfig::RoboConfig(QWidget *parent) :
     //! 如果在MRH-T上运行自动添加本地
     addDeviceWithIP("127.0.0.1");
 #endif
+
+    qRegisterMetaType<XSetting>( "XSetting" );
 }
 
 RoboConfig::~RoboConfig()
@@ -1019,12 +1021,15 @@ void RoboConfig::slot_plugin_setting_changed( XSetting setting )
             emit signal_plugins_operable( false );
         }
     }
+    //! op able
+    else if ( setting.mSetting == XPage::e_setting_op_able )
+    {
+        emit signal_plugins_operable( setting.mPara1.toBool() );
+    }
     //! on line
     else if ( setting.mSetting == XPage::e_setting_online )
     {
-        bool bOnLine = setting.mPara1.toBool();
-
-        emit signal_plugins_online( bOnLine );
+        emit signal_plugins_online( setting.mPara1.toBool() );
     }
     else if ( setting.mSetting == XPage::e_setting_mission_working )
     {

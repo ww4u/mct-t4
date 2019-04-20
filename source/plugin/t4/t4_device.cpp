@@ -12,7 +12,7 @@
 
 bool MRX_T4::isOnLine()
 {
-    return mbMctEn;
+    return mbAxisPwr && mbMctEn;
 }
 
 int MRX_T4::open()
@@ -123,6 +123,11 @@ void MRX_T4::close()
     emit_setting_changed( XPage::e_setting_opened, false );
 }
 
+void MRX_T4::startup()
+{
+    startupProc();
+}
+
 int MRX_T4::stop()
 {
     //! stop working
@@ -199,8 +204,28 @@ int MRX_T4::diff()
 int MRX_T4::onXEvent( XEvent *pEvent )
 {
     //! \todo stop/estop/
+    if ( pEvent->type() == e_x_update_ui )
+    {
+        xevent_updateui( pEvent );
+        return 0;
+    }
 
     return XPlugin::onXEvent( pEvent );
+}
+
+void MRX_T4::xevent_updateui( XEvent *pEvent )
+{
+    //! cast to page
+    QObject *pObj;
+    pObj = pEvent->mVar1.value<QObject*>();
+    if ( NULL == pObj )
+    { return; }
+
+    XPage *pPage = dynamic_cast<XPage*>(pObj);
+    if ( NULL == pPage )
+    { return; }
+
+    pPage->updateUi();
 }
 
 int MRX_T4::_uploadProc()
@@ -230,7 +255,18 @@ int MRX_T4::_uploadProc()
 
             //! update data
             if ( ret == 0 )
-            { pPage->updateData(); }
+            {
+                do
+                {
+                    XEvent *pEvent = new XEvent( MRX_T4::e_x_update_ui, QVariant::fromValue( (QObject*)pWig) );
+                    if ( NULL == pEvent )
+                    { break; }
+
+                    qApp->postEvent( this, pEvent );
+
+                }while( 0 );
+
+            }
         }
     }
 
@@ -249,7 +285,16 @@ int MRX_T4::uploadProc()
 
     //! save
     if ( ret == 0 )
-    { slot_save_setting(); }
+    {
+        slot_save_setting();
+
+        //! start up
+        XEvent *pEvent = new XEvent( XEvent::e_xevent_startup );
+        if ( NULL != pEvent )
+        {
+            qApp->postEvent( this, pEvent );
+        }
+    }
 
     sysProgress( "Uploading...", false );
 
@@ -303,6 +348,36 @@ int MRX_T4::diffProc()
 
 int MRX_T4::onStop( QVariant var )
 {
+    return 0;
+}
+
+int MRX_T4::_startupProc()
+{
+    //! foeach pages
+    XPage *pPage;
+    int i = 0;
+    foreach( QWidget *pWig, mPluginWidgets )
+    {
+        Q_ASSERT( NULL != pWig );
+        pPage = dynamic_cast<XPage*>( pWig );
+        if ( NULL != pPage )
+        {
+            //! startup
+            pPage->startup();
+        }
+    }
+
+    return 0;
+}
+
+int MRX_T4::startupProc()
+{
+    sysProgress( "Startup...", true, 0 );
+
+    _startupProc();
+
+    sysProgress( "Startup...", false );
+
     return 0;
 }
 

@@ -83,6 +83,7 @@ public:
 
     virtual void updateUi();        //! data -> ui
     virtual void updateData();
+    virtual void startup();
 
     virtual void updateRole();
 

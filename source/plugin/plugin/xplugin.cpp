@@ -196,6 +196,9 @@ void XPlugin::updateUi()
     }
 }
 
+void XPlugin::startup()
+{}
+
 void XPlugin::rst()
 {}
 
@@ -533,6 +536,11 @@ int XPlugin::onXEvent( XEvent *pEvent )
         sysPrompt( pEvent->mVar2.toString(), pEvent->mVar1.toInt() );
         return 0;
     }
+    else if ( pEvent->type() == XEvent::e_xevent_startup )
+    { startup(); }
+    else
+    {}
+
 
     return 0;
 }

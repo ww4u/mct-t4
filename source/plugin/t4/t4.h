@@ -89,6 +89,11 @@ public:
         e_setting_record,
     };
 
+    enum eT4XEvent
+    {
+        e_x_update_ui = XEvent::e_xevent_plugins,
+    };
+
 public:
     MRX_T4( QObject *parent = nullptr );
     ~MRX_T4();
@@ -122,6 +127,8 @@ public:
     virtual int open();
     virtual void close();
 
+    virtual void startup();
+
     virtual int stop();
 
     virtual void rst();
@@ -140,6 +147,9 @@ protected:
     virtual int onXEvent( XEvent *pEvent );
 
 protected:
+    void xevent_updateui( XEvent *pEvent );
+
+protected:
     int _uploadProc();
     int uploadProc();
 
@@ -150,6 +160,9 @@ protected:
     int diffProc();
 
     int onStop( QVariant var );
+
+    int _startupProc();
+    int startupProc();
 //    int onHoming( QVariant var );
 //    int onFolding( QVariant var );
 

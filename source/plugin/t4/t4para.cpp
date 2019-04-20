@@ -85,8 +85,9 @@ void T4Para::rst()
     mMaxAcc = 10;
     mMaxJerk = 10;
 
-    mMaxJointSpeed =  180;
     mMaxTerminalSpeed = 250;
+
+    mMaxJointSpeeds<<170<<50<<50<<180<<60;
 
     mbAxisPwr = true;
     mbMctEn = true;
@@ -186,8 +187,14 @@ int T4Para::serialOut( QXmlStreamWriter &writer )
     writer.writeTextElement( "acc", QString::number( mMaxAcc ) );
         writer.writeTextElement( "jerk", QString::number( mMaxJerk ) );
 
-        writer.writeTextElement( "joint", QString::number( mMaxJointSpeed ) );
         writer.writeTextElement( "terminal", QString::number( mMaxTerminalSpeed ) );
+
+        //! each joint
+        for ( int i = 0; i < mMaxJointSpeeds.size(); i++ )
+        {
+            writer.writeTextElement( "joint", QString::number( mMaxJointSpeeds.at(i) ) );
+        }
+
     writer.writeEndElement();
 
     //! control
@@ -368,6 +375,7 @@ int T4Para::serialIn( QXmlStreamReader &reader )
         }
         else if ( reader.name() == "max_speed" )
         {
+            int jid = 0;
             while( reader.readNextStartElement() )
             {
                 if ( reader.name() == "acc" )
@@ -375,7 +383,9 @@ int T4Para::serialIn( QXmlStreamReader &reader )
                 else if ( reader.name() == "jerk" )
                 { mMaxJerk = reader.readElementText().toDouble(); }
                 else if ( reader.name() == "joint" )
-                { mMaxJointSpeed = reader.readElementText().toDouble(); }
+                {
+                    mMaxJointSpeeds[jid++] = reader.readElementText().toDouble();
+                }
                 else if ( reader.name() == "terminal" )
                 { mMaxTerminalSpeed = reader.readElementText().toInt(); }
                 else

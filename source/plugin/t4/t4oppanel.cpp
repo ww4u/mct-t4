@@ -982,7 +982,7 @@ void T4OpPanel::stepProc( int jId, int dir )
     if ( isCoordJoint() || jId >= 4 )
     {
         QList<QVariant> vars;
-        vars<<(jId-1)<<1;
+        vars<<(jId-1)<<dir;
         QVariant var( vars );
         on_post_setting( T4OpPanel, onJointStep, tr("Joint step") );
     }
@@ -1126,8 +1126,8 @@ int T4OpPanel::onJointStep( QVariant var /*int jId, int dir*/ )
 
     double stp = localStep();
 
-    double spd = pRobo->mMaxJointSpeed * localSpeed() / 100.0;
-    logDbg()<<spd<<stp/spd<<pRobo->mMaxJointSpeed;
+    double spd = pRobo->mMaxJointSpeeds.at(jId) * localSpeed() / 100.0;
+
     int ret = mrgMRQAdjust( device_var(), jId, 0, dir * stp, stp/spd, guess_dist_time_ms( stp/spd, stp ) );
     return ret;
 }
@@ -1166,7 +1166,7 @@ int T4OpPanel::onJointJog( QVariant var )
     dir = vars[1].toInt();
     btnId = vars[2].toInt();
 
-    double speed = pRobo->mMaxJointSpeed * localSpeed() / 100.0;
+    double speed = pRobo->mMaxJointSpeeds.at(jId) * localSpeed() / 100.0;
 
     int ret = -1;
     //! \todo stop2

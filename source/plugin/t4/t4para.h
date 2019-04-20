@@ -85,7 +85,10 @@ public:
 
     double mMaxAcc, mMaxJerk;
 
-    double mMaxJointSpeed, mMaxTerminalSpeed;
+    double mMaxJointSpeed;
+    double mMaxTerminalSpeed;
+
+    QList<double> mMaxJointSpeeds;
 
     bool mbAxisPwr, mbMctEn;
 

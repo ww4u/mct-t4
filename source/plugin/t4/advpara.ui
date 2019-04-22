@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>434</width>
-    <height>363</height>
+    <height>395</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -66,7 +66,7 @@
              <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
             <property name="suffix">
-             <string>mm/s</string>
+             <string/>
             </property>
             <property name="minimum">
              <double>1.000000000000000</double>

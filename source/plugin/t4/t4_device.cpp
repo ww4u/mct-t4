@@ -18,7 +18,7 @@ bool MRX_T4::isOnLine()
 int MRX_T4::open()
 {
     int vi;
-logDbg()<<mAddr;
+
     vi = mrgOpenGateWay( mAddr.toLatin1().data(), 2000 );
     if ( vi > 0 )
     {
@@ -253,8 +253,8 @@ void MRX_T4::xevent_updateui( XEvent *pEvent )
     XPage *pPage = dynamic_cast<XPage*>(pObj);
     if ( NULL == pPage )
     { logDbg(); return; }
-
-    pPage->updateUi();logDbg();
+logDbg()<<pObj->objectName();
+    pPage->updateUi();logDbg()<<pObj->objectName();
 }
 
 int MRX_T4::_uploadProc()
@@ -270,12 +270,12 @@ int MRX_T4::_uploadProc()
         Q_ASSERT( NULL != pWig );
         pPage = dynamic_cast<XPage*>( pWig );
         if ( NULL != pPage )
-        {
+        {logDbg()<<pPage->objectName();
             //! upload
             ret = pPage->upload();
             if ( ret != 0 )
             {
-                logDbg()<<pPage->objectName();
+                logDbg()<<pPage->objectName()<<ret;
                 sysError( tr("Upload fail") );
                 //! \todo
 //                return ret;

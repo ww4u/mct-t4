@@ -23,11 +23,18 @@ class ActionTable : public XPage
     Q_OBJECT
 
 public:
+    enum eActionEvent
+    {
+        e_event_post_load = Qt::UserRole + 1
+    };
+
+public:
     explicit ActionTable(QWidget *parent = 0);
     ~ActionTable();
 
 protected:
     virtual void keyReleaseEvent(QKeyEvent *event);
+    virtual bool event(QEvent *event);
 
 protected:
     virtual void retranslateUi();
@@ -55,8 +62,11 @@ public:
 protected:
     void addRecord( XSetting setting );
     void editRecord( XSetting setting );
+
     void doSave();
     void doLoad();
+
+    void postDoLoad();
 
 protected:
     void updateControl();
@@ -71,7 +81,9 @@ protected:
 
 private:
     Ui::ActionTable *ui;
-//    IODelegate *m_pIDelegate;
+
+    QAbstractItemView::EditTriggers mRawEditTriggers;
+
     IODelegate *m_pODelegate;
     ComboxDelegate *m_pTypeDelegate;
     dSpinDelegate *m_pDelegateXYZ;
@@ -120,6 +132,8 @@ protected Q_SLOTS:
 
     void slot_resize();
 
+    void slot_post_save_timeout();
+
     void slot_customContextMenuRequested(const QPoint &pos);
 private slots:
     void on_toolExport_clicked();
@@ -129,7 +143,6 @@ private slots:
     void on_toolDel_clicked();
     void on_toolClr_clicked();
     void on_toolInsert_clicked();
-    void on_view_activated(const QModelIndex &index);
     void on_view_clicked(const QModelIndex &index);
 };
 

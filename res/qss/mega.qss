@@ -456,7 +456,11 @@ QMenu::item{
       background-color: #00a3d9;
 	  border-radius: 4px;
   }
-  
+
+ QMenu::item:disabled { /* when user selects item using mouse or keyboard */
+      background-color: gray;
+	  border-radius: 4px;
+  }
   
   /*#00a3d9 #2c3d4f*/
  QMenu::icon { /* appearance of a 'checked' icon */

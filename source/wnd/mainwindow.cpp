@@ -539,6 +539,11 @@ void MainWindow::slot_post_startup()
 
 }
 
+void MainWindow::on_actionStop_triggered()
+{
+    slot_emergency_stop();
+}
+
 void MainWindow::on_actionAbout_triggered()
 {
     aboutDlg dlg(this);
@@ -928,5 +933,6 @@ void MainWindow::on_actionRead_me_triggered()
 {
     explorerDocFile( "readme.txt");
 }
+
 
 

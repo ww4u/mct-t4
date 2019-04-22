@@ -18,6 +18,8 @@ ActionTable::ActionTable(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    mRawEditTriggers = ui->view->editTriggers();
+
     ui->view->setColumnWidth( 0, 20 );
     for ( int i = 1; i < 11; i++ )
     {
@@ -113,6 +115,18 @@ void ActionTable::keyReleaseEvent(QKeyEvent *event)
     { XPage::keyReleaseEvent( event ); }
 }
 
+bool ActionTable::event(QEvent *event)
+{
+    if ( event->type() == e_event_post_load )
+    {
+        doLoad();
+
+        return true;
+    }
+
+    return XPage::event( event );
+}
+
 void ActionTable::retranslateUi()
 {
     ui->retranslateUi( this );
@@ -123,6 +137,18 @@ void ActionTable::buildConnection()
     //! connection
     connect( ui->view, SIGNAL(customContextMenuRequested(const QPoint &)),
              this, SLOT(slot_customContextMenuRequested(const QPoint &)));
+
+    connect( ui->view, SIGNAL(activated(const QModelIndex &)),
+             this, SLOT(on_view_clicked(const QModelIndex &)));
+
+    connect( ui->view, SIGNAL(doubleClicked(const QModelIndex &)),
+             this, SLOT(on_view_clicked(const QModelIndex &)));
+
+    connect( ui->view, SIGNAL(entered(const QModelIndex &)),
+             this, SLOT(on_view_clicked(const QModelIndex &)));
+
+    connect( ui->view, SIGNAL(pressed(const QModelIndex &)),
+             this, SLOT(on_view_clicked(const QModelIndex &)));
 }
 
 void ActionTable::setModel( QAbstractItemModel *pModel )
@@ -247,7 +273,7 @@ int ActionTable::upload()
         file.close();
 
         //! read success + reload
-        doLoad();
+        postDoLoad();
 
         return 0;
 
@@ -300,11 +326,15 @@ void ActionTable::enterMission()
 {
     if ( NULL != m_pContextMenu )
     { m_pContextMenu->setEnabled( false ); }
+
+    ui->view->setEditTriggers( QAbstractItemView::NoEditTriggers );
 }
 void ActionTable::exitMission()
 {
     if ( NULL != m_pContextMenu )
     { m_pContextMenu->setEnabled( true ); }
+
+    ui->view->setEditTriggers( mRawEditTriggers );
 }
 
 //! \note return the parent row
@@ -426,7 +456,7 @@ void ActionTable::doSave()
 }
 
 void ActionTable::doLoad()
-{
+{logDbg();
     QString fileName = m_pPlugin->homePath() + "/" + record_file_name;
     TreeModel *pTable = (TreeModel*)ui->view->model();
     if ( NULL == pTable )
@@ -442,6 +472,15 @@ void ActionTable::doLoad()
     }
 }
 
+void ActionTable::postDoLoad()
+{
+    QEvent *pEvent = new QEvent( (QEvent::Type)e_event_post_load );
+    if ( NULL != pEvent )
+    {
+        qApp->postEvent( this, pEvent );
+    }
+}
+
 //! change the status by the current item
 void ActionTable::updateControl()
 {
@@ -450,7 +489,11 @@ void ActionTable::updateControl()
     if ( index.isValid() )
     {}
     else
-    { return; }
+    {
+        ui->toolUp->setEnabled( false );
+        ui->toolDown->setEnabled( false );
+        return;
+    }
 
     TreeItem *pItem = static_cast<TreeItem*>( index.internalPointer() );
     if ( NULL == pItem )
@@ -596,10 +639,12 @@ int ActionTable::absToHere( QList<QVariant> &vars )
 }
 
 void ActionTable::slot_request_save()
-{ doSave(); }
+{
+    doSave();
+}
 
 void ActionTable::slot_request_load()
-{ doLoad(); }
+{ postDoLoad(); }
 
 void ActionTable::slot_data_changed()
 {
@@ -614,6 +659,8 @@ void ActionTable::slot_data_changed()
     var.setValue( ui->view->model()->rowCount() );
 
     m_pPlugin->emit_setting_changed( (eXSetting)(MRX_T4::e_setting_record), var );
+
+    updateControl();
 }
 
 #define get_data( val, col )    val = pItem->dataSets().at( col );\
@@ -776,7 +823,7 @@ void ActionTable::slot_up()
 
     ui->view->setCurrentIndex( ui->view->model()->index( index.row()-1, 0, index.parent() ) );
 
-    on_view_activated( ui->view->currentIndex() );
+    updateControl();
 }
 void ActionTable::slot_down()
 {
@@ -789,7 +836,7 @@ void ActionTable::slot_down()
 
     ui->view->setCurrentIndex( ui->view->model()->index( index.row()+1, 0, index.parent() ) );
 
-    on_view_activated( ui->view->currentIndex() );
+    updateControl();
 }
 
 void ActionTable::slot_expandAll()
@@ -813,6 +860,11 @@ void ActionTable::slot_resize()
     {
 //        ui->view->resizeColumnToContents(column);
     }
+}
+
+void ActionTable::slot_post_save_timeout()
+{
+
 }
 
 void ActionTable::slot_customContextMenuRequested(const QPoint &pos)
@@ -1030,11 +1082,6 @@ void ActionTable::on_toolClr_clicked()
 void ActionTable::on_toolInsert_clicked()
 {
     slot_add_below();
-}
-
-void ActionTable::on_view_activated(const QModelIndex &index)
-{
-    updateControl();
 }
 
 void ActionTable::on_view_clicked(const QModelIndex &index)

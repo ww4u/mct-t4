@@ -1341,6 +1341,7 @@ bool T4OpPanel::procSequenceEn( SequenceItem* pItem )
 //double x, y, z, pw, h, v, line;
 //do
 //double delay;
+
 int T4OpPanel::procSequence( SequenceItem* pItem )
 {
     Q_ASSERT( NULL != pItem );
@@ -1372,6 +1373,18 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
 
         iVal >> 2;
     }
+
+    //! \todo Wrist move
+    float angle,speed;
+    angle = pItem->pw;
+    speed = pRobo->mMaxJointSpeeds.at(3) * pItem->v / 100.0;
+
+    ret = mrgSetRobotWristPose(device_var(), angle, speed, guess_dist_time_ms( 180/speed, 180 ));
+        logDbg() << angle << speed << ret;
+    if( ret != 0 )
+        return ret;
+
+    //! \todo Terminal move
 
     return ret;
 }
@@ -2360,6 +2373,7 @@ void T4OpPanel::on_toolButton_debugRun_clicked()
     //! vars
     QVariant var;
     on_post_setting( T4OpPanel, onSequence, "Debug" );
+
 }
 
 void T4OpPanel::on_radCoordXyz_clicked()

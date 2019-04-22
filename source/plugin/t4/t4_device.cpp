@@ -26,6 +26,8 @@ logDbg()<<mAddr;
 
         //! changed
         emit_setting_changed( XPage::e_setting_opened, true );
+
+        emit_setting_changed( XPage::e_setting_user_role, QVariant() );
     }
     else
     {

@@ -525,7 +525,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
 
             //! delta angles
             double dAngles[4];
-            int dir []= { 1, 1, 1, 1 };
+            int dir []= { -1, -1, 1, -1 };
 
 //            double baseAngles[] = { 0, 180, 90, 90 };
             for ( int i = 0; i < 4; i++ )
@@ -797,10 +797,10 @@ void T4OpPanel::attachWorkings()
                          NULL,
                          m_pPref->refreshIntervalMs() );
     //! diagnosis
-    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::refreshDiagnosisInfo ),
-                         tr("Diagnosis refresh"),
-                         NULL,
-                         m_pPref->refreshIntervalMs() );
+//    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::refreshDiagnosisInfo ),
+//                         tr("Diagnosis refresh"),
+//                         NULL,
+//                         m_pPref->refreshIntervalMs() );
 }
 
 void T4OpPanel::updateUi()

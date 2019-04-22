@@ -8,6 +8,7 @@
 #include "MegaGateway.h"
 
 #include "../../plugin/t4/t4.h"
+#include "../../plugin/xpluginworkingthread.h"
 
 #include "comassist.h"
 
@@ -405,7 +406,8 @@ void T4OpPanel::spyEdited()
 void T4OpPanel::updateRefreshPara( QEvent *e )
 {
     //! record now
-    ui->spinBox_RecordNumber->setValue( mRefreshPara.recNow );
+    if ( m_pPlugin->m_pMissionWorking->isRunning() )
+    { ui->spinBox_RecordNumber->setValue( mRefreshPara.recNow ); }
 
     //! target
     ui->doubleSpinBox_target_position_x->setValue( mRefreshPara.poseAim.x );

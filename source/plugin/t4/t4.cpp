@@ -140,7 +140,7 @@ void MRX_T4::retranslateUi()
     m_pRecordModel->setHeaderData( 6, Qt::Horizontal,
                                    tr("Terminal")+QString("(%1)").arg(char_deg), Qt::EditRole  );
     m_pRecordModel->setHeaderData( 7, Qt::Horizontal,
-                                   tr("V")+"%", Qt::EditRole  );
+                                   tr("V")+"(%)", Qt::EditRole  );
     m_pRecordModel->setHeaderData( 8, Qt::Horizontal,
                                    tr("Line"), Qt::EditRole  );
 

@@ -14,6 +14,9 @@
 
 #define pnVALUE_TO_ABS_ANGLE( val )   (qint32)( (val) * ((1<<18)-1) / 360.0f )
 
+//! dirs
+static int _axis_enc_dirs[]={ -1, -1, 1, -1 };
+
 namespace mrx_t4 {
 
 Config::Config(QWidget *parent) :
@@ -180,8 +183,20 @@ int Config::upload()
 
 //        ui->lmtSoftLimit->setRange( i, lmtL, lmtH );
 
-        selfPara->mAxisSoftLower[i] = lmtL;
-        selfPara->mAxisSoftUpper[i] = lmtH;
+        if ( _axis_enc_dirs[i] < 0 )
+        {
+            selfPara->mAxisSoftLower[i] = lmtH;
+            selfPara->mAxisSoftUpper[i] = lmtL;
+        }
+        else
+        {
+            selfPara->mAxisSoftLower[i] = lmtL;
+            selfPara->mAxisSoftUpper[i] = lmtH;
+        }
+
+
+//        logDbg()<<lmtL<<lmtH;
+//        sysInfo( QString("%1 %2").arg(lmtL).arg(lmtH) );
 
         ret = mrgMRQAbsEncoderAlarmState_Query( device_var(), i, &lmtOnOff );
         if ( ret != 0 )
@@ -201,10 +216,6 @@ int Config::upload()
     ret = mrgGetRobotLinks( robot_var(), link, &linkCnt );
     if ( ret != 0 )
     { logDbg(); return -1; }
-
-//    ui->spinBase->setValue( link[0] );
-//    ui->spinBA->setValue( link[1] );
-//    ui->spinLA->setValue( link[2] );
 
     for ( int al = 0; al < 3; al++ )
     {
@@ -284,23 +295,45 @@ int Config::download()
             if ( ret != 0 )
             { return -1; }
 
-            //! down
-            val = pnVALUE_TO_ABS_ANGLE( lmtL );
+            //! \note inverse the direction
+            if ( _axis_enc_dirs[i] > 0 )
+            {
+                //! down
+                val = pnVALUE_TO_ABS_ANGLE( lmtL );
+                ret = mrgMRQAbsEncoderAlarmDownLimit( device_var(),
+                                                i,
+                                                val );
+                if ( ret != 0 )
+                { return -1; }
 
-            ret = mrgMRQAbsEncoderAlarmDownLimit( device_var(),
-                                            i,
-                                            val );
-            if ( ret != 0 )
-            { return -1; }
+                //! up
+                val = pnVALUE_TO_ABS_ANGLE( lmtH );
+                ret = mrgMRQAbsEncoderAlarmUpLimit( device_var(),
+                                                i,
+                                                val );
+                if ( ret != 0 )
+                { return -1; }
+            }
+            else
+            {
+                //! down
+                val = pnVALUE_TO_ABS_ANGLE( lmtL );
+                ret = mrgMRQAbsEncoderAlarmDownLimit( device_var(),
+                                                i,
+                                                -val );
+                if ( ret != 0 )
+                { return -1; }
 
-            //! up
-            val = pnVALUE_TO_ABS_ANGLE( lmtH );
+                //! up
+                val = pnVALUE_TO_ABS_ANGLE( lmtH );
+                ret = mrgMRQAbsEncoderAlarmUpLimit( device_var(),
+                                                i,
+                                                -val );
+                if ( ret != 0 )
+                { return -1; }
+            }
 
-            ret = mrgMRQAbsEncoderAlarmUpLimit( device_var(),
-                                            i,
-                                            val );
-            if ( ret != 0 )
-            { return -1; }
+            //! config
 
             //! on off
             ret = mrgMRQAbsEncoderAlarmState( device_var(), i, ui->lmtSoftLimit->limitOn() );

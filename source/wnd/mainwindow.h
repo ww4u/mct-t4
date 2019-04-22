@@ -117,6 +117,8 @@ private slots:
     void slot_focus_in( const QString &model,
                         const QString &name );
 
+    void on_actionStop_triggered();
+
     void on_actionAbout_triggered();
 
     void on_actionPoweroff_triggered();

@@ -686,9 +686,10 @@ int T4OpPanel::pingTick( void *pContext )
     else
     { return 0; }
 
+    //! read only one time
     int ret;
     char idn[128];
-    for ( int i = 0; i < 3; i++ )
+    for ( int i = 0; i < 1; i++ )
     {
         ret = mrgGateWayIDNQuery( (ViSession)pRobo->deviceVi(), idn );
         //! read fail
@@ -798,6 +799,8 @@ void T4OpPanel::attachWorkings()
                          tr("ping tick"),
                          NULL,
                          m_pPref->refreshIntervalMs() );
+    //! \todo
+    //! \note bypass for simplify the MRH load
     //! diagnosis
 //    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::refreshDiagnosisInfo ),
 //                         tr("Diagnosis refresh"),
@@ -958,6 +961,9 @@ void T4OpPanel::exitMission( )
     {
         ui->tabWidget->widget( i )->setEnabled( true );
     }
+
+    //! awake update
+    m_pPlugin->awakeUpdate();
 }
 
 #define local_on_line()  ( ui->controllerStatus->getDevicePower() && ui->controllerStatus->isMctChecked() )
@@ -1326,6 +1332,14 @@ int T4OpPanel::_onSequence( QVariant var )
 
         }
     }while( ui->chkCyclic->isChecked() );
+
+    //! cyclic
+    if ( ui->chkCyclic->isChecked() )
+    {}
+    else
+    {
+        sysPrompt( tr("Single execute completed") );
+    }
 
     return 0;
 }

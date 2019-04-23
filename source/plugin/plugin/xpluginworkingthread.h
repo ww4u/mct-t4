@@ -85,6 +85,8 @@ public:
     void setTick( int ms );
     int tick();
 
+    void awake();
+
 protected:
     virtual void run();
 
@@ -92,8 +94,11 @@ protected:
     void procApis();
     void procApi( WorkingApi *pApi );
 
+    void selfSleep( int ms );
+
 protected:
     const int _tickms = 100;
+    const int _ticktick = 100;
 
     QList< WorkingApi *> mApis;
 
@@ -102,6 +107,8 @@ protected:
     QMutex mMutex;
 
     QMutex *m_pWorkMutex;
+
+    QSemaphore mWakeupSema;
 };
 
 class XPluginUpdateingThread : public XPluginWorkingThread

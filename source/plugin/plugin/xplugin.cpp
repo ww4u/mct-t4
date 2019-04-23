@@ -297,6 +297,12 @@ void XPlugin::unlockWorking()
     mUpdateMutex.unlock();
 }
 
+void XPlugin::awakeUpdate()
+{
+    if ( NULL != m_pUpdateWorking )
+    { m_pUpdateWorking->awake(); }
+}
+
 void XPlugin::attachUpdateWorking( XPage *pObj,
                              XPage::procDo proc,
                              const QString &desc,

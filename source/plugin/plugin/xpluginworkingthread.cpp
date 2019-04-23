@@ -109,6 +109,11 @@ void XPluginWorkingThread::setTick( int ms )
 int XPluginWorkingThread::tick()
 { return mTickms; }
 
+void XPluginWorkingThread::awake()
+{
+    mWakeupSema.release();
+}
+
 void XPluginWorkingThread::run()
 {
     try
@@ -159,10 +164,12 @@ void XPluginWorkingThread::procApis()
             mApis.removeAll( pApi );
             mMutex.unlock();
         }
-
-        if ( mTickms > 0 )
-        { QThread::msleep( mTickms ); }
     }
+
+    //! batch tick
+    if ( mTickms > 0 )
+//    { QThread::msleep( mTickms ); }
+    { selfSleep( mTickms ); }
 }
 
 void XPluginWorkingThread::procApi( WorkingApi *pApi )
@@ -230,6 +237,18 @@ void XPluginWorkingThread::procApi( WorkingApi *pApi )
         //! alert to be used in slot
     if ( bMission )
     { emit signal_exit_working( pApi, ret ); }
+}
+
+//selfSleep
+void XPluginWorkingThread::selfSleep( int ms )
+{
+    while( ms > 0 )
+    {
+        if ( mWakeupSema.tryAcquire( 1, XPluginWorkingThread::_ticktick ) )
+        { break; }
+        else
+        { ms -= XPluginWorkingThread::_ticktick; }
+    }
 }
 
 XPluginUpdateingThread::XPluginUpdateingThread( QObject *parent )

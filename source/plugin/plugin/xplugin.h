@@ -187,6 +187,8 @@ public:
     void lockWorking();
     void unlockWorking();
 
+    void awakeUpdate();
+
     void attachUpdateWorking( XPage *pObj,
                         XPage::procDo proc,
                         const QString &desc="",

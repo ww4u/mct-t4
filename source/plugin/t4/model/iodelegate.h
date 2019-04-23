@@ -3,6 +3,7 @@
 
 #include <QStyledItemDelegate>
 
+//class IOWidget;
 class IODelegate : public QStyledItemDelegate
 {
     Q_OBJECT
@@ -23,6 +24,7 @@ public:
     void updateEditorGeometry(QWidget *editor,
         const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
+//    virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 protected:
     int mWidth;
 };

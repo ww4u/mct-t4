@@ -76,5 +76,6 @@ void IODelegate::updateEditorGeometry(QWidget *editor,
 
     editor->setGeometry( option.rect.left(), option.rect.top(),
                          selfRect.width(), selfRect.height() );
+//     editor->setGeometry( option.rect );
 }
 

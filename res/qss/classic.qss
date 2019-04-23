@@ -396,3 +396,5 @@ QTreeView::branch:open:has-children:has-siblings  {
         border-image: none;
         image: url(:/res/image/widget/arrow_down_2.png);
 }
+
+

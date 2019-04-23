@@ -87,6 +87,8 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     ui->tvDebug->setModel( &mDebugTable );
     ui->tvDiagnosis->setModel( &mDiagTable );
 
+    ui->listView->setModel( &mDebugConsoleModel );
+
     //! build connect
     connect( &mDebugTable, SIGNAL(signal_data_changed()),
              this, SLOT(slot_debug_table_changed()) );
@@ -686,9 +688,10 @@ int T4OpPanel::pingTick( void *pContext )
     else
     { return 0; }
 
+    //! read only one time
     int ret;
     char idn[128];
-    for ( int i = 0; i < 3; i++ )
+    for ( int i = 0; i < 1; i++ )
     {
         ret = mrgGateWayIDNQuery( (ViSession)pRobo->deviceVi(), idn );
         //! read fail
@@ -798,6 +801,8 @@ void T4OpPanel::attachWorkings()
                          tr("ping tick"),
                          NULL,
                          m_pPref->refreshIntervalMs() );
+    //! \todo
+    //! \note bypass for simplify the MRH load
     //! diagnosis
 //    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::refreshDiagnosisInfo ),
 //                         tr("Diagnosis refresh"),
@@ -958,6 +963,9 @@ void T4OpPanel::exitMission( )
     {
         ui->tabWidget->widget( i )->setEnabled( true );
     }
+
+    //! awake update
+    m_pPlugin->awakeUpdate();
 }
 
 #define local_on_line()  ( ui->controllerStatus->getDevicePower() && ui->controllerStatus->isMctChecked() )
@@ -1327,6 +1335,14 @@ int T4OpPanel::_onSequence( QVariant var )
         }
     }while( ui->chkCyclic->isChecked() );
 
+    //! cyclic
+    if ( ui->chkCyclic->isChecked() )
+    {}
+    else
+    {
+        sysPrompt( tr("Single execute completed") );
+    }
+
     return 0;
 }
 
@@ -1367,12 +1383,17 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
     else
     { return -1; }
 
+    //! \note print comment
+    if ( pItem->mComment.length() > 0 )
+    {
+        mDebugConsoleModel.append( pItem->mComment );
+    }
+
     //! \todo DO
     int iVal = pItem->mDo;
     for( int i = 0; i < 2; i++ ){
         int t = iVal & 0x03;
         //! set io state
-
         iVal >> 2;
     }
 
@@ -2285,6 +2306,8 @@ int T4OpPanel::buildSequence( QList<SequenceItem*> &list )
             pItem->bLine = var.at( 9 ).toBool();
             pItem->mDo = var.at( 10 ).toInt();
             pItem->delay = var.at( 11 ).toDouble();
+
+            pItem->mComment = var.at( 12 ).toString();
 
             //! \note split the first anchor
             if ( i == ui->tvDebug->currentIndex().row() && j == 0 )

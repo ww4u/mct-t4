@@ -37,6 +37,9 @@ protected:
     virtual bool event(QEvent *event);
 
 protected:
+    virtual void setOperAble( bool b );
+    virtual void setOpened( bool b );
+
     virtual void retranslateUi();
 
     void buildConnection();

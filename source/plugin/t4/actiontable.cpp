@@ -127,6 +127,24 @@ bool ActionTable::event(QEvent *event)
     return XPage::event( event );
 }
 
+void ActionTable::setOperAble( bool b )
+{
+    //! operate
+    if ( b )
+    { exitMission(); }
+    else
+    { enterMission(); }
+}
+
+void ActionTable::setOpened( bool b )
+{
+    //! operate
+    if ( b )
+    { exitMission(); }
+    else
+    { enterMission(); }
+}
+
 void ActionTable::retranslateUi()
 {
     ui->retranslateUi( this );
@@ -328,6 +346,8 @@ void ActionTable::enterMission()
     { m_pContextMenu->setEnabled( false ); }
 
     ui->view->setEditTriggers( QAbstractItemView::NoEditTriggers );
+
+    ui->groupBox->setEnabled( false );
 }
 void ActionTable::exitMission()
 {
@@ -335,6 +355,8 @@ void ActionTable::exitMission()
     { m_pContextMenu->setEnabled( true ); }
 
     ui->view->setEditTriggers( mRawEditTriggers );
+
+    ui->groupBox->setEnabled( true );
 }
 
 //! \note return the parent row
@@ -484,6 +506,11 @@ void ActionTable::postDoLoad()
 //! change the status by the current item
 void ActionTable::updateControl()
 {
+    if ( ui->groupBox->isEnabled() )
+    {}
+    else
+    { return; }
+
     //! \todo
     QModelIndex index = ui->view->currentIndex();
     if ( index.isValid() )

@@ -20,6 +20,13 @@ QLabel
 	background: none;
 }
 
+QLabel#labelTerminalImg
+{
+	border: 1px solid #1f2a3b;
+	border-radius: 4px;
+	/*background: none;*/
+}
+
 QMainWindow::separator {
       background: #1f2a3b;
 	  width:2px;

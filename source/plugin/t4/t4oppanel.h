@@ -14,6 +14,7 @@
 //! delegate
 #include "../../model/delegate/dspindelegate.h"
 #include "../../model/delegate/ispindelegate.h"
+#include "../../model/megaloglistmodel.h"
 
 #include "iostate.h"
 
@@ -75,6 +76,8 @@ public:
     bool bLine;
     double delay;
     int mDo;
+
+    QString mComment;
 
     bool mbAnchor;  //! the first line for running
 
@@ -339,6 +342,9 @@ protected:
     DiagnosisTable mDiagTable;
 
     RefreshPara mRefreshPara;
+
+    //! model
+    MegaLogListModel mDebugConsoleModel;
 
     QList<QWidget*> mTerminalRelations;
     QMenu *m_pDebugContextMenu;

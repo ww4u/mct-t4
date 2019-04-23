@@ -27,8 +27,6 @@ SysPref::SysPref( const SysPara &para, QWidget *parent ) :
 //    mSysMode = para.mSysMode;
 
     mPlugins = para.mPlugins;
-    //！ remove autologin
-    ui->chkAutoLogin->setVisible( false );
 }
 
 SysPref::~SysPref()

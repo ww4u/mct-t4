@@ -1381,8 +1381,8 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
     angle = pItem->pw;
     speed = pRobo->mMaxJointSpeeds.at(3) * pItem->v / 100.0;
 
-    ret = mrgSetRobotWristPose(device_var(), angle, speed, guess_dist_time_ms( 180/speed, 180 ));
-        logDbg() << angle << speed << ret;
+    ret = mrgSetRobotWristPose(robot_var(), angle, speed, guess_dist_time_ms( 180/speed, 180 ));
+    logDbg() << angle << speed << ret;
     if( ret != 0 )
         return ret;
 

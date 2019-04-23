@@ -622,6 +622,7 @@ int ActionTable::relToHere( QList<QVariant> &vars )
                           vars.at(4).toDouble(), vars.at(5).toDouble(),
                           rel_to_abs_speed( vars.at(6).toDouble() ), vars.at(7).toBool()
                           );
+
     return ret;
 }
 int ActionTable::absToHere( QList<QVariant> &vars )
@@ -634,6 +635,15 @@ int ActionTable::absToHere( QList<QVariant> &vars )
                           vars.at(4).toDouble(), vars.at(5).toDouble(),
                           rel_to_abs_speed( vars.at(6).toDouble() ), vars.at(7).toBool()
                           );
+    //! Wrist
+    //float speed = rel_to_abs_speed( vars.at(6).toDouble() );
+    float speed = pRobo->mMaxJointSpeeds.at(3) * vars.at(6).toDouble() / 100.0;
+
+    ret = mrgSetRobotWristPose(robot_var(), vars.at(4).toDouble(), speed, guess_dist_time_ms( 180/speed, 180 ));
+    logDbg() << vars.at(4).toDouble() << speed << ret;
+    if( ret != 0 )
+        return ret;
+    //! terminal
 
     return ret;
 }

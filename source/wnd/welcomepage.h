@@ -17,6 +17,7 @@ public:
 
 private:
     Ui::WelcomePage *ui;
+
 };
 
 #endif // WELCOMEPAGE_H

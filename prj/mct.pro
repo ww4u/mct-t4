@@ -11,7 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 TARGET = mct
 TEMPLATE = app
 #qt >= 5.10
-VERSION = 0.0.0.4
+VERSION = 0.0.0.5
 
 CONFIG += C++11 #use lambda
 

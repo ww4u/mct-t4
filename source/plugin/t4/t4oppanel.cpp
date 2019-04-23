@@ -87,6 +87,8 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     ui->tvDebug->setModel( &mDebugTable );
     ui->tvDiagnosis->setModel( &mDiagTable );
 
+    ui->listView->setModel( &mDebugConsoleModel );
+
     //! build connect
     connect( &mDebugTable, SIGNAL(signal_data_changed()),
              this, SLOT(slot_debug_table_changed()) );
@@ -1380,12 +1382,17 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
     else
     { return -1; }
 
+    //! \note print comment
+    if ( pItem->mComment.length() > 0 )
+    {
+        mDebugConsoleModel.append( pItem->mComment );
+    }
+
     //! \todo DO
     int iVal = pItem->mDo;
     for( int i = 0; i < 2; i++ ){
         int t = iVal & 0x03;
         //! set io state
-
         iVal >> 2;
     }
 
@@ -2286,6 +2293,8 @@ int T4OpPanel::buildSequence( QList<SequenceItem*> &list )
             pItem->bLine = var.at( 9 ).toBool();
             pItem->mDo = var.at( 10 ).toInt();
             pItem->delay = var.at( 11 ).toDouble();
+
+            pItem->mComment = var.at( 12 ).toString();
 
             //! \note split the first anchor
             if ( i == ui->tvDebug->currentIndex().row() && j == 0 )

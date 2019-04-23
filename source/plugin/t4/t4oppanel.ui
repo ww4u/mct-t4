@@ -74,7 +74,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>3</number>
          </property>
          <property name="elideMode">
           <enum>Qt::ElideNone</enum>
@@ -1341,6 +1341,18 @@
             <layout class="QHBoxLayout" name="horizontalLayout_3">
              <item>
               <layout class="QGridLayout" name="gridLayout_5">
+               <property name="leftMargin">
+                <number>6</number>
+               </property>
+               <property name="topMargin">
+                <number>6</number>
+               </property>
+               <property name="rightMargin">
+                <number>6</number>
+               </property>
+               <property name="bottomMargin">
+                <number>6</number>
+               </property>
                <item row="0" column="3">
                 <widget class="QLabel" name="label_9">
                  <property name="sizePolicy">
@@ -1354,39 +1366,6 @@
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="8" colspan="2">
-                <spacer name="horizontalSpacer_6">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item row="0" column="0">
-                <widget class="QToolButton" name="btnImport">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>1</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string>Import</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="../../../res/res.qrc">
-                   <normaloff>:/res/image/icon/218.png</normaloff>:/res/image/icon/218.png</iconset>
                  </property>
                 </widget>
                </item>
@@ -1424,8 +1403,21 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="11">
-                <widget class="QToolButton" name="btnDown">
+               <item row="0" column="8" colspan="2">
+                <spacer name="horizontalSpacer_6">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="0" column="0">
+                <widget class="QToolButton" name="btnImport">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>1</horstretch>
@@ -1433,14 +1425,30 @@
                   </sizepolicy>
                  </property>
                  <property name="toolTip">
-                  <string>Move Down</string>
+                  <string>Import</string>
                  </property>
                  <property name="text">
                   <string/>
                  </property>
                  <property name="icon">
                   <iconset resource="../../../res/res.qrc">
-                   <normaloff>:/res/image/icon/arrow-down.png</normaloff>:/res/image/icon/arrow-down.png</iconset>
+                   <normaloff>:/res/image/icon/218.png</normaloff>:/res/image/icon/218.png</iconset>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="13">
+                <widget class="QCheckBox" name="chkCyclic">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>1</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="layoutDirection">
+                  <enum>Qt::LeftToRight</enum>
+                 </property>
+                 <property name="text">
+                  <string>Cyclic</string>
                  </property>
                 </widget>
                </item>
@@ -1461,6 +1469,46 @@
                  <property name="icon">
                   <iconset resource="../../../res/res.qrc">
                    <normaloff>:/res/image/icon/trash.png</normaloff>:/res/image/icon/trash.png</iconset>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="11">
+                <widget class="QToolButton" name="btnDown">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>1</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="toolTip">
+                  <string>Move Down</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../../../res/res.qrc">
+                   <normaloff>:/res/image/icon/arrow-down.png</normaloff>:/res/image/icon/arrow-down.png</iconset>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="10">
+                <widget class="QToolButton" name="btnUp">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>1</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="toolTip">
+                  <string>Move Up</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../../../res/res.qrc">
+                   <normaloff>:/res/image/icon/arrow-up.png</normaloff>:/res/image/icon/arrow-up.png</iconset>
                  </property>
                 </widget>
                </item>
@@ -1513,8 +1561,8 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="10">
-                <widget class="QToolButton" name="btnUp">
+               <item row="0" column="5">
+                <widget class="QToolButton" name="btnAdd">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>1</horstretch>
@@ -1522,30 +1570,14 @@
                   </sizepolicy>
                  </property>
                  <property name="toolTip">
-                  <string>Move Up</string>
+                  <string>add a new record</string>
                  </property>
                  <property name="text">
                   <string/>
                  </property>
                  <property name="icon">
                   <iconset resource="../../../res/res.qrc">
-                   <normaloff>:/res/image/icon/arrow-up.png</normaloff>:/res/image/icon/arrow-up.png</iconset>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="13">
-                <widget class="QCheckBox" name="chkCyclic">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>1</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="layoutDirection">
-                  <enum>Qt::LeftToRight</enum>
-                 </property>
-                 <property name="text">
-                  <string>Cyclic</string>
+                   <normaloff>:/res/image/icon/add.png</normaloff>:/res/image/icon/add.png</iconset>
                  </property>
                 </widget>
                </item>
@@ -1569,19 +1601,6 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="12">
-                <spacer name="horizontalSpacer_9">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
                <item row="0" column="6">
                 <widget class="QToolButton" name="btnDel">
                  <property name="sizePolicy">
@@ -1602,26 +1621,6 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="5">
-                <widget class="QToolButton" name="btnAdd">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>1</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string>add a new record</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="../../../res/res.qrc">
-                   <normaloff>:/res/image/icon/add.png</normaloff>:/res/image/icon/add.png</iconset>
-                 </property>
-                </widget>
-               </item>
                <item row="0" column="2">
                 <spacer name="horizontalSpacer_7">
                  <property name="orientation">
@@ -1635,7 +1634,20 @@
                  </property>
                 </spacer>
                </item>
-               <item row="2" column="0" rowspan="10" colspan="17">
+               <item row="0" column="12">
+                <spacer name="horizontalSpacer_9">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="0" rowspan="10" colspan="12">
                 <widget class="KeyTableView" name="tvDebug">
                  <property name="contextMenuPolicy">
                   <enum>Qt::DefaultContextMenu</enum>
@@ -1668,6 +1680,9 @@
                   <bool>false</bool>
                  </attribute>
                 </widget>
+               </item>
+               <item row="1" column="12" colspan="4">
+                <widget class="LogoutWidget" name="listView"/>
                </item>
               </layout>
              </item>

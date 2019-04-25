@@ -36,7 +36,7 @@ void T4Para::rst()
     mAxisIdleCurrents[1] = 1;
     mAxisIdleCurrents[2] = 1;
     mAxisIdleCurrents[3] = 1;
-    mAxisIdleCurrents[4] = 1;
+    mAxisIdleCurrents[4] = 0.5;
 
 //    mAxisSwitchTimes[0] = 0.5;
 //    mAxisSwitchTimes[1] = 0.5;
@@ -46,7 +46,7 @@ void T4Para::rst()
 
     //! \note not change the zero
 
-    mbAxisSoftEnable = true;
+    mbAxisSoftEnable = false;
     mbAxisSafeEnable = true;
     for ( int i = 0; i < T4Para::_axis_cnt; i++ )
     {
@@ -75,7 +75,7 @@ void T4Para::rst()
         mCoordPara[i].mRc = 0;
     }
 
-    mArmLength[0] = 263.8;
+    mArmLength[0] = 263.7;
     mArmLength[1] = 255;
     mArmLength[2] = 250;
 

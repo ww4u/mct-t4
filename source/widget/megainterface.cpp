@@ -342,8 +342,8 @@ void MegaInterface::on_pushButton_Scan_clicked()
                     tInfo.mRoboModel = QString("%1").arg( strType );
                     tInfo.mRoboSN = "";
 
-                    sysInfo( IDN );
-                    sysInfo( QString("%1 %2").arg( tInfo.mRoboModel).arg( tInfo.mId ) );
+//                    sysInfo( IDN );
+                    sysInfo( QString("%1 %2 %3").arg(IDN).arg( tInfo.mRoboModel).arg( tInfo.mId ) );
 
                     //! append
                     pRoboList->append( tInfo );

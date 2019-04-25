@@ -554,11 +554,15 @@ void RoboConfig::slotActionClose()
     Q_ASSERT( NULL != m_pCurPlugin );
     m_pCurPlugin->close();
 }
+
 #include <qmessagebox.h>
+#define msgBox_Warning_ok( title, content )     (QMessageBox::warning(this, title, content, QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ? 1:0)
+#define msgBox_Information_ok( title, content ) (QMessageBox::information(this, title, content, QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ? 1:0)
+
 void RoboConfig::slotActionRst()
 {
     Q_ASSERT( NULL != m_pCurPlugin );
-    if ( QMessageBox::warning(this, tr("Warning"), tr("Confirm Reset?"), QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok )
+    if ( msgBox_Warning_ok( tr("Warning"), tr("Confirm Reset?") ))
         m_pCurPlugin->rst();
 }
 
@@ -576,19 +580,18 @@ void RoboConfig::slotActionFold()
 void RoboConfig::slotActionReboot()
 {
     Q_ASSERT( NULL != m_pCurPlugin );
-    if( QMessageBox::warning(this, tr("Warning"), tr("Confirm Reboot?"), QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok )
+    if( msgBox_Warning_ok( tr("Warning"), tr("Confirm Reboot?") ) )
         m_pCurPlugin->reboot();
 }
 void RoboConfig::slotActionPoweroff()
 {
     Q_ASSERT( NULL != m_pCurPlugin );
-    if( QMessageBox::warning(this, tr("Warning"), tr("Confirm PowerOff?"), QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok )
+    if(msgBox_Warning_ok( tr("Warning"), tr("Confirm PowerOff?") ))
         m_pCurPlugin->powerOff();
 }
-
 void RoboConfig::slotActionDelete()
 {
-    if(  QMessageBox::warning(this, tr("Warning"), tr("Confirm Delete?"), QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ){
+    if(  msgBox_Warning_ok( tr("Warning"), tr("Confirm Delete?") ) ){
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
             //! delete + remove the root
@@ -602,6 +605,7 @@ void RoboConfig::slotActionDelete()
             delete m_pCurTreeItem;
 
         QApplication::restoreOverrideCursor();
+        msgBox_Information_ok( tr("Information"), tr("Delete Success!") );
     }
 }
 

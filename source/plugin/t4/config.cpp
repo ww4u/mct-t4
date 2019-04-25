@@ -185,8 +185,8 @@ int Config::upload()
 
         if ( _axis_enc_dirs[i] < 0 )
         {
-            selfPara->mAxisSoftLower[i] = lmtH;
-            selfPara->mAxisSoftUpper[i] = lmtL;
+            selfPara->mAxisSoftLower[i] = -lmtL;
+            selfPara->mAxisSoftUpper[i] = -lmtH;
         }
         else
         {

@@ -2290,7 +2290,8 @@ EXPORT_API int CALL mrgSetRobotWristPose(ViSession vi, int name, float angle, fl
     {
         return -1;
     }
-    f32Target = 90.0f + angle - f32Current;
+    //f32Target = 90.0f + angle - f32Current;
+    f32Target = angle - f32Current;
     //走一个最短距离
     if (f32Target > 180.0f)
     {

@@ -77,7 +77,7 @@ typedef unsigned long ViSession;
 //#define Sleep(x)            usleep( ((x) * 1000) )
 
 #include "../../assist.h"
-#define Sleep( n )  localSleep( n )
+#define SLEEP(n)  localSleep( n )
 
 #define EXPORT_API 
 #define CALL

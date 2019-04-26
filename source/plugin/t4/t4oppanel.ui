@@ -32,7 +32,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>0</y>
+        <y>-161</y>
         <width>900</width>
         <height>362</height>
        </rect>
@@ -74,7 +74,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>3</number>
+          <number>2</number>
          </property>
          <property name="elideMode">
           <enum>Qt::ElideNone</enum>
@@ -1923,106 +1923,6 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="tab_5">
-          <property name="contextMenuPolicy">
-           <enum>Qt::DefaultContextMenu</enum>
-          </property>
-          <attribute name="title">
-           <string>Efficiency</string>
-          </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
-           <property name="spacing">
-            <number>0</number>
-           </property>
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-           <property name="topMargin">
-            <number>0</number>
-           </property>
-           <property name="rightMargin">
-            <number>0</number>
-           </property>
-           <property name="bottomMargin">
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QScrollArea" name="scrollArea">
-             <property name="sizeAdjustPolicy">
-              <enum>QAbstractScrollArea::AdjustToContents</enum>
-             </property>
-             <property name="widgetResizable">
-              <bool>true</bool>
-             </property>
-             <widget class="QWidget" name="scrollAreaWidgetContents">
-              <property name="geometry">
-               <rect>
-                <x>0</x>
-                <y>0</y>
-                <width>882</width>
-                <height>336</height>
-               </rect>
-              </property>
-              <property name="contextMenuPolicy">
-               <enum>Qt::CustomContextMenu</enum>
-              </property>
-              <layout class="QHBoxLayout" name="horizontalLayout_10">
-               <property name="spacing">
-                <number>0</number>
-               </property>
-               <property name="leftMargin">
-                <number>0</number>
-               </property>
-               <property name="topMargin">
-                <number>0</number>
-               </property>
-               <property name="rightMargin">
-                <number>0</number>
-               </property>
-               <property name="bottomMargin">
-                <number>0</number>
-               </property>
-               <item>
-                <widget class="MegaSplineChart" name="jointChart5" native="true">
-                 <property name="contextMenuPolicy">
-                  <enum>Qt::CustomContextMenu</enum>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="MegaSplineChart" name="jointChart4" native="true">
-                 <property name="contextMenuPolicy">
-                  <enum>Qt::CustomContextMenu</enum>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="MegaSplineChart" name="jointChart3" native="true">
-                 <property name="contextMenuPolicy">
-                  <enum>Qt::CustomContextMenu</enum>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="MegaSplineChart" name="jointChart2" native="true">
-                 <property name="contextMenuPolicy">
-                  <enum>Qt::CustomContextMenu</enum>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="MegaSplineChart" name="jointChart1" native="true">
-                 <property name="contextMenuPolicy">
-                  <enum>Qt::CustomContextMenu</enum>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </widget>
-            </widget>
-           </item>
-          </layout>
-         </widget>
          <widget class="QWidget" name="tab_7">
           <attribute name="title">
            <string>Diagnosis</string>
@@ -2143,12 +2043,6 @@
    <class>Joint</class>
    <extends>QWidget</extends>
    <header>joint.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>MegaSplineChart</class>
-   <extends>QWidget</extends>
-   <header location="global">megasplinechart.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

@@ -86,25 +86,6 @@ int MRX_T4::open()
     else
     { dataOnOff = 1; }
 
-    {
-        for ( int i = 0; i < T4Para::_axis_cnt; i++ )
-        {
-           ret = mrgMRQReportState( self_device_var(), i, 0, dataOnOff );
-           if ( ret != 0 )
-           {
-               sysError( tr("Data report state fail") );
-               break;
-           }
-
-//           ret = mrgMRQReportPeriod( self_device_var(), i, 0, 1000 );
-//           if ( ret != 0 )
-//           {
-//               sysError( tr("Data report state fail") );
-//               break;
-//           }
-        }
-    }
-
     //! \note upload the data from device
     upload();
 
@@ -115,21 +96,11 @@ void MRX_T4::close()
     lockWorking();
         if ( mVi > 0 )
         {
-            for ( int i = 0; i < T4Para::_axis_cnt; i++ )
-            {
-               int ret = mrgMRQReportState( self_device_var(), i, 0, 0 );
-               if ( ret != 0 )
-               {
-                   sysError( tr("Data report off fail") );
-                   continue;
-               }
-
-            }
             mrgCloseGateWay( mVi);
             mVi = -1;
         }
         else
-        {}
+        {   }
     unlockWorking();
 
     emit_setting_changed( XPage::e_setting_opened, false );

@@ -350,7 +350,6 @@ protected:
     QMenu *m_pDebugContextMenu;
     QMenu *m_pMonitorContextMenu;
 
-    QList<MegaSplineChart*> mJointCharts;
     DataCache *m_pCaches[5];
 
     QMutex mSeqMutex;
@@ -387,11 +386,6 @@ protected Q_SLOTS:
 
     void slot_customContextMenuRequested( const QPoint &);
     void slot_toHere();
-
-    void slot_monitorContextMenuRequested( const QPoint &);
-    void slot_monitorExportImage();
-    void slot_monitorExportData();
-    void slot_monitorCopy();
 
     void slot_digitalInputsCustomContextMenuRequested( const QPoint & );
     void slot_Rename();

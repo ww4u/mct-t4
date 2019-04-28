@@ -792,10 +792,10 @@ void T4OpPanel::attachWorkings()
                          NULL,
                          m_pPref->refreshIntervalMs() );
 
-    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ),
-                         tr("Monitor refresh"),
-                         NULL,
-                         m_pPref->refreshIntervalMs() );
+//    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ),
+//                         tr("Monitor refresh"),
+//                         NULL,
+//                         m_pPref->refreshIntervalMs() );
 
     attachUpdateWorking( (XPage::procDo)( &T4OpPanel::pingTick ),
                          tr("ping tick"),
@@ -1340,7 +1340,7 @@ int T4OpPanel::_onSequence( QVariant var )
     {}
     else
     {
-        sysPrompt( tr("Single execute completed") );
+        sysPrompt( tr("Single execute completed"), 0 );
     }
 
     return 0;

@@ -38,12 +38,6 @@ void T4Para::rst()
     mAxisIdleCurrents[3] = 1;
     mAxisIdleCurrents[4] = 0.5;
 
-//    mAxisSwitchTimes[0] = 0.5;
-//    mAxisSwitchTimes[1] = 0.5;
-//    mAxisSwitchTimes[2] = 0.5;
-//    mAxisSwitchTimes[3] = 0.5;
-//    mAxisSwitchTimes[4] = 0.5;
-
     //! \note not change the zero
 
     mbAxisSoftEnable = false;

@@ -3,7 +3,8 @@
 import time
 import threading
 import socket
-
+import os
+import platform
 from ctypes import *
 
 ### 将C语言的char*字符串转化为标准的python字符串
@@ -25,8 +26,18 @@ def list_remove_all(lst, ele):
 class MageGateway(object):
     
     def __init__(self):
-        self._dll = cdll.LoadLibrary('./libMegaRobo.so.1.0')
-
+        pwd = os.path.abspath(os.path.dirname(__file__))
+        _platform = platform.system()
+        if _platform == "Windows" :
+            os.chdir(pwd + "/../windows/")
+            self._dll = cdll.LoadLibrary('MegaGateway.dll')
+        else:
+            info = os.popen('file /bin/ls').readlines()[0]
+            cpuarch = info.split(",")[1]
+            if 'x86' in cpuarch:
+                self._dll = cdll.LoadLibrary(pwd + "/../linux/libMegaRobo.so.1.0")
+            else:
+                self._dll = cdll.LoadLibrary(pwd + "/../armlinux/libMegaRobo.so.1.0")
 
 ############################################################
 ### device.h
@@ -239,7 +250,14 @@ class MageGateway(object):
 
 ### int mrgGetRobotType(ViSession vi, int name);
     def mrgGetRobotType(self, fd, robotname):
-        return self._dll.mrgGetRobotType(fd, robotname)
+        typeList = ["MRX-T4", "MRX-AS", "MRX-H2", "MRX-DELTA", "MRX-RAW", "UNKNOWN"]
+        ret = self._dll.mrgGetRobotType(fd, robotname)
+        if ret < 0:
+            return "UNKNOWN"
+        elif ret < len(typeList):
+            return typeList[ret]
+        else:
+            return "UNKNOWN"
 
 ### int mrgExportRobotConfig(ViSession vi);
     def mrgExportRobotConfig(self, fd):
@@ -672,9 +690,9 @@ class MageGateway(object):
         else:
             return result.value
 
-### int mrgSetRobotWristPose(ViSession vi, int name, float angle,float time,int timeout_ms);
-    def mrgSetRobotWristPose(self, fd, roboname, angle, time, timeout_ms):
-        return self._dll.mrgSetRobotWristPose(fd, roboname, c_float(angle), c_float(time), timeout_ms)
+### int mrgSetRobotWristPose(ViSession vi, int name, int wavetable, float angle, float speed, int timeout_ms);
+    def mrgSetRobotWristPose(self, fd, roboname, wavetable, angle, speed, timeout_ms):
+        return self._dll.mrgSetRobotWristPose(fd, roboname, wavetable, c_float(angle), c_float(speed), timeout_ms)
 
 ############################################################
 ### "mrqdevice.h"
@@ -2079,15 +2097,22 @@ class MageGateway(object):
         else:
             return cbuf_to_string(buf)
 
-### int mrgStorageMotionFileSave(ViSession vi, char* srcFileName,char* saveFileName);
-    def mrgStorageMotionFileSave(self, fd, srcFileName, saveFileName):
-        return self._dll.mrgStorageMotionFileSave(fd, string_to_charp(srcFileName), string_to_charp(saveFileName))
-
 ### int mrgStorageMotionFileSaveContext(ViSession vi, char* context, int len, char * saveFileName);
     def mrgStorageMotionFileSaveContext(self, fd, context, saveFileName):
         return self._dll.mrgStorageMotionFileSaveContext(fd, string_to_charp(context), len(context), string_to_charp(saveFileName))
 
+### int mrgStorageWriteFile(ViSession vi, int isUdisk, char *path, char *saveFileName, unsigned char *data, int dataLen);
+    def mrgStorageWriteFile(self, fd, isUdisk, path, saveFileName, data):
+        return self._dll.mrgStorageWriteFile(fd, isUdisk, string_to_charp(path), string_to_charp(saveFileName), string_to_charp(data), len(data))
 
+### int mrgStorageReadFile(ViSession vi, int isUdisk, char *path, char* filename, unsigned char* context);
+    def mrgStorageReadFile(self, fd, isUdisk, path, filename):
+        buf = create_string_buffer(1024 * 1024)
+        ret = self._dll.mrgStorageReadFile(fd, isUdisk, string_to_charp(path), string_to_charp(filename), buf, 1024 * 1024)
+        if ret < 0:
+            return ""
+        else:
+            return cbuf_to_string(buf)
 
 
 ############################################################
@@ -2133,10 +2158,10 @@ class MageGateway(object):
     def mrgSetProjectMode(self, fd, int_state):
         return self._dll.mrgSetProjectMode(fd, int_state)
 
-### int mrgProjectGetXinState(ViSession vi, unsigned int *state);
-    def mrgProjectGetXinState(self, fd):
+### int mrgProjectGetXinState(ViSession vi, int index, unsigned int *state)
+    def mrgProjectGetXinState(self, fd, index):
         result = c_uint(0)
-        ret = self._dll.mrgProjectGetXinState(fd, byref(result) )
+        ret = self._dll.mrgProjectGetXinState(fd, index, byref(result) )
         if ret < 0:
             return -1
         else:
@@ -2174,3 +2199,6 @@ class MageGateway(object):
 if __name__ == "__main__":
     """
     """
+    gw = MageGateway()
+    mrhtList = gw.mrgFindGateWay(0)
+    print(mrhtList)

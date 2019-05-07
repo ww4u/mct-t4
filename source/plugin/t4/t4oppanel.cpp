@@ -468,7 +468,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
         {
             ret = mrgMRQReportData_Query( device_var(), i, 5, &encData );
             if ( ret <= 0 )
-            { break; }
+            {sysError( tr("report data query fail"), e_out_log );break; }
 
             angles[i] = ABS_ANGLE_TO_DEG( encData );
         }
@@ -501,7 +501,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
         //! joint5
         ret = mrgGetRobotToolPosition( robot_var(), angles );
         if ( ret < 0 )
-        { break; }
+        { sysError( tr("get tool position fail"), e_out_log );break; }
         else
         {
             mRefreshPara.angles[4] = angles[0];
@@ -516,7 +516,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
             char roboStates[128];
             ret = mrgRobotGetState( robot_var(), wave_table, roboStates );
             if ( ret != 0 )
-            { break; }
+            { sysError( tr("get state fail"), e_out_log );break; }
 
             mRefreshPara.mRoboState = QString( roboStates );
         }
@@ -732,6 +732,7 @@ void T4OpPanel::updateUi()
     ui->DIN5->setName( pRobo->listIoName.at(4) );
     ui->START->setName( pRobo->listIoName.at(5) );
     ui->RESET->setName( pRobo->listIoName.at(6) );
+    logDbg() << pRobo->listIoName.at(0);
 }
 
 void T4OpPanel::updateData()
@@ -1292,7 +1293,18 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
     for( int i = 0; i < 2; i++ ){
         int t = iVal & 0x03;
         //! set io state
-        iVal >> 2;
+        switch(t)
+        {
+            case 0x0:   /*low*/
+                mrgProjectSetYout(device_var_vi(), i, 0);
+                break;
+            case 0x1:   /*reserve*/
+                break;
+            case 0x2:   /*high*/
+                mrgProjectSetYout(device_var_vi(), i, 1);
+                break;
+        }
+        iVal = iVal >> 2;
     }
 
     //! \todo Wrist move
@@ -1300,12 +1312,15 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
     angle = pItem->pw;
     speed = pRobo->mMaxJointSpeeds.at(3) * pItem->v / 100.0;
 
-    ret = mrgSetRobotWristPose(robot_var(), angle, speed, guess_dist_time_ms( 180/speed, 180 ));
+    ret = mrgSetRobotWristPose(robot_var(), 0, angle, speed, guess_dist_time_ms( 180/speed, 180 ));
     logDbg() << angle << speed << ret;
     if( ret != 0 )
         return ret;
 
     //! \todo Terminal move
+    speed = pRobo->mMaxJointSpeeds.at(4) * pItem->v / 100.0;
+    //ret = mrgRobotToolExe(robot_var(), pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
+    ret = mrgRobotJointMove(robot_var(), 4, pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
 
     return ret;
 }

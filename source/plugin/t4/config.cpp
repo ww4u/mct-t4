@@ -208,7 +208,6 @@ int Config::upload()
 
     //! \todo safe area
 
-
     //! arm length
     //! \todo
     float link[5];

@@ -767,12 +767,21 @@ EXPORT_API int CALL mrgGetRobotWristPose(ViSession vi, int name, float *angle);
 * 控制机器人腕关节的姿态角度(相对于90度的算法零位)
 * vi :visa设备句柄
 * name: 机器人名称
+* wavetable: 波表
 * angle: 腕关节角度(垂直向下时为零)
-* time : 时间
+* speed: 速度
 * timeout_ms: 表示等待执行的超时时间. 如果为-1,表示不等待. 0表示无限等待. >0 表示等待的超时时间. 单位:ms
 * 返回值：零表示执行正确,-1表示执行错误
 */
-EXPORT_API int CALL mrgSetRobotWristPose(ViSession vi, int name, float angle,float time,int timeout_ms);
+EXPORT_API int CALL mrgSetRobotWristPose(ViSession vi, int name, int wavetable, float angle, float speed, int timeout_ms);
+/*
+* 获取机器人的折叠状态
+* vi :visa设备句柄
+* name: 机器人名称
+* 返回值：1表示执行成功， 0：还要折叠中; 小于零表示执行出错
+* 此命令只对T4有效！！！！！
+*/
+EXPORT_API int CALL mrgSetRobotFold(ViSession vi, int name);
 
 #if defined(__cplusplus) || defined(__cplusplus__)
 }

@@ -419,9 +419,15 @@ int T4Para::serialIn( QXmlStreamReader &reader )
         }
         else if ( reader.name() == "digital_inputs" )
         {
-            if ( reader.name() == "name" ){
-                listIoName.clear();
-                listIoName = reader.readElementText().split( "," );
+            while( reader.readNextStartElement() )
+            {
+                if ( reader.name() == "name" )
+                {
+                    listIoName.clear();
+                    listIoName = reader.readElementText().split( "," );
+                }
+                else
+                { reader.skipCurrentElement(); }
             }
         }
         else

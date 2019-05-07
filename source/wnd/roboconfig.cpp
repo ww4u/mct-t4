@@ -613,10 +613,12 @@ void RoboConfig::slotActionExportLog()
 {
     //! \todo api for export
 }
-
+#include "classwizard.h"
 void RoboConfig::slotActionUpdate()
 {
     //! \todo update
+    ClassWizard *wizard = new ClassWizard(this);
+    wizard->show();
 }
 
 void RoboConfig::slotActionExplorer()

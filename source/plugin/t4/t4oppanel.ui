@@ -74,7 +74,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>1</number>
          </property>
          <property name="elideMode">
           <enum>Qt::ElideNone</enum>
@@ -2058,6 +2058,7 @@
   </customwidget>
  </customwidgets>
  <resources>
+  <include location="../../../res/res.qrc"/>
   <include location="../../../res/res.qrc"/>
  </resources>
  <connections/>

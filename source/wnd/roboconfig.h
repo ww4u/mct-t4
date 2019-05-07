@@ -157,6 +157,8 @@ private:
 
     QTreeWidgetItem *m_pRootNode;
     QList<XPlugin*> mPluginList;
+public:
+    XPlugin* currentXPlugin() const { return m_pCurPlugin; }
 };
 
 #endif // H2CONFIG_H

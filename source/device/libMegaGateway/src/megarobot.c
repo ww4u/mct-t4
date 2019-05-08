@@ -2221,45 +2221,6 @@ EXPORT_API int CALL mrgGetRobotCurrentRecord(ViSession vi, int name, int *record
     return 0;
 }
 /*
-* 机器人的折叠功能(包装位)
-* vi :visa设备句柄
-* name: 机器人名称
-* axi0 axi1,axi2,axi3：各轴相对于零点的角度值. axi0:基座; axi1:大臂;axi2:小臂;axi3:腕 
-* 返回值：0表示执行成功， －1：表示执行失败
-* 此命令只对T4有效！！！！！
-*/
-EXPORT_API int CALL mrgGetRobotFold(ViSession vi, int name, int wavetable, float axi0, float axi1, float axi2, float axi3)
-{
-    int device = 0;
-    //如果不是T4,则返回错误
-    if (mrgGetRobotType(vi,name) != MRX_TYPE_T4)
-    {
-        return -1;
-    }
-    if (mrgGetRobotDevice(vi, name, &device) == 0)
-    {
-        return -2; //获取设备失败
-    }
-    //0. 机器人本体回零位
-    mrgRobotGoHome(vi,name, 0);
-    //1. 先动末端执行器
-    mrgMRQAdjust(vi, device, 4, wavetable, 10.0f,1.0f, 2000);
-    mrgRobotToolGoHome(vi, name, 10000); //末端回零
-
-    //2.腕
-    mrgMRQAdjust(vi, device, 3, wavetable, axi3, 3.0f, 10000);
-    //3. 大臂向后
-    mrgMRQAdjust(vi, device, 1, wavetable, axi1, 2.0f, 10000);
-
-    //4.小臂向下
-    mrgMRQAdjust(vi, device, 2, wavetable, axi2, 3.0f, 10000);
-
-    //5. 基座
-    mrgMRQAdjust(vi, device, 2, wavetable, axi0, 1.0f, 10000);
-    return 0;
-}
-
-/*
 * 获取机器人腕关节的姿态角度(相对于90度的算法零位)
 * vi :visa设备句柄
 * name: 机器人名称
@@ -2306,15 +2267,33 @@ EXPORT_API int CALL mrgSetRobotWristPose(ViSession vi, int name, int wavetable, 
     }
     return mrgRobotWaitEnd(vi, name, wavetable, timeout_ms);
 }
-
+/*
+* 机器人的折叠功能(包装位)
+* vi :visa设备句柄
+* name: 机器人名称
+* axi0 axi1,axi2,axi3：各轴相对于零点的角度值. axi0:基座; axi1:大臂;axi2:小臂;axi3:腕
+* 返回值：0表示执行成功， －1：表示执行失败
+* 此命令只对T4有效！！！！！
+*/
+EXPORT_API int CALL mrgSetRobotFold(ViSession vi, int name, int wavetable, float axi0, float axi1, float axi2, float axi3)
+{
+    int count = 0, retlen = 0;
+    char args[SEND_BUF];
+    snprintf(args, SEND_BUF, "ROBOT:POSE:factory %d,%f,%f,%f,%f\n", name, axi0, axi1, axi2, axi3);
+    if ((retlen = busWrite(vi, args, strlen(args))) == 0)
+    {
+        return -1;
+    }
+    return 0;
+}
 /*
 * 获取机器人的折叠状态
 * vi :visa设备句柄
 * name: 机器人名称
-* 返回值：1表示执行成功， 0：还要折叠中; 小于零表示执行出错
+* 返回值：1表示折叠完成， 0：还在折叠中; 小于零表示执行出错
 * 此命令只对T4有效！！！！！
 */
-EXPORT_API int CALL mrgSetRobotFold(ViSession vi, int name)
+EXPORT_API int CALL mrgGetRobotFoldState(ViSession vi, int name)
 {
     int retlen = 0;
     char args[SEND_BUF];

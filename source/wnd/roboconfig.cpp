@@ -94,6 +94,7 @@ void RoboConfig::setupUi()
 void RoboConfig::retranslateUi()
 {
     ui->retranslateUi(this);
+    ui->buttonBox->button( QDialogButtonBox::Reset )->setText(tr("Reset"));
     m_pRootNode->setText( 0, tr("Project"));
     foreach (XPlugin* xPlug, mPluginList){
         xPlug->retranslateUi();
@@ -617,6 +618,7 @@ void RoboConfig::slotActionExportLog()
 void RoboConfig::slotActionUpdate()
 {
     //! \todo update
+    return;
     ClassWizard *wizard = new ClassWizard(this);
     wizard->show();
 }

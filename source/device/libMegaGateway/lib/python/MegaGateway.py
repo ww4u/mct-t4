@@ -677,10 +677,6 @@ class MageGateway(object):
         else:
             return result.value
 
-### int mrgGetRobotFold(ViSession vi, int name, int wavetable, float axi0, float axi1, float axi2, float axi3);
-    def mrgGetRobotFold(self, fd, roboname, wavetable, axi0, axi1, axi2, axi3):
-        return self._dll.mrgGetRobotFold(fd, roboname, wavetable, c_float(axi0), c_float(axi1), c_float(axi2), c_float(axi3))
-
 ### int mrgGetRobotWristPose(ViSession vi, int name, float *angle);
     def mrgGetRobotWristPose(self, fd, roboname):
         result = c_float(-1)
@@ -693,6 +689,14 @@ class MageGateway(object):
 ### int mrgSetRobotWristPose(ViSession vi, int name, int wavetable, float angle, float speed, int timeout_ms);
     def mrgSetRobotWristPose(self, fd, roboname, wavetable, angle, speed, timeout_ms):
         return self._dll.mrgSetRobotWristPose(fd, roboname, wavetable, c_float(angle), c_float(speed), timeout_ms)
+
+### int mrgSetRobotFold(ViSession vi, int name, int wavetable, float axi0, float axi1, float axi2, float axi3);
+    def mrgSetRobotFold(self, fd, roboname, wavetable, axi0, axi1, axi2, axi3):
+        return self._dll.mrgSetRobotFold(fd, roboname, wavetable, c_float(axi0), c_float(axi1), c_float(axi2), c_float(axi3))
+
+### int mrgGetRobotFoldState(ViSession vi, int name);
+    def mrgGetRobotFoldState(self, fd, roboname):
+        return self._dll.mrgGetRobotFoldState(fd, roboname)
 
 ############################################################
 ### "mrqdevice.h"

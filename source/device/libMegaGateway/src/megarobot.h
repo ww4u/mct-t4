@@ -747,15 +747,6 @@ EXPORT_API int CALL mrgGetRobotTargetPosition(ViSession vi, int name, float * x,
 */
 EXPORT_API int CALL mrgGetRobotCurrentRecord(ViSession vi, int name, int *record);
 /*
-* 机器人的折叠功能(包装位)
-* vi :visa设备句柄
-* name: 机器人名称
-* axi0 axi1,axi2,axi3：各轴相对于零点的角度值. axi0:基座; axi1:大臂;axi2:小臂;axi3:腕
-* 返回值：0表示执行成功， －1：表示执行失败
-* 此命令只对T4有效！！！！！
-*/
-EXPORT_API int CALL mrgGetRobotFold(ViSession vi, int name, int wavetable, float axi0, float axi1, float axi2, float axi3);
-/*
 * 获取机器人腕关节的姿态角度(相对于90度的算法零位)
 * vi :visa设备句柄
 * name: 机器人名称
@@ -775,13 +766,22 @@ EXPORT_API int CALL mrgGetRobotWristPose(ViSession vi, int name, float *angle);
 */
 EXPORT_API int CALL mrgSetRobotWristPose(ViSession vi, int name, int wavetable, float angle, float speed, int timeout_ms);
 /*
+* 机器人的折叠功能(包装位)
+* vi :visa设备句柄
+* name: 机器人名称
+* axi0 axi1,axi2,axi3：各轴相对于零点的角度值. axi0:基座; axi1:大臂;axi2:小臂;axi3:腕
+* 返回值：0表示执行成功， －1：表示执行失败
+* 此命令只对T4有效！！！！！
+*/
+EXPORT_API int CALL mrgSetRobotFold(ViSession vi, int name, int wavetable, float axi0, float axi1, float axi2, float axi3);
+/*
 * 获取机器人的折叠状态
 * vi :visa设备句柄
 * name: 机器人名称
-* 返回值：1表示执行成功， 0：还要折叠中; 小于零表示执行出错
+* 返回值：1表示折叠完成， 0：还在折叠中; 小于零表示执行出错
 * 此命令只对T4有效！！！！！
 */
-EXPORT_API int CALL mrgSetRobotFold(ViSession vi, int name);
+EXPORT_API int CALL mrgGetRobotFoldState(ViSession vi, int name);
 
 #if defined(__cplusplus) || defined(__cplusplus__)
 }

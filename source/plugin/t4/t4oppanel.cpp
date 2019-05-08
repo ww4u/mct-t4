@@ -1022,7 +1022,7 @@ int T4OpPanel::onFolding( QVariant var )
 
     int ret;
 
-    ret = mrgGetRobotFold( robot_var(),
+    ret = mrgSetRobotFold( robot_var(),
                            wave_table,
                            pRobo->mPackagesAxes[0],
                            pRobo->mPackagesAxes[1],
@@ -1380,9 +1380,9 @@ void T4OpPanel::switchCoordMode()
     //! joint
     if ( ui->radCoordJoint->isChecked() )
     {
-        ui->joint1->setJointName( "Base" );
-        ui->joint2->setJointName( "Shoulder" );
-        ui->joint3->setJointName( "Elbow" );
+        ui->joint1->setJointName( tr("Base") );
+        ui->joint2->setJointName( tr("Shoulder") );
+        ui->joint3->setJointName( tr("Elbow") );
 
         ui->joint1->setAngleVisible( bAbsAngleVisible, true );
         ui->joint2->setAngleVisible( bAbsAngleVisible, true );

@@ -69,12 +69,12 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
 
     //! record table
     QStringList headerList;
-    headerList<<"Record"<<"Type"
+    headerList<<tr("Record")<<tr("Type")
               //<<"coordinate"<<"para."
               <<"x(mm)"<<"y(mm)"<<"z(mm)"
-              <<QString("Wrist(%1)").arg(char_deg)<<QString("Terminal(%1)").arg( char_deg )
-              <<QString("v(%)")<<("Line")<<"Output"<<"Delay(s)"
-              <<"comment";
+              <<tr("Wrist")+QString("(%1)").arg(char_deg)<<tr("Terminal")+QString("(%1)").arg(char_deg)
+              <<tr("V")+"(%)"<<tr("Line")<<tr("Output")<<tr("Delay")+"(s)"
+              <<tr("comment");
 
 //    headerList<<"id"<<"type"<<"coord";
 

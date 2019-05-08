@@ -215,7 +215,7 @@ EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *path, c
         memset(as8State,0,sizeof(as8State));
         if (busWrite(vi, as8Ret, writeLen + cmdLen) == 0)
         {
-            Sleep(1);
+            SLEEP(1);
             continue;
         }
         retLen = busRead(vi, as8State, sizeof(as8State));
@@ -226,7 +226,7 @@ EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *path, c
         as8State[retLen - 1] = '\0';//去掉回车符
         if(STRCASECMP(as8State, "ERROR") == 0)
         {
-            Sleep(1);
+            SLEEP(1);
             continue;
         }
         len -= writeLen;

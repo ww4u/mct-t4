@@ -17,6 +17,33 @@ VERSION = 00.01.00.00
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+################### QtGUI ###################
+INCLUDEPATH += ./mainwindow
+INCLUDEPATH += ./widget
+INCLUDEPATH += ./dialog
+INCLUDEPATH += ./thread
+
+SOURCES +=  \
+    mainwindow/mainwindow.cpp   \
+    widget/mainwidget.cpp       \
+    dialog/TestPanelDialog.cpp
+
+HEADERS += \
+    mainwindow/mainwindow.h     \
+    widget/mainwidget.h         \
+    dialog/TestPanelDialog.h
+
+FORMS += \
+    mainwindow/mainwindow.ui    \
+    widget/mainwidget.ui        \
+    dialog/TestPanelDialog.ui
+
+
+RC_ICONS = resource/app.ico
+
+RESOURCES += \
+    resource/res.qrc
+
 
 ################### SDK ###################
 unix {
@@ -63,33 +90,4 @@ LIBS += -L"../../win" -llibws2_32
 LIBS += -L"../../win" -llibiphlpapi
 LIBS += -L"../../win" -lvisa32
 }
-
-
-################### QtGUI ###################
-INCLUDEPATH += ./mainwindow
-INCLUDEPATH += ./widget
-INCLUDEPATH += ./dialog
-INCLUDEPATH += ./thread
-
-SOURCES +=  \
-    mainwindow/mainwindow.cpp \
-    widget/mainwidget.cpp
-
-HEADERS += \
-    mainwindow/mainwindow.h \
-    widget/mainwidget.h
-
-FORMS += \
-    mainwindow/mainwindow.ui \
-    widget/mainwidget.ui
-
-
-
-
-
-
-
-
-
-
 

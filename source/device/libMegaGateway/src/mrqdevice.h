@@ -628,7 +628,7 @@ EXPORT_API int CALL mrgMRQPVTModifyDuty(ViSession vi, int name, int ch, int wave
 *duty:占空比
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQPVTModifyDuty_Query(ViSession vi, int name, int ch, int wavetable, float *duty);
+EXPORT_API int CALL mrgMRQPVTModifyDuty_Query(ViSession vi, int name, int ch, int wavetable, int *duty);
 /*
 *设置是否为速度保持
 *vi :visa设备句柄
@@ -1512,7 +1512,7 @@ EXPORT_API int CALL mrgMRQUartFlowctrl(ViSession vi, int num, int name, int mode
 *mode:RS232 的流控制方式： NONE、 RTS、 CTS 或 RTS&CTS
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQUartFlowctrl_Query(ViSession vi, int num, int name, char *mode);
+EXPORT_API int CALL mrgMRQUartFlowctrl_Query(ViSession vi, int num, int name, int *mode);
 /*
 *设置串口传感器状态，打开或关闭
 *vi :visa设备句柄
@@ -1689,7 +1689,7 @@ EXPORT_API int CALL mrgMRQDistanceAlarm_Query(ViSession vi, int num, int name, i
 *type:驱动板类型
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQNewDriverType_Query(ViSession vi, int name, int ch, char *type);
+EXPORT_API int CALL mrgMRQNewDriverType_Query(ViSession vi, int name, int ch, int *type);
 /*
 *设置驱动板电流（只支持10轴）
 *vi :visa设备句柄

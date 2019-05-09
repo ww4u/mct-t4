@@ -159,12 +159,13 @@ unsigned int busRead(ViSession vi, char *buf, unsigned int len)
     LOCK();
     while(errCount--)
     {
-        retCount = SyncRead(vi, buf, len, 1);
+        retCount = SyncRead(vi, buf, len, 0);
         if(retCount > 0)
         {
             break;
         }
         retCount=0;
+        msSleep(1);
     }
 
     if( (retCount==0) || STRCASECMP(buf, "Command error") == 0 )
@@ -191,12 +192,13 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* o
 
     while(errCount--)
     {
-        retCount = SyncRead(vi, output, wantlen, 1);
+        retCount = SyncRead(vi, output, wantlen, 0);
         if(retCount > 0)
         {
             break;
         }
         retCount=0;
+        msSleep(1);
     }
     if( (retCount==0) || STRCASECMP(output, "Command error") == 0 )
     {
@@ -455,6 +457,7 @@ unsigned int busRead(ViSession vi, char * buf, unsigned int len)
             break;
         }
         retCount = 0;
+        msSleep(1);
     }
     if( (retCount == 0) ||  STRCASECMP(buf, "Command error") == 0 )
     {
@@ -485,6 +488,7 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen,char* ou
             break;
         }
         retCount = 0;
+        msSleep(1);
     }
     if( (retCount == 0) ||  STRCASECMP(output, "Command error") == 0 )
     {

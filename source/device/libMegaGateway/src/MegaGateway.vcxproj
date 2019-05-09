@@ -77,6 +77,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;_WINDOWS;_USRDLL;MEGAGATEWAY_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/utf-8</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -128,8 +129,8 @@
     <ClCompile Include="system.c" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="../win/pthreadVC2.lib" />
-    <Library Include="../win/visa32.lib" />
+    <Library Include="msvc/pthreadVC2.lib" />
+    <Library Include="msvc/visa32.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

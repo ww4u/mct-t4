@@ -1023,12 +1023,11 @@ int T4OpPanel::onFolding( QVariant var )
     int ret;
 
     ret = mrgSetRobotFold( robot_var(),
-                           wave_table,
                            pRobo->mPackagesAxes[0],
                            pRobo->mPackagesAxes[1],
                            pRobo->mPackagesAxes[2],
-                           pRobo->mPackagesAxes[3]
-                           );
+                           pRobo->mPackagesAxes[3],
+                           120000);
     return ret;
 }
 

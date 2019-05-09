@@ -173,16 +173,23 @@ void MRX_T4::fold()
 void MRX_T4::reboot()
 {
     //! close
-    close();
+    //close();
 
     //! \todo api
+    int ret = mrgSystemRunCmd(mVi,(char*)"reboot", 0);
+    if(ret != 0){
+        sysError( tr("Reboot fail") );
+    }
 }
 void MRX_T4::powerOff()
 {
-    close();
+    //close();
 
     //! \todo api
-
+    int ret = mrgSystemRunCmd(mVi,(char*)"poweroff",0);
+    if(ret != 0){
+        sysError( tr("Poweroff fail") );
+    }
 }
 
 int MRX_T4::upload()

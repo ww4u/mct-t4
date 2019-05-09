@@ -106,9 +106,10 @@ int MegaInterface::deviceOpen()
     //! current
     QModelIndex index = ui->tableView->selectionModel()->selectedIndexes().at(0);
     QString strAddr = m_model->data(index,Qt::DisplayRole).toString();
+    QString fullAddr = QString("TCPIP0::%1::inst0::INSTR").arg(strAddr);
 
     //! open
-    int visa =  mrgOpenGateWay( strAddr.toLocal8Bit().data(), 3000 );
+    int visa =  mrgOpenGateWay( fullAddr.toLocal8Bit().data(), 3000 );
     if(visa <= 0){
         QMessageBox::critical(this,tr("error"),tr("open device error"));
     }
@@ -155,9 +156,9 @@ void MegaInterface::slotShowSearchResult( QVariant var )
     int rowCnt = 0;
     foreach( const RoboInfo &info, mSearchRobos )
     {
-
-        t_item = new QStandardItem( info.mAddr );
-        t_item->setData( info.mAddr, Qt::ToolTipRole );
+        QString strIP = info.mAddr.split("::").at(1);
+        t_item = new QStandardItem( strIP );
+        t_item->setData( strIP, Qt::ToolTipRole );
         m_model->setItem( rowCnt, 0, t_item );
 
         t_item = new QStandardItem( info.mFMModel );
@@ -222,7 +223,7 @@ void MegaInterface::slotSelectDevices()
 {
     //! only one item
     QString strAddr = m_model->data( m_model->index(  ui->tableView->currentIndex().row(), 0 ), Qt::DisplayRole ).toString();
-    QString strFullAddr = strAddr;
+    QString strFullAddr = QString("TCPIP0::%1::inst0::INSTR").arg(strAddr);
 
     QString strModel = m_model->data( m_model->index(  ui->tableView->currentIndex().row(), 4 ), Qt::DisplayRole ).toString();
 

@@ -264,7 +264,14 @@ EXPORT_API int CALL mrgRobotRun(ViSession vi, int name, int wavetable);
 * 返回值：0表示停止成功，否则表示停止失败
 */
 EXPORT_API int CALL mrgRobotStop(ViSession vi, int name, int wavetable);
-
+/*
+* 查询机器人运行状态
+* vi :visa设备句柄
+* name: 机器人名称
+* wavetable ：波表索引，－1表示使用默认索引（调用mrgSetRobotWavetable设置的波表索引）
+* 返回值：0表示等待成功，－1：表示出错
+*/
+EXPORT_API int CALL mrgGetRobotStates(ViSession vi, int name, int wavetable, char *state);
 /*
 * 等待机器人的特定波表的ready状态（等待模块设备解算完成）
 * vi :visa设备句柄
@@ -427,8 +434,8 @@ EXPORT_API int CALL mrgRobotGoHome(ViSession vi, int name, int timeout_ms);
 * 机器人回零位操作
 * vi :visa设备句柄
 * name: 机器人名称
-* param: 参数，对于T4来说，指的是时间，即在多秒时间内回到零位。对于H2来说，指的是回零位的速度，度/秒
-* timeout_ms:表示等待超时时间,0表示无限等待，－1表示不等待，立即返回
+* param: 参数，回零位的速度回零位的速度.对于T4来说，单位是mm/s。对于H2来说，度/秒
+* timeout_ms:表示等待超时时间,0表示无限等待，小于零表示不等待，立即返回
 * 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示执行超时
 * 说明：末端保持不动
 */
@@ -773,7 +780,7 @@ EXPORT_API int CALL mrgSetRobotWristPose(ViSession vi, int name, int wavetable, 
 * 返回值：0表示执行成功， －1：表示执行失败
 * 此命令只对T4有效！！！！！
 */
-EXPORT_API int CALL mrgSetRobotFold(ViSession vi, int name, int wavetable, float axi0, float axi1, float axi2, float axi3);
+EXPORT_API int CALL mrgSetRobotFold(ViSession vi, int name, float axi0, float axi1, float axi2, float axi3, int timeout);
 /*
 * 获取机器人的折叠状态
 * vi :visa设备句柄

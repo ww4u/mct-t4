@@ -117,7 +117,7 @@ int waitMotionFileWriteEnd(int vi)
     {
         if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0)
         {
-            SLEEP(10);
+            msSleep(10);
             time += 10;
             continue;
         }
@@ -143,6 +143,7 @@ int waitMotionFileWriteEnd(int vi)
 */
 EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context,int len, char * saveFileName)
 {
+#if 0
     int count = 0;
     int writeLen = 0;
     int cmdLen = 0;
@@ -174,8 +175,11 @@ EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context,
         return -1;
     }
     return 0;
-}
+#endif
 
+    // MRH-T 大于1.20版本才可用下面这种方式
+    return mrgStorageWriteFile(vi, 0, "/home/megarobo/MRH-T/motionfile/", saveFileName, (unsigned char*)context, len);
+}
 /*
 * 保存文件内容
 * vi :visa设备句柄
@@ -186,8 +190,7 @@ EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context,
 * dataLen:文件内容长度
 * 返回值：  0：写入成功；1：写入失败
 */
-EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *path, char *saveFileName,
-                                        unsigned char *data, int dataLen)
+EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *path, char *saveFileName,unsigned char *data, int dataLen)
 {
     int retLen = -1;
     int count = 0;
@@ -198,9 +201,7 @@ EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *path, c
     char as8Ret[1024];
     char as8State[64];
 
-    snprintf(args, SEND_BUF, "STORage:FILe:WRITe:START %s,%s,%s\n",
-             isUdisk?"UDISK":"LOCAL", path, saveFileName);
-
+    snprintf(args, SEND_BUF, "STORage:FILe:WRITe:START %s,%s,%s\n",isUdisk?"UDISK":"LOCAL", path, saveFileName);
     if (busWrite(vi, args, strlen(args)) == 0)//写入文件名
     {
         return -1;
@@ -215,7 +216,7 @@ EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *path, c
         memset(as8State,0,sizeof(as8State));
         if (busWrite(vi, as8Ret, writeLen + cmdLen) == 0)
         {
-            SLEEP(1);
+            msSleep(1);
             continue;
         }
         retLen = busRead(vi, as8State, sizeof(as8State));
@@ -226,7 +227,7 @@ EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *path, c
         as8State[retLen - 1] = '\0';//去掉回车符
         if(STRCASECMP(as8State, "ERROR") == 0)
         {
-            SLEEP(1);
+            msSleep(1);
             continue;
         }
         len -= writeLen;
@@ -245,7 +246,6 @@ EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *path, c
 
     return 0;
 }
-
 /*
 * 读取文件到上位机
 * vi :visa设备句柄

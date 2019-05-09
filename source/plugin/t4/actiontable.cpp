@@ -44,7 +44,7 @@ ActionTable::ActionTable(QWidget *parent) :
     m_pDelegateTime->setSuffix( "s" );
 
     m_pCheckDelegate = new CheckDelegate( shape_check, this );
-    m_pCheckDelegate->setAlignment( Qt::AlignLeft );
+    m_pCheckDelegate->setAlignment( Qt::AlignCenter );
 
     ui->view->setItemDelegateForColumn( 2, m_pDelegateXYZ );
     ui->view->setItemDelegateForColumn( 3, m_pDelegateXYZ );
@@ -843,7 +843,6 @@ void ActionTable::slot_add_below()
 void ActionTable::slot_delete()
 {
     QModelIndex index = ui->view->selectionModel()->currentIndex();
-
     if ( ui->view->model()->removeRow( index.row(), index.parent() ) )
     {}
     else

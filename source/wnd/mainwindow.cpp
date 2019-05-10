@@ -786,6 +786,10 @@ void MainWindow::retranslateUi()
     m_pSystemAction->setText( tr("System") );
 
     m_pHelpAction->setText(tr("Show Help"));
+    m_pDockHelp->setWindowTitle(tr("Help"));
+    m_pDockOps->setWindowTitle(tr("Ops"));
+    m_pSysLogout->reTranslate();
+    m_pLabStatus->setText(tr("MEGAROBO Configuration Tool"));
 }
 
 void MainWindow::adaptToUserRole()

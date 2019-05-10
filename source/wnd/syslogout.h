@@ -18,6 +18,8 @@ public:
 
     void attachLogModel( QAbstractListModel *pModel );
 
+    void reTranslate();
+
 protected:
     virtual bool event( QEvent *event );
 

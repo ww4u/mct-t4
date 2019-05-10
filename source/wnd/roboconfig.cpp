@@ -654,8 +654,7 @@ void RoboConfig::on_buttonBox_clicked(QAbstractButton *button)
     {
         do
         {
-            if ( QMessageBox::Yes
-                 == QMessageBox::question( this, tr("Reset"), tr("Sure to reset all?") ) )
+            if ( msgBox_Warning_ok( tr("Reset"), tr("Sure to reset all?") ) )
             { }
             else
             { break; }

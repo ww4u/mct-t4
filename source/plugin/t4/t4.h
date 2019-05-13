@@ -125,6 +125,10 @@ public:
     virtual bool isOnLine();
 
     virtual int open();
+private:
+    int _open( int &vi );
+
+public:
     virtual void close();
 
     virtual void startup();

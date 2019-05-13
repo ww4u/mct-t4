@@ -17,21 +17,89 @@ bool MRX_T4::isOnLine()
 
 int MRX_T4::open()
 {
-    int vi;
+    int ret;
 
-    vi = mrgOpenGateWay( mAddr.toLatin1().data(), 2000 );
-    if ( vi > 0 )
+    int localVi;
+    ret = _open( localVi );
+    if ( ret == 0 )
     {
-        mVi = vi;
+        mVi = localVi;
 
         //! changed
         emit_setting_changed( XPage::e_setting_opened, true );
 
         emit_setting_changed( XPage::e_setting_user_role, QVariant() );
+
+
+        //! change setting
+        //! update the angle
+        float zeroAngles[4];
+        ret = mrgGetRobotHomeAngle( self_robot_var(), zeroAngles );
+        if ( ret < 0 )
+        { sysError( tr("Zero Angle update fail") ); }
+        else
+        {
+            for ( int i = 0; i < ret && i < T4Para::_axis_cnt; i++ )
+            { mAxisZero[ i ] = zeroAngles[ i ]; }
+        }
+
+        //! update the current
+        for ( int i = 0; i < T4Para::_axis_cnt; i++ )
+        {
+            ret = mrgMRQMotorCurrent_Query( self_device_var(), i, mAxisCurrents + i );
+            if ( ret != 0 )
+            {
+                sysError( tr("Current read fail") );
+                break;
+            }
+        }
+
+        //! \note
+        //! \todo
+        //! config the data
+        int dataOnOff;
+        if ( sysHasArgv("-noupdate") )
+        { dataOnOff = 0; }
+        else
+        { dataOnOff = 1; }
+
+        {
+            for ( int i = 0; i < T4Para::_axis_cnt; i++ )
+            {
+               ret = mrgMRQReportState( self_device_var(), i, 0, dataOnOff );
+               if ( ret != 0 )
+               {
+                   sysError( tr("Data report state fail") );
+                   break;
+               }
+            }
+        }
+
+        //! \note upload the data from device
+        upload();
+
     }
     else
     {
         emit_setting_changed( XPage::e_setting_opened, false );
+    }
+
+    return ret;
+}
+
+#define local_robot_var()     (ViSession)vi, robotHandle()
+#define local_device_var()    (ViSession)vi,deviceHandle()
+int MRX_T4::_open( int &vi )
+{
+    //! local vi
+    vi = mrgOpenGateWay( mAddr.toLatin1().data(), 2000 );
+    if ( vi > 0 )
+    {
+        //! delay setting changed
+//        mVi = vi;
+    }
+    else
+    {
         return -1;
     }
 
@@ -40,7 +108,7 @@ int MRX_T4::open()
     int ret;
 
     //! \todo names overflow
-    ret = mrgGetRobotName( mVi, names );
+    ret = mrgGetRobotName( vi, names );
     if ( ret > 16 || ret < 1 )
     { return -1; }
 
@@ -49,64 +117,11 @@ int MRX_T4::open()
 
     //! device handle
     int deviceHandles[16];
-    ret = mrgGetRobotDevice( self_robot_var(), deviceHandles );
+    ret = mrgGetRobotDevice( local_robot_var(), deviceHandles );
     if ( ret > 16 || ret < 1 )
     { return -1; }
     mDeviceHandle = deviceHandles[0];
     sysInfo( tr("Device"), mDeviceHandle );
-
-    //! update the angle
-    float zeroAngles[4];
-    ret = mrgGetRobotHomeAngle( self_robot_var(), zeroAngles );
-    if ( ret < 0 )
-    { sysError( tr("Zero Angle update fail") ); }
-    else
-    {
-        for ( int i = 0; i < ret && i < T4Para::_axis_cnt; i++ )
-        { mAxisZero[ i ] = zeroAngles[ i ]; }
-    }
-
-    //! update the current
-    for ( int i = 0; i < T4Para::_axis_cnt; i++ )
-    {
-        ret = mrgMRQMotorCurrent_Query( self_device_var(), i, mAxisCurrents + i );
-        if ( ret != 0 )
-        {
-            sysError( tr("Current read fail") );
-            break;
-        }
-    }
-
-    //! \note
-    //! \todo
-    //! config the data
-    int dataOnOff;
-    if ( sysHasArgv("-noupdate") )
-    { dataOnOff = 0; }
-    else
-    { dataOnOff = 1; }
-
-    {
-        for ( int i = 0; i < T4Para::_axis_cnt; i++ )
-        {
-           ret = mrgMRQReportState( self_device_var(), i, 0, dataOnOff );
-           if ( ret != 0 )
-           {
-               sysError( tr("Data report state fail") );
-               break;
-           }
-
-//           ret = mrgMRQReportPeriod( self_device_var(), i, 0, 1000 );
-//           if ( ret != 0 )
-//           {
-//               sysError( tr("Data report state fail") );
-//               break;
-//           }
-        }
-    }
-
-    //! \note upload the data from device
-    upload();
 
     return 0;
 }

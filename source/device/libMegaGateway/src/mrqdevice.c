@@ -229,7 +229,7 @@ EXPORT_API int CALL mrgMRQMotionRunState_Query(ViSession vi, int name,
 */
 EXPORT_API int CALL mrgMRQMotionWaitReady(ViSession vi, int name, int ch, int wavetable, int timeout_ms)
 {
-    int ret = -3,error_count = 0;
+    int ret = -3;
     char args[SEND_BUF];
     char state[12];
     int retLen = 0,time = 0;
@@ -237,13 +237,9 @@ EXPORT_API int CALL mrgMRQMotionWaitReady(ViSession vi, int name, int ch, int wa
              name, ch, wavetableToString(wavetable));
     while (1)
     {
-        SLEEP(200);
-        if ((retLen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
-            if (++error_count > 3)
-            {
-                return -1;
-            }
-            continue;
+        if ((retLen = busQuery(vi, args, strlen(args), state, 12)) == 0)
+        {
+            return -1;
         }
         state[retLen - 1] = '\0';//去掉回车符
         if (STRCASECMP(state, "READY") == 0 || STRCASECMP(state, "IDLE") == 0) //下发过程中停止会进入“IDLE”状态
@@ -253,6 +249,7 @@ EXPORT_API int CALL mrgMRQMotionWaitReady(ViSession vi, int name, int ch, int wa
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
+        msSleep(200);
         time += 200;
         if (timeout_ms > 0)
         {
@@ -275,7 +272,6 @@ EXPORT_API int CALL mrgMRQMotionWaitReady(ViSession vi, int name, int ch, int wa
 EXPORT_API int CALL mrgMRQMotionWaitEnd(ViSession vi, int name, int ch, int wavetable, int timeout_ms)
 {
     int ret = -3;
-    int error_count = 0;
     char args[SEND_BUF];
     char state[12];
     int retLen = 0;
@@ -284,13 +280,9 @@ EXPORT_API int CALL mrgMRQMotionWaitEnd(ViSession vi, int name, int ch, int wave
              name, ch, wavetableToString(wavetable));
     while (1)
     {
-        SLEEP(200);
-        if ((retLen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
-            if (++error_count > 3)
-            {
-                return -1;
-            }
-            continue;
+        if ((retLen = busQuery(vi, args, strlen(args), state, 12)) == 0)
+        {
+            return -1;
         }
         state[retLen - 1] = '\0';//去掉回车符
         if (STRCASECMP(state, "READY") == 0 || STRCASECMP(state, "IDLE") == 0) //下发过程中停止会进入“IDLE”状态
@@ -300,6 +292,7 @@ EXPORT_API int CALL mrgMRQMotionWaitEnd(ViSession vi, int name, int ch, int wave
         else if (STRCASECMP(state, "ERROR") == 0) {
             ret = -2; break;
         }
+        msSleep(200);
         time += 200;
         if (timeout_ms > 0)
         {
@@ -455,7 +448,7 @@ EXPORT_API int CALL mrgMRQMotionOffsetValue_Query(ViSession vi, int name, int ch
     {
         as8Ret[retLen] = '\0';
     }
-    *distance = strtod(as8Ret,NULL);
+    *distance = strtof(as8Ret,NULL);
     return 0;
 }
 /*
@@ -1149,9 +1142,9 @@ EXPORT_API int CALL mrgMRQPVTStateWait(ViSession vi, int name, int ch, int wavet
     
     while (1)
     {
-        SLEEP(200);
+        msSleep(200);
         mrgMRQPVTState_Query(vi, name, ch, wavetable, &readState);
-        SLEEP(200);
+        msSleep(200);
         if (readState == state)
         {
             return 0;
@@ -1181,8 +1174,7 @@ EXPORT_API int  mrgMRQPVTLoad(ViSession vi, int name, int ch, int wavetable, flo
     {
         mrgMRQPVTValue(vi, name, ch, wavetable, p[i*step], v[i*step], t[i*step]);
     }
-    mrgMRQPVTConfig(vi, name, ch, wavetable, 0);
-    return 0;
+    return mrgMRQPVTConfig(vi, name, ch, wavetable, 0);
 }
 /*
 *等待当前PVT的解算结束状态或运行结束状态
@@ -1203,7 +1195,7 @@ EXPORT_API int CALL mrgMRQPVTStateWaitEnd(ViSession vi, int name, int ch, int wa
     }
     while (1)
     {
-        SLEEP(100);
+        msSleep(100);
         mrgMRQPVTState_Query(vi, name, ch, wavetable, &readState);
         if (readState == MTSTATE_CALCEND || readState == MTSTATE_RESET)
         {
@@ -1675,7 +1667,7 @@ EXPORT_API int CALL mrgMRQPVTModifyDuty(ViSession vi, int name, int devList, int
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQPVTModifyDuty_Query(ViSession vi, int name,
-                                              int ch, int wavetable, float *duty)
+									int ch, int wavetable, int *duty)
 {
     char args[SEND_BUF];
     char as8Ret[100];
@@ -4263,17 +4255,19 @@ EXPORT_API int CALL mrgMRQUartFlowctrl(ViSession vi, int num, int name, int mode
 *mode:RS232 的流控制方式： NONE、 RTS、 CTS 或 RTS&CTS
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQUartFlowctrl_Query(ViSession vi, int num, int name, char *mode)
+EXPORT_API int CALL mrgMRQUartFlowctrl_Query(ViSession vi, int num, int name, int *mode)
 {
     char args[SEND_BUF];
+    char tmp[20];
     int retLen = 0;
     snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:FLOWctrl? %d\n", num, name);
-    if ((retLen = busQuery(vi, args, strlen(args), mode, 10)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), tmp, 10)) == 0) {
         return -1;
     }
     else
     {
-        mode[retLen - 1] = '\0';
+        tmp[retLen - 1] = '\0';
+        *mode = atoi(tmp);
     }
     return 0;
 }
@@ -4695,17 +4689,19 @@ EXPORT_API int CALL mrgMRQDistanceAlarm_Query(ViSession vi, int num, int name, i
 *type:驱动板类型
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQNewDriverType_Query(ViSession vi, int name, int ch, char *type)
+EXPORT_API int CALL mrgMRQNewDriverType_Query(ViSession vi, int name, int ch, int *type)
 {
     char args[SEND_BUF];
+    char tmp[20];
     int retLen = 0;
     snprintf(args, SEND_BUF, "DEVICE:MRQ:NDRiver:TYPe? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), type, 10)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), tmp, 10)) == 0) {
         return -1;
     }
     else
     {
-        type[retLen - 1] = '\0';
+        tmp[retLen - 1] = '\0';
+        *type = atoi(tmp);
     }
     return 0;
 }

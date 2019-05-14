@@ -164,6 +164,7 @@ void MainWindow::setupMenu()
     m_pEnAction->setCheckable( true );
     m_pTrChAction = langGroup->addAction( tr("Traditional Chinese") );
     m_pTrChAction->setCheckable( true );
+    m_pTrChAction->setVisible(false);
 
     QActionGroup * styleGroup = new QActionGroup(ui->menuView);
     m_pMegaAction = styleGroup->addAction( tr("MEGAROBO") );
@@ -222,7 +223,7 @@ void MainWindow::setupToolBar()
 
 void MainWindow::setupStatusBar()
 {
-    m_pLabStatus = new QLabel("MEGAROBO Configuration Tool");
+    m_pLabStatus = new QLabel(tr("MEGAROBO Configuration Tool"));
     m_pLabMctVer = new QLabel( QString("Version: %1  ").arg( qApp->applicationVersion() ) );
     m_pLabConVer = new QLabel( );
 
@@ -785,6 +786,10 @@ void MainWindow::retranslateUi()
     m_pSystemAction->setText( tr("System") );
 
     m_pHelpAction->setText(tr("Show Help"));
+    m_pDockHelp->setWindowTitle(tr("Help"));
+    m_pDockOps->setWindowTitle(tr("Ops"));
+    m_pSysLogout->reTranslate();
+    m_pLabStatus->setText(tr("MEGAROBO Configuration Tool"));
 }
 
 void MainWindow::adaptToUserRole()

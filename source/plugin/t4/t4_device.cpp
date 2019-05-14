@@ -63,10 +63,11 @@ int MRX_T4::open()
         else
         { dataOnOff = 1; }
 
+        //! \note no sg/se
         {
             for ( int i = 0; i < T4Para::_axis_cnt; i++ )
             {
-               ret = mrgMRQReportState( self_device_var(), i, 0, dataOnOff );
+               ret = mrgMRQReportState( self_device_var(), i, 0, 0 );
                if ( ret != 0 )
                {
                    sysError( tr("Data report state fail") );
@@ -130,21 +131,11 @@ void MRX_T4::close()
     lockWorking();
         if ( mVi > 0 )
         {
-            for ( int i = 0; i < T4Para::_axis_cnt; i++ )
-            {
-               int ret = mrgMRQReportState( self_device_var(), i, 0, 0 );
-               if ( ret != 0 )
-               {
-                   sysError( tr("Data report off fail") );
-                   continue;
-               }
-
-            }
             mrgCloseGateWay( mVi);
             mVi = -1;
         }
         else
-        {}
+        {   }
     unlockWorking();
 
     emit_setting_changed( XPage::e_setting_opened, false );
@@ -217,16 +208,23 @@ void MRX_T4::fold()
 void MRX_T4::reboot()
 {
     //! close
-    close();
+    //close();
 
     //! \todo api
+    int ret = mrgSystemRunCmd(mVi,(char*)"reboot", 0);
+    if(ret != 0){
+        sysError( tr("Reboot fail") );
+    }
 }
 void MRX_T4::powerOff()
 {
-    close();
+    //close();
 
     //! \todo api
-
+    int ret = mrgSystemRunCmd(mVi,(char*)"poweroff",0);
+    if(ret != 0){
+        sysError( tr("Poweroff fail") );
+    }
 }
 
 int MRX_T4::upload()

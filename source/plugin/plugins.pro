@@ -7,3 +7,6 @@ SUBDIRS = ./t4/t4.pro \
           ./model/model.pro \
           ../device/device.pro
 #          ../../prj/mct.pro
+
+#TRANSLATIONS += ../plugin/mct_zh_CN.ts \
+#                ../plugin/mct_EN.ts

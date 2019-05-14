@@ -817,14 +817,6 @@
    返回值：0表示执行成功， －1：表示执行失败
    此命令只对H2有效！！！！！
 
-** int mrgGetRobotFold(ViSession vi, int name, int wavetable, float axi0, float axi1, float axi2, float axi3);
-   机器人的折叠功能(包装位)
-   vi :visa设备句柄
-   name: 机器人名称
-   axi0 axi1,axi2,axi3：各轴相对于零点的角度值. axi0:基座; axi1:大臂;axi2:小臂;axi3:腕
-   返回值：0表示执行成功， －1：表示执行失败
-   此命令只对T4有效！！！！！
-
 ** int mrgGetRobotWristPose(ViSession vi, int name, float *angle);
    获取机器人腕关节的姿态角度(相对于90度的算法零位)
    vi :visa设备句柄
@@ -833,13 +825,29 @@
    返回值：零表示执行正确,-1表示执行错误
 
 ** int mrgSetRobotWristPose(ViSession vi, int name, float angle,float time,int timeout_ms);
-  控制机器人腕关节的姿态角度(相对于90度的算法零位)
-  vi :visa设备句柄
-  name: 机器人名称
-  angle: 腕关节角度(垂直向下时为零)
-  time : 时间
-  timeout_ms: 表示等待执行的超时时间. 如果为-1,表示不等待. 0表示无限等待. >0 表示等待的超时时间. 单位:ms
-  返回值：零表示执行正确,-1表示执行错误
+   控制机器人腕关节的姿态角度(相对于90度的算法零位)
+   vi :visa设备句柄
+   name: 机器人名称
+   wavetable: 波表
+   angle: 腕关节角度(垂直向下时为零)
+   speed: 速度
+   timeout_ms: 表示等待执行的超时时间. 如果为-1,表示不等待. 0表示无限等待. >0 表示等待的超时时间. 单位:ms
+   返回值：零表示执行正确,-1表示执行错误
+
+** int mrgSetRobotFold(ViSession vi, int name, int wavetable, float axi0, float axi1, float axi2, float axi3);
+   机器人的折叠功能(包装位)
+   vi :visa设备句柄
+   name: 机器人名称
+   axi0 axi1,axi2,axi3：各轴相对于零点的角度值. axi0:基座; axi1:大臂;axi2:小臂;axi3:腕
+   返回值：0表示执行成功， －1：表示执行失败
+   此命令只对T4有效！！！！！
+
+** int mrgGetRobotFoldState(ViSession vi, int name);
+   获取机器人的折叠状态
+   vi :visa设备句柄
+   name: 机器人名称
+   返回值：1表示执行成功， 0：还要折叠中; 小于零表示执行出错
+   此命令只对T4有效！
 
 
 * mrqdevice.h
@@ -2604,6 +2612,15 @@
    vi: visa句柄
    失败返回-1，运行返回1，停止返回0
 
+** int mrgSystemRunCmd(ViSession vi, char *cmd, int isBackground);
+   执行命令行命令
+   vi: visa句柄
+   cmd: 命令内容
+   isBackground: 是否后台执行
+   0表示阻塞执行时间短命令,如创建文件修改权限等
+   1表示将命令放到后台执行,如重启网卡,启动MCT等
+   失败返回-1,成功返回0
+
 
 * errorcode.h
 ** int mrgErrorCodeConfigUpload(ViSession vi, int code, int *type, int *response, int *diagnose, int *enable);
@@ -2662,14 +2679,6 @@
    wantlen： context（存储区）的长度
    返回值：返回实际的文件长度
 
-** int mrgStorageMotionFileSave(ViSession vi, char *srcFileName,char *saveFileName);
-   保存运动文件内容到本地存储器,
-   vi :visa设备句柄
-   srcFileName: 源文件名
-   saveFileName：目的文件名
-   返回值：  0：写入成功；1：写入失败
-
-
 ** int mrgStorageMotionFileSaveContext(ViSession vi, char *context, int len, char *saveFileName);
    保存运动文件内容到本地存储器
    vi :visa设备句柄
@@ -2678,6 +2687,25 @@
    saveFileName：目的文件名
    返回值：  0：写入成功；1：写入失败
 
+** int mrgStorageWriteFile(ViSession vi, int isUdisk, char *path, char *saveFileName, unsigned char *data, int dataLen);
+   保存文件内容
+   vi :visa设备句柄
+   isUdisk: 是否写在U盘上
+   path: 文件路径
+   saveFileName：目的文件名
+   data: 文件内容
+   dataLen:文件内容长度
+   返回值：  0：写入成功；1：写入失败
+
+** int mrgStorageReadFile(ViSession vi, int isUdisk, char *path, char* filename, unsigned char* context);
+   读取文件到上位机
+   vi :visa设备句柄
+   isUdisk: 是否写在U盘上
+   path: 文件路径
+   filename: 文件名
+   context：读取到的内容
+   返回值：返回实际的文件长度
+      
 
 * project.h
 ** int mrgSetProjectMode(ViSession vi, int state);
@@ -2687,19 +2715,20 @@
    返回值：0表示执行成功；－1表示执行失败
    说明: 只有在工程模式下,才允许读取IO状态
 
-** int mrgProjectGetXinState(ViSession vi, unsigned int *state);
+** int mrgProjectGetXinState(ViSession vi, int index, unsigned int *state)
    查询外部IO的状态
    vi :visa设备句柄
+   index: 0->所有,1->X1,2->X2...
    state: 每一位表示一个IO的状态
    返回值：0表示执行成功；－1表示执行失败
 
 ** int mrgProjectSetYout(ViSession vi, int index, int state);
    设置系统的外部输出IO的状态
    vi :visa设备句柄
-   index: 0->YOUT1; 1->YOUT2
-   state: 0->low| 1->high
+   index: 0->ALL, 1->YOUT1, 2->YOUT2,3->YOUT3, 4->YOUT4
+   state: 0->low, 1->high
    返回值：0表示执行成功；－1表示执行失败
-   说明: 只有在工程模式下,才允许读取IO状态
+   说明: 不支持 同时写出YOUT
 
 ** int mrgProjectSetSerialNum(ViSession vi, char *serial);
    设置系统的序列号

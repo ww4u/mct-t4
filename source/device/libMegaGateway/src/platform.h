@@ -25,7 +25,7 @@
 #include "visa.h"
 
 #include "../../assist.h"
-#define SLEEP(n)  localSleep( n )
+#define msSleep(n)  localSleep( n )
 
 #else // MSVC
 
@@ -74,10 +74,9 @@ typedef unsigned long ViSession;
 #define STRCASECMP(x,y)		strcasecmp(x,y)
 #define STRTOK_S(x,y,z)     	strtok_r(x,y,z)
 //#define _strnicmp           strncasecmp
-//#define Sleep(x)            usleep( ((x) * 1000) )
 
-#include "../../assist.h"
-#define SLEEP(n)  localSleep( n )
+//#include "../../assist.h"
+//#define msSleep( n )  localSleep( n )
 
 #define EXPORT_API 
 #define CALL

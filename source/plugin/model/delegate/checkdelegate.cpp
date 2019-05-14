@@ -3,6 +3,17 @@
 
 #define CHECK_WIDGET    QCheckBox
 
+static QRect CheckBoxRect(const QStyleOptionViewItem &viewItemStyleOptions)
+{
+    QStyleOptionButton checkBoxStyleOption;
+    QRect checkBoxRect = QApplication::style()->subElementRect( QStyle::SE_CheckBoxIndicator, &checkBoxStyleOption);
+    QPoint checkBoxPoint(viewItemStyleOptions.rect.left() + viewItemStyleOptions.rect.width() / 2 - checkBoxRect.width() / 2-4,
+                         viewItemStyleOptions.rect.top() + viewItemStyleOptions.rect.height() / 2 - checkBoxRect.height() / 2+5);
+
+    //返回几何形状
+    return QRect(checkBoxPoint, checkBoxRect.size());
+}
+
 CheckDelegate::CheckDelegate( checkShape shp,
                               QObject *parent ) : QStyledItemDelegate(parent)
 {
@@ -85,58 +96,47 @@ void CheckDelegate::updateEditorGeometry(QWidget *editor,
     }
 }
 
-void CheckDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+void CheckDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,const QModelIndex& index)const
 {
-    if ( index.isValid() )
-    {}
-    else
-    { return; }
+    bool checked = index.model()->data(index, Qt::DisplayRole).toBool();
+    if(index.column() == 8){
+        QStyleOptionButton checkBoxStyleOption;
+        checkBoxStyleOption.state |= QStyle::State_Enabled;
+        checkBoxStyleOption.state |= checked? QStyle::State_On : QStyle::State_Off;
+        checkBoxStyleOption.rect = CheckBoxRect(option);
 
-    //! valid role
-    QVariant var = index.data( Qt::UserRole + 2 );
-    if ( var.isValid() && var.type() == QVariant::Bool )
-    {
-        if ( var.toBool() )
-        {}
-        else
-        { return; }
+        QApplication::style()->drawControl(QStyle::CE_CheckBox,&checkBoxStyleOption,painter);
+    }else{
+        QStyledItemDelegate::paint(painter, option, index);
     }
-    else
-    {  }
+}
 
-    QStyleOption opt=option;
-    QStyleOptionButton optBtn;
-
-    optBtn.rect = option.rect;
-
-    //! value
-    if ( index.data( Qt::DisplayRole ).toBool() )
-    { optBtn.state = QStyle::State_On | QStyle::State_Enabled; }
-    else
-    { optBtn.state = QStyle::State_Off | QStyle::State_Enabled; }
-
-    //! tune the rect
-    if ( mAlign == Qt::AlignCenter )
-    { optBtn.rect.setX( optBtn.rect.left() + ( option.rect.width() - mPrimSize.width())/2 ); }
-    else
-    { }
-
-    painter->save();
-
-        if ( mShape == shape_check )
-        {
-            QApplication::style()->drawControl( QStyle::CE_CheckBox, &optBtn, painter );
+bool CheckDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
+{
+    if(index.column() == 8){
+        if((event->type() == QEvent::MouseButtonRelease) ||
+            (event->type() == QEvent::MouseButtonDblClick)){
+            QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+            if(mouseEvent->button() != Qt::LeftButton ||
+                    !CheckBoxRect(option).contains(mouseEvent->pos())){
+                return true;
+            }
+            if(event->type() == QEvent::MouseButtonDblClick){
+               return true;
+            }
+        }else if(event->type() == QEvent::KeyPress){
+            if(static_cast<QKeyEvent*>(event)->key() != Qt::Key_Space &&
+                static_cast<QKeyEvent*>(event)->key() != Qt::Key_Select){
+                return false;
+            }
+        }else{
+            return false;
         }
-        else if ( mShape == shape_radio )
-        {
-            QApplication::style()->drawControl( QStyle::CE_RadioButton, &optBtn, painter );
-        }
-        else
-        {}
-
-    painter->restore();
-
-//    logDbg();
+        bool checked = index.model()->data(index, Qt::DisplayRole).toBool();
+        return model->setData(index, !checked, Qt::EditRole);
+    }else{
+        return QStyledItemDelegate::editorEvent(event, model, option, index);
+    }
 }
 
 void CheckDelegate::setShape( checkShape shp )

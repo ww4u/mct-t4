@@ -59,7 +59,7 @@ IOWidget::IOWidget(int w, QWidget *parent) :
     {
         mBits[i]->setVisible( true );
         mBits[i]->setTristate();
-        mBits[i]->setText(QString("DO[%1]").arg(i));
+        mBits[i]->setText(QString("Y[%1]").arg(i+1));
     }
 
     //! find the w

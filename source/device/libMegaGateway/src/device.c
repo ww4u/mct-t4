@@ -120,7 +120,7 @@ EXPORT_API int CALL mrgFindDevice(ViSession vi, int timeout_ms)
     {
         return 0;
     }
-    SLEEP(timeout_ms);
+    msSleep(timeout_ms);
     snprintf(args, SEND_BUF, "DEVICE:COUNT?\n");
     if ((retlen = busQuery(vi, args, strlen(args), ret, 40)) <= 0)
     {
@@ -249,7 +249,7 @@ EXPORT_API int CALL mrgGetDeviceSoftVersion(ViSession vi, int name, char * versi
 *buf:设备硬件版本号,长度最少12个字节
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgGetFirmWareHard(ViSession vi, int name, char *buf)
+EXPORT_API int CALL mrgGetDeviceFirmWareHard(ViSession vi, int name, char *buf)
 {
     char args[SEND_BUF];
     int retLen = 0;
@@ -270,7 +270,7 @@ EXPORT_API int CALL mrgGetFirmWareHard(ViSession vi, int name, char *buf)
 *buf:设备BOOT版本号
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgGetFirmWareBoot(ViSession vi, int name, char *buf)
+EXPORT_API int CALL mrgGetDeviceFirmWareBoot(ViSession vi, int name, char *buf)
 {
     char args[SEND_BUF];
     int retLen = 0;
@@ -291,7 +291,7 @@ EXPORT_API int CALL mrgGetFirmWareBoot(ViSession vi, int name, char *buf)
 *buf:设备逻辑版本号
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgGetFirmWareFpga(ViSession vi, int name, char *buf)
+EXPORT_API int CALL mrgGetDeviceFirmWareFpga(ViSession vi, int name, char *buf)
 {
     char args[SEND_BUF];
     int retLen = 0;

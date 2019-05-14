@@ -44,7 +44,7 @@ ActionTable::ActionTable(QWidget *parent) :
     m_pDelegateTime->setSuffix( "s" );
 
     m_pCheckDelegate = new CheckDelegate( shape_check, this );
-    m_pCheckDelegate->setAlignment( Qt::AlignLeft );
+    m_pCheckDelegate->setAlignment( Qt::AlignCenter );
 
     ui->view->setItemDelegateForColumn( 2, m_pDelegateXYZ );
     ui->view->setItemDelegateForColumn( 3, m_pDelegateXYZ );
@@ -666,11 +666,14 @@ int ActionTable::absToHere( QList<QVariant> &vars )
     //float speed = rel_to_abs_speed( vars.at(6).toDouble() );
     float speed = pRobo->mMaxJointSpeeds.at(3) * vars.at(6).toDouble() / 100.0;
 
-    ret = mrgSetRobotWristPose(robot_var(), vars.at(4).toDouble(), speed, guess_dist_time_ms( 180/speed, 180 ));
-    logDbg() << vars.at(4).toDouble() << speed << ret;
+    ret = mrgSetRobotWristPose(robot_var(), 0, vars.at(4).toDouble(), speed, guess_dist_time_ms( 180/speed, 180 ));
     if( ret != 0 )
         return ret;
+
     //! terminal
+    speed = pRobo->mMaxJointSpeeds.at(4) * vars.at(6).toDouble() / 100.0;
+    //ret = mrgRobotToolExe(robot_var(), vars.at(5).toDouble(), 80/speed, guess_dist_time_ms( 80/speed, 80 ));
+    ret = mrgRobotJointMove(robot_var(), 4, vars.at(5).toDouble(), 80/speed, guess_dist_time_ms( 80/speed, 80 ));
 
     return ret;
 }
@@ -840,7 +843,6 @@ void ActionTable::slot_add_below()
 void ActionTable::slot_delete()
 {
     QModelIndex index = ui->view->selectionModel()->currentIndex();
-
     if ( ui->view->model()->removeRow( index.row(), index.parent() ) )
     {}
     else

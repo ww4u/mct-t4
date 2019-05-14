@@ -121,18 +121,6 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     connect( ui->tvDebug, SIGNAL(customContextMenuRequested(const QPoint &)),
              this, SLOT(slot_customContextMenuRequested(const QPoint &)));
 
-    //! customconst QPoint &
-    connect( ui->jointChart1,SIGNAL(customContextMenuRequested(const QPoint &)),
-             this, SLOT(slot_monitorContextMenuRequested(const QPoint &)) );
-    connect( ui->jointChart2,SIGNAL(customContextMenuRequested(const QPoint &)),
-             this, SLOT(slot_monitorContextMenuRequested(const QPoint &)) );
-    connect( ui->jointChart3,SIGNAL(customContextMenuRequested(const QPoint &)),
-             this, SLOT(slot_monitorContextMenuRequested(const QPoint &)) );
-    connect( ui->jointChart4,SIGNAL(customContextMenuRequested(const QPoint &)),
-             this, SLOT(slot_monitorContextMenuRequested(const QPoint &)) );
-    connect( ui->jointChart5,SIGNAL(customContextMenuRequested(const QPoint &)),
-             this, SLOT(slot_monitorContextMenuRequested(const QPoint &)) );
-
     //! diagnosis
     connect( &mDiagTable, SIGNAL(signal_data_changed()),
              this, SLOT(slot_save_diagnosis()) );
@@ -152,7 +140,6 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
 
     //! terminal relations
     mTerminalRelations.append( ui->joint5 );
-    mTerminalRelations.append( ui->jointChart5 );
 
     //! spys
     spySetting( MRX_T4::e_setting_terminal );
@@ -228,9 +215,6 @@ bool T4OpPanel::event(QEvent *e)
     { return XPage::event( e ); }
 }
 
-#define config_chart( wig, title )  ui->wig->chart()->setTitle( title );\
-                                    ui->wig->chart()->series1()->setPen(QPen(Qt::red));\
-                                    ui->wig->chart()->series2()->setPen(QPen(Qt::blue));
 void T4OpPanel::setupUi()
 {
     //! delegate
@@ -253,8 +237,7 @@ void T4OpPanel::setupUi()
 //            <<"dio"
 //            <<"homing"
             <<"control"
-            <<"debug"
-            <<"monitor"            
+            <<"debug"          
             <<"diagnosis"
               ;
     Q_ASSERT( strList.size() == ui->tabWidget->count() );
@@ -263,23 +246,6 @@ void T4OpPanel::setupUi()
 
     //! terminal
     ui->joint5->setAngleVisible( true, false );
-
-
-    //! config the chart
-    config_chart( jointChart1, tr("Basement") );
-    config_chart( jointChart2, tr("Big Arm") );
-    config_chart( jointChart3, tr("Little Arm") );
-    config_chart( jointChart4, tr("Wrist") );
-
-    config_chart( jointChart5, tr("Terminal") );
-
-    //! cache
-    mJointCharts.append( ui->jointChart1 );
-    mJointCharts.append( ui->jointChart2 );
-    mJointCharts.append( ui->jointChart3 );
-    mJointCharts.append( ui->jointChart4 );
-
-    mJointCharts.append( ui->jointChart5 );
 
     //! disabled ui
     //! \todo for coord control
@@ -307,13 +273,6 @@ void T4OpPanel::retranslateUi()
     ui->joint4->setJointName( tr("Wrist") );
 
     ui->joint5->setJointName( tr("Terminal") );
-
-    ui->jointChart1->chart()->setTitle( tr("Base") );
-    ui->jointChart2->chart()->setTitle( tr("Shoulder") );
-    ui->jointChart3->chart()->setTitle( tr("Elbow") );
-    ui->jointChart4->chart()->setTitle( tr("Wrist") );
-
-    ui->jointChart5->chart()->setTitle( tr("Terminal") );
 
     //! monitor context
     if ( NULL != m_pActionExportImage )
@@ -344,14 +303,10 @@ void T4OpPanel::updateMonitor(QEvent *e )
     //! has data
     if ( m_pCaches[joint]->v1.size() > 0 )
     {
-        mJointCharts[joint]->chart()->beginChangeData();
         for ( int i = 0; i < m_pCaches[joint]->v1.size(); i++ )
         {
-            mJointCharts[joint]->chart()->dataAppend( m_pCaches[joint]->v1.at(i),
-                                             m_pCaches[joint]->v2.at(i)
-                                            );
+
         }
-        mJointCharts[joint]->chart()->endChangeData();
     }
     //! no data
     else
@@ -513,7 +468,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
         {
             ret = mrgMRQReportData_Query( device_var(), i, 5, &encData );
             if ( ret <= 0 )
-            { break; }
+            {sysError( tr("report data query fail"), e_out_log );break; }
 
             angles[i] = ABS_ANGLE_TO_DEG( encData );
         }
@@ -546,7 +501,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
         //! joint5
         ret = mrgGetRobotToolPosition( robot_var(), angles );
         if ( ret < 0 )
-        { break; }
+        { sysError( tr("get tool position fail"), e_out_log );break; }
         else
         {
             mRefreshPara.angles[4] = angles[0];
@@ -561,7 +516,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
             char roboStates[128];
             ret = mrgRobotGetState( robot_var(), wave_table, roboStates );
             if ( ret != 0 )
-            { break; }
+            { sysError( tr("get state fail"), e_out_log );break; }
 
             mRefreshPara.mRoboState = QString( roboStates );
         }
@@ -616,63 +571,6 @@ int T4OpPanel::monitorRefreshProc( void *pContext )
     {}
     else
     { return 0; }
-
-    unsigned int array[1024] = {0};
-    int ret, v1, v2;
-
-    //! foreach sub plot
-    for( int joint = 0; joint < mJointCharts.size(); joint++ )
-    {
-        //! get from device
-        ret = mrgMRQReportQueue_Query( device_var(), joint, 0, array);
-
-        if ( ret < 0 )
-        {
-            sysError( tr("Monitor update fail"), e_out_log );
-            break;
-        }
-
-        //! no data
-        if( ret == 0 )
-            break;
-
-        m_pCaches[joint]->mWSema.acquire();
-
-        m_pCaches[joint]->v1.clear();
-        m_pCaches[joint]->v2.clear();
-
-        //! update the data
-        if ( ret > 0 )
-        {
-            for(int i=0; i < ret; i++)
-            {
-                v1 = (array[i] >> 8) & 0xFF;        //! SG
-                v2 = array[i] & 0xFF;               //! SE
-                if( v1>=0 && v1<=100 && v2>=0 && v2<=100 )
-                {
-    //                jointCharts[joint]->dataAppend(v1,v2);
-                    m_pCaches[joint]->v1.append( v1 );
-                    m_pCaches[joint]->v2.append( v2 );
-                }
-            }
-        }
-
-//        m_pCaches[joint]->mRSema.release();
-        do
-        {
-            OpEvent *refreshEvent = new OpEvent( OpEvent::monitor_event );
-            if ( NULL == refreshEvent )
-            {
-                m_pCaches[joint]->mWSema.release();
-                break;
-            }
-            else
-            { }
-
-            refreshEvent->setPara( joint, 0 );
-            qApp->postEvent( this, refreshEvent );
-        }while( 0 );
-    }
 
     return 0;
 }
@@ -834,6 +732,7 @@ void T4OpPanel::updateUi()
     ui->DIN5->setName( pRobo->listIoName.at(4) );
     ui->START->setName( pRobo->listIoName.at(5) );
     ui->RESET->setName( pRobo->listIoName.at(6) );
+    logDbg() << pRobo->listIoName.at(0);
 }
 
 void T4OpPanel::updateData()
@@ -1123,13 +1022,12 @@ int T4OpPanel::onFolding( QVariant var )
 
     int ret;
 
-    ret = mrgGetRobotFold( robot_var(),
-                           wave_table,
+    ret = mrgSetRobotFold( robot_var(),
                            pRobo->mPackagesAxes[0],
                            pRobo->mPackagesAxes[1],
                            pRobo->mPackagesAxes[2],
-                           pRobo->mPackagesAxes[3]
-                           );
+                           pRobo->mPackagesAxes[3],
+                           120000);
     return ret;
 }
 
@@ -1394,7 +1292,18 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
     for( int i = 0; i < 2; i++ ){
         int t = iVal & 0x03;
         //! set io state
-        iVal >> 2;
+        switch(t)
+        {
+            case 0x0:   /*low*/
+                mrgProjectSetYout(device_var_vi(), i, 0);
+                break;
+            case 0x1:   /*reserve*/
+                break;
+            case 0x2:   /*high*/
+                mrgProjectSetYout(device_var_vi(), i, 1);
+                break;
+        }
+        iVal = iVal >> 2;
     }
 
     //! \todo Wrist move
@@ -1402,12 +1311,15 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
     angle = pItem->pw;
     speed = pRobo->mMaxJointSpeeds.at(3) * pItem->v / 100.0;
 
-    ret = mrgSetRobotWristPose(robot_var(), angle, speed, guess_dist_time_ms( 180/speed, 180 ));
+    ret = mrgSetRobotWristPose(robot_var(), 0, angle, speed, guess_dist_time_ms( 180/speed, 180 ));
     logDbg() << angle << speed << ret;
     if( ret != 0 )
         return ret;
 
     //! \todo Terminal move
+    speed = pRobo->mMaxJointSpeeds.at(4) * pItem->v / 100.0;
+    //ret = mrgRobotToolExe(robot_var(), pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
+    //ret = mrgRobotJointMove(robot_var(), 4, pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
 
     return ret;
 }
@@ -1467,9 +1379,9 @@ void T4OpPanel::switchCoordMode()
     //! joint
     if ( ui->radCoordJoint->isChecked() )
     {
-        ui->joint1->setJointName( "Base" );
-        ui->joint2->setJointName( "Shoulder" );
-        ui->joint3->setJointName( "Elbow" );
+        ui->joint1->setJointName( tr("Base") );
+        ui->joint2->setJointName( tr("Shoulder") );
+        ui->joint3->setJointName( tr("Elbow") );
 
         ui->joint1->setAngleVisible( bAbsAngleVisible, true );
         ui->joint2->setAngleVisible( bAbsAngleVisible, true );
@@ -1675,148 +1587,6 @@ void T4OpPanel::slot_customContextMenuRequested( const QPoint &pt )
 void T4OpPanel::slot_toHere()
 {
     //! \todo
-}
-
-void T4OpPanel::slot_monitorContextMenuRequested( const QPoint &)
-{logDbg();
-    if(m_pMonitorContextMenu == NULL )
-    {
-        m_pMonitorContextMenu = new QMenu( ui->tab_5 );
-        if ( NULL == m_pMonitorContextMenu )
-        { return; }
-
-        m_pActionExportImage = m_pMonitorContextMenu->addAction(tr("Export image..."));
-        if ( NULL == m_pActionExportImage )
-        {
-            delete m_pMonitorContextMenu;
-            m_pMonitorContextMenu = NULL;
-            return;
-        }
-
-        m_pActionExportData = m_pMonitorContextMenu->addAction(tr("Export data..."));
-        if ( NULL == m_pActionExportData )
-        {
-            delete m_pMonitorContextMenu;
-            m_pMonitorContextMenu = NULL;
-            return;
-        }
-
-        m_pActionCopy = m_pMonitorContextMenu->addAction(tr("Copy"));
-        if ( NULL == m_pActionCopy )
-        {
-            delete m_pMonitorContextMenu;
-            m_pMonitorContextMenu = NULL;
-            return;
-        }
-
-        //! set icon
-        m_pActionExportImage->setIcon( QIcon(":/res/image/icon/xingzhuang-tupian.png") );
-        m_pActionExportData->setIcon( QIcon(":/res/image/icon/activity.png") );
-        m_pActionCopy->setIcon( QIcon(":/res/image/icon/fuzhi.png") );
-
-        connect(m_pActionExportImage, SIGNAL(triggered(bool)),
-                this, SLOT( slot_monitorExportImage() ) );
-        connect(m_pActionExportData, SIGNAL(triggered(bool)),
-                this, SLOT( slot_monitorExportData() ) );
-        connect(m_pActionCopy, SIGNAL(triggered(bool)),
-                this, SLOT( slot_monitorCopy() ) );
-    }
-    else
-    {}
-
-    m_pMonitorContextMenu->exec(QCursor::pos());
-}
-
-void T4OpPanel::slot_monitorExportImage()
-{
-    QString strFileName = QFileDialog::getSaveFileName( this,
-                                  tr("Export"),
-                                  m_pPlugin->homePath(),
-                                  tr("Image Files (*.png *.jpg *.bmp)")
-                                  );
-    if ( !strFileName.isEmpty() )
-    {
-        QPixmap pixmap = ui->scrollAreaWidgetContents->grab();
-        pixmap.save( strFileName );
-    }
-}
-
-void T4OpPanel::slot_monitorExportData()
-{
-    QString strFileName = QFileDialog::getSaveFileName( this,
-                                  tr("Export"),
-                                  m_pPlugin->homePath(),
-                                  tr("Data (*.csv)")
-                                  );
-    if ( !strFileName.isEmpty() )
-    {
-//        QPixmap pixmap = ui->scrollAreaWidgetContents->grab();
-//        pixmap.save( strFileName );
-        //! \todo
-        //!
-        //!
-
-        QFile file( strFileName );
-        if ( file.open( QIODevice::WriteOnly ) )
-        {}
-        else
-        {
-            sysError( strFileName + " " + tr("save fail") );
-            return;
-        }
-
-        QTextStream txtStream( &file );
-
-        m_pPlugin->lockWorking();
-            PointList *p11, *p12;
-            PointList *p21, *p22;
-            PointList *p31, *p32;
-            PointList *p41, *p42;
-            PointList *p51, *p52;
-
-            //! snap
-            ui->jointChart1->chart()->snapDataSet( &p11, &p12 );
-            ui->jointChart2->chart()->snapDataSet( &p21, &p22 );
-            ui->jointChart3->chart()->snapDataSet( &p31, &p32 );
-            ui->jointChart4->chart()->snapDataSet( &p41, &p42 );
-
-            ui->jointChart5->chart()->snapDataSet( &p51, &p52 );
-
-            //! datasets
-            PlotDataSets d1( p11, p12 );
-            PlotDataSets d2( p21, p22 );
-            PlotDataSets d3( p31, p32 );
-            PlotDataSets d4( p41, p42 );
-            PlotDataSets d5( p51, p52 );
-
-            QList<PlotDataSets*> dataSets;
-            dataSets<<&d1<<&d2<<&d3<<&d4;
-            if ( ui->jointChart5->isVisible() )
-            { dataSets<<&d5; }
-
-            QStringList headers;
-            headers<<"t(base)"<<"sg(base)"<<"se(base)"
-                   <<"t(ba)"<<"sg(ba)"<<"se(ba)"
-                   <<"t(la))"<<"sg(la)"<<"se(la)"
-                   <<"t(wrist)"<<"sg(wrist)"<<"se(wrist)"
-                   <<"t(terminal)"<<"sg(terminal)"<<"se(terminal)";
-            exportDataSets( txtStream, headers, dataSets );
-
-            file.close();
-
-        m_pPlugin->unlockWorking();
-    }
-}
-
-void T4OpPanel::slot_monitorCopy()
-{
-    QPixmap pixmap = ui->scrollAreaWidgetContents->grab();
-
-    QClipboard *clipboard = QGuiApplication::clipboard();
-    if ( NULL == clipboard )
-    { return; }
-
-    clipboard->setImage( pixmap.toImage() );
 }
 
 void T4OpPanel::slot_digitalInputsCustomContextMenuRequested( const QPoint &p )

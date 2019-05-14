@@ -1,0 +1,12 @@
+windows的库包括两种：
+1): MSVC编译的库 MegaGateway.dll
+	此库运行依赖:
+	pthreadVC2.dll
+	visa32.dll
+
+2): MingW编译的库 libMegaRobo.so.1.0
+	此库运行依赖：
+	libstdc++-6.dll
+	libgcc_s_dw2-1.dll
+	libwinpthread-1.dll
+	visa32.dll

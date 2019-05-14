@@ -44,5 +44,8 @@ void SysLogout::focusInEvent(QFocusEvent *event)
 
     logDbg();
 }
-
+void SysLogout::reTranslate()
+{
+    ui->tabWidget->setTabText(0, tr("Logout"));
+}
 

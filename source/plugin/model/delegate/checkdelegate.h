@@ -30,6 +30,8 @@ public:
 
     virtual void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
+    bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index);
+
 public:
     void setShape( checkShape shp );
     checkShape shape();

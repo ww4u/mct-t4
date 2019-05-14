@@ -22,6 +22,12 @@ EXPORT_API int CALL mrgIdentify(ViSession vi, int state);
  */
 EXPORT_API int CALL mrgModeSwitch(ViSession vi, int mode);
 /*
+*查询 MRH-T 软件工程版本号
+*vi :visa设备句柄
+*返回值：0回读正确;否则回读失败
+*/
+EXPORT_API int CALL mrgSysGetProjectSoftVersion(ViSession vi, char * version);
+/*
  * 查询 MRH-T 软件版本号
 *vi :visa设备句柄
 *返回值：0回读正确;否则回读失败
@@ -263,6 +269,16 @@ EXPORT_API int CALL mrgScriptStop(ViSession vi);
  * 失败返回-1，运行返回1，停止返回0
  */
 EXPORT_API int CALL mrgScriptGetCurrentStates(ViSession vi);
+/*
+ * 执行命令行命令
+ * vi: visa句柄
+ * cmd: 命令内容
+ * isBackground: 是否后台执行
+ * 0表示阻塞执行时间短命令,如创建文件修改权限等
+ * 1表示将命令放到后台执行,如重启网卡,启动MCT等
+ * 失败返回-1,成功返回0
+ */
+EXPORT_API int CALL mrgSystemRunCmd(ViSession vi, char *cmd, int isBackground);
 
 #if defined(__cplusplus) || defined(__cplusplus__)
 }

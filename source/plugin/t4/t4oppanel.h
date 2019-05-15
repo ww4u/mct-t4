@@ -393,6 +393,8 @@ protected Q_SLOTS:
     void slot_debug_delete();
     void slot_debug_insert();
 
+    //! slot speed verify
+    void slot_speed_verify();
 
 private slots:
 //    void on_pushButton_starting_home_clicked();

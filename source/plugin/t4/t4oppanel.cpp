@@ -1673,7 +1673,7 @@ void T4OpPanel::slot_debug_insert()
 //! xyz:
 //! step:   v:(%)
 //! ~10]    ~5]
-//! ~50]     ~50]
+//! ~50]     ~20]
 //! ~100]    ~100]
 //! joint
 //! ~10]    ~5]
@@ -1704,7 +1704,7 @@ void T4OpPanel::slot_speed_verify()
         if ( stepList.at( ui->cmbStepXx->currentIndex()) <= 10 )
         { maxSpeed=10; }
         else if ( stepList.at( ui->cmbStepXx->currentIndex()) <= 50 )
-        { maxSpeed = 50; }
+        { maxSpeed = 20; }
         else
         { maxSpeed = 100; }
     }
@@ -1734,7 +1734,7 @@ void T4OpPanel::slot_speed_verify()
     if ( curIndex > ui->cmbSpeed->count() )
     {
         ui->cmbSpeed->setCurrentIndex( ui->cmbSpeed->count() -1 );
-        sysPrompt( tr("Current speed changed") );
+        sysPrompt( tr("Current speed changed"), 0 );
     }
     else
     {

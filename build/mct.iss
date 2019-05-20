@@ -3,7 +3,7 @@
 
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING .ISS SCRIPT FILES!
 
-#define appVersion "0.0.1.0"
+#define appVersion "0.0.1.1"
 #define appPublisher "MCT-MRX-T4"
 
 [Setup]

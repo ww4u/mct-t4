@@ -12,9 +12,8 @@ XPlugin *PluginFactory::createPlugin( const QString &name,
 {
     if ( str_is( name, PLUGIN_MRX_T4_NAME) )
     { return new MRX_T4( ); }
+//    else if ( str_is( name, PLUGIN_MRX_H2_NAME) )
 //    { return new MRX_H2(); }
-    else if ( str_is( name, PLUGIN_MRX_H2_NAME) )
-    { return new MRX_H2(); }
     else
     {
         return NULL;

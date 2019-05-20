@@ -294,7 +294,7 @@ int Config::download()
             if ( ret != 0 )
             { return -1; }
 
-            //! \note inverse the direction
+
             if ( _axis_enc_dirs[i] > 0 )
             {
                 //! down
@@ -313,6 +313,7 @@ int Config::download()
                 if ( ret != 0 )
                 { return -1; }
             }
+            //! \note inverse the direction
             else
             {
                 //! down

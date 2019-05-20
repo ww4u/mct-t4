@@ -46,7 +46,10 @@
 
 #define EXPORT_API __declspec(dllexport)
 #define CALL    __cdecl
-//#define CALL  __stdcall
+
+//! no exception
+#define _msSleep(n)  Sleep( n )
+
 #else
 //////////////////////////////////
 //Linux 头文件
@@ -75,9 +78,7 @@ typedef unsigned long ViSession;
 #define STRTOK_S(x,y,z)     	strtok_r(x,y,z)
 //#define _strnicmp           strncasecmp
 
-
-#include "../../assist.h"
-#define msSleep( n )  localSleep( n )
+#define _msSleep(n)  usleep( n * n  )
 
 #define EXPORT_API 
 #define CALL

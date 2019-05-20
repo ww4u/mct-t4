@@ -20,10 +20,21 @@
 #define DEFAULT_PAGE_INDEX 2
 namespace mrx_t4{
 
-static double _stepRatio[]={ 0.1,0.5,
-                            1,5,
-                            10,50,
-                            100 };
+static double _stepRatio[]={ 0.1,   //! 0
+                             0.5,   //! 1
+                             1,     //! 2
+                             5,     //! 3
+                             10,    //! 4
+                             50,    //! 5
+                             100 }; //! 6
+
+//! speed
+//! 1       0
+//! 5       1
+//! 10      2
+//! 20      3
+//! 50      4
+//! 100     5
 
 #define new_cache( id ) m_pCaches[id] = new DataCache( this ); \
                         Q_ASSERT( m_pCaches[id] != NULL );\
@@ -149,6 +160,12 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     switchCoordMode();
 
     ui->btnRead->setVisible(false);
+
+    //! step and speed
+    connect( ui->cmbSpeed, SIGNAL(activated(int)),
+             this, SLOT(slot_speed_verify()) );
+    connect( ui->cmbStepXx, SIGNAL(activated(int)),
+             this, SLOT(slot_speed_verify()) );
 
     //! \todo
     //! init digital inputs name
@@ -690,10 +707,10 @@ void T4OpPanel::attachWorkings()
                          NULL,
                          m_pPref->refreshIntervalMs() );
 
-    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ),
-                         tr("Monitor refresh"),
-                         NULL,
-                         m_pPref->refreshIntervalMs() );
+//    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ),
+//                         tr("Monitor refresh"),
+//                         NULL,
+//                         m_pPref->refreshIntervalMs() );
 
     attachUpdateWorking( (XPage::procDo)( &T4OpPanel::pingTick ),
                          tr("ping tick"),
@@ -716,6 +733,8 @@ void T4OpPanel::updateUi()
     ui->cmbStepXx->setCurrentIndex( pRobo->mStepIndex );
     //! \todo the display format
     ui->cmbSpeed->setCurrentText( QString("%1").arg( pRobo->mSpeed ) );
+
+    slot_speed_verify();
 
     //! checked
     ui->controllerStatus->setMctChecked( pRobo->mbMctEn );
@@ -1238,7 +1257,7 @@ int T4OpPanel::_onSequence( QVariant var )
     {}
     else
     {
-        sysPrompt( tr("Single execute completed") );
+        sysPrompt( tr("Single execute completed"), 0 );
     }
 
     return 0;
@@ -1319,7 +1338,7 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
     //! \todo Terminal move
     speed = pRobo->mMaxJointSpeeds.at(4) * pItem->v / 100.0;
     //ret = mrgRobotToolExe(robot_var(), pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
-    ret = mrgRobotJointMove(robot_var(), 4, pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
+    //ret = mrgRobotJointMove(robot_var(), 4, pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
 
     return ret;
 }
@@ -1649,6 +1668,78 @@ void T4OpPanel::slot_debug_insert()
 {
     if ( ui->btnAdd->isEnabled() )
     { on_btnAdd_clicked(); }
+}
+
+//! xyz:
+//! step:   v:(%)
+//! ~10]    ~5]
+//! ~50]     ~20]
+//! ~100]    ~100]
+//! joint
+//! ~10]    ~5]
+//! ~50]    ~20]
+//! ~100]   ~100]
+void T4OpPanel::slot_speed_verify()
+{
+    QList<int> speedList;
+    speedList<<1<<5<<10<<20<<50<<100;
+
+    QList<float> stepList;
+    stepList<<0.1<<0.5<<1<<5<<10<<50<<100;
+
+    //! x,y,z
+    int maxSpeed;
+    if ( ui->radCoordXyz->isChecked() )
+    {
+        if ( stepList.at( ui->cmbStepXx->currentIndex()) <= 10 )
+        { maxSpeed=5; }
+        else if ( stepList.at( ui->cmbStepXx->currentIndex()) <= 50 )
+        { maxSpeed = 20; }
+        else
+        { maxSpeed = 100; }
+    }
+    //! joint
+    else
+    {
+        if ( stepList.at( ui->cmbStepXx->currentIndex()) <= 10 )
+        { maxSpeed=10; }
+        else if ( stepList.at( ui->cmbStepXx->currentIndex()) <= 50 )
+        { maxSpeed = 20; }
+        else
+        { maxSpeed = 100; }
+    }
+
+    //! remove all
+    int curIndex;
+    curIndex = ui->cmbSpeed->currentIndex();
+    for ( int i = ui->cmbSpeed->count(); i >=0 ; i-- )
+    {
+        ui->cmbSpeed->removeItem( i );
+    }
+
+    //! add again
+    for ( int i = ui->cmbSpeed->count();
+          i < speedList.size();
+          i++ )
+    {
+        if ( speedList.at(i) <= maxSpeed )
+        {
+            ui->cmbSpeed->addItem( QString::number( speedList.at(i) ) );
+        }
+        else
+        { break; }
+    }
+
+    //! change the cur index
+    if ( curIndex > ui->cmbSpeed->count() )
+    {
+        ui->cmbSpeed->setCurrentIndex( ui->cmbSpeed->count() -1 );
+        sysPrompt( tr("Current speed changed"), 0 );
+    }
+    else
+    {
+        ui->cmbSpeed->setCurrentIndex( curIndex );
+    }
 }
 
 void T4OpPanel::on_toolSingleAdd_clicked()
@@ -2182,6 +2273,5 @@ void T4OpPanel::on_radCoordJoint_clicked()
 }
 
 }
-
 
 

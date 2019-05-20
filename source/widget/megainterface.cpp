@@ -229,8 +229,10 @@ void MegaInterface::slotSelectDevices()
 
     QString firmwareVer = m_model->data( m_model->index(  ui->tableView->currentIndex().row(), 3 ), Qt::DisplayRole ).toString();
     QString sn = m_model->data( m_model->index(  ui->tableView->currentIndex().row(), 2 ), Qt::DisplayRole ).toString();
+
     //! \todo get the mechanical ver from the protocol
-    QString mechanicalVer = "1.0";
+    int iRow = ui->tableView->currentIndex().row();
+    QString mechanicalVer = mSearchRobos.at(iRow).mDevInfo.mFirmWareHard;
 
     //! append the item
     //! "addr,model,sn,firmwareVer,mechanicalVer"
@@ -345,6 +347,28 @@ void MegaInterface::on_pushButton_Scan_clicked()
 
 //                    sysInfo( IDN );
                     sysInfo( QString("%1 %2 %3").arg(IDN).arg( tInfo.mRoboModel).arg( tInfo.mId ) );
+
+                    int devName[128];
+                    ret = mrgGetRobotDevice(visa, roboIds[i], devName);
+                    if(ret <= 0){
+                        continue;
+                    }else{}
+
+                    tInfo.mDevInfo.mId = devName[0];
+
+                    char buf[128];
+                    ret = mrgGetDeviceInfo(visa, devName[0], buf);
+                    if(ret != 0){
+                        continue;
+                    }else{}
+
+                    QString t = QString::fromLatin1(buf, 128);
+                    QStringList tList = t.split(":");
+                    tInfo.mDevInfo.mSN = tList.at(0);
+                    tInfo.mDevInfo.mFirmWareHard = tList.at(1);
+                    tInfo.mDevInfo.mSoftVer = tList.at(2);
+                    tInfo.mDevInfo.mFirmWareBoot = tList.at(3);
+                    tInfo.mDevInfo.mFirmWareFpga = tList.at(4);
 
                     //! append
                     pRoboList->append( tInfo );

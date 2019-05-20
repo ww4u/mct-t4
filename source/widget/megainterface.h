@@ -23,6 +23,18 @@ enum _DEV_TYPES
     TYPE_USB = 1
 };
 
+class DevInfo
+{
+public:
+    int mId;
+    QString mType;
+    QString mSN;
+    QString mSoftVer;
+    QString mFirmWareHard;
+    QString mFirmWareBoot;
+    QString mFirmWareFpga;
+};
+
 class RoboInfo
 {
 public:
@@ -36,6 +48,8 @@ public:
     QString mRoboModel;
 
     int mId;
+
+    DevInfo mDevInfo;
 };
 
 class MegaInterface : public QDialog

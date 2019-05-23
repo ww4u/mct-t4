@@ -27,7 +27,8 @@ protected:
 private:
     Ui::Info *ui;
 
-    QList<QTableWidgetItem *> mTableItems;
+    QList<QTableWidgetItem *> mTableItems;  /* MRH */
+    QList<QTableWidgetItem *> m_T4Items;    /* MRQ */
 };
 
 }

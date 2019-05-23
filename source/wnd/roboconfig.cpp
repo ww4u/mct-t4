@@ -5,6 +5,7 @@
 //#include "h2robo.h"
 #include "xthread.h"
 #include "welcomepage.h"
+#include "widget.h"
 
 #define plugin_changed()    emit signal_plugins_changed();
 
@@ -614,13 +615,14 @@ void RoboConfig::slotActionExportLog()
 {
     //! \todo api for export
 }
-#include "classwizard.h"
+
 void RoboConfig::slotActionUpdate()
 {
     //! \todo update
-    return;
-    ClassWizard *wizard = new ClassWizard(this);
-    wizard->show();
+
+    Widget *w = new Widget;
+    w->attatchRoboConfig(this);
+    w->show();
 }
 
 void RoboConfig::slotActionExplorer()
@@ -836,6 +838,15 @@ void RoboConfig::createRobot( const QStringList &strInfos )
     plugin->setSN( strInfos.at(2) );
     plugin->setFirmwareVer( strInfos.at(3) );
     plugin->setMechanicalVer( strInfos.at(4) );
+
+    //！MRQ devinfo
+    plugin->setType_MRQ( strInfos.at(5) );
+    plugin->setSN_MRQ( strInfos.at(6) );
+    plugin->setSoftVer_MRQ( strInfos.at(7) );
+    plugin->setFirmWareHard_MRQ( strInfos.at(8) );
+    plugin->setFirmWareBoot_MRQ(strInfos.at(9));
+    plugin->setFirmWareFpga_MRQ(strInfos.at(10));
+    plugin->setDevId( strInfos.at(11).toInt() );
 
     //! pref
     plugin->attachPref( m_pPref );

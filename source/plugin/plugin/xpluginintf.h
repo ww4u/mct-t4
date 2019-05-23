@@ -56,6 +56,27 @@ public:
     void setMechanicalVer( const QString &ver );
     QString mechanicalVer();
 
+    //!
+    void setType_MRQ( const QString &s ){ mType = s; }
+    QString Type_MRQ(){ return  mType; }
+
+    void setSN_MRQ( const QString &s ){ mSN_MRQ = s; }
+    QString SN_MRQ(){ return mSN_MRQ; }
+
+    void setSoftVer_MRQ( const QString &s ){ mSoftVer_MRQ = s; }
+    QString SoftVer_MRQ(){ return mSoftVer_MRQ; }
+
+    void setFirmWareHard_MRQ( const QString &s ){ mFirmWareHard_MRQ = s; }
+    QString FirmWareHard_MRQ(){ return mFirmWareHard_MRQ; }
+
+    void setFirmWareBoot_MRQ( const QString &s ){ mFirmWareHard_MRQ = s; }
+    QString FirmWareBoot_MRQ(){ return mFirmWareHard_MRQ; }
+
+    void setFirmWareFpga_MRQ( const QString &s ){ mFirmWareFpga_MRQ = s; }
+    QString FirmWareFpga_MRQ(){ return mFirmWareFpga_MRQ; }
+
+    void setDevId( const int id ){ mDevId = id; }
+    int DevId(){ return mDevId; }
 
     int save( QXmlStreamWriter &writer );
     int load( QXmlStreamReader &reader );
@@ -86,7 +107,11 @@ protected:
 
     QString mSN, mFirmwareVer, mMechanicalVer;
 
+    //! MRQ info
+    QString mType, mSN_MRQ, mSoftVer_MRQ, mFirmWareHard_MRQ, mFirmWareBoot_MRQ, mFirmWareFpga_MRQ;
+
     ePluginAttr mAttr;
+    int mDevId;
 
 };
 

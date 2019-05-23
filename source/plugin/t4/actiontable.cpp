@@ -172,10 +172,15 @@ void ActionTable::buildConnection()
 void ActionTable::setModel( QAbstractItemModel *pModel )
 {
     Q_ASSERT( NULL != pModel );
+    Q_ASSERT( NULL != m_pPlugin);
+    MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
 
     ui->view->setModel( pModel );
 
     TreeModel *pMegaModel = (TreeModel*)pModel;
+    pMegaModel->MaxTerminalSpeed( pRobo->mMaxTerminalSpeed );
+    pMegaModel->MaxJointSpeeds( pRobo->mMaxJointSpeeds );
+
     if ( NULL != pMegaModel )
     {
         connect( pMegaModel, SIGNAL(signal_data_changed()),

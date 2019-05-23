@@ -1313,12 +1313,12 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
         //! set io state
         switch(t)
         {
-            case 0x0:   /*low*/
+            case 0x02:   /* low 10*/
                 mrgProjectSetYout(device_var_vi(), i, 0);
                 break;
-            case 0x1:   /*reserve*/
+            case 0x00:   /*reserve 00*/
                 break;
-            case 0x2:   /*high*/
+            case 0x03:   /* high 11*/
                 mrgProjectSetYout(device_var_vi(), i, 1);
                 break;
         }
@@ -1337,7 +1337,7 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
 
     //! \todo Terminal move
     speed = pRobo->mMaxJointSpeeds.at(4) * pItem->v / 100.0;
-    //ret = mrgRobotToolExe(robot_var(), pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
+    ret = mrgRobotToolExe(robot_var(), pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
     //ret = mrgRobotJointMove(robot_var(), 4, pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
 
     return ret;

@@ -225,6 +225,7 @@ void MegaInterface::slotSelectDevices()
     QString strAddr = m_model->data( m_model->index(  ui->tableView->currentIndex().row(), 0 ), Qt::DisplayRole ).toString();
     QString strFullAddr = QString("TCPIP0::%1::inst0::INSTR").arg(strAddr);
 
+    //QString strModel = m_model->data( m_model->index(  ui->tableView->currentIndex().row(), 4 ), Qt::DisplayRole ).toString();
     QString strModel = m_model->data( m_model->index(  ui->tableView->currentIndex().row(), 4 ), Qt::DisplayRole ).toString();
 
     QString firmwareVer = m_model->data( m_model->index(  ui->tableView->currentIndex().row(), 3 ), Qt::DisplayRole ).toString();
@@ -233,12 +234,21 @@ void MegaInterface::slotSelectDevices()
     //! \todo get the mechanical ver from the protocol
     int iRow = ui->tableView->currentIndex().row();
     QString mechanicalVer = mSearchRobos.at(iRow).mDevInfo.mFirmWareHard;
+    //！\todo devtype
+    QString typeMRQ = QString("MRQ-MV");
+    QString snMRQ = mSearchRobos.at(iRow).mDevInfo.mSN;
+    QString softVer = mSearchRobos.at(iRow).mDevInfo.mSoftVer;
+    QString firmWareHard = mSearchRobos.at(iRow).mDevInfo.mFirmWareHard;
+    QString FirmWareBoot = mSearchRobos.at(iRow).mDevInfo.mFirmWareBoot;
+    QString FirmWareFpga = mSearchRobos.at(iRow).mDevInfo.mFirmWareFpga;
+    int devId = mSearchRobos.at(iRow).mDevInfo.mId;
 
     //! append the item
     //! "addr,model,sn,firmwareVer,mechanicalVer"
     //!
     QStringList strList;
-    strList<<QString("%1,%2,%3,%4,%5").arg( strFullAddr).arg( strModel ).arg(sn).arg(firmwareVer).arg(mechanicalVer);
+    //strList<<QString("%1,%2,%3,%4,%5,%6,%7,%8").arg( strFullAddr).arg( strModel ).arg(sn).arg(firmwareVer).arg(mechanicalVer);
+    strList<<QString("%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12").arg( strFullAddr).arg( strModel ).arg(sn).arg(firmwareVer).arg(mechanicalVer).arg(typeMRQ).arg(snMRQ).arg(softVer).arg(firmWareHard).arg(FirmWareBoot).arg(FirmWareFpga).arg(devId);
     logDbg()<<strList;
 
     emit signalSelectedInfo(strList);
@@ -369,6 +379,7 @@ void MegaInterface::on_pushButton_Scan_clicked()
                     tInfo.mDevInfo.mSoftVer = tList.at(2);
                     tInfo.mDevInfo.mFirmWareBoot = tList.at(3);
                     tInfo.mDevInfo.mFirmWareFpga = tList.at(4);
+                    tInfo.mDevInfo.mId = devName[0];
 
                     //! append
                     pRoboList->append( tInfo );

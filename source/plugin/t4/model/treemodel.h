@@ -119,6 +119,9 @@ public:
 
     int loadIn( QTextStream &stream );
 
+    double MaxTerminalSpeed(double str);
+    double MaxJointSpeeds( QList<double> list );
+
 private:
     int _loadIn( MDataSet &dataSet );
     int _loadIn( MDataSet *pSet,
@@ -132,6 +135,9 @@ private:
 
     TreeItem *getItem(const QModelIndex &index) const;
 
+    double mMaxTerminalSpeed;
+
+    QList<double> mMaxJointSpeeds;
 
 Q_SIGNALS:
     void signal_data_changed();

@@ -24,6 +24,14 @@ Info::Info(QWidget *parent) :
 
     //! translate
 //    retranslateUi();
+
+    //! T4 cell items
+    for( int i = 0; i < ui->tableWidget2->rowCount(); i++){
+        for(int j = 0; j < ui->tableWidget2->columnCount(); j++){
+            m_T4Items.append( new QTableWidgetItem );
+            ui->tableWidget2->setItem( i, j, m_T4Items.last() );
+        }
+    }
 }
 
 Info::~Info()
@@ -42,6 +50,13 @@ void Info::updateUi()
     mTableItems[5]->setData( Qt::DisplayRole, m_pPlugin->viewAddr() );
     mTableItems[7]->setData( Qt::DisplayRole, m_pPlugin->firmwareVer() );
     mTableItems[9]->setData( Qt::DisplayRole, m_pPlugin->mechanicalVer() );
+
+    m_T4Items[1]->setData( Qt::DisplayRole, m_pPlugin->Type_MRQ() );
+    m_T4Items[3]->setData( Qt::DisplayRole, m_pPlugin->SN_MRQ() );
+    m_T4Items[5]->setData( Qt::DisplayRole, m_pPlugin->SoftVer_MRQ() );
+    m_T4Items[7]->setData( Qt::DisplayRole, m_pPlugin->FirmWareHard_MRQ() );
+    m_T4Items[9]->setData( Qt::DisplayRole, m_pPlugin->FirmWareBoot_MRQ() );
+    m_T4Items[11]->setData( Qt::DisplayRole, m_pPlugin->FirmWareFpga_MRQ() );
 }
 
 void Info::retranslateUi()
@@ -53,6 +68,13 @@ void Info::retranslateUi()
     mTableItems[4]->setData( Qt::DisplayRole, tr("Addr") );
     mTableItems[6]->setData( Qt::DisplayRole, tr("Firmware") );
     mTableItems[8]->setData( Qt::DisplayRole, tr("Mechanical") );
+
+    m_T4Items[0]->setData( Qt::DisplayRole, tr("Model") );
+    m_T4Items[2]->setData( Qt::DisplayRole, tr("SN") );
+    m_T4Items[4]->setData( Qt::DisplayRole, tr("Version") );
+    m_T4Items[6]->setData( Qt::DisplayRole, tr("FirmWareHard") );
+    m_T4Items[8]->setData( Qt::DisplayRole, tr("FirmWareBoot") );
+    m_T4Items[10]->setData( Qt::DisplayRole, tr("FirmWareFpga") );
 }
 
 }

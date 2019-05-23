@@ -1763,16 +1763,19 @@ EXPORT_API int CALL mrgRobotGetToolType(ViSession vi, int robotname, int *type)
 */
 EXPORT_API int CALL mrgRobotWaitToolExeEnd(ViSession vi, int name,int timeout_ms)
 {
-    int ret = 0;
+    int ret = 0,error_count = 0;
     char args[SEND_BUF];
     char state[12];
     int time = 0,retlen = 0;
     snprintf(args, SEND_BUF, "ROBOT:EFFECTor:EXEC:STATe? %d\n", name);
     while (1)
     {
-        if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0)
-        {
-            return -1;
+        if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
+            if (++error_count > 3)
+            {
+                return -1;
+            }
+            continue;
         }
         state[retlen - 1] = '\0';//去掉回车符
         if (STRCASECMP(state, "STOP") == 0 || STRCASECMP(state, "IDLE") == 0) {

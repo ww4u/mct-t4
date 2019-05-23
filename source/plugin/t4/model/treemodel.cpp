@@ -458,7 +458,10 @@ int TreeModel::exportOut( const QString &fileName )
            <<"x"<<"y"<<"z"<<"w"<<"h"<<"v"<<"mode"
            <<"do"
            <<"delay"
-           <<"comment";
+           <<"comment"
+           <<"realV"   /* max(250) * v */
+           <<"realW"
+           <<"realH";
     dataSet.setHeaders( headers );
 
     MDataSection *pSection;
@@ -501,6 +504,15 @@ int TreeModel::loadIn( QTextStream &stream )
     { logDbg();return ret; }
 
     return _loadIn( dataSet );
+}
+
+double TreeModel::MaxTerminalSpeed(double str)
+{
+    mMaxTerminalSpeed = str;
+}
+double TreeModel::MaxJointSpeeds(QList<double> list )
+{
+    mMaxJointSpeeds = list;
 }
 
 int TreeModel::_loadIn( MDataSet &dataSet )
@@ -659,7 +671,7 @@ int TreeModel::_fmtSection( TreeItem *section,
 int TreeModel::_fmtItem( TreeItem *pItem,
                          QString &ary )
 {
-    ary = QString("%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12,%13")
+    ary = QString("%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12,%13,%14,%15,%16")
             .arg( pItem->isValid() )
             .arg( pItem->data(0).toInt() )
             .arg( pItem->data(1).toString() )
@@ -673,6 +685,9 @@ int TreeModel::_fmtItem( TreeItem *pItem,
             .arg( pItem->data(9).toInt() )
             .arg( pItem->data(10).toDouble() )
             .arg( pItem->data(11).toString() )
+            .arg( pItem->data(7).toDouble() * mMaxTerminalSpeed / 100 )
+            .arg( pItem->data(7).toDouble() * mMaxJointSpeeds[3] / 100 )
+            .arg( pItem->data(7).toDouble() * mMaxJointSpeeds[4] / 100 )
             ;
     return 0;
 }

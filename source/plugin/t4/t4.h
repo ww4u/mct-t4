@@ -37,6 +37,7 @@
 #define robot_var() (ViSession)pRobo->deviceVi(), pRobo->robotHandle()
 #define device_var() (ViSession)pRobo->deviceVi(), pRobo->deviceHandle()
 #define robot_var_handle() pRobo->robotHandle()
+#define device_var_handle() pRobo->deviceHandle()
 #define device_var_vi() (ViSession)pRobo->deviceVi()
 
 #define self_check_connect() \

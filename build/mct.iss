@@ -40,7 +40,9 @@ Source: "plugins\platforms\*"; DestDir: "{app}\plugins\platforms"
 Source: "plugins\styles\*"; DestDir: "{app}\plugins\styles" 
 
 Source: "doc\*"; DestDir: "{app}\doc";  Flags: recursesubdirs 
-;Source: "C:\Users\lwq\AppData\Roaming\mct\*"; DestDir: "{userappdata}\mct"; Flags: recursesubdirs                        
+;Source: "C:\Users\lwq\AppData\Roaming\mct\*"; DestDir: "{userappdata}\mct"; Flags: recursesubdirs   
+
+Source: "MRQ_Update\*"; DestDir: "{app}\MRQ_Update"                     
 
 [Dirs]
 ;Name: "{app}\temp"

@@ -80,7 +80,17 @@ void IOWidget::setData( quint32 dat )
 {
     for ( int i = 0; i < mWidth; i++ )
     {
-        mBits.at(i)->setCheckState( Qt::CheckState( dat & 0x03) );
+        //mBits.at(i)->setCheckState( Qt::CheckState( dat & 0x03) );
+        quint32 t = dat & 0x03;
+        if(t == 0x03){
+            mBits.at(i)->setCheckState(Qt::CheckState(2));
+        }
+        if(t == 0x00){
+            mBits.at(i)->setCheckState(Qt::CheckState(1));
+        }
+        if(t == 0x02){
+            mBits.at(i)->setCheckState(Qt::CheckState(0));
+        }
 
         dat >>= 2;
     }
@@ -90,7 +100,22 @@ quint32 IOWidget::getData( )
     quint32 dat = 0;
     for ( int i = 0; i < mWidth; i++ )
     {
-        dat |= ( mBits.at(i)->checkState()<<(i*2));
+        //dat |= ( mBits.at(i)->checkState()<<(i*2));
+        auto j = mBits.at(i)->checkState() & 0x03;
+        switch (j)
+        {
+            case 0:
+                dat |= 0x02 << (i*2);
+                continue;
+            case 1:
+                dat |= 0x00 << (i*2);
+                continue;
+            case 2:
+                dat |= 0x03 << (i*2);
+                continue;
+            default:
+                break;
+        }
     }
 
     return dat;

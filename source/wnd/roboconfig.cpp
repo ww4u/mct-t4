@@ -622,7 +622,7 @@ void RoboConfig::slotActionUpdate()
 
     Widget *w = new Widget;
     w->attatchRoboConfig(this);
-    w->show();
+    w->exec();
 }
 
 void RoboConfig::slotActionExplorer()

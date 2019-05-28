@@ -92,21 +92,21 @@
    len：存储区的长度
    返回值：0表示执行成功，－1表示失败
 
-** int mrgGetFirmWareHard(ViSession vi, int name, char *buf);
+** int mrgGetDeviceFirmWareHard(ViSession vi, int name, char *buf);
    查询设备硬件版本号
    vi :visa设备句柄
    name:机器人的名字
    buf:设备硬件版本号,长度最少12个字节
    返回值：0表示执行成功，－1表示失败
 
-** int mrgGetFirmWareBoot(ViSession vi, int name, char *buf);
+** int mrgGetDeviceFirmWareBoot(ViSession vi, int name, char *buf);
    查询设备BOOT版本号
    vi :visa设备句柄
    name:机器人的名字
    buf:设备BOOT版本号
    返回值：0表示执行成功，－1表示失败
 
-** int mrgGetFirmWareFpga(ViSession vi, int name, char *buf);
+** int mrgGetDeviceFirmWareFpga(ViSession vi, int name, char *buf);
    查询设备逻辑版本号
    vi :visa设备句柄
    name:机器人的名字
@@ -377,6 +377,13 @@
    name: 机器人名称
    wavetable:波表索引，－1表示使用默认索引（调用mrgSetRobotWavetable设置的波表索引）
    返回值：0表示停止成功，否则表示停止失败
+
+** int mrgGetRobotStates(ViSession vi, int name, int wavetable, char *state);
+   查询机器人运行状态
+   vi :visa设备句柄
+   name: 机器人名称
+   wavetable ：波表索引，－1表示使用默认索引（调用mrgSetRobotWavetable设置的波表索引）
+   返回值：0表示等待成功，－1：表示出错
 
 ** int mrgRobotWaitReady(ViSession vi, int name, int wavetable, int timeout_ms);
    等待机器人的特定波表的ready状态（等待模块设备解算完成）
@@ -834,13 +841,14 @@
    timeout_ms: 表示等待执行的超时时间. 如果为-1,表示不等待. 0表示无限等待. >0 表示等待的超时时间. 单位:ms
    返回值：零表示执行正确,-1表示执行错误
 
-** int mrgSetRobotFold(ViSession vi, int name, int wavetable, float axi0, float axi1, float axi2, float axi3);
+** int mrgSetRobotFold(ViSession vi, int name, float axi0, float axi1, float axi2, float axi3, int timeout);
    机器人的折叠功能(包装位)
    vi :visa设备句柄
    name: 机器人名称
    axi0 axi1,axi2,axi3：各轴相对于零点的角度值. axi0:基座; axi1:大臂;axi2:小臂;axi3:腕
-   返回值：0表示执行成功， －1：表示执行失败
-   此命令只对T4有效！！！！！
+   timeout:正数表示等待超时时间, -1表示不等待,0表示无限等待
+   返回值：0表示执行成功， -1：表示执行失败
+   此命令只对T4有效!
 
 ** int mrgGetRobotFoldState(ViSession vi, int name);
    获取机器人的折叠状态
@@ -1409,7 +1417,7 @@
    duty:占空比
    返回值：0表示执行成功，－1表示失败
 
-** int mrgMRQPVTModifyDuty_Query(ViSession vi, int name, int ch, int wavetable, float *duty);
+** int mrgMRQPVTModifyDuty_Query(ViSession vi, int name, int ch, int wavetable, int *duty);
    查询LVT模式下进行时间调整的占比
    vi :visa设备句柄
    name:设备名称（SEND_ID）
@@ -2194,7 +2202,7 @@
    mode:RS232 的流控制方式： NONE、 RTS、 CTS 或 RTS&CTS
    返回值：0表示执行成功，－1表示失败
 
-** int mrgMRQUartFlowctrl_Query(ViSession vi, int num, int name, char *mode);
+** int mrgMRQUartFlowctrl_Query(ViSession vi, int num, int name, int *mode);
    查询串口硬件控制流
    vi :visa设备句柄
    name:设备名称（SEND_ID）
@@ -2352,7 +2360,7 @@
    distance:测距报警的响应距离
    返回值：0表示执行成功，－1表示失败
 
-** int mrgMRQNewDriverType_Query(ViSession vi, int name, int ch, char *type);
+** int mrgMRQNewDriverType_Query(ViSession vi, int name, int ch, int *type);
    查询驱动板类型（只支持10轴）
    vi :visa设备句柄
    name:设备名称（SEND_ID）
@@ -2406,6 +2414,11 @@
 
 
 * system.h
+** int mrgSysGetProjectSoftVersion(ViSession vi, char *version);
+   查询 MRH-T 软件工程版本号
+   vi :visa设备句柄
+   返回值：0回读正确;否则回读失败
+
 ** int mrgSysGetSoftVersion(ViSession vi, char * version);
    查询 MRH-T 软件版本号
    vi :visa设备句柄

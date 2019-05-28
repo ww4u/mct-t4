@@ -18,9 +18,9 @@ EXPORT_API int CALL mrgFindGateWay(int  bus, char *output, int len,int method)
 }
 /*
 * 打开网关设备。
-* desc :findGateWay()返回的设备描述符
-* timeout：设备通讯时的最大超时时间
-* 返回值：查找到的设备个数
+* desc: mrgFindGateWay返回的设备描述符
+* timeout_ms: 设备通讯时的最大超时时间
+* 返回值：visa句柄
 */
 EXPORT_API int CALL mrgOpenGateWay(char * desc, int timeout_ms)
 {
@@ -30,7 +30,7 @@ EXPORT_API int CALL mrgOpenGateWay(char * desc, int timeout_ms)
 * 关闭网关设备。
 * desc :findGateWay()返回的设备描述符
 * timeout：设备通讯时的最大超时时间
-* 返回值：查找到的设备个数
+* 返回值: 关闭的值
 */
 EXPORT_API int CALL mrgCloseGateWay(ViSession  vi)
 {
@@ -95,6 +95,10 @@ EXPORT_API int CALL mrgGateWayIDNQuery(ViSession  vi, char * idn)
 {
     char args[SEND_BUF];
     int retlen = 0;
+    if (idn == NULL)
+    {
+        return -2;
+    }
     snprintf(args, SEND_BUF, "*IDN?\n");
     if ((retlen = busQuery(vi, args, strlen(args), idn, 100)) <= 0)
     {
@@ -133,7 +137,7 @@ EXPORT_API int CALL mrgFindDevice(ViSession vi, int timeout_ms)
 * 获取所有与网关相连的设备名称（sendid的字符形式）
 * vi :visa设备句柄
 * names：返回名称的存放处
-* 返回值：设备名称个数
+* 返回值：大于零表示设备名称个数; -1表示没有返回,-2表示参数错误
 */
 EXPORT_API int CALL mrgGetDeviceName(ViSession vi, int * name)
 {
@@ -144,6 +148,10 @@ EXPORT_API int CALL mrgGetDeviceName(ViSession vi, int * name)
     char names[1024];
     char *p;
     char *pNext = NULL;
+    if (name == NULL)
+    {
+        return -2;
+    }
     snprintf(args, SEND_BUF, "DEVICE:NAME?\n");
     if ((retlen = busQuery(vi, args, strlen(args), names, 1024)) == 0)
     {
@@ -166,20 +174,23 @@ EXPORT_API int CALL mrgGetDeviceName(ViSession vi, int * name)
 * 获取指定设备的类型
 * vi :visa设备句柄
 * type：返回设备类型的存储区
-* type可能的取值： “MRQM2304”，“MRQM2305”，“MRQM2310”，“MRQC23D”，“MRQC23S”，
-* type_len：存储区的长度，长度最少8个字节
-* 返回值：0表示执行成功，－1表示失败
+* type可能的取值： “MRQM2304”，“MRQM2305”，“MRQT2305”，“MRQM2310”，“MRQC23D”，“MRQC23S”，
+* 返回值：0表示执行成功，－1表示失败; -2表示参数错误
 */
-EXPORT_API int CALL mrgGetDeviceType(ViSession vi, int name, char * type)
+EXPORT_API int CALL mrgGetDeviceType(ViSession vi, int name, char * ps8Type)
 {
     char args[SEND_BUF];
     int len = 0;
+    if (ps8Type == NULL)
+    {
+        return -2;
+    }
     snprintf(args, SEND_BUF, "DEVICE:TYPe? %d\n", name);
-    if ((len = busQuery(vi, args, strlen(args), type, 12)) == 0)
+    if ((len = busQuery(vi, args, strlen(args), ps8Type, 12)) == 0)
     {
         return -1;
     }
-    type[len-1] = '\0';
+    ps8Type[len-1] = '\0';
     return 0;
 }
 /*
@@ -206,19 +217,23 @@ EXPORT_API int CALL mrgGetDeviceChannelCount(ViSession vi, int name)
 /*
 * 获取指定设备的信息，包括（序列号：硬件版本号：软件版本号：boot版本号：逻辑版本号）
 * vi :visa设备句柄
-* info：返回信息的存储区
-* 返回值：0表示执行成功，－1表示失败
+* ps8Info：返回信息的存储区. ps8Info是不安全的,请保持ps8Info最小长度为100字节
+* 返回值：0表示执行成功，－1表示失败; -2表示参数错误
 */
-EXPORT_API int CALL mrgGetDeviceInfo(ViSession vi, int name, char * info)
+EXPORT_API int CALL mrgGetDeviceInfo(ViSession vi, int name, char * ps8Info)
 {
     char args[SEND_BUF];
     int retlen = 0;
+    if (ps8Info == NULL)
+    {
+        return -2;
+    }
     snprintf(args, SEND_BUF, "DEVICE:FIRMWARE:ALL? %d\n", name);
-    if ((retlen = busQuery(vi, args, strlen(args), info, 100)) == 0) {
+    if ((retlen = busQuery(vi, args, strlen(args), ps8Info, 100)) == 0) {
         return -1;
     }
     else {
-        info[retlen - 1] = '\0';
+        ps8Info[retlen - 1] = '\0';
         return 0;
     }
 }
@@ -226,19 +241,23 @@ EXPORT_API int CALL mrgGetDeviceInfo(ViSession vi, int name, char * info)
 * 获取指定设备的软件版本号
 * vi :visa设备句柄
 * version：返回设备版本号的存储区
-* len：存储区的长度
-* 返回值：0表示执行成功，－1表示失败
+
+* 返回值：0表示执行成功，－1表示失败; -2表示参数错误
 */
-EXPORT_API int CALL mrgGetDeviceSoftVersion(ViSession vi, int name, char * version)
+EXPORT_API int CALL mrgGetDeviceSoftVersion(ViSession vi, int name, char * ps8Version)
 {
     char args[SEND_BUF];
     int len = 0;
+    if (ps8Version == NULL)
+    {
+        return -2;
+    }
     snprintf(args, SEND_BUF, "DEVICE:FIRMWARE:SOFT? %d\n", name);
-    if ((len = busQuery(vi, args, strlen(args), version, 20)) == 0) {
+    if ((len = busQuery(vi, args, strlen(args), ps8Version, 20)) == 0) {
         return -1;
     }
     else {
-        version[len] = '\0';
+        ps8Version[len-1] = '\0';
         return 0;
     }
 }
@@ -247,12 +266,16 @@ EXPORT_API int CALL mrgGetDeviceSoftVersion(ViSession vi, int name, char * versi
 *vi :visa设备句柄
 *name:机器人的名字
 *buf:设备硬件版本号,长度最少12个字节
-*返回值：0表示执行成功，－1表示失败
+*返回值：0表示执行成功，－1表示失败; -2表示参数错误
 */
 EXPORT_API int CALL mrgGetDeviceFirmWareHard(ViSession vi, int name, char *buf)
 {
     char args[SEND_BUF];
     int retLen = 0;
+    if (buf == NULL)
+    {
+        return -2;
+    }
     snprintf(args, SEND_BUF, "DEVice:FIRMware:HARD? %d\n", name);
     if ((retLen = busQuery(vi, args, strlen(args), buf, 12)) == 0) {
         return -1;
@@ -268,12 +291,16 @@ EXPORT_API int CALL mrgGetDeviceFirmWareHard(ViSession vi, int name, char *buf)
 *vi :visa设备句柄
 *name:机器人的名字
 *buf:设备BOOT版本号
-*返回值：0表示执行成功，－1表示失败
+*返回值：0表示执行成功，－1表示失败; -2表示参数错误
 */
 EXPORT_API int CALL mrgGetDeviceFirmWareBoot(ViSession vi, int name, char *buf)
 {
     char args[SEND_BUF];
     int retLen = 0;
+    if (buf == NULL)
+    {
+        return -2;
+    }
     snprintf(args, SEND_BUF, "DEVice:FIRMware:BOOT? %d\n", name);
     if ((retLen = busQuery(vi, args, strlen(args), buf, 12)) == 0) {
         return -1;
@@ -289,12 +316,16 @@ EXPORT_API int CALL mrgGetDeviceFirmWareBoot(ViSession vi, int name, char *buf)
 *vi :visa设备句柄
 *name:机器人的名字
 *buf:设备逻辑版本号
-*返回值：0表示执行成功，－1表示失败
+*返回值：0表示执行成功，－1表示失败; -2表示参数错误
 */
 EXPORT_API int CALL mrgGetDeviceFirmWareFpga(ViSession vi, int name, char *buf)
 {
     char args[SEND_BUF];
     int retLen = 0;
+    if (buf == NULL)
+    {
+        return -2;
+    }
     snprintf(args, SEND_BUF, "DEVice:FIRMware:FPGA? %d\n", name);
     if ((retLen = busQuery(vi, args, strlen(args), buf, 40)) == 0) {
         return -1;
@@ -308,20 +339,23 @@ EXPORT_API int CALL mrgGetDeviceFirmWareFpga(ViSession vi, int name, char *buf)
 /*
  * 获取指定设备的序列号
  * vi :visa设备句柄
- * serial：返回设备序列号的存储区
- * len：存储区的长度，长度最少18个字节
- * 返回值：0表示执行成功，－1表示失败
+ * ps8Serial：返回设备序列号的存储区
+ * 返回值：0表示执行成功，－1表示失败; -2表示参数错误
  */
-EXPORT_API int CALL mrgGetDeviceSerialNumber(ViSession vi, int name, char * serial)
+EXPORT_API int CALL mrgGetDeviceSerialNumber(ViSession vi, int name, char * ps8Serial)
 {
     char args[SEND_BUF];
     int len = 0;
+    if (ps8Serial == NULL)
+    {
+        return -2;
+    }
     snprintf(args, SEND_BUF, "DEVICE:FIRMWARE:SN? %d\n", name);
-    if ((len = busQuery(vi, args, strlen(args), serial, 20)) == 0) {
+    if ((len = busQuery(vi, args, strlen(args), ps8Serial, 20)) == 0) {
         return -1;
     }
     else {
-        serial[len-1] = '\0';
+        ps8Serial[len-1] = '\0';
         return 0;
     }
 }

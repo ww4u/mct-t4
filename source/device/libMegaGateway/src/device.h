@@ -71,22 +71,20 @@ EXPORT_API int CALL mrgGateWayIDNQuery(ViSession  vi, char * idn);
 */
 EXPORT_API int CALL mrgFindDevice(ViSession vi, int timeout_ms);
 /*
-* 获取所有与网关相连的设备名称
+* 获取所有与网关相连的设备名称（sendid的字符形式）
 * vi :visa设备句柄
 * names：返回名称的存放处
-* names_len：存储区的长度
-* 返回值：设备名称个数
+* 返回值：大于零表示设备名称个数; -1表示没有返回,-2表示参数错误
 */
 EXPORT_API int CALL mrgGetDeviceName(ViSession vi, int* names);
 /*
 * 获取指定设备的类型
 * vi :visa设备句柄
 * type：返回设备类型的存储区
-* type可能的取值： “MRQM2304”，“MRQM2305”，“MRQM2310”，“MRQC23D”，“MRQC23S”，
-* type_len：存储区的长度，长度最少8个字节
-* 返回值：0表示执行成功，－1表示失败
+* type可能的取值： “MRQM2304”，“MRQM2305”，“MRQT2305”，“MRQM2310”，“MRQC23D”，“MRQC23S”，
+* 返回值：0表示执行成功，－1表示失败; -2表示参数错误
 */
-EXPORT_API int CALL mrgGetDeviceType(ViSession vi, int name, char * type);
+EXPORT_API int CALL mrgGetDeviceType(ViSession vi, int name, char * ps8Type);
 /*
 *查询指定设备的通道个数,name为仪器名
 *vi :visa设备句柄
@@ -98,16 +96,16 @@ EXPORT_API int CALL mrgGetDeviceChannelCount(ViSession vi, int name);
 /*
 * 获取指定设备的信息，包括（序列号：硬件版本号：软件版本号：boot版本号：逻辑版本号）
 * vi :visa设备句柄
-* info：返回信息的存储区
-* 返回值：0表示执行成功，－1表示失败
+* ps8Info：返回信息的存储区,ps8Info是不安全的,请保持ps8Info最小长度为100字节
+* 返回值：0表示执行成功，－1表示失败; -2表示参数错误
 */
-EXPORT_API int CALL mrgGetDeviceInfo(ViSession vi, int name, char * info);
+EXPORT_API int CALL mrgGetDeviceInfo(ViSession vi, int name, char * ps8Info);
 /*
 * 获取指定设备的软件版本号
 * vi :visa设备句柄
 * version：返回设备版本号的存储区
-* len：存储区的长度
-* 返回值：0表示执行成功，－1表示失败
+
+* 返回值：0表示执行成功，－1表示失败; -2表示参数错误
 */
 EXPORT_API int CALL mrgGetDeviceSoftVersion(ViSession vi, int name, char * version);
 /*
@@ -115,7 +113,7 @@ EXPORT_API int CALL mrgGetDeviceSoftVersion(ViSession vi, int name, char * versi
 *vi :visa设备句柄
 *name:机器人的名字
 *buf:设备硬件版本号,长度最少12个字节
-*返回值：0表示执行成功，－1表示失败
+*返回值：0表示执行成功，－1表示失败; -2表示参数错误
 */
 EXPORT_API int CALL mrgGetDeviceFirmWareHard(ViSession vi, int name, char *buf);
 /*
@@ -123,7 +121,7 @@ EXPORT_API int CALL mrgGetDeviceFirmWareHard(ViSession vi, int name, char *buf);
 *vi :visa设备句柄
 *name:机器人的名字
 *buf:设备BOOT版本号
-*返回值：0表示执行成功，－1表示失败
+*返回值：0表示执行成功，－1表示失败; -2表示参数错误
 */
 EXPORT_API int CALL mrgGetDeviceFirmWareBoot(ViSession vi, int name, char *buf);
 /*
@@ -131,17 +129,16 @@ EXPORT_API int CALL mrgGetDeviceFirmWareBoot(ViSession vi, int name, char *buf);
 *vi :visa设备句柄
 *name:机器人的名字
 *buf:设备逻辑版本号
-*返回值：0表示执行成功，－1表示失败
+*返回值：0表示执行成功，－1表示失败; -2表示参数错误
 */
 EXPORT_API int CALL mrgGetDeviceFirmWareFpga(ViSession vi, int name, char *buf);
 /*
  * 获取指定设备的序列号
  * vi :visa设备句柄
  * serial：返回设备序列号的存储区
- * len：存储区的长度，长度最少18个字节
- * 返回值：0表示执行成功，－1表示失败
+ * 返回值：0表示执行成功，－1表示失败; -2表示参数错误
  */
-EXPORT_API int CALL mrgGetDeviceSerialNumber(ViSession vi, int name, char * serial);
+EXPORT_API int CALL mrgGetDeviceSerialNumber(ViSession vi, int name, char * ps8Serial);
 
 #if defined(__cplusplus) || defined(__cplusplus__)
 }

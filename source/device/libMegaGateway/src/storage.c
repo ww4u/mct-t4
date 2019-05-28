@@ -1,25 +1,30 @@
 #include "storage.h"
 
 #define SEND_BUF  (100)
+
 /*
 * 查询存储器中，可用的运动文件
 * vi :visa设备句柄
 * location:0表示本地存储（本地文件系统）；1表示外部存储（U盘之类）
-* fileList: 点坐标文件名列表，以逗号分隔
-* len : fileList的缓存长度
+* ps8FileList: 点坐标文件名列表，以逗号分隔
+* len : ps8FileList的缓存长度
 * 返回值：大于零表示返回实际的字节数，小于零表示出错
 */
-EXPORT_API int CALL mrgStorageMotionFileQuery(ViSession vi, int location, char* fileList, int len)
+EXPORT_API int CALL mrgStorageMotionFileQuery(ViSession vi, int location, char* ps8FileList, int len)
 {
     int retlen = 0;
     char args[SEND_BUF];
+    if (ps8FileList == NULL || (location != 0 && location != 1))
+    {
+        return -2;
+    }
     snprintf(args, SEND_BUF, "STORage:FIL:MOT:%s?\n", (location == 0) ? "LOC" : "EXTER");
-    if ((retlen = busQuery(vi, args, strlen(args), fileList, len)) == 0) {
+    if ((retlen = busQuery(vi, args, strlen(args), ps8FileList, len)) == 0) {
         return -1;
     }
     if (retlen < len)
     {
-        fileList[retlen - 1] = 0;
+        ps8FileList[retlen - 1] = 0;
         return retlen - 1;
     }
     else
@@ -31,15 +36,17 @@ EXPORT_API int CALL mrgStorageMotionFileQuery(ViSession vi, int location, char* 
 /*
 * 删除本地存储器中的运动文件
 * vi :visa设备句柄
-* location:0表示本地存储（本地文件系统）；1表示外部存储（U盘之类）
-* fileList: 点坐标文件名列表，以逗号分隔
-* len : fileList的缓存长度
+* ps8FileName: 点坐标文件名
 * 返回值：大于零表示返回实际的字节数，小于零表示出错
 */
-EXPORT_API int CALL mrgStorageMotionFileDelete(ViSession vi, char* fileName)
+EXPORT_API int CALL mrgStorageMotionFileDelete(ViSession vi, char* ps8FileName)
 {
     char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "STORage:FIL:MOT:DEL %s\n", fileName);
+    if (ps8FileName == NULL)
+    {
+        return -2;
+    }
+    snprintf(args, SEND_BUF, "STORage:FIL:MOT:DEL %s\n", ps8FileName);
     if ((busWrite(vi, args, strlen(args))) == 0) {
         return -1;
     }
@@ -48,12 +55,11 @@ EXPORT_API int CALL mrgStorageMotionFileDelete(ViSession vi, char* fileName)
 /*
 * 读取运动文件内容到上位机
 * vi :visa设备句柄
-* filename: 文件名
-* context：读取到的内容
-* wantlen： context（存储区）的长度
+* ps8FileName: 文件名
+* ps8Context：读取到的内容
 * 返回值：返回实际的文件长度
 */
-EXPORT_API int CALL mrgStorageMotionFileContextRead(ViSession vi, char* filename, char* context)
+EXPORT_API int CALL mrgStorageMotionFileContextRead(ViSession vi, char* ps8FileName, char* ps8Context)
 {
     int retlen = 0;
     int count = 0;
@@ -63,7 +69,11 @@ EXPORT_API int CALL mrgStorageMotionFileContextRead(ViSession vi, char* filename
     char args[SEND_BUF];
     char as8Ret[1024];
     char as8StrLen[20];
-    snprintf(args, SEND_BUF, "STORage:FILe:MOTion:CONTEXT:READ? %s\n", filename);
+    if (ps8FileName == NULL || ps8Context == NULL)
+    {
+        return -2;
+    }
+    snprintf(args, SEND_BUF, "STORage:FILe:MOTion:CONTEXT:READ? %s\n", ps8FileName);
     if (busWrite(vi, args, strlen(args)) == 0)
     {
         return 0;
@@ -85,7 +95,7 @@ EXPORT_API int CALL mrgStorageMotionFileContextRead(ViSession vi, char* filename
     {
         return 0;
     }
-    context[0] = as8Ret[11];
+    ps8Context[0] = as8Ret[11];
     count = 1;
     while (left >0)
     {
@@ -95,7 +105,7 @@ EXPORT_API int CALL mrgStorageMotionFileContextRead(ViSession vi, char* filename
         {
             break;
         }
-        memcpy(&context[count], as8Ret, retlen);
+        memcpy(&ps8Context[count], as8Ret, retlen);
         count += retlen;
         left -= retlen;
     }
@@ -136,12 +146,12 @@ int waitMotionFileWriteEnd(int vi)
 /*
 * 保存运动文件内容到本地存储器
 * vi :visa设备句柄
-* context: 文件内容
+* ps8Context: 文件内容
 * len:文件内容长度
-* saveFileName：目的文件名
+* ps8SaveFileName：目的文件名
 * 返回值：  0：写入成功；1：写入失败
 */
-EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context,int len, char * saveFileName)
+EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* ps8Context,int len, char * ps8SaveFileName)
 {
 #if 0
     int count = 0;
@@ -149,8 +159,11 @@ EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context,
     int cmdLen = 0;
     char args[SEND_BUF];
     char as8Ret[1024];
-    snprintf(args, SEND_BUF, "STORage:FILe:MOTion:CONTEXT:WRITe:NAMe %s\n", saveFileName);
-    
+    if (ps8Context == NULL || ps8SaveFileName == NULL)
+    {
+        return -2;
+    }
+    snprintf(args, SEND_BUF, "STORage:FILe:MOTion:CONTEXT:WRITe:NAMe %s\n", ps8SaveFileName);
     if (busWrite(vi, args, strlen(args)) == 0)//写入文件名
     {
         return -1;
@@ -161,7 +174,7 @@ EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context,
         writeLen = len > 512 ? 512 : len;
         snprintf(as8Ret, 1024, "STORage:FILe:MOTion:CONText:WRITe:DATa #9%09d", writeLen);
         cmdLen = strlen(as8Ret);
-        memcpy(&as8Ret[cmdLen],&context[count], writeLen);
+        memcpy(&as8Ret[cmdLen],&ps8Context[count], writeLen);
         if (busWrite(vi, as8Ret, writeLen + cmdLen) == 0)
         {
             return -1;
@@ -178,30 +191,34 @@ EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* context,
 #endif
 
     // MRH-T 大于1.20版本才可用下面这种方式
-    return mrgStorageWriteFile(vi, 0, "/home/megarobo/MRH-T/motionfile/", saveFileName, (unsigned char*)context, len);
+    return mrgStorageWriteFile(vi, 0, (char *)"/home/megarobo/MRH-T/motionfile/", ps8SaveFileName, (unsigned char*)ps8Context, len);
 }
 /*
 * 保存文件内容
 * vi :visa设备句柄
 * isUdisk: 是否写在U盘上
-* path: 文件路径
-* saveFileName：目的文件名
-* data: 文件内容
+* ps8Path: 文件路径
+* ps8SaveFileName：目的文件名
+* pu8Data: 文件内容
 * dataLen:文件内容长度
-* 返回值：  0：写入成功；1：写入失败
+* 返回值：  0：写入成功；1：写入失败,-2表示参数错误
 */
-EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *path, char *saveFileName,unsigned char *data, int dataLen)
+EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *ps8Path, char *ps8SaveFileName,unsigned char *pu8Data, int dataLen)
 {
     int retLen = -1;
     int count = 0;
+    int errCount = 3;
     int len = dataLen;
     int writeLen = 0;
     int cmdLen = 0;
     char args[SEND_BUF];
     char as8Ret[1024];
     char as8State[64];
-
-    snprintf(args, SEND_BUF, "STORage:FILe:WRITe:START %s,%s,%s\n",isUdisk?"UDISK":"LOCAL", path, saveFileName);
+    if (ps8Path == NULL || pu8Data == NULL || ps8SaveFileName == NULL)
+    {
+        return -2;
+    }
+    snprintf(args, SEND_BUF, "STORage:FILe:WRITe:START %s,%s,%s\n",isUdisk?"UDISK":"LOCAL", ps8Path, ps8SaveFileName);
     if (busWrite(vi, args, strlen(args)) == 0)//写入文件名
     {
         return -1;
@@ -212,18 +229,24 @@ EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *path, c
         writeLen = len > 512 ? 512 : len;
         snprintf(as8Ret, 1024, "STORage:FILe:WRITe:DATa? #9%09d", writeLen);
         cmdLen = strlen(as8Ret);
-        memcpy(&as8Ret[cmdLen],&data[count], writeLen);
-        memset(as8State,0,sizeof(as8State));
-        if (busWrite(vi, as8Ret, writeLen + cmdLen) == 0)
+        memcpy(&as8Ret[cmdLen],&pu8Data[count], writeLen);
+
+        errCount = 3;
+        while(errCount--)
         {
-            msSleep(1);
-            continue;
+            memset(as8State,0,sizeof(as8State));
+            retLen = busQuery(vi, as8Ret, writeLen + cmdLen, as8State, sizeof(as8State));
+            if (retLen > 0)
+            {
+                break;
+            }
+            msSleep(5);
         }
-        retLen = busRead(vi, as8State, sizeof(as8State));
-        if(retLen == 0)
+        if( retLen == 0 )
         {
             return -2;
         }
+
         as8State[retLen - 1] = '\0';//去掉回车符
         if(STRCASECMP(as8State, "ERROR") == 0)
         {
@@ -250,12 +273,12 @@ EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *path, c
 * 读取文件到上位机
 * vi :visa设备句柄
 * isUdisk: 是否写在U盘上
-* path: 文件路径
-* filename: 文件名
-* context：读取到的内容
+* ps8Path: 文件路径
+* ps8Filename: 文件名
+* ps8Context：读取到的内容
 * 返回值：返回实际的文件长度
 */
-EXPORT_API int CALL mrgStorageReadFile(ViSession vi, int isUdisk, char *path, char* filename, unsigned char* context)
+EXPORT_API int CALL mrgStorageReadFile(ViSession vi, int isUdisk, char *ps8Path, char* ps8Filename, unsigned char* ps8Context)
 {
     int retlen = 0;
     int count = 0;
@@ -265,9 +288,12 @@ EXPORT_API int CALL mrgStorageReadFile(ViSession vi, int isUdisk, char *path, ch
     char args[SEND_BUF];
     char as8Ret[1024];
     char as8StrLen[20];
-
+    if (ps8Path == NULL || ps8Context == NULL || ps8Filename == NULL)
+    {
+        return 0;
+    }
     snprintf(args, SEND_BUF, "STORage:FILe:READ? %s,%s,%s\n",
-             isUdisk?"UDISK":"LOCAL", path, filename);
+             isUdisk?"UDISK":"LOCAL", ps8Path, ps8Filename);
 
     if (busWrite(vi, args, strlen(args)) == 0)
     {
@@ -290,7 +316,7 @@ EXPORT_API int CALL mrgStorageReadFile(ViSession vi, int isUdisk, char *path, ch
     {
         return 0;
     }
-    context[0] = as8Ret[11];
+    ps8Context[0] = as8Ret[11];
     count = 1;
     while (left >0)
     {
@@ -300,7 +326,7 @@ EXPORT_API int CALL mrgStorageReadFile(ViSession vi, int isUdisk, char *path, ch
         {
             break;
         }
-        memcpy(&context[count], as8Ret, retlen);
+        memcpy(&ps8Context[count], as8Ret, retlen);
         count += retlen;
         left -= retlen;
     }

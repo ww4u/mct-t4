@@ -23,6 +23,10 @@ int socketFindResources(char ip[][100], int timeout);
 int busFindDevice(int bus, char *output, int len,int method)
 {
     int r = 0;
+    if (output == NULL)
+    {
+        return 0;
+    }
     if (bus == 0)
     {
         if (method == 0)
@@ -57,6 +61,10 @@ VXI11_CLINK *_g_clink = NULL;    //vxi11句柄
 
 int busOpenDevice(char *ip, int timeout_ms)
 {
+    if (ip == NULL)
+    {
+        return -1;
+    }
     memset(_g_device_IP,'\0',sizeof(_g_device_IP));
     _g_clink = NULL;
     _g_timeout = 2000;
@@ -91,7 +99,7 @@ int busOpenDevice(char *ip, int timeout_ms)
 
 static int SyncSend(int vi, char *buf, int dataLen, int isBlock)
 {
-    if(_g_clink == NULL)
+    if(_g_clink == NULL || buf == NULL)
         return -1;
 
     int ret = vxi11_send(_g_clink, buf, dataLen);
@@ -105,7 +113,7 @@ static int SyncSend(int vi, char *buf, int dataLen, int isBlock)
 
 static int SyncRead(int vi, char *data, int dataLen, int isBlock)
 {
-    if(_g_clink == NULL)
+    if(_g_clink == NULL || data == NULL)
         return -1;
 
     int ret = -1;
@@ -141,8 +149,12 @@ int busCloseDevice(ViSession vi)
 
 unsigned int busWrite(ViSession vi, char *data, unsigned int len)
 {
+    if (data == NULL)
+    {
+        return 0;
+    }
     LOCK();
-    int retCount = SyncSend(vi, data, len, 1);
+    int retCount = SyncSend(vi, data, len, 0);
     if(retCount < 0){
         UNLOCK();
         return 0;
@@ -155,7 +167,11 @@ unsigned int busWrite(ViSession vi, char *data, unsigned int len)
 unsigned int busRead(ViSession vi, char *buf, unsigned int len)
 {
     int errCount = 3;
-    int retCount;
+    int retCount = 0;
+    if (buf == NULL)
+    {
+        return 0;
+    }
     LOCK();
     while(errCount--)
     {
@@ -165,7 +181,7 @@ unsigned int busRead(ViSession vi, char *buf, unsigned int len)
             break;
         }
         retCount=0;
-        msSleep(1);
+        msSleep(5);
     }
 
     if( (retCount==0) || STRCASECMP(buf, "Command error") == 0 )
@@ -182,6 +198,10 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* o
 {
     int retCount;
     int errCount = 3;
+    if (input == NULL || output == NULL)
+    {
+        return 0;
+    }
     LOCK();
     retCount = SyncSend(vi, input, inputlen, 1);
     if(retCount < 0)
@@ -198,7 +218,7 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* o
             break;
         }
         retCount=0;
-        msSleep(1);
+        msSleep(5);
     }
     if( (retCount==0) || STRCASECMP(output, "Command error") == 0 )
     {
@@ -278,6 +298,11 @@ int busFindDevice(int bus, char *output, int len,int method)
     static ViUInt32 numInstrs;
     static ViFindList findList;
     char instrDescriptor[VI_FIND_BUFLEN];
+    if (output == NULL)
+    {
+        return 0;
+    }
+
     /* First we will need to open the default resource manager. */
     status = viOpenDefaultRM(&defaultRM);
     if (status < VI_SUCCESS)
@@ -364,6 +389,10 @@ int busOpenDevice(char * ip, int timeout)
 {
     ViStatus status;
     ViSession vi;
+    if (ip == NULL)
+    {
+        return 0;
+    }
     status = viOpenDefaultRM(&defaultRM);
     if (status < VI_SUCCESS)
     {
@@ -373,8 +402,8 @@ int busOpenDevice(char * ip, int timeout)
     status = viOpen(defaultRM, ip, VI_NO_LOCK, VI_TMO_IMMEDIATE, &vi);
     if (status < VI_SUCCESS)
     {
-        vi = -1;
-        return status;
+        vi = 0;
+        return 0;
     }
     if (_strnicmp(ip, "USB",3)== 0)
     {
@@ -431,7 +460,11 @@ int busCloseDevice(ViSession vi)
 unsigned int busWrite(ViSession vi, char * buf, unsigned int len)
 {
     //返回VI_ERROR_CONN_LOST 表示断开连接
-    ViUInt32 retCount;
+    ViUInt32 retCount = 0;
+    if (buf == NULL)
+    {
+        return 0;
+    }
     LOCK();
     if(viWrite(vi, (ViBuf)buf, len, &retCount) != VI_SUCCESS)
     {
@@ -447,7 +480,10 @@ unsigned int busRead(ViSession vi, char * buf, unsigned int len)
     //返回VI_ERROR_CONN_LOST 表示断开连接
     ViUInt32 retCount = 0;
     int errCount = 3;
-
+    if (buf == NULL)
+    {
+        return 0;
+    }
     LOCK();
     while(errCount--)
     {
@@ -457,7 +493,7 @@ unsigned int busRead(ViSession vi, char * buf, unsigned int len)
             break;
         }
         retCount = 0;
-        _msSleep(1);
+        msSleep(5);
     }
     if( (retCount == 0) ||  STRCASECMP(buf, "Command error") == 0 )
     {
@@ -473,7 +509,10 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen,char* ou
 {
     ViUInt32 retCount;
     int errCount = 3;
-
+    if (input == NULL || output == NULL)
+    {
+        return 0;
+    }
     LOCK();
     if (viWrite(vi, (ViBuf)input, inputlen, &retCount) != VI_SUCCESS)
     {
@@ -488,7 +527,7 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen,char* ou
             break;
         }
         retCount = 0;
-        _msSleep(1);
+        msSleep(5);
     }
     if( (retCount == 0) ||  STRCASECMP(output, "Command error") == 0 )
     {

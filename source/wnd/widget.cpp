@@ -12,11 +12,13 @@
 #define MRQ_UPDATE_EXE "/MRQ_Update/MegaRobo_Update.exe"
 
 Widget::Widget(QWidget *parent) :
-    QWidget(parent),
+    QDialog(parent),
     ui(new Ui::Widget)
 {
     ui->setupUi(this);
     setWindowFlags(Qt::WindowTitleHint);
+    connect(this, SIGNAL(AppendText(QString)),this,SLOT(SlotAppendText(QString)));
+    connect(this, SIGNAL(sigReboot()),this, SLOT(slotReboot()));
 }
 
 Widget::~Widget()
@@ -28,14 +30,15 @@ void Widget::attatchRoboConfig(RoboConfig *r)
 {
     m_roboConfig = r;
     m_addr = m_roboConfig->currentXPlugin()->addr();
+    qDebug() << "update" << m_addr;
     recvID = m_roboConfig->currentXPlugin()->DevId();
 }
 
 void Widget::on_buttonBox_clicked(QAbstractButton *button)
 {
-    m_roboConfig->currentXPlugin()->close();
 
     if((QPushButton*)(button) == ui->buttonBox->button(QDialogButtonBox::Ok)){
+        //m_roboConfig->currentXPlugin()->emit_setting_changed( XPage::e_setting_opened, false );
         button->setEnabled(false);
     }else {
         //! cancle process
@@ -57,41 +60,37 @@ void Widget::on_toolButton_clicked()
           tr("Open File"), NULL, tr("(*.p)"));
     ui->lineEdit->setText(sPath);
 }
-void Widget::slot_finished(int i, QProcess::ExitStatus e)
+#include <QtConcurrent>
+
+void Widget::slot_updateMRH(int i, QProcess::ExitStatus e)
 {
     //! mrh
-    ui->textBrowser->append(tr("Notify: MRH Updating..."));
-    QFile mrhFile(sPath.left(sPath.lastIndexOf("/")) + MRH_UPDATE);
-    if(!mrhFile.open(QIODevice::ReadOnly)){
-        ui->textBrowser->append("Error: File Error ");
-        return;
-    }
-    QByteArray ba = mrhFile.readAll();
-    int ret = mrgStorageWriteFile(m_roboConfig->currentXPlugin()->deviceVi(), 0, (char *)"/media/usb0/",
-                              (char *)"mrh.dat", (unsigned char*)(ba.data()), ba.size());
-    if(ret!=0){
-        ui->textBrowser->append("Error: MRH Update Fail ");
-        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
-        return;
-    }
-    ret = mrgSysUpdateFileStart(m_roboConfig->currentXPlugin()->deviceVi(), (char *)"mrh.dat");
-    if(ret !=0 ){
-        ui->textBrowser->append("Error: MRH Update Start Fail ");
-        return;
-    }
-    ui->textBrowser->append("Notify: System Update end ");
-    mrgSystemRunCmd(m_roboConfig->currentXPlugin()->deviceVi(), (char *)"rm -rf /media/usb0/*", 1);
-    //!
-
-    QMessageBox *msgBox = new QMessageBox(this);
-    msgBox->setText(tr("\n\tUpdate Success\t\t \n\n\tReboot?\t \n"));
-    msgBox->setStandardButtons(QMessageBox::Ok|QMessageBox::Cancel);
-    if(msgBox->exec() == QMessageBox::Ok){
-        //! reboot
-        if(m_roboConfig->currentXPlugin()->isRebootable()){
-            mrgSystemRunCmd(m_roboConfig->currentXPlugin()->deviceVi(), (char *)"reboot", 0);
+    Append("Notify: MRH Updating...\r\n");
+    QFuture<void> future = QtConcurrent::run([=]() {
+        QFile mrhFile(sPath.left(sPath.lastIndexOf("/")) + MRH_UPDATE);
+        if(!mrhFile.open(QIODevice::ReadOnly)){
+            Append("Error: File Error\r\n");
+            return;
         }
-    }
+        QByteArray ba = mrhFile.readAll();
+        int ret = mrgStorageWriteFile(m_roboConfig->currentXPlugin()->deviceVi(), 0, (char *)"/media/usb0/",
+                                  (char *)MRH_UPDATE, (unsigned char*)(ba.data()), ba.size());
+        if(ret!=0){
+            Append("Error: MRH Update Fail\r\n");
+            ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
+            return;
+        }
+        ret = mrgSysUpdateFileStart(m_roboConfig->currentXPlugin()->deviceVi(), (char *)MRH_UPDATE);
+        if(ret !=0 ){
+            Append("Error: MRH Update Start Fail\r\n");
+            return;
+        }
+        Append("Notify: System Update end\r\n");
+        QString strCmd = "rm -rf /media/usb0/" + QString(MRH_UPDATE);
+        mrgSystemRunCmd(m_roboConfig->currentXPlugin()->deviceVi(), strCmd.toLocal8Bit().data(), 1);
+
+        reboot();
+      });
 }
 void Widget::slot_undo_finished(int i, QProcess::ExitStatus e)
 {
@@ -111,8 +110,33 @@ void Widget::slot_startMRQUpdate(int)
     connect(updateProcess, &QProcess::readyRead,this,[=](){
         this->ui->textBrowser->append(updateProcess->readAll());
     });
-    connect(updateProcess, SIGNAL(finished(int,QProcess::ExitStatus)),this,SLOT(slot_finished(int, QProcess::ExitStatus)));
+    connect(updateProcess, SIGNAL(finished(int,QProcess::ExitStatus)),this,SLOT(slot_updateMRH(int, QProcess::ExitStatus)));
     QStringList arguments;
     arguments << (sPath.left(sPath.lastIndexOf("/")) + MRQ_UPDATE) << m_addr << recvID;
     updateProcess->start(updateExe, arguments);
+}
+void Widget::Append(const QString &text)
+{
+    emit AppendText(text);
+}
+void Widget::SlotAppendText(const QString &text)
+{
+    ui->textBrowser->append(text);
+}
+void Widget::slotReboot()
+{
+    QMessageBox msgBox;
+    msgBox.setText(tr("\n\tUpdate Success\t\t \n\n\tReboot?\t \n"));
+    msgBox.setStandardButtons(QMessageBox::Ok|QMessageBox::Cancel);
+    if(msgBox.exec() == QMessageBox::Ok){
+        //! reboot
+        if(m_roboConfig->currentXPlugin()->isRebootable()){
+            mrgSystemRunCmd(m_roboConfig->currentXPlugin()->deviceVi(), (char *)"reboot", 0);
+        }
+        this->close();
+    }
+}
+void Widget::reboot()
+{
+    emit sigReboot();
 }

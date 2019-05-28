@@ -447,12 +447,12 @@ int T4OpPanel::posRefreshProc( void *pContext )
         //! record now
         int rec;
         ret = mrgGetRobotCurrentRecord( robot_var(),
-                                        &rec );
+                                        mRefreshPara.mRecordName.toLocal8Bit().data() );
         if ( ret != 0 )
         { sysError( tr("Record read fail"), e_out_log ); break; }
         else
         {
-            mRefreshPara.recNow = rec;
+//            mRefreshPara.recNow = rec;
         }
 
         ret = mrgGetRobotTargetPosition( robot_var(),
@@ -538,7 +538,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
             mRefreshPara.mRoboState = QString( roboStates );
         }
 
-        mRefreshPara.mRecordName = "Record Table";
+//        mRefreshPara.mRecordName = "Record Table";
 
         //! home valid?
         ret = mrgGetRobotHomeRequire( robot_var() );

@@ -69,7 +69,7 @@ EXPORT_API int CALL mrgSysGetSoftVersion(ViSession vi, char * version)
         return -1;
     }
     ret[retlen - 1] = 0;
-    memcpy(version, ret, retlen - 1);
+    memcpy(version, ret, retlen);
     return 0;
 }
 /*
@@ -88,7 +88,7 @@ EXPORT_API int CALL mrgSysGetBackBoardSoftVersion(ViSession vi,char * version)
         return -1;
     }
     ret[retlen - 1] = 0;
-    memcpy(version, ret, retlen - 1);
+    memcpy(version, ret, retlen);
     return 0;
 }
 /*
@@ -107,7 +107,7 @@ EXPORT_API int CALL mrgSysGetBackBoardHardVersion(ViSession vi, char * version)
         return -1;
     }
     ret[retlen - 1] = 0;
-    memcpy(version, ret, retlen - 1);
+    memcpy(version, ret, retlen);
     return 0;
 }
 /*
@@ -250,53 +250,6 @@ EXPORT_API int CALL mrgSysInstructionMode_Query(ViSession vi, int* mode)
     else if (STRCASECMP(ret, "SECTION") == 0)
     {
         *mode = 1;
-    }
-    else
-    {
-        return -2;
-    }
-    return 0;
-}
-/*
-* 设置网络的IP模式 
-* vi :visa设备句柄
-* mode : IP 模式 0->静态IP; 1->DHCP
-* 返回值：0设置成功,-1设置失败
-*/
-EXPORT_API int CALL mrgSysSetNetworkIPMode(ViSession vi,int mode)
-{
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "SYSTEM:NETWORK:IPMODe %s\n", mode==1?"DHCP":"STATIC");
-    if (busWrite(vi, args, strlen(args)) <= 0)
-    {
-        return -1;
-    }
-    return 0;
-}
-/*
-* 获取网络的IP模式
-* vi :visa设备句柄
-* mode : IP 模式 0->静态IP; 1->DHCP
-* 返回值：0执行成功,否则执行失败
-*/
-EXPORT_API int CALL  mrgSysGetNetworkIPMode(ViSession vi, int* mode)
-{
-    char args[SEND_BUF];
-    char as8Ret[20];
-    int retLen = 0;
-    snprintf(args, SEND_BUF, "SYSTEM:NETWORK:IPMODe?\n");
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 20)) <= 0)
-    {
-        return -1;
-    }
-    as8Ret[retLen - 1] = 0;
-    if (STRCASECMP(as8Ret, "DHCP") == 0)
-    {
-        *mode = 1;
-    }
-    else if (STRCASECMP(as8Ret, "DHCP") == 0)
-    {
-        *mode = 0;
     }
     else
     {
@@ -615,11 +568,10 @@ EXPORT_API int CALL mrgSysUpdateFileSearch(ViSession vi, char *fileList)
         return -1;
     }
     ret[retlen - 1] = 0;
-    strncpy(fileList,ret, SEND_BUF);
-
     if( STRCASECMP(ret, "NO_UDISK") == 0 )
         return 1;
-
+    //strncpy(fileList,ret, retlen);
+    memcpy(fileList, ret, retlen);
     return 0;
 }
 

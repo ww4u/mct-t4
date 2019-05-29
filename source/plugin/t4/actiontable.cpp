@@ -8,8 +8,8 @@
 #include "../model/treeitem.h"
 #include "../model/treemodel.h"
 
-#define record_file_name  "motion.mrp"
-
+//#define record_file_name  "motion.mrp"
+#define record_file_name  "MCT_motion.mrp"
 namespace mrx_t4 {
 
 ActionTable::ActionTable(QWidget *parent) :
@@ -259,8 +259,8 @@ int ActionTable::upload()
         QString fileList( QByteArray( fileListAry, fileListLen ) );
 
         //! check the file exist
-        QString fileAry = m_pPlugin->model().toLower() + record_file_name;
-
+        //QString fileAry = m_pPlugin->model().toLower() + record_file_name;
+        QString fileAry = QString(record_file_name);
         if ( fileList.contains( fileAry.toLatin1().data() ) )
         {}
         else
@@ -317,22 +317,19 @@ int ActionTable::download()
 
     QFile f( fileName );
     if( !f.open(QIODevice::ReadOnly )){
-        sysError( tr("Record save fail") );
+        sysError( tr("Record Open Error") );
         return -1;
     }
     QByteArray ba = f.readAll();
     f.close();
 
-    QString fileOutName = m_pPlugin->model().toLower() + record_file_name;
-//    ret = mrgStorageMotionFileSave( pRobo->deviceVi(),
-//                              fileName.toLatin1().data(),
-//                              fileOutName.toLatin1().data()
-//                              );
+    //QString fileOutName = m_pPlugin->model().toLower() + record_file_name;
+    QString fileOutName = QString( record_file_name );
 
     ret = mrgStorageMotionFileSaveContext(pRobo->deviceVi(),
                                           ba.data(),
                                           ba.size(),
-                                          fileOutName.toLocal8Bit().data());
+                                          fileOutName.toLatin1().data());
     if ( ret != 0 )
     {
         sysError( tr("Record save fail") );

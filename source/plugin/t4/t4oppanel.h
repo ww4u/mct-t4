@@ -216,7 +216,7 @@ public:
     double angles[5];
     double deltaAngles[5];
 
-    int recNow;
+    QString recNow;
 
     CPose poseAim;
 

@@ -381,7 +381,7 @@ void T4OpPanel::updateRefreshPara( QEvent *e )
 {
     //! record now
     if ( m_pPlugin->m_pMissionWorking->isRunning() )
-    { ui->spinBox_RecordNumber->setValue( mRefreshPara.recNow ); }
+    { ui->spinBox_RecordNumber->setSpecialValueText(mRefreshPara.recNow);}
 
     //! target
     ui->doubleSpinBox_target_position_x->setValue( mRefreshPara.poseAim.x );
@@ -445,14 +445,14 @@ int T4OpPanel::posRefreshProc( void *pContext )
         float fx,fy,fz;
         double dx,dy,dz;
         //! record now
-        int rec;
+        char t[1024];
         ret = mrgGetRobotCurrentRecord( robot_var(),
-                                        mRefreshPara.mRecordName.toLocal8Bit().data() );
+                                        t );
         if ( ret != 0 )
         { sysError( tr("Record read fail"), e_out_log ); break; }
         else
         {
-//            mRefreshPara.recNow = rec;
+            mRefreshPara.recNow = QString(t);
         }
 
         ret = mrgGetRobotTargetPosition( robot_var(),

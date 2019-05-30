@@ -74,7 +74,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>3</number>
          </property>
          <property name="elideMode">
           <enum>Qt::ElideNone</enum>
@@ -1358,23 +1358,7 @@
                <property name="bottomMargin">
                 <number>6</number>
                </property>
-               <item row="0" column="3">
-                <widget class="QLabel" name="label_9">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>1</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string>Delay Time:</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="14" colspan="2">
+               <item row="0" column="15" colspan="2">
                 <widget class="QToolButton" name="toolButton_debugRun">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -1457,6 +1441,22 @@
                  </property>
                 </widget>
                </item>
+               <item row="0" column="3">
+                <widget class="QLabel" name="label_9">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>1</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Delay Time:</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
                <item row="0" column="7">
                 <widget class="QToolButton" name="btnClr">
                  <property name="sizePolicy">
@@ -1474,26 +1474,6 @@
                  <property name="icon">
                   <iconset resource="../../../res/res.qrc">
                    <normaloff>:/res/image/icon/trash.png</normaloff>:/res/image/icon/trash.png</iconset>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="11">
-                <widget class="QToolButton" name="btnDown">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>1</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="toolTip">
-                  <string>Move Down</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="../../../res/res.qrc">
-                   <normaloff>:/res/image/icon/arrow-down.png</normaloff>:/res/image/icon/arrow-down.png</iconset>
                  </property>
                 </widget>
                </item>
@@ -1566,6 +1546,26 @@
                  </property>
                 </widget>
                </item>
+               <item row="0" column="11">
+                <widget class="QToolButton" name="btnDown">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>1</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="toolTip">
+                  <string>Move Down</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../../../res/res.qrc">
+                   <normaloff>:/res/image/icon/arrow-down.png</normaloff>:/res/image/icon/arrow-down.png</iconset>
+                 </property>
+                </widget>
+               </item>
                <item row="0" column="5">
                 <widget class="QToolButton" name="btnAdd">
                  <property name="sizePolicy">
@@ -1626,8 +1626,8 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="2">
-                <spacer name="horizontalSpacer_7">
+               <item row="0" column="12">
+                <spacer name="horizontalSpacer_9">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -1639,8 +1639,8 @@
                  </property>
                 </spacer>
                </item>
-               <item row="0" column="12">
-                <spacer name="horizontalSpacer_9">
+               <item row="0" column="2">
+                <spacer name="horizontalSpacer_7">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -1686,8 +1686,21 @@
                  </attribute>
                 </widget>
                </item>
-               <item row="1" column="12" colspan="4">
+               <item row="1" column="12" colspan="5">
                 <widget class="LogoutWidget" name="listView"/>
+               </item>
+               <item row="0" column="14">
+                <widget class="QToolButton" name="btnStepNext">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Step Next</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>

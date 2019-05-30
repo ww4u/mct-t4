@@ -840,13 +840,16 @@ void RoboConfig::createRobot( const QStringList &strInfos )
     plugin->setMechanicalVer( strInfos.at(4) );
 
     //！MRQ devinfo
-    plugin->setType_MRQ( strInfos.at(5) );
-    plugin->setSN_MRQ( strInfos.at(6) );
-    plugin->setSoftVer_MRQ( strInfos.at(7) );
-    plugin->setFirmWareHard_MRQ( strInfos.at(8) );
-    plugin->setFirmWareBoot_MRQ(strInfos.at(9));
-    plugin->setFirmWareFpga_MRQ(strInfos.at(10));
-    plugin->setDevId( strInfos.at(11).toInt() );
+    if ( strInfos.size() > 5 )
+    {
+        plugin->setType_MRQ( strInfos.at(5) );
+        plugin->setSN_MRQ( strInfos.at(6) );
+        plugin->setSoftVer_MRQ( strInfos.at(7) );
+        plugin->setFirmWareHard_MRQ( strInfos.at(8) );
+        plugin->setFirmWareBoot_MRQ(strInfos.at(9));
+        plugin->setFirmWareFpga_MRQ(strInfos.at(10));
+        plugin->setDevId( strInfos.at(11).toInt() );
+    }
 
     //! pref
     plugin->attachPref( m_pPref );
@@ -872,7 +875,7 @@ void RoboConfig::createRobot( const QStringList &strInfos )
     pRoboRoot->setToolTip( 0, plugin->viewAddr() );
     plugin->setViewObj( pRoboRoot );
     rootItem()->addChild( pRoboRoot );
-
+logDbg();
     //! auto expand
     rootItem()->setExpanded( true );
     { pRoboRoot->setExpanded( m_pPref->mbAutoExpand ); }

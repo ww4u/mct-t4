@@ -15,8 +15,8 @@ VERSION = 0.0.1.1
 
 CONFIG += C++11 #use lambda
 
-release:DEFINES += QT_NO_WARNING_OUTPUT \
-                   QT_NO_DEBUG_OUTPUT
+#release:DEFINES += QT_NO_WARNING_OUTPUT \
+#                   QT_NO_DEBUG_OUTPUT
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings

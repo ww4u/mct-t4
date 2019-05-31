@@ -69,8 +69,8 @@ public:
     void setFirmWareHard_MRQ( const QString &s ){ mFirmWareHard_MRQ = s; }
     QString FirmWareHard_MRQ(){ return mFirmWareHard_MRQ; }
 
-    void setFirmWareBoot_MRQ( const QString &s ){ mFirmWareHard_MRQ = s; }
-    QString FirmWareBoot_MRQ(){ return mFirmWareHard_MRQ; }
+    void setFirmWareBoot_MRQ( const QString &s ){ mFirmWareBoot_MRQ = s; }
+    QString FirmWareBoot_MRQ(){ return mFirmWareBoot_MRQ; }
 
     void setFirmWareFpga_MRQ( const QString &s ){ mFirmWareFpga_MRQ = s; }
     QString FirmWareFpga_MRQ(){ return mFirmWareFpga_MRQ; }

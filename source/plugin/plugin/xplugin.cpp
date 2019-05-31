@@ -240,6 +240,11 @@ int XPlugin::download()
 int XPlugin::diff()
 { return 0; }
 
+int XPlugin::startDemo( int id )
+{ return 0; }
+int XPlugin::stopDemo( int id )
+{ return 0; }
+
 void XPlugin::emit_timer_op( QTimer *pTimer, int tmo, bool b )
 {
     emit signal_timer_op( pTimer, tmo, b );

@@ -841,6 +841,39 @@ void T4OpPanel::fold()
     m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onFolding), var, tr("Folding") );
 }
 
+int T4OpPanel::requestLoad_debug( const QString &path, const QString &name )
+{
+    QString fileName = path + "/" + name;
+
+    int ret;
+    do
+    {
+        QByteArray theAry;
+        theAry.reserve( max_file_size );
+        ret = mrgStorageReadFile( m_pPlugin->deviceVi(),
+                                  0,
+                                  path.toLatin1().data(),
+                                  name.toLatin1().data(),
+                                  (quint8*)theAry.data() );logDbg()<<ret;
+        if ( ret <= 0 )
+        {
+            ret = -1;
+            break;
+        }
+        theAry.resize( ret );
+        ret = mDebugTable.load( theAry );
+        if ( ret != 0 )
+        { break; }
+    }while ( 0 );
+
+    if ( ret != 0 )
+    {
+        sysError( fileName + " " + tr("load fail") );
+    }
+
+    return ret;
+}
+
 double T4OpPanel::localSpeed()
 {
     return ui->cmbSpeed->currentText().toDouble();

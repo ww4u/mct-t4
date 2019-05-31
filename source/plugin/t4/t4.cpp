@@ -8,10 +8,13 @@
 #include "traceplot.h"
 #include "actiontable.h"
 #include "advpara.h"
+#include "maintain.h"
+
 #include "errormgrtable.h"
 #include "coordinate.h"
 #include "scripteditor.h"
 #include "fileexplorer.h"
+
 
 MRX_T4::MRX_T4( QObject *parent ) : XPlugin( parent )
 {
@@ -61,6 +64,7 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
 //    new_widget( mrx_t4::TracePlot, pWig, tr("Trace"), ":/res/image/icon/409.png" );logDbg();
 //    new_widget( mrx_t4::ScriptEditor, pWig, tr("Script"), ":/res/image/icon/activity.png" );logDbg();
     new_widget( mrx_t4::AdvPara, pWig, tr("Misc"), ":/res/image/icon/qita.png" );
+    new_widget( mrx_t4::Maintain, pWig, tr("Maintain"), ":/res/image/icon/qita.png" );
 
     //! default
     QByteArray ary;
@@ -122,6 +126,7 @@ void MRX_T4::retranslateUi()
     mTreeItems.at(3)->setText( 0, tr("Record Table") ) ;
 //    mTreeItems.at(5)->setText( 0, tr("Error Management") ) ;
     mTreeItems.at(4)->setText( 0, tr("Misc") ) ;
+    mTreeItems.at(5)->setText( 0, tr("Maintain") ) ;
 
     //! tree header
 //    headerList<<"Record"<<"Type"

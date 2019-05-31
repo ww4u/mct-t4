@@ -323,6 +323,53 @@ int ActionTable::diff()
     return 0;
 }
 
+int ActionTable::requestLoad( const QString &path, const QString &name )
+{
+    QString fileName = path + "/" + name;
+
+    int ret = -1;
+    do
+    {
+        TreeModel *pTable = (TreeModel*)ui->view->model();
+        if ( NULL == pTable )
+        {
+            ret = -1;
+            break;
+        }
+
+        //! read
+        QByteArray theAry;
+        theAry.reserve( max_file_size );
+        ret = mrgStorageReadFile( m_pPlugin->deviceVi(),
+                                  0,
+                                  path.toLatin1().data(),
+                                  name.toLatin1().data(),
+                                  (quint8*)theAry.data() );
+        if ( ret <= 0 )
+        {
+            ret = -1;
+            break;
+        }
+
+        theAry.resize( ret );
+
+        QTextStream stream( theAry );
+
+        //! load
+        ret = pTable->loadIn( stream );
+        if ( ret != 0 )
+        { break; }
+
+    }while( 0 );
+
+    if ( ret != 0 )
+    {
+        sysError( fileName + " " + tr("load fail") );
+    }
+
+    return ret;
+}
+
 void ActionTable::enterMission()
 {
     if ( NULL != m_pContextMenu )

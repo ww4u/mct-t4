@@ -243,6 +243,20 @@ int MRX_T4::diff()
     return 0;
 }
 
+int MRX_T4::startDemo( int id )
+{
+    //! load the action table
+
+
+    //! load the debug.xml
+
+    //! start
+
+    return 0;
+}
+int MRX_T4::stopDemo( int id )
+{ return 0; }
+
 int MRX_T4::onXEvent( XEvent *pEvent )
 {
     //! \todo stop/estop/

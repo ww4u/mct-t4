@@ -279,6 +279,9 @@ public:
     void home();
     void fold();
 
+    //! path
+    int requestLoad_debug( const QString &path, const QString &name );
+
 protected:
     double localSpeed();
     double localStep();

@@ -161,6 +161,8 @@ public:
     virtual int download();
     virtual int diff();
 
+    virtual int startDemo( int id );
+    virtual int stopDemo( int id );
 
 public:
     void emit_timer_op( QTimer *pTimer, int tmo, bool b );

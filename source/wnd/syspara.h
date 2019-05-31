@@ -45,8 +45,7 @@ public:
 
     QByteArray mPw;
 
-    //! addr,model,sn
-    //! addr,model,sn
+    //! addr,model,sn,fw,mw,mrqtype,mrq_sn,mrq_sw,mrq_hw,mrq_boot,mrq_fpga,mrq_id
     QStringList mPlugins;
 
 };

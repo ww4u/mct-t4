@@ -247,46 +247,74 @@ int ErrorMgrTable::diff()
 
 void ErrorMgrTable::doSave()
 {
-    MegaTableModel *pTable = (MegaTableModel*)ui->tableView->model();
-    if ( NULL == pTable )
+    QString fileName = m_pPlugin->selfPath() + "/" + error_mgr_file_name;
+
+    int ret = -1;
+    do
     {
-        sysError( tr("Save record fail") );
-        return;
-    }
+        MegaTableModel *pTable = (MegaTableModel*)ui->tableView->model();
+        if ( NULL == pTable )
+        {
+            ret = -1;
+            break;
+        }
 
-    int ret;
+        //! export
+        QByteArray theAry;
+        ret = pTable->save( theAry );
+        if ( ret != 0 )
+        { break; }
 
-    Q_ASSERT( NULL != m_pPlugin );
-    ret = assurePath( m_pPlugin->homePath() );
-    if ( ret != 0 )
-    { return; }
+        //! save
+        ret = mrgStorageWriteFile( plugin_root_dir(),
+                                   error_mgr_file_name,
+                                   (quint8*)theAry.data(),
+                                   theAry.length() );
+        if ( ret != 0 )
+        { break; }
 
-    QString fileName = m_pPlugin->homePath() + "/errmgr.xml";
-    ret = pTable->save( fileName );
+    }while( 0 );
+
     if ( ret != 0 )
     {
         sysError( fileName + " " + tr("save fail") );
-        return;
     }
 }
 void ErrorMgrTable::doLoad()
 {
-    QString fileName = m_pPlugin->homePath() +"/errmgr.xml";
-    int ret;
+    QString fileName = m_pPlugin->selfPath() + "/" + error_mgr_file_name;
+    int ret = -1;
 
-    MegaTableModel *pTable = (MegaTableModel*)ui->tableView->model();
-    if ( NULL == pTable )
+    do
     {
-        sysError( tr("Load record fail") );
-        return;
-    }
+        MegaTableModel *pTable = (MegaTableModel*)ui->tableView->model();
+        if ( NULL == pTable )
+        {
+            ret = -1;
+            break;
+        }
 
-    ret = pTable->load( fileName );
+        QByteArray theAry;
+        theAry.reserve( max_file_size );
+        ret = mrgStorageReadFile( plugin_root_dir(),
+                                  error_mgr_file_name,
+                                  (quint8*)theAry.data() );
+        if ( ret <= 0 )
+        {
+            ret = -2;
+            break;
+        }
+        theAry.resize( ret );
+
+        pTable->load( theAry );
+
+    }while( 0 );
+
     if ( ret != 0 )
     {
         sysError( fileName + " " + tr("load fail") );
-        return;
     }logDbg();
+
 }
 
 void ErrorMgrTable::slot_request_save()

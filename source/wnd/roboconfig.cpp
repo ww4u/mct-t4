@@ -457,12 +457,6 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
             { gc_context_menu(); return; }
             m_pActionUpdate->setIcon( QIcon(":/res/image/icon/fuzhi.png") );
 
-            QAction *actionExplorer = m_pRoboContextMenu->addAction( tr("Explorer") );
-            if ( NULL == actionExplorer )
-            { gc_context_menu(); return; }
-            actionExplorer->setIcon( QIcon(":/res/image/icon/manage.png") );
-
-
             //! add action
             connect(m_pActionOpen, SIGNAL(triggered(bool)), this, SLOT(slotActionOpen()));
             connect(m_pActionClose, SIGNAL(triggered(bool)), this, SLOT(slotActionClose()));
@@ -477,7 +471,6 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
             connect(actionDelete, SIGNAL(triggered(bool)), this, SLOT(slotActionDelete()));
             connect(m_pActionExportLog, SIGNAL(triggered(bool)),this, SLOT(slotActionExportLog()) );
             connect(m_pActionUpdate, SIGNAL(triggered(bool)),this, SLOT(slotActionUpdate()) );
-            connect(actionExplorer, SIGNAL(triggered(bool)), this, SLOT(slotActionExplorer()));
         }
 
         //! modify
@@ -623,20 +616,6 @@ void RoboConfig::slotActionUpdate()
     Widget *w = new Widget;
     w->attatchRoboConfig(this);
     w->exec();
-}
-
-void RoboConfig::slotActionExplorer()
-{
-    Q_ASSERT( NULL != m_pCurPlugin );
-
-    QStringList args;
-    QString str;
-    str = m_pCurPlugin->homePath();
-    str.replace("/", QDir::separator() );
-    args<<str;
-    //! \todo linux
-
-    QProcess::execute( "explorer.exe", args );
 }
 
 void RoboConfig::on_treeWidget_currentItemChanged(QTreeWidgetItem *current,
@@ -880,12 +859,12 @@ logDbg();
     rootItem()->setExpanded( true );
     { pRoboRoot->setExpanded( m_pPref->mbAutoExpand ); }
 
-    //! try load the setup from the local
-    plugin->emit_load();
-
     //! open
     if ( plugin->open() == 0 )
-    {}
+    {
+        //! try load the setup device
+        plugin->emit_load();
+    }
     else
     {
         sysError(  strInfos.at(0) + " " + tr("open fail") );

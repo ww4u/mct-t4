@@ -34,13 +34,20 @@ bool XPluginIntf::isEqual( const QString &_addr,
     return true;
 }
 
-//! addr,model,sn,firmwareVer,mechanicalVer
+
+//! \see SysPara plugin
 QString XPluginIntf::description()
 {
     QStringList strList;
 
-    strList<<addr()<<model()<<SN()<<firmwareVer()<<mechanicalVer();
-
+    strList<<addr()<<model()<<SN()<<firmwareVer()<<mechanicalVer()
+           <<Type_MRQ()
+           <<SN_MRQ()
+           <<SoftVer_MRQ()
+           <<FirmWareHard_MRQ()
+           <<FirmWareBoot_MRQ()
+           <<FirmWareFpga_MRQ()
+           <<QString::number( DevId() );
     return strList.join(',');
 }
 

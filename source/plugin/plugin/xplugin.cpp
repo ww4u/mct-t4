@@ -2,6 +2,8 @@
 #include "../../../include/mystd.h"
 #include "xpluginworkingthread.h"
 
+#include "MegaGateway.h"
+
 XPlugin::XPlugin( QObject *parent ) : XPluginIntf( parent )
 {
     m_pRootWidgetItem = NULL;
@@ -9,7 +11,7 @@ XPlugin::XPlugin( QObject *parent ) : XPluginIntf( parent )
     m_pPref = NULL;
     m_pPanelWidget = NULL;
     m_pViewObj = NULL;
-logDbg()<<QThread::currentThreadId();
+
     //! updateing
 //    m_pUpdateWorking = new XPluginUpdateingThread(  );
     m_pUpdateWorking = new XPluginWorkingThread( this );
@@ -108,13 +110,9 @@ void XPlugin::onOnLine( bool b )
 
 int XPlugin::save( const QString &fileName )
 {
-    QFile file( fileName );
-    if ( file.open( QIODevice::WriteOnly ) )
-    {}
-    else
-    { return -1; }
+    QByteArray theAry;
 
-    QXmlStreamWriter writer( &file );
+    QXmlStreamWriter writer( &theAry );
 
     writer.writeStartDocument();
 
@@ -132,19 +130,44 @@ int XPlugin::save( const QString &fileName )
 
     writer.writeEndDocument();
 
-    file.close();
-
-    return 0;
+    bool bOk;
+    QString path, name;
+    bOk = splitPathName( fileName, path, name );
+    if ( !bOk )
+    { return -1; }
+logDbg()<<path<<name<<theAry.length();
+    int ret = mrgStorageWriteFile( mVi,
+                                   0,
+                                   path.toLatin1().data(),
+                                   name.toLatin1().data(),
+                                   (quint8*)theAry.data(),
+                                   theAry.length()
+                                   );
+    logDbg()<<ret;
+    return ret;
 }
 int XPlugin::load( const QString &fileName )
 {
-    QFile file( fileName );
-    if ( file.open( QIODevice::ReadOnly ) )
-    {}
-    else
+    bool bOk;
+    QString path, name;
+    bOk = splitPathName( fileName, path, name );
+    if ( !bOk )
     { return -1; }
 
-    QXmlStreamReader reader( &file );
+    QByteArray theAry;
+    theAry.reserve( 1024 * 1024 );
+
+    int ret = mrgStorageReadFile( mVi, 0,
+                                  path.toLatin1().data(),
+                                  name.toLatin1().data(),
+                                  (quint8*)theAry.data() );
+    if ( ret <= 0 )
+    { return -1; }
+
+    theAry.resize( ret );
+    logDbg()<<ret;
+
+    QXmlStreamReader reader( theAry );
 
     while( reader.readNextStartElement() )
     {
@@ -167,8 +190,6 @@ int XPlugin::load( const QString &fileName )
         else
         { reader.skipCurrentElement(); }
     }
-
-    file.close();
 
     return 0;
 }
@@ -282,6 +303,11 @@ SysPara * XPlugin::pref()
 QString XPlugin::homePath()
 {
     return QDir::homePath() + "/AppData/Roaming/mct/" + model() + "/" + SN();
+}
+
+QString XPlugin::selfPath()
+{
+    return "/home/megarobo/MCT/" + model() + "/" + SN();
 }
 
 void XPlugin::lockWorking()
@@ -513,6 +539,21 @@ void XPlugin::cancelBgWorking()
     Q_ASSERT( NULL != m_pBgWorking );
     m_pBgWorking->requestInterruption();
     m_pBgWorking->wait();
+}
+
+bool XPlugin::splitPathName( const QString &fullPath,
+                             QString &path, QString &name,
+                             const QString &sep )
+{
+    int id;
+    id = fullPath.lastIndexOf( sep );
+
+    if ( id <= 0 )
+    { return false; }
+
+    name = fullPath.mid( id + 1, fullPath.length() - id + 1 );
+    path = fullPath.mid( 0, id );
+    return true;
 }
 
 bool XPlugin::event(QEvent *pEvent)

@@ -56,7 +56,7 @@ public:
     void setMechanicalVer( const QString &ver );
     QString mechanicalVer();
 
-    //!
+    //! mrq attr
     void setType_MRQ( const QString &s ){ mType = s; }
     QString Type_MRQ(){ return  mType; }
 
@@ -78,6 +78,7 @@ public:
     void setDevId( const int id ){ mDevId = id; }
     int DevId(){ return mDevId; }
 
+public:
     int save( QXmlStreamWriter &writer );
     int load( QXmlStreamReader &reader );
 

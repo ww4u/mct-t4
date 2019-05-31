@@ -186,6 +186,13 @@ int MDataSet::load( QTextStream &stream )
     return doLoad( stream );
 }
 
+int MDataSet::save( QTextStream &stream )
+{
+    int ret = doSave( stream );
+
+    return ret;
+}
+
 MDataSection* MDataSet::tryLoad( const QString &fullName,
                      const QString &modelStr,
                      const QStringList &headers )
@@ -339,6 +346,11 @@ int MDataSet::doSave( QFile &file )
 {
     QTextStream stream( &file );
 
+    return doSave( stream );
+}
+
+int MDataSet::doSave( QTextStream &stream )
+{
     stream << "[" << mModel << "]" <<line_seperator;
 
     for ( int i = 0; i < mSections.size(); i++ )

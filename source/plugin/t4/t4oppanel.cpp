@@ -1578,18 +1578,34 @@ void T4OpPanel::slot_ack_error()
 }
 
 void T4OpPanel::slot_save_debug()
-{
+{logDbg();
     Q_ASSERT( NULL != m_pPlugin );
     int ret;
 
     //! debug
-    QString fileName = m_pPlugin->homePath() + "/debug.xml";
-    ret = mDebugTable.save( fileName );
+    QString fileName = m_pPlugin->selfPath() + "/" + debug_file_name;
+
+    do
+    {
+        QByteArray theAry;
+        ret = mDebugTable.save( theAry );
+        if ( ret != 0 )
+        { break; }
+
+        ret = mrgStorageWriteFile( plugin_root_dir(),
+                                   debug_file_name,
+                                   (quint8*)theAry.data(),
+                                   theAry.length()
+                             );
+        if ( ret != 0 )
+        { break; }
+    }while( 0 );
+
     if ( ret != 0 )
     {
         sysError( fileName + tr(" save fail") );
     }
-    logDbg();
+
 }
 void T4OpPanel::slot_save_diagnosis()
 {
@@ -1597,8 +1613,23 @@ void T4OpPanel::slot_save_diagnosis()
     int ret;
 
     //! diagnosis
-    QString fileName = m_pPlugin->homePath() + "/diagnosis.xml";
-    ret = mDiagTable.save( fileName );
+    QString fileName = m_pPlugin->selfPath() + "/" + diagnosis_file_name;
+
+    do
+    {
+        QByteArray theAry;
+        ret = mDiagTable.save( theAry );
+        if ( ret != 0 )
+        { break; }
+
+        ret = mrgStorageWriteFile( plugin_root_dir(),
+                                   diagnosis_file_name,
+                                   (quint8*)theAry.data(),
+                                   theAry.length() );
+        if ( ret != 0 )
+        { break; }
+    }while( 0 );
+
     if ( ret != 0 )
     {
         sysError( fileName + tr(" load fail") );
@@ -1615,15 +1646,52 @@ void T4OpPanel::slot_request_load()
 {
     Q_ASSERT( NULL != m_pPlugin );
     int ret;
-    QString fileName = m_pPlugin->homePath() + "/debug.xml";
-    ret = mDebugTable.load( fileName );
+
+    QString fileName;
+
+    //! debug
+    fileName = m_pPlugin->selfPath() + "/" + debug_file_name;
+    do
+    {
+        QByteArray theAry;
+        theAry.reserve( max_file_size );
+        ret = mrgStorageReadFile( plugin_root_dir(),
+                                  debug_file_name,
+                                  (quint8*)theAry.data() );logDbg()<<ret;
+        if ( ret <= 0 )
+        {
+            ret = -1;
+            break;
+        }
+        theAry.resize( ret );
+        ret = mDebugTable.load( theAry );
+        if ( ret != 0 )
+        { break; }
+    }while( 0 );
     if ( ret != 0 )
     {
         sysError( fileName + tr(" load fail") );
     }
 
-    fileName = m_pPlugin->homePath() + "/diagnosis.xml";
-    ret = mDiagTable.load( fileName );
+    //! diagnosis
+    fileName = m_pPlugin->selfPath() + "/" + diagnosis_file_name;
+    do
+    {
+        QByteArray theAry;
+        theAry.reserve( max_file_size );
+        ret = mrgStorageReadFile( plugin_root_dir(),
+                                  diagnosis_file_name,
+                                  (quint8*)theAry.data() );logDbg()<<ret;
+        if ( ret <= 0 )
+        {
+            ret = -1;
+            break;
+        }
+        theAry.resize( ret );
+        ret = mDiagTable.load( theAry );
+        if ( ret != 0 )
+        { break; }
+    }while( 0 );
     if ( ret != 0 )
     {
         sysError( fileName + tr(" load fail") );
@@ -1743,8 +1811,7 @@ void T4OpPanel::slot_digitalInputsCustomContextMenuRequested( const QPoint &p )
 }
 
 void T4OpPanel::slot_Rename()
-{logDbg();
-
+{
     bool ok;
     QRegExp regExp("\\w+");
     regExp.setPatternSyntax(QRegExp::Wildcard);
@@ -1762,7 +1829,9 @@ void T4OpPanel::slot_Rename()
             pRobo->listIoName << ui->DIN1->Name() << ui->DIN2->Name() << ui->DIN3->Name() << ui->DIN4->Name()
                               << ui->DIN5->Name() << ui->START->Name() << ui->RESET->Name();
             //t->emit_save(); not work
-            pRobo->save( pRobo->homePath() + "/" + "config.xml" );
+//            pRobo->save( pRobo->homePath() + "/" + "config.xml" );
+//            m_pPlugin->emit_save();
+            emit signal_request_save();
         }
     }
 }

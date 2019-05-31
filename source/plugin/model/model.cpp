@@ -63,6 +63,25 @@ int MegaTableModel::save( const QString &fileName )
 
     return ret;
 }
+
+int MegaTableModel::save( QByteArray &ary )
+{
+    int ret;
+    QXmlStreamWriter writer( &ary );
+
+    writer.writeStartDocument();
+
+    writer.writeStartElement( mUri );
+
+        ret = serialOut( writer );
+
+    writer.writeEndElement();
+
+    writer.writeEndDocument();
+
+    return ret;
+}
+
 int MegaTableModel::load( const QString &fileName )
 {
     QFile file( fileName );

@@ -55,6 +55,7 @@ public:
     int save( const QString &fullName );
 
     int load( QTextStream &stream );
+    int save( QTextStream &stream );
 
     MDataSection * tryLoad( const QString &fullName,
                  const QString &model,
@@ -67,6 +68,7 @@ protected:
     int doLoad( QTextStream &stream );
 
     int doSave( QFile &file );
+    int doSave( QTextStream &stream );
 
     bool verifyLine( QString &ary );
     bool commentLine( QString &ary );

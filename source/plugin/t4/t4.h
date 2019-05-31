@@ -72,6 +72,20 @@
 #define rel_to_abs_speed( rel ) ( rel/100.0*pRobo->mMaxTerminalSpeed )
 
 
+//! file names
+#define record_file_name  "MCT_motion.mrp"
+#define error_mgr_file_name "errmgr.xml"
+#define config_file_name  "config.xml"
+#define debug_file_name "debug.xml"
+#define diagnosis_file_name "diagnosis.xml"
+
+#define max_file_size       (1024*1024)
+
+#define plugin_root_path()  m_pPlugin->selfPath().toLatin1().data()
+#define plugin_root_dir()   m_pPlugin->deviceVi(),\
+                            0,\
+                            plugin_root_path()
+
 namespace mrx_t4 {
 class ActionTable;
 class T4OpPanel;

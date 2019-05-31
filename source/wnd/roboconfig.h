@@ -124,7 +124,6 @@ private slots:
 
     void slotActionExportLog();
     void slotActionUpdate();
-    void slotActionExplorer();
 
 //    void slotStoreEnd(int val);
 

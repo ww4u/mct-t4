@@ -183,6 +183,7 @@ public:
     QWidget *panel();
 
     QString homePath();
+    QString selfPath();
 public:
     void lockWorking();
     void unlockWorking();
@@ -234,6 +235,7 @@ public:
     void cancelBgWorking();
 
 protected:
+    bool splitPathName( const QString &fullPath, QString &path, QString &name, const QString &sep="/" );
     virtual bool event(QEvent *event);
     virtual int onXEvent( XEvent *pEvent );
 

@@ -336,7 +336,6 @@ void MegaInterface::on_pushButton_Scan_clicked()
                 if ( idCnt < 1 )
                 { break; }
 
-//                char roboType[64];
                 QString strType;
                 for ( int i = 0; i < idCnt; i++ )
                 {
@@ -363,7 +362,15 @@ void MegaInterface::on_pushButton_Scan_clicked()
                     if(ret <= 0){
                         continue;
                     }else{}
-
+logDbg()<<tInfo.mFMSN;
+                    //! \note use the device sn
+                    char sns[128];
+                    ret = mrgGetDeviceSerialNumber( visa, roboIds[i], sns );
+                    if ( ret != 0 )
+                    { continue; }
+//                    else
+//                    { tInfo.mFMSN = sns; }
+logDbg()<<tInfo.mFMSN;
                     tInfo.mDevInfo.mId = devName[0];
 
                     char buf[128];
@@ -372,8 +379,9 @@ void MegaInterface::on_pushButton_Scan_clicked()
                         continue;
                     }else{}
 
-                    QString t = QString::fromLatin1(buf, 128);
+                    QString t( buf );
                     QStringList tList = t.split(":");
+
                     tInfo.mDevInfo.mSN = tList.at(0);
                     tInfo.mDevInfo.mFirmWareHard = tList.at(1);
                     tInfo.mDevInfo.mSoftVer = tList.at(2);

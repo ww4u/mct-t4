@@ -1,10 +1,6 @@
 #include <QDir>
 #include "t4.h"
 
-
-#define cfg_file_path  QDir::homePath() + "/mct"
-#define cfg_file_name  cfg_file_path + "/sn.xml"
-
 int MRX_T4::serialOut(QXmlStreamWriter &writer)
 {
     return T4Para::serialOut( writer );
@@ -18,15 +14,10 @@ void MRX_T4::slot_save_setting()
 {
     int ret;
 
-    QString path = homePath();
-
-    //! create path
-    ret = assurePath( path );
-    if ( ret != 0 )
-    { return; }
+    QString path = selfPath();
 
     //! save file
-    QString setupfileName = path + "/" + "config.xml";
+    QString setupfileName = path + "/" + config_file_name;
     ret = save( setupfileName );
     if ( ret != 0 )
     {
@@ -40,10 +31,10 @@ void MRX_T4::slot_load_setting()
 {
     int ret;
 
-    QString path = homePath();
+    QString path = selfPath();
 
     //! save file
-    QString setupfileName = path + "/" + "config.xml";
+    QString setupfileName = path + "/" + config_file_name;
     ret = load( setupfileName );
     if ( ret != 0 )
     {

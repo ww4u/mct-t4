@@ -1,5 +1,5 @@
 #include "storage.h"
-
+#include "system.h"
 #define SEND_BUF  (100)
 
 /*
@@ -218,6 +218,10 @@ EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *ps8Path
     {
         return -2;
     }
+
+    sprintf( as8Ret, "mkdir -p %s", ps8Path );
+    mrgSystemRunCmd( vi, as8Ret, 0 );
+
     snprintf(args, SEND_BUF, "STORage:FILe:WRITe:START %s,%s,%s\n",isUdisk?"UDISK":"LOCAL", ps8Path, ps8SaveFileName);
     if (busWrite(vi, args, strlen(args)) == 0)//写入文件名
     {

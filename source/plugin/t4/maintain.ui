@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -33,7 +33,7 @@
         </rect>
        </property>
        <property name="text">
-        <string>PushButton</string>
+        <string>Update</string>
        </property>
       </widget>
      </widget>
@@ -72,6 +72,44 @@
       <attribute name="title">
        <string>Demo</string>
       </attribute>
+      <widget class="QComboBox" name="comboBox">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>40</y>
+         <width>69</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <item>
+        <property name="text">
+         <string>Demo1</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Demo2</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Demo3</string>
+        </property>
+       </item>
+      </widget>
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>40</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>start</string>
+       </property>
+      </widget>
      </widget>
     </widget>
    </item>

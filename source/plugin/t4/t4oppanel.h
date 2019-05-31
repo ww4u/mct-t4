@@ -172,6 +172,7 @@ public:
         monitor_event,
         update_pose,
         communicate_fail,
+        demo_start,
     };
 
 public:
@@ -341,6 +342,8 @@ protected:
 
     void on_debug_enter( int id, int r, QVariantList &vars );
     void on_debug_exit( int id, int r );
+
+    void on_demo_start( );
 
 private:
     Ui::T4OpPanel *ui;

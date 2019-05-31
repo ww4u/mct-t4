@@ -17,6 +17,26 @@ public:
     explicit Maintain(QWidget *parent = 0);
     ~Maintain();
 
+protected:
+    virtual void enterMission();
+    virtual void exitMission();
+public:
+    virtual void setOperAble( bool b );
+    virtual void setOpened( bool b );
+
+private slots:
+    void on_btnDemo_clicked();
+
+    void on_btnRestart_clicked();
+
+    void on_btnShutDown_clicked();
+
+    void on_btnReset_clicked();
+
+    void on_btnUpdate_clicked();
+
+    void on_btnFold_clicked();
+
 private:
     Ui::Maintain *ui;
 };

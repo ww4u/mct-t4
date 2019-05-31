@@ -186,6 +186,8 @@ public:
 
     QString homePath();
     QString selfPath();
+    QString demoPath();
+
 public:
     void lockWorking();
     void unlockWorking();

@@ -220,6 +220,10 @@ bool T4OpPanel::event(QEvent *e)
                 m_pPlugin->close();
 
             }
+            else if ( (int)pEvent->type() == OpEvent::demo_start )
+            {
+                on_demo_start( );
+            }
             else
             {}
 
@@ -2453,6 +2457,14 @@ void T4OpPanel::on_debug_enter( int id, int r, QVariantList &vars )
 void T4OpPanel::on_debug_exit( int id, int r )
 {
 
+}
+
+void T4OpPanel::on_demo_start( )
+{
+    //! single
+    ui->chkCyclic->setChecked( false );
+
+    on_toolButton_debugRun_clicked();
 }
 
 //! start the run thread

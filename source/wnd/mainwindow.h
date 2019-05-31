@@ -125,8 +125,6 @@ private slots:
 
     void on_actionReboot_triggered();
 
-    void on_actionWifi_triggered();
-
     void on_actionPref_triggered();
 
     void on_actionChange_Password_triggered();

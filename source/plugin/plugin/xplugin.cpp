@@ -315,6 +315,11 @@ QString XPlugin::selfPath()
     return "/home/megarobo/MCT/" + model() + "/" + SN();
 }
 
+QString XPlugin::demoPath()
+{
+    return "/home/megarobo/MCT/" + model() + "/demo";
+}
+
 void XPlugin::lockWorking()
 {
     mEmergMutex.lock();

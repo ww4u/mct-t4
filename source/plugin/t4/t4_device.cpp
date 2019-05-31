@@ -207,24 +207,24 @@ void MRX_T4::fold()
 
 void MRX_T4::reboot()
 {
-    //! close
-    //close();
-
-    //! \todo api
+    //! \todo the the bg thread
+    //!
     int ret = mrgSystemRunCmd(mVi,(char*)"reboot", 0);
     if(ret != 0){
         sysError( tr("Reboot fail") );
     }
+
+    close();
 }
 void MRX_T4::powerOff()
 {
-    //close();
-
-    //! \todo api
+    //! \todo the the bg thread
     int ret = mrgSystemRunCmd(mVi,(char*)"poweroff",0);
     if(ret != 0){
         sysError( tr("Poweroff fail") );
     }
+
+    close();
 }
 
 int MRX_T4::upload()
@@ -245,17 +245,35 @@ int MRX_T4::diff()
 
 int MRX_T4::startDemo( int id )
 {
-    //! load the action table
+    int ret;
 
+    QString strPath = demoPath() + "/" + QString::number( id );
+
+    //! load the action table
+    ret = m_pRecordView->requestLoad( strPath, record_file_name );
+    if ( ret != 0 )
+    { return ret; }
 
     //! load the debug.xml
+    ret = m_pOpPanel->requestLoad_debug( strPath, debug_file_name );
+    if ( ret != 0 )
+    {
+        return ret;
+    }
 
     //! start
+    mrx_t4::OpEvent *demoEvent = new mrx_t4::OpEvent( mrx_t4::OpEvent::demo_start );
+    if ( NULL != demoEvent )
+    { qApp->postEvent( m_pOpPanel, demoEvent ); }
+
+    return ret;
+}
+int MRX_T4::stopDemo( int id )
+{
+
 
     return 0;
 }
-int MRX_T4::stopDemo( int id )
-{ return 0; }
 
 int MRX_T4::onXEvent( XEvent *pEvent )
 {

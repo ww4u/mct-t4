@@ -16,6 +16,8 @@ Maintain::Maintain(QWidget *parent) :
     ui->setupUi(this);
 
     setContextHelp("maintain");
+
+    on_cmbDemo_currentIndexChanged( ui->cmbDemo->currentIndex() );
 }
 
 Maintain::~Maintain()
@@ -44,6 +46,15 @@ void Maintain::setOpened( bool b )
     logDbg()<<b;
 }
 
+void Maintain::on_cmbDemo_currentIndexChanged(int index)
+{
+    //! set the demo info
+    //! \todo add more info
+    QString demo1Info = tr( "The Test file" );
+
+    ui->txtDemoInfo->setText( demo1Info );
+}
+
 void Maintain::on_btnDemo_clicked()
 {
     Q_ASSERT( NULL != m_pPlugin );
@@ -54,7 +65,6 @@ void Maintain::on_btnDemo_clicked()
     {
         sysPrompt( tr("Demo fail"), 0 );
     }
-
 }
 
 void Maintain::on_btnRestart_clicked()
@@ -85,4 +95,15 @@ void Maintain::on_btnFold_clicked()
     m_pPlugin->fold();
 }
 
+void Maintain::on_btnBackup_clicked()
+{
+    QInputDialog inputText;
+
+    QString descripton = inputText.show();
+
 }
+
+}
+
+
+

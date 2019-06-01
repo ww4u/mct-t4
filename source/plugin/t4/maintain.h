@@ -25,6 +25,8 @@ public:
     virtual void setOpened( bool b );
 
 private slots:
+    void on_cmbDemo_currentIndexChanged(int index);
+
     void on_btnDemo_clicked();
 
     void on_btnRestart_clicked();
@@ -36,6 +38,8 @@ private slots:
     void on_btnUpdate_clicked();
 
     void on_btnFold_clicked();
+
+
 
 private:
     Ui::Maintain *ui;

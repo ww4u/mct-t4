@@ -41,6 +41,8 @@ private slots:
 
     void on_btnBackup_clicked();
 
+    void on_btnClearBackup_clicked();
+
 private:
     Ui::Maintain *ui;
 };

@@ -1,6 +1,6 @@
 #include "storage.h"
 #include "system.h"
-#define SEND_BUF  (100)
+#define SEND_BUF  ( 256 )
 
 /*
 * 查询存储器中，可用的运动文件

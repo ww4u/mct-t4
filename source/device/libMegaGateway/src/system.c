@@ -1,6 +1,6 @@
 #include "system.h"
 
-#define SEND_BUF  (100)
+#define SEND_BUF  (256)
 /*
  * 识别网关设备（ON时，LED1常亮；OFF时LED闪烁）
  * vi :visa设备句柄

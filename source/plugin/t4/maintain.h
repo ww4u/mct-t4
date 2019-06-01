@@ -39,7 +39,7 @@ private slots:
 
     void on_btnFold_clicked();
 
-
+    void on_btnBackup_clicked();
 
 private:
     Ui::Maintain *ui;

@@ -17,13 +17,26 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
        <string>Operate</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
+       <item row="4" column="0" colspan="2">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>355</width>
+           <height>149</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
        <item row="0" column="0">
         <widget class="QPushButton" name="btnUpdate">
          <property name="text">
@@ -58,18 +71,12 @@
          </property>
         </spacer>
        </item>
-       <item row="3" column="0" colspan="2">
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
+       <item row="3" column="0">
+        <widget class="QPushButton" name="btnBackup">
+         <property name="text">
+          <string>Backup</string>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>355</width>
-           <height>149</height>
-          </size>
-         </property>
-        </spacer>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -143,16 +150,6 @@
          <item>
           <property name="text">
            <string>Demo1</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Demo2</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Demo3</string>
           </property>
          </item>
         </widget>

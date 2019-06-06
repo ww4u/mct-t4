@@ -1,7 +1,5 @@
 #include "device.h"
 
-#define  SEND_BUF   (100)
-
 /*
 * 查找网关。
 * bus :总线类型. ＝0，网络接口；＝1，USBTMC接口
@@ -57,12 +55,7 @@ EXPORT_API int CALL mrgGateWaySendCmd(ViSession  vi, char* cmd, int len)
 EXPORT_API int CALL mrgGateWayRead(ViSession  vi, char * output, int wantlen)
 {
     int retlen = 0;
-    if (wantlen > 1024)
-    {
-        //return -1;
-    }
-    retlen = busRead(vi,output, wantlen);
-    output[retlen] = 0;
+    retlen = busRead(vi,output, wantlen>1024?1024:wantlen);
     return retlen;
 }
 /*
@@ -77,11 +70,7 @@ EXPORT_API int CALL mrgGateWayRead(ViSession  vi, char * output, int wantlen)
 EXPORT_API int CALL mrgGateWayQuery(ViSession  vi, char* cmd, char * output, int wantlen)
 {
     int retlen = 0;
-    if (wantlen > 1024)
-    {
-        return -1;
-    }
-    retlen = busQuery(vi, cmd, strlen(cmd), output, wantlen);
+    retlen = busQuery(vi, cmd, strlen(cmd), output, wantlen>1024?1024:wantlen);
     return retlen;
 }
 
@@ -93,18 +82,15 @@ EXPORT_API int CALL mrgGateWayQuery(ViSession  vi, char* cmd, char * output, int
 */
 EXPORT_API int CALL mrgGateWayIDNQuery(ViSession  vi, char * idn)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retlen = 0;
-    if (idn == NULL)
-    {
-        return -2;
-    }
-    snprintf(args, SEND_BUF, "*IDN?\n");
-    if ((retlen = busQuery(vi, args, strlen(args), idn, 100)) <= 0)
+    char as8Ret[RECV_LEN] = "";
+    snprintf(args, SEND_LEN, "*IDN?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) <= 0)
     {
         return -1;
     }
-    idn[retlen-1] = 0;
+    strcpy(idn, as8Ret);
     return 0;
 }
 
@@ -116,21 +102,20 @@ EXPORT_API int CALL mrgGateWayIDNQuery(ViSession  vi, char * idn)
 */
 EXPORT_API int CALL mrgFindDevice(ViSession vi, int timeout_ms)
 {
-    char ret[40];
-    char args[SEND_BUF];
+    char ret[RECV_LEN];
+    char args[SEND_LEN];
     int retlen = 0;
-    snprintf(args, SEND_BUF, "DEVICE:SEARCH\n");
+    snprintf(args, SEND_LEN, "DEVICE:SEARCH\n");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return 0;
     }
     msSleep(timeout_ms);
-    snprintf(args, SEND_BUF, "DEVICE:COUNT?\n");
-    if ((retlen = busQuery(vi, args, strlen(args), ret, 40)) <= 0)
+    snprintf(args, SEND_LEN, "DEVICE:COUNT?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), ret, sizeof(ret))) <= 0)
     {
         return 0;
     }
-    ret[retlen] = 0;
     return atoi(ret);
 }
 /*
@@ -144,20 +129,19 @@ EXPORT_API int CALL mrgGetDeviceName(ViSession vi, int * name)
     int count = 0;
     int retlen = 0;
     int tmp = 0;
-    char args[SEND_BUF];
-    char names[1024];
+    char args[SEND_LEN];
+    char names[RECV_LEN];
     char *p;
     char *pNext = NULL;
     if (name == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:NAME?\n");
-    if ((retlen = busQuery(vi, args, strlen(args), names, 1024)) == 0)
+    snprintf(args, SEND_LEN, "DEVICE:NAME?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), names, sizeof(names))) == 0)
     {
         return -1;
     }
-    name[retlen - 1] = 0;
     p = STRTOK_S(names, ",", &pNext);
     while (p)
     {
@@ -179,18 +163,19 @@ EXPORT_API int CALL mrgGetDeviceName(ViSession vi, int * name)
 */
 EXPORT_API int CALL mrgGetDeviceType(ViSession vi, int name, char * ps8Type)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int len = 0;
     if (ps8Type == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:TYPe? %d\n", name);
-    if ((len = busQuery(vi, args, strlen(args), ps8Type, 12)) == 0)
+    snprintf(args, SEND_LEN, "DEVICE:TYPe? %d\n", name);
+    if ((len = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0)
     {
         return -1;
     }
-    ps8Type[len-1] = '\0';
+    strcpy(ps8Type,as8Ret);
     return 0;
 }
 /*
@@ -201,16 +186,12 @@ EXPORT_API int CALL mrgGetDeviceType(ViSession vi, int name, char * ps8Type)
 */
 EXPORT_API int CALL mrgGetDeviceChannelCount(ViSession vi, int name)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retLen = 0;
-    char state[10];
-    snprintf(args, SEND_BUF, "DEVice:CHANnel:COUNt? %d\n", name);
-    if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
+    char state[RECV_LEN];
+    snprintf(args, SEND_LEN, "DEVice:CHANnel:COUNt? %d\n", name);
+    if ((retLen = busQuery(vi, args, strlen(args), state, sizeof(state))) == 0) {
         return -1;
-    }
-    else
-    {
-        state[retLen - 1] = '\0';
     }
     return atoi(state);
 }
@@ -222,20 +203,15 @@ EXPORT_API int CALL mrgGetDeviceChannelCount(ViSession vi, int name)
 */
 EXPORT_API int CALL mrgGetDeviceInfo(ViSession vi, int name, char * ps8Info)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retlen = 0;
-    if (ps8Info == NULL)
-    {
-        return -2;
-    }
-    snprintf(args, SEND_BUF, "DEVICE:FIRMWARE:ALL? %d\n", name);
-    if ((retlen = busQuery(vi, args, strlen(args), ps8Info, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:FIRMWARE:ALL? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else {
-        ps8Info[retlen - 1] = '\0';
-        return 0;
-    }
+    strcpy(ps8Info,as8Ret);
+    return 0;
 }
 /*
 * 获取指定设备的软件版本号
@@ -246,20 +222,15 @@ EXPORT_API int CALL mrgGetDeviceInfo(ViSession vi, int name, char * ps8Info)
 */
 EXPORT_API int CALL mrgGetDeviceSoftVersion(ViSession vi, int name, char * ps8Version)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int len = 0;
-    if (ps8Version == NULL)
-    {
-        return -2;
-    }
-    snprintf(args, SEND_BUF, "DEVICE:FIRMWARE:SOFT? %d\n", name);
-    if ((len = busQuery(vi, args, strlen(args), ps8Version, 20)) == 0) {
+    char as8Ret[RECV_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:FIRMWARE:SOFT? %d\n", name);
+    if ((len = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else {
-        ps8Version[len-1] = '\0';
-        return 0;
-    }
+    strcpy(ps8Version, as8Ret);
+    return 0;
 }
 /*
 *查询设备硬件版本号
@@ -270,20 +241,14 @@ EXPORT_API int CALL mrgGetDeviceSoftVersion(ViSession vi, int name, char * ps8Ve
 */
 EXPORT_API int CALL mrgGetDeviceFirmWareHard(ViSession vi, int name, char *buf)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
-    if (buf == NULL)
-    {
-        return -2;
-    }
-    snprintf(args, SEND_BUF, "DEVice:FIRMware:HARD? %d\n", name);
-    if ((retLen = busQuery(vi, args, strlen(args), buf, 12)) == 0) {
+    snprintf(args, SEND_LEN, "DEVice:FIRMware:HARD? %d\n", name);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        buf[retLen - 1] = '\0';
-    }
+    strcpy(buf, as8Ret);
     return 0;
 }
 /*
@@ -295,19 +260,11 @@ EXPORT_API int CALL mrgGetDeviceFirmWareHard(ViSession vi, int name, char *buf)
 */
 EXPORT_API int CALL mrgGetDeviceFirmWareBoot(ViSession vi, int name, char *buf)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retLen = 0;
-    if (buf == NULL)
-    {
-        return -2;
-    }
-    snprintf(args, SEND_BUF, "DEVice:FIRMware:BOOT? %d\n", name);
-    if ((retLen = busQuery(vi, args, strlen(args), buf, 12)) == 0) {
+    snprintf(args, SEND_LEN, "DEVice:FIRMware:BOOT? %d\n", name);
+    if ((retLen = busQuery(vi, args, strlen(args), buf, RECV_LEN)) == 0) {
         return -1;
-    }
-    else
-    {
-        buf[retLen - 1] = '\0';
     }
     return 0;
 }
@@ -320,19 +277,11 @@ EXPORT_API int CALL mrgGetDeviceFirmWareBoot(ViSession vi, int name, char *buf)
 */
 EXPORT_API int CALL mrgGetDeviceFirmWareFpga(ViSession vi, int name, char *buf)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retLen = 0;
-    if (buf == NULL)
-    {
-        return -2;
-    }
-    snprintf(args, SEND_BUF, "DEVice:FIRMware:FPGA? %d\n", name);
-    if ((retLen = busQuery(vi, args, strlen(args), buf, 40)) == 0) {
+    snprintf(args, SEND_LEN, "DEVice:FIRMware:FPGA? %d\n", name);
+    if ((retLen = busQuery(vi, args, strlen(args), buf, RECV_LEN)) == 0) {
         return -1;
-    }
-    else
-    {
-        buf[retLen - 1] = '\0';
     }
     return 0;
 }
@@ -344,19 +293,12 @@ EXPORT_API int CALL mrgGetDeviceFirmWareFpga(ViSession vi, int name, char *buf)
  */
 EXPORT_API int CALL mrgGetDeviceSerialNumber(ViSession vi, int name, char * ps8Serial)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int len = 0;
-    if (ps8Serial == NULL)
-    {
-        return -2;
-    }
-    snprintf(args, SEND_BUF, "DEVICE:FIRMWARE:SN? %d\n", name);
-    if ((len = busQuery(vi, args, strlen(args), ps8Serial, 20)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:FIRMWARE:SN? %d\n", name);
+    if ((len = busQuery(vi, args, strlen(args), ps8Serial, RECV_LEN)) == 0) {
         return -1;
     }
-    else {
-        ps8Serial[len-1] = '\0';
-        return 0;
-    }
+    return 0;
 }
 

@@ -1,6 +1,5 @@
 #include "mrqdevice.h"
 
-#define  SEND_BUF   (100)
 #define     WAVETABLE_MIN   0   //! 最小波表号
 #define     WAVETABLE_MAX   9   //! 最大波表号
 #define     DEFAULT_WAVETABLE (-1)
@@ -44,8 +43,8 @@ char *motionStateToString(int fun1)
 */
 EXPORT_API int CALL mrgMRQIdentify(ViSession vi, int name, int state)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:IDENtify %d,%s\n", name, state ? "ON" : "OFF");
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:IDENtify %d,%s\n", name, state ? "ON" : "OFF");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -62,22 +61,19 @@ EXPORT_API int CALL mrgMRQIdentify(ViSession vi, int name, int state)
 */
 EXPORT_API int CALL mrgGetMRQDioState(ViSession vi, int name, unsigned short * pu16State)
 {
-    char args[SEND_BUF];
-    char as8Ret[100] = { 0 };
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN] = { 0 };
     int len = 0;
     if (pu16State == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVice:DIOSTATe? %d", name);
-    if ((len = busQuery(vi, args, strlen(args), as8Ret, 20)) == 0) {
+    snprintf(args, SEND_LEN, "DEVice:DIOSTATe? %d", name);
+    if ((len = busQuery(vi, args, strlen(args), as8Ret, RECV_LEN)) == 0) {
         return -1;
     }
-    else {
-        as8Ret[len - 1] = '\0';
-        *pu16State = atoi(as8Ret);
-        return 0;
-    }
+    *pu16State = atoi(as8Ret);
+    return 0;
 }
 /*
 * 将指定的设备分在一个组中
@@ -89,22 +85,19 @@ EXPORT_API int CALL mrgGetMRQDioState(ViSession vi, int name, unsigned short * p
 */
 EXPORT_API int CALL mrgGetMRQGroup(ViSession vi, char * devList, unsigned int * groupID,int grouptype)
 {
-    char args[SEND_BUF];
-    char as8Ret[100] = { 0 };
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN] = { 0 };
     int len = 0;
     if (devList == NULL || groupID == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVice:GROUP:ALLOC? (%s),%s", devList, grouptype?"GROUPID2": "GROUPID1");
-    if ((len = busQuery(vi, args, strlen(args), as8Ret, 20)) == 0) {
+    snprintf(args, SEND_LEN, "DEVice:GROUP:ALLOC? (%s),%s", devList, grouptype?"GROUPID2": "GROUPID1");
+    if ((len = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else {
-        as8Ret[len - 1] = '\0';
-        *groupID = atoi(as8Ret);
-        return 0;
-    }
+    *groupID = atoi(as8Ret);
+    return 0;
 }
 
 /*
@@ -117,8 +110,8 @@ EXPORT_API int CALL mrgGetMRQGroup(ViSession vi, char * devList, unsigned int * 
 */
 EXPORT_API int CALL mrgMRQMotionStateReport(ViSession vi, int name, int ch, int state)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:STATe:REPORt %d,%d,%s\n",
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTion:STATe:REPORt %d,%d,%s\n",
              name, ch, state == 0 ? "ACTIVE" : "QUERY");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
@@ -136,21 +129,18 @@ EXPORT_API int CALL mrgMRQMotionStateReport(ViSession vi, int name, int ch, int 
 */
 EXPORT_API int CALL mrgMRQMotionStateReport_Query(ViSession vi, int name, int ch,int *ps32State)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retLen = 0;
-    char as8Ret[100] = { 0 };
+    char as8Ret[RECV_LEN] = { 0 };
     if (ps32State == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:STATe:REPORt? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTion:STATe:REPORt? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     if(STRCASECMP(as8Ret,"QUERY") == 0 || STRCASECMP(as8Ret,"1") == 0)
     {
         *ps32State = 1;
@@ -175,13 +165,13 @@ EXPORT_API int CALL mrgMRQMotionStateReport_Query(ViSession vi, int name, int ch
 */
 EXPORT_API int CALL mrgMRQMotionTrigSource(ViSession vi, int name, int ch, int source)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     char *ps8Source[5] = { "SOFTWARE" ,"DIGITALIO" ,"CAN" ,"ALL" };
     if (source > 3)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:TRIGger:SOURce %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTion:TRIGger:SOURce %d,%d,%s\n",
              name, ch, ps8Source[source]);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -198,21 +188,18 @@ EXPORT_API int CALL mrgMRQMotionTrigSource(ViSession vi, int name, int ch, int s
 */
 EXPORT_API int CALL mrgMRQMotionTrigSource_Query(ViSession vi, int name, int ch, int * source)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (source == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:TRIGger:SOURce? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTion:TRIGger:SOURce? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     if(STRCASECMP(as8Ret,"SOFTWARE") == 0)
     {
         *source = 0;
@@ -240,8 +227,8 @@ EXPORT_API int CALL mrgMRQMotionTrigSource_Query(ViSession vi, int name, int ch,
 */
 EXPORT_API int CALL mrgMRQMotionOffsetState(ViSession vi, int name, int ch, int state)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:OFFSet:STATe %d,%d,%s\n",
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTion:OFFSet:STATe %d,%d,%s\n",
              name, ch, state == 0 ? "OFF" : "ON");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
@@ -259,21 +246,18 @@ EXPORT_API int CALL mrgMRQMotionOffsetState(ViSession vi, int name, int ch, int 
 */
 EXPORT_API int CALL mrgMRQMotionOffsetState_Query(ViSession vi, int name, int ch, int *state)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (state == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:OFFSet:STATe? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTion:OFFSet:STATe? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     if(STRCASECMP(as8Ret,"ON") == 0 || STRCASECMP(as8Ret,"1") == 0 )
     {
         *state = 1;
@@ -293,21 +277,17 @@ EXPORT_API int CALL mrgMRQMotionOffsetState_Query(ViSession vi, int name, int ch
 */
 EXPORT_API int CALL mrgMRQMotionOffsetValue_Query(ViSession vi, int name, int ch, float *distance)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (distance == NULL)
     {
         return -2;
     }
 
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:OFFSet:VALue? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTion:OFFSet:VALue? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen] = '\0';
     }
     *distance = strtof(as8Ret,NULL);
     return 0;
@@ -321,17 +301,14 @@ EXPORT_API int CALL mrgMRQMotionOffsetValue_Query(ViSession vi, int name, int ch
 */
 EXPORT_API int CALL mrgMRQMotionABCount_Query(ViSession vi, int name, int ch)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
-    snprintf(args, SEND_BUF,  "DEVICE:MRQ:MOTion:ABCOUNt? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN,  "DEVICE:MRQ:MOTion:ABCOUNt? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return 0;
     }
-    else {
-        as8Ret[retLen-1] = '\0';
-        return atoi(as8Ret);
-    }
+    return atoi(as8Ret);
 }
 /*
 *清空增量编码器的AB相的计数值
@@ -342,11 +319,36 @@ EXPORT_API int CALL mrgMRQMotionABCount_Query(ViSession vi, int name, int ch)
 */
 EXPORT_API int CALL mrgMRQMotionABCountClear(ViSession vi, int name, int ch)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:ABCOUNt:CLEAr %d,%d\n", name, ch);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTion:ABCOUNt:CLEAr %d,%d\n", name, ch);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
+    return 0;
+}
+/*
+*查询通道当前的PVT运行时间
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*time: PVT的运行时间
+*返回值: 0表示成功,否则表示失败
+*/
+EXPORT_API int CALL mrgMRQMotionRuntime_Query(ViSession vi, int name, int ch,float* pf32Time)
+{
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
+    int retLen = 0;
+    if (pf32Time == NULL)
+    {
+        return -2;
+    }
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTion:RUNTIME? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
+        return -1;
+    }
+
+    *pf32Time = strtof(as8Ret, NULL);
     return 0;
 }
 /*
@@ -359,8 +361,8 @@ EXPORT_API int CALL mrgMRQMotionABCountClear(ViSession vi, int name, int ch)
 */
 EXPORT_API int CALL mrgMRQMotionReverse(ViSession vi, int name, int state)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:REVERSe %d,%d\n", name, state);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTion:REVERSe %d,%d\n", name, state);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -376,20 +378,16 @@ EXPORT_API int CALL mrgMRQMotionReverse(ViSession vi, int name, int state)
 */
 EXPORT_API int CALL mrgMRQMotionReverse_Query(ViSession vi, int name,int * reverse)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     char as8Ret[8];
     int retLen = 0;
     if (reverse == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTion:REVERSe? %d\n", name);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 8)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTion:REVERSe? %d\n", name);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     if (STRCASECMP(as8Ret, "OFF") == 0)
     {
@@ -446,8 +444,8 @@ EXPORT_API int CALL mrgMRQAdjust(ViSession vi,int name,int ch,int wavetable,floa
 */
 EXPORT_API int CALL mrgMRQClockSync(ViSession vi, char *name_list, float time)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:CLOCk %s,%f\n", name_list, time);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:CLOCk %s,%f\n", name_list, time);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -463,13 +461,13 @@ EXPORT_API int CALL mrgMRQClockSync(ViSession vi, char *name_list, float time)
 */
 EXPORT_API int CALL mrgMRQMotorStepAngle(ViSession vi, int name, int ch, int stepangle)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     char * ps8StepAngle[4] = { "1.8","0.9","15", "7.5", };
     if (stepangle > 3)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:STEP:ANGLe %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:STEP:ANGLe %d,%d,%s\n",
              name, ch, ps8StepAngle[stepangle]);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -486,21 +484,18 @@ EXPORT_API int CALL mrgMRQMotorStepAngle(ViSession vi, int name, int ch, int ste
 */
 EXPORT_API int CALL mrgMRQMotorStepAngle_Query(ViSession vi, int name, int devList, int *stepangle)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     char as8Ret[12];
     int retLen = 0;
     if (stepangle == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:STEP:ANGLe? %d,%d\n", name, devList);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 12)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:STEP:ANGLe? %d,%d\n", name, devList);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     if (STRCASECMP(as8Ret, "1.8") == 0)
     {
         *stepangle = 0;
@@ -529,12 +524,12 @@ EXPORT_API int CALL mrgMRQMotorStepAngle_Query(ViSession vi, int name, int devLi
 */
 EXPORT_API int CALL mrgMRQMotorMotionType(ViSession vi, int name, int devList, int type)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (type > 1)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:MOTion:TYPe %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:MOTion:TYPe %d,%d,%s\n",
              name, devList, type==0 ? "ROTARY" : "LINEAR");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -551,31 +546,28 @@ EXPORT_API int CALL mrgMRQMotorMotionType(ViSession vi, int name, int devList, i
 */
 EXPORT_API int CALL mrgMRQMotorMotionType_Query(ViSession vi, int name, int ch, int *type)
 {
-    char args[SEND_BUF];
-    char as8Ret[12];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (type == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:MOTion:TYPe? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 12)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:MOTion:TYPe? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
+
+    if (STRCASECMP(as8Ret, "ROTARY") == 0)
     {
-        as8Ret[retLen-1] = '\0';
-        if (STRCASECMP(as8Ret, "ROTARY") == 0)
-        {
-            *type = 0;
-        }
-        else if (STRCASECMP(as8Ret, "LINEAR") == 0)
-        {
-            *type = 1;
-        }
-        else{
-            return -1;
-        }
+        *type = 0;
+    }
+    else if (STRCASECMP(as8Ret, "LINEAR") == 0)
+    {
+        *type = 1;
+    }
+    else{
+        return -1;
     }
     return 0;
 }
@@ -589,13 +581,13 @@ EXPORT_API int CALL mrgMRQMotorMotionType_Query(ViSession vi, int name, int ch, 
 */
 EXPORT_API int CALL mrgMRQMotorPositionUnit(ViSession vi, int name, int ch, int unit)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     char *ps8Unit[3] = { "ANGLE" ,"RADIAN" ,"MILLIMETER" };
     if (unit > 2 || unit < 0)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:POSition:UNIT %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:POSition:UNIT %d,%d,%s\n",
              name, ch, ps8Unit[unit]);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -612,35 +604,32 @@ EXPORT_API int CALL mrgMRQMotorPositionUnit(ViSession vi, int name, int ch, int 
 */
 EXPORT_API int CALL mrgMRQMotorPositionUnit_Query(ViSession vi, int name, int ch, int *ps8Unit)
 {
-    char args[SEND_BUF];
-    char as8Ret[12];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (ps8Unit == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:POSition:UNIT? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 12)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:POSition:UNIT? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
+
+    if (STRCASECMP(as8Ret, "ANGLE") == 0)
     {
-        as8Ret[retLen - 1] = 0;
-        if (STRCASECMP(as8Ret, "ANGLE") == 0)
-        {
-            *ps8Unit = 0;
-        }
-        else if (STRCASECMP(as8Ret, "RADIAN") == 0)
-        {
-            *ps8Unit = 1;
-        }
-        else if (STRCASECMP(as8Ret, "MILLIMETER") == 0)
-        {
-            *ps8Unit = 2;
-        }
-        else{
-            return -1;
-        }
+        *ps8Unit = 0;
+    }
+    else if (STRCASECMP(as8Ret, "RADIAN") == 0)
+    {
+        *ps8Unit = 1;
+    }
+    else if (STRCASECMP(as8Ret, "MILLIMETER") == 0)
+    {
+        *ps8Unit = 2;
+    }
+    else{
+        return -1;
     }
     return 0;
 }
@@ -655,8 +644,8 @@ EXPORT_API int CALL mrgMRQMotorPositionUnit_Query(ViSession vi, int name, int ch
 */
 EXPORT_API int CALL mrgMRQMotorGearRatio(ViSession vi, int name, int ch, int a, int b)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:GEAR:RATio %d,%d,%d,%d\n", name, ch, a, b);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:GEAR:RATio %d,%d,%d,%d\n", name, ch, a, b);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -673,22 +662,19 @@ EXPORT_API int CALL mrgMRQMotorGearRatio(ViSession vi, int name, int ch, int a, 
 */
 EXPORT_API int CALL mrgMRQMotorGearRatio_Query(ViSession vi, int name, int ch, int *a, int *b)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retLen = 0;
-    char as8Ret[100];
+    char as8Ret[RECV_LEN];
     char *p = NULL, *pNext = NULL;
     if (a == NULL || b == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:GEAR:RATio? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:GEAR:RATio? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     p = STRTOK_S(as8Ret, ",", &pNext);
     *a = atoi(p);
     p = STRTOK_S(NULL, ",", &pNext);
@@ -705,8 +691,8 @@ EXPORT_API int CALL mrgMRQMotorGearRatio_Query(ViSession vi, int name, int ch, i
 */
 EXPORT_API int CALL mrgMRQMotorLead(ViSession vi, int name, int ch, float millimeter)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:LEAD %d,%d,%f\n", name, ch, millimeter);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:LEAD %d,%d,%f\n", name, ch, millimeter);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -722,20 +708,16 @@ EXPORT_API int CALL mrgMRQMotorLead(ViSession vi, int name, int ch, float millim
 */
 EXPORT_API int CALL mrgMRQMotorLead_Query(ViSession vi, int name, int ch, float *millimeter)
 {
-    char args[SEND_BUF];
-    char as8Ret[12];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (millimeter == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:LEAD? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 12)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:LEAD? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     *millimeter = strtof(as8Ret,NULL);
     return 0;
@@ -750,8 +732,8 @@ EXPORT_API int CALL mrgMRQMotorLead_Query(ViSession vi, int name, int ch, float 
 */
 EXPORT_API int CALL mrgMRQMotorSize(ViSession vi, int name, int ch, int size)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:SIZE %d,%d,%d\n", name, ch, size);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:SIZE %d,%d,%d\n", name, ch, size);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -767,22 +749,17 @@ EXPORT_API int CALL mrgMRQMotorSize(ViSession vi, int name, int ch, int size)
 */
 EXPORT_API int CALL mrgMRQMotorSize_Query(ViSession vi, int name, int ch, int *size)
 {
-    char args[SEND_BUF];
-    char as8Ret[10];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (size == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:SIZE? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 10)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:SIZE? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen] = '\0';
-    }
-
     *size = atoi(as8Ret);
     return 0;
 }
@@ -796,8 +773,8 @@ EXPORT_API int CALL mrgMRQMotorSize_Query(ViSession vi, int name, int ch, int *s
 */
 EXPORT_API int CALL mrgMRQMotorVoltate(ViSession vi, int name, int ch, int volt)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:VOLTage %d,%d,%d\n", name, ch, volt);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:VOLTage %d,%d,%d\n", name, ch, volt);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -813,22 +790,17 @@ EXPORT_API int CALL mrgMRQMotorVoltate(ViSession vi, int name, int ch, int volt)
 */
 EXPORT_API int CALL mrgMRQMotorVoltage_Query(ViSession vi, int name, int ch, int *volt)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (volt == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:VOLTage? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:VOLTage? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
-
     *volt = atoi(as8Ret);
     return 0;
 }
@@ -842,8 +814,8 @@ EXPORT_API int CALL mrgMRQMotorVoltage_Query(ViSession vi, int name, int ch, int
 */
 EXPORT_API int CALL mrgMRQMotorCurrent(ViSession vi, int name, int ch, float current)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:CURRent %d,%d,%f\n", name, ch, current);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:CURRent %d,%d,%f\n", name, ch, current);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -859,22 +831,17 @@ EXPORT_API int CALL mrgMRQMotorCurrent(ViSession vi, int name, int ch, float cur
 */
 EXPORT_API int CALL mrgMRQMotorCurrent_Query(ViSession vi, int name, int ch, float *current)
 {
-    char args[SEND_BUF];
-    char as8Ret[12];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (current == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:CURRent? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 12)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:CURRent? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
-
     *current = strtof(as8Ret,NULL);
     return 0;
 }
@@ -888,8 +855,8 @@ EXPORT_API int CALL mrgMRQMotorCurrent_Query(ViSession vi, int name, int ch, flo
 */
 EXPORT_API int CALL mrgMRQMotorBackLash(ViSession vi, int name, int ch, float lash)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:BACKLash %d,%d,%f\n", name, ch, lash);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:BACKLash %d,%d,%f\n", name, ch, lash);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -905,24 +872,60 @@ EXPORT_API int CALL mrgMRQMotorBackLash(ViSession vi, int name, int ch, float la
 */
 EXPORT_API int CALL mrgMRQMotorBackLash_Query(ViSession vi, int name, int ch, float *lash)
 {
-    char args[SEND_BUF];
-    char state[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (lash == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:MOTOR:BACKLash? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), state, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:BACKLash? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        state[retLen - 1] = '\0';
-    }
 
-    *lash = strtof(state,NULL);
+    *lash = strtof(as8Ret,NULL);
     return 0;
+}
+/*
+*设置电机报警灯闪烁状态
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*isOn: 是否打开,0表示关闭,1表示打开
+*返回值：0表示执行成功，负数表示失败
+*/
+EXPORT_API int CALL mrgMRQMotorAlarmLed(ViSession vi, int name, int ch, int isOn)
+{
+    char args[SEND_LEN];
+    if (isOn != 0 && isOn != 1)
+    {
+        return -2;
+    }
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:ALARMLED %d,%d,%s\n",
+             name, ch, isOn ? "ON" : "OFF");
+    if (busWrite(vi, args, strlen(args)) == 0) {
+        return -1;
+    }
+    return 0;
+}
+
+/*
+*查询电机报警灯闪烁状态
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*返回值：0表示执行关闭,1表示打开,-1表示错误
+*/
+EXPORT_API int CALL mrgMRQMotorAlarmLed_Query(ViSession vi, int name, int ch)
+{
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:MOTOR:ALARMLED? %d,%d\n", name, ch);
+    if (busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret)) == 0) {
+        return -1;
+    }
+    return atoi(as8Ret);
 }
 /*
 *PVT配置命令
@@ -935,12 +938,12 @@ EXPORT_API int CALL mrgMRQMotorBackLash_Query(ViSession vi, int name, int ch, fl
 */
 EXPORT_API int CALL mrgMRQPVTConfig(ViSession vi, int name, int ch, int wavetable, int state)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:CONFig %d,%d,%s,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:CONFig %d,%d,%s,%s\n",
              name, ch, wavetableToString(wavetable), state == 0 ? "END" : "CLEAR");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -960,12 +963,12 @@ EXPORT_API int CALL mrgMRQPVTConfig(ViSession vi, int name, int ch, int wavetabl
 */
 EXPORT_API int CALL mrgMRQPVTValue(ViSession vi, int name, int devList, int wavetable, float p, float v, float t)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:VALue %d,%d,%s,%f,%f,%f\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:VALue %d,%d,%s,%f,%f,%f\n",
              name, devList, wavetableToString(wavetable), p, v, t);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -983,12 +986,12 @@ EXPORT_API int CALL mrgMRQPVTValue(ViSession vi, int name, int devList, int wave
 */
 EXPORT_API int CALL mrgMRQPVTState(ViSession vi, int name, int ch, int wavetable, int state)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || state < 0 || state > 4)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:STATe %d,%d,%s,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:STATe %d,%d,%s,%s\n",
              name, ch, wavetableToString(wavetable), changeSwitchStateToString(state));
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1006,22 +1009,19 @@ EXPORT_API int CALL mrgMRQPVTState(ViSession vi, int name, int ch, int wavetable
 */
 EXPORT_API int CALL mrgMRQPVTState_Query(ViSession vi, int name, int devList, int wavetable, int *state)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || state  == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:STATe? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:STATe? %d,%d,%s\n",
              name, devList, wavetableToString(wavetable));
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 10)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     if (STRCASECMP(as8Ret, "POWERON") == 0 || STRCASECMP(as8Ret, "0") == 0)
     {
         *state = MTSTATE_POWERON;
@@ -1075,13 +1075,12 @@ EXPORT_API int CALL mrgMRQPVTStateWait(ViSession vi, int name, int ch, int wavet
     }
     while (1)
     {
-        msSleep(200);
         mrgMRQPVTState_Query(vi, name, ch, wavetable, &readState);
-        msSleep(200);
         if (readState == state)
         {
             return 0;
         }
+        msSleep(200);
         time += 200;
         if (timeout_ms > 0) {
             if (time > timeout_ms) {
@@ -1173,12 +1172,12 @@ EXPORT_API int CALL mrgMRQPVTRun(ViSession vi, int name, int ch, int wavetable, 
 */
 EXPORT_API int CALL mrgMRQPVTTimeScale(ViSession vi, int name, int ch, int wavetable, int speedup, int speedcut)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX )
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:TSCale %d,%d,%s,%d,%d\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:TSCale %d,%d,%s,%d,%d\n",
              name, ch, wavetableToString(wavetable), speedup, speedcut);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1197,8 +1196,8 @@ EXPORT_API int CALL mrgMRQPVTTimeScale(ViSession vi, int name, int ch, int wavet
 */
 EXPORT_API int CALL mrgMRQPVTTimeScale_Query(ViSession vi, int name, int ch, int wavetable, int* speedup, int* speedcut)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     char *p;
     char *pNext;
     int retLen = 0;
@@ -1206,12 +1205,11 @@ EXPORT_API int CALL mrgMRQPVTTimeScale_Query(ViSession vi, int name, int ch, int
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:TSCale? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:TSCale? %d,%d,%s\n",
              name, ch, wavetableToString(wavetable));
-    if ((retLen = busQuery(vi, args, strlen(args),as8Ret,100)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args),as8Ret,sizeof(as8Ret))) == 0) {
         return -1;
     }
-    as8Ret[retLen - 1] = '\0';
     p = STRTOK_S(as8Ret, ",", &pNext);
     *speedup = atoi(p);
     p = STRTOK_S(NULL, ",", &pNext);
@@ -1229,12 +1227,12 @@ EXPORT_API int CALL mrgMRQPVTTimeScale_Query(ViSession vi, int name, int ch, int
 */
 EXPORT_API int CALL mrgMRQPVTCycle(ViSession vi, int name, int ch, int wavetable, unsigned int cycle)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:CYCLE %d,%d,%s,%u\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:CYCLE %d,%d,%s,%u\n",
              name, ch, wavetableToString(wavetable), cycle);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1252,19 +1250,18 @@ EXPORT_API int CALL mrgMRQPVTCycle(ViSession vi, int name, int ch, int wavetable
 */
 EXPORT_API int CALL mrgMRQPVTCycle_Query(ViSession vi, int name, int ch, int wavetable, unsigned int *cycle)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || cycle == NULL )
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:CYCLE? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:CYCLE? %d,%d,%s\n",
              name, ch, wavetableToString(wavetable));
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    as8Ret[retLen - 1] = '\0';
     *cycle = strtoul(as8Ret, NULL, 10);
     return 0;
 }
@@ -1279,12 +1276,12 @@ EXPORT_API int CALL mrgMRQPVTCycle_Query(ViSession vi, int name, int ch, int wav
 */
 EXPORT_API int CALL mrgMRQPVTFifoBufferTime(ViSession vi, int name, int ch, int wavetable, unsigned int time)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX )
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:FIFO:TIMe %d,%d,%s,%d\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:FIFO:TIMe %d,%d,%s,%d\n",
              name, ch, wavetableToString(wavetable), time);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1302,19 +1299,18 @@ EXPORT_API int CALL mrgMRQPVTFifoBufferTime(ViSession vi, int name, int ch, int 
 */
 EXPORT_API int CALL mrgMRQPVTFifoBufferTime_Query(ViSession vi, int name, int ch, int wavetable, unsigned int *time)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || time == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:FIFO:TIMe? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:FIFO:TIMe? %d,%d,%s\n",
              name, ch, wavetableToString(wavetable));
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    as8Ret[retLen - 1] = '\0';
     *time = strtoul(as8Ret, NULL, 10);
     return 0;
 }
@@ -1331,8 +1327,8 @@ EXPORT_API int CALL mrgMRQPVTFifoBufferTime_Query(ViSession vi, int name, int ch
 */
 EXPORT_API int CALL mrgMRQPVTModeConfig_Query(ViSession vi, int name, int ch, int wavetable, int *exe, int *plan, int *motion)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     char *p;
     char *pNext;
     int retLen = 0;
@@ -1340,14 +1336,10 @@ EXPORT_API int CALL mrgMRQPVTModeConfig_Query(ViSession vi, int name, int ch, in
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:CONFig? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:MODe:CONFig? %d,%d,%s\n",
              name, ch, wavetableToString(wavetable));
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     p = STRTOK_S(as8Ret, ",", &pNext);
     if(p)
@@ -1418,14 +1410,14 @@ EXPORT_API int CALL mrgMRQPVTModeConfig_Query(ViSession vi, int name, int ch, in
 EXPORT_API int CALL mrgMRQPVTModeConfig(ViSession vi, int name, int ch, 
                                         int wavetable, int exe, int plan, int motion)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     char *ps8Plan[3] = { "CUBICPOLY" ,"TRAPEZOID" ,"SCURVE" };
     char *ps8MotionMode[3] = { "PVT" ,"LVT_CORRECT" ,"LVT_NOCORRECT" };
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || plan > 2 || motion > 2 || exe > 1)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:CONFig %d,%d,%s,%s,%s,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:MODe:CONFig %d,%d,%s,%s,%s,%s\n",
              name, ch, wavetableToString(wavetable), exe?"CYCLE" : "FIFO", ps8Plan[plan], ps8MotionMode[motion]);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1443,12 +1435,12 @@ EXPORT_API int CALL mrgMRQPVTModeConfig(ViSession vi, int name, int ch,
 */
 EXPORT_API int CALL mrgMRQPVTModeExe(ViSession vi, int name, int ch, int wavetable, int exemode)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || exemode > 1)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:EXE %d,%d,%s,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:MODe:EXE %d,%d,%s,%s\n",
              name, ch, wavetableToString(wavetable), exemode==0? "CYCLE" : "FIFO");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1467,33 +1459,30 @@ EXPORT_API int CALL mrgMRQPVTModeExe(ViSession vi, int name, int ch, int wavetab
 EXPORT_API int CALL mrgMRQPVTModeExe_Query(ViSession vi, int name, 
                                            int ch, int wavetable, int *mode)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retLen = 0;
-    char as8Ret[12];
+    char as8Ret[RECV_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || mode == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:EXE? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:MODe:EXE? %d,%d,%s\n",
              name, ch, wavetableToString(wavetable));
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 12)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
+    }
+
+    if (STRCASECMP(as8Ret, "CYCLE") == 0 || STRCASECMP(as8Ret, "0") == 0)
+    {
+        *mode = 0;
+    }
+    else if (STRCASECMP(as8Ret, "FIFO") == 0 || STRCASECMP(as8Ret, "1") == 0)
+    {
+        *mode = 1;
     }
     else
     {
-        as8Ret[retLen - 1] = '\0';
-        if (STRCASECMP(as8Ret, "CYCLE") == 0 || STRCASECMP(as8Ret, "0") == 0)
-        {
-            *mode = 0;
-        }
-        else if (STRCASECMP(as8Ret, "FIFO") == 0 || STRCASECMP(as8Ret, "1") == 0)
-        {
-            *mode = 1;
-        }
-        else
-        {
-            return -1;
-        }
+        return -1;
     }
     return 0;
 }
@@ -1508,13 +1497,13 @@ EXPORT_API int CALL mrgMRQPVTModeExe_Query(ViSession vi, int name,
 */
 EXPORT_API int CALL mrgMRQPVTModePlan(ViSession vi, int name, int ch, int wavetable, int planmode)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     char *ps8Plan[3] = { "CUBICPOLY" ,"TRAPEZOID" ,"SCURVE" };
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || planmode > 2 )
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:PLAN %d,%d,%s,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:MODe:PLAN %d,%d,%s,%s\n",
              name, ch, wavetableToString(wavetable), ps8Plan[planmode]);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1532,32 +1521,33 @@ EXPORT_API int CALL mrgMRQPVTModePlan(ViSession vi, int name, int ch, int waveta
 */
 EXPORT_API int CALL mrgMRQPVTModePlan_Query(ViSession vi, int name, int ch, int wavetable, int *mode)
 {
-    char args[SEND_BUF];
-    char as8Ret[24];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || mode == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:PLAN? %d,%d,%s\n", name, ch, wavetableToString(wavetable));
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 24)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:MODe:PLAN? %d,%d,%s\n", name, ch, wavetableToString(wavetable));
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
+    }
+
+    if (STRCASECMP(as8Ret, "CUBICPOLY") == 0)
+    {
+        *mode = 0;
+    }
+    else if (STRCASECMP(as8Ret, "TRAPEZOID") == 0)
+    {
+        *mode = 1;
+    }
+    else if (STRCASECMP(as8Ret, "SCURVE") == 0)
+    {
+        *mode = 2;
     }
     else
     {
-        as8Ret[retLen - 1] = '\0';
-        if (STRCASECMP(as8Ret, "CUBICPOLY") == 0)
-        {
-            *mode = 0;
-        }
-        else if (STRCASECMP(as8Ret, "TRAPEZOID") == 0)
-        {
-            *mode = 1;
-        }
-        else if (STRCASECMP(as8Ret, "SCURVE") == 0)
-        {
-            *mode = 2;
-        }
+        return -1;
     }
     return 0;
 }
@@ -1572,13 +1562,13 @@ EXPORT_API int CALL mrgMRQPVTModePlan_Query(ViSession vi, int name, int ch, int 
 */
 EXPORT_API int CALL mrgMRQPVTModeMotion(ViSession vi, int name, int ch, int wavetable, int mode)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     char *ps8MotionMode[3] = { "PVT" ,"LVT_CORRECT" ,"LVT_NOCORRECT" };
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || mode > 2)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:MOTion %d,%d,%s,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:MODe:MOTion %d,%d,%s,%s\n",
              name, ch, wavetableToString(wavetable), ps8MotionMode[mode]);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1596,33 +1586,34 @@ EXPORT_API int CALL mrgMRQPVTModeMotion(ViSession vi, int name, int ch, int wave
 */
 EXPORT_API int CALL mrgMRQPVTModeMotion_Query(ViSession vi, int name, int ch, int wavetable, int *mode)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retLen = 0;
-    char as8Ret[24];
+    char as8Ret[RECV_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || mode == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODe:MOTion? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:MODe:MOTion? %d,%d,%s\n",
              name, ch, wavetableToString(wavetable));
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 24)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
+    }
+
+    if (STRCASECMP(as8Ret, "PVT") == 0)
+    {
+        *mode = 0;
+    }
+    else if (STRCASECMP(as8Ret, "LVT_CORRECT") == 0)
+    {
+        *mode = 1;
+    }
+    else if (STRCASECMP(as8Ret, "LVT_NOCORRECT") == 0)
+    {
+        *mode = 2;
     }
     else
     {
-        as8Ret[retLen - 1] = '\0';
-        if (STRCASECMP(as8Ret, "PVT") == 0)
-        {
-            *mode = 0;
-        }
-        else if (STRCASECMP(as8Ret, "LVT_CORRECT") == 0)
-        {
-            *mode = 1;
-        }
-        else if (STRCASECMP(as8Ret, "LVT_NOCORRECT") == 0)
-        {
-            *mode = 2;
-        }
+        return -1;
     }
     return 0;
 }
@@ -1637,13 +1628,13 @@ EXPORT_API int CALL mrgMRQPVTModeMotion_Query(ViSession vi, int name, int ch, in
 */
 EXPORT_API int CALL mrgMRQPVTModifyDuty(ViSession vi, int name, int devList, int wavetable, int duty)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     char *as8duty[4] = { "1/4","1/8","1/16","1/32" };
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || duty > 3)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODIFy:DUTY %d,%d,%s,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:MODIFy:DUTY %d,%d,%s,%s\n",
              name, devList, wavetableToString(wavetable), as8duty[duty]);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1660,24 +1651,21 @@ EXPORT_API int CALL mrgMRQPVTModifyDuty(ViSession vi, int name, int devList, int
 *返回值：0表示执行成功，－1表示失败,-2表示参数错误
 */
 EXPORT_API int CALL mrgMRQPVTModifyDuty_Query(ViSession vi, int name,
-									int ch, int wavetable, int *duty)
+                                              int ch, int wavetable, int *duty)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || duty == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:MODIFy:DUTY? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:MODIFy:DUTY? %d,%d,%s\n",
              name, ch, wavetableToString(wavetable));
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     if (STRCASECMP(as8Ret, "1/4") == 0)
     {
         *duty = 0;
@@ -1711,12 +1699,12 @@ EXPORT_API int CALL mrgMRQPVTModifyDuty_Query(ViSession vi, int name,
 */
 EXPORT_API int CALL mrgMRQPVTEndState(ViSession vi, int name, int ch, int wavetable, int state)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || (state !=0 && state != 1))
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:END:STATe %d,%d,%s,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:END:STATe %d,%d,%s,%s\n",
              name, ch, wavetableToString(wavetable), state ? "STOP" : "HOLD");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1734,29 +1722,30 @@ EXPORT_API int CALL mrgMRQPVTEndState(ViSession vi, int name, int ch, int waveta
 */
 EXPORT_API int CALL mrgMRQPVTEndState_Query(ViSession vi, int name, int ch, int wavetable, int *state)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retLen = 0;
-    char as8Ret[12];
+    char as8Ret[RECV_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || state == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:END:STATe? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:END:STATe? %d,%d,%s\n",
              name, ch, wavetableToString(wavetable));
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 12)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
+    }
+
+    if (STRCASECMP(as8Ret, "STOP") == 0 || STRCASECMP(as8Ret, "0") == 0)
+    {
+        *state = 0;
+    }
+    else if (STRCASECMP(as8Ret, "HOLD") == 0 || STRCASECMP(as8Ret, "1") == 0)
+    {
+        *state = 1;
     }
     else
     {
-        as8Ret[retLen - 1] = '\0';
-        if (STRCASECMP(as8Ret, "STOP") == 0 || STRCASECMP(as8Ret, "0") == 0)
-        {
-            *state = 0;
-        }
-        else if (STRCASECMP(as8Ret, "HOLD") == 0 || STRCASECMP(as8Ret, "1") == 0)
-        {
-            *state = 1;
-        }
+        return -1;
     }
     return 0;
 }
@@ -1771,12 +1760,12 @@ EXPORT_API int CALL mrgMRQPVTEndState_Query(ViSession vi, int name, int ch, int 
 */
 EXPORT_API int CALL mrgMRQPVTStopMode(ViSession vi, int name, int ch, int wavetable, int type)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || (type != 0 && type != 1))
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:MODe %d,%d,%s,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:STOP:MODe %d,%d,%s,%s\n",
              name, ch, wavetableToString(wavetable), type == 0 ? "IMMEDIATE" : "DISTANCE");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1794,22 +1783,19 @@ EXPORT_API int CALL mrgMRQPVTStopMode(ViSession vi, int name, int ch, int waveta
 */
 EXPORT_API int CALL mrgMRQPVTStopMode_Query(ViSession vi, int name, int ch, int wavetable, int *ps32State)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || ps32State == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:MODe? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:STOP:MODe? %d,%d,%s\n",
              name, ch, wavetableToString(wavetable));
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     if (STRCASECMP(as8Ret, "IMMEDIATE") == 0 || STRCASECMP(as8Ret, "0") == 0)
     {
         *ps32State = 0;
@@ -1835,12 +1821,12 @@ EXPORT_API int CALL mrgMRQPVTStopMode_Query(ViSession vi, int name, int ch, int 
 */
 EXPORT_API int CALL mrgMRQPVTStopTime(ViSession vi, int name, int ch, int wavetable, float time)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX )
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:TIMe %d,%d,%s,%f\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:STOP:TIMe %d,%d,%s,%f\n",
              name, ch, wavetableToString(wavetable), time);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1858,24 +1844,19 @@ EXPORT_API int CALL mrgMRQPVTStopTime(ViSession vi, int name, int ch, int waveta
 */
 EXPORT_API int CALL mrgMRQPVTStopTime_Query(ViSession vi, int name, int ch, int wavetable, float *pf32Time)
 {
-    char args[SEND_BUF];
-    char state[10];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || pf32Time == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:TIMe? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:STOP:TIMe? %d,%d,%s\n",
              name, ch, wavetableToString(wavetable));
-    if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        state[retLen - 1] = '\0';
-    }
-
-    *pf32Time = strtof(state,NULL);
+    *pf32Time = strtof(as8Ret,NULL);
     return 0;
 }
 /*
@@ -1889,12 +1870,12 @@ EXPORT_API int CALL mrgMRQPVTStopTime_Query(ViSession vi, int name, int ch, int 
 */
 EXPORT_API int CALL mrgMRQPVTStopDistance(ViSession vi, int name, int ch, int wavetable, float distance)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX )
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:DISTance %d,%d,%s,%f\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:STOP:DISTance %d,%d,%s,%f\n",
              name, ch, wavetableToString(wavetable), distance);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1913,24 +1894,20 @@ EXPORT_API int CALL mrgMRQPVTStopDistance(ViSession vi, int name, int ch, int wa
 EXPORT_API int CALL mrgMRQPVTStopDistance_Query(ViSession vi, int name, 
                                                 int ch, int  wavetable, float *pf32Distance)
 {
-    char args[SEND_BUF];
-    char state[10];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || pf32Distance == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:STOP:DISTance? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:STOP:DISTance? %d,%d,%s\n",
              name, ch, wavetableToString(wavetable));
-    if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        state[retLen - 1] = '\0';
-    }
 
-    *pf32Distance = strtof(state,NULL);
+    *pf32Distance = strtof(as8Ret,NULL);
     return 0;
 }
 /*
@@ -1944,12 +1921,12 @@ EXPORT_API int CALL mrgMRQPVTStopDistance_Query(ViSession vi, int name,
 */
 EXPORT_API int CALL mrgMRQPVTWavetableAddress(ViSession vi, int name, int ch, int wavetable, unsigned int address)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:WAVETABLE:ADDRess %d,%d,%s,%u\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:WAVETABLE:ADDRess %d,%d,%s,%u\n",
              name, ch, wavetableToString(wavetable), address);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1968,23 +1945,19 @@ EXPORT_API int CALL mrgMRQPVTWavetableAddress(ViSession vi, int name, int ch, in
 EXPORT_API int CALL mrgMRQPVTWavetableAddress_Query(ViSession vi, int name,
                                                     int ch, int  wavetable, unsigned int * pf32Address)
 {
-    char args[SEND_BUF];
-    char tmp[20];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || pf32Address == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:WAVETABLE:ADDRess? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:WAVETABLE:ADDRess? %d,%d,%s\n",
              name, ch, wavetableToString(wavetable));
-    if ((retLen = busQuery(vi, args, strlen(args), tmp, 20)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        tmp[retLen - 1] = '\0';
-    }
-    *pf32Address = strtoul(tmp,NULL,0);
+    *pf32Address = strtoul(as8Ret,NULL,0);
     return 0;
 }
 /*
@@ -1998,12 +1971,12 @@ EXPORT_API int CALL mrgMRQPVTWavetableAddress_Query(ViSession vi, int name,
 */
 EXPORT_API int CALL mrgMRQPVTWavetableSize(ViSession vi, int name, int ch, int wavetable, unsigned int size)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX )
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:WAVETABLE:SIZE %d,%d,%s,%u\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:WAVETABLE:SIZE %d,%d,%s,%u\n",
              name, ch, wavetableToString(wavetable), size);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -2021,23 +1994,19 @@ EXPORT_API int CALL mrgMRQPVTWavetableSize(ViSession vi, int name, int ch, int w
 */
 EXPORT_API int CALL mrgMRQPVTWavetableSize_Query(ViSession vi, int name,int ch, int  wavetable, unsigned int * pu32sSize)
 {
-    char args[SEND_BUF];
-    char tmp[20];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || pu32sSize == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:PVT:WAVETABLE:SIZE? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:PVT:WAVETABLE:SIZE? %d,%d,%s\n",
              name, ch, wavetableToString(wavetable));
-    if ((retLen = busQuery(vi, args, strlen(args), tmp, 20)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        tmp[retLen - 1] = '\0';
-    }
-    *pu32sSize = strtoul(tmp, NULL, 0);
+    *pu32sSize = strtoul(as8Ret, NULL, 0);
     return 0;
 }
 
@@ -2053,25 +2022,21 @@ EXPORT_API int CALL mrgMRQPVTWavetableSize_Query(ViSession vi, int name,int ch, 
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQLostStepLineConfig_Query(ViSession vi, int name, 
-                                                   int ch, int wavetable, int *ps32State,float *pf32Threshold, int *ps32Resp)
+                                                   int ch, int wavetable, int *ps32State,unsigned short *pu16Threshold, int *ps32Resp)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     char *p;
     char *pNext;
-    if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || ps32State == NULL || pf32Threshold == NULL || ps32Resp == NULL)
+    if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || ps32State == NULL || pu16Threshold == NULL || ps32Resp == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:CONFig? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:LOSTstep:LINe:CONFig? %d,%d,%s\n",
              name, ch, wavetableToString(wavetable));
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     p = STRTOK_S(as8Ret, ",", &pNext);
     if(p)
@@ -2091,7 +2056,7 @@ EXPORT_API int CALL mrgMRQLostStepLineConfig_Query(ViSession vi, int name,
     p = STRTOK_S(NULL, ",", &pNext);
     if(p)
     {
-        *pf32Threshold = strtof(p,NULL);
+        *pu16Threshold = strtoul(p,NULL,0);
     }
     p = STRTOK_S(NULL, ",", &pNext);
     if(p)
@@ -2130,14 +2095,14 @@ EXPORT_API int CALL mrgMRQLostStepLineConfig_Query(ViSession vi, int name,
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQLostStepLineConfig(ViSession vi, int name, 
-                                             int ch, int wavetable, int state, float threshold, int resp)
+                                             int ch, int wavetable, int state, unsigned short threshold, int resp)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX )
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:CONFig %d,%d,%s,%s,%f,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:LOSTstep:LINe:CONFig %d,%d,%s,%s,%d,%s\n",
              name, ch, wavetableToString(wavetable),
              state ? "ON" : "OFF",
              threshold, changeResponseToString(resp));
@@ -2157,12 +2122,12 @@ EXPORT_API int CALL mrgMRQLostStepLineConfig(ViSession vi, int name,
 */
 EXPORT_API int CALL mrgMRQLostStepState(ViSession vi, int name, int ch, int wavetable, int state)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || (state != 0 && state != 1))
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:STATe %d,%d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:LOSTstep:LINe:STATe %d,%d,%d,%s\n",
              name, ch, wavetable, state ? "ON" : "OFF");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -2180,20 +2145,16 @@ EXPORT_API int CALL mrgMRQLostStepState(ViSession vi, int name, int ch, int wave
 */
 EXPORT_API int CALL mrgMRQLostStepState_Query(ViSession vi, int name, int ch, int wavetable, int *ps32State)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || ps32State == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:STATe? %d,%d,%d\n", name, ch, wavetable);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:LOSTstep:LINe:STATe? %d,%d,%d\n", name, ch, wavetable);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     if(STRCASECMP(as8Ret,"ON") == 0 || STRCASECMP(as8Ret,"1") == 0 )
     {
@@ -2217,14 +2178,14 @@ EXPORT_API int CALL mrgMRQLostStepState_Query(ViSession vi, int name, int ch, in
 *value:线间失步阈值
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQLostStepThreshold(ViSession vi, int name, int ch, int wavetable, float value)
+EXPORT_API int CALL mrgMRQLostStepThreshold(ViSession vi, int name, int ch, int wavetable, unsigned short value)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX )
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:THREShold %d,%d,%s,%f\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:LOSTstep:LINe:THREShold %d,%d,%s,%d\n",
              name, ch, wavetableToString(wavetable), value);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -2241,26 +2202,21 @@ EXPORT_API int CALL mrgMRQLostStepThreshold(ViSession vi, int name, int ch, int 
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQLostStepThreshold_Query(ViSession vi, int name, 
-                                                  int ch, int wavetable, float *pf32Value)
+                                                  int ch, int wavetable, unsigned short *pu16Value)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
-    if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || pf32Value == NULL)
+    if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || pu16Value == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:THREShold? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:LOSTstep:LINe:THREShold? %d,%d,%s\n",
              name, ch, wavetableToString(wavetable));
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
-
-    *pf32Value = strtof(as8Ret,NULL);
+    *pu16Value = strtoul(as8Ret,NULL,0);
     return 0;
 }
 /*
@@ -2274,12 +2230,12 @@ EXPORT_API int CALL mrgMRQLostStepThreshold_Query(ViSession vi, int name,
 */
 EXPORT_API int CALL mrgMRQLostStepResponse(ViSession vi, int name, int ch, int wavetable, int resp)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || resp < 0 || resp > 3)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:RESPonse %d,%d,%s,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:LOSTstep:LINe:RESPonse %d,%d,%s,%s\n",
              name, ch, wavetableToString(wavetable), changeResponseToString(resp));
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -2297,21 +2253,17 @@ EXPORT_API int CALL mrgMRQLostStepResponse(ViSession vi, int name, int ch, int w
 */
 EXPORT_API int mrgMRQLostStepResponse_Query(ViSession vi, int name, int ch, int wavetable, int *ps32Resp)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (wavetable < WAVETABLE_MIN || wavetable > WAVETABLE_MAX || ps32Resp == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:LOSTstep:LINe:RESPonse? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:LOSTstep:LINe:RESPonse? %d,%d,%s\n",
              name, ch, wavetableToString(wavetable));
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     if(STRCASECMP(as8Ret,"NONE") == 0 || STRCASECMP(as8Ret,"0") == 0 )
     {
@@ -2345,24 +2297,21 @@ EXPORT_API int mrgMRQLostStepResponse_Query(ViSession vi, int name, int ch, int 
 */
 EXPORT_API int CALL mrgMRQReportConfig_Query(ViSession vi, int name, int ch, int funs, int *ps32State,float *pf32Period)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retLen = 0;
-    char as8Ret[100];
+    char as8Ret[RECV_LEN];
     char *p;
     char *pNext;
     if (funs < 0 || funs > 5 || ps32State == NULL || pf32Period == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:CONFig? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:REPort:CONFig? %d,%d,%s\n",
              name, ch, changeReportFuncToString(funs));
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     p = STRTOK_S(as8Ret, ",", &pNext);
     if(p)
     {
@@ -2394,12 +2343,12 @@ EXPORT_API int CALL mrgMRQReportConfig_Query(ViSession vi, int name, int ch, int
 */
 EXPORT_API int CALL mrgMRQReportConfig(ViSession vi, int name, int ch, int funs, int state, float period)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (funs < 0 || funs > 5 || (state != 0 && state !=1))
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:CONFig %d,%d,%s,%s,%f\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:REPort:CONFig %d,%d,%s,%s,%f\n",
              name, ch, changeReportFuncToString(funs), state ? "ON" : "OFF", period);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -2417,12 +2366,12 @@ EXPORT_API int CALL mrgMRQReportConfig(ViSession vi, int name, int ch, int funs,
 */
 EXPORT_API int CALL mrgMRQReportState(ViSession vi, int name, int ch, int funs, int state)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (funs < 0 || funs > 5 || (state != 0 && state != 1))
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:STATe %d,%d,%s,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:REPort:STATe %d,%d,%s,%s\n",
              name, ch, changeReportFuncToString(funs), state? "ON" : "OFF");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -2440,33 +2389,30 @@ EXPORT_API int CALL mrgMRQReportState(ViSession vi, int name, int ch, int funs, 
 */
 EXPORT_API int CALL mrgMRQReportState_Query(ViSession vi, int name, int ch, int funs, int *ps32State)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retLen = 0;
-    char tmp[20];
+    char as8Ret[20];
     if (funs < 0 || funs > 5 || ps32State == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:STATe? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:REPort:STATe? %d,%d,%s\n",
              name, ch, changeReportFuncToString(funs));
-    if ((retLen = busQuery(vi, args, strlen(args), tmp, 10)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
+    }
+
+    if (STRCASECMP(as8Ret, "OFF") == 0 || STRCASECMP(as8Ret, "0") == 0)
+    {
+        *ps32State = 0;
+    }
+    else if (STRCASECMP(as8Ret, "ON") == 0 || STRCASECMP(as8Ret, "1") == 0)
+    {
+        *ps32State = 1;
     }
     else
     {
-        tmp[retLen - 1] = '\0';
-        if (STRCASECMP(tmp, "OFF") == 0 || STRCASECMP(tmp, "0") == 0)
-        {
-            *ps32State = 0;
-        }
-        else if (STRCASECMP(tmp, "ON") == 0 || STRCASECMP(tmp, "1") == 0)
-        {
-            *ps32State = 1;
-        }
-        else
-        {
-            return -1;
-        }
+        return -1;
     }
     return 0;
 }
@@ -2481,12 +2427,12 @@ EXPORT_API int CALL mrgMRQReportState_Query(ViSession vi, int name, int ch, int 
 */
 EXPORT_API int CALL mrgMRQReportPeriod(ViSession vi, int name, int ch, int funs, int period)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (funs < 0 || funs > 5)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:PERiod %d,%d,%s,%d\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:REPort:PERiod %d,%d,%s,%d\n",
              name, ch, changeReportFuncToString(funs), period);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -2504,23 +2450,19 @@ EXPORT_API int CALL mrgMRQReportPeriod(ViSession vi, int name, int ch, int funs,
 */
 EXPORT_API int CALL mrgMRQReportPeriod_Query(ViSession vi, int name, int ch, int func, int *pf32Period)
 {
-    char args[SEND_BUF];
-    char state[10];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (func < 0 || func > 5 || pf32Period == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:PERiod? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:REPort:PERiod? %d,%d,%s\n",
              name, ch, changeReportFuncToString(func));
-    if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        state[retLen - 1] = '\0';
-    }
-    *pf32Period = atoi(state);
+    *pf32Period = atoi(as8Ret);
     return 0;
 }
 /*
@@ -2535,23 +2477,20 @@ EXPORT_API int CALL mrgMRQReportPeriod_Query(ViSession vi, int name, int ch, int
 */
 EXPORT_API int CALL mrgMRQReportData_Query(ViSession vi, int name, int ch, int func, unsigned int *pu32Data)
 {
-    char args[SEND_BUF];
-    char buff[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (func < 0 || func > 5 || pu32Data == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:DATA:VALue? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:REPort:DATA:VALue? %d,%d,%s\n",
              name, ch, changeReportFuncToString(func));
-    if ((retLen = busQuery(vi, args, strlen(args), buff, 100)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return 0;
     }
-    else
-    {
-        buff[retLen - 1] = '\0';
-    }
-    *pu32Data = strtoul(buff, NULL, 10);
+
+    *pu32Data = strtoul(as8Ret, NULL, 10);
     return 1;
 }
 /*
@@ -2565,7 +2504,7 @@ EXPORT_API int CALL mrgMRQReportData_Query(ViSession vi, int name, int ch, int f
 */
 EXPORT_API int CALL mrgMRQReportQueue_Query(ViSession vi, int name, int ch, int func, unsigned int *pu32Data)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     char buff[1024];
     char strLen[12];
     int retLen = 0;
@@ -2576,7 +2515,7 @@ EXPORT_API int CALL mrgMRQReportQueue_Query(ViSession vi, int name, int ch, int 
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:REPort:DATA:Queue? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:REPort:DATA:Queue? %d,%d,%s\n",
              name, ch, changeReportFuncToString(func));
     if (busWrite(vi, args, strlen(args)) == 0)
     {
@@ -2615,12 +2554,12 @@ EXPORT_API int CALL mrgMRQReportQueue_Query(ViSession vi, int name, int ch, int 
 */
 EXPORT_API int CALL mrgMRQTriggerMode(ViSession vi, int name, int ch, int mode)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (mode != 0 && mode != 1)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:MODe %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TRIGger:MODe %d,%d,%s\n",
              name, ch, mode==0? "PATTERN" : "LEVEL");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -2638,21 +2577,18 @@ EXPORT_API int CALL mrgMRQTriggerMode(ViSession vi, int name, int ch, int mode)
 */
 EXPORT_API int CALL mrgMRQTriggerMode_Query(ViSession vi, int name, int ch, int *ps32Mode)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retLen = 0;
-    char as8Ret[100];
+    char as8Ret[RECV_LEN];
     if (ps32Mode == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:MODe? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TRIGger:MODe? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     if (STRCASECMP(as8Ret, "PATTERN") == 0)
     {
         *ps32Mode = 0;
@@ -2678,23 +2614,20 @@ EXPORT_API int CALL mrgMRQTriggerMode_Query(ViSession vi, int name, int ch, int 
 EXPORT_API int CALL mrgMRQTriggerLevelConfig_Query(ViSession vi, int name, 
                                                    int ch, int trig, int * ps32State, int * ps32ype, float *pf32Period,int * ps32Response)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     char*p,*pNext;
     int retLen = 0;
     if ((trig != 0 && trig != 1) || ps32State == NULL || ps32ype == NULL || pf32Period == NULL || ps32Response == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:CONFig? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TRIGger:LEVel:CONFig? %d,%d,%s\n",
              name, ch, trig==0 ? "TRIGL" : "TRIGR");
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     p = STRTOK_S(as8Ret, ",", &pNext);
     if(p)
     {
@@ -2779,12 +2712,12 @@ EXPORT_API int CALL mrgMRQTriggerLevelConfig_Query(ViSession vi, int name,
 EXPORT_API int CALL mrgMRQTriggerLevelConfig(ViSession vi, int name, int devList, int trig, 
                                              int state, int type, float period, int response)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if ((trig != 0 && trig != 1) || (state != 0 && state != 1) || type < 0 || type >4 || response< 0 || response>3)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:CONFig %d,%d,%s,%s,%s,%f,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TRIGger:LEVel:CONFig %d,%d,%s,%s,%s,%f,%s\n",
              name, devList, trig ==0 ? "TRIGL" : "TRIGR",
              state==0 ? "OFF" : "ON",
              changeLevelTrigTypeToString(type),
@@ -2805,12 +2738,12 @@ EXPORT_API int CALL mrgMRQTriggerLevelConfig(ViSession vi, int name, int devList
 */
 EXPORT_API int CALL mrgMRQTriggerLevelState(ViSession vi, int name, int ch, int trig, int state)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if ((trig != 0 && trig != 1) || (state != 0 && state != 1))
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:STATe %d,%d,%s,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TRIGger:LEVel:STATe %d,%d,%s,%s\n",
              name, ch, trig == 0 ? "TRIGL" : "TRIGR", state == 0 ? "OFF" : "ON");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -2828,22 +2761,19 @@ EXPORT_API int CALL mrgMRQTriggerLevelState(ViSession vi, int name, int ch, int 
 */
 EXPORT_API int CALL mrgMRQTriggerLevelState_Query(ViSession vi, int name, int ch, int trig, int *ps32State)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if ((trig != 0 && trig != 1) || ps32State == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:STATe? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TRIGger:LEVel:STATe? %d,%d,%s\n",
              name, ch, trig == 0 ? "TRIGL" : "TRIGR");
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     if (STRCASECMP("OFF", as8Ret) == 0 || STRCASECMP(as8Ret, "0") == 0)
     {
         *ps32State = 0;
@@ -2868,12 +2798,12 @@ EXPORT_API int CALL mrgMRQTriggerLevelState_Query(ViSession vi, int name, int ch
 */
 EXPORT_API int CALL mrgMRQTriggerLevelType(ViSession vi, int name, int ch, int trig, int type)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if ((trig != 0 && trig != 1)|| type < 0 || type >4 )
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:TYPe %d,%d,%s,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TRIGger:LEVel:TYPe %d,%d,%s,%s\n",
              name, ch, trig == 0 ? "TRIGL" : "TRIGR", changeLevelTrigTypeToString(type));
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -2891,22 +2821,19 @@ EXPORT_API int CALL mrgMRQTriggerLevelType(ViSession vi, int name, int ch, int t
 */
 EXPORT_API int CALL mrgMRQTriggerLevelType_Query(ViSession vi, int name, int ch, int trig, int *ps32Type)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if ((trig != 0 && trig != 1) || ps32Type == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:TYPe? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TRIGger:LEVel:TYPe? %d,%d,%s\n",
              name, ch, trig ==0 ? "TRIGL" : "TRIGR");
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     if (STRCASECMP(as8Ret, "RESERVE") == 0 || STRCASECMP(as8Ret, "0") == 0)
     {
         *ps32Type = 0;
@@ -2944,12 +2871,12 @@ EXPORT_API int CALL mrgMRQTriggerLevelType_Query(ViSession vi, int name, int ch,
 */
 EXPORT_API int CALL mrgMRQTriggerLevelResponse(ViSession vi, int name, int ch, int trig, int response)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if ((trig != 0 && trig != 1) || response< 0 || response>3)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:RESPonse %d,%d,%s,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TRIGger:LEVel:RESPonse %d,%d,%s,%s\n",
              name, ch, trig ==0 ? "TRIGL" : "TRIGR", changeResponseToString(response));
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -2967,22 +2894,19 @@ EXPORT_API int CALL mrgMRQTriggerLevelResponse(ViSession vi, int name, int ch, i
 */
 EXPORT_API int CALL mrgMRQTriggerLevelResponse_Query(ViSession vi, int name, int ch, int trig, int *ps32Resp)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if ((trig != 0 && trig != 1) || ps32Resp == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:RESPonse? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TRIGger:LEVel:RESPonse? %d,%d,%s\n",
              name, ch, trig == 0 ? "TRIGL" : "TRIGR");
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     if (STRCASECMP(as8Ret, "NONE") == 0 || STRCASECMP(as8Ret, "0") == 0)
     {
         *ps32Resp = 0;
@@ -3015,12 +2939,12 @@ EXPORT_API int CALL mrgMRQTriggerLevelResponse_Query(ViSession vi, int name, int
 */
 EXPORT_API int CALL mrgMRQTriggerLevelPeriod(ViSession vi, int name, int ch, int trig, float period)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if ((trig != 0 && trig != 1))
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:PERIod %d,%d,%s,%f\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TRIGger:LEVel:PERIod %d,%d,%s,%f\n",
              name, ch, trig ==0 ? "TRIGL" : "TRIGR", period);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -3039,23 +2963,18 @@ EXPORT_API int CALL mrgMRQTriggerLevelPeriod(ViSession vi, int name, int ch, int
 EXPORT_API int CALL mrgMRQTriggerLevelPeriod_Query(ViSession vi, int name, 
                                                    int ch, int trig, float *pf32Period)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if ((trig != 0 && trig != 1) || pf32Period == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TRIGger:LEVel:PERIod? %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TRIGger:LEVel:PERIod? %d,%d,%s\n",
              name, ch, trig== 0 ? "TRIGL" : "TRIGR");
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
-
     *pf32Period = strtof(as8Ret,NULL);
     return 0;
 }
@@ -3072,22 +2991,19 @@ EXPORT_API int CALL mrgMRQTriggerLevelPeriod_Query(ViSession vi, int name,
 EXPORT_API int CALL mrgMRQDriverConfig_Query(ViSession vi, int name, int ch, 
                                              int *ps32State,int *ps32Microstep,float* pf32Current )
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     char *p, *pNext;
     int retLen = 0;
     if (ps32State == NULL || ps32Microstep == NULL || pf32Current == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:CONFig? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:DRIVER:CONFig? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     p = STRTOK_S(as8Ret, ",", &pNext);
     if(p)
     {
@@ -3139,8 +3055,8 @@ EXPORT_API int CALL mrgMRQDriverConfig_Query(ViSession vi, int name, int ch,
 EXPORT_API int CALL mrgMRQDriverConfig(ViSession vi, int name, int ch, 
                                        int state, int microstep, float current)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:CONFig %d,%d,%s,%d,%f\n",
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:DRIVER:CONFig %d,%d,%s,%d,%f\n",
              name, ch, state == 0 ? "OFF" : "ON", microstep, current);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -3157,21 +3073,18 @@ EXPORT_API int CALL mrgMRQDriverConfig(ViSession vi, int name, int ch,
 */
 EXPORT_API int CALL mrgMRQDriverType_Query(ViSession vi, int name, int ch, int *ps32Type)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (ps32Type == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:TYPe? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:DRIVER:TYPe? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     if(STRCASECMP(as8Ret,"D17") == 0 || STRCASECMP(as8Ret,"0") == 0)
     {
         *ps32Type = 0;
@@ -3196,8 +3109,8 @@ EXPORT_API int CALL mrgMRQDriverType_Query(ViSession vi, int name, int ch, int *
 */
 EXPORT_API int CALL mrgMRQDriverCurrent(ViSession vi, int name, int ch, float current)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:CURRent:VALue %d,%d,%f\n", name, ch, current);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:DRIVER:CURRent:VALue %d,%d,%f\n", name, ch, current);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -3213,16 +3126,12 @@ EXPORT_API int CALL mrgMRQDriverCurrent(ViSession vi, int name, int ch, float cu
 */
 EXPORT_API int CALL mrgMRQDriverCurrent_Query(ViSession vi, int name, int ch, float *ps32Current)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:CURRent:VALue? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:DRIVER:CURRent:VALue? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     *ps32Current = strtof(as8Ret,NULL);
     return 0;
@@ -3237,8 +3146,8 @@ EXPORT_API int CALL mrgMRQDriverCurrent_Query(ViSession vi, int name, int ch, fl
 */
 EXPORT_API int CALL mrgMRQDriverIdleCurrent(ViSession vi, int name, int ch, float current)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:CURRent:IDLE %d,%d,%f\n", name, ch, current);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:DRIVER:CURRent:IDLE %d,%d,%f\n", name, ch, current);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -3254,22 +3163,17 @@ EXPORT_API int CALL mrgMRQDriverIdleCurrent(ViSession vi, int name, int ch, floa
 */
 EXPORT_API int CALL mrgMRQDriverIdleCurrent_Query(ViSession vi, int name, int ch, float *pf32Current)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (pf32Current == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:CURRent:IDLE? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:DRIVER:CURRent:IDLE? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
-
     *pf32Current = strtof(as8Ret,NULL);
     return 0;
 }
@@ -3283,8 +3187,8 @@ EXPORT_API int CALL mrgMRQDriverIdleCurrent_Query(ViSession vi, int name, int ch
 */
 EXPORT_API int CALL mrgMRQDriverMicroStep(ViSession vi, int name, int devList, int microstep)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:MICROStep %d,%d,%d\n", name, devList, microstep);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:DRIVER:MICROStep %d,%d,%d\n", name, devList, microstep);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -3300,22 +3204,17 @@ EXPORT_API int CALL mrgMRQDriverMicroStep(ViSession vi, int name, int devList, i
 */
 EXPORT_API int CALL mrgMRQDriverMicroStep_Query(ViSession vi, int name, int devList, int *ps32Microstep)
 {
-    char args[SEND_BUF];
-    char as8Ret[10];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (ps32Microstep == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:MICROStep? %d,%d\n", name, devList);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 10)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:DRIVER:MICROStep? %d,%d\n", name, devList);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
-
     *ps32Microstep = atoi(as8Ret);
     return 0;
 }
@@ -3329,8 +3228,8 @@ EXPORT_API int CALL mrgMRQDriverMicroStep_Query(ViSession vi, int name, int devL
 */
 EXPORT_API int CALL mrgMRQDriverState(ViSession vi, int name, int ch, int state)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:STATe %d,%d,%s\n", name, ch, state? "ON":"OFF");
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:DRIVER:STATe %d,%d,%s\n", name, ch, state? "ON":"OFF");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -3346,20 +3245,16 @@ EXPORT_API int CALL mrgMRQDriverState(ViSession vi, int name, int ch, int state)
 */
 EXPORT_API int CALL mrgMRQDriverState_Query(ViSession vi, int name, int ch, int *ps32State)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (ps32State == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:STATe? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:DRIVER:STATe? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     if (STRCASECMP(as8Ret, "ON") == 0 || STRCASECMP(as8Ret, "1") == 0)
     {
@@ -3382,8 +3277,8 @@ EXPORT_API int CALL mrgMRQDriverState_Query(ViSession vi, int name, int ch, int 
 */
 EXPORT_API int CALL mrgMRQDriverRegisterValue(ViSession vi, int name, int ch,int regIndex, unsigned int value)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:REGister:VALue %d,%d,%d,%d\n", name, ch, regIndex,value);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:DRIVER:REGister:VALue %d,%d,%d,%d\n", name, ch, regIndex,value);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -3400,20 +3295,16 @@ EXPORT_API int CALL mrgMRQDriverRegisterValue(ViSession vi, int name, int ch,int
 */
 EXPORT_API int CALL mrgMRQDriverRegisterValue_Query(ViSession vi, int name, int ch, int regIndex, unsigned int *pu32Value)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (pu32Value == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:DRIVER:REGister:VALue? %d,%d,%d\n", name, ch, regIndex);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:DRIVER:REGister:VALue? %d,%d,%d\n", name, ch, regIndex);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     *pu32Value = strtoul(as8Ret, NULL, 10);
     return 0;
@@ -3428,12 +3319,12 @@ EXPORT_API int CALL mrgMRQDriverRegisterValue_Query(ViSession vi, int name, int 
 */
 EXPORT_API int CALL mrgMRQDriverTuningState(ViSession vi, int name, int ch, int state)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (state != 0 && state != 1)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TUNing:STATe %d,%d,%s\n", name, ch, state?"ON":"OFF");
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TUNing:STATe %d,%d,%s\n", name, ch, state?"ON":"OFF");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -3449,20 +3340,16 @@ EXPORT_API int CALL mrgMRQDriverTuningState(ViSession vi, int name, int ch, int 
 */
 EXPORT_API int CALL mrgMRQDriverTuningState_Query(ViSession vi, int name, int ch, int *ps32State)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (ps32State == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TUNing:STATe? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TUNing:STATe? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     if (STRCASECMP(as8Ret, "OFF") == 0 || STRCASECMP(as8Ret, "0") == 0)
     {
@@ -3488,12 +3375,12 @@ EXPORT_API int CALL mrgMRQDriverTuningState_Query(ViSession vi, int name, int ch
 */
 EXPORT_API int CALL mrgMRQDriverTuningMinCurrent(ViSession vi, int name, int ch, int ratio)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (ratio != 0 && ratio != 1)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TUNing:MIN %d,%d,%s\n", name, ch, ratio == 0 ? "1/2" : "1/4");
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TUNing:MIN %d,%d,%s\n", name, ch, ratio == 0 ? "1/2" : "1/4");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -3509,20 +3396,16 @@ EXPORT_API int CALL mrgMRQDriverTuningMinCurrent(ViSession vi, int name, int ch,
 */
 EXPORT_API int CALL mrgMRQDriverTuningMinCurrent_Query(ViSession vi, int name, int ch, int *ps32Ratio)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (ps32Ratio == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TUNing:MIN? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TUNing:MIN? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     if (STRCASECMP(as8Ret, "1/2") == 0 || STRCASECMP(as8Ret, "0") == 0)
     {
@@ -3549,8 +3432,8 @@ EXPORT_API int CALL mrgMRQDriverTuningMinCurrent_Query(ViSession vi, int name, i
 */
 EXPORT_API int CALL mrgMRQDriverTuningEfficLimit(ViSession vi, int name, int ch, int limitUp,int limitDown)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TUNing:EFFIC %d,%d,%d,%d\n", name, ch, limitUp , limitDown);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TUNing:EFFIC %d,%d,%d,%d\n", name, ch, limitUp , limitDown);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -3567,21 +3450,17 @@ EXPORT_API int CALL mrgMRQDriverTuningEfficLimit(ViSession vi, int name, int ch,
 */
 EXPORT_API int CALL mrgMRQDriverTuningEfficLimit_Query(ViSession vi, int name, int ch, int *ps32LimitUp, int *ps32LimitDown)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     char *p =NULL, *pNext;
     if (ps32LimitUp == NULL || ps32LimitDown == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TUNing:EFFIC? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TUNing:EFFIC? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     p = STRTOK_S(as8Ret, ",", &pNext);
     if (p)
@@ -3620,12 +3499,12 @@ EXPORT_API int CALL mrgMRQDriverTuningEfficLimit_Query(ViSession vi, int name, i
 */
 EXPORT_API int CALL mrgMRQDriverTuningCurrentRegulate(ViSession vi, int name, int ch, int speedUp, int speedDown)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (speedUp < 0 || speedUp > 3 || speedDown < 0 || speedDown > 3)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TUNing:REGULATE %d,%d,%d,%d\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TUNing:REGULATE %d,%d,%d,%d\n",
              name, ch, speedUp, speedDown);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -3649,22 +3528,19 @@ EXPORT_API int CALL mrgMRQDriverTuningCurrentRegulate(ViSession vi, int name, in
 */
 EXPORT_API int CALL mrgMRQDriverTuningCurrentRegulate_Query(ViSession vi, int name, int ch, int *ps32SpeedUp, int *ps32SpeedDown)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     char *p, *pNext;
     if (ps32SpeedDown == NULL || ps32SpeedUp == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:TUNing:REGULATE? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:TUNing:REGULATE? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     p = STRTOK_S(as8Ret, ",", &pNext);
     if (p)
     {
@@ -3700,22 +3576,19 @@ EXPORT_API int CALL mrgMRQDriverTuningCurrentRegulate_Query(ViSession vi, int na
 EXPORT_API int CALL mrgMRQEncoderConfig_Query(ViSession vi, int name, int ch, 
                                               int *ps32State,int *ps32Type,int * ps32LineNum,int *ps32ChanNum)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     char *p,*pNext;
     int retLen = 0;
     if (ps32State == NULL || ps32Type == NULL || ps32LineNum == NULL || ps32ChanNum == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:CONFig? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:CONFig? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     p = STRTOK_S(as8Ret, ",", &pNext);
     if(p)
     {
@@ -3782,13 +3655,13 @@ EXPORT_API int CALL mrgMRQEncoderConfig_Query(ViSession vi, int name, int ch,
 EXPORT_API int CALL mrgMRQEncoderConfig(ViSession vi, int name, int ch, 
                                         int state, int type, int linenum, int channelnum)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     char *ps8EncoderState[3] = {"NONE","OFF","ON"};
     if (state < 0 || state > 2 || (type != 0 && type != 1))
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:CONFig %d,%d,%s,%s,%d,%d\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:CONFig %d,%d,%s,%s,%d,%d\n",
              name, ch,
              ps8EncoderState[state],
              type? "ABSOLUTE":"INCREMENTAL",
@@ -3808,8 +3681,8 @@ EXPORT_API int CALL mrgMRQEncoderConfig(ViSession vi, int name, int ch,
 */
 EXPORT_API int CALL mrgMRQEncoderLineNum(ViSession vi, int name, int ch, int num)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:LINe:NUMber %d,%d,%d\n", name, ch, num);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:LINe:NUMber %d,%d,%d\n", name, ch, num);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -3825,22 +3698,17 @@ EXPORT_API int CALL mrgMRQEncoderLineNum(ViSession vi, int name, int ch, int num
 */
 EXPORT_API int CALL mrgMRQEncoderLineNum_Query(ViSession vi, int name, int ch, int *ps32LineNum)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (ps32LineNum == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:LINe:NUMber? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:LINe:NUMber? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
-
     *ps32LineNum = atoi(as8Ret);
     return 0;
 }
@@ -3854,8 +3722,8 @@ EXPORT_API int CALL mrgMRQEncoderLineNum_Query(ViSession vi, int name, int ch, i
 */
 EXPORT_API int CALL mrgMRQEncoderChannelNum(ViSession vi, int name, int ch, int channelnum)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:CHANnel:NUMber %d,%d,%d\n", name, ch, channelnum);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:CHANnel:NUMber %d,%d,%d\n", name, ch, channelnum);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -3871,23 +3739,18 @@ EXPORT_API int CALL mrgMRQEncoderChannelNum(ViSession vi, int name, int ch, int 
 */
 EXPORT_API int CALL mrgMRQEncoderChannelNum_Query(ViSession vi, int name, int ch, int *ps32ChannelNum)
 {
-    char args[SEND_BUF];
-    char state[10];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (ps32ChannelNum == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:CHANnel:NUMber? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:CHANnel:NUMber? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        state[retLen - 1] = '\0';
-    }
-
-    *ps32ChannelNum = atoi(state);
+    *ps32ChannelNum = atoi(as8Ret);
     return 0;
 }
 /*
@@ -3900,8 +3763,8 @@ EXPORT_API int CALL mrgMRQEncoderChannelNum_Query(ViSession vi, int name, int ch
 */
 EXPORT_API int CALL mrgMRQEncoderType(ViSession vi, int name, int ch, int type)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:TYPe %d,%d,%s\n",
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:TYPe %d,%d,%s\n",
              name, ch, type == 0 ? "INCREMENTAL" : "ABSOLUTE");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -3918,21 +3781,18 @@ EXPORT_API int CALL mrgMRQEncoderType(ViSession vi, int name, int ch, int type)
 */
 EXPORT_API int CALL mrgMRQEncoderType_Query(ViSession vi, int name, int ch, int *ps32Type)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (ps32Type == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:TYPe? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:TYPe? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     if (STRCASECMP(as8Ret, "INCREMENTAL") == 0 || STRCASECMP(as8Ret, "0") == 0)
     {
         *ps32Type = 0;
@@ -3953,13 +3813,13 @@ EXPORT_API int CALL mrgMRQEncoderType_Query(ViSession vi, int name, int ch, int 
 */
 EXPORT_API int CALL mrgMRQEncoderMultiple(ViSession vi, int name, int ch, int multiple)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     char *ps8Multiple[3] = { "SINGLE" ,"DOUBLE" ,"QUADRUPLE" };
     if (multiple < 0 || multiple > 2)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:MULTIPLe %d,%d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:MULTIPLe %d,%d,%s\n",
              name, ch, ps8Multiple[multiple]);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -3976,20 +3836,16 @@ EXPORT_API int CALL mrgMRQEncoderMultiple(ViSession vi, int name, int ch, int mu
 */
 EXPORT_API int CALL mrgMRQEncoderMultiple_Query(ViSession vi, int name, int ch, int *ps32Multiple)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (ps32Multiple == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:MULTIPLe? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:MULTIPLe? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     if(STRCASECMP(as8Ret,"SINGLE") == 0 || STRCASECMP(as8Ret,"0") == 0)
     {
@@ -4018,14 +3874,14 @@ EXPORT_API int CALL mrgMRQEncoderMultiple_Query(ViSession vi, int name, int ch, 
 */
 EXPORT_API int CALL mrgMRQEncoderState(ViSession vi, int name, int ch, int state)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     char *pEncoderState[] = { "NONE","OFF","ON" };
     if (state < 0 || state > 2)
     {
         return -2;
     }
 
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:STATe %d,%d,%s\n", name, ch, pEncoderState[state]);
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:STATe %d,%d,%s\n", name, ch, pEncoderState[state]);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -4041,20 +3897,16 @@ EXPORT_API int CALL mrgMRQEncoderState(ViSession vi, int name, int ch, int state
 */
 EXPORT_API int CALL mrgMRQEncoderState_Query(ViSession vi, int name, int ch, int*ps32State)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (ps32State == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:STATe? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:STATe? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     if (STRCASECMP(as8Ret, "NONE") == 0 || STRCASECMP(as8Ret, "0") == 0)
     {
@@ -4080,8 +3932,8 @@ EXPORT_API int CALL mrgMRQEncoderState_Query(ViSession vi, int name, int ch, int
 */
 EXPORT_API int CALL mrgMRQEncoderFeedback(ViSession vi, int name, int ch, int value)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:FEEDBACK %d,%d,%d\n", name, ch, value);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:FEEDBACK %d,%d,%d\n", name, ch, value);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -4097,20 +3949,16 @@ EXPORT_API int CALL mrgMRQEncoderFeedback(ViSession vi, int name, int ch, int va
 */
 EXPORT_API int CALL mrgMRQEncoderFeedback_Query(ViSession vi, int name, int ch, int *ps32Value)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retLen = 0;
-    char as8Ret[10];
+    char as8Ret[RECV_LEN];
     if (ps32Value == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:FEEDBACK? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 10)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:FEEDBACK? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     *ps32Value = atoi(as8Ret);
     return 0;
@@ -4125,8 +3973,8 @@ EXPORT_API int CALL mrgMRQEncoderFeedback_Query(ViSession vi, int name, int ch, 
 */
 EXPORT_API int CALL mrgMRQEncoderDirection(ViSession vi, int name, int ch, int value)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:DIRECTION %d,%d,%s\n", name, ch, value?"NEGATIVE":"POSITIVE");
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:DIRECTION %d,%d,%s\n", name, ch, value?"NEGATIVE":"POSITIVE");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -4142,21 +3990,18 @@ EXPORT_API int CALL mrgMRQEncoderDirection(ViSession vi, int name, int ch, int v
 */
 EXPORT_API int CALL mrgMRQEncoderDirection_Query(ViSession vi, int name, int ch, int *ps32Value)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retLen = 0;
-    char as8Ret[100];
+    char as8Ret[RECV_LEN];
     if (ps32Value == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:DIRECTION? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:DIRECTION? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
-    }
+
     if (STRCASECMP("POSITIVE", as8Ret) == 0 || STRCASECMP("0", as8Ret) == 0)
     {
         *ps32Value = 0;
@@ -4182,8 +4027,8 @@ EXPORT_API int CALL mrgMRQEncoderDirection_Query(ViSession vi, int name, int ch,
 */
 EXPORT_API int CALL mrgMRQAbsEncoderAlarmState(ViSession vi, int name, int ch, int state)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ALARM:STATe %d,%d,%s\n", name, ch, state ? "ON" : "OFF");
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:ABS:ALARM:STATe %d,%d,%s\n", name, ch, state ? "ON" : "OFF");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -4199,20 +4044,16 @@ EXPORT_API int CALL mrgMRQAbsEncoderAlarmState(ViSession vi, int name, int ch, i
 */
 EXPORT_API int CALL mrgMRQAbsEncoderAlarmState_Query(ViSession vi, int name, int ch, int *ps32State)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retLen = 0;
-    char as8Ret[100];
+    char as8Ret[RECV_LEN];
     if (ps32State == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ALARM:STATe? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:ABS:ALARM:STATe? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     if (STRCASECMP("OFF", as8Ret) == 0 || STRCASECMP("0", as8Ret) == 0)
     {
@@ -4238,8 +4079,8 @@ EXPORT_API int CALL mrgMRQAbsEncoderAlarmState_Query(ViSession vi, int name, int
 */
 EXPORT_API int CALL mrgMRQAbsEncoderAlarmUpLimit(ViSession vi, int name, int ch, int value)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ALARM:UP %d,%d,%d\n", name, ch, value);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:ABS:ALARM:UP %d,%d,%d\n", name, ch, value);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -4255,20 +4096,16 @@ EXPORT_API int CALL mrgMRQAbsEncoderAlarmUpLimit(ViSession vi, int name, int ch,
 */
 EXPORT_API int CALL mrgMRQAbsEncoderAlarmUpLimit_Query(ViSession vi, int name, int ch, int *ps32Value)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retLen = 0;
-    char as8Ret[100];
+    char as8Ret[RECV_LEN];
     if (ps32Value == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ALARM:UP? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:ABS:ALARM:UP? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     *ps32Value = atoi(as8Ret);
     return 0;
@@ -4283,8 +4120,8 @@ EXPORT_API int CALL mrgMRQAbsEncoderAlarmUpLimit_Query(ViSession vi, int name, i
 */
 EXPORT_API int CALL mrgMRQAbsEncoderAlarmDownLimit(ViSession vi, int name, int ch, int value)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ALARM:DOWN %d,%d,%d\n", name, ch, value);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:ABS:ALARM:DOWN %d,%d,%d\n", name, ch, value);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -4300,20 +4137,16 @@ EXPORT_API int CALL mrgMRQAbsEncoderAlarmDownLimit(ViSession vi, int name, int c
 */
 EXPORT_API int CALL mrgMRQAbsEncoderAlarmDownLimit_Query(ViSession vi, int name, int ch, int *ps32Value)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retLen = 0;
-    char as8Ret[100];
+    char as8Ret[RECV_LEN];
     if (ps32Value == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ALARM:DOWN? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:ABS:ALARM:DOWN? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     *ps32Value = atoi(as8Ret);
     return 0;
@@ -4328,8 +4161,8 @@ EXPORT_API int CALL mrgMRQAbsEncoderAlarmDownLimit_Query(ViSession vi, int name,
 */
 EXPORT_API int CALL mrgMRQAbsEncoderAlarmResponse(ViSession vi, int name, int ch, int value)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ALARM:RESPonse %d,%d,%s\n", name, ch, changeResponseToString(value));
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:ABS:ALARM:RESPonse %d,%d,%s\n", name, ch, changeResponseToString(value));
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -4345,20 +4178,16 @@ EXPORT_API int CALL mrgMRQAbsEncoderAlarmResponse(ViSession vi, int name, int ch
 */
 EXPORT_API int CALL mrgMRQAbsEncoderAlarmResponse_Query(ViSession vi, int name, int ch, int *ps32Value)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retLen = 0;
-    char as8Ret[100];
+    char as8Ret[RECV_LEN];
     if (ps32Value == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ALARM:RESPonse? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:ABS:ALARM:RESPonse? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     if (STRCASECMP(as8Ret, "NONE") == 0 || STRCASECMP(as8Ret, "0") == 0)
     {
@@ -4391,8 +4220,8 @@ EXPORT_API int CALL mrgMRQAbsEncoderAlarmResponse_Query(ViSession vi, int name, 
 */
 EXPORT_API int CALL mrgMRQAbsEncoderZeroValue(ViSession vi, int name, int ch, int value)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ZERO:VALUe %d,%d,%d\n", name, ch, value);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:ABS:ZERO:VALUe %d,%d,%d\n", name, ch, value);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -4408,20 +4237,16 @@ EXPORT_API int CALL mrgMRQAbsEncoderZeroValue(ViSession vi, int name, int ch, in
 */
 EXPORT_API int CALL mrgMRQAbsEncoderZeroValue_Query(ViSession vi, int name, int ch, int *ps32Value)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retLen = 0;
-    char as8Ret[100];
+    char as8Ret[RECV_LEN];
     if (ps32Value == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:ENCODer:ABS:ZERO:VALUe? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:ENCODer:ABS:ZERO:VALUe? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     *ps32Value = atoi(as8Ret);
     return 0;
@@ -4440,8 +4265,8 @@ EXPORT_API int CALL mrgMRQAbsEncoderZeroValue_Query(ViSession vi, int name, int 
 EXPORT_API int CALL mrgMRQUartConfig(ViSession vi, int num, int name, 
                                      int baud,char parity, int wordlen, int stopbit)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:APPLy %d,%d,%c,%d,%d\n",
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:UART%d:APPLy %d,%d,%c,%d,%d\n",
              num, name,baud, parity, wordlen, stopbit);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -4461,8 +4286,8 @@ EXPORT_API int CALL mrgMRQUartConfig(ViSession vi, int num, int name,
 */
 EXPORT_API int CALL mrgMRQUartConfig_Query(ViSession vi, int uart, int name, int *ps8Baud,char * ps8Parity,int * ps8Wordlen,int * ps8Stopbit)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     char*p,*pNext;
     int retLen = 0;
     if (uart != 1 && uart != 2)
@@ -4473,13 +4298,9 @@ EXPORT_API int CALL mrgMRQUartConfig_Query(ViSession vi, int uart, int name, int
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:APPLy? %d\n", uart, name);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:UART%d:APPLy? %d\n", uart, name);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     p = STRTOK_S(as8Ret, ",", &pNext);
     if(p)
@@ -4525,14 +4346,14 @@ EXPORT_API int CALL mrgMRQUartConfig_Query(ViSession vi, int uart, int name, int
 */
 EXPORT_API int CALL mrgMRQUartFlowctrl(ViSession vi, int uart, int name, int mode)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     char *ps8FlowCtrl[4] = { "NONE" ,"RTS" ,"CTS" ,"RTS_CTS" };
     if (mode < 0 || mode > 3 || (uart != 1 && uart != 2) )
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:FLOWctrl %d,%s\n",
-        uart, name, ps8FlowCtrl[mode]);
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:UART%d:FLOWctrl %d,%s\n",
+             uart, name, ps8FlowCtrl[mode]);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -4548,22 +4369,18 @@ EXPORT_API int CALL mrgMRQUartFlowctrl(ViSession vi, int uart, int name, int mod
 */
 EXPORT_API int CALL mrgMRQUartFlowctrl_Query(ViSession vi, int uart, int name, int *ps32Mode)
 {
-    char args[SEND_BUF];
-    char tmp[20];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (ps32Mode == NULL || (uart != 1 && uart != 2))
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:FLOWctrl? %d\n", uart, name);
-    if ((retLen = busQuery(vi, args, strlen(args), tmp, 10)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:UART%d:FLOWctrl? %d\n", uart, name);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        tmp[retLen - 1] = '\0';
-        *ps32Mode = atoi(tmp);
-    }
+    *ps32Mode = atoi(as8Ret);
     return 0;
 }
 /*
@@ -4577,12 +4394,12 @@ EXPORT_API int CALL mrgMRQUartFlowctrl_Query(ViSession vi, int uart, int name, i
 */
 EXPORT_API int CALL mrgMRQUartSensorState(ViSession vi, int uart, int port, int name, int state)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if ((uart != 1 && uart != 2) || port < 1 || port >4)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:SENSor%d:STATe %d,%s\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:UART%d:SENSor%d:STATe %d,%s\n",
              uart, port, name, state == 0 ? "OFF" : "ON");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -4601,8 +4418,8 @@ EXPORT_API int CALL mrgMRQUartSensorState(ViSession vi, int uart, int port, int 
 EXPORT_API int CALL mrgMRQUartSensorState_Query(ViSession vi, int uart, 
                                                 int port, int name, int *ps32State)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (ps32State == NULL)
     {
@@ -4612,13 +4429,9 @@ EXPORT_API int CALL mrgMRQUartSensorState_Query(ViSession vi, int uart,
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:SENSor%d:STATe? %d\n", uart, port, name);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:UART%d:SENSor%d:STATe? %d\n", uart, port, name);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     if(STRCASECMP(as8Ret,"ON") == 0 || STRCASECMP(as8Ret,"1") == 0)
     {
@@ -4644,12 +4457,12 @@ EXPORT_API int CALL mrgMRQUartSensorState_Query(ViSession vi, int uart,
 EXPORT_API int CALL mrgMRQUartSensorConfAll(ViSession vi, int uart, 
                                             int port, int name, int sof, int framelen, int num2, int period)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if ((uart != 1 && uart != 2) || port < 1 || port >4)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:ALL %d,%d,%d,%d,%d\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:ALL %d,%d,%d,%d,%d\n",
              uart, port, name, sof, framelen, num2, period);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -4671,21 +4484,17 @@ EXPORT_API int CALL mrgMRQUartSensorConfAll(ViSession vi, int uart,
 EXPORT_API int CALL mrgMRQUartSensorConfAll_Query(ViSession vi, int uart, 
                                                   int port, int name, int *ps32Sof, int* ps32Framelen, int* ps32Framenum, int* ps32Period)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     char*p, *pNext;
     int retLen = 0;
     if (ps32Sof == NULL || ps32Framelen == NULL || ps32Framenum == NULL || ps32Period == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:ALL? %d\n", uart, port, name);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:ALL? %d\n", uart, port, name);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     p = STRTOK_S(as8Ret, ",", &pNext);
     if (p)
@@ -4720,12 +4529,12 @@ EXPORT_API int CALL mrgMRQUartSensorConfAll_Query(ViSession vi, int uart,
 */
 EXPORT_API int CALL mrgMRQUartSensorConfSof(ViSession vi, int uart, int port, int name, int sof)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if ((uart != 1 && uart != 2) || port < 1 || port >4)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:SOF %d,%d\n", uart, port, name, sof);
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:SOF %d,%d\n", uart, port, name, sof);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -4742,8 +4551,8 @@ EXPORT_API int CALL mrgMRQUartSensorConfSof(ViSession vi, int uart, int port, in
 */
 EXPORT_API int CALL mrgMRQUartSensorConfSof_Query(ViSession vi, int uart, int port, int name, int *ps32Sof)
 {
-    char args[SEND_BUF];
-    char state[10];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if ((uart != 1 && uart != 2) || port < 1 || port >4)
     {
@@ -4753,15 +4562,11 @@ EXPORT_API int CALL mrgMRQUartSensorConfSof_Query(ViSession vi, int uart, int po
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:SOF? %d\n", uart, port, name);
-    if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:SOF? %d\n", uart, port, name);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        state[retLen] = '\0';
-    }
-    *ps32Sof = atoi(state);
+    *ps32Sof = atoi(as8Ret);
     return 0;
 }
 /*
@@ -4775,12 +4580,12 @@ EXPORT_API int CALL mrgMRQUartSensorConfSof_Query(ViSession vi, int uart, int po
 */
 EXPORT_API int CALL mrgMRQUartSensorConfFrameLen(ViSession vi, int uart, int port, int name, int len)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if ((uart != 1 && uart != 2) || port < 1 || port >4)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:FRAMELen %d,%d\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:FRAMELen %d,%d\n",
              uart, port, name, len);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -4799,8 +4604,8 @@ EXPORT_API int CALL mrgMRQUartSensorConfFrameLen(ViSession vi, int uart, int por
 EXPORT_API int CALL mrgMRQUartSensorConfFrameLen_Query(ViSession vi, 
                                                        int uart, int port, int name, int *ps32Len)
 {
-    char args[SEND_BUF];
-    char state[10];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if ((uart != 1 && uart != 2) || port < 1 || port >4)
     {
@@ -4810,16 +4615,12 @@ EXPORT_API int CALL mrgMRQUartSensorConfFrameLen_Query(ViSession vi,
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:FRAMELen? %d\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:FRAMELen? %d\n",
              uart, port, name);
-    if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        state[retLen] = '\0';
-    }
-    *ps32Len = atoi(state);
+    *ps32Len = atoi(as8Ret);
     return 0;
 }
 /*
@@ -4834,12 +4635,12 @@ EXPORT_API int CALL mrgMRQUartSensorConfFrameLen_Query(ViSession vi,
 EXPORT_API int CALL mrgMRQUartSensorConfRecvNum(ViSession vi, int uart, 
                                                 int port, int name, int frameNum)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if ((uart != 1 && uart != 2) || port < 1 || port >4)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:NUM %d,%d\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:NUM %d,%d\n",
              uart, port, name, frameNum);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -4858,8 +4659,8 @@ EXPORT_API int CALL mrgMRQUartSensorConfRecvNum(ViSession vi, int uart,
 EXPORT_API int CALL mrgMRQUartSensorConfRecvNum_Query(ViSession vi, int uart, 
                                                       int port, int name, int *ps32FrameNum)
 {
-    char args[SEND_BUF];
-    char state[10];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if ((uart != 1 && uart != 2) || port < 1 || port >4)
     {
@@ -4869,15 +4670,11 @@ EXPORT_API int CALL mrgMRQUartSensorConfRecvNum_Query(ViSession vi, int uart,
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:NUM? %d\n", uart, port, name);
-    if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:NUM? %d\n", uart, port, name);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        state[retLen] = '\0';
-    }
-    *ps32FrameNum = atoi(state);
+    *ps32FrameNum = atoi(as8Ret);
     return 0;
 }
 /*
@@ -4891,12 +4688,12 @@ EXPORT_API int CALL mrgMRQUartSensorConfRecvNum_Query(ViSession vi, int uart,
 */
 EXPORT_API int CALL mrgMRQUartSensorConfPeriod(ViSession vi, int uart, int port, int name, int period)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if ((uart != 1 && uart != 2) || port < 1 || port >4)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:PERIod %d,%d\n",
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:PERIod %d,%d\n",
              uart, port, name, period);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -4915,8 +4712,8 @@ EXPORT_API int CALL mrgMRQUartSensorConfPeriod(ViSession vi, int uart, int port,
 EXPORT_API int CALL mrgMRQUartSensorConfPeriod_Query(ViSession vi, int uart, 
                                                      int port, int name, int *ps32Period)
 {
-    char args[SEND_BUF];
-    char state[10];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if ((uart != 1 && uart != 2) || port < 1 || port >4)
     {
@@ -4926,15 +4723,11 @@ EXPORT_API int CALL mrgMRQUartSensorConfPeriod_Query(ViSession vi, int uart,
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:PERIod? %d\n", uart, port, name);
-    if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:UART%d:SENSor%d:CONFig:PERIod? %d\n", uart, port, name);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        state[retLen] = '\0';
-    }
-    *ps32Period = atoi(state);
+    *ps32Period = atoi(as8Ret);
     return 0;
 }
 /*
@@ -4948,7 +4741,8 @@ EXPORT_API int CALL mrgMRQUartSensorConfPeriod_Query(ViSession vi, int uart,
 */
 EXPORT_API int CALL mrgMRQUartSensorData_Query(ViSession vi, int uart, int port, int name, char *buf)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if ((uart != 1 && uart != 2) || port < 1 || port >4)
     {
@@ -4958,14 +4752,11 @@ EXPORT_API int CALL mrgMRQUartSensorData_Query(ViSession vi, int uart, int port,
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:UART%d:SENSor%d:DATA? %d\n", uart, port, name);
-    if ((retLen = busQuery(vi, args, strlen(args), buf, 10)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:UART%d:SENSor%d:DATA? %d\n", uart, port, name);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        buf[retLen - 1] = '\0';
-    }
+    strcpy(buf, as8Ret);
     return 0;
 }
 /*
@@ -4978,20 +4769,16 @@ EXPORT_API int CALL mrgMRQUartSensorData_Query(ViSession vi, int uart, int port,
 */
 EXPORT_API int CALL mrgMRQDistanceAlarmState_Query(ViSession vi, int name, int ch, int *ps32State)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (ps32State == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:DALarm:STATe? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:DALarm:STATe? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     if (STRCASECMP(as8Ret, "OFF") == 0 || STRCASECMP(as8Ret, "0") == 0)
     {
@@ -5013,12 +4800,12 @@ EXPORT_API int CALL mrgMRQDistanceAlarmState_Query(ViSession vi, int name, int c
 */
 EXPORT_API int CALL mrgMRQDistanceAlarmState(ViSession vi, int name, int ch, int state)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (state != 0 && state != 1)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:DALarm:STATe %d,%d,%s\n", name, ch, state ? "ON" : "OFF");
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:DALarm:STATe %d,%d,%s\n", name, ch, state ? "ON" : "OFF");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -5035,8 +4822,8 @@ EXPORT_API int CALL mrgMRQDistanceAlarmState(ViSession vi, int name, int ch, int
 */
 EXPORT_API int CALL mrgMRQDistanceAlarm(ViSession vi, int num, int name, int ch, float distance)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:DALarm:ALARm%d:DISTance %d,%d,%f\n", num, name, ch, distance);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:DALarm:ALARm%d:DISTance %d,%d,%f\n", num, name, ch, distance);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -5053,23 +4840,18 @@ EXPORT_API int CALL mrgMRQDistanceAlarm(ViSession vi, int num, int name, int ch,
 */
 EXPORT_API int CALL mrgMRQDistanceAlarm_Query(ViSession vi, int num, int name, int ch, float *pf32Distance)
 {
-    char args[SEND_BUF];
-    char state[10];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (pf32Distance == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:DALarm:ALARm%d:DISTance? %d,%d\n", num, name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:DALarm:ALARm%d:DISTance? %d,%d\n", num, name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        state[retLen - 1] = '\0';
-    }
-
-    *pf32Distance = strtof(state,NULL);
+    *pf32Distance = strtof(as8Ret,NULL);
     return 0;
 }
 /*
@@ -5082,22 +4864,18 @@ EXPORT_API int CALL mrgMRQDistanceAlarm_Query(ViSession vi, int num, int name, i
 */
 EXPORT_API int CALL mrgMRQNewDriverType_Query(ViSession vi, int name, int ch, int *ps32Type)
 {
-    char args[SEND_BUF];
-    char tmp[20];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (ps32Type == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:NDRiver:TYPe? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), tmp, 10)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:NDRiver:TYPe? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        tmp[retLen - 1] = '\0';
-        *ps32Type = atoi(tmp);
-    }
+    *ps32Type = atoi(as8Ret);
     return 0;
 }
 /*
@@ -5109,8 +4887,8 @@ EXPORT_API int CALL mrgMRQNewDriverType_Query(ViSession vi, int name, int ch, in
 */
 EXPORT_API int CALL mrgMRQNewDriverCurrent(ViSession vi, int name, float current)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:NDRiver:CURRent %d,%f\n", name, current);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:NDRiver:CURRent %d,%f\n", name, current);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -5125,23 +4903,18 @@ EXPORT_API int CALL mrgMRQNewDriverCurrent(ViSession vi, int name, float current
 */
 EXPORT_API int CALL mrgMRQNewDriverCurrent_Query(ViSession vi, int name, float *pf32Current)
 {
-    char args[SEND_BUF];
-    char state[10];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (pf32Current == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:NDRiver:CURRent? %d\n", name);
-    if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:NDRiver:CURRent? %d\n", name);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        state[retLen - 1] = '\0';
-    }
-
-    *pf32Current = strtof(state,NULL);
+    *pf32Current = strtof(as8Ret,NULL);
     return 0;
 }
 /*
@@ -5153,8 +4926,8 @@ EXPORT_API int CALL mrgMRQNewDriverCurrent_Query(ViSession vi, int name, float *
 */
 EXPORT_API int CALL mrgMRQNewDriverMicrosteps(ViSession vi, int name, int microstep)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:NDRiver:MICRosteps %d,%d\n", name, microstep);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:NDRiver:MICRosteps %d,%d\n", name, microstep);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -5169,23 +4942,18 @@ EXPORT_API int CALL mrgMRQNewDriverMicrosteps(ViSession vi, int name, int micros
 */
 EXPORT_API int CALL mrgMRQNewDriverMicrosteps_Query(ViSession vi, int name, int *ps32Microstep)
 {
-    char args[SEND_BUF];
-    char state[10];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (ps32Microstep == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:NDRiver:MICRosteps? %d\n", name);
-    if ((retLen = busQuery(vi, args, strlen(args), state, 10)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:NDRiver:MICRosteps? %d\n", name);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
     }
-    else
-    {
-        state[retLen - 1] = '\0';
-    }
-
-    *ps32Microstep = atoi(state);
+    *ps32Microstep = atoi(as8Ret);
     return 0;
 }
 /*
@@ -5198,20 +4966,16 @@ EXPORT_API int CALL mrgMRQNewDriverMicrosteps_Query(ViSession vi, int name, int 
 */
 EXPORT_API int CALL mrgMRQNewDriverState_Query(ViSession vi, int name, int ch, int *ps32State)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     if (ps32State == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:NDRiver:STATe? %d,%d\n", name, ch);
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:NDRiver:STATe? %d,%d\n", name, ch);
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
         return -1;
-    }
-    else
-    {
-        as8Ret[retLen - 1] = '\0';
     }
     if (STRCASECMP(as8Ret, "ON") == 0 || STRCASECMP(as8Ret, "1") == 0)
     {
@@ -5233,8 +4997,8 @@ EXPORT_API int CALL mrgMRQNewDriverState_Query(ViSession vi, int name, int ch, i
 */
 EXPORT_API int CALL mrgMRQNewDriverState(ViSession vi, int name, int ch, int state)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "DEVICE:MRQ:NDRiver:STATe %d,%d,%s\n", name, ch, state ? "ON" : "OFF");
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEVICE:MRQ:NDRiver:STATe %d,%d,%s\n", name, ch, state ? "ON" : "OFF");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }

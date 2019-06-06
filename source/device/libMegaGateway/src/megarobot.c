@@ -4,7 +4,6 @@
 #include "mrqdevice.h"
 #include "device.h"
 
-#define     SEND_BUF        (100)
 #define     DELAYTIME       (100)  //! 查询延时时间
 #define     WAVETABLE_MIN   0   //! 最小波表号
 #define     WAVETABLE_MAX   9   //! 最大波表号
@@ -20,8 +19,8 @@
 */
 EXPORT_API int CALL mrgBuildRobot(ViSession vi, char * robotType, char * devList, int * robotname)
 {
-    char args[SEND_BUF];
-    char name[8];
+    char args[SEND_LEN];
+    char name[RECV_LEN];
     int  id = 0;
     int retLen = 0;
     if (robotType == NULL || robotname == NULL)
@@ -30,19 +29,17 @@ EXPORT_API int CALL mrgBuildRobot(ViSession vi, char * robotType, char * devList
     }
     if (STRCASECMP("MRX-RAW", robotType) == 0 || devList == NULL)
     {
-        snprintf(args, SEND_BUF, "ROBOT:ALLOC? %s\n", robotType);
+        snprintf(args, SEND_LEN, "ROBOT:ALLOC? %s\n", robotType);
     }
     else
     {
-        snprintf(args, SEND_BUF, "ROBOT:ALLOC? %s,(%s)\n", robotType, devList);
+        snprintf(args, SEND_LEN, "ROBOT:ALLOC? %s,(%s)\n", robotType, devList);
     }
     
-    if ((retLen = busQuery(vi, args, strlen(args), name,8)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), name,sizeof(name))) == 0) {
         return -1;
     }
-    else {
-        name[retLen-1] = '\0'; //去掉“\n”
-    }
+
     id = atoi(name);
     if (id > 0)
     {
@@ -62,8 +59,8 @@ EXPORT_API int CALL mrgBuildRobot(ViSession vi, char * robotType, char * devList
 */
 EXPORT_API int CALL mrgBuildRobotNamed(ViSession vi, char * robotType, char * devList,int robotid, int * robotname)
 {
-    char args[SEND_BUF];
-    char name[8];
+    char args[SEND_LEN];
+    char name[RECV_LEN];
     int  id = 0;
     int retLen = 0;
     if (robotType == NULL || robotname == NULL)
@@ -72,18 +69,15 @@ EXPORT_API int CALL mrgBuildRobotNamed(ViSession vi, char * robotType, char * de
     }
     if (STRCASECMP("MRX-RAW", robotType) == 0 || devList == NULL)
     {
-        snprintf(args, SEND_BUF, "ROBOT:ALLOC? %s,,%d\n", robotType, robotid);
+        snprintf(args, SEND_LEN, "ROBOT:ALLOC? %s,,%d\n", robotType, robotid);
     }
     else
     {
-        snprintf(args, SEND_BUF, "ROBOT:ALLOC? %s,(%s),%d\n", robotType, devList, robotid);
+        snprintf(args, SEND_LEN, "ROBOT:ALLOC? %s,(%s),%d\n", robotType, devList, robotid);
     }
 
-    if ((retLen = busQuery(vi, args, strlen(args), name, 8)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), name, sizeof(name))) == 0) {
         return -1;
-    }
-    else {
-        name[retLen - 1] = '\0'; //去掉“\n”
     }
     id = atoi(name);
     if (id > 0)
@@ -102,8 +96,8 @@ EXPORT_API int CALL mrgBuildRobotNamed(ViSession vi, char * robotType, char * de
 */
 EXPORT_API int CALL mrgDeleteRobot(ViSession vi, int robotname)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:DELETE %d\n", robotname);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:DELETE %d\n", robotname);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -120,8 +114,8 @@ EXPORT_API int CALL mrgDeleteRobot(ViSession vi, int robotname)
 */
 EXPORT_API int CALL mrgSetRobotLinks(ViSession vi, int robotname,float * links,int link_count)
 {
-    char args[SEND_BUF];
-    char as8Links[SEND_BUF] = { 0 }, tmp[20] = {0};
+    char args[SEND_LEN];
+    char as8Links[SEND_LEN] = { 0 }, tmp[20] = {0};
     int i;
     if (links == NULL )
     {
@@ -136,7 +130,7 @@ EXPORT_API int CALL mrgSetRobotLinks(ViSession vi, int robotname,float * links,i
         snprintf(tmp, 20, "%f", links[i]);
         strcat(as8Links, tmp);
     }
-    snprintf(args, SEND_BUF, "ROBOT:LINK %d,(%s)\n", robotname, as8Links);
+    snprintf(args, SEND_LEN, "ROBOT:LINK %d,(%s)\n", robotname, as8Links);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -153,8 +147,8 @@ EXPORT_API int CALL mrgSetRobotLinks(ViSession vi, int robotname,float * links,i
 */
 EXPORT_API int CALL mrgGetRobotLinks(ViSession vi, int robotname, float * links, int *link_count)
 {
-    char args[SEND_BUF];
-    char ret[100];
+    char args[SEND_LEN];
+    char ret[RECV_LEN];
     char *pNext,*p;
     int retlen = 0;
     if (links == NULL || link_count == NULL)
@@ -162,20 +156,16 @@ EXPORT_API int CALL mrgGetRobotLinks(ViSession vi, int robotname, float * links,
         return -1;
     }
     *link_count = 0;
-    snprintf(args, SEND_BUF, "ROBOT:LINK? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "ROBOT:LINK? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, sizeof(ret))) == 0) {
         return -1;
     }
-    else
+    p = STRTOK_S(ret, ",", &pNext);
+    while (p)
     {
-        ret[retlen - 1] = 0;
-        p = STRTOK_S(ret, ",", &pNext);
-        while (p)
-        {
-            *links++ = strtof(p,NULL);
-            p = STRTOK_S(NULL, ",", &pNext);
-            (*link_count)++;
-        }
+        *links++ = strtof(p,NULL);
+        p = STRTOK_S(NULL, ",", &pNext);
+        (*link_count)++;
     }
     return 0;
 }
@@ -188,36 +178,33 @@ EXPORT_API int CALL mrgGetRobotLinks(ViSession vi, int robotname, float * links,
 */
 EXPORT_API int CALL mrgGetRobotType(ViSession vi, int robotname)
 {
-    char args[SEND_BUF];
-    char ret[100];
+    char args[SEND_LEN];
+    char ret[RECV_LEN];
     int retlen = 0;
-    snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "ROBOT:CONFIGURATION? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, sizeof(ret))) == 0) {
         return -1;
     }
-    else
+
+    if (STRCASECMP(ret, "MRX-T4") == 0)
     {
-        ret[retlen - 1] = 0;
-        if (STRCASECMP(ret, "MRX-T4") == 0)
-        {
-            return MRX_TYPE_T4;
-        }
-        else if (STRCASECMP(ret, "MRX-AS") == 0)
-        {
-            return MRX_TYPE_AS;
-        }
-        else if (STRCASECMP(ret, "MRX-H2") == 0)
-        {
-            return MRX_TYPE_H2;
-        }
-        else if (STRCASECMP(ret, "MRX-DELTA") == 0)
-        {
-            return MRX_TYPE_DELTA;
-        }
-        else if (STRCASECMP(ret, "MRX-RAW") == 0)
-        {
-            return MRX_TYPE_RAW;
-        }
+        return MRX_TYPE_T4;
+    }
+    else if (STRCASECMP(ret, "MRX-AS") == 0)
+    {
+        return MRX_TYPE_AS;
+    }
+    else if (STRCASECMP(ret, "MRX-H2") == 0)
+    {
+        return MRX_TYPE_H2;
+    }
+    else if (STRCASECMP(ret, "MRX-DELTA") == 0)
+    {
+        return MRX_TYPE_DELTA;
+    }
+    else if (STRCASECMP(ret, "MRX-RAW") == 0)
+    {
+        return MRX_TYPE_RAW;
     }
     return MRX_TYPE_UNKOWN;
 }
@@ -229,8 +216,8 @@ EXPORT_API int CALL mrgGetRobotType(ViSession vi, int robotname)
 */
 EXPORT_API int CALL mrgExportRobotConfig(ViSession vi)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION:FILE:EXPort\n");
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:CONFIGURATION:FILE:EXPort\n");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -245,8 +232,8 @@ EXPORT_API int CALL mrgExportRobotConfig(ViSession vi)
 */
 EXPORT_API int CALL mrgExportRobotConfig_default(ViSession vi)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION:FILE:EXPort::DEFault\n");
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:CONFIGURATION:FILE:EXPort::DEFault\n");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -261,8 +248,8 @@ EXPORT_API int CALL mrgExportRobotConfig_default(ViSession vi)
 */
 EXPORT_API int CALL mrgRestoreRobotConfig(ViSession vi)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION:FILE:IMPort\n");
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:CONFIGURATION:FILE:IMPort\n");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -277,31 +264,27 @@ EXPORT_API int CALL mrgRestoreRobotConfig(ViSession vi)
 */
 EXPORT_API int CALL mrgGetRobotConfigState(ViSession vi)
 {
-    char args[SEND_BUF];
-    char ret[100];
+    char args[SEND_LEN];
+    char ret[RECV_LEN];
     int retlen = 0,try_times = 0;
-    snprintf(args, SEND_BUF, "ROBOT:CONFIGURATION:FILE:STATE?\n");
-    while (try_times < 10)
+    snprintf(args, SEND_LEN, "ROBOT:CONFIGURATION:FILE:STATE?\n");
+    while (try_times++ < 10)
     {
-        if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
-            try_times++;
+        if ((retlen = busQuery(vi, args, strlen(args), ret, sizeof(ret))) == 0) {
+            msSleep(DELAYTIME);
             continue;
         }
-        else
+        if (STRCASECMP(ret, "BUSY") == 0)
         {
-            ret[retlen - 1] = '\0';
-            if (STRCASECMP(ret, "BUSY") == 0)
-            {
-                return 1;
-            }
-            else if (STRCASECMP(ret, "IDLE") == 0)
-            {
-                return 0;
-            }
-            else if (STRCASECMP(ret, "ERROR") == 0)
-            {
-                return 2;
-            }
+            return 1;
+        }
+        else if (STRCASECMP(ret, "IDLE") == 0)
+        {
+            return 0;
+        }
+        else if (STRCASECMP(ret, "ERROR") == 0)
+        {
+            return 2;
         }
     }
     return -1;
@@ -316,8 +299,8 @@ EXPORT_API int CALL mrgGetRobotConfigState(ViSession vi)
 */
 EXPORT_API int CALL mrgSetRobotMachineSerialNum(ViSession vi, int robotname, char * sn)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:CONFIGuration:SN %d,%s\n", robotname, sn);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:CONFIGuration:SN %d,%s\n", robotname, sn);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -334,17 +317,16 @@ EXPORT_API int CALL mrgSetRobotMachineSerialNum(ViSession vi, int robotname, cha
 */
 EXPORT_API int CALL mrgGetRobotMachineSerialNum(ViSession vi, int robotname,char*serial)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retlen = 0;
     if (serial == NULL)
     {
         return -1;
     }
-    snprintf(args, SEND_BUF, "ROBOT:CONFIGuration:SN? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), serial, 100)) == 0) {
+    snprintf(args, SEND_LEN, "ROBOT:CONFIGuration:SN? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), serial, RECV_LEN)) == 0) {
         return -1;
     }
-    serial[retlen - 1] = 0;
     return 0;
 }
 /*
@@ -357,8 +339,8 @@ EXPORT_API int CALL mrgGetRobotMachineSerialNum(ViSession vi, int robotname,char
 */
 EXPORT_API int CALL mrgSetRobotSubType(ViSession vi,int robotname,int subtype)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:SUBTYPE %d,%d\n", robotname,subtype);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:SUBTYPE %d,%d\n", robotname,subtype);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -374,17 +356,14 @@ EXPORT_API int CALL mrgSetRobotSubType(ViSession vi,int robotname,int subtype)
 */
 EXPORT_API int CALL mrgGetRobotSubType(ViSession vi, int robotname)
 {
-    char args[SEND_BUF];
-    char ret[8];
+    char args[SEND_LEN];
+    char ret[RECV_LEN];
     int retlen = 0;
-    snprintf(args, SEND_BUF, "ROBOT:SUBTYPE? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), ret, 4)) == 0) {
+    snprintf(args, SEND_LEN, "ROBOT:SUBTYPE? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, sizeof(ret))) == 0) {
         return -1;
     }
-    else {
-        ret[retlen] = '\0';
-        return atoi(ret);
-    }
+    return atoi(ret);
 }
 /*
 * 设置当前机器人的坐标系
@@ -396,8 +375,8 @@ EXPORT_API int CALL mrgGetRobotSubType(ViSession vi, int robotname)
 */
 EXPORT_API int CALL mrgSetRobotCoordinateSystem(ViSession vi, int robotname, int coord)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:COORDinate %d,%d\n", robotname, coord);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:COORDinate %d,%d\n", robotname, coord);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -413,17 +392,14 @@ EXPORT_API int CALL mrgSetRobotCoordinateSystem(ViSession vi, int robotname, int
 */
 EXPORT_API int CALL mrgGetRobotCoordinateSystem(ViSession vi, int robotname)
 {
-    char args[SEND_BUF];
-    char ret[12];
+    char args[SEND_LEN];
+    char ret[RECV_LEN];
     int retlen = 0;
-    snprintf(args, SEND_BUF, "ROBOT:COORDinate? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), ret, 12)) == 0) {
+    snprintf(args, SEND_LEN, "ROBOT:COORDinate? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, sizeof(ret))) == 0) {
         return -1;
     }
-    else {
-        ret[retlen] = '\0';
-        return atoi(ret);
-    }
+    return atoi(ret);
 }
 /*
 * 查询CAN网络中机器人的个数
@@ -432,17 +408,14 @@ EXPORT_API int CALL mrgGetRobotCoordinateSystem(ViSession vi, int robotname)
 */
 EXPORT_API int CALL mrgGetRobotCount(ViSession vi)
 {
-    char args[SEND_BUF];
-    char ret[12];
+    char args[SEND_LEN];
+    char ret[RECV_LEN];
     int retlen = 0;
-    snprintf(args, SEND_BUF, "ROBOT:COUNT?\n");
-    if ((retlen = busQuery(vi, args, strlen(args),ret,12)) == 0) {
+    snprintf(args, SEND_LEN, "ROBOT:COUNT?\n");
+    if ((retlen = busQuery(vi, args, strlen(args),ret,sizeof(ret))) == 0) {
         return -1;
     }
-    else {
-        ret[retlen - 1] = '\0';
-        return atoi(ret);
-    }
+    return atoi(ret);
 }
 /*
 * 查询CAN网络中所有机器人的名子
@@ -453,18 +426,17 @@ EXPORT_API int CALL mrgGetRobotCount(ViSession vi)
 */
 EXPORT_API int CALL mrgGetRobotName(ViSession vi,int *robotnames)
 {
-    char args[SEND_BUF];
-    char names[100];
+    char args[SEND_LEN];
+    char names[RECV_LEN];
     char *p, *pNext;
     int retlen = 0,count = 0;
     if (robotnames == NULL)
     {
         return -1;
     }
-    snprintf(args, SEND_BUF, "ROBOT:NAME?\n");
-    if ((retlen = busQuery(vi, args, strlen(args), names, 100)) > 0)
+    snprintf(args, SEND_LEN, "ROBOT:NAME?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), names, sizeof(names))) > 0)
     {
-        names[retlen - 1] = '\0';
         p = STRTOK_S(names, ",", &pNext);
         while (p)
         {
@@ -530,19 +502,18 @@ EXPORT_API int CALL mrgGetRobotName(ViSession vi,int *robotnames)
 */
 EXPORT_API int CALL mrgGetRobotDevice(ViSession vi,int robotname,int * device)
 {
-    char args[SEND_BUF];
-    char devlist[100];
+    char args[SEND_LEN];
+    char devlist[RECV_LEN];
     char *p, *pNext;
     int count = 0, retlen = 0;
     if (device == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "ROBOT:DEVICE:NAME? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), devlist, 100)) == 0) {
+    snprintf(args, SEND_LEN, "ROBOT:DEVICE:NAME? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), devlist, sizeof(devlist))) == 0) {
         return -1;
     }
-    devlist[retlen] = '\0';
     p = STRTOK_S(devlist, ",", &pNext);
     while (p)
     {
@@ -563,8 +534,8 @@ EXPORT_API int CALL mrgGetRobotDevice(ViSession vi,int robotname,int * device)
 */
 EXPORT_API int CALL mrgSetRobotProjectZero(ViSession vi, int robotname, float x,float y,float z)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:ZERO:PROJECT %d,%f,%f,%f\n", robotname, x,y,z);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:ZERO:PROJECT %d,%f,%f,%f\n", robotname, x,y,z);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -581,8 +552,8 @@ EXPORT_API int CALL mrgSetRobotProjectZero(ViSession vi, int robotname, float x,
 */
 EXPORT_API int CALL mrgGetRobotProjectZero(ViSession vi, int robotname,float * x,float *y,float *z)
 {
-    char args[SEND_BUF];
-    char ret[100];
+    char args[SEND_LEN];
+    char ret[RECV_LEN];
     char *p, *pNext;
     int retlen = 0,count = 0;
     float values[10] = {0.0};
@@ -590,11 +561,10 @@ EXPORT_API int CALL mrgGetRobotProjectZero(ViSession vi, int robotname,float * x
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "ROBOT:ZERO:PROJECT? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "ROBOT:ZERO:PROJECT? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, sizeof(ret))) == 0) {
         return -1;
     }
-    ret[retlen - 1] = '\0';
     p = STRTOK_S(ret, ",", &pNext);
     while (p)
     {
@@ -616,8 +586,8 @@ EXPORT_API int CALL mrgGetRobotProjectZero(ViSession vi, int robotname,float * x
 */
 EXPORT_API int CALL mrgSetRobotAxisZero(ViSession vi, int robotname, float x, float y, float z)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:ZERO:AXIS %d,%f,%f,%f\n", robotname, x, y, z);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:ZERO:AXIS %d,%f,%f,%f\n", robotname, x, y, z);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -634,8 +604,8 @@ EXPORT_API int CALL mrgSetRobotAxisZero(ViSession vi, int robotname, float x, fl
 */
 EXPORT_API int CALL mrgGetRobotAxisZero(ViSession vi, int robotname, float * x, float *y, float *z)
 {
-    char args[SEND_BUF];
-    char ret[100];
+    char args[SEND_LEN];
+    char ret[RECV_LEN];
     char *p, *pNext;
     int retlen = 0, count = 0;
     float values[10] = { 0.0 };
@@ -643,11 +613,10 @@ EXPORT_API int CALL mrgGetRobotAxisZero(ViSession vi, int robotname, float * x, 
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "ROBOT:ZERO:AXIS? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "ROBOT:ZERO:AXIS? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, sizeof(ret))) == 0) {
         return -1;
     }
-    ret[retlen - 1] = '\0';
     p = STRTOK_S(ret, ",", &pNext);
     while (p)
     {
@@ -670,8 +639,8 @@ EXPORT_API int CALL mrgGetRobotAxisZero(ViSession vi, int robotname, float * x, 
 */
 EXPORT_API int CALL mrgSetRobotSoftWareLimit(ViSession vi, int robotname,int type,float x, float y, float z)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:LIMIt:SOFT:%s %d,%f,%f,%f\n",type == 0?"POSITive":"NEGATive", robotname, x, y, z);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:LIMIt:SOFT:%s %d,%f,%f,%f\n",type == 0?"POSITive":"NEGATive", robotname, x, y, z);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -689,16 +658,15 @@ EXPORT_API int CALL mrgSetRobotSoftWareLimit(ViSession vi, int robotname,int typ
 */
 EXPORT_API int CALL mrgGetRobotSoftWareLimit(ViSession vi, int robotname,int type, float * x, float *y, float *z)
 {
-    char args[SEND_BUF];
-    char ret[100];
+    char args[SEND_LEN];
+    char ret[RECV_LEN];
     char *p, *pNext;
     int retlen = 0, count = 0;
     float values[10] = { 0.0 };
-    snprintf(args, SEND_BUF, "ROBOT:LIMIt:SOFT:%s? %d\n", type == 0 ? "POSITive" : "NEGATive", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), ret, 100)) == 0) {
+    snprintf(args, SEND_LEN, "ROBOT:LIMIt:SOFT:%s? %d\n", type == 0 ? "POSITive" : "NEGATive", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, sizeof(ret))) == 0) {
         return -1;
     }
-    ret[retlen - 1] = '\0';
     p = STRTOK_S(ret, ",", &pNext);
     while (p)
     {
@@ -719,12 +687,12 @@ EXPORT_API int CALL mrgGetRobotSoftWareLimit(ViSession vi, int robotname,int typ
 */
 EXPORT_API int CALL mrgSetRobotWavetable(ViSession vi, int robotname,int wavetable)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable >= WAVETABLE_MAX)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF,"ROBOT::WAVETABLE %d,%d\n", robotname,wavetable);
+    snprintf(args, SEND_LEN,"ROBOT::WAVETABLE %d,%d\n", robotname,wavetable);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -739,14 +707,13 @@ EXPORT_API int CALL mrgSetRobotWavetable(ViSession vi, int robotname,int wavetab
 */
 EXPORT_API int CALL mrgRobotWavetableQuery(ViSession vi, int robotname)
 {
-    char args[SEND_BUF];
-    char wavetable[8];
+    char args[SEND_LEN];
+    char wavetable[RECV_LEN];
     int retlen = 0;
-    snprintf(args, SEND_BUF, "ROBOT::WAVETABLE? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), wavetable,8)) == 0) {
+    snprintf(args, SEND_LEN, "ROBOT::WAVETABLE? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), wavetable,sizeof(wavetable))) == 0) {
         return -1;
     }
-    wavetable[retlen-1] = '\0'; //去掉回车符
     if (STRCASECMP(wavetable, "MAIN") == 0 || STRCASECMP(wavetable, "0") == 0){
         return 0;
     }else if (STRCASECMP(wavetable, "SMALL") == 0){
@@ -780,14 +747,14 @@ EXPORT_API int CALL mrgRobotWavetableQuery(ViSession vi, int robotname)
 */
 EXPORT_API int CALL mrgRobotRun(ViSession vi,int robotname,int wavetable)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if(wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
-        snprintf(args, SEND_BUF, "ROBOT:RUN %d,%d\n", robotname,wavetable);
+        snprintf(args, SEND_LEN, "ROBOT:RUN %d,%d\n", robotname,wavetable);
     }
     else
     {
-        snprintf(args, SEND_BUF, "ROBOT:RUN %d\n", robotname);
+        snprintf(args, SEND_LEN, "ROBOT:RUN %d\n", robotname);
     }
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -803,18 +770,17 @@ EXPORT_API int CALL mrgRobotRun(ViSession vi,int robotname,int wavetable)
 */
 EXPORT_API int CALL mrgRobotStop(ViSession vi, int name, int wavetable)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
-        snprintf(args, SEND_BUF, "ROBOT:STOP %d,%d\n", name, wavetable);
+        snprintf(args, SEND_LEN, "ROBOT:STOP %d,%d\n", name, wavetable);
     }
     else
     {
-        snprintf(args, SEND_BUF, "ROBOT:STOP %d\n", name);
+        snprintf(args, SEND_LEN, "ROBOT:STOP %d\n", name);
     }
-    busWrite(vi, args, strlen(args));
-    msSleep(300);
     if (busWrite(vi, args, strlen(args)) == 0) {
+        msSleep(DELAYTIME * 2);
         if (busWrite(vi, args, strlen(args)) == 0) {
             return -1;
         }
@@ -830,23 +796,22 @@ EXPORT_API int CALL mrgRobotStop(ViSession vi, int name, int wavetable)
 */
 EXPORT_API int CALL mrgGetRobotStates(ViSession vi, int robotname, int wavetable, char *state)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retlen = 0;
 
     if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
-        snprintf(args, SEND_BUF, "ROBOT:STATe? %d,%d\n", robotname, wavetable);
+        snprintf(args, SEND_LEN, "ROBOT:STATe? %d,%d\n", robotname, wavetable);
     }
     else
     {
-        snprintf(args, SEND_BUF, "ROBOT:STATe? %d\n", robotname);
+        snprintf(args, SEND_LEN, "ROBOT:STATe? %d\n", robotname);
     }
 
-    if ((retlen = busQuery(vi, args, strlen(args), state, 100)) == 0)
+    if ((retlen = busQuery(vi, args, strlen(args), state, RECV_LEN)) == 0)
     {
         return -1;
     }
-    state[retlen - 1] = '\0';//去掉回车符
     return 0;
 }
 /*
@@ -859,31 +824,24 @@ EXPORT_API int CALL mrgGetRobotStates(ViSession vi, int robotname, int wavetable
 */
 EXPORT_API int CALL mrgRobotWaitReady(ViSession vi, int robotname,int wavetable, int timeout_ms)
 {
-    int ret = -3, error_count = 0;
-    char args[SEND_BUF];
-    char state[12];
+    int ret = -3;
+    char args[SEND_LEN];
+    char state[RECV_LEN];
     int time = 0, retlen = 0;
     if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
-        snprintf(args, SEND_BUF, "ROBOT:STATe? %d,%d\n", robotname, wavetable);
+        snprintf(args, SEND_LEN, "ROBOT:STATe? %d,%d\n", robotname, wavetable);
     }
     else
     {
-        snprintf(args, SEND_BUF, "ROBOT:STATe? %d\n", robotname);
+        snprintf(args, SEND_LEN, "ROBOT:STATe? %d\n", robotname);
     }
     while (1)
     {
-        msSleep(DELAYTIME);
-        if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
-            if (++error_count > 3)
-            {
-                return -1;
-            }
-            msSleep(DELAYTIME);
-            time += DELAYTIME;
-            continue;
+        if ((retlen = busQuery(vi, args, strlen(args), state, sizeof(state))) == 0)
+        {
+            ret = -1; break;
         }
-        state[retlen - 1] = '\0';//去掉回车符
         if (STRCASECMP(state, "READY") == 0 || STRCASECMP(state, "IDLE") == 0) //下发过程中停止会进入“IDLE”状态
         {
             ret = 0; break;
@@ -912,32 +870,25 @@ EXPORT_API int CALL mrgRobotWaitReady(ViSession vi, int robotname,int wavetable,
 */
 EXPORT_API int CALL mrgRobotWaitEnd(ViSession vi, int robotname, int wavetable, int timeout_ms)
 {
-    int ret = -3,error_count = 0;
-    char args[SEND_BUF];
-    char state[100];
+    int ret = -3;
+    char args[SEND_LEN];
+    char state[RECV_LEN];
     int time = 0, retlen = 0;
 
     if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
-        snprintf(args, SEND_BUF, "ROBOT:STATe? %d,%d\n", robotname, wavetable);
+        snprintf(args, SEND_LEN, "ROBOT:STATe? %d,%d\n", robotname, wavetable);
     }
     else
     {
-        snprintf(args, SEND_BUF, "ROBOT:STATe? %d\n", robotname);
+        snprintf(args, SEND_LEN, "ROBOT:STATe? %d\n", robotname);
     }
     while (1)
     {
-        if ((retlen = busQuery(vi, args, strlen(args), state, 100)) == 0)
+        if ((retlen = busQuery(vi, args, strlen(args), state, sizeof(state))) == 0)
         {
-            if (++error_count > 30)
-            {
-                return -1;
-            }
-            msSleep(DELAYTIME);
-            time += DELAYTIME;
-            continue;
+            ret = -1; break;
         }
-        state[retlen - 1] = '\0';//去掉回车符
         if (STRCASECMP(state, "STOP") == 0 || STRCASECMP(state, "IDLE") == 0) {
             ret = 0; break;
         }
@@ -967,15 +918,15 @@ EXPORT_API int CALL mrgRobotWaitEnd(ViSession vi, int robotname, int wavetable, 
 */
 EXPORT_API int CALL mrgRobotMove(ViSession vi, int robotname,int wavetable, float x, float y, float z, float time,int timeout_ms)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
 
     if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE %d,%f,%f,%f,%f,%d\n", robotname, x, y, z, time,wavetable);
+        snprintf(args, SEND_LEN, "ROBOT:MOVE %d,%f,%f,%f,%f,%d\n", robotname, x, y, z, time,wavetable);
     }
     else
     {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE %d,%f,%f,%f,%f\n", robotname, x, y, z, time);
+        snprintf(args, SEND_LEN, "ROBOT:MOVE %d,%f,%f,%f,%f\n", robotname, x, y, z, time);
     }
     
     if (busWrite(vi, args, strlen(args)) == 0) {
@@ -999,14 +950,14 @@ EXPORT_API int CALL mrgRobotMove(ViSession vi, int robotname,int wavetable, floa
 */
 EXPORT_API int CALL mrgRobotMoveOn(ViSession vi, int robotname, int wavetable, float x, float y, float z, float speed)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE:CONTInue %d,%f,%f,%f,%f,%d\n", robotname, x, y, z, speed, wavetable);
+        snprintf(args, SEND_LEN, "ROBOT:MOVE:CONTInue %d,%f,%f,%f,%f,%d\n", robotname, x, y, z, speed, wavetable);
     }
     else
     {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE:CONTInue %d,%f,%f,%f,%f\n", robotname, x,y,z,speed);
+        snprintf(args, SEND_LEN, "ROBOT:MOVE:CONTInue %d,%f,%f,%f,%f\n", robotname, x,y,z,speed);
     }
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1025,14 +976,14 @@ EXPORT_API int CALL mrgRobotMoveOn(ViSession vi, int robotname, int wavetable, f
 */
 EXPORT_API int CALL mrgRobotAxisMoveOn(ViSession vi, int robotname, int wavetable, int ax, float speed)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE:HOLD %d,%d,%f,%d\n", robotname, ax, speed,wavetable);
+        snprintf(args, SEND_LEN, "ROBOT:MOVE:HOLD %d,%d,%f,%d\n", robotname, ax, speed,wavetable);
     }
     else
     {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE:HOLD %d,%d,%f\n", robotname, ax, speed);
+        snprintf(args, SEND_LEN, "ROBOT:MOVE:HOLD %d,%d,%f\n", robotname, ax, speed);
     }
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1053,14 +1004,14 @@ EXPORT_API int CALL mrgRobotAxisMoveOn(ViSession vi, int robotname, int wavetabl
 */
 EXPORT_API int CALL mrgRobotAxisMoveJog(ViSession vi, int robotname, int wavetable, int ax,float cr_time,float cr_speed, float speed)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE:JOG %d,%d,%f,%f,%f,%d\n", robotname, ax, cr_time, cr_speed, speed, wavetable);
+        snprintf(args, SEND_LEN, "ROBOT:MOVE:JOG %d,%d,%f,%f,%f,%d\n", robotname, ax, cr_time, cr_speed, speed, wavetable);
     }
     else
     {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE:JOG %d,%d,%f,%f,%f\n", robotname, ax, cr_time, cr_speed, speed);
+        snprintf(args, SEND_LEN, "ROBOT:MOVE:JOG %d,%d,%f,%f,%f\n", robotname, ax, cr_time, cr_speed, speed);
     }
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1080,14 +1031,14 @@ EXPORT_API int CALL mrgRobotAxisMoveJog(ViSession vi, int robotname, int wavetab
 */
 EXPORT_API int CALL mrgRobotRelMove(ViSession vi, int robotname, int wavetable, float x, float y, float z, float time,int timeout_ms)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE:RELATive %d,%f,%f,%f,%f,%d\n", robotname, x, y, z, time, wavetable);
+        snprintf(args, SEND_LEN, "ROBOT:MOVE:RELATive %d,%f,%f,%f,%f,%d\n", robotname, x, y, z, time, wavetable);
     }
     else
     {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE:RELATive %d,%f,%f,%f,%f\n", robotname, x, y, z, time);
+        snprintf(args, SEND_LEN, "ROBOT:MOVE:RELATive %d,%f,%f,%f,%f\n", robotname, x, y, z, time);
     }
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1111,14 +1062,14 @@ EXPORT_API int CALL mrgRobotRelMove(ViSession vi, int robotname, int wavetable, 
 */
 EXPORT_API int CALL mrgRobotMoveL(ViSession vi, int robotname, int wavetable, float x, float y, float z, float time,int timeout_ms)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE:LINear %d,%f,%f,%f,%f,%d\n", robotname, x, y, z, time, wavetable);
+        snprintf(args, SEND_LEN, "ROBOT:MOVE:LINear %d,%f,%f,%f,%f,%d\n", robotname, x, y, z, time, wavetable);
     }
     else
     {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE:LINear %d,%f,%f,%f,%f\n", robotname, x, y, z, time);
+        snprintf(args, SEND_LEN, "ROBOT:MOVE:LINear %d,%f,%f,%f,%f\n", robotname, x, y, z, time);
     }
 
     if (busWrite(vi, args, strlen(args)) == 0) {
@@ -1143,14 +1094,14 @@ EXPORT_API int CALL mrgRobotMoveL(ViSession vi, int robotname, int wavetable, fl
 */
 EXPORT_API int CALL mrgRobotRelMoveL(ViSession vi, int robotname, int wavetable, float x, float y, float z, float time, int timeout_ms)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE:LINear:RELATive %d,%f,%f,%f,%f,%d\n", robotname, x, y, z, time, wavetable);
+        snprintf(args, SEND_LEN, "ROBOT:MOVE:LINear:RELATive %d,%f,%f,%f,%f,%d\n", robotname, x, y, z, time, wavetable);
     }
     else
     {
-        snprintf(args, SEND_BUF, "ROBOT:MOVE:LINear:RELATive %d,%f,%f,%f,%f\n", robotname, x, y, z, time);
+        snprintf(args, SEND_LEN, "ROBOT:MOVE:LINear:RELATive %d,%f,%f,%f,%f\n", robotname, x, y, z, time);
     }
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1170,8 +1121,8 @@ EXPORT_API int CALL mrgRobotRelMoveL(ViSession vi, int robotname, int wavetable,
 */
 EXPORT_API int CALL mrgSetRobotInterPolateMode(ViSession vi, int robotname,int mode)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:INTERPOLATE:MODE %d,%d\n", robotname, mode);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:INTERPOLATE:MODE %d,%d\n", robotname, mode);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1186,14 +1137,13 @@ EXPORT_API int CALL mrgSetRobotInterPolateMode(ViSession vi, int robotname,int m
 */
 EXPORT_API int CALL mrgGetRobotInterPolateMode(ViSession vi, int robotname, int* mode)
 {
-    char args[SEND_BUF];
-    char ret[8];
+    char args[SEND_LEN];
+    char ret[RECV_LEN];
     int retlen = 0;
-    snprintf(args, SEND_BUF, "ROBOT:INTERPOLATE:MODE? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args),ret,8)) == 0) {
+    snprintf(args, SEND_LEN, "ROBOT:INTERPOLATE:MODE? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args),ret,sizeof(ret))) == 0) {
         return -1;
     }
-    ret[retlen] = '\0';
     *mode = atoi(ret);
     return 0;
 }
@@ -1206,8 +1156,8 @@ EXPORT_API int CALL mrgGetRobotInterPolateMode(ViSession vi, int robotname, int*
 */
 EXPORT_API int CALL mrgSetRobotInterPolateStep(ViSession vi, int robotname, float step)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:INTERPOLATE:STEP %d,%f\n", robotname, step);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:INTERPOLATE:STEP %d,%f\n", robotname, step);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1222,14 +1172,13 @@ EXPORT_API int CALL mrgSetRobotInterPolateStep(ViSession vi, int robotname, floa
 */
 EXPORT_API int CALL mrgGetRobotInterPolateStep(ViSession vi, int robotname, float* step)
 {
-    char args[SEND_BUF];
-    char ret[8];
+    char args[SEND_LEN];
+    char ret[RECV_LEN];
     int retlen = 0;
-    snprintf(args, SEND_BUF, "ROBOT:INTERPOLATE:STEP? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), ret, 8)) == 0) {
+    snprintf(args, SEND_LEN, "ROBOT:INTERPOLATE:STEP? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, sizeof(ret))) == 0) {
         return -1;
     }
-    ret[retlen] = '\0';
     *step = strtof(ret,NULL);
     return 0;
 }
@@ -1242,12 +1191,12 @@ EXPORT_API int CALL mrgGetRobotInterPolateStep(ViSession vi, int robotname, floa
 */
 EXPORT_API int CALL mrgSetRobotHomeWavetable(ViSession vi, int robotname, int wavetable)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable < WAVETABLE_MIN || wavetable >= WAVETABLE_MAX)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "ROBOT:HOME:WAVETABLE %d,%d\n", robotname, wavetable);
+    snprintf(args, SEND_LEN, "ROBOT:HOME:WAVETABLE %d,%d\n", robotname, wavetable);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1262,14 +1211,13 @@ EXPORT_API int CALL mrgSetRobotHomeWavetable(ViSession vi, int robotname, int wa
 */
 EXPORT_API int CALL mrgGetRobotHomeWavetable(ViSession vi, int robotname)
 {
-    char args[SEND_BUF];
-    char wavetable[8];
+    char args[SEND_LEN];
+    char wavetable[RECV_LEN];
     int retlen = 0;
-    snprintf(args, SEND_BUF, "ROBOT:HOME:WAVETABLE? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), wavetable,8)) == 0) {
+    snprintf(args, SEND_LEN, "ROBOT:HOME:WAVETABLE? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), wavetable,sizeof(wavetable))) == 0) {
         return -1;
     }
-    wavetable[retlen - 1] = 0; //去掉回车符
     if (STRCASECMP(wavetable, "MAIN") == 0) {
         return 0;
     }
@@ -1314,8 +1262,8 @@ EXPORT_API int CALL mrgGetRobotHomeWavetable(ViSession vi, int robotname)
 */
 EXPORT_API int CALL mrgRobotGoHome(ViSession vi, int robotname,int timeout_ms)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:HOME:RUN %d\n", robotname);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:HOME:RUN %d\n", robotname);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1336,8 +1284,8 @@ EXPORT_API int CALL mrgRobotGoHome(ViSession vi, int robotname,int timeout_ms)
 */
 EXPORT_API int CALL mrgRobotGoHomeWithParam(ViSession vi, int robotname,float param, int timeout_ms)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:HOME:RUN %d,%f\n", robotname, param);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:HOME:RUN %d,%f\n", robotname, param);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1355,8 +1303,8 @@ EXPORT_API int CALL mrgRobotGoHomeWithParam(ViSession vi, int robotname,float pa
 */
 EXPORT_API int CALL mrgRobotGoHomeStop(ViSession vi, int robotname)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:HOME:STOP %d\n", robotname);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:HOME:STOP %d\n", robotname);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1371,25 +1319,20 @@ EXPORT_API int CALL mrgRobotGoHomeStop(ViSession vi, int robotname)
 */
 EXPORT_API int CALL mrgRobotWaitHomeEnd(ViSession vi, int robotname, int timeout_ms)
 {
-    int ret = 0,error_count = 0;
-    char args[SEND_BUF];
-    char state[12];
+    int ret = 0;
+    char args[SEND_LEN];
+    char state[RECV_LEN];
     int time = 0,retlen = 0;
-    snprintf(args, SEND_BUF, "ROBOT:HOME:STATe? %d\n", robotname);
+    snprintf(args, SEND_LEN, "ROBOT:HOME:STATe? %d\n", robotname);
     if (timeout_ms < 0)
     {
         return -4;
     }
     while (1)
     {
-        if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
-            if (++error_count > 3)
-            {
-                return -1;
-            }
-            continue;
+        if ((retlen = busQuery(vi, args, strlen(args), state, sizeof(state))) == 0) {
+            ret = -1; break;
         }
-        state[retlen - 1] = '\0';//去掉回车符
         if (STRCASECMP(state, "STOP") == 0 || STRCASECMP(state, "IDLE") == 0) {
             ret = 0; break;
         }
@@ -1416,15 +1359,14 @@ EXPORT_API int CALL mrgRobotWaitHomeEnd(ViSession vi, int robotname, int timeout
 EXPORT_API int CALL mrgGetRobotHomeAngle(ViSession vi, int robotname,float * angles)
 {
     int count = 0, retlen = 0;
-    char args[SEND_BUF];
-    char tmp[100];
+    char args[SEND_LEN];
+    char tmp[RECV_LEN];
     char * p, *pNext = NULL;
-    snprintf(args, SEND_BUF, "ROBOT:HOME:ANGLE? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
+    snprintf(args, SEND_LEN, "ROBOT:HOME:ANGLE? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), tmp, sizeof(tmp))) == 0)
     {
         return -1;
     }
-    tmp[retlen] = 0;
     p = STRTOK_S(tmp, ",", &pNext);
     while (p)
     {
@@ -1443,16 +1385,15 @@ EXPORT_API int CALL mrgGetRobotHomeAngle(ViSession vi, int robotname,float * ang
 EXPORT_API int CALL mrgGetRobotHomePosition(ViSession vi, int robotname, float * x, float *y, float* z)
 {
     int count = 0, retlen = 0;
-    char args[SEND_BUF];
-    char tmp[100];
+    char args[SEND_LEN];
+    char tmp[RECV_LEN];
     float position[3];
     char * p, *pNext = NULL;
-    snprintf(args, SEND_BUF, "ROBOT:HOME:POSITION? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
+    snprintf(args, SEND_LEN, "ROBOT:HOME:POSITION? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), tmp, sizeof(tmp))) == 0)
     {
         return -1;
     }
-    tmp[retlen] = 0;
     p = STRTOK_S(tmp, ",", &pNext);
     while (p)
     {
@@ -1475,8 +1416,8 @@ EXPORT_API int CALL mrgGetRobotHomePosition(ViSession vi, int robotname, float *
 */
 EXPORT_API int CALL mrgSetRobotHomeMode(ViSession vi, int robotname, int mode)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:HOME:MODE %d,%d\n", robotname, mode);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:HOME:MODE %d,%d\n", robotname, mode);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1491,14 +1432,13 @@ EXPORT_API int CALL mrgSetRobotHomeMode(ViSession vi, int robotname, int mode)
 */
 EXPORT_API int CALL mrgGetRobotHomeMode(ViSession vi, int robotname)
 {
-    char args[SEND_BUF];
-    char ret[8];
+    char args[SEND_LEN];
+    char ret[RECV_LEN];
     int retlen = 0;
-    snprintf(args, SEND_BUF, "ROBOT:HOME:MODE? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), ret, 8)) == 0) {
+    snprintf(args, SEND_LEN, "ROBOT:HOME:MODE? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, sizeof(ret))) == 0) {
         return -1;
     }
-    ret[retlen] = '\0';
     return atoi(ret);
 }
 /*
@@ -1510,14 +1450,13 @@ EXPORT_API int CALL mrgGetRobotHomeMode(ViSession vi, int robotname)
 */
 EXPORT_API int CALL mrgGetRobotHomeRequire(ViSession vi, int robotname)
 {
-    char args[SEND_BUF];
-    char ret[8];
+    char args[SEND_LEN];
+    char ret[RECV_LEN];
     int retlen = 0;
-    snprintf(args, SEND_BUF, "ROBOT:HOME:REQUIRE? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), ret, 8)) == 0) {
+    snprintf(args, SEND_LEN, "ROBOT:HOME:REQUIRE? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, sizeof(ret))) == 0) {
         return -1;
     }
-    ret[retlen] = '\0';
     return atoi(ret);
 }
 
@@ -1530,8 +1469,8 @@ EXPORT_API int CALL mrgGetRobotHomeRequire(ViSession vi, int robotname)
 */
 EXPORT_API int CALL mrgRobotPointClear(ViSession vi, int robotname)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF,"ROBOT:POINT:CLEAR %d\n", robotname);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN,"ROBOT:POINT:CLEAR %d\n", robotname);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1550,8 +1489,8 @@ EXPORT_API int CALL mrgRobotPointClear(ViSession vi, int robotname)
 */
 EXPORT_API int CALL mrgRobotPointLoad(ViSession vi, int robotname, float x, float y, float z, float end, float time,int mod,float step)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:POINT:LOAD %d,%f,%f,%f,%f,%f,%d,%f\n", robotname,x,y,z,end,time,mod,step);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:POINT:LOAD %d,%f,%f,%f,%f,%f,%d,%f\n", robotname,x,y,z,end,time,mod,step);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1567,14 +1506,14 @@ EXPORT_API int CALL mrgRobotPointLoad(ViSession vi, int robotname, float x, floa
 */
 EXPORT_API int CALL mrgRobotPointResolve(ViSession vi, int robotname, int wavetable,int timeout_ms )
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
-        snprintf(args, SEND_BUF, "ROBOT:POINT:RESOLVe %d,%d\n", robotname, wavetable);
+        snprintf(args, SEND_LEN, "ROBOT:POINT:RESOLVe %d,%d\n", robotname, wavetable);
     }
     else
     {
-        snprintf(args, SEND_BUF, "ROBOT:POINT:RESOLVe %d\n", robotname);
+        snprintf(args, SEND_LEN, "ROBOT:POINT:RESOLVe %d\n", robotname);
     }
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1594,8 +1533,8 @@ EXPORT_API int CALL mrgRobotPointResolve(ViSession vi, int robotname, int waveta
 */
 EXPORT_API int CALL mrgRobotPvtClear(ViSession vi, int robotname)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:PVT:CLEAR %d\n", robotname);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:PVT:CLEAR %d\n", robotname);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1613,8 +1552,8 @@ EXPORT_API int CALL mrgRobotPvtClear(ViSession vi, int robotname)
 */
 EXPORT_API int CALL mrgRobotPvtLoad(ViSession vi, int robotname, float p, float v, float t, int axle)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:PVT:LOAD %d,%f,%f,%f,%d\n", robotname, p, v, t,axle);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:PVT:LOAD %d,%f,%f,%f,%d\n", robotname, p, v, t,axle);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1630,14 +1569,14 @@ EXPORT_API int CALL mrgRobotPvtLoad(ViSession vi, int robotname, float p, float 
 */
 EXPORT_API int CALL mrgRobotPvtResolve(ViSession vi, int robotname, int wavetable,int timeout_ms)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
-        snprintf(args, SEND_BUF, "ROBOT:PVT:RESOLVe %d,%d\n", robotname, wavetable);
+        snprintf(args, SEND_LEN, "ROBOT:PVT:RESOLVe %d,%d\n", robotname, wavetable);
     }
     else
     {
-        snprintf(args, SEND_BUF, "ROBOT:PVT:RESOLVe %d\n", robotname);
+        snprintf(args, SEND_LEN, "ROBOT:PVT:RESOLVe %d\n", robotname);
     }
 
     if (busWrite(vi, args, strlen(args)) == 0) {
@@ -1660,8 +1599,8 @@ EXPORT_API int CALL mrgRobotPvtResolve(ViSession vi, int robotname, int wavetabl
 */
 EXPORT_API int CALL mrgRobotMotionFileImport(ViSession vi,int robotname,char* filename)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:FILE:IMPORT %d,%s\n", robotname, filename);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:FILE:IMPORT %d,%s\n", robotname, filename);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1677,8 +1616,8 @@ EXPORT_API int CALL mrgRobotMotionFileImport(ViSession vi,int robotname,char* fi
 */
 EXPORT_API int CALL mrgRobotMotionFileImportLocal(ViSession vi, int robotname, char* filename)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:FILE:IMPORT:LOCal %d,%s\n", robotname, filename);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:FILE:IMPORT:LOCal %d,%s\n", robotname, filename);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1694,8 +1633,8 @@ EXPORT_API int CALL mrgRobotMotionFileImportLocal(ViSession vi, int robotname, c
 */
 EXPORT_API int CALL mrgRobotMotionFileImportExternal(ViSession vi, int robotname, char* filename)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:FILE:IMPORT:EXTERnal %d,%s\n", robotname, filename);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:FILE:IMPORT:EXTERnal %d,%s\n", robotname, filename);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1714,18 +1653,18 @@ EXPORT_API int CALL mrgRobotMotionFileImportExternal(ViSession vi, int robotname
 */
 EXPORT_API int CALL mrgRobotFileResolve(ViSession vi, int name, int section, int line, int wavetable,int timeout_ms)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int time = 0;
     char strLastStates[8] = "";
     char state[8] = "";
 
     if (line <= 0)
     {
-        snprintf(args, SEND_BUF, "ROBOT:FILE:RESOLVE %d,%d\n", name, section);
+        snprintf(args, SEND_LEN, "ROBOT:FILE:RESOLVE %d,%d\n", name, section);
     }
     else
     {
-        snprintf(args, SEND_BUF, "ROBOT:FILE:RESOLVE %d,%d,%d,%d\n", name, section, line, wavetable);
+        snprintf(args, SEND_LEN, "ROBOT:FILE:RESOLVE %d,%d,%d,%d\n", name, section, line, wavetable);
     }
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
@@ -1761,7 +1700,7 @@ EXPORT_API int CALL mrgRobotFileResolve(ViSession vi, int name, int section, int
         }
     }
 
-//    return mrgRobotWaitReady(vi, name, wavetable, timeout_ms);
+    //    return mrgRobotWaitReady(vi, name, wavetable, timeout_ms);
 }
 /*
 * 将系统中的运动数据，导出成文件
@@ -1773,12 +1712,12 @@ EXPORT_API int CALL mrgRobotFileResolve(ViSession vi, int name, int section, int
 */
 EXPORT_API int CALL mrgRobotMotionFileExport(ViSession vi, int robotname,int location, char* filename)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (filename == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "ROBOT:FILE:EXPORT:%s %d,%s\n", location ? "LOCAL" : "EXTERNAL", robotname,filename);
+    snprintf(args, SEND_LEN, "ROBOT:FILE:EXPORT:%s %d,%s\n", location ? "LOCAL" : "EXTERNAL", robotname,filename);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1794,13 +1733,13 @@ EXPORT_API int CALL mrgRobotMotionFileExport(ViSession vi, int robotname,int loc
 */
 EXPORT_API int CALL mrgRobotToolSet(ViSession vi, int robotname, int type, char* dev)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     char *effector[] = {"MR_F2","MR_F3","MR_TIP","MR_FR"};
     if (type < 0 || type > 3 || dev == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:SET %d,%s,(%s)\n",robotname, effector[type], dev);
+    snprintf(args, SEND_LEN, "ROBOT:EFFECTor:SET %d,%s,(%s)\n",robotname, effector[type], dev);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1815,25 +1754,20 @@ EXPORT_API int CALL mrgRobotToolSet(ViSession vi, int robotname, int type, char*
 */
 EXPORT_API int CALL mrgRobotGetToolType(ViSession vi, int robotname, int *ps32Type)
 {
-    int ret = 0, error_count = 0;
-    char args[SEND_BUF];
-    char state[12];
+    int ret = 0;
+    char args[SEND_LEN];
+    char state[RECV_LEN];
     int retlen = 0;
     if (ps32Type == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:TYPe? %d\n", robotname);
+    snprintf(args, SEND_LEN, "ROBOT:EFFECTor:TYPe? %d\n", robotname);
     while (1)
     {
-        if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
-            if (++error_count > 3)
-            {
-                return -1;
-            }
-            continue;
+        if ((retlen = busQuery(vi, args, strlen(args), state, sizeof(state))) == 0) {
+            return -1;
         }
-        state[retlen - 1] = '\0';//去掉回车符
         if (STRCASECMP(state, "MR-F2") == 0 || STRCASECMP(state, "CLAW") == 0 || STRCASECMP(state, "MR_F2") == 0)
         {
             *ps32Type = 0;
@@ -1866,21 +1800,16 @@ EXPORT_API int CALL mrgRobotGetToolType(ViSession vi, int robotname, int *ps32Ty
 */
 EXPORT_API int CALL mrgRobotWaitToolExeEnd(ViSession vi, int robotname,int timeout_ms)
 {
-    int ret = 0,error_count = 0;
-    char args[SEND_BUF];
-    char state[12];
+    int ret = 0;
+    char args[SEND_LEN];
+    char state[RECV_LEN];
     int time = 0,retlen = 0;
-    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:EXEC:STATe? %d\n", robotname);
+    snprintf(args, SEND_LEN, "ROBOT:EFFECTor:EXEC:STATe? %d\n", robotname);
     while (1)
     {
-        if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
-            if (++error_count > 3)
-            {
-                return -1;
-            }
-            continue;
+        if ((retlen = busQuery(vi, args, strlen(args), state, sizeof(state))) == 0) {
+            ret = -1; break;
         }
-        state[retlen - 1] = '\0';//去掉回车符
         if (STRCASECMP(state, "STOP") == 0 || STRCASECMP(state, "IDLE") == 0) {
             ret = 0; break;
         }
@@ -1909,8 +1838,8 @@ EXPORT_API int CALL mrgRobotWaitToolExeEnd(ViSession vi, int robotname,int timeo
 */
 EXPORT_API int CALL mrgRobotToolExe(ViSession vi, int robotname, float position,float time,int timeout_ms)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:EXEC %d,%f,%f\n", robotname,position,time);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:EFFECTor:EXEC %d,%f,%f\n", robotname,position,time);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1928,8 +1857,8 @@ EXPORT_API int CALL mrgRobotToolExe(ViSession vi, int robotname, float position,
 */
 EXPORT_API int CALL mrgRobotToolStop(ViSession vi, int robotname)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:EXEC:STOP %d\n", robotname);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:EFFECTor:EXEC:STOP %d\n", robotname);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1944,8 +1873,8 @@ EXPORT_API int CALL mrgRobotToolStop(ViSession vi, int robotname)
 */
 EXPORT_API int CALL mrgRobotToolExeMode(ViSession vi, int robotname, int mode)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:EXEC:MODe %d,%s\n", robotname,mode == 1? "OPEN":"NORMAL");
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:EFFECTor:EXEC:MODe %d,%s\n", robotname,mode == 1? "OPEN":"NORMAL");
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -1960,16 +1889,15 @@ EXPORT_API int CALL mrgRobotToolExeMode(ViSession vi, int robotname, int mode)
 */
 EXPORT_API int CALL mrgRobotToolExeMode_Query(ViSession vi, int robotname, int* mode)
 {
-    char args[SEND_BUF];
-    char state[12];
+    char args[SEND_LEN];
+    char state[RECV_LEN];
     int  retlen = 0;
-    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:EXEC:MODe? %d\n", robotname);
+    snprintf(args, SEND_LEN, "ROBOT:EFFECTor:EXEC:MODe? %d\n", robotname);
     
-    if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0)
+    if ((retlen = busQuery(vi, args, strlen(args), state, sizeof(state))) == 0)
     {
         return -1;
     }
-    state[retlen - 1] = '\0';//去掉回车符
     if (STRCASECMP(state, "NORMAL") == 0 ) {
         *mode = 0;
     }
@@ -1990,8 +1918,8 @@ EXPORT_API int CALL mrgRobotToolExeMode_Query(ViSession vi, int robotname, int* 
 */
 EXPORT_API int CALL mrgRobotToolStopGoHome(ViSession vi, int robotname)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:HOME:STOP %d\n", robotname);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:EFFECTor:HOME:STOP %d\n", robotname);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -2006,21 +1934,16 @@ EXPORT_API int CALL mrgRobotToolStopGoHome(ViSession vi, int robotname)
 */
 EXPORT_API int CALL mrgRobotWaitToolHomeEnd(ViSession vi, int robotname, int timeout_ms)
 {
-    int ret = 0,error_count = 0;
-    char args[SEND_BUF];
-    char state[12];
+    int ret = 0;
+    char args[SEND_LEN];
+    char state[RECV_LEN];
     int time = 0, retlen = 0;
-    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:HOME:STATe? %d\n", robotname);
+    snprintf(args, SEND_LEN, "ROBOT:EFFECTor:HOME:STATe? %d\n", robotname);
     while (1)
     {
-        if ((retlen = busQuery(vi, args, strlen(args), state, 12)) == 0) {
-            if (++error_count > 3)
-            {
-                return -1;
-            }
-            continue;
+        if ((retlen = busQuery(vi, args, strlen(args), state, sizeof(state))) == 0) {
+            ret = -1; break;
         }
-        state[retlen - 1] = '\0';//去掉回车符
         if (STRCASECMP(state, "STOP") == 0 || STRCASECMP(state, "IDLE") == 0) {
             ret = 0; break;
         }
@@ -2046,9 +1969,9 @@ EXPORT_API int CALL mrgRobotWaitToolHomeEnd(ViSession vi, int robotname, int tim
 */
 EXPORT_API int CALL mrgRobotToolGoHome(ViSession vi, int robotname,int timeout_ms)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int ret = 0;
-    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:HOME %d\n", robotname);
+    snprintf(args, SEND_LEN, "ROBOT:EFFECTor:HOME %d\n", robotname);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -2069,14 +1992,13 @@ EXPORT_API int CALL mrgRobotToolGoHome(ViSession vi, int robotname,int timeout_m
 EXPORT_API int CALL mrgGetRobotToolPosition(ViSession vi, int robotname, float * position)
 {
     int  retlen = 0;
-    char args[SEND_BUF];
-    char tmp[100];
-    snprintf(args, SEND_BUF, "ROBOT:EFFECTor:POSITion:CURRent? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
+    char args[SEND_LEN];
+    char tmp[RECV_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:EFFECTor:POSITion:CURRent? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), tmp, sizeof(tmp))) == 0)
     {
         return -1;
     }
-    tmp[retlen-1] = 0;
     *position = strtof(tmp,NULL);
     return 0;
 }
@@ -2091,15 +2013,14 @@ EXPORT_API int CALL mrgGetRobotToolPosition(ViSession vi, int robotname, float *
 EXPORT_API int CALL mrgGetRobotCurrentAngle(ViSession vi, int robotname,float * angles)
 {
     int count = 0, retlen = 0;
-    char args[SEND_BUF];
-    char tmp[100];
+    char args[SEND_LEN];
+    char tmp[RECV_LEN];
     char * p, *pNext = NULL;
-    snprintf(args, SEND_BUF, "ROBOT:CURRENT:ANGLE? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
+    snprintf(args, SEND_LEN, "ROBOT:CURRENT:ANGLE? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), tmp, sizeof(tmp))) == 0)
     {
         return -1;
     }
-    tmp[retlen] = 0;
     p = STRTOK_S(tmp, ",", &pNext);
     while (p)
     {
@@ -2117,24 +2038,18 @@ EXPORT_API int CALL mrgGetRobotCurrentAngle(ViSession vi, int robotname,float * 
 */
 EXPORT_API int CALL mrgGetRobotCurrentPosition(ViSession vi, int robotname, float * x,float *y ,float* z)
 {
-    int count = 0, retlen = 0, error_count = 0;
-    char args[SEND_BUF];
-    char tmp[100];
+    int count = 0, retlen = 0;
+    char args[SEND_LEN];
+    char tmp[RECV_LEN];
     float position[3];
     char * p, *pNext = NULL;
-    snprintf(args, SEND_BUF, "ROBOT:CURRENT:POSITION? %d\n", robotname);
+    snprintf(args, SEND_LEN, "ROBOT:CURRENT:POSITION? %d\n", robotname);
     while (1)
     {
-        if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
+        if ((retlen = busQuery(vi, args, strlen(args), tmp, sizeof(tmp))) == 0)
         {
-            if (++error_count > 3)
-            {
-                return -1;
-            }
-			msSleep(20);	
-            continue;
+            return -1;
         }
-        tmp[retlen - 1] = 0;
         p = STRTOK_S(tmp, ",", &pNext);
         while (p)
         {
@@ -2161,9 +2076,9 @@ EXPORT_API int CALL mrgGetRobotCurrentPosition(ViSession vi, int robotname, floa
 EXPORT_API int CALL mrgRobotJointHome(ViSession vi, int robotname, int axi, float speed,int timeout_ms)
 {
     int retlen = 0;
-    char args[SEND_BUF];
+    char args[SEND_LEN];
 
-    snprintf(args, SEND_BUF, "ROBOT:JOINT:HOMe %d,%d,%f\n", robotname, axi, speed);
+    snprintf(args, SEND_LEN, "ROBOT:JOINT:HOMe %d,%d,%f\n", robotname, axi, speed);
     if ((retlen = busWrite(vi, args, strlen(args))) == 0)
     {
         return -1;
@@ -2187,8 +2102,8 @@ EXPORT_API int CALL mrgRobotJointHome(ViSession vi, int robotname, int axi, floa
 EXPORT_API int CALL mrgRobotJointMove(ViSession vi, int robotname, int axi, float position,float time, int timeout_ms)
 {
     int retlen = 0;
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:JOINT:MOVE %d,%d,%f,%f\n", robotname, axi, position, time);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:JOINT:MOVE %d,%d,%f,%f\n", robotname, axi, position, time);
     if ((retlen = busWrite(vi, args, strlen(args))) == 0)
     {
         return -1;
@@ -2211,12 +2126,12 @@ EXPORT_API int CALL mrgRobotJointMove(ViSession vi, int robotname, int axi, floa
 EXPORT_API int CALL mrgRobotJointMoveOn(ViSession vi, int robotname, int axi, float speed)
 {
     int retlen = 0;
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (fabsf(speed) < 0.00001f)
     {
         return -1;
     }
-    snprintf(args, SEND_BUF, "ROBOT:JOINT:MOVE:HOLD %d,%d,%f\n", robotname, axi, speed);
+    snprintf(args, SEND_LEN, "ROBOT:JOINT:MOVE:HOLD %d,%d,%f\n", robotname, axi, speed);
     if ((retlen = busWrite(vi, args, strlen(args))) == 0)
     {
         return -1;
@@ -2234,22 +2149,21 @@ EXPORT_API int CALL mrgRobotJointMoveOn(ViSession vi, int robotname, int axi, fl
 EXPORT_API int CALL mrgGetRobotJointAngle(ViSession vi, int robotname, int joint, float *angle)
 {
     int count = 0, retlen = 0;
-    char args[SEND_BUF];
-    char tmp[100];
+    char args[SEND_LEN];
+    char tmp[RECV_LEN];
     char * p, *pNext = NULL;
     if (joint < 0)
     {
-        snprintf(args, SEND_BUF, "ROBOT:JOINT:ANGLE? %d\n", robotname);
+        snprintf(args, SEND_LEN, "ROBOT:JOINT:ANGLE? %d\n", robotname);
     }
     else
     {
-        snprintf(args, SEND_BUF, "ROBOT:JOINT:ANGLE? %d,%d\n", robotname, joint);
+        snprintf(args, SEND_LEN, "ROBOT:JOINT:ANGLE? %d,%d\n", robotname, joint);
     }
-    if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
+    if ((retlen = busQuery(vi, args, strlen(args), tmp, sizeof(tmp))) == 0)
     {
         return 0;
     }
-    tmp[retlen] = 0;
     p = STRTOK_S(tmp, ",", &pNext);
     while (p)
     {
@@ -2269,16 +2183,15 @@ EXPORT_API int CALL mrgGetRobotJointAngle(ViSession vi, int robotname, int joint
 EXPORT_API int CALL mrgGetRobotCurrentMileage(ViSession vi, int robotname, float * x, float *y, float* z)
 {
     int count = 0, retlen = 0;
-    char args[SEND_BUF];
-    char tmp[100];
+    char args[SEND_LEN];
+    char tmp[RECV_LEN];
     float position[3];
     char * p, *pNext = NULL;
-    snprintf(args, SEND_BUF, "ROBOT:CURRENT:MILEAGE? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
+    snprintf(args, SEND_LEN, "ROBOT:CURRENT:MILEAGE? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), tmp, sizeof(tmp))) == 0)
     {
         return -1;
     }
-    tmp[retlen] = 0;
     p = STRTOK_S(tmp, ",", &pNext);
     while (p)
     {
@@ -2301,16 +2214,15 @@ EXPORT_API int CALL mrgGetRobotCurrentMileage(ViSession vi, int robotname, float
 EXPORT_API int CALL mrgGetRobotTargetPosition(ViSession vi, int robotname, float * x, float *y, float* z)
 {
     int count = 0, retlen = 0;
-    char args[SEND_BUF];
-    char tmp[100];
+    char args[SEND_LEN];
+    char tmp[RECV_LEN];
     float position[3];
     char * p, *pNext = NULL;
-    snprintf(args, SEND_BUF, "ROBOT:TARGET? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), tmp, 100)) == 0)
+    snprintf(args, SEND_LEN, "ROBOT:TARGET? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), tmp, sizeof(tmp))) == 0)
     {
         return -1;
     }
-    tmp[retlen] = 0;
     p = STRTOK_S(tmp, ",", &pNext);
     while (p)
     {
@@ -2333,18 +2245,17 @@ EXPORT_API int CALL mrgGetRobotTargetPosition(ViSession vi, int robotname, float
 EXPORT_API int CALL mrgGetRobotCurrentRecord(ViSession vi, int name, char *record)
 {
     int retlen = 0;
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     if (record == NULL)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, "ROBOT:CURRENT:RECORD? %d\n", name);
-    if ((retlen = busQuery(vi, args, strlen(args), as8Ret, 100)) == 0)
+    snprintf(args, SEND_LEN, "ROBOT:CURRENT:RECORD? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0)
     {
         return -1;
     }
-    as8Ret[retlen-1] = 0;
     strcpy(record, as8Ret);
     return 0;
 }
@@ -2359,17 +2270,16 @@ EXPORT_API int CALL mrgGetRobotCurrentRecord(ViSession vi, int name, char *recor
 EXPORT_API int CALL mrgGetRobotErrorInfo(ViSession vi, int name, int *errorCode, char *errorInfo)
 {
     int retlen = 0;
-    char args[SEND_BUF];
-    char tmp[1024] = "";
+    char args[SEND_LEN];
+    char tmp[RECV_LEN] = "";
     char * p, *pNext = NULL;
-    snprintf(args, SEND_BUF, "ROBOT:CURRENT:ERRORInfo? %d\n", name);
-    if ((retlen = busQuery(vi, args, strlen(args), tmp, 1024)) == 0)
+    snprintf(args, SEND_LEN, "ROBOT:CURRENT:ERRORInfo? %d\n", name);
+    if ((retlen = busQuery(vi, args, strlen(args), tmp, sizeof(tmp))) == 0)
     {
         return -1;
     }
-    tmp[retlen-1] = 0;
     p = STRTOK_S(tmp, "::", &pNext);
-    *errorCode = atoi(tmp);
+    *errorCode = atoi(p);
     strcpy(errorInfo, pNext+1);
     return 0;
 }
@@ -2404,14 +2314,14 @@ EXPORT_API int CALL mrgGetRobotWristPose(ViSession vi, int robotname, float *ang
 EXPORT_API int CALL mrgSetRobotWristPose(ViSession vi, int robotname, int wavetable, float angle, float speed, int timeout_ms)
 {
     int retlen = 0;
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
     {
-        snprintf(args, SEND_BUF, "ROBOT:POSE:WRIST %d,%f,%f,%d\n", robotname, angle,speed, wavetable);
+        snprintf(args, SEND_LEN, "ROBOT:POSE:WRIST %d,%f,%f,%d\n", robotname, angle,speed, wavetable);
     }
     else
     {
-        snprintf(args, SEND_BUF, "ROBOT:POSE:WRIST %d,%f,%f\n", robotname, angle,speed);
+        snprintf(args, SEND_LEN, "ROBOT:POSE:WRIST %d,%f,%f\n", robotname, angle,speed);
     }
 
     if ((retlen = busWrite(vi, args, strlen(args))) == 0)
@@ -2432,8 +2342,8 @@ EXPORT_API int CALL mrgSetRobotWristPose(ViSession vi, int robotname, int waveta
 EXPORT_API int CALL mrgSetRobotFold(ViSession vi, int robotname, float axi0, float axi1, float axi2, float axi3, int timeout_ms)
 {
     int ret = 0;
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "ROBOT:POSE:factory %d,%f,%f,%f,%f\n", robotname, axi0, axi1, axi2, axi3);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:POSE:factory %d,%f,%f,%f,%f\n", robotname, axi0, axi1, axi2, axi3);
     if ((ret = busWrite(vi, args, strlen(args))) == 0)
     {
         return -1;
@@ -2444,9 +2354,9 @@ EXPORT_API int CALL mrgSetRobotFold(ViSession vi, int robotname, float axi0, flo
         if ((ret = mrgGetRobotFoldState(vi, robotname)) != 0) {
             break;
         }
-        msSleep(DELAYTIME);
         if (timeout_ms != 0)
         {
+            msSleep(DELAYTIME);
             timeout_ms -= DELAYTIME;
         }
     };
@@ -2462,10 +2372,10 @@ EXPORT_API int CALL mrgSetRobotFold(ViSession vi, int robotname, float axi0, flo
 EXPORT_API int CALL mrgGetRobotFoldState(ViSession vi, int robotname)
 {
     int retlen = 0;
-    char args[SEND_BUF];
-    char as8Ret[10];
-    snprintf(args, SEND_BUF, "ROBOT:POSE:factory:state? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), as8Ret, 10)) == 0)
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:POSE:factory:state? %d\n", robotname);
+    if ((retlen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0)
     {
         return -1;
     }

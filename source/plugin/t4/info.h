@@ -21,6 +21,8 @@ public:
 public:
     virtual void updateUi();
 
+    virtual void onSetting(XSetting setting);
+
 protected:
     virtual void retranslateUi();
 

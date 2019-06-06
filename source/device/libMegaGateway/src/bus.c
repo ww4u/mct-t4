@@ -184,13 +184,14 @@ unsigned int busRead(ViSession vi, char *buf, unsigned int len)
         msSleep(5);
     }
 
-    if( (retCount==0) || STRCASECMP(buf, "Command error") == 0 )
+    if( (retCount==0) || STRNCASECMP(buf, "Command error", strlen("Command error")) == 0 )
     {
         UNLOCK();
         return 0;
     }
-
     UNLOCK();
+    if(buf[retCount-1] == '\n')
+        buf[retCount-1] = '\0';
     return (unsigned int)retCount;
 }
 
@@ -220,13 +221,14 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* o
         retCount=0;
         msSleep(5);
     }
-    if( (retCount==0) || STRCASECMP(output, "Command error") == 0 )
+    if( (retCount==0) || STRNCASECMP(output, "Command error", strlen("Command error")) == 0 )
     {
         UNLOCK();
         return 0;
     }
-
     UNLOCK();
+    if(buf[output-1] == '\n')
+        buf[output-1] = '\0';
     return (unsigned int)retCount;
 }
 
@@ -378,7 +380,7 @@ int busFindDevice(int bus, char *output, int len,int method)
             }
             strcat(&output[r], ",");
             strcat(output, instrDescriptor);
-        }    /* end while */
+        }
     }
     
 END:
@@ -396,7 +398,6 @@ int busOpenDevice(char * ip, int timeout)
     status = viOpenDefaultRM(&defaultRM);
     if (status < VI_SUCCESS)
     {
-        printf("Could not open a session to the VISA Resource Manager!\n");
         return 0;
     }
     status = viOpen(defaultRM, ip, VI_NO_LOCK, VI_TMO_IMMEDIATE, &vi);
@@ -495,13 +496,14 @@ unsigned int busRead(ViSession vi, char * buf, unsigned int len)
         retCount = 0;
         msSleep(5);
     }
-    if( (retCount == 0) ||  STRCASECMP(buf, "Command error") == 0 )
+    if( (retCount == 0) ||  STRNCASECMP(buf, "Command error", strlen("Command error")) == 0 )
     {
         UNLOCK();
         return 0;
     }
-
     UNLOCK();
+    if(buf[retCount-1] == '\n')
+        buf[retCount-1] = '\0';
     return retCount;
 }
 
@@ -529,13 +531,14 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen,char* ou
         retCount = 0;
         msSleep(5);
     }
-    if( (retCount == 0) ||  STRCASECMP(output, "Command error") == 0 )
+    if( (retCount == 0) ||  STRNCASECMP(output, "Command error", strlen("Command error")) == 0 )
     {
         UNLOCK();
         return 0;
     }
-
     UNLOCK();
+    if(output[retCount-1] == '\n')
+        output[retCount-1] = '\0';
     return retCount;
 }
 /* strHostIp:返回的IP地址

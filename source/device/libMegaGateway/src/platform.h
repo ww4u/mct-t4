@@ -7,6 +7,9 @@
 #include <time.h> 
 #include <math.h>
 
+#define  SEND_LEN   (512)
+#define  RECV_LEN   (1024)
+
 #define strcpy_s(x,y,z)     	strncpy(x,z,y)
 
 #ifdef _WIN32
@@ -42,14 +45,11 @@
 #include <IPHlpApi.h>
 
 #define STRCASECMP(x,y)		_stricmp(x,y)
+#define STRNCASECMP         _strnicmp
 #define STRTOK_S(x,y,z)		strtok_s(x,y,z)
-
 #define EXPORT_API __declspec(dllexport)
 #define CALL    __cdecl
-
-//! no exception
-#define _msSleep(n)  Sleep( n )
-
+//#define CALL  __stdcall
 #else
 //////////////////////////////////
 //Linux 头文件
@@ -75,6 +75,7 @@ typedef unsigned long ViSession;
 #include "vxi11/vxi11_user.h"
 
 #define STRCASECMP(x,y)		strcasecmp(x,y)
+#define STRNCASECMP         strncasecmp
 #define STRTOK_S(x,y,z)     	strtok_r(x,y,z)
 //#define _strnicmp           strncasecmp
 

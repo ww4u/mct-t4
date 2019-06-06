@@ -17,6 +17,7 @@
 #include "../../model/megaloglistmodel.h"
 
 #include "iostate.h"
+#include "ioindicator.h"
 
 //#define MONITOR_EVENT   (QEvent::Type)( QEvent::User + 1 )
 typedef QList<QPointF> PointList;
@@ -226,6 +227,14 @@ public:
 
     QString mRecordName;
     QString mRoboState;
+
+    //! Device Status
+    bool bReady;
+    bool bEnable;
+    bool bTO;
+    bool bMC;
+    bool bError;
+    bool bWarning;
 };
 
 class T4OpPanel : public XPage
@@ -326,7 +335,7 @@ protected:
     void post_debug_enter( int id, int r, QVariantList list=QVariantList() );
     void post_debug_exit( int id, int r );
 
-    void on_debug_enter( int id, int r, QVariantList &vars );
+    void on_debug_enter( QString recordNow, int r, QVariantList &vars );
     void on_debug_exit( int id, int r );
 
 private:
@@ -362,7 +371,7 @@ protected:
     //! digital inputs
     QMenu *m_pIOContextMenu;
     QAction *m_pActionRename;
-    IoState *currentRenameObj;
+    IoIndicator *currentRenameObj;
 
 Q_SIGNALS:
 //    void signal_debug_enter( int i );

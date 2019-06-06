@@ -27,6 +27,7 @@ ControllerStatus::ControllerStatus(QWidget *parent) :
     ui->radMc->setChecked( true );
     ui->radTo->setChecked( true );
 
+    IoIndicatorList << ui->radEn << ui->radTo << ui->radReady << ui->radMc << ui->radError << ui->radWarning;
 }
 
 ControllerStatus::~ControllerStatus()
@@ -112,3 +113,8 @@ void ControllerStatus::setDevicePowerEnable( bool b )
 { ui->chkPwr->setEnabled( b ); }
 bool ControllerStatus::isDevicePowerEnable()
 { return ui->chkPwr->isEnabled(); }
+
+void ControllerStatus::setDeviceStatCheck(int index, bool b)
+{
+    IoIndicatorList.at(index)->setChecked(b);
+}

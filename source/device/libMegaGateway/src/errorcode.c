@@ -1,7 +1,5 @@
 #include "errorcode.h"
 
-#define  SEND_BUF   (100)
-
 /*
   上传错误代码配置
   vi :visa设备句柄
@@ -11,16 +9,15 @@
 */
 int mrgErrorCodeConfigUpload(ViSession vi, int code, int *type,  int *response, int *diagnose, int *enable)
 {
-    char error[256] = "";
-    int len = 256;
-    char args[SEND_BUF];
+    char error[RECV_LEN] = "";
+    int len = RECV_LEN;
+    char args[SEND_LEN];
     int retlen = 0;
     int count = 0;
-    snprintf(args, SEND_BUF, ":ERRCode:UPLoad? %d\n", code);
+    snprintf(args, SEND_LEN, ":ERRCode:UPLoad? %d\n", code);
     if ((retlen = busQuery(vi, args, strlen(args), error, len)) == 0) {
         return -1;
     }
-    error[retlen-1] = '\0';
 
     char *p, *pNext;
     char values[32][64] = {""};
@@ -110,7 +107,7 @@ int mrgErrorCodeConfigUpload(ViSession vi, int code, int *type,  int *response, 
 */
 int mrgErrorCodeConfigDownload(ViSession vi, int code, int type, int response, int diagnose, int enable)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retlen = 0;
 
     char ps8Type[10] = "";
@@ -183,7 +180,7 @@ int mrgErrorCodeConfigDownload(ViSession vi, int code, int type, int response, i
         return -4;
     }
 
-    snprintf(args, SEND_BUF, ":ERRCode:DOWNLoad %d,%s,%s,%s,%s\n", code, ps8Type, ps8Response, ps8Diagnose, ps8Enable);
+    snprintf(args, SEND_LEN, ":ERRCode:DOWNLoad %d,%s,%s,%s,%s\n", code, ps8Type, ps8Response, ps8Diagnose, ps8Enable);
     if ((retlen = busWrite(vi, args, strlen(args))) <= 0) {
         return -5;
     }
@@ -205,8 +202,8 @@ int mrgErrorLogUpload(ViSession vi, int format, char* errorLog)
     int lenOfLen = 0;
     int readLen = 0;
     int left = 0;
-    char args[SEND_BUF];
-    char as8Ret[1024];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     char as8StrLen[20];
     char *as8Format[] = { "NORMAL","ZIP","TARGZ","TAR" };
 
@@ -214,7 +211,7 @@ int mrgErrorLogUpload(ViSession vi, int format, char* errorLog)
     {
         return -2;
     }
-    snprintf(args, SEND_BUF, ":ERRLOG:UPLOAD? %s\n", as8Format[format]);
+    snprintf(args, SEND_LEN, ":ERRLOG:UPLOAD? %s\n", as8Format[format]);
     if (busWrite(vi, args, strlen(args)) == 0)
     {
         return 0;
@@ -259,9 +256,9 @@ int mrgErrorLogUpload(ViSession vi, int format, char* errorLog)
 */
 int mrgErrorLogClear(ViSession vi)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retlen = 0;
-    snprintf(args, SEND_BUF, ":ERRLOG:CLEAR\n");
+    snprintf(args, SEND_LEN, ":ERRLOG:CLEAR\n");
     if ((retlen = busWrite(vi, args, strlen(args))) == 0) {
         return -1;
     }

@@ -235,7 +235,7 @@ void MegaInterface::slotSelectDevices()
     int iRow = ui->tableView->currentIndex().row();
     QString mechanicalVer = mSearchRobos.at(iRow).mDevInfo.mFirmWareHard;
     //！\todo devtype
-    QString typeMRQ = QString("MRQ-MV");
+    QString typeMRQ = mSearchRobos.at(iRow).mDevInfo.mType;
     QString snMRQ = mSearchRobos.at(iRow).mDevInfo.mSN;
     QString softVer = mSearchRobos.at(iRow).mDevInfo.mSoftVer;
     QString firmWareHard = mSearchRobos.at(iRow).mDevInfo.mFirmWareHard;
@@ -380,6 +380,12 @@ void MegaInterface::on_pushButton_Scan_clicked()
                     tInfo.mDevInfo.mFirmWareBoot = tList.at(3);
                     tInfo.mDevInfo.mFirmWareFpga = tList.at(4);
                     tInfo.mDevInfo.mId = devName[0];
+
+                    char bufDevType[128];
+                    ret = mrgGetDeviceType(visa,devName[0], bufDevType);
+                    if(ret!=0)
+                        continue;
+                    tInfo.mDevInfo.mType = QString::fromLatin1(bufDevType,128);
 
                     //! append
                     pRoboList->append( tInfo );

@@ -10,6 +10,15 @@
     <height>16</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::CustomContextMenu</enum>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -34,6 +43,21 @@
      <property name="enabled">
       <bool>false</bool>
      </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>89</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="contextMenuPolicy">
+      <enum>Qt::DefaultContextMenu</enum>
+     </property>
      <property name="text">
       <string>RadioButton</string>
      </property>
@@ -41,6 +65,9 @@
    </item>
    <item>
     <widget class="QLabel" name="label">
+     <property name="contextMenuPolicy">
+      <enum>Qt::DefaultContextMenu</enum>
+     </property>
      <property name="text">
       <string>TextLabel</string>
      </property>

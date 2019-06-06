@@ -28,7 +28,6 @@ private:
 
     MainWidget *m_mainWidget;
 
-    QLabel *m_labelStatus;
     QLabel *m_labelVersion;
     QProgressBar *m_progressBar;
 

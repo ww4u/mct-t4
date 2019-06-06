@@ -1,6 +1,8 @@
 #include "info.h"
 #include "ui_info.h"
 #include "../plugin/xplugin.h"
+#include "../../plugin/t4/t4.h"
+
 namespace mrx_t4 {
 
 Info::Info(QWidget *parent) :
@@ -57,6 +59,7 @@ void Info::updateUi()
     m_T4Items[7]->setData( Qt::DisplayRole, m_pPlugin->FirmWareHard_MRQ() );
     m_T4Items[9]->setData( Qt::DisplayRole, m_pPlugin->FirmWareBoot_MRQ() );
     m_T4Items[11]->setData( Qt::DisplayRole, m_pPlugin->FirmWareFpga_MRQ() );
+
 }
 
 void Info::retranslateUi()
@@ -69,12 +72,23 @@ void Info::retranslateUi()
     mTableItems[6]->setData( Qt::DisplayRole, tr("Firmware") );
     mTableItems[8]->setData( Qt::DisplayRole, tr("Mechanical") );
 
-    m_T4Items[0]->setData( Qt::DisplayRole, tr("Model") );
+    m_T4Items[0]->setData( Qt::DisplayRole, tr("Type") );
     m_T4Items[2]->setData( Qt::DisplayRole, tr("SN") );
     m_T4Items[4]->setData( Qt::DisplayRole, tr("Version") );
     m_T4Items[6]->setData( Qt::DisplayRole, tr("FirmWareHard") );
     m_T4Items[8]->setData( Qt::DisplayRole, tr("FirmWareBoot") );
     m_T4Items[10]->setData( Qt::DisplayRole, tr("FirmWareFpga") );
+}
+
+void Info::onSetting(XSetting setting)
+{
+    XPage::onSetting( setting );
+
+    if ( (int)setting.mSetting == XPage::e_setting_user_role )
+    {
+        bool bVisible = ( sysMode() == sysPara::e_sys_admin);
+        ui->tableWidget2->setVisible(bVisible);
+    }
 }
 
 }

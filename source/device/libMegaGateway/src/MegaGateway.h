@@ -9,5 +9,6 @@
 #include "errorcode.h"
 #include "project.h"
 #include "../../appendix.h"
+#define MEGAROBO_TCP_EXCEPTION_PORT (5577)
 
 #endif

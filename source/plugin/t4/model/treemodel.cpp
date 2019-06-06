@@ -458,10 +458,10 @@ int TreeModel::exportOut( const QString &fileName )
            <<"x"<<"y"<<"z"<<"w"<<"h"<<"v"<<"mode"
            <<"do"
            <<"delay"
-           <<"comment"
-           <<"realV"   /* max(250) * v */
+           <<"percent"   /* max(250) * v */
            <<"realW"
-           <<"realH";
+           <<"realH"
+           <<"comment";
     dataSet.setHeaders( headers );
 
     MDataSection *pSection;
@@ -616,7 +616,8 @@ int TreeModel::_loadIn( MDataSet *pDataSet,
         get_double( "w",i, 0 );
         get_double( "h",i, 0 );
 
-        get_double( "v",i, 0 );
+        //get_double( "v",i, 0 );
+        get_double( "percent",i, 0 );
         get_bool( "mode",i, 0 );
 
         get_int( "do", i, 0 );
@@ -680,14 +681,15 @@ int TreeModel::_fmtItem( TreeItem *pItem,
             .arg( pItem->data(4).toDouble() )
             .arg( pItem->data(5).toDouble() )
             .arg( pItem->data(6).toDouble() )
-            .arg( pItem->data(7).toDouble() )
+            //.arg( pItem->data(7).toDouble() )
+            .arg( pItem->data(7).toDouble() * mMaxTerminalSpeed / 100 )
             .arg( pItem->data(8).toInt() )
             .arg( pItem->data(9).toInt() )
             .arg( pItem->data(10).toDouble() )
-            .arg( pItem->data(11).toString() )
-            .arg( pItem->data(7).toDouble() * mMaxTerminalSpeed / 100 )
+            .arg( pItem->data(7).toDouble() )
             .arg( pItem->data(7).toDouble() * mMaxJointSpeeds[3] / 100 )
             .arg( pItem->data(7).toDouble() * mMaxJointSpeeds[4] / 100 )
+            .arg( pItem->data(11).toString() )
             ;
     return 0;
 }

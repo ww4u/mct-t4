@@ -143,6 +143,15 @@ EXPORT_API int CALL mrgMRQMotionABCount_Query(ViSession vi, int name, int ch);
 */
 EXPORT_API int CALL mrgMRQMotionABCountClear(ViSession vi, int name, int ch);
 /*
+*查询通道当前的PVT运行时间
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*time: PVT的运行时间
+*返回值: 0表示成功,否则表示失败
+*/
+EXPORT_API int CALL mrgMRQMotionRuntime_Query(ViSession vi, int name, int ch,float* pf32Time);
+/*
 *设置电机是否反向
 *vi :visa设备句柄
 *name:设备名称(SEND_ID)
@@ -343,6 +352,23 @@ EXPORT_API int CALL mrgMRQMotorBackLash(ViSession vi, int name, int ch, float la
 *返回值：0表示执行成功，－1表示失败,-2表示参数错误
 */
 EXPORT_API int CALL mrgMRQMotorBackLash_Query(ViSession vi, int name, int ch, float *lash);
+/*
+*设置电机报警灯闪烁状态
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*isOn: 是否打开,0表示关闭,1表示打开
+*返回值：0表示执行成功，－1表示失败
+*/
+EXPORT_API int CALL mrgMRQMotorAlarmLed(ViSession vi, int name, int ch, int isOn);
+/*
+*查询电机报警灯闪烁状态
+*vi :visa设备句柄
+*name:设备名称(SEND_ID)
+*ch：通道号
+*返回值：0表示执行关闭,1表示打开,-1表示错误
+*/
+EXPORT_API int CALL mrgMRQMotorAlarmLed_Query(ViSession vi, int name, int ch);
 /*
 *PVT配置命令
 *vi :visa设备句柄
@@ -741,7 +767,7 @@ EXPORT_API int CALL mrgMRQLostStepLineConfig_Query(ViSession vi, int name,
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQLostStepLineConfig(ViSession vi, int name, 
-                                             int ch, int wavetable, int state, float threshold, int resp);
+                                             int ch, int wavetable, int state, unsigned short threshold, int resp);
 /*
 *设置线间失步告警状态
 *vi :visa设备句柄
@@ -771,18 +797,18 @@ EXPORT_API int CALL mrgMRQLostStepState_Query(ViSession vi, int name, int ch, in
 *value:线间失步阈值
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQLostStepThreshold(ViSession vi, int name, int ch, int wavetable, float value);
+EXPORT_API int CALL mrgMRQLostStepThreshold(ViSession vi, int name, int ch, int wavetable, unsigned short value);
 /*
 *查询线间失步阈值
 *vi :visa设备句柄
-*name:设备名称（SEND_ID）
+*name:设备名称(SEND_ID)
 *ch：通道号
 *wavetable:波表索引，取值范围： 0~9 MAIN|SMALL|P1|P2|P3|P4|P5|P6|P7|P8
 *value:线间失步阈值
 *返回值：0表示执行成功，－1表示失败
 */
 EXPORT_API int CALL mrgMRQLostStepThreshold_Query(ViSession vi, int name, 
-                                                  int ch, int wavetable, float *pf32Value);
+                                                  int ch, int wavetable, unsigned short *pu16Value);
 
 /*
 *设置当步数偏差超过LOSTNUM后的响应方式

@@ -53,7 +53,6 @@ HEADERS += ../include/mystd.h           \
     ../source/wnd/prompt.h \
     ../source/wnd/changedpw.h \
     ../source/wnd/spacewidget.h \
-    ../source/wnd/classwizard.h \
     ../source/wnd/widget.h
 
 SOURCES += ../source/main/main.cpp      \
@@ -78,7 +77,6 @@ SOURCES += ../source/main/main.cpp      \
     ../source/wnd/prompt.cpp \
     ../source/wnd/changedpw.cpp \
     ../source/wnd/spacewidget.cpp \
-    ../source/wnd/classwizard.cpp \
     ../source/wnd/widget.cpp
 
 !win32: HEADERS += ../source/device/vxi11/vxi11.h

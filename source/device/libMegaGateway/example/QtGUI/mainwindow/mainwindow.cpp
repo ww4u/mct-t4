@@ -40,7 +40,6 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete m_mainWidget;
-    delete m_labelStatus;
     delete m_progressBar;
     delete m_labelVersion;
     delete ui;
@@ -49,20 +48,18 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupStatusBar()
 {
-    m_labelStatus = new QLabel("");
     m_progressBar = new QProgressBar;
     m_progressBar->setMaximum(100);
     m_progressBar->setHidden(true);
     m_labelVersion = new QLabel(QString("Version: %1 ").arg(qApp->applicationVersion()));
 
-    ui->statusbar->insertWidget(0, m_labelStatus, 1);
-    ui->statusbar->insertWidget(1, m_progressBar, 0);
-    ui->statusbar->insertWidget(2, m_labelVersion, 0);
+    ui->statusbar->addPermanentWidget(m_progressBar, 0);
+    ui->statusbar->addPermanentWidget(m_labelVersion, 0);
 }
 
 void MainWindow::slotUpdateStatus(QString str)
 {
-    m_labelStatus->setText(str);
+    ui->statusbar->setStatusTip(str);
 }
 
 void MainWindow::slotShowProgressStatus(bool isRun)

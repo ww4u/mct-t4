@@ -169,13 +169,35 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
 
     //! \todo
     //! init digital inputs name
-    connect( ui->DIN1, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
-    connect( ui->DIN2, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
-    connect( ui->DIN3, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
-    connect( ui->DIN4, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
-    connect( ui->DIN5, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
-    connect( ui->START, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
-    connect( ui->RESET, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    connect( ui->radDI1, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    connect( ui->radDI2, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    connect( ui->radDI3, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    connect( ui->radDI4, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    connect( ui->radDI5, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    connect( ui->radDI6, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    connect( ui->radStart, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    connect( ui->radReset, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    connect( ui->radENBLE, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    connect( ui->radRDYEN, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    connect( ui->radMC, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)));
+    connect( ui->radFAULT, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    connect( ui->radENABLED, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    connect( ui->radACK, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+
+    ui->radDI1->setChecked(false);
+    ui->radDI2->setChecked(false);
+    ui->radDI3->setChecked(false);
+    ui->radDI4->setChecked(false);
+    ui->radDI5->setChecked(false);
+    ui->radDI6->setChecked(false);
+    ui->radStart->setChecked(false);
+    ui->radReset->setChecked(false);
+    ui->radENBLE->setChecked(false);
+    ui->radRDYEN->setChecked(false);
+    ui->radMC->setChecked(false);
+    ui->radFAULT->setChecked(false);
+    ui->radENABLED->setChecked(false);
+    ui->radACK->setChecked(false);
 }
 
 T4OpPanel::~T4OpPanel()
@@ -200,7 +222,7 @@ bool T4OpPanel::event(QEvent *e)
 
             if ( (int)pEvent->type() == OpEvent::debug_enter )
             {
-                on_debug_enter( pEvent->mVar1.toInt(),
+                on_debug_enter( pEvent->mVar1.toString(),
                                 pEvent->mVar2.toInt(),
                                 pEvent->mVars );
             }
@@ -381,7 +403,9 @@ void T4OpPanel::updateRefreshPara( QEvent *e )
 {
     //! record now
     if ( m_pPlugin->m_pMissionWorking->isRunning() )
-    { ui->spinBox_RecordNumber->setSpecialValueText(mRefreshPara.recNow);}
+    {   ui->spinBox_RecordNumber->setSpecialValueText(mRefreshPara.recNow);
+        ui->spinBox_debugRecord->setSpecialValueText(mRefreshPara.recNow);
+    }
 
     //! target
     ui->doubleSpinBox_target_position_x->setValue( mRefreshPara.poseAim.x );
@@ -744,14 +768,20 @@ void T4OpPanel::updateUi()
     ui->tabWidget->setCurrentIndex( DEFAULT_PAGE_INDEX );
 
     //! update digital inputs name
-    ui->DIN1->setName( pRobo->listIoName.at(0) );
-    ui->DIN2->setName( pRobo->listIoName.at(1) );
-    ui->DIN3->setName( pRobo->listIoName.at(2) );
-    ui->DIN4->setName( pRobo->listIoName.at(3) );
-    ui->DIN5->setName( pRobo->listIoName.at(4) );
-    ui->START->setName( pRobo->listIoName.at(5) );
-    ui->RESET->setName( pRobo->listIoName.at(6) );
-    logDbg() << pRobo->listIoName.at(0);
+    ui->radDI1->setText( pRobo->listIoName.at(0) );
+    ui->radDI2->setText( pRobo->listIoName.at(1) );
+    ui->radDI3->setText( pRobo->listIoName.at(2) );
+    ui->radDI4->setText( pRobo->listIoName.at(3) );
+    ui->radDI5->setText( pRobo->listIoName.at(4) );
+    ui->radDI6->setText( pRobo->listIoName.at(5) );
+    ui->radStart->setText( pRobo->listIoName.at(6) );
+    ui->radReset->setText( pRobo->listIoName.at(7) );
+    ui->radRDYEN->setText( pRobo->listIoName.at(8) );
+    ui->radENBLE->setText( pRobo->listIoName.at(9) );
+    ui->radACK->setText( pRobo->listIoName.at(10) );
+    ui->radENABLED->setText( pRobo->listIoName.at(11) );
+    ui->radFAULT->setText( pRobo->listIoName.at(12) );
+    ui->radMC->setText( pRobo->listIoName.at(13) );
 }
 
 void T4OpPanel::updateData()
@@ -1314,12 +1344,14 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
         switch(t)
         {
             case 0x02:   /* low 10*/
-                mrgProjectSetYout(device_var_vi(), i, 0);
+                //mrgProjectSetYout(device_var_vi(), i, 0);
+                mrgProjectIOSet(device_var_vi(), IOSET_INDEX(i+1),0);
                 break;
             case 0x00:   /*reserve 00*/
                 break;
             case 0x03:   /* high 11*/
-                mrgProjectSetYout(device_var_vi(), i, 1);
+                //mrgProjectSetYout(device_var_vi(), i, 1);
+                mrgProjectIOSet(device_var_vi(), IOSET_INDEX(i+1), 1);
                 break;
         }
         iVal = iVal >> 2;
@@ -1337,8 +1369,8 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
 
     //! \todo Terminal move
     speed = pRobo->mMaxJointSpeeds.at(4) * pItem->v / 100.0;
-    ret = mrgRobotToolExe(robot_var(), pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
-    //ret = mrgRobotJointMove(robot_var(), 4, pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
+    //ret = mrgRobotToolExe(robot_var(), pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
+    ret = mrgRobotJointMove(robot_var(), 4, pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
 
     return ret;
 }
@@ -1611,7 +1643,7 @@ void T4OpPanel::slot_toHere()
 void T4OpPanel::slot_digitalInputsCustomContextMenuRequested( const QPoint &p )
 {logDbg();
 
-    IoState *pIoState = dynamic_cast<IoState *>(sender());
+    IoIndicator *pIoState = dynamic_cast<IoIndicator *>(sender());
 
     if( m_pIOContextMenu == NULL ){
         m_pIOContextMenu = new QMenu( ui->groupBox );
@@ -1640,19 +1672,21 @@ void T4OpPanel::slot_Rename()
     bool ok;
     QRegExp regExp("\\w+");
     regExp.setPatternSyntax(QRegExp::Wildcard);
-    QString text=RegExpInputDialog::getText(this, tr("Rename"), tr("New Name"), currentRenameObj->Name(), regExp, &ok);
+    QString text=RegExpInputDialog::getText(this, tr("Rename"), tr("New Name"), currentRenameObj->text(), regExp, &ok);
 
     if (ok && !text.isEmpty()){
         if( currentRenameObj ){
-            currentRenameObj->setName( text );
+            currentRenameObj->setText(text);
 
             //! update config.xml
             MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
             Q_ASSERT( pRobo != NULL );
 
             pRobo->listIoName.clear();
-            pRobo->listIoName << ui->DIN1->Name() << ui->DIN2->Name() << ui->DIN3->Name() << ui->DIN4->Name()
-                              << ui->DIN5->Name() << ui->START->Name() << ui->RESET->Name();
+            pRobo->listIoName << ui->radDI1->text() << ui->radDI2->text() << ui->radDI3->text() << ui->radDI4->text() << ui->radDI5->text()
+                              << ui->radDI6->text() << ui->radStart->text() << ui->radReset->text() << ui->radRDYEN->text() << ui->radENBLE->text()
+                              << ui->radACK->text() << ui->radENABLED->text() << ui->radFAULT->text() << ui->radMC->text();
+
             //t->emit_save(); not work
             pRobo->save( pRobo->homePath() + "/" + "config.xml" );
         }
@@ -2189,7 +2223,7 @@ int T4OpPanel::buildSequence( QList<SequenceItem*> &list )
 
 void T4OpPanel::post_debug_enter( int id, int r, QVariantList vars )
 {
-    OpEvent *pEvent= new OpEvent( OpEvent::debug_enter, id, r );
+    OpEvent *pEvent= new OpEvent( OpEvent::debug_enter, mRefreshPara.recNow, r );
     if ( NULL == pEvent )
     { return; }
 
@@ -2204,11 +2238,11 @@ void T4OpPanel::post_debug_exit( int id, int r )
 
 }
 
-void T4OpPanel::on_debug_enter( int id, int r, QVariantList &vars )
+void T4OpPanel::on_debug_enter( QString recordNow, int r, QVariantList &vars )
 {
     ui->tvDebug->selectRow( r );
-    ui->doubleSpinBox_debugRecord->setValue( id );
-    ui->spinBox_RecordNumber->setValue( id );
+    ui->spinBox_debugRecord->setSpecialValueText(recordNow);
+    ui->spinBox_RecordNumber->setSpecialValueText(recordNow);
 
     ui->doubleSpinBox_target_position_x->setValue( vars.at(0).toDouble() );
     ui->doubleSpinBox_target_position_y->setValue( vars.at(1).toDouble() );

@@ -279,6 +279,20 @@ EXPORT_API int CALL mrgScriptGetCurrentStates(ViSession vi);
  * 失败返回-1,成功返回0
  */
 EXPORT_API int CALL mrgSystemRunCmd(ViSession vi, char *cmd, int isBackground);
+/*
+ * 设置系统中配置的MRQ信息
+ * version: MRQ版本号
+ * sn: MRQ序列号
+ * 说明:只有当MRH-T连接一个MRQ时，系统才会检查MRQ信息
+ */
+EXPORT_API int CALL mrgSystemSetMRQConfig(ViSession vi, const char *version, const char *sn);
+
+/*
+ * 获取系统中配置的MRQ信息
+ * version: MRQ版本号
+ * sn: MRQ序列号
+ */
+EXPORT_API int CALL mrgSystemGetMRQConfig(ViSession vi, char *version, char *sn);
 
 #if defined(__cplusplus) || defined(__cplusplus__)
 }

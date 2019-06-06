@@ -1,6 +1,5 @@
 #include "system.h"
 
-#define SEND_BUF  (100)
 /*
  * 识别网关设备（ON时，LED1常亮；OFF时LED闪烁）
  * vi :visa设备句柄
@@ -10,8 +9,8 @@
  */
 EXPORT_API int CALL mrgIdentify(ViSession vi, int state)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "SYSTEM:IDENTIFY %s\n", state ? "ON" : "OFF");
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "SYSTEM:IDENTIFY %s\n", state ? "ON" : "OFF");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -26,8 +25,8 @@ EXPORT_API int CALL mrgIdentify(ViSession vi, int state)
  */
 EXPORT_API int CALL mrgModeSwitch(ViSession vi, int mode)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "SYSTEM:MODe:SWITch %d\n", mode);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "SYSTEM:MODe:SWITch %d\n", mode);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -41,15 +40,14 @@ EXPORT_API int CALL mrgModeSwitch(ViSession vi, int mode)
 */
 EXPORT_API int CALL mrgSysGetProjectSoftVersion(ViSession vi, char * version)
 {
-    char args[SEND_BUF];
-    char ret[20] = { 0 };
+    char args[SEND_LEN];
+    char ret[RECV_LEN] = { 0 };
     int retlen = 0;
-    snprintf(args, SEND_BUF, ":PROJect:SOFTware?\n");
-    if ((retlen = busQuery(vi, args, strlen(args), ret, 20)) <= 0)
+    snprintf(args, SEND_LEN, ":PROJect:SOFTware?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), ret, sizeof(ret))) <= 0)
     {
         return -1;
     }
-    ret[retlen - 1] = 0;
     memcpy(version, ret, retlen);
     return 0;
 }
@@ -60,15 +58,14 @@ EXPORT_API int CALL mrgSysGetProjectSoftVersion(ViSession vi, char * version)
 */
 EXPORT_API int CALL mrgSysGetSoftVersion(ViSession vi, char * version)
 {
-    char args[SEND_BUF];
-    char ret[20] = { 0 };
+    char args[SEND_LEN];
+    char ret[RECV_LEN] = { 0 };
     int retlen = 0;
-    snprintf(args, SEND_BUF, "SYSTEM:FIRMware:SOFT?\n");
-    if ((retlen = busQuery(vi, args, strlen(args), ret, 20)) <= 0)
+    snprintf(args, SEND_LEN, "SYSTEM:FIRMware:SOFT?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), ret, sizeof(ret))) <= 0)
     {
         return -1;
     }
-    ret[retlen - 1] = 0;
     memcpy(version, ret, retlen);
     return 0;
 }
@@ -79,15 +76,14 @@ EXPORT_API int CALL mrgSysGetSoftVersion(ViSession vi, char * version)
 */
 EXPORT_API int CALL mrgSysGetBackBoardSoftVersion(ViSession vi,char * version)
 {
-    char args[SEND_BUF];
-    char ret[20] = { 0 };
+    char args[SEND_LEN];
+    char ret[RECV_LEN] = { 0 };
     int retlen = 0;
-    snprintf(args, SEND_BUF, "SYSTEM:FIRMware:BACKBOARD:SOFT?\n");
-    if ((retlen = busQuery(vi, args, strlen(args), ret, 20)) <= 0)
+    snprintf(args, SEND_LEN, "SYSTEM:FIRMware:BACKBOARD:SOFT?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), ret, sizeof(ret))) <= 0)
     {
         return -1;
     }
-    ret[retlen - 1] = 0;
     memcpy(version, ret, retlen);
     return 0;
 }
@@ -98,15 +94,14 @@ EXPORT_API int CALL mrgSysGetBackBoardSoftVersion(ViSession vi,char * version)
 */
 EXPORT_API int CALL mrgSysGetBackBoardHardVersion(ViSession vi, char * version)
 {
-    char args[SEND_BUF];
-    char ret[20] = { 0 };
+    char args[SEND_LEN];
+    char ret[RECV_LEN] = { 0 };
     int retlen = 0;
-    snprintf(args, SEND_BUF, "SYSTEM:FIRMware:BACKBOARD:HARD?\n");
-    if ((retlen = busQuery(vi, args, strlen(args), ret, 20)) <= 0)
+    snprintf(args, SEND_LEN, "SYSTEM:FIRMware:BACKBOARD:HARD?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), ret, sizeof(ret))) <= 0)
     {
         return -1;
     }
-    ret[retlen - 1] = 0;
     memcpy(version, ret, retlen);
     return 0;
 }
@@ -117,8 +112,8 @@ EXPORT_API int CALL mrgSysGetBackBoardHardVersion(ViSession vi, char * version)
 */
 EXPORT_API int CALL mrgSysStartCan(ViSession vi)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "CAN:STARt\n");
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "CAN:STARt\n");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -132,8 +127,8 @@ EXPORT_API int CALL mrgSysStartCan(ViSession vi)
  */
 EXPORT_API int CALL mrgSysResetCan(ViSession vi)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "CAN:RESET\n");
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "CAN:RESET\n");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -148,8 +143,8 @@ EXPORT_API int CALL mrgSysResetCan(ViSession vi)
  */
 EXPORT_API int CALL mrgSysConfCan(ViSession vi,int baud)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "CAN:CONFig %d\n", baud);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "CAN:CONFig %d\n", baud);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -164,15 +159,14 @@ EXPORT_API int CALL mrgSysConfCan(ViSession vi,int baud)
 */
 EXPORT_API int CALL mrgSysConfCan_Query(ViSession vi, int* baud)
 {
-    char args[SEND_BUF];
-    char ret[20] = { 0 };
+    char args[SEND_LEN];
+    char ret[RECV_LEN] = { 0 };
     int retlen = 0;
-    snprintf(args, SEND_BUF, "CAN:CONFig?\n");
-    if ((retlen = busQuery(vi, args, strlen(args), ret, 20)) <= 0)
+    snprintf(args, SEND_LEN, "CAN:CONFig?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), ret, sizeof(ret))) <= 0)
     {
         return -1;
     }
-    ret[retlen - 1] = 0;
     *baud = atoi(ret);
     return 0;
 }
@@ -184,8 +178,8 @@ EXPORT_API int CALL mrgSysConfCan_Query(ViSession vi, int* baud)
 */
 EXPORT_API int CALL mrgSysModeSwitch(ViSession vi, int mode)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "SYSTEM:MODe:SWITch %d\n", mode);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "SYSTEM:MODe:SWITch %d\n", mode);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -199,15 +193,14 @@ EXPORT_API int CALL mrgSysModeSwitch(ViSession vi, int mode)
  */
 EXPORT_API int CALL mrgGetSysMode(ViSession vi)
 {
-    char args[SEND_BUF];
-    char ret[8] = {0};
+    char args[SEND_LEN];
+    char ret[RECV_LEN] = {0};
     int retlen = 0;
-    snprintf(args, SEND_BUF, "SYSTEM:MODe:SWITch?\n");
-    if ((retlen = busQuery(vi, args, strlen(args),ret,8)) <= 0)
+    snprintf(args, SEND_LEN, "SYSTEM:MODe:SWITch?\n");
+    if ((retlen = busQuery(vi, args, strlen(args),ret,sizeof(ret))) <= 0)
     {
         return -1;
     }
-    ret[retlen - 1] = 0;
     return atoi(ret);
 }
 /*
@@ -218,8 +211,8 @@ EXPORT_API int CALL mrgGetSysMode(ViSession vi)
 */
 EXPORT_API int CALL mrgSysInstructionMode(ViSession vi, int mode)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "SYSTEM:INSTRUCTion:MODe %s\n", mode? "SECTION":"LINE");
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "SYSTEM:INSTRUCTion:MODe %s\n", mode? "SECTION":"LINE");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -234,15 +227,14 @@ EXPORT_API int CALL mrgSysInstructionMode(ViSession vi, int mode)
 */
 EXPORT_API int CALL mrgSysInstructionMode_Query(ViSession vi, int* mode)
 {
-    char args[SEND_BUF];
-    char ret[8] = { 0 };
+    char args[SEND_LEN];
+    char ret[RECV_LEN] = { 0 };
     int retlen = 0;
-    snprintf(args, SEND_BUF, "SYSTEM:INSTRUCTion:MODe?\n");
-    if ((retlen = busQuery(vi, args, strlen(args), ret, 8)) <= 0)
+    snprintf(args, SEND_LEN, "SYSTEM:INSTRUCTion:MODe?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), ret, sizeof(ret))) <= 0)
     {
         return -1;
     }
-    ret[retlen - 1] = 0;
     if (STRCASECMP(ret, "LINE") == 0)
     {
         *mode = 0;
@@ -265,15 +257,14 @@ EXPORT_API int CALL mrgSysInstructionMode_Query(ViSession vi, int* mode)
 */
 EXPORT_API int CALL mrgSysWifiScan(ViSession vi, char* result,int len)
 {
-    char args[SEND_BUF];
-    char as8Ret[1024];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
-    snprintf(args, SEND_BUF, "SYSTEM:NETWORK:WIFI:SEARCH?\n");
-    if ((retLen = busQuery(vi, args, strlen(args),as8Ret,1024)) <= 0)
+    snprintf(args, SEND_LEN, "SYSTEM:NETWORK:WIFI:SEARCH?\n");
+    if ((retLen = busQuery(vi, args, strlen(args),as8Ret,sizeof(as8Ret))) <= 0)
     {
         return 0;
     }
-    as8Ret[retLen - 1] = 0;
     retLen = (len > retLen) ? retLen : len;
     memcpy(result, as8Ret,retLen);
     return retLen;
@@ -287,8 +278,8 @@ EXPORT_API int CALL mrgSysWifiScan(ViSession vi, char* result,int len)
 */
 EXPORT_API int CALL mrgSysWifiConfig(ViSession vi, char* name, char* passwd)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "SYSTEM:NETWORK:WIFI:CONFig %s,%s\n", name, passwd);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "SYSTEM:NETWORK:WIFI:CONFig %s,%s\n", name, passwd);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -303,8 +294,8 @@ EXPORT_API int CALL mrgSysWifiConfig(ViSession vi, char* name, char* passwd)
  */
 EXPORT_API int CALL mrgSysWifiUpDown(ViSession vi, int state)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "SYSTEM:NETWORK:WIFI:%s\n", state?"UP":"DOWN");
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "SYSTEM:NETWORK:WIFI:%s\n", state?"UP":"DOWN");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -319,23 +310,22 @@ EXPORT_API int CALL mrgSysWifiUpDown(ViSession vi, int state)
  */
 EXPORT_API int CALL mrgSysWifiCheckState(ViSession vi, int timeout_ms)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
     int time = 0;
-    snprintf(args, SEND_BUF, "SYSTEM:NETWORK:WIFI:STATe?\n");
+    snprintf(args, SEND_LEN, "SYSTEM:NETWORK:WIFI:STATe?\n");
     while (time < timeout_ms)
     {
-        msSleep(200);
-        if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 1024)) <= 0)
+        if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) <= 0)
         {
             continue;
         }
-        as8Ret[retLen - 1] = 0;
         if (STRCASECMP(as8Ret, "ON") == 0)
         {
             return 1;
         }
+        msSleep(200);
         time += 200;
     }
     return 0;
@@ -348,16 +338,15 @@ EXPORT_API int CALL mrgSysWifiCheckState(ViSession vi, int timeout_ms)
  */
 EXPORT_API int CALL mrgSysGetWifiConnected(ViSession vi, char* name)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
-    snprintf(args, SEND_BUF, "SYSTEM:NETWORK:WIFI:NAMe?\n");
+    snprintf(args, SEND_LEN, "SYSTEM:NETWORK:WIFI:NAMe?\n");
 
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 1024)) <= 0)
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) <= 0)
     {
         return -1;
     }
-    as8Ret[retLen - 1] = 0;
     strncpy(name, as8Ret,sizeof(as8Ret));
     return 0;
 }
@@ -369,8 +358,8 @@ EXPORT_API int CALL mrgSysGetWifiConnected(ViSession vi, char* name)
 */
 EXPORT_API int CALL mrgSysSetHeartPeriod(ViSession vi, int value)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "SYSTEM:HEARTBEAT:VALUE %d\n", value);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "SYSTEM:HEARTBEAT:VALUE %d\n", value);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -385,16 +374,15 @@ EXPORT_API int CALL mrgSysSetHeartPeriod(ViSession vi, int value)
  */
 EXPORT_API int CALL mrgSysGetHeartPeriod(ViSession vi, int * value)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
-    snprintf(args, SEND_BUF, "SYSTEM:HEARTBEAT:VALUE?\n");
+    snprintf(args, SEND_LEN, "SYSTEM:HEARTBEAT:VALUE?\n");
 
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) <= 0)
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) <= 0)
     {
         return -1;
     }
-    as8Ret[retLen - 1] = 0;
     *value = atoi(as8Ret);
     return 0;
 }
@@ -406,8 +394,8 @@ EXPORT_API int CALL mrgSysGetHeartPeriod(ViSession vi, int * value)
  */
 EXPORT_API int CALL mrgSysSetPowerOn(ViSession vi, int value)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "SYSTEM:POWERON %s\n", value == 0? "DEFAULT":"LAST");
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "SYSTEM:POWERON %s\n", value == 0? "DEFAULT":"LAST");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -422,16 +410,15 @@ EXPORT_API int CALL mrgSysSetPowerOn(ViSession vi, int value)
  */
 EXPORT_API int CALL mrgSysGetPowerOn(ViSession vi, int * value)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
-    snprintf(args, SEND_BUF, "SYSTEM:POWERON?\n");
+    snprintf(args, SEND_LEN, "SYSTEM:POWERON?\n");
 
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) <= 0)
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) <= 0)
     {
         return -1;
     }
-    as8Ret[retLen - 1] = 0;
     if (STRCASECMP(as8Ret, "DEFAULT") == 0 || STRCASECMP(as8Ret, "0") == 0)
     {
         *value = 0;
@@ -454,9 +441,9 @@ EXPORT_API int CALL mrgSysGetPowerOn(ViSession vi, int * value)
  */
 EXPORT_API int CALL mrgSysSetInterface(ViSession vi, int face)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     char *ps8Interface[3] = { "LAN", "USB", "IO" };
-    snprintf(args, SEND_BUF, "SYSTEM:INTERFACE %s\n", ps8Interface[face]);
+    snprintf(args, SEND_LEN, "SYSTEM:INTERFACE %s\n", ps8Interface[face]);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -471,16 +458,15 @@ EXPORT_API int CALL mrgSysSetInterface(ViSession vi, int face)
  */
 EXPORT_API int CALL mrgSysGetInterface(ViSession vi, int * face)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
-    snprintf(args, SEND_BUF, "SYSTEM:INTERFACE?\n");
+    snprintf(args, SEND_LEN, "SYSTEM:INTERFACE?\n");
 
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) <= 0)
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) <= 0)
     {
         return -1;
     }
-    as8Ret[retLen - 1] = 0;
     if (STRCASECMP(as8Ret, "LAN") == 0 || STRCASECMP(as8Ret, "0") == 0)
     {
         *face = 0;
@@ -509,8 +495,8 @@ EXPORT_API int CALL mrgSysGetInterface(ViSession vi, int * face)
  */
 EXPORT_API int CALL mrgSysSetEmergencyStop(ViSession vi, int state)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "SCRAM:STATE %s\n", state?"ON":"OFF");
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "SCRAM:STATE %s\n", state?"ON":"OFF");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -526,16 +512,15 @@ EXPORT_API int CALL mrgSysSetEmergencyStop(ViSession vi, int state)
  */
 EXPORT_API int CALL mrgSysGetEmergencyStopState(ViSession vi,int *state)
 {
-    char args[SEND_BUF];
-    char as8Ret[100];
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
     int retLen = 0;
-    snprintf(args, SEND_BUF, "SCRAM:STATE?\n");
+    snprintf(args, SEND_LEN, "SCRAM:STATE?\n");
 
-    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) <= 0)
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) <= 0)
     {
         return -1;
     }
-    as8Ret[retLen - 1] = 0;
     if (STRCASECMP(as8Ret, "OFF") == 0 || STRCASECMP(as8Ret, "0") == 0)
     {
         *state = 0;
@@ -559,18 +544,16 @@ EXPORT_API int CALL mrgSysGetEmergencyStopState(ViSession vi,int *state)
  */
 EXPORT_API int CALL mrgSysUpdateFileSearch(ViSession vi, char *fileList)
 {
-    char args[SEND_BUF];
-    char ret[1024] = {0};
+    char args[SEND_LEN];
+    char ret[RECV_LEN] = {0};
     int retlen = 0;
-    snprintf(args, SEND_BUF, "SYST:UPGR:SEAR?\n");
+    snprintf(args, SEND_LEN, "SYST:UPGR:SEAR?\n");
     if ((retlen = busQuery(vi, args, strlen(args),ret,sizeof(ret))) <= 0)
     {
         return -1;
     }
-    ret[retlen - 1] = 0;
     if( STRCASECMP(ret, "NO_UDISK") == 0 )
         return 1;
-    //strncpy(fileList,ret, retlen);
     memcpy(fileList, ret, retlen);
     return 0;
 }
@@ -583,8 +566,8 @@ EXPORT_API int CALL mrgSysUpdateFileSearch(ViSession vi, char *fileList)
  */
 EXPORT_API int CALL mrgSysUpdateFileStart(ViSession vi, char *filename)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "SYST:UPGR:STAR %s\n", filename);
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "SYST:UPGR:STAR %s\n", filename);
     if (busWrite(vi, args, strlen(args)) == 0) {
         return -1;
     }
@@ -616,16 +599,14 @@ EXPORT_API int CALL mrgSysUpdateFileStart(ViSession vi, char *filename)
  */
 EXPORT_API int CALL mrgSysUpdateFirmwareStatusQuery(ViSession vi)
 {
-    char args[SEND_BUF];
-    char state[1024] = {0};
+    char args[SEND_LEN];
+    char state[RECV_LEN] = {0};
     int retlen = 0;
-    snprintf(args, SEND_BUF, "SYST:UPGR:STAT?\n");
+    snprintf(args, SEND_LEN, "SYST:UPGR:STAT?\n");
     if ((retlen = busQuery(vi, args, strlen(args),state,sizeof(state))) <= 0)
     {
         return -1;
     }
-    state[retlen - 1] = 0;
-
     if( STRCASECMP(state, "COMPLETED") == 0 )
         return 0;
     else if( STRCASECMP(state, "UPDATING") == 0 )
@@ -639,17 +620,15 @@ EXPORT_API int CALL mrgSysUpdateFirmwareStatusQuery(ViSession vi)
 
 EXPORT_API int CALL mrgScriptSearch(ViSession vi, int isUdisk, char *fileList)
 {
-    char args[SEND_BUF];
-    char ret[1024] = {0};
+    char args[SEND_LEN];
+    char ret[RECV_LEN] = {0};
     int retlen = 0;
-    snprintf(args, SEND_BUF, "SCRipt:SEARCH? %s\n", isUdisk?"UDISK":"LOCAL");
+    snprintf(args, SEND_LEN, "SCRipt:SEARCH? %s\n", isUdisk?"UDISK":"LOCAL");
     if ((retlen = busQuery(vi, args, strlen(args),ret,sizeof(ret))) <= 0)
     {
         return -1;
     }
-    ret[retlen - 1] = 0;
-    strncpy(fileList, ret, SEND_BUF);
-
+    strncpy(fileList, ret, SEND_LEN);
     if( STRCASECMP(ret, "NO_UPGRADE_FILE") == 0 )
         return 1;
 
@@ -661,8 +640,8 @@ EXPORT_API int CALL mrgScriptSearch(ViSession vi, int isUdisk, char *fileList)
 
 EXPORT_API int CALL mrgScriptConfig(ViSession vi, char *filename, int isBoot)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "SCRipt:CONFIG %s,%s\n", filename, isBoot?"ON":"OFF");
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "SCRipt:CONFIG %s,%s\n", filename, isBoot?"ON":"OFF");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -672,20 +651,19 @@ EXPORT_API int CALL mrgScriptConfig(ViSession vi, char *filename, int isBoot)
 
 EXPORT_API int CALL mrgScriptConfigQuery(ViSession vi, char *filename)
 {
-    char args[SEND_BUF];
+    char args[SEND_LEN];
     int retlen = 0;
-    snprintf(args, SEND_BUF, "SCRipt:CONFIG?\n");
-    if ((retlen = busQuery(vi, args, strlen(args), filename, 100)) <= 0) {
+    snprintf(args, SEND_LEN, "SCRipt:CONFIG?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), filename, sizeof(filename))) <= 0) {
         return -1;
     }
-    filename[retlen - 1] = 0;
     return 0;
 }
 
 EXPORT_API int CALL mrgScriptRun(ViSession vi)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "SCRipt:START\n");
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "SCRipt:START\n");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -695,8 +673,8 @@ EXPORT_API int CALL mrgScriptRun(ViSession vi)
 
 EXPORT_API int CALL mrgScriptStop(ViSession vi)
 {
-    char args[SEND_BUF];
-    snprintf(args, SEND_BUF, "SCRipt:STOP\n");
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "SCRipt:STOP\n");
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;
@@ -706,16 +684,14 @@ EXPORT_API int CALL mrgScriptStop(ViSession vi)
 
 EXPORT_API int CALL mrgScriptGetCurrentStates(ViSession vi)
 {
-    char args[SEND_BUF];
-    char state[1024] = {0};
+    char args[SEND_LEN];
+    char state[RECV_LEN] = {0};
     int retlen = 0;
-    snprintf(args, SEND_BUF, "SCRipt:RUNState?\n");
+    snprintf(args, SEND_LEN, "SCRipt:RUNState?\n");
     if ((retlen = busQuery(vi, args, strlen(args),state,sizeof(state))) <= 0)
     {
         return -1;
     }
-    state[retlen - 1] = 0;
-
     if( STRCASECMP(state, "STOP") == 0 )
         return 0;
     else if( STRCASECMP(state, "RUNNING") == 0 )
@@ -726,17 +702,44 @@ EXPORT_API int CALL mrgScriptGetCurrentStates(ViSession vi)
 
 EXPORT_API int CALL mrgSystemRunCmd(ViSession vi, char *cmd, int isBackground)
 {
-    char args[SEND_BUF];
-    char state[1024] = {0};
+    char args[SEND_LEN];
+    char state[RECV_LEN] = {0};
     int retlen = 0;
-    snprintf(args, SEND_BUF, "SYSTEM:CMDLine? %s,%s\n", cmd, isBackground?"NOWAIT":"WAIT");
+    snprintf(args, SEND_LEN, "SYSTEM:CMDLine? %s,%s\n", cmd, isBackground?"NOWAIT":"WAIT");
     if ((retlen = busQuery(vi, args, strlen(args), state, sizeof(state))) <= 0)
     {
         return -1;
     }
-    state[retlen-1] = 0;
     if( !isBackground && STRCASECMP(state, "ERROR") == 0 )
         return -1;
     else
         return 0;
+}
+
+EXPORT_API int CALL mrgSystemSetMRQConfig(ViSession vi, const char *version, const char *sn)
+{
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, ":SYSTem:CONFIG:MRQInfo %s,%s\n", version, sn);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
+}
+
+EXPORT_API int CALL mrgSystemGetMRQConfig(ViSession vi, char *version, char *sn)
+{
+    char args[SEND_LEN];
+    char state[RECV_LEN] = {0};
+    char * p, *pNext = NULL;
+    int retlen = 0;
+    snprintf(args, SEND_LEN, ":SYSTem:CONFIG:MRQInfo?\n");
+    if ((retlen = busQuery(vi, args, strlen(args), state, sizeof(state))) <= 0)
+    {
+        return -1;
+    }
+    p = STRTOK_S(state, ",", &pNext);
+    strcpy(version, p);
+    strcpy(sn, pNext);
+    return 0;
 }

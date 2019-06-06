@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "../../plugin/xpage.h"
+#include "ioindicator.h"
 
 namespace Ui {
 class ControllerStatus;
@@ -50,8 +51,12 @@ public:
     void setDevicePowerEnable( bool b );
     bool isDevicePowerEnable();
 
+    void setDeviceStatCheck(int index, bool b );
+
 private:
     Ui::ControllerStatus *ui;
+
+    QList<IoIndicator *> IoIndicatorList;
 
 Q_SIGNALS:
     void signal_mct_checked( bool b );

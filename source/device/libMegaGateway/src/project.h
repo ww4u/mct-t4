@@ -7,6 +7,42 @@
 extern "C" {
 #endif
 
+typedef enum
+{
+    IOGET_X1,
+    IOGET_X2,
+    IOGET_X3,
+    IOGET_X4,
+    IOGET_X5,
+    IOGET_X6,
+    IOGET_X7,
+    IOGET_X8,
+    IOGET_X9,
+    IOGET_X10,
+    IOGET_Y1,
+    IOGET_Y2,
+    IOGET_Y3,
+    IOGET_Y4,
+    IOGET_STOP,
+    IOGET_DB15,
+    IOGET_MAXNUM,
+}IOGET_INDEX;
+
+typedef enum
+{
+    IOSET_ALL,
+    IOSET_Y1,
+    IOSET_Y2,
+    IOSET_Y3,
+    IOSET_Y4,
+    IOSET_READY,
+    IOSET_FAULT,
+    IOSET_ACK,
+    IOSET_MC,
+    IOSET_ENABLED,
+    IOSET_MAXNUM,
+}IOSET_INDEX;
+
 /*
 * 设置系统为工程模式
 * vi :visa设备句柄
@@ -22,7 +58,7 @@ EXPORT_API int CALL mrgSetProjectMode(ViSession vi, int state);
 * pu32State: 每一位表示一个IO的状态
 * 返回值：0表示执行成功；－1表示执行失败,-2表示参数错误
 */
-EXPORT_API int CALL mrgProjectGetXinState(ViSession vi, int index, unsigned int *pu32State);
+EXPORT_API int CALL mrgProjectIOGet(ViSession vi, IOGET_INDEX index, char *strState);
 /*
 * 设置系统的外部输出IO的状态
 * vi :visa设备句柄
@@ -31,7 +67,7 @@ EXPORT_API int CALL mrgProjectGetXinState(ViSession vi, int index, unsigned int 
 * 返回值：0表示执行成功；－1表示执行失败,-2表示参数错误
 * 说明: 不支持 同时写出YOUT
 */
-EXPORT_API int CALL mrgProjectSetYout(ViSession vi, int index, int state);
+EXPORT_API int CALL mrgProjectIOSet(ViSession vi, IOSET_INDEX index, int state);
 /*
 * 设置系统的序列号
 * vi :visa设备句柄

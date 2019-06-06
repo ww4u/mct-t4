@@ -5,7 +5,6 @@
 //#include "h2robo.h"
 #include "xthread.h"
 #include "welcomepage.h"
-#include "widget.h"
 
 #define plugin_changed()    emit signal_plugins_changed();
 

@@ -559,7 +559,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
         //! \todo device status: running/stoped/error_stoped
         {
             char roboStates[128];
-            ret = mrgRobotGetState( robot_var(), wave_table, roboStates );
+            ret = mrgGetRobotStates(robot_var(), wave_table, roboStates);
             if ( ret != 0 )
             { sysError( tr("get state fail"), e_out_log );break; }
 

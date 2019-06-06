@@ -16,7 +16,7 @@ INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include"
 #DEFINES += ARCH_32
 }
 
-INCLUDEPATH += ./libMegaGateway/src
+INCLUDEPATH += ./MegaRoboMRHT_SDK/src
 
 OBJECTS_DIR = ./obj
 MOC_DIR = ./obj

@@ -4,7 +4,7 @@ CONFIG += static
 
 TARGET = ../../../../lib/xplugin
 
-INCLUDEPATH += "../../device/libMegaGateway/src"
+INCLUDEPATH += "../../device/MegaRoboMRHT_SDK/src"
 win32 {
 # visa
 INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include"

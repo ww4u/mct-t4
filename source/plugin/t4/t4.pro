@@ -21,7 +21,7 @@ INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include"
 INCLUDEPATH += "../../widget"
 INCLUDEPATH += "./widget"
 
-INCLUDEPATH += "../../device/libMegaGateway/src"
+INCLUDEPATH += "../../device/MegaRoboMRHT_SDK/src"
 
 OBJECTS_DIR = ./obj
 MOC_DIR = ./obj

@@ -111,7 +111,7 @@ INCLUDEPATH += ../source/plugin
 
 win32:INCLUDEPATH += "C:/Program Files (x86)/IVI Foundation/VISA/WinNT/Include"
 
-INCLUDEPATH += "../source/device/libMegaGateway/src"
+INCLUDEPATH += "../source/device/MegaRoboMRHT_SDK/src"
 
 # libs
 LIBS += -L"../lib"

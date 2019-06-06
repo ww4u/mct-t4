@@ -1,6 +1,7 @@
 #include <float.h>
 #include "t4.h"
-
+#include <QTcpSocket>
+#include <QHostAddress>
 #include "MegaGateway.h"
 
 #include "../../../include/mystd.h"
@@ -19,7 +20,7 @@ int MRX_T4::open()
 {
     int ret;
 
-    int localVi;
+    int localVi = 0;
     ret = _open( localVi );
     if ( ret == 0 )
     {
@@ -92,6 +93,9 @@ int MRX_T4::open()
 #define local_device_var()    (ViSession)vi,deviceHandle()
 int MRX_T4::_open( int &vi )
 {
+    //! init setting
+    vi = 0;
+
     //! local vi
     vi = mrgOpenGateWay( mAddr.toLatin1().data(), 2000 );
     if ( vi > 0 )
@@ -104,27 +108,61 @@ int MRX_T4::_open( int &vi )
         return -1;
     }
 
-    //! get robot handle
-    int names[16];
     int ret;
+    do
+    {
+        //! get robot handle
+        int names[16];
 
-    //! \todo names overflow
-    ret = mrgGetRobotName( vi, names );
-    if ( ret > 16 || ret < 1 )
-    { return -1; }
+        //! \todo names overflow
+        ret = mrgGetRobotName( vi, names );
+        if ( ret > 16 || ret < 1 )
+        { ret = -1; break; }
 
-    mRobotHandle = names[0];
-    sysInfo( tr("Robot"), mRobotHandle );
+        mRobotHandle = names[0];
+        sysInfo( tr("Robot"), mRobotHandle );
 
-    //! device handle
-    int deviceHandles[16];
-    ret = mrgGetRobotDevice( local_robot_var(), deviceHandles );
-    if ( ret > 16 || ret < 1 )
-    { return -1; }
-    mDeviceHandle = deviceHandles[0];
-    sysInfo( tr("Device"), mDeviceHandle );
+        //! device handle
+        int deviceHandles[16];
+        ret = mrgGetRobotDevice( local_robot_var(), deviceHandles );
+        if ( ret > 16 || ret < 1 )
+        { ret = -1; break; }
+        mDeviceHandle = deviceHandles[0];
+        sysInfo( tr("Device"), mDeviceHandle );
 
-    return 0;
+        //! connect socket
+        QStringList secList = mAddr.split("::");
+        if ( secList.size() < 3 )
+        { ret = -1; break; }
+
+        m_pExceptionSocket = new QTcpSocket();
+        if ( NULL == m_pExceptionSocket )
+        { ret = -1; break; }
+
+        //! bind success
+        QString pureIp = secList.at(1);
+//        QHostAddress host(pureIp);
+        m_pExceptionSocket->connectToHost( pureIp, MEGAROBO_TCP_EXCEPTION_PORT );
+        bool b = m_pExceptionSocket->waitForConnected();
+        if ( b )
+        { }
+        else
+        {
+            sysError(tr("Bind exception fail"));
+            ret = -1; break;
+        }
+
+        connect( m_pExceptionSocket, SIGNAL(readyRead()), this, SLOT(slot_exception_arrived()));
+
+        ret = 0;
+    }while( false );
+
+    if ( ret != 0 )
+    {
+        mrgCloseGateWay( mVi);
+    }
+
+    return ret;
 }
 void MRX_T4::close()
 {
@@ -136,6 +174,10 @@ void MRX_T4::close()
         }
         else
         {   }
+
+        m_pExceptionSocket->close();
+        delete m_pExceptionSocket;
+        m_pExceptionSocket = NULL;
     unlockWorking();
 
     emit_setting_changed( XPage::e_setting_opened, false );
@@ -285,6 +327,15 @@ int MRX_T4::onXEvent( XEvent *pEvent )
     }
 
     return XPlugin::onXEvent( pEvent );
+}
+
+void MRX_T4::onDeviceException( int var )
+{
+    //! prompt
+    sysPrompt( ( QString::number( var) ), 2 );
+
+    //! post load the diagnosis
+    m_pOpPanel->postRefreshDiagnosisInfo();
 }
 
 void MRX_T4::xevent_updateui( XEvent *pEvent )

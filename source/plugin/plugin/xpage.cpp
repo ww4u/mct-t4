@@ -199,6 +199,7 @@ void XPage::showFocusHelp()
 }
 
 void XPage::attachUpdateWorking( XPage::procDo proc,
+                                 int wType,
                                  const QString &desc,
                                  void *pContext,
                                  int tmoms
@@ -206,9 +207,10 @@ void XPage::attachUpdateWorking( XPage::procDo proc,
 {
     Q_ASSERT( NULL != m_pPlugin );
 
-    m_pPlugin->attachUpdateWorking( this, proc, desc, pContext, tmoms );
+    m_pPlugin->attachUpdateWorking( this, (WorkingApi::eWorkingType)wType, proc, desc, pContext, tmoms );
 }
 void XPage::attachUpdateWorking( XPage::procDo proc,
+                                 int wType,
                     XPage::preDo pre,
                     XPage::postDo post,
                     const QString &desc,
@@ -218,7 +220,7 @@ void XPage::attachUpdateWorking( XPage::procDo proc,
 {
     Q_ASSERT( NULL != m_pPlugin );
 
-    m_pPlugin->attachUpdateWorking( this, proc, pre, post, desc, pContext,tmoms );
+    m_pPlugin->attachUpdateWorking( this, (WorkingApi::eWorkingType)wType, proc, pre, post, desc, pContext,tmoms );
 }
 
 void XPage::attachMissionWorking( XPage *pObj,

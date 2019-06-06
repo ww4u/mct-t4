@@ -90,8 +90,10 @@ void XPluginWorkingThread::attach( WorkingApi * pApi )
     Q_ASSERT( NULL != pApi );
 
     mMutex.lock();
-
-    mApis.append( pApi );
+    if ( mApis.contains( pApi ) )
+    {}
+    else
+    { mApis.append( pApi ); }
 
     mMutex.unlock();
 }

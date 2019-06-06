@@ -340,6 +340,7 @@ void XPlugin::awakeUpdate()
 }
 
 void XPlugin::attachUpdateWorking( XPage *pObj,
+                             WorkingApi::eWorkingType eType,
                              XPage::procDo proc,
                              const QString &desc,
                              void *pContext,
@@ -348,24 +349,12 @@ void XPlugin::attachUpdateWorking( XPage *pObj,
 {
     Q_ASSERT( NULL != pObj );
 
-    attachUpdateWorking( pObj, proc, NULL, NULL, desc, pContext, tmoms );
-
-//    WorkingApi *pApi = new WorkingApi();
-//    if ( NULL == pApi )
-//    { return; }
-
-//    pApi->m_pIsEnabled = isEnabled;
-
-//    pApi->m_pProcDo = proc;
-//    pApi->m_pContext = pContext;
-//    pApi->m_pObj = pObj;
-
-//    Q_ASSERT( m_pUpdateWorking );
-//    m_pUpdateWorking->attach( pApi );
+    attachUpdateWorking( pObj, eType, proc, NULL, NULL, desc, pContext, tmoms );
 }
 
 void XPlugin::attachUpdateWorking(
                     XPage *pObj,
+                    WorkingApi::eWorkingType eType,
                     XPage::procDo proc,
                     XPage::preDo pre,
                     XPage::postDo post,
@@ -379,6 +368,8 @@ void XPlugin::attachUpdateWorking(
     WorkingApi *pApi = new WorkingApi();
     if ( NULL == pApi )
     { return; }
+
+    pApi->mWorkingType = eType;
 
     pApi->m_pIsEnabled = isEnabled;
 
@@ -398,8 +389,9 @@ void XPlugin::attachUpdateWorking(
     { m_pUpdateWorking->start(); }
 }
 
-void XPlugin::_attachUpdateWorking(
+void XPlugin::__attachUpdateWorking(
                     XPage *pObj,
+                    WorkingApi::eWorkingType eType,
                     XPage::procDo proc,
                     XPage::preDo pre,
                     XPage::postDo post,
@@ -413,6 +405,8 @@ void XPlugin::_attachUpdateWorking(
     WorkingApi *pApi = new WorkingApi();
     if ( NULL == pApi )
     { return; }
+
+    pApi->mWorkingType = eType;
 
     pApi->m_pIsEnabled = isEnabled;
 
@@ -595,11 +589,17 @@ int XPlugin::onXEvent( XEvent *pEvent )
     }
     else if ( pEvent->type() == XEvent::e_xevent_startup )
     { startup(); }
+    else if ( pEvent->type() == XEvent::e_xevent_device_exception )
+    { onDeviceException( pEvent->mVar1.toInt() );}
     else
     {}
 
-
     return 0;
+}
+
+void XPlugin::onDeviceException( int var )
+{
+
 }
 
 void XPlugin::slot_save_setting()

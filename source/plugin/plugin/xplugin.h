@@ -10,6 +10,7 @@
 #include "../../../source/wnd/syspara.h"
 #include "xpage.h"
 #include "xpluginintf.h"
+#include "xpluginworkingthread.h"
 
 //    var->adapteToUserMode(sysMode());
 //var->adapteToUserMode(sysMode());
@@ -66,6 +67,8 @@ public:
         e_xevent_pause,
         e_xevent_estop,
         e_xevent_startup,
+                            //! v1: exception id
+        e_xevent_device_exception,
 
         e_xevent_prompt,    //! v1: 0,1,2; v2: info
 
@@ -195,12 +198,15 @@ public:
     void awakeUpdate();
 
     void attachUpdateWorking( XPage *pObj,
+                        WorkingApi::eWorkingType eType,
                         XPage::procDo proc,
                         const QString &desc="",
                         void *pContext = NULL,
                         int tmoms = 100
                         );
     void attachUpdateWorking( XPage *pObj,
+                        WorkingApi::eWorkingType eType,
+
                         XPage::procDo proc,
                         XPage::preDo pre,
                         XPage::postDo post,
@@ -209,7 +215,9 @@ public:
                         int tmoms = 100
                         );
 
-    void _attachUpdateWorking( XPage *pObj,
+    void __attachUpdateWorking( XPage *pObj,
+                        WorkingApi::eWorkingType eType,
+
                         XPage::procDo proc,
                         XPage::preDo pre,
                         XPage::postDo post,
@@ -243,6 +251,7 @@ protected:
     virtual bool event(QEvent *event);
     virtual int onXEvent( XEvent *pEvent );
 
+     virtual void onDeviceException( int var );
 protected:
     QTreeWidgetItem *m_pRootWidgetItem;
     QWidget *m_pPanelWidget;

@@ -1,4 +1,5 @@
 #include <QDir>
+#include <QTcpSocket>
 #include "t4.h"
 
 int MRX_T4::serialOut(QXmlStreamWriter &writer)
@@ -43,4 +44,47 @@ void MRX_T4::slot_load_setting()
 
     XPlugin::slot_load_setting();
     logDbg()<<setupfileName;
+}
+
+void MRX_T4::slot_exception_arrived()
+{
+    lockWorking();
+        //! proc the event
+        QByteArray theData;
+        if ( m_pExceptionSocket->canReadLine() )
+        {
+            theData = m_pExceptionSocket->readAll();
+            logDbg()<<theData;
+        }
+
+    unlockWorking();
+
+    //! now try parse
+    QStringList exceptionList = QString( theData).split( '\n' );
+    QString item;
+    bool bOk;
+    int exceptId;
+    for ( int i = 0; i < exceptionList.size(); i++ )
+    {
+        item = exceptionList.at(i);
+        exceptId = item.toInt( &bOk );
+        if ( bOk )
+        {
+            XEvent *pEvent = new XEvent( XEvent::e_xevent_device_exception, exceptId );
+            if ( NULL != pEvent )
+            {
+                qApp->postEvent( this, pEvent );
+            }
+            else
+            {
+                sysError( tr("New event fail") );
+            }
+
+        }
+        else
+        {
+            sysError( tr("Invaid exception id") );
+        }
+    }
+
 }

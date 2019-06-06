@@ -724,6 +724,16 @@ int T4OpPanel::refreshDiagnosisInfo( void *pContext )
     { return 0; }
 }
 
+//! only one time
+void T4OpPanel::postRefreshDiagnosisInfo()
+{
+    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::refreshDiagnosisInfo ),
+                         WorkingApi::e_work_single,
+                         tr("Diagnosis refresh"),
+                         NULL,
+                         0 );
+}
+
 void T4OpPanel::attachWorkings()
 {
     if ( sysHasArgv("-noupdate") )
@@ -731,6 +741,7 @@ void T4OpPanel::attachWorkings()
 
     //! attach
     attachUpdateWorking( (XPage::procDo)( &T4OpPanel::posRefreshProc),
+                         WorkingApi::e_work_loop,
                          tr("Position refresh"),
                          NULL,
                          m_pPref->refreshIntervalMs() );
@@ -741,6 +752,7 @@ void T4OpPanel::attachWorkings()
 //                         m_pPref->refreshIntervalMs() );
 
     attachUpdateWorking( (XPage::procDo)( &T4OpPanel::pingTick ),
+                         WorkingApi::e_work_loop,
                          tr("ping tick"),
                          NULL,
                          m_pPref->refreshIntervalMs() );

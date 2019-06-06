@@ -272,6 +272,7 @@ public:
     int pingTick( void *pContext );
 
     int refreshDiagnosisInfo( void *pContext );
+    void postRefreshDiagnosisInfo();
 public:
     virtual void attachWorkings();
 

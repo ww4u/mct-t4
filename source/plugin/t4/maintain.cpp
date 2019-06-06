@@ -113,6 +113,7 @@ void Maintain::on_btnBackup_clicked()
     if ( !bOk )
     { return; }
 
+    descripton = descripton.simplified();
     if ( descripton.isEmpty() )
     {
         sysPrompt( tr("Invalid description"), 0 );
@@ -141,7 +142,13 @@ void Maintain::on_btnBackup_clicked()
         ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
         if ( ret != 0 )
         { break; }
-logDbg()<<dstPath<<descripton;
+
+        //! copy the log
+        cmd = "cp -r /home/megarobo/MRH-T/log" + dstPath + "/log";
+        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
+        if ( ret != 0 )
+        { break; }
+
         //! write the description
         ret = mrgStorageWriteFile( m_pPlugin->deviceVi(),
                                    0,

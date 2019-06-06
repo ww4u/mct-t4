@@ -362,7 +362,7 @@ void MegaInterface::on_pushButton_Scan_clicked()
                     if(ret <= 0){
                         continue;
                     }else{}
-logDbg()<<tInfo.mFMSN;
+
                     //! \note use the device sn
                     char sns[128];
                     ret = mrgGetDeviceSerialNumber( visa, roboIds[i], sns );
@@ -373,6 +373,7 @@ logDbg()<<tInfo.mFMSN;
 logDbg()<<tInfo.mFMSN;
                     tInfo.mDevInfo.mId = devName[0];
 
+                    //! \note invalid sn
                     char buf[128];
                     ret = mrgGetDeviceInfo(visa, devName[0], buf);
                     if(ret != 0){
@@ -381,7 +382,13 @@ logDbg()<<tInfo.mFMSN;
 
                     QString t( buf );
                     QStringList tList = t.split(":");
+logDbg()<<tList<<buf;
+//                    tList.at(0);
 
+                    //! \note the sn
+                    tInfo.mFMSN = tList.at(0);
+
+                    //! the mrq sn
                     tInfo.mDevInfo.mSN = tList.at(0);
                     tInfo.mDevInfo.mFirmWareHard = tList.at(1);
                     tInfo.mDevInfo.mSoftVer = tList.at(2);

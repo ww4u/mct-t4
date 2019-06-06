@@ -141,14 +141,13 @@ int MRX_T4::_open( int &vi )
 
         //! bind success
         QString pureIp = secList.at(1);
-//        QHostAddress host(pureIp);
         m_pExceptionSocket->connectToHost( pureIp, MEGAROBO_TCP_EXCEPTION_PORT );
-        bool b = m_pExceptionSocket->waitForConnected();
+        bool b = m_pExceptionSocket->waitForConnected( 5 );
         if ( b )
         { }
         else
         {
-            sysError(tr("Bind exception fail"));
+            sysPrompt(tr("Bind exception fail"));
             ret = -1; break;
         }
 
@@ -159,7 +158,7 @@ int MRX_T4::_open( int &vi )
 
     if ( ret != 0 )
     {
-        mrgCloseGateWay( mVi);
+        mrgCloseGateWay( vi);
     }
 
     return ret;

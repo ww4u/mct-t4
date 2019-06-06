@@ -108,5 +108,6 @@
         <file>image/icon/ErrorSetting.png</file>
         <file>image/icon/config.png</file>
         <file>image/icon/table.png</file>
+        <file>image/icon/03.png</file>
     </qresource>
 </RCC>

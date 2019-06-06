@@ -393,7 +393,7 @@ logDbg()<<tInfo.mFMSN;
                     ret = mrgGetDeviceType(visa,devName[0], bufDevType);
                     if(ret!=0)
                         continue;
-                    tInfo.mDevInfo.mType = QString::fromLatin1(bufDevType,128);
+                    tInfo.mDevInfo.mType = QString::fromLocal8Bit(bufDevType);
 
                     //! append
                     pRoboList->append( tInfo );

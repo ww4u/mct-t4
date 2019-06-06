@@ -4,6 +4,7 @@
 #include "t4.h"
 #include "MegaGateway.h"
 #include <qmessagebox.h>
+#include "widget.h"
 #define msgBox_Warning_ok( title, content )     (QMessageBox::warning(this, title, content, QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ? 1:0)
 #define msgBox_Information_ok( title, content ) (QMessageBox::information(this, title, content, QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ? 1:0)
 
@@ -88,6 +89,9 @@ void Maintain::on_btnReset_clicked()
 void Maintain::on_btnUpdate_clicked()
 {
     //! \todo
+    Widget w;
+    w.attatchPlugin(m_pPlugin);
+    w.exec();
 }
 
 void Maintain::on_btnFold_clicked()

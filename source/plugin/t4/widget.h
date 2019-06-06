@@ -3,14 +3,16 @@
 
 #include <QWidget>
 #include <QAbstractButton>
-#include "roboconfig.h"
+#include <QDialog>
+#include <QProcess>
+#include "MegaGateway.h"
+#include "../plugin/xplugin.h"
 
-class WorkerThread;
 
 namespace Ui {
 class Widget;
 }
-
+class XPlugin;
 class Widget : public QDialog
 {
     Q_OBJECT
@@ -19,7 +21,7 @@ public:
     explicit Widget(QWidget *parent = 0);
     ~Widget();
 
-    void attatchRoboConfig(RoboConfig *);
+    void attatchPlugin(XPlugin *xp);
 
     void reOpenDevice();
 
@@ -61,7 +63,7 @@ private slots:
 private:
     Ui::Widget *ui;
     QString sPath;
-    RoboConfig *m_roboConfig;
+    XPlugin *m_pPlugin;
     QString m_addr,recvID;
     QProcess *m_updateProcess,*m_undoProcess;
 
@@ -69,35 +71,6 @@ private:
     int         m_robotID;
 
     QProcess *proUpdateMRQ;
-
-};
-
-//! start QProcess
-class WorkerThread : public QThread
-{
-    Q_OBJECT
-public:
-    WorkerThread();
-    WorkerThread(QString &program, QStringList &argument, QThread *parent = 0);
-
-    void run();
-
-public:
-    void setProgram(QString &program){ m_program = program; }
-    void setArguments(QStringList &argument){ m_argument = argument; }
-
-signals:
-    void resultReady(QString);
-    void errorOccur();
-
-private slots:
-    void slotReadyReadStandOut();
-
-private:
-    QProcess *m_process;
-    QString m_program;
-    QStringList m_argument;
-
 
 };
 

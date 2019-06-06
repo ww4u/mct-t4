@@ -1,5 +1,5 @@
 TEMPLATE=lib
-QT       += gui widgets
+QT       += gui widgets concurrent
 CONFIG += static
 CONFIG += c++11
 TARGET = ../../../../lib/mrx-t4
@@ -61,7 +61,8 @@ SOURCES = \
     widget/keytableview.cpp \
     widget/axislimit.cpp \
     fileexplorer.cpp \
-    maintain.cpp
+    maintain.cpp \
+    widget.cpp
 
 
 HEADERS = \
@@ -97,7 +98,8 @@ HEADERS = \
     widget/keytableview.h \
     widget/axislimit.h \
     fileexplorer.h \
-    maintain.h
+    maintain.h \
+    widget.h
 
 FORMS += \
     config.ui \
@@ -121,7 +123,8 @@ FORMS += \
     t4oppanel.ui \
     widget/axislimit.ui \
     fileexplorer.ui \
-    maintain.ui
+    maintain.ui \
+    widget.ui
 
 RESOURCES += ../../../res/res.qrc
 

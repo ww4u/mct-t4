@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui charts xml concurrent
+QT       += core gui charts xml
 
 greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 
@@ -52,8 +52,7 @@ HEADERS += ../include/mystd.h           \
     ../source/wnd/stopwidget.h \
     ../source/wnd/prompt.h \
     ../source/wnd/changedpw.h \
-    ../source/wnd/spacewidget.h \
-    ../source/wnd/widget.h
+    ../source/wnd/spacewidget.h
 
 SOURCES += ../source/main/main.cpp      \
     ../source/sys/sysapi.cpp            \
@@ -76,8 +75,7 @@ SOURCES += ../source/main/main.cpp      \
     ../source/wnd/stopwidget.cpp \
     ../source/wnd/prompt.cpp \
     ../source/wnd/changedpw.cpp \
-    ../source/wnd/spacewidget.cpp \
-    ../source/wnd/widget.cpp
+    ../source/wnd/spacewidget.cpp
 
 !win32: HEADERS += ../source/device/vxi11/vxi11.h
 !win32: HEADERS += ../source/device/vxi11/vxi11_user.h
@@ -98,8 +96,7 @@ FORMS += ../source/wnd/mainwindow.ui    \
     ../source/wnd/stopwidget.ui \
     ../source/wnd/prompt.ui \
     ../source/wnd/changedpw.ui \
-    ../source/wnd/spacewidget.ui \
-    ../source/wnd/widget.ui
+    ../source/wnd/spacewidget.ui
 
 INCLUDEPATH += ../include
 INCLUDEPATH += ../source/sys

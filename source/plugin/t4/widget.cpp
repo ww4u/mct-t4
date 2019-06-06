@@ -2,8 +2,6 @@
 #include "ui_widget.h"
 #include <QFileDialog>
 #include <QDebug>
-#include "xthread.h"
-#include <QProcess>
 #include <QtConcurrent>
 
 
@@ -39,31 +37,14 @@ Widget::~Widget()
     delete ui;
 }
 
-void Widget::attatchRoboConfig(RoboConfig *r)
+void Widget::attatchPlugin(XPlugin *xp)
 {
-    m_roboConfig = r;
-    m_addr = m_roboConfig->currentXPlugin()->addr();
-//recvID = m_roboConfig->currentXPlugin()->DevId();
-//    m_vi = mrgOpenGateWay(m_addr.toLocal8Bit().data(), 200);
-//    if(m_vi <= 0){
-//        //! \todo
-//    }
-//    int robotNames[128] = {0};
-//    int ret = mrgGetRobotName(m_vi, robotNames);
-//    if(ret <=0){
-//        //! \todo
-//    }else if(ret ==1){
-//        m_robotID = robotNames[0];
-//    }else{}
-
-//    int deviceNames[128] = {0};
-//    //ret = mrgGetRobotDevice(m_vi, m_robotID, deviceNames);
-//    recvID = QString::number(1);
-
+    m_pPlugin = xp;
+    m_addr = m_pPlugin->addr();
 }
 void Widget::reOpenDevice()
 {
-    m_roboConfig->currentXPlugin()->close();
+    m_pPlugin->close();
     m_vi = mrgOpenGateWay(m_addr.toLocal8Bit().data(), 200);
     if(m_vi <= 0){
         //! \todo
@@ -243,7 +224,7 @@ void Widget::slotReboot()
     msgBox.setStandardButtons(QMessageBox::Ok|QMessageBox::Cancel);
     if(msgBox.exec() == QMessageBox::Ok){
         //! reboot
-        if(m_roboConfig->currentXPlugin()->isRebootable()){
+        if(m_pPlugin->isRebootable()){
             mrgSystemRunCmd(m_vi, (char *)"reboot", 0);
         }
         this->close();
@@ -291,34 +272,9 @@ void Widget::on_btnShow_toggled(bool checked)
         ui->textBrowser->hide();
     }
 }
-//!
 void Widget::slotHandleError()
 {
     ui->labelStatus->setText( tr( "Update Fail" ) );
     ui->labelStatus->show();
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
-}
-
-WorkerThread::WorkerThread()
-{
-
-}
-
-WorkerThread::WorkerThread(QString &program, QStringList &argument, QThread *parent) :
-    QThread(parent)
-{
-    m_program = program;
-    m_argument = argument;
-    m_process = new QProcess;
-    connect(m_process,SIGNAL(readyReadStandardOutput()), this, SLOT(slotReadyReadStandOut()));
-}
-
-void WorkerThread::run()
-{
-    m_process->start(m_program, m_argument);
-}
-
-void WorkerThread::slotReadyReadStandOut()
-{
-    emit resultReady( QString(m_process->readAllStandardOutput()) );
 }

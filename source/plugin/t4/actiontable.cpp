@@ -8,8 +8,6 @@
 #include "../model/treeitem.h"
 #include "../model/treemodel.h"
 
-//#define record_file_name  "motion.mrp"
-#define record_file_name  "MCT_motion.mrp"
 namespace mrx_t4 {
 
 ActionTable::ActionTable(QWidget *parent) :
@@ -280,20 +278,10 @@ int ActionTable::upload()
             break;
         }
 
-        //! save the file
-        QFile file( m_pPlugin->homePath() + "/" + record_file_name );
-        if ( file.open( QIODevice::WriteOnly ) )
-        {}
-        else
-        { break; }
-
-        if ( ret != file.write( ary.data(), ret ) )
-        {
-            file.close();
-            break;
-        }
-
-        file.close();
+        ret = mrgStorageWriteFile( plugin_root_dir(),
+                             (record_file_name),
+                             (quint8*)ary.data(),
+                             ary.length() );
 
         //! read success + reload
         postDoLoad();
@@ -309,21 +297,14 @@ int ActionTable::download()
 {
     check_connect_ret( -1 );
 
-    QString fileName = m_pPlugin->homePath() + "/" + record_file_name;
+    QByteArray ba;
+    QTextStream stream( &ba );
 
-    //! update local file
     TreeModel *model = (TreeModel *)ui->view->model();
-    int ret = model->exportOut( fileName );
+    int ret = model->exportOut( stream );
+    if ( ret != 0 )
+    { return ret; }
 
-    QFile f( fileName );
-    if( !f.open(QIODevice::ReadOnly )){
-        sysError( tr("Record Open Error") );
-        return -1;
-    }
-    QByteArray ba = f.readAll();
-    f.close();
-
-    //QString fileOutName = m_pPlugin->model().toLower() + record_file_name;
     QString fileOutName = QString( record_file_name );
 
     ret = mrgStorageMotionFileSaveContext(pRobo->deviceVi(),
@@ -340,6 +321,53 @@ int ActionTable::download()
 int ActionTable::diff()
 {
     return 0;
+}
+
+int ActionTable::requestLoad( const QString &path, const QString &name )
+{
+    QString fileName = path + "/" + name;
+
+    int ret = -1;
+    do
+    {
+        TreeModel *pTable = (TreeModel*)ui->view->model();
+        if ( NULL == pTable )
+        {
+            ret = -1;
+            break;
+        }
+
+        //! read
+        QByteArray theAry;
+        theAry.reserve( max_file_size );
+        ret = mrgStorageReadFile( m_pPlugin->deviceVi(),
+                                  0,
+                                  path.toLatin1().data(),
+                                  name.toLatin1().data(),
+                                  (quint8*)theAry.data() );
+        if ( ret <= 0 )
+        {
+            ret = -1;
+            break;
+        }
+
+        theAry.resize( ret );
+
+        QTextStream stream( theAry );
+
+        //! load
+        ret = pTable->loadIn( stream );
+        if ( ret != 0 )
+        { break; }
+
+    }while( 0 );
+
+    if ( ret != 0 )
+    {
+        sysError( fileName + " " + tr("load fail") );
+    }
+
+    return ret;
 }
 
 void ActionTable::enterMission()
@@ -451,48 +479,82 @@ void ActionTable::editRecord( XSetting setting )
 }
 
 void ActionTable::doSave()
-{logDbg();
-    TreeModel *pTable = (TreeModel*)ui->view->model();
-    if ( NULL == pTable )
+{
+    QString fileName = m_pPlugin->selfPath() + "/" + record_file_name;
+
+    int ret = -1;
+
+    do
     {
-        sysError( tr("Save record fail") );
-        return;
-    }
+        TreeModel *pTable = (TreeModel*)ui->view->model();
+        if ( NULL == pTable )
+        {
+            ret = -1;
+            break;
+        }
 
-    int ret;
+        //! export
+        QByteArray theAry;
+        QTextStream stream( &theAry );
+        ret = pTable->exportOut( stream );
+        if ( ret != 0 )
+        { break; }
+        stream.flush();
 
-    Q_ASSERT( NULL != m_pPlugin );
-    ret = assurePath( m_pPlugin->homePath() );
+        //! write
+        ret = mrgStorageWriteFile( plugin_root_dir(),
+                                   record_file_name,
+                                   (quint8*)theAry.data(),
+                                   theAry.length() );
+        if ( ret != 0 )
+        { break; }
+
+    }while( 0 );
+
     if ( ret != 0 )
-    {
-        sysError( tr("Save record fail") );
-        return;
-    }
-
-    //! mrp
-    QString fileName = m_pPlugin->homePath() + "/" + record_file_name;
-    ret = pTable->exportOut( fileName );
-    if ( ret != 0 )
-    {
-        sysError( fileName + " " + tr("save fail") );
-        return;
-    }
+    { sysError( fileName + " " + tr("save fail") ); return; }
 }
 
 void ActionTable::doLoad()
-{logDbg();
-    QString fileName = m_pPlugin->homePath() + "/" + record_file_name;
-    TreeModel *pTable = (TreeModel*)ui->view->model();
-    if ( NULL == pTable )
-    {
-        sysError( tr("Load record fail") );
-        return;
-    }
+{
+    QString fileName = m_pPlugin->selfPath() + "/" + record_file_name;
 
-    int ret = pTable->loadIn( fileName );
+    int ret = -1;
+    do
+    {
+        TreeModel *pTable = (TreeModel*)ui->view->model();
+        if ( NULL == pTable )
+        {
+            ret = -1;
+            break;
+        }
+
+        //! read
+        QByteArray theAry;
+        theAry.reserve( max_file_size );
+        ret = mrgStorageReadFile( plugin_root_dir(),
+                                  record_file_name,
+                                  (quint8*)theAry.data() );
+        if ( ret <= 0 )
+        {
+            ret = -1;
+            break;
+        }
+
+        theAry.resize( ret );
+
+        QTextStream stream( theAry );
+
+        //! load
+        ret = pTable->loadIn( stream );
+        if ( ret != 0 )
+        { break; }
+
+    }while( 0 );
+
     if ( ret != 0 )
     {
-        sysError( tr("Load record fail") );
+        sysError( fileName + " " + tr("load fail") );
     }
 }
 

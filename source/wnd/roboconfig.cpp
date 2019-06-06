@@ -24,8 +24,6 @@ RoboConfig::RoboConfig(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::RoboConfig)
 {
-//    mIndex = -1;
-
     m_megaSerachWidget = NULL;
     m_pOpDock = NULL;
 
@@ -35,15 +33,8 @@ RoboConfig::RoboConfig(QWidget *parent) :
     m_pRoboContextMenu = NULL;
     m_pActionOpen = NULL;
     m_pActionClose = NULL;
-    m_pActionRst = NULL;
 
     m_pActionHome = NULL;
-    m_pActionFold = NULL;
-
-    m_pActionReboot = NULL;
-    m_pActionPowerOff = NULL;
-    m_pActionExportLog = NULL;
-    m_pActionUpdate = NULL;
 
     m_pProjectContextMenu = NULL;
     m_pActionDelAll = NULL;
@@ -246,62 +237,6 @@ void RoboConfig::slot_plugins_stop()
 void RoboConfig::slot_plugin_home()
 { pluginHome(); }
 
-void RoboConfig::slotWifi()
-{
-//    if(mIndex < 0) return;
-//    if( m_RobotList[mIndex].m_Visa == 0)
-//    {
-//        QMessageBox::warning(this,tr("warning"),tr("Current Device In Offline"));
-//        return;
-//    }
-
-//    int ret = -1;
-//    char wifiList[1024] = "";
-//    ret = mrgSysWifiSearch(m_RobotList[mIndex].m_Visa, wifiList);
-//    if(ret < 0)
-//    {
-//        QMessageBox::critical(this,tr("error"),tr("Wifi search error or empty!"));
-//        qDebug() << "mrgSysWifiSearch" << ret;
-//        return;
-//    }
-
-//    QStringList StrList = QString(wifiList).split(",", QString::SkipEmptyParts);
-
-//    //显示选择对话框
-//    QString wifiName = QInputDialog::getItem(this, tr("Wifi"), tr("Please choose wifi:"), StrList, -1, false);
-//    if(wifiName == "")
-//        return;
-
-//    //显示输入对话框获取输入的wifi密码
-//    QString password = QInputDialog::getText(this, tr("Input"), tr("Please input wifi password:"), QLineEdit::Password);
-//    if(password == "")
-//        return;
-
-//    ret = mrgSysWifiConnect(m_RobotList[mIndex].m_Visa, wifiName.toLocal8Bit().data(), password.toLocal8Bit().data());
-//    if(ret == 1){
-//        QMessageBox::information(this,tr("tips"),tr("Wifi Connect success!"));
-//    }
-//    else{
-//        QMessageBox::critical(this,tr("error"),tr("Wifi Connect error!"));
-//        qDebug() << "mrgSysWifiConnect" << ret;
-//    }
-//    return;
-}
-
-//void RoboConfig::slotExit()
-//{
-//    foreach (RobotInfo robo, m_RobotList ){
-//        QString strIP = robo.m_strDevInfo.split(',').at(0);
-//        if(robo.m_Visa != 0){
-//            //如果没有关闭就关闭设备
-//            slot_open_close(strIP);
-//        }
-//    }
-
-//    if(m_megaSerachWidget != NULL){
-//        m_megaSerachWidget->close();
-//    }
-//}
 
 #define gc_context_menu() { delete m_pRoboContextMenu; m_pRoboContextMenu = NULL; }
 void RoboConfig::slotShowContextmenu(const QPoint& pos)
@@ -405,22 +340,12 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
             if ( NULL == m_pActionClose )
             { gc_context_menu(); return; }
 
-            m_pActionRst = m_pRoboContextMenu->addAction(tr("Reset"));
-            m_pActionRst->setIcon( QIcon(":/res/image/icon/beauty.png") );
-            if ( NULL == m_pActionRst )
-            { gc_context_menu(); return; }
-
             if ( NULL== m_pRoboContextMenu->addSeparator() )
             { gc_context_menu(); return; }
 
             m_pActionHome = m_pRoboContextMenu->addAction( tr("Home") );
             m_pActionHome->setIcon( QIcon(":/res/image/icon/address.png") );
             if ( NULL == m_pActionHome )
-            { gc_context_menu(); return; }
-
-            m_pActionFold = m_pRoboContextMenu->addAction( tr("Fold") );
-            m_pActionFold->setIcon( QIcon(":/res/image/icon/stealth.png") );
-            if ( NULL == m_pActionFold )
             { gc_context_menu(); return; }
 
             if ( NULL== m_pRoboContextMenu->addSeparator() )
@@ -431,53 +356,13 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
             if ( NULL == actionDelete )
             { gc_context_menu(); return; }
 
-            if ( NULL== m_pRoboContextMenu->addSeparator() )
-            { gc_context_menu(); return; }
-
-            m_pActionReboot = m_pRoboContextMenu->addAction( tr("Reboot") );
-            m_pActionReboot->setIcon( QIcon(":/res/image/icon/332.png") );
-            if ( NULL == m_pActionReboot )
-            { gc_context_menu(); return; }
-
-            m_pActionPowerOff = m_pRoboContextMenu->addAction( tr("Power Off") );
-            m_pActionPowerOff->setIcon( QIcon(":/res/image/icon/246.png") );
-            if ( NULL == m_pActionPowerOff )
-            { gc_context_menu(); return; }
-
-            if ( NULL== m_pRoboContextMenu->addSeparator() )
-            { gc_context_menu(); return; }
-
-            m_pActionExportLog = m_pRoboContextMenu->addAction( tr("Export log...") );
-            if ( NULL == m_pActionExportLog )
-            { gc_context_menu(); return; }
-            m_pActionExportLog->setIcon( QIcon(":/res/image/icon/219.png") );
-
-            m_pActionUpdate = m_pRoboContextMenu->addAction( tr("Update...") );
-            if ( NULL == m_pActionUpdate )
-            { gc_context_menu(); return; }
-            m_pActionUpdate->setIcon( QIcon(":/res/image/icon/fuzhi.png") );
-
-            QAction *actionExplorer = m_pRoboContextMenu->addAction( tr("Explorer") );
-            if ( NULL == actionExplorer )
-            { gc_context_menu(); return; }
-            actionExplorer->setIcon( QIcon(":/res/image/icon/manage.png") );
-
-
             //! add action
             connect(m_pActionOpen, SIGNAL(triggered(bool)), this, SLOT(slotActionOpen()));
             connect(m_pActionClose, SIGNAL(triggered(bool)), this, SLOT(slotActionClose()));
-            connect(m_pActionRst, SIGNAL(triggered(bool)), this, SLOT(slotActionRst()));
 
             connect(m_pActionHome, SIGNAL(triggered(bool)), this, SLOT(slotActionHome()));
-            connect(m_pActionFold, SIGNAL(triggered(bool)), this, SLOT(slotActionFold()));
-
-            connect(m_pActionReboot, SIGNAL(triggered(bool)), this, SLOT(slotActionReboot()));
-            connect(m_pActionPowerOff, SIGNAL(triggered(bool)), this, SLOT(slotActionPoweroff()));
 
             connect(actionDelete, SIGNAL(triggered(bool)), this, SLOT(slotActionDelete()));
-            connect(m_pActionExportLog, SIGNAL(triggered(bool)),this, SLOT(slotActionExportLog()) );
-            connect(m_pActionUpdate, SIGNAL(triggered(bool)),this, SLOT(slotActionUpdate()) );
-            connect(actionExplorer, SIGNAL(triggered(bool)), this, SLOT(slotActionExplorer()));
         }
 
         //! modify
@@ -485,31 +370,15 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
         {
             m_pActionOpen->setVisible(false);
             m_pActionClose->setVisible(true);
-            m_pActionRst->setVisible( true );
 
             m_pActionHome->setVisible( true && m_pCurPlugin->isOnLine() );
-            m_pActionFold->setVisible( m_pCurPlugin->isFoldable() && m_pCurPlugin->isOnLine() );
-
-            m_pActionReboot->setVisible( m_pCurPlugin->isRebootable() );
-            m_pActionPowerOff->setVisible( m_pCurPlugin->isPowerOffable() );
-
-            m_pActionExportLog->setVisible( true );
-            m_pActionUpdate->setVisible( true );
         }
         else
         {
             m_pActionOpen->setVisible(true);
             m_pActionClose->setVisible(false);
-            m_pActionRst->setVisible( false );
 
             m_pActionHome->setVisible( false );
-            m_pActionFold->setVisible( false );
-
-            m_pActionReboot->setVisible( false );
-            m_pActionPowerOff->setVisible( false );
-
-            m_pActionExportLog->setVisible( false );
-            m_pActionUpdate->setVisible( false );
         }
 
         //! pop proc
@@ -561,36 +430,12 @@ void RoboConfig::slotActionClose()
 #define msgBox_Warning_ok( title, content )     (QMessageBox::warning(this, title, content, QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ? 1:0)
 #define msgBox_Information_ok( title, content ) (QMessageBox::information(this, title, content, QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ? 1:0)
 
-void RoboConfig::slotActionRst()
-{
-    Q_ASSERT( NULL != m_pCurPlugin );
-    if ( msgBox_Warning_ok( tr("Warning"), tr("Confirm Reset?") ))
-        m_pCurPlugin->rst();
-}
-
 void RoboConfig::slotActionHome()
 {
     Q_ASSERT( NULL != m_pCurPlugin );
     m_pCurPlugin->home();
 }
-void RoboConfig::slotActionFold()
-{
-    Q_ASSERT( NULL != m_pCurPlugin );
-    m_pCurPlugin->fold();
-}
 
-void RoboConfig::slotActionReboot()
-{
-    Q_ASSERT( NULL != m_pCurPlugin );
-    if( msgBox_Warning_ok( tr("Warning"), tr("Confirm Reboot?") ) )
-        m_pCurPlugin->reboot();
-}
-void RoboConfig::slotActionPoweroff()
-{
-    Q_ASSERT( NULL != m_pCurPlugin );
-    if(msgBox_Warning_ok( tr("Warning"), tr("Confirm PowerOff?") ))
-        m_pCurPlugin->powerOff();
-}
 void RoboConfig::slotActionDelete()
 {
     if(  msgBox_Warning_ok( tr("Warning"), tr("Confirm Delete?") ) ){
@@ -611,33 +456,14 @@ void RoboConfig::slotActionDelete()
     }
 }
 
-void RoboConfig::slotActionExportLog()
-{
-    //! \todo api for export
-}
+//void RoboConfig::slotActionUpdate()
+//{
+//    //! \todo update
 
-void RoboConfig::slotActionUpdate()
-{
-    //! \todo update
-
-    Widget *w = new Widget;
-    w->attatchRoboConfig(this);
-    w->exec();
-}
-
-void RoboConfig::slotActionExplorer()
-{
-    Q_ASSERT( NULL != m_pCurPlugin );
-
-    QStringList args;
-    QString str;
-    str = m_pCurPlugin->homePath();
-    str.replace("/", QDir::separator() );
-    args<<str;
-    //! \todo linux
-
-    QProcess::execute( "explorer.exe", args );
-}
+//    Widget *w = new Widget;
+//    w->attatchRoboConfig(this);
+//    w->exec();
+//}
 
 void RoboConfig::on_treeWidget_currentItemChanged(QTreeWidgetItem *current,
                                                   QTreeWidgetItem *previous)
@@ -840,13 +666,16 @@ void RoboConfig::createRobot( const QStringList &strInfos )
     plugin->setMechanicalVer( strInfos.at(4) );
 
     //！MRQ devinfo
-    plugin->setType_MRQ( strInfos.at(5) );
-    plugin->setSN_MRQ( strInfos.at(6) );
-    plugin->setSoftVer_MRQ( strInfos.at(7) );
-    plugin->setFirmWareHard_MRQ( strInfos.at(8) );
-    plugin->setFirmWareBoot_MRQ(strInfos.at(9));
-    plugin->setFirmWareFpga_MRQ(strInfos.at(10));
-    plugin->setDevId( strInfos.at(11).toInt() );
+    if ( strInfos.size() > 5 )
+    {
+        plugin->setType_MRQ( strInfos.at(5) );
+        plugin->setSN_MRQ( strInfos.at(6) );
+        plugin->setSoftVer_MRQ( strInfos.at(7) );
+        plugin->setFirmWareHard_MRQ( strInfos.at(8) );
+        plugin->setFirmWareBoot_MRQ(strInfos.at(9));
+        plugin->setFirmWareFpga_MRQ(strInfos.at(10));
+        plugin->setDevId( strInfos.at(11).toInt() );
+    }
 
     //! pref
     plugin->attachPref( m_pPref );
@@ -872,17 +701,17 @@ void RoboConfig::createRobot( const QStringList &strInfos )
     pRoboRoot->setToolTip( 0, plugin->viewAddr() );
     plugin->setViewObj( pRoboRoot );
     rootItem()->addChild( pRoboRoot );
-
+logDbg();
     //! auto expand
     rootItem()->setExpanded( true );
     { pRoboRoot->setExpanded( m_pPref->mbAutoExpand ); }
 
-    //! try load the setup from the local
-    plugin->emit_load();
-
     //! open
     if ( plugin->open() == 0 )
-    {}
+    {
+        //! try load the setup device
+        plugin->emit_load();
+    }
     else
     {
         sysError(  strInfos.at(0) + " " + tr("open fail") );

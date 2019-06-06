@@ -450,6 +450,41 @@ int TreeModel::loadIn( const QString &fileName )
 int TreeModel::exportOut( const QString &fileName )
 {
     MDataSet dataSet;
+
+    int ret;
+    ret = buildDataSet( dataSet );
+    if ( ret != 0 )
+    { return ret; }
+
+    return dataSet.save( fileName );
+}
+
+int TreeModel::loadIn( QTextStream &stream )
+{
+    MDataSet dataSet;
+
+    int ret;
+    ret = dataSet.load( stream );
+    if ( ret != 0 )
+    { logDbg();return ret; }
+
+    return _loadIn( dataSet );
+}
+
+int TreeModel::exportOut( QTextStream &stream )
+{
+    MDataSet dataSet;
+
+    int ret;
+    ret = buildDataSet( dataSet );
+    if ( ret != 0 )
+    { return ret; }
+
+    return dataSet.save( stream );
+}
+
+int TreeModel::buildDataSet( MDataSet &dataSet )
+{
     dataSet.setModel( "MRX-T4" );
     QStringList headers;
     headers<<"valid"
@@ -491,19 +526,7 @@ int TreeModel::exportOut( const QString &fileName )
         }
     }
 
-    return dataSet.save( fileName );
-}
-
-int TreeModel::loadIn( QTextStream &stream )
-{
-    MDataSet dataSet;
-
-    int ret;
-    ret = dataSet.load( stream );
-    if ( ret != 0 )
-    { logDbg();return ret; }
-
-    return _loadIn( dataSet );
+    return 0;
 }
 
 double TreeModel::MaxTerminalSpeed(double str)

@@ -56,7 +56,7 @@ public:
     void setMechanicalVer( const QString &ver );
     QString mechanicalVer();
 
-    //!
+    //! mrq attr
     void setType_MRQ( const QString &s ){ mType = s; }
     QString Type_MRQ(){ return  mType; }
 
@@ -69,8 +69,8 @@ public:
     void setFirmWareHard_MRQ( const QString &s ){ mFirmWareHard_MRQ = s; }
     QString FirmWareHard_MRQ(){ return mFirmWareHard_MRQ; }
 
-    void setFirmWareBoot_MRQ( const QString &s ){ mFirmWareHard_MRQ = s; }
-    QString FirmWareBoot_MRQ(){ return mFirmWareHard_MRQ; }
+    void setFirmWareBoot_MRQ( const QString &s ){ mFirmWareBoot_MRQ = s; }
+    QString FirmWareBoot_MRQ(){ return mFirmWareBoot_MRQ; }
 
     void setFirmWareFpga_MRQ( const QString &s ){ mFirmWareFpga_MRQ = s; }
     QString FirmWareFpga_MRQ(){ return mFirmWareFpga_MRQ; }
@@ -78,6 +78,7 @@ public:
     void setDevId( const int id ){ mDevId = id; }
     int DevId(){ return mDevId; }
 
+public:
     int save( QXmlStreamWriter &writer );
     int load( QXmlStreamReader &reader );
 

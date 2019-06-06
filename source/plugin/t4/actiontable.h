@@ -55,6 +55,9 @@ public:
     virtual int download();
     virtual int diff();    
 
+    //! load the file
+    int requestLoad( const QString &path, const QString &name );
+
 protected:
     virtual void enterMission();
     virtual void exitMission();

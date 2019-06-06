@@ -488,7 +488,7 @@ void MainWindow::slot_plugin_operable( bool b )
 
     ui->actionStore->setEnabled( b );
 
-    ui->actionHome->setVisible( b );    logDbg()<<b;
+    ui->actionHome->setVisible( b );
 
     //! \todo plugin opened
     //! plugin operable
@@ -845,11 +845,6 @@ void MainWindow::on_actionReboot_triggered()
 #else
     system("shutdown -s -r 0");
 #endif
-}
-
-void MainWindow::on_actionWifi_triggered()
-{
-    m_roboConfig->slotWifi();
 }
 
 void MainWindow::on_actionPref_triggered()

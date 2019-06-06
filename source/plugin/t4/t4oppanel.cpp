@@ -242,6 +242,10 @@ bool T4OpPanel::event(QEvent *e)
                 m_pPlugin->close();
 
             }
+            else if ( (int)pEvent->type() == OpEvent::demo_start )
+            {
+                on_demo_start( );
+            }
             else
             {}
 
@@ -871,6 +875,39 @@ void T4OpPanel::fold()
     m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onFolding), var, tr("Folding") );
 }
 
+int T4OpPanel::requestLoad_debug( const QString &path, const QString &name )
+{
+    QString fileName = path + "/" + name;
+
+    int ret;
+    do
+    {
+        QByteArray theAry;
+        theAry.reserve( max_file_size );
+        ret = mrgStorageReadFile( m_pPlugin->deviceVi(),
+                                  0,
+                                  path.toLatin1().data(),
+                                  name.toLatin1().data(),
+                                  (quint8*)theAry.data() );logDbg()<<ret;
+        if ( ret <= 0 )
+        {
+            ret = -1;
+            break;
+        }
+        theAry.resize( ret );
+        ret = mDebugTable.load( theAry );
+        if ( ret != 0 )
+        { break; }
+    }while ( 0 );
+
+    if ( ret != 0 )
+    {
+        sysError( fileName + " " + tr("load fail") );
+    }
+
+    return ret;
+}
+
 double T4OpPanel::localSpeed()
 {
     return ui->cmbSpeed->currentText().toDouble();
@@ -1173,10 +1210,22 @@ int T4OpPanel::onTcpJog( QVariant var )
 
 }
 
+void T4OpPanel::preSequence()
+{
+    //! invalid row
+    if ( !ui->tvDebug->currentIndex().isValid() && ui->tvDebug->model()->rowCount() > 0 )
+    { ui->tvDebug->selectRow( 0 ); }
+
+    //! build
+    mSeqMutex.lock();
+        delete_all( mSeqList );
+        buildSequence( mSeqList );
+    mSeqMutex.unlock();
+}
+
 int T4OpPanel::onSequence( QVariant var )
 {
     check_connect_ret( -1 );
-logDbg()<<QThread::currentThreadId();
     //! proc the sequence
 
     int ret = _onSequence( var );
@@ -1212,74 +1261,37 @@ int T4OpPanel::_onSequence( QVariant var )
         }
     }
 
-    //! find the first line
-    int anchorSeq = -1;
+    //! anchors
+    QList<int> anchors;
     for( int i = 0; i < mSeqList.size(); i++ )
     {
         if ( mSeqList.at(i)->mbAnchor )
         {
-            anchorSeq = i;
-            break;
+            anchors<<i;
         }
     }
 
-    if ( anchorSeq < 0 )
+    if ( anchors.size() < 1 )
     {
         sysError( tr("Anchor fail") );
         return -2;
     }
 
     //! do loop
-    QVariantList vars;
+    int from = anchors.first();
     do
     {
-        for( int i = anchorSeq; i < mSeqList.size(); i++, anchorSeq = 0 )
-        {
-            if ( QThread::currentThread()->isInterruptionRequested() )
-            { return 0; }
+        //! loop
+        ret = _onSequenceRange( var, from, mSeqList.size() );
+        if ( ret != 0 )
+        { return ret; }
 
-            //! enter
-            vars.clear();
-            vars<<mSeqList.at(i)->x
-                <<mSeqList.at(i)->y
-                <<mSeqList.at(i)->z
-                <<mSeqList.at(i)->pw
-                <<mSeqList.at(i)->h;
-            post_debug_enter( mSeqList.at(i)->id, mSeqList.at(i)->vRow, vars );
+        if ( QThread::currentThread()->isInterruptionRequested() )
+        { return 0; }
 
-            //! enable?
-            if ( procSequenceEn( mSeqList.at( i )) )
-            {
-                ret = procSequence( mSeqList.at( i ) );
-                //! \todo the action delay
-                if ( ret == 0 )
-                {
-                    if ( mSeqList.at(i)->delay > 0 )
-                    {
-                        //! sleep s
-                        QThread::sleep( mSeqList.at(i)->delay );
-                    }
-                    else
-                    {}
+        //! \note the first loop completed
+        from = 0;
 
-                    //! exit
-                    post_debug_exit( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
-                }
-                //! exec fail
-                else
-                {
-                    //! exit
-                    post_debug_exit( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
-
-                    return -1;
-                }
-            }
-            else
-            {
-                post_debug_exit( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
-            }
-
-        }
     }while( ui->chkCyclic->isChecked() );
 
     //! cyclic
@@ -1291,6 +1303,62 @@ int T4OpPanel::_onSequence( QVariant var )
     }
 
     return 0;
+}
+
+int T4OpPanel::_onSequenceRange( QVariant var, int from, int end )
+{
+    QVariantList vars;
+    int ret;
+
+    for( int i = from; i < end; i++ )
+    {
+        //! terminated
+        if ( QThread::currentThread()->isInterruptionRequested() )
+        { return 0; }
+
+        //! enter
+        vars.clear();
+        vars<<mSeqList.at(i)->x
+            <<mSeqList.at(i)->y
+            <<mSeqList.at(i)->z
+            <<mSeqList.at(i)->pw
+            <<mSeqList.at(i)->h;
+        post_debug_enter( mSeqList.at(i)->id, mSeqList.at(i)->vRow, vars );
+
+        //! enable?
+        if ( procSequenceEn( mSeqList.at( i )) )
+        {
+            ret = procSequence( mSeqList.at( i ) );
+
+            if ( ret == 0 )
+            {
+                if ( mSeqList.at(i)->delay > 0 )
+                {
+                    //! sleep s
+                    QThread::sleep( mSeqList.at(i)->delay );
+                }
+                else
+                {}
+
+                //! exit
+                post_debug_exit( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
+            }
+            //! exec fail
+            else
+            {
+                //! exit
+                post_debug_exit( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
+
+                return -1;
+            }
+        }
+        else
+        {
+            post_debug_exit( mSeqList.at(i)->id, mSeqList.at(i)->vRow );
+        }
+    }
+
+    return ret;
 }
 
 bool T4OpPanel::procSequenceEn( SequenceItem* pItem )
@@ -1367,14 +1435,91 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
     if( ret != 0 )
         return ret;
 
-    //! \todo Terminal move
-    speed = pRobo->mMaxJointSpeeds.at(4) * pItem->v / 100.0;
-    //ret = mrgRobotToolExe(robot_var(), pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
-    ret = mrgRobotJointMove(robot_var(), 4, pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
+    //! \todo Terminal move is relative
+    if ( qAbs( pItem->h ) > FLT_EPSILON )
+    {
+        speed = pRobo->mMaxJointSpeeds.at(4) * pItem->v / 100.0;
+        ret = mrgRobotToolExe(robot_var(),
+                              pItem->h,
+                              qAbs(pItem->h)/speed, guess_dist_time_ms( qAbs(pItem->h)/speed, qAbs(pItem->h)) );
+    }
+    //ret = mrgRobotJointMove(robot_var(), 4, pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
 
     return ret;
 }
 
+int T4OpPanel::onStepSequence( QVariant var )
+{
+    check_connect_ret( -1 );
+    //! proc the sequence
+
+    int ret = _onStepSequence( var );
+
+    //! exec fail
+    if ( ret != 0 )
+    {
+        sysError( tr("Exec fail") );
+    }
+
+    mSeqMutex.lock();
+        delete_all( mSeqList );
+    mSeqMutex.unlock();
+
+    return ret;
+}
+
+int T4OpPanel::_onStepSequence( QVariant var )
+{
+    //! anchors
+    QList<int> anchors;
+    int vRow;
+    for( int i = 0; i < mSeqList.size(); i++ )
+    {
+        if ( mSeqList.at(i)->mbAnchor )
+        {
+            anchors<<i;
+            vRow = mSeqList.at(i)->vRow;
+        }
+    }
+
+    if ( anchors.size() < 1 )
+    {
+        sysError( tr("Anchor fail") );
+        return -2;
+    }
+
+    //! select the rows
+    int stepCnt = 0;
+    for ( int i = anchors.first(); i < mSeqList.size(); i++ )
+    {
+        if ( mSeqList.at(i)->vRow == vRow )
+        { stepCnt++; }
+        else
+        { }
+    }
+
+    int ret;
+    do
+    {
+        //! only the current row id
+        ret = _onSequenceRange( var, anchors.first(), anchors.first() + stepCnt );
+        if ( ret != 0 )
+        { return ret; }
+
+        if ( QThread::currentThread()->isInterruptionRequested() )
+        { return 0; }
+
+        //! step to next row
+        int nxtRow;
+        nxtRow = (vRow + 1)%ui->tvDebug->model()->rowCount();
+        enterRow( nxtRow );
+
+    }while( false );
+
+    sysPrompt( tr("Step execute completed"), 0 );
+
+    return 0;
+}
 
 int T4OpPanel::exportDataSets( QTextStream &stream,
                                QStringList &headers,
@@ -1502,18 +1647,34 @@ void T4OpPanel::slot_ack_error()
 }
 
 void T4OpPanel::slot_save_debug()
-{
+{logDbg();
     Q_ASSERT( NULL != m_pPlugin );
     int ret;
 
     //! debug
-    QString fileName = m_pPlugin->homePath() + "/debug.xml";
-    ret = mDebugTable.save( fileName );
+    QString fileName = m_pPlugin->selfPath() + "/" + debug_file_name;
+
+    do
+    {
+        QByteArray theAry;
+        ret = mDebugTable.save( theAry );
+        if ( ret != 0 )
+        { break; }
+
+        ret = mrgStorageWriteFile( plugin_root_dir(),
+                                   debug_file_name,
+                                   (quint8*)theAry.data(),
+                                   theAry.length()
+                             );
+        if ( ret != 0 )
+        { break; }
+    }while( 0 );
+
     if ( ret != 0 )
     {
         sysError( fileName + tr(" save fail") );
     }
-    logDbg();
+
 }
 void T4OpPanel::slot_save_diagnosis()
 {
@@ -1521,8 +1682,23 @@ void T4OpPanel::slot_save_diagnosis()
     int ret;
 
     //! diagnosis
-    QString fileName = m_pPlugin->homePath() + "/diagnosis.xml";
-    ret = mDiagTable.save( fileName );
+    QString fileName = m_pPlugin->selfPath() + "/" + diagnosis_file_name;
+
+    do
+    {
+        QByteArray theAry;
+        ret = mDiagTable.save( theAry );
+        if ( ret != 0 )
+        { break; }
+
+        ret = mrgStorageWriteFile( plugin_root_dir(),
+                                   diagnosis_file_name,
+                                   (quint8*)theAry.data(),
+                                   theAry.length() );
+        if ( ret != 0 )
+        { break; }
+    }while( 0 );
+
     if ( ret != 0 )
     {
         sysError( fileName + tr(" load fail") );
@@ -1539,15 +1715,52 @@ void T4OpPanel::slot_request_load()
 {
     Q_ASSERT( NULL != m_pPlugin );
     int ret;
-    QString fileName = m_pPlugin->homePath() + "/debug.xml";
-    ret = mDebugTable.load( fileName );
+
+    QString fileName;
+
+    //! debug
+    fileName = m_pPlugin->selfPath() + "/" + debug_file_name;
+    do
+    {
+        QByteArray theAry;
+        theAry.reserve( max_file_size );
+        ret = mrgStorageReadFile( plugin_root_dir(),
+                                  debug_file_name,
+                                  (quint8*)theAry.data() );logDbg()<<ret;
+        if ( ret <= 0 )
+        {
+            ret = -1;
+            break;
+        }
+        theAry.resize( ret );
+        ret = mDebugTable.load( theAry );
+        if ( ret != 0 )
+        { break; }
+    }while( 0 );
     if ( ret != 0 )
     {
         sysError( fileName + tr(" load fail") );
     }
 
-    fileName = m_pPlugin->homePath() + "/diagnosis.xml";
-    ret = mDiagTable.load( fileName );
+    //! diagnosis
+    fileName = m_pPlugin->selfPath() + "/" + diagnosis_file_name;
+    do
+    {
+        QByteArray theAry;
+        theAry.reserve( max_file_size );
+        ret = mrgStorageReadFile( plugin_root_dir(),
+                                  diagnosis_file_name,
+                                  (quint8*)theAry.data() );logDbg()<<ret;
+        if ( ret <= 0 )
+        {
+            ret = -1;
+            break;
+        }
+        theAry.resize( ret );
+        ret = mDiagTable.load( theAry );
+        if ( ret != 0 )
+        { break; }
+    }while( 0 );
     if ( ret != 0 )
     {
         sysError( fileName + tr(" load fail") );
@@ -1667,8 +1880,7 @@ void T4OpPanel::slot_digitalInputsCustomContextMenuRequested( const QPoint &p )
 }
 
 void T4OpPanel::slot_Rename()
-{logDbg();
-
+{
     bool ok;
     QRegExp regExp("\\w+");
     regExp.setPatternSyntax(QRegExp::Wildcard);
@@ -1688,7 +1900,9 @@ void T4OpPanel::slot_Rename()
                               << ui->radACK->text() << ui->radENABLED->text() << ui->radFAULT->text() << ui->radMC->text();
 
             //t->emit_save(); not work
-            pRobo->save( pRobo->homePath() + "/" + "config.xml" );
+//            pRobo->save( pRobo->homePath() + "/" + "config.xml" );
+//            m_pPlugin->emit_save();
+            emit signal_request_save();
         }
     }
 }
@@ -2221,6 +2435,30 @@ int T4OpPanel::buildSequence( QList<SequenceItem*> &list )
     return 0;
 }
 
+void T4OpPanel::enterRow( int nextRow )
+{
+    //! find the seq
+    int rowSeq = -1;
+    for ( int i = 0; i < mSeqList.size(); i++ )
+    {
+        if ( mSeqList.at(i)->vRow == nextRow )
+        { rowSeq = i; break; }
+    }
+    if ( rowSeq < 0 )
+    { return; }
+
+    QVariantList vars;
+    vars.clear();
+    vars<<mSeqList.at( rowSeq )->x
+        <<mSeqList.at( rowSeq )->y
+        <<mSeqList.at( rowSeq )->z
+        <<mSeqList.at( rowSeq )->pw
+        <<mSeqList.at( rowSeq )->h;
+    post_debug_enter( mSeqList.at(rowSeq)->id, mSeqList.at(rowSeq)->vRow, vars );
+}
+void T4OpPanel::exitRow( int row )
+{}
+
 void T4OpPanel::post_debug_enter( int id, int r, QVariantList vars )
 {
     OpEvent *pEvent= new OpEvent( OpEvent::debug_enter, mRefreshPara.recNow, r );
@@ -2230,9 +2468,8 @@ void T4OpPanel::post_debug_enter( int id, int r, QVariantList vars )
     pEvent->setVars( vars );
 
     qApp->postEvent( this, pEvent );
-//
-
 }
+
 void T4OpPanel::post_debug_exit( int id, int r )
 {
 
@@ -2256,34 +2493,18 @@ void T4OpPanel::on_debug_exit( int id, int r )
 
 }
 
+void T4OpPanel::on_demo_start( )
+{
+    //! single
+    ui->chkCyclic->setChecked( false );
+
+    on_toolButton_debugRun_clicked();
+}
+
 //! start the run thread
 void T4OpPanel::on_toolButton_debugRun_clicked()
 {
-    //! invalid row
-    if ( !ui->tvDebug->currentIndex().isValid() && ui->tvDebug->model()->rowCount() > 0 )
-    { ui->tvDebug->selectRow( 0 ); }
-
-    //! build
-    mSeqMutex.lock();
-        delete_all( mSeqList );
-        buildSequence( mSeqList );
-    mSeqMutex.unlock();
-
-    logDbg()<<mSeqList.size();
-    for ( int i = 0; i < mSeqList.size(); i++ )
-    {
-        logDbg()<<i
-                <<mSeqList.at(i)->vRow
-                <<mSeqList.at(i)->mType
-                <<mSeqList.at(i)->x
-                <<mSeqList.at(i)->y
-                <<mSeqList.at(i)->z
-                <<mSeqList.at(i)->v
-                <<mSeqList.at(i)->pw
-                <<mSeqList.at(i)->h
-                <<mSeqList.at(i)->bLine;
-
-    }
+    preSequence();
 
     if ( mSeqList.size() > 0 )
     {}
@@ -2293,7 +2514,20 @@ void T4OpPanel::on_toolButton_debugRun_clicked()
     //! vars
     QVariant var;
     on_post_setting( T4OpPanel, onSequence, "Debug" );
+}
 
+void T4OpPanel::on_btnStepNext_clicked()
+{
+   preSequence();
+
+   if ( mSeqList.size() > 0 )
+   {}
+   else
+   { return; }
+
+   //! vars
+   QVariant var;
+   on_post_setting( T4OpPanel, onStepSequence, "Debug Step" );
 }
 
 void T4OpPanel::on_radCoordXyz_clicked()
@@ -2307,5 +2541,6 @@ void T4OpPanel::on_radCoordJoint_clicked()
 }
 
 }
+
 
 

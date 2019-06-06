@@ -8,17 +8,24 @@ QFrame
 	font: 15px;
 }
 
+QCheckBox#chkMct:checked,QCheckBox#chkPwr:checked
+{
+	/*color: green;*/
+	background: #00ff00;
+}
+
 QGroupBox,QCheckBox,QRadioButton
 {
 font: 14px;
 }
-
 
 QLabel
 {
 	border: none;
 	background: none;
 }
+
+
 
 QLabel#labelTerminalImg
 {

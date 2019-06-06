@@ -23,6 +23,8 @@ public:
 
 public:
     int save( const QString &fileName );
+    int save( QByteArray &ary );
+
     int load( const QString &fileName );
     int load( QByteArray &ary );
 protected:

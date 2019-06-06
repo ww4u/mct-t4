@@ -118,6 +118,9 @@ public:
     int exportOut( const QString &fileName );
 
     int loadIn( QTextStream &stream );
+    int exportOut( QTextStream &stream );
+
+    int buildDataSet( MDataSet &dataset );
 
     double MaxTerminalSpeed(double str);
     double MaxJointSpeeds( QList<double> list );

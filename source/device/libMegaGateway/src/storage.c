@@ -1,5 +1,8 @@
 #include "storage.h"
 
+#include "system.h"
+#define SEND_BUF  ( 256 )
+
 /*
 * 查询存储器中，可用的运动文件
 * vi :visa设备句柄
@@ -206,13 +209,11 @@ EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *ps8Path
     {
         return -2;
     }
-
     snprintf(args, SEND_LEN, "SYSTEM:CMDLine? %s%s,%s\n", "mkdir -p ", ps8Path, "WAIT");
     if ((retLen = busQuery(vi, args, strlen(args), as8State, sizeof(as8State))) <= 0)
     {
         return -1;
     }
-
     snprintf(args, SEND_LEN, "STORage:FILe:WRITe:START %s,%s,%s\n",isUdisk?"UDISK":"LOCAL", ps8Path, ps8SaveFileName);
     if (busWrite(vi, args, strlen(args)) == 0)//写入文件名
     {

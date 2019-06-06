@@ -88,3 +88,4 @@ source/plugin/t4/ui_quadwiget.h
 source/plugin/t4/ui_scripteditor.h
 source/plugin/t4/ui_t4oppanel.h
 source/plugin/t4/ui_traceplot.h
+source/plugin/t4/ui_maintain.h

@@ -148,6 +148,8 @@ void XPage::onSetting( XSetting setting )
 
         //! enable/disable
         setOperAble( setting.mPara1.toBool() );
+
+        logDbg()<<mUri<<setting.mPara1.toBool();
     }
     else if ( setting.mSetting == XPage::e_setting_online )
     {

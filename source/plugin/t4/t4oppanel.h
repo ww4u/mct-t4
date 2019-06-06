@@ -173,6 +173,7 @@ public:
         monitor_event,
         update_pose,
         communicate_fail,
+        demo_start,
     };
 
 public:
@@ -288,6 +289,9 @@ public:
     void home();
     void fold();
 
+    //! path
+    int requestLoad_debug( const QString &path, const QString &name );
+
 protected:
     double localSpeed();
     double localStep();
@@ -317,11 +321,18 @@ protected:
 
     int onTcpJog( QVariant var );
 
+    void preSequence();
     int onSequence( QVariant var );
     int _onSequence( QVariant var );
 
+    int _onSequenceRange( QVariant var, int from, int end );
+
     bool procSequenceEn( SequenceItem* pItem );
     int procSequence( SequenceItem* pItem );
+
+    int onStepSequence( QVariant var );
+    int _onStepSequence( QVariant var );
+
 
     int exportDataSets( QTextStream &stream,
                         QStringList &headers,
@@ -332,11 +343,16 @@ protected:
 protected:
     int buildSequence( QList<SequenceItem*> &list );
 
+    void enterRow( int row );
+    void exitRow( int row );
+
     void post_debug_enter( int id, int r, QVariantList list=QVariantList() );
     void post_debug_exit( int id, int r );
 
     void on_debug_enter( QString recordNow, int r, QVariantList &vars );
     void on_debug_exit( int id, int r );
+
+    void on_demo_start( );
 
 private:
     Ui::T4OpPanel *ui;
@@ -434,9 +450,11 @@ private slots:
     void on_tabWidget_currentChanged(int index);
 
     void on_toolButton_debugRun_clicked();
+    void on_btnStepNext_clicked();
 
     void on_radCoordXyz_clicked();
     void on_radCoordJoint_clicked();
+
 };
 
 }

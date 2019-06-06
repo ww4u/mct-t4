@@ -161,6 +161,8 @@ public:
     virtual int download();
     virtual int diff();
 
+    virtual int startDemo( int id );
+    virtual int stopDemo( int id );
 
 public:
     void emit_timer_op( QTimer *pTimer, int tmo, bool b );
@@ -183,6 +185,9 @@ public:
     QWidget *panel();
 
     QString homePath();
+    QString selfPath();
+    QString demoPath();
+
 public:
     void lockWorking();
     void unlockWorking();
@@ -234,6 +239,7 @@ public:
     void cancelBgWorking();
 
 protected:
+    bool splitPathName( const QString &fullPath, QString &path, QString &name, const QString &sep="/" );
     virtual bool event(QEvent *event);
     virtual int onXEvent( XEvent *pEvent );
 

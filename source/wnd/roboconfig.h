@@ -91,8 +91,6 @@ public slots:
 
     void slotConnect();
 
-    void slotWifi();
-
     void slot_plugins_stop();
     void slot_plugin_home();
 
@@ -112,19 +110,12 @@ private slots:
 
     void slotActionOpen();
     void slotActionClose();
-    void slotActionRst();
 
     void slotActionHome();
-    void slotActionFold();
-
-    void slotActionReboot();
-    void slotActionPoweroff();
 
     void slotActionDelete();
 
-    void slotActionExportLog();
-    void slotActionUpdate();
-    void slotActionExplorer();
+//    void slotActionUpdate();
 
 //    void slotStoreEnd(int val);
 
@@ -144,9 +135,8 @@ private:
     QAction *m_pConnAction;
 
     QMenu *m_pRoboContextMenu;
-    QAction *m_pActionOpen, *m_pActionClose, *m_pActionRst;
-    QAction *m_pActionHome, *m_pActionFold, *m_pActionReboot, *m_pActionPowerOff;
-    QAction *m_pActionExportLog, *m_pActionUpdate;
+    QAction *m_pActionOpen, *m_pActionClose;
+    QAction *m_pActionHome;
 
     QMenu *m_pProjectContextMenu;
     QAction *m_pActionDelAll;

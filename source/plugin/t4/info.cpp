@@ -74,10 +74,10 @@ void Info::retranslateUi()
 
     m_T4Items[0]->setData( Qt::DisplayRole, tr("Type") );
     m_T4Items[2]->setData( Qt::DisplayRole, tr("SN") );
-    m_T4Items[4]->setData( Qt::DisplayRole, tr("Version") );
-    m_T4Items[6]->setData( Qt::DisplayRole, tr("FirmWareHard") );
-    m_T4Items[8]->setData( Qt::DisplayRole, tr("FirmWareBoot") );
-    m_T4Items[10]->setData( Qt::DisplayRole, tr("FirmWareFpga") );
+    m_T4Items[4]->setData( Qt::DisplayRole, tr("Firmware") );
+    m_T4Items[6]->setData( Qt::DisplayRole, tr("Hardware") );
+    m_T4Items[8]->setData( Qt::DisplayRole, tr("Boot") );
+    m_T4Items[10]->setData( Qt::DisplayRole, tr("FPGA") );
 }
 
 void Info::onSetting(XSetting setting)

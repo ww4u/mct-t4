@@ -243,8 +243,9 @@ int XPluginIntf::savePw( const QString &path, const QString &name )
 int XPluginIntf::loadPw( const QString &path, const QString &name )
 {
     int ret;
-    QByteArray theData;
 
+    //! \todo need query the file size
+    QByteArray theData;
     theData.reserve( 1024 * 1024 );
 
     ret = mrgStorageReadFile( deviceVi(),

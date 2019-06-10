@@ -80,8 +80,9 @@
 #define debug_file_name "debug.xml"
 #define diagnosis_file_name "diagnosis.xml"
 
+#define update_file_name    "update.txt"
 
-
+//! \todo need the file size query
 #define max_file_size       (1024*1024)
 
 #define plugin_root_path()  m_pPlugin->selfPath().toLatin1().data()

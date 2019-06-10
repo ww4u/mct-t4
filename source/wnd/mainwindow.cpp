@@ -919,10 +919,10 @@ void MainWindow::on_actiontest_triggered()
 //    m_roboConfig->rootItem()->addChild( pRoboRoot );
 }
 
-void MainWindow::on_actionErrant_triggered()
-{
-    explorerDocFile( "errant.txt");
-}
+//void MainWindow::on_actionErrant_triggered()
+//{
+//    explorerDocFile( "errant.txt" );
+//}
 
 void MainWindow::on_actionFAQ_triggered()
 {
@@ -931,7 +931,7 @@ void MainWindow::on_actionFAQ_triggered()
 
 void MainWindow::on_actionRead_me_triggered()
 {
-    explorerDocFile( "readme.txt");
+    explorerDocFile( "readme.txt" );
 }
 
 

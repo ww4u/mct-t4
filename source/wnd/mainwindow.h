@@ -133,7 +133,7 @@ private slots:
 
     void on_actiontest_triggered();
 
-    void on_actionErrant_triggered();
+//    void on_actionErrant_triggered();
 
     void on_actionFAQ_triggered();
 

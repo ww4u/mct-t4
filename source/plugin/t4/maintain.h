@@ -40,6 +40,8 @@ private slots:
 
     void on_btnUpdate_clicked();
 
+    void on_btnHistory_clicked();
+
     void on_btnFold_clicked();
 
     void on_btnBackup_clicked();

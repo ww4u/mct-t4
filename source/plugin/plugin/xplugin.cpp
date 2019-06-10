@@ -154,6 +154,7 @@ int XPlugin::load( const QString &fileName )
     if ( !bOk )
     { return -1; }
 
+    //! \todo need the file size
     QByteArray theAry;
     theAry.reserve( 1024 * 1024 );
 

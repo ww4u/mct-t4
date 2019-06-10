@@ -65,10 +65,24 @@ void Maintain::updateUi()
 void Maintain::on_cmbDemo_currentIndexChanged(int index)
 {
     //! set the demo info
-    //! \todo add more info
-    QString demo1Info = tr( "The Test file" );
 
-    ui->txtDemoInfo->setText( demo1Info );
+    QStringList strList;
+    strList<<tr("demo0:"
+                "* drag and drop in two points."
+                )
+            <<tr("demo1:"
+                 "* Moving in the working space."
+                 "* It is used in the factory test procedure."
+                  );
+
+    if ( index < strList.size() )
+    {
+        ui->txtDemoInfo->setText( strList.at(index) );
+    }
+    else
+    {
+        ui->txtDemoInfo->setText( tr("No demo descripton") );
+    }
 }
 
 void Maintain::on_btnDemo_clicked()
@@ -107,6 +121,45 @@ void Maintain::on_btnUpdate_clicked()
     Widget w;
     w.attatchPlugin(m_pPlugin);
     w.exec();
+}
+
+void Maintain::on_btnHistory_clicked()
+{
+    //! \todo need the file size api
+    QByteArray ary;
+    ary.reserve( 1024 * 1024 );
+
+    int ret;
+    //! read the history from remote and show
+    ret = mrgStorageReadFile( m_pPlugin->deviceVi(), 0,
+                        (QString(mct_path) + "/" + "MRX-T4").toLatin1().data(),
+                        update_file_name,
+                        (quint8*)ary.data() );
+    if ( ret <= 0 )
+    { return; }
+
+    ary.resize( ret );
+
+    //! write
+    QString fileName = QDir::homePath() + "/AppData/Roaming/mct/MRX-T4/" + update_file_name;
+    QFile file( fileName );
+    if ( file.open(QIODevice::WriteOnly ) )
+    {
+        file.write( ary );
+        file.close();
+    }
+    else
+    { return; }
+
+    //! show doc
+    QStringList args;
+    QString str;
+    str = fileName;
+    str.replace("/","\\");
+    args<<str;
+
+    //! \todo linux
+    QProcess::execute( "explorer.exe", args );
 }
 
 void Maintain::on_btnFold_clicked()
@@ -305,9 +358,6 @@ void Maintain::on_chkAutoLogin_stateChanged(int arg1)
 }
 
 }
-
-
-
 
 
 

@@ -70,7 +70,6 @@
     </property>
     <addaction name="actionAbout"/>
     <addaction name="actionRead_me"/>
-    <addaction name="actionErrant"/>
     <addaction name="actionFAQ"/>
    </widget>
    <widget class="QMenu" name="menuToo">
@@ -323,11 +322,6 @@
    </property>
    <property name="text">
     <string>Pref</string>
-   </property>
-  </action>
-  <action name="actionErrant">
-   <property name="text">
-    <string>Errant...</string>
    </property>
   </action>
   <action name="actionFAQ">

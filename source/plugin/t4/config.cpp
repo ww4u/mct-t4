@@ -416,7 +416,7 @@ void Config::retranslateUi()
 
 void Config::updateRole()
 {
-    bool bEditable = sysMode() == sysPara::e_sys_admin;
+    bool bEditable = m_pPlugin->isAdmin();
 
     ui->tabZero->setEnabled( bEditable );
     ui->tabSoftLimit->setEnabled( bEditable );

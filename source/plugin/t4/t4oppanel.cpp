@@ -157,7 +157,7 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     spySetting( MRX_T4::e_setting_record );
 
     //! sync ui
-    switchCoordMode();
+//    switchCoordMode();
 
     ui->btnRead->setVisible(false);
 
@@ -829,6 +829,9 @@ void T4OpPanel::updateRole()
 {
     //! \note the role changed
     switchCoordMode();
+
+    Q_ASSERT( NULL != m_pPlugin );
+    ui->controllerStatus->setRole( m_pPlugin->userRole() );
 }
 
 //! exchange
@@ -1582,7 +1585,8 @@ int T4OpPanel::exportDataSets( QTextStream &stream,
 //! switch mode
 void T4OpPanel::switchCoordMode()
 {
-    bool bAbsAngleVisible = ( sysMode() == sysPara::e_sys_admin);
+    Q_ASSERT( NULL != m_pPlugin );
+    bool bAbsAngleVisible = m_pPlugin->isAdmin();
 
     //! joint
     if ( ui->radCoordJoint->isChecked() )

@@ -245,6 +245,11 @@ int XPlugin::startDemo( int id )
 int XPlugin::stopDemo( int id )
 { return 0; }
 
+void XPlugin::emit_user_role_change()
+{
+    emit_setting_changed( XPage::e_setting_user_role, QVariant() );
+}
+
 void XPlugin::emit_timer_op( QTimer *pTimer, int tmo, bool b )
 {
     emit signal_timer_op( pTimer, tmo, b );
@@ -312,12 +317,12 @@ QString XPlugin::homePath()
 
 QString XPlugin::selfPath()
 {
-    return "/home/megarobo/MCT/" + model() + "/" + SN();
+    return QString(mct_path) + "/" + model() + "/" + SN();
 }
 
 QString XPlugin::demoPath()
 {
-    return "/home/megarobo/MCT/" + model() + "/demo";
+    return QString(mct_path) + "/" + model() + "/demo";
 }
 
 void XPlugin::lockWorking()

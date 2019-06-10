@@ -25,6 +25,9 @@ MRX_T4::MRX_T4( QObject *parent ) : XPlugin( parent )
     m_pOpPanel = NULL;
 
     mAttr = (ePluginAttr)(plugin_attr_foldable | plugin_attr_reboot_able | plugin_attr_poweroff_able);
+
+    connect( this, SIGNAL(signal_request_pw_save()),
+             this, SLOT(slot_save_pw()) );
 }
 
 MRX_T4::~MRX_T4()

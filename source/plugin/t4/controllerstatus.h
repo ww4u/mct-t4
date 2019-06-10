@@ -39,6 +39,7 @@ public:
     void setWarning( const QString &warning );
     void setError( const QString &error );
 
+    void setRole( int role );
     void setWorkingStatus( const QString &status );
     void setRecordName( const QString &name );
 

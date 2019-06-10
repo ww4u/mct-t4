@@ -53,8 +53,6 @@ void SysPref::updateUi()
 //    ui->chkAutoLogin->setChecked( mbAutoLogin );
 
     ui->chkAutoRpp->setChecked( mbAutoRpp );
-
-    ui->cmbRefresh->setCurrentIndex( mRefreshIndex );
 }
 void SysPref::updateData()
 {
@@ -64,8 +62,6 @@ void SysPref::updateData()
 //    mbAutoLogin = ui->chkAutoLogin->isChecked();
 
     mbAutoRpp = ui->chkAutoRpp->isChecked();
-
-    mRefreshIndex = ui->cmbRefresh->currentIndex();
 }
 
 void SysPref::on_buttonBox_clicked(QAbstractButton *button)

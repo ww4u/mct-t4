@@ -80,6 +80,8 @@
 #define debug_file_name "debug.xml"
 #define diagnosis_file_name "diagnosis.xml"
 
+
+
 #define max_file_size       (1024*1024)
 
 #define plugin_root_path()  m_pPlugin->selfPath().toLatin1().data()
@@ -136,6 +138,7 @@ public:
     virtual int serialIn(QXmlStreamReader &reader);
 
 protected Q_SLOTS:
+    void slot_save_pw();
     void slot_save_setting();
     void slot_load_setting();
     void slot_exception_arrived();

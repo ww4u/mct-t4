@@ -150,6 +150,7 @@ public:
     virtual void onSetting( XSetting setting );
 
 public:
+
     virtual void updateUi();
 
     virtual void startup();
@@ -168,6 +169,8 @@ public:
     virtual int stopDemo( int id );
 
 public:
+    virtual void emit_user_role_change();
+
     void emit_timer_op( QTimer *pTimer, int tmo, bool b );
 
     void emit_setting_changed( XPage::eXSetting setting, bool b );

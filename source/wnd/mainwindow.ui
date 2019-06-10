@@ -79,8 +79,6 @@
     </property>
     <addaction name="actionWifi"/>
     <addaction name="actionPref"/>
-    <addaction name="actionChange_Password"/>
-    <addaction name="actionSwitch_User"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">

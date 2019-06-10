@@ -15,15 +15,13 @@ public:
     explicit ChangedPw(QWidget *parent = 0);
     ~ChangedPw();
 public:
-    QString getPw();
+    QString getOldPw();
+    QString getNewPw();
 
-protected:
-    void updateControl();
+protected Q_SLOTS:
+    void slot_updateControl();
 
 private slots:
-    void on_edtPw1_textChanged(const QString &arg1);
-
-    void on_edtPw2_textChanged(const QString &arg1);
 
 private:
     Ui::ChangedPw *ui;

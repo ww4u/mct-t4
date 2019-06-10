@@ -4,8 +4,16 @@
 #include <QObject>
 #include <QtCore>
 
+#define password_file_name  "password.xml"
+#define mct_path            "/home/megarobo/MCT"
 class XPluginIntf : public QObject
 {
+public:
+    enum eUserRole
+    {
+        user_user,
+        user_admin,
+    };
 public:
     enum ePluginAttr{
         plugin_attr_none = 0,
@@ -17,6 +25,9 @@ public:
     Q_OBJECT
 public:
     XPluginIntf( QObject *parent = nullptr );
+
+public:
+    void rstAuthority();
 
 public:
     bool isEqual( XPluginIntf *p );
@@ -78,11 +89,26 @@ public:
     void setDevId( const int id ){ mDevId = id; }
     int DevId(){ return mDevId; }
 
+    //! authority
+    void setPw( eUserRole role, const QString &pw );
+    QString getPw( eUserRole role, bool &bOk );
+    void rstPw( eUserRole role );
+
+    void setAutoLogin( bool b );
+    bool isAutoLogin();
+
 public:
     int save( QXmlStreamWriter &writer );
     int load( QXmlStreamReader &reader );
 
+    int savePw( const QString &path, const QString &name = password_file_name );
+    int loadPw( const QString &path, const QString &name = password_file_name );
+
+Q_SIGNALS:
+    void signal_request_pw_save();
 public:
+    virtual void emit_user_role_change();
+
     virtual int open();
     virtual void close();
 
@@ -96,7 +122,12 @@ public:
 
     virtual bool isOnLine();
 
+    void attachVi( int vi );
     int deviceVi();
+
+    void setUserRole( eUserRole role );
+    eUserRole userRole();
+    bool isAdmin();
 
 protected:
     bool mbOperateAble;
@@ -114,6 +145,11 @@ protected:
     ePluginAttr mAttr;
     int mDevId;
 
+    //! pw
+    //! encrypted
+    bool mbAutoLogin;
+    QString mUserPw, mAdminPw;
+    eUserRole mUserRole;
 };
 
 #endif // XPLUGININTF_H

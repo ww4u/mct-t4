@@ -183,7 +183,7 @@ void MotorConfig::retranslateUi()
 
 void MotorConfig::updateRole()
 {
-    bool bEditable = sysMode() == sysPara::e_sys_admin;
+    bool bEditable = m_pPlugin->isAdmin();
 
     setEnabled( bEditable );
 }

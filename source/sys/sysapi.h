@@ -6,13 +6,13 @@
 class sysPara
 {
 public:
-    enum eSysMode
-    {
-        e_sys_user,
-        e_sys_admin,
-    };
+//    enum eSysMode
+//    {
+//        e_sys_user,
+//        e_sys_admin,
+//    };
 public:
-    eSysMode mMode;
+//    eSysMode mMode;
 
     int mArgc;
     char **mArgv;
@@ -24,8 +24,8 @@ enum eOutHandle
     e_out_log
 };
 
-void setSysMode( sysPara::eSysMode mode );
-sysPara::eSysMode sysMode();
+//void setSysMode( sysPara::eSysMode mode );
+//sysPara::eSysMode sysMode();
 
 void sysSetArg( int argc, char **argv );
 int sysArgc();

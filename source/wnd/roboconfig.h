@@ -62,7 +62,7 @@ protected:
     void stackPageChange( QTreeWidgetItem *current, QTreeWidgetItem *previous );
     void panelPageChange( QTreeWidgetItem *current, QTreeWidgetItem *previous );
 
-    void createRobot( const QStringList &strInfos );
+    int createRobot( const QStringList &strInfos );
 
     //! remove the plugin
     void removePlugin( XPlugin *plugin );

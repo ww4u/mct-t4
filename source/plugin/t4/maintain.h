@@ -24,6 +24,9 @@ public:
     virtual void setOperAble( bool b );
     virtual void setOpened( bool b );
 
+    virtual void updateRole();
+
+    virtual void updateUi();
 private slots:
     void on_cmbDemo_currentIndexChanged(int index);
 
@@ -42,6 +45,14 @@ private slots:
     void on_btnBackup_clicked();
 
     void on_btnClearBackup_clicked();
+
+    void on_cmbUser_currentIndexChanged(int index);
+
+    void on_btnChange_clicked();
+
+    void on_btnResetPw_clicked();
+
+    void on_chkAutoLogin_stateChanged(int arg1);
 
 private:
     Ui::Maintain *ui;

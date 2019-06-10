@@ -11,6 +11,21 @@ int MRX_T4::serialIn(QXmlStreamReader &reader)
     return T4Para::serialIn( reader );
 }
 
+void MRX_T4::slot_save_pw()
+{
+    int ret;
+
+    QString path = selfPath();
+
+    //! save file
+//    QString fileName = path + "/" + password_file_name;
+    ret = savePw( path, QString(password_file_name) );
+    if ( ret != 0 )
+    {
+        sysError( tr("Password save fail") );
+    }
+}
+
 void MRX_T4::slot_save_setting()
 {
     int ret;
@@ -43,7 +58,19 @@ void MRX_T4::slot_load_setting()
     }
 
     XPlugin::slot_load_setting();
-    logDbg()<<setupfileName;
+
+    //! load pw
+    ret = loadPw( path, QString(password_file_name) );
+    if ( ret != 0 )
+    {
+        sysError( tr("Password load fail") );
+
+        //! recover
+        rstPw( user_user );
+        rstPw( user_admin );
+    }
+    else
+    {}
 }
 
 void MRX_T4::slot_exception_arrived()

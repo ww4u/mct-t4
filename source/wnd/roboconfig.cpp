@@ -6,6 +6,8 @@
 #include "xthread.h"
 #include "welcomepage.h"
 
+#include "login.h"
+
 #define plugin_changed()    emit signal_plugins_changed();
 
 //! tcpip::172.16.3.25::inst0::INSTR
@@ -121,10 +123,16 @@ void RoboConfig::slotAddNewRobot( const QStringList & strDevInfo)
 
     //! plugin
     //! foreach robot
+    int ret;
     foreach( const QString &str, strDevInfo )
     {
         roboInfo = str.split(',');
-        createRobot( roboInfo );
+        ret = createRobot( roboInfo );
+        //! create success
+        if ( ret == 0 && NULL != m_megaSerachWidget )
+        {
+            m_megaSerachWidget->hide();
+        }
     }
 }
 
@@ -640,14 +648,60 @@ void RoboConfig::panelPageChange( QTreeWidgetItem *current,
 
 #include "../plugin/factory/pluginfactory.h"
 //! addr,model,sn,firmwareVer,mechanicalVer
-void RoboConfig::createRobot( const QStringList &strInfos )
-{logDbg()<<strInfos;
+int RoboConfig::createRobot( const QStringList &strInfos )
+{
+    int ret = 0;
+    int userRole = 0;
+
+    //! try get the pw
+    do
+    {
+        XPluginIntf intf;
+        QString path = QString( mct_path ) + "/" + strInfos.at(1) + "/" + strInfos.at(2);
+
+        //! open
+        int vi = mrgOpenGateWay( strInfos.at(0).toLatin1().data(), 2000 );
+        if ( vi <=0 )
+        { return -1; }
+
+            intf.attachVi( vi );
+            ret = intf.loadPw( path );
+
+        //! close
+        mrgCloseGateWay( vi );
+
+        //! read success
+        if ( ret == 0 && !intf.isAutoLogin())
+        {}
+        else
+        { break; }
+
+        //! success
+        //! log in
+        LogIn logIn;
+        int ret = logIn.exec();
+        if ( ret != QDialog::Accepted )
+        { return -1; }
+
+        bool bOk;
+        if ( intf.getPw( (XPluginIntf::eUserRole)logIn.getUserRole(), bOk) == logIn.getPw() && bOk )
+        {
+            userRole = logIn.getUserRole();
+        }
+        else
+        {
+            QMessageBox::critical( this, tr("Error"), tr("Invalid password") );
+            return -1;
+        }
+
+    }while( 0 );
+
     //! create
     XPlugin *plugin = PluginFactory::createPlugin( strInfos.at(1), strInfos.at(0) );
     if ( NULL == plugin )
     {
         sysError( tr("No model") + " " + strInfos.at(1) );
-        return;
+        return -1;
     }
 
     //! connect plugin
@@ -686,14 +740,14 @@ void RoboConfig::createRobot( const QStringList &strInfos )
     Q_ASSERT( NULL != m_pLogModel );
     QWidget *pWig = plugin->createOpsPanel( m_pLogModel, nullptr );
     if ( NULL != pWig )
-    {
+    {logDbg();
         pWig->show();
         m_pOpDock->setWidget( pWig );
     }
 
     plugin->attachDock( m_pOpDock );
     plugin->attachPanel( pWig );
-
+logDbg();
     //! pref pages
     //! \note pRoboRoot is managed by the tree
     QTreeWidgetItem *pRoboRoot = plugin->createPrefPages( stackWidget() );logDbg()<<pRoboRoot;
@@ -717,11 +771,13 @@ logDbg();
     }
 
     //! adapt the role
-    plugin->emit_setting_changed( XPage::e_setting_user_role, QVariant() );
+    plugin->setUserRole( (XPluginIntf::eUserRole)userRole );
+//    plugin->emit_setting_changed( XPage::e_setting_user_role, QVariant() );
 
     //! synclize the setup from the device
     //! \todo
 logDbg();
+    return 0;
 
 }
 

@@ -145,9 +145,7 @@ void AdvPara::retranslateUi()
 
 void AdvPara::updateRole()
 {
-    bool bEditable = sysMode() == sysPara::e_sys_admin;
-
-    setEnabled( bEditable );
+    setEnabled( m_pPlugin->isAdmin() );
 }
 
 }

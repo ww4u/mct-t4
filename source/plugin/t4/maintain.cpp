@@ -5,6 +5,8 @@
 #include "MegaGateway.h"
 #include <qmessagebox.h>
 #include "widget.h"
+
+#include "../../wnd/changedpw.h"
 #define msgBox_Warning_ok( title, content )     (QMessageBox::warning(this, title, content, QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ? 1:0)
 #define msgBox_Information_ok( title, content ) (QMessageBox::information(this, title, content, QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ? 1:0)
 
@@ -45,6 +47,19 @@ void Maintain::setOpened( bool b )
     }
 
     logDbg()<<b;
+}
+
+void Maintain::updateRole()
+{
+    bool bAdmin = m_pPlugin->isAdmin();
+logDbg()<<bAdmin;
+    ui->btnResetPw->setVisible( bAdmin );
+    ui->cmbRstUser->setVisible( bAdmin );
+}
+
+void Maintain::updateUi()
+{
+    ui->chkAutoLogin->setChecked( m_pPlugin->isAutoLogin() );
 }
 
 void Maintain::on_cmbDemo_currentIndexChanged(int index)
@@ -196,7 +211,104 @@ void Maintain::on_btnClearBackup_clicked()
     }
 }
 
+void Maintain::on_cmbUser_currentIndexChanged(int index)
+{
+    //! is equal
+    if ( index == (int)m_pPlugin->userRole() )
+    { return; }
+
+    bool bOk;
+    QString adminPw;
+
+    adminPw = m_pPlugin->getPw( XPluginIntf::user_admin, bOk );
+    if ( bOk && adminPw.length() > 0 )
+    {}
+    else
+    { return; }
+
+    //! require
+    //! to user
+    if ( index == 0 )
+    {
+        m_pPlugin->setUserRole( (XPluginIntf::eUserRole)index );
+    }
+    //! to admin
+    else if ( index == 1 )
+    {
+        do
+        {
+            QString pw;
+            pw = QInputDialog::getText( this, tr("Password"), tr("Password"), QLineEdit::Password, QString(), &bOk );
+
+            if ( bOk && adminPw == pw )
+            {
+                m_pPlugin->setUserRole( (XPluginIntf::eUserRole)index );
+                break;
+            }
+            if ( bOk )
+            {
+                QMessageBox::critical( this, tr("Error"), tr("Invalid password") );
+            }
+            ui->cmbUser->setCurrentIndex( 0 );
+        }while( 0 );
+    }
 }
+
+void Maintain::on_btnChange_clicked()
+{
+    ChangedPw changePw;
+
+    if ( QDialog::Accepted != changePw.exec() )
+    { return; }
+
+    //! check pw
+    bool bOk;
+    if ( changePw.getOldPw() == m_pPlugin->getPw( (XPluginIntf::eUserRole)ui->cmbUser->currentIndex(), bOk) && bOk )
+    {}
+    else
+    {
+        QMessageBox::critical( this, tr("Error"), tr("Invalid password") );
+        return;
+    }
+
+    //! check the pw
+    m_pPlugin->setPw( (XPluginIntf::eUserRole)ui->cmbUser->currentIndex(),
+                      changePw.getNewPw() );
+}
+
+//! \note only for admin
+void Maintain::on_btnResetPw_clicked()
+{
+    bool bOk;
+    QString pw;
+    pw = QInputDialog::getText( this, tr("Password"), tr("Admin Password"), QLineEdit::Password, QString(), &bOk );
+    if ( bOk && pw.simplified().size() > 0 )
+    {}
+    else
+    { return; }
+
+    if ( pw == m_pPlugin->getPw( XPluginIntf::user_admin, bOk) && bOk )
+    {}
+    else
+    {
+        QMessageBox::critical( this, tr("Error"), tr("Invalid password") );
+        return;
+    }
+
+    //! reset
+    m_pPlugin->rstPw( (XPluginIntf::eUserRole)ui->cmbRstUser->currentIndex() );
+}
+
+void Maintain::on_chkAutoLogin_stateChanged(int arg1)
+{
+    m_pPlugin->setAutoLogin( ui->chkAutoLogin->isChecked() );
+}
+
+}
+
+
+
+
 
 
 

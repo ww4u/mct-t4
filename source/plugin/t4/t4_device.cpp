@@ -100,7 +100,7 @@ int MRX_T4::_open( int &vi )
     vi = mrgOpenGateWay( mAddr.toLatin1().data(), 2000 );
     if ( vi > 0 )
     {
-        //! delay setting changed
+        //! \note delay setting changed
 //        mVi = vi;
     }
     else
@@ -142,16 +142,17 @@ int MRX_T4::_open( int &vi )
         //! bind success
         QString pureIp = secList.at(1);
         m_pExceptionSocket->connectToHost( pureIp, MEGAROBO_TCP_EXCEPTION_PORT );
-        bool b = m_pExceptionSocket->waitForConnected( 5 );
+        bool b = m_pExceptionSocket->waitForConnected( 200 );
         if ( b )
-        { }
+        {
+            connect( m_pExceptionSocket, SIGNAL(readyRead()), this, SLOT(slot_exception_arrived()));
+        }
+        //! \note connect fail, still use the device
         else
         {
-            sysPrompt(tr("Bind exception fail"));
-            ret = -1; break;
+            sysPrompt( tr("Connect exception port fail") );
+            sysError( tr("Connect exception port fail") );
         }
-
-        connect( m_pExceptionSocket, SIGNAL(readyRead()), this, SLOT(slot_exception_arrived()));
 
         ret = 0;
     }while( false );
@@ -174,9 +175,15 @@ void MRX_T4::close()
         else
         {   }
 
-        m_pExceptionSocket->close();
-        delete m_pExceptionSocket;
-        m_pExceptionSocket = NULL;
+        //! valid exception
+        if ( m_pExceptionSocket != NULL )
+        {
+            if ( m_pExceptionSocket->isOpen() )
+            { m_pExceptionSocket->close(); }
+            delete m_pExceptionSocket;
+            m_pExceptionSocket = NULL;
+        }
+
     unlockWorking();
 
     emit_setting_changed( XPage::e_setting_opened, false );
@@ -663,3 +670,24 @@ int MRX_T4::absMove( QString para,
     return ret;
 }
 
+void MRX_T4::setAbsMarker( double x, double y, double z,
+                   double pw, double h,
+                   double v, bool bLine )
+{
+    m_pMarkerItem->bValid = true;
+
+    m_pMarkerItem->x = x;
+    m_pMarkerItem->y = y;
+    m_pMarkerItem->z = z;
+
+    m_pMarkerItem->pw = pw;
+    m_pMarkerItem->h = h;
+
+    m_pMarkerItem->v = v;
+    m_pMarkerItem->bLine = bLine;
+
+}
+void MRX_T4::setAbsMarker( SequenceItem &item )
+{ *m_pMarkerItem = item; }
+SequenceItem *MRX_T4::absMarker()
+{ return m_pMarkerItem; }

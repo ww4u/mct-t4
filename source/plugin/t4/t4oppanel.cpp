@@ -156,9 +156,7 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     spySetting( MRX_T4::e_setting_terminal );
     spySetting( MRX_T4::e_setting_record );
 
-    //! sync ui
-//    switchCoordMode();
-
+    //! \note no need the diagnosis read button
     ui->btnRead->setVisible(false);
 
     //! step and speed
@@ -669,13 +667,21 @@ int T4OpPanel::refreshDiagnosisInfo( void *pContext )
     else
     { return 0; }
 
+    //! \todo check the file size by the file size api
     QByteArray ary;
     ary.reserve( 4096 );
 
-    int ret;
-
+    int ret=0;
     ret = mrgErrorLogUpload( pRobo->deviceVi(), 0,
                              ary.data());
+
+//    QFile file( "G:/work/mct/doc/Diagnose.log");
+//    if ( file.open( QIODevice::ReadOnly ) )
+//    { ret = file.size(); logDbg()<<ret; }
+//    else
+//    { logDbg(); return -1; }
+//    ary = file.readAll();
+//    file.close();
 
     //! fill the model
     if ( ret > 0 )
@@ -721,7 +727,10 @@ int T4OpPanel::refreshDiagnosisInfo( void *pContext )
     }
     else
     //! \todo read error!
-    { return 0; }
+    {
+        sysPrompt( tr("Read diagnosis fail") );
+        return -1;
+    }
 }
 
 //! only one time
@@ -1401,6 +1410,9 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
                               pItem->x, pItem->y, pItem->z,
                               pItem->pw, pItem->h,
                               rel_to_abs_speed( pItem->v ), pItem->bLine );
+
+        //! save context
+        pRobo->setAbsMarker( *pItem );
     }
     else if ( str_is( pItem->mType, "PRA")
               || str_is( pItem->mType, "PRN"))
@@ -1410,8 +1422,31 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
                               pItem->pw, pItem->h,
                               rel_to_abs_speed( pItem->v ), pItem->bLine );
     }
+    else if ( str_is( pItem->mType, "PRLA") )
+    {
+        //! validate
+        if ( pRobo->absMarker()->bValid )
+        {}
+        else
+        {
+            sysPrompt( tr("Invalid last absolution position") );
+            return -1;
+        }
+
+        ret = pRobo->absMove( "",
+                              pRobo->absMarker()->x + pItem->x,
+                              pRobo->absMarker()->y + pItem->y,
+                              pRobo->absMarker()->z + pItem->z,
+
+                              pItem->pw, pItem->h,
+                              rel_to_abs_speed( pItem->v ), pItem->bLine );
+    }
     else
     { return -1; }
+
+    //! exec fail
+    if ( ret != 0 )
+    { return ret; }
 
     //! \note print comment
     if ( pItem->mComment.length() > 0 )
@@ -1427,20 +1462,18 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
         switch(t)
         {
             case 0x02:   /* low 10*/
-                //mrgProjectSetYout(device_var_vi(), i, 0);
                 mrgProjectIOSet(device_var_vi(), IOSET_INDEX(i+1),0);
                 break;
             case 0x00:   /*reserve 00*/
                 break;
             case 0x03:   /* high 11*/
-                //mrgProjectSetYout(device_var_vi(), i, 1);
                 mrgProjectIOSet(device_var_vi(), IOSET_INDEX(i+1), 1);
                 break;
         }
         iVal = iVal >> 2;
     }
 
-    //! \todo Wrist move
+    //! \note Wrist move
     float angle,speed;
     angle = pItem->pw;
     speed = pRobo->mMaxJointSpeeds.at(3) * pItem->v / 100.0;
@@ -1448,17 +1481,19 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
     ret = mrgSetRobotWristPose(robot_var(), 0, angle, speed, guess_dist_time_ms( 180/speed, 180 ));
     logDbg() << angle << speed << ret;
     if( ret != 0 )
-        return ret;
+    { return ret; }
 
-    //! \todo Terminal move is relative
+    //! \note Terminal move is relative
     if ( qAbs( pItem->h ) > FLT_EPSILON )
     {
         speed = pRobo->mMaxJointSpeeds.at(4) * pItem->v / 100.0;
         ret = mrgRobotToolExe(robot_var(),
                               pItem->h,
                               qAbs(pItem->h)/speed, guess_dist_time_ms( qAbs(pItem->h)/speed, qAbs(pItem->h)) );
+
+        if( ret != 0 )
+        { return ret; }
     }
-    //ret = mrgRobotJointMove(robot_var(), 4, pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
 
     return ret;
 }
@@ -2205,59 +2240,9 @@ void T4OpPanel::on_btnDown_clicked()
 //! diagnosis   set invisiable
 void T4OpPanel::on_btnRead_clicked()
 {
-//    check_connect();
+    check_connect();
 
-//    QByteArray ary;
-//    ary.reserve( 4096 );
-
-//    int ret;
-
-//    ret = mrgErrorLogUpload( pRobo->deviceVi(), 0,
-//                             ary.data());
-
-//    //! fill the model
-//    if ( ret > 0 )
-//    {
-//        //! remove all
-//        ui->tvDiagnosis->model()->removeRows( 0, ui->tvDiagnosis->model()->rowCount() );
-
-//        ary.resize( ret );
-
-//        //! code, counter, info
-//        QList<QByteArray> aryList = ary.split('\n');
-//        QList<QByteArray> itemList;
-
-//        //! model
-//        DiagnosisTable *pModel = (DiagnosisTable*)ui->tvDiagnosis->model();
-
-//        int code, counter;
-//        bool bOk;
-
-//        foreach( QByteArray item, aryList )
-//        {
-//            itemList = item.split(',');
-
-//            if ( itemList.size() >= 3 )
-//            {}
-//            else
-//            { continue; }
-
-//            code = itemList.at(0).toInt( &bOk );
-//            if ( !bOk )
-//            { continue; }
-
-//            counter = itemList.at(1).toInt( &bOk );
-//            if ( !bOk )
-//            { continue; }
-
-//            pModel->append( code,
-//                            counter,
-//                            itemList.at(2)
-//                        );
-//        }
-//    }
-//    else
-//    {}
+    refreshDiagnosisInfo( NULL );
 }
 
 void T4OpPanel::on_btnDelete_clicked()
@@ -2513,6 +2498,10 @@ void T4OpPanel::on_demo_start( )
 {
     //! single
     ui->chkCyclic->setChecked( false );
+
+    //! move the first line
+    QModelIndex index = ui->tvDebug->model()->index( 0,  0 );
+    ui->tvDebug->setCurrentIndex( index );
 
     on_toolButton_debugRun_clicked();
 }

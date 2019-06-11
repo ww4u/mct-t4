@@ -391,8 +391,6 @@ protected:
     IoIndicator *currentRenameObj;
 
 Q_SIGNALS:
-//    void signal_debug_enter( int i );
-//    void signal_debug_exit( int i );
 
 protected Q_SLOTS:
     //! status
@@ -423,9 +421,6 @@ protected Q_SLOTS:
     void slot_speed_verify();
 
 private slots:
-//    void on_pushButton_starting_home_clicked();
-//    void on_btnFold_clicked();
-
     void on_toolSingleAdd_clicked();
     void on_toolSingleEdit_clicked();
 

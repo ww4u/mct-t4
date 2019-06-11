@@ -87,6 +87,7 @@ protected:
 
     int relToHere( QList<QVariant> &vars );
     int absToHere( QList<QVariant> &vars );
+    int rellabsToHere( QList<QVariant> &vars );
 
 private:
     Ui::ActionTable *ui;

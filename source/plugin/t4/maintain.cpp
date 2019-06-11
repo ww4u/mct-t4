@@ -67,13 +67,17 @@ void Maintain::on_cmbDemo_currentIndexChanged(int index)
     //! set the demo info
 
     QStringList strList;
-    strList<<tr("demo0:"
-                "* drag and drop in two points."
+    strList<<tr("Demo0:\n"
+                "* drag and drop in two points.\n"
                 )
-            <<tr("demo1:"
-                 "* Moving in the working space."
-                 "* It is used in the factory test procedure."
+            <<tr("Demo1:\n"
+                 "* Moving in the working space.\n"
+                 "* It is used in the factory test procedure.\n"
                   );
+//            <<tr("Demo3:\n"
+//             "* Draw the logo.\n"
+//             "* Draw \"MEGAROBO\".\n"
+//              );
 
     if ( index < strList.size() )
     {
@@ -212,7 +216,7 @@ void Maintain::on_btnBackup_clicked()
         { break; }
 
         //! copy the log
-        cmd = "cp -r /home/megarobo/MRH-T/log" + dstPath + "/log";
+        cmd = "cp -r /home/megarobo/MRH-T/log " + dstPath + "/log";
         ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
         if ( ret != 0 )
         { break; }

@@ -31,8 +31,8 @@
      <widget class="QWidget" name="scrollAreaWidgetContents_2">
       <property name="geometry">
        <rect>
-        <x>-90</x>
-        <y>0</y>
+        <x>0</x>
+        <y>-12</y>
         <width>1057</width>
         <height>362</height>
        </rect>
@@ -74,7 +74,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>3</number>
+          <number>4</number>
          </property>
          <property name="elideMode">
           <enum>Qt::ElideNone</enum>
@@ -1852,7 +1852,7 @@
            <item row="0" column="0">
             <widget class="QToolButton" name="btnRead">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">

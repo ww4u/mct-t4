@@ -24,7 +24,12 @@ MRX_T4::MRX_T4( QObject *parent ) : XPlugin( parent )
     m_pRecordView = NULL;
     m_pOpPanel = NULL;
 
+    m_pExceptionSocket = NULL;
+
     mAttr = (ePluginAttr)(plugin_attr_foldable | plugin_attr_reboot_able | plugin_attr_poweroff_able);
+
+    m_pMarkerItem = new SequenceItem();
+    Q_ASSERT( NULL != m_pMarkerItem );
 
     connect( this, SIGNAL(signal_request_pw_save()),
              this, SLOT(slot_save_pw()) );
@@ -33,6 +38,7 @@ MRX_T4::MRX_T4( QObject *parent ) : XPlugin( parent )
 MRX_T4::~MRX_T4()
 {
     delete m_pRecordModel;
+    delete m_pMarkerItem;
 }
 
 //! role: page

@@ -4,6 +4,7 @@
 
 #include "../../plugin/t4/t4.h"
 #include "MegaGateway.h"
+#include "t4oppanel.h"  //! for SequenceItem
 
 #include "../model/treeitem.h"
 #include "../model/treemodel.h"
@@ -77,6 +78,7 @@ ActionTable::ActionTable(QWidget *parent) :
     m_pTypeDelegate = new ComboxDelegate( 0, this );
 
     QStringList strList;
+//    strList<<"PA"<<"PRA"<<"PRN"<<"PRLA";
     strList<<"PA"<<"PRA"<<"PRN";
     m_pTypeDelegate->setItems( strList );
 
@@ -700,6 +702,11 @@ logDbg()<<QThread::currentThreadId()
     {
         return relToHere( vars );
     }
+    //! \todo the last abs position
+    else if ( str_is( vars.at(0).toString(), "PRLA" ) )
+    {
+        return rellabsToHere( vars );
+    }
     else
     {
         sysError( tr("Invalid input") );
@@ -731,6 +738,8 @@ int ActionTable::relToHere( QList<QVariant> &vars )
                           rel_to_abs_speed( vars.at(6).toDouble() ), vars.at(7).toBool()
                           );
 
+    //! \todo the terminal is rel
+
     return ret;
 }
 int ActionTable::absToHere( QList<QVariant> &vars )
@@ -743,6 +752,14 @@ int ActionTable::absToHere( QList<QVariant> &vars )
                           vars.at(4).toDouble(), vars.at(5).toDouble(),
                           rel_to_abs_speed( vars.at(6).toDouble() ), vars.at(7).toBool()
                           );
+    if( ret != 0 )
+        return ret;
+
+    //! marker
+    pRobo->setAbsMarker( vars.at(1).toDouble(), vars.at(2).toDouble(), vars.at(3).toDouble(),
+                         vars.at(4).toDouble(), vars.at(5).toDouble(),
+                         rel_to_abs_speed( vars.at(6).toDouble() ), vars.at(7).toBool() );
+
     //! Wrist
     //float speed = rel_to_abs_speed( vars.at(6).toDouble() );
     float speed = pRobo->mMaxJointSpeeds.at(3) * vars.at(6).toDouble() / 100.0;
@@ -751,12 +768,38 @@ int ActionTable::absToHere( QList<QVariant> &vars )
     if( ret != 0 )
         return ret;
 
-    //! terminal
+    //! \todo the terminal is rel
     speed = pRobo->mMaxJointSpeeds.at(4) * vars.at(6).toDouble() / 100.0;
     //ret = mrgRobotToolExe(robot_var(), vars.at(5).toDouble(), 80/speed, guess_dist_time_ms( 80/speed, 80 ));
     ret = mrgRobotJointMove(robot_var(), 4, vars.at(5).toDouble(), 80/speed, guess_dist_time_ms( 80/speed, 80 ));
 
     return ret;
+}
+
+int ActionTable::rellabsToHere( QList<QVariant> &vars )
+{
+    logDbg();
+    check_connect_ret( -1 );
+
+    //! check the abs marker
+    if ( pRobo->absMarker()->bValid )
+    {}
+    else
+    {
+        sysError( tr("Invalid absolute position") );
+        return -1;
+    }
+
+    int ret;
+    ret = pRobo->absMove( "",
+                          pRobo->absMarker()->x + vars.at(1).toDouble(),
+                          pRobo->absMarker()->y + vars.at(2).toDouble(),
+                          pRobo->absMarker()->z + vars.at(3).toDouble(),
+
+                          vars.at(4).toDouble(), vars.at(5).toDouble(),
+                          rel_to_abs_speed( vars.at(6).toDouble() ), vars.at(7).toBool()
+                          );
+    return  ret;
 }
 
 void ActionTable::slot_request_save()

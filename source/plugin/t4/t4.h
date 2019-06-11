@@ -94,7 +94,7 @@ namespace mrx_t4 {
 class ActionTable;
 class T4OpPanel;
 }
-
+class SequenceItem;
 class QTcpSocket;
 class MRX_T4 : public XPlugin, public T4Para
 {
@@ -195,9 +195,6 @@ protected:
 
     int _startupProc();
     int startupProc();
-//    int onHoming( QVariant var );
-//    int onFolding( QVariant var );
-
 
 public:
     int robotHandle();
@@ -220,6 +217,12 @@ public:
                  double pw, double h,
                  double v, bool bLine );
 
+    void setAbsMarker( double x, double y, double z,
+                       double pw, double h,
+                       double v, bool bLine );
+    void setAbsMarker( SequenceItem &item );
+    SequenceItem *absMarker();
+
 public:
     TreeModel* m_pRecordModel;
 protected:
@@ -233,6 +236,9 @@ private:
     mrx_t4::T4OpPanel *m_pOpPanel;
 
     QTcpSocket *m_pExceptionSocket;
+
+private:
+    SequenceItem *m_pMarkerItem;
 
 };
 

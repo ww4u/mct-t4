@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui charts xml
+QT       += core gui charts xml network
 
 greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 

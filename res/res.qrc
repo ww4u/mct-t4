@@ -108,5 +108,7 @@
         <file>image/icon/ErrorSetting.png</file>
         <file>image/icon/config.png</file>
         <file>image/icon/table.png</file>
+        <file>image/icon/03.png</file>
+        <file>image/icon/play-circle.png</file>
     </qresource>
 </RCC>

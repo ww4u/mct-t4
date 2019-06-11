@@ -86,7 +86,7 @@ void Info::onSetting(XSetting setting)
 
     if ( (int)setting.mSetting == XPage::e_setting_user_role )
     {
-        bool bVisible = ( sysMode() == sysPara::e_sys_admin);
+        bool bVisible = ( m_pPlugin->isAdmin() );
         ui->tableWidget2->setVisible(bVisible);
     }
 }

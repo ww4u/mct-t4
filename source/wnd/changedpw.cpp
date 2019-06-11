@@ -6,6 +6,16 @@ ChangedPw::ChangedPw(QWidget *parent) :
     ui(new Ui::ChangedPw)
 {
     ui->setupUi(this);
+
+    connect( ui->edtLast, SIGNAL(textChanged( const QString &)),
+             this, SLOT(slot_updateControl()));
+    connect( ui->edtPw1, SIGNAL(textChanged( const QString &)),
+             this, SLOT(slot_updateControl()));
+    connect( ui->edtPw2, SIGNAL(textChanged( const QString &)),
+             this, SLOT(slot_updateControl()));
+
+    //! update control
+    slot_updateControl();
 }
 
 ChangedPw::~ChangedPw()
@@ -13,34 +23,37 @@ ChangedPw::~ChangedPw()
     delete ui;
 }
 
-QString ChangedPw::getPw()
+QString ChangedPw::getOldPw()
+{
+    return ui->edtLast->text();
+}
+QString ChangedPw::getNewPw()
 {
     return ui->edtPw1->text();
 }
 
-void ChangedPw::updateControl()
+void ChangedPw::slot_updateControl()
 {
-    if ( ui->edtPw1->text() != ui->edtPw2->text() )
+    ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
+
+    //! check the last
+    if ( ui->edtLast->text().trimmed().length() < 1 )
     {
-        ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
         return;
     }
 
+    //! check equal
     if ( ui->edtPw1->text().trimmed().length() < 1 )
     {
-        ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
+        return;
+    }
+
+    if ( ui->edtPw1->text() != ui->edtPw2->text() )
+    {
         return;
     }
 
     ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( true );
 }
 
-void ChangedPw::on_edtPw1_textChanged(const QString &arg1)
-{
-    updateControl();
-}
 
-void ChangedPw::on_edtPw2_textChanged(const QString &arg1)
-{
-    updateControl();
-}

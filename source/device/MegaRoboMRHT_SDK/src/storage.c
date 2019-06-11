@@ -1,5 +1,5 @@
 #include "storage.h"
-
+#include "system.h"
 /*
 * 查询存储器中，可用的运动文件
 * vi :visa设备句柄
@@ -206,6 +206,9 @@ EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *ps8Path
     {
         return -2;
     }
+
+    sprintf( as8Ret, "mkdir -p %s", ps8Path );
+    mrgSystemRunCmd( vi, as8Ret, 0 );
 
     snprintf(args, SEND_LEN, "SYSTEM:CMDLine? %s%s,%s\n", "mkdir -p ", ps8Path, "WAIT");
     if ((retLen = busQuery(vi, args, strlen(args), as8State, sizeof(as8State))) <= 0)

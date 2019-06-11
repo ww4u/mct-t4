@@ -1,14 +1,14 @@
 #include "sysapi.h"
 #include "mainwindow.h"
 
-static sysPara _sysPara = { sysPara::e_sys_user, 0, 0 };
+static sysPara _sysPara = { 0, 0 };
 
-void setSysMode( sysPara::eSysMode mode )
-{
-    _sysPara.mMode = mode;
-}
-sysPara::eSysMode sysMode()
-{ return _sysPara.mMode; }
+//void setSysMode( sysPara::eSysMode mode )
+//{
+//    _sysPara.mMode = mode;
+//}
+//sysPara::eSysMode sysMode()
+//{ return _sysPara.mMode; }
 
 void sysSetArg( int argc, char **argv )
 {

@@ -480,7 +480,38 @@ void ActionTable::editRecord( XSetting setting )
 
 void ActionTable::doSave()
 {
-    QString fileName = m_pPlugin->selfPath() + "/" + record_file_name;
+    int ret = -1;
+
+    ret = _doSave( record_file_name );
+
+    if ( ret != 0 )
+    { sysError( QString(record_file_name) + QString(" ") + tr("save fail") ); return; }
+}
+
+void ActionTable::doLoad()
+{
+    int ret = -1;
+
+    ret = _doLoad( record_file_name );
+
+    if ( ret != 0 )
+    {
+        sysError( QString(record_file_name) + QString(" ") + tr("load fail") );
+    }
+}
+
+void ActionTable::postDoLoad()
+{
+    QEvent *pEvent = new QEvent( (QEvent::Type)e_event_post_load );
+    if ( NULL != pEvent )
+    {
+        qApp->postEvent( this, pEvent );
+    }
+}
+
+int ActionTable::_doSave( const QString &name )
+{
+    QString fileName = m_pPlugin->selfPath() + "/" + name;
 
     int ret = -1;
 
@@ -503,7 +534,7 @@ void ActionTable::doSave()
 
         //! write
         ret = mrgStorageWriteFile( plugin_root_dir(),
-                                   record_file_name,
+                                   name.toLatin1().data(),
                                    (quint8*)theAry.data(),
                                    theAry.length() );
         if ( ret != 0 )
@@ -511,13 +542,11 @@ void ActionTable::doSave()
 
     }while( 0 );
 
-    if ( ret != 0 )
-    { sysError( fileName + " " + tr("save fail") ); return; }
+    return ret;
 }
-
-void ActionTable::doLoad()
+int ActionTable::_doLoad( const QString &name )
 {
-    QString fileName = m_pPlugin->selfPath() + "/" + record_file_name;
+    QString fileName = m_pPlugin->selfPath() + "/" + name;
 
     int ret = -1;
     do
@@ -533,7 +562,7 @@ void ActionTable::doLoad()
         QByteArray theAry;
         theAry.reserve( max_file_size );
         ret = mrgStorageReadFile( plugin_root_dir(),
-                                  record_file_name,
+                                  name.toLatin1().data(),
                                   (quint8*)theAry.data() );
         if ( ret <= 0 )
         {
@@ -552,19 +581,7 @@ void ActionTable::doLoad()
 
     }while( 0 );
 
-    if ( ret != 0 )
-    {
-        sysError( fileName + " " + tr("load fail") );
-    }
-}
-
-void ActionTable::postDoLoad()
-{
-    QEvent *pEvent = new QEvent( (QEvent::Type)e_event_post_load );
-    if ( NULL != pEvent )
-    {
-        qApp->postEvent( this, pEvent );
-    }
+    return ret;
 }
 
 //! change the status by the current item
@@ -1155,9 +1172,81 @@ void ActionTable::on_toolImport_clicked()
 
     int ret = pTable->loadIn( str );
     if ( ret != 0 )
+    { sysError( tr("Load record fail") ); }
+}
+
+//! \todo list the files
+void ActionTable::on_toolOpen_clicked()
+{
+    QString descripton;
+    bool bOk;
+    descripton = QInputDialog::getText( this,
+                                        tr("Open"),
+                                        tr("Name:"),
+                                        QLineEdit::Normal,
+                                        "mrx-t4_motion_" + QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss_zzz" ),
+                                        &bOk
+                                        );
+    if ( !bOk )
+    { return; }
+
+    //! simple
+    descripton = descripton.simplified();
+    if ( descripton.isEmpty() )
     {
-        sysError( tr("Load record fail") );
+        sysPrompt( tr("Invalid description"), 0 );
+        return;
     }
+
+    //!
+    if ( descripton.endsWith(".mrp"), Qt::CaseInsensitive )
+    {
+        descripton.remove( descripton.length() - 4, 4 );
+    }
+    else
+    {}
+    descripton.append( ".mrp" );
+
+    int ret = _doLoad( descripton );
+    if ( ret != 0 )
+    { sysError( tr("Load record fail") ); }
+}
+
+//! \todo list the files
+void ActionTable::on_toolSaveAs_clicked()
+{
+    QString descripton;
+    bool bOk;
+    descripton = QInputDialog::getText( this,
+                                        tr("Save as"),
+                                        tr("Name:"),
+                                        QLineEdit::Normal,
+                                        "mrx-t4_motion_" + QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss_zzz" ),
+                                        &bOk
+                                        );
+    if ( !bOk )
+    { return; }
+
+    //! simple
+    descripton = descripton.simplified();
+    if ( descripton.isEmpty() )
+    {
+        sysPrompt( tr("Invalid description"), 0 );
+        return;
+    }
+
+    //! clear
+    if ( descripton.endsWith(".mrp"), Qt::CaseInsensitive )
+    {
+        descripton.remove( descripton.length() - 4, 4 );
+    }
+    else
+    {}
+    descripton.append( ".mrp" );
+
+    int ret = _doSave( descripton );
+    if ( ret != 0 )
+    { sysError( tr("Save record fail") ); }
 }
 
 void ActionTable::on_toolUp_clicked()

@@ -157,7 +157,7 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     spySetting( MRX_T4::e_setting_record );
 
     //! sync ui
-    switchCoordMode();
+//    switchCoordMode();
 
     ui->btnRead->setVisible(false);
 
@@ -724,6 +724,16 @@ int T4OpPanel::refreshDiagnosisInfo( void *pContext )
     { return 0; }
 }
 
+//! only one time
+void T4OpPanel::postRefreshDiagnosisInfo()
+{
+    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::refreshDiagnosisInfo ),
+                         WorkingApi::e_work_single,
+                         tr("Diagnosis refresh"),
+                         NULL,
+                         0 );
+}
+
 void T4OpPanel::attachWorkings()
 {
     if ( sysHasArgv("-noupdate") )
@@ -731,6 +741,7 @@ void T4OpPanel::attachWorkings()
 
     //! attach
     attachUpdateWorking( (XPage::procDo)( &T4OpPanel::posRefreshProc),
+                         WorkingApi::e_work_loop,
                          tr("Position refresh"),
                          NULL,
                          m_pPref->refreshIntervalMs() );
@@ -741,6 +752,7 @@ void T4OpPanel::attachWorkings()
 //                         m_pPref->refreshIntervalMs() );
 
     attachUpdateWorking( (XPage::procDo)( &T4OpPanel::pingTick ),
+                         WorkingApi::e_work_loop,
                          tr("ping tick"),
                          NULL,
                          m_pPref->refreshIntervalMs() );
@@ -817,6 +829,9 @@ void T4OpPanel::updateRole()
 {
     //! \note the role changed
     switchCoordMode();
+
+    Q_ASSERT( NULL != m_pPlugin );
+    ui->controllerStatus->setRole( m_pPlugin->userRole() );
 }
 
 //! exchange
@@ -1570,7 +1585,8 @@ int T4OpPanel::exportDataSets( QTextStream &stream,
 //! switch mode
 void T4OpPanel::switchCoordMode()
 {
-    bool bAbsAngleVisible = ( sysMode() == sysPara::e_sys_admin);
+    Q_ASSERT( NULL != m_pPlugin );
+    bool bAbsAngleVisible = m_pPlugin->isAdmin();
 
     //! joint
     if ( ui->radCoordJoint->isChecked() )

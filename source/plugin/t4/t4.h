@@ -2,6 +2,7 @@
 #define MRX_T4_H
 
 #include <QObject>
+
 #include <float.h>
 #include "../plugin/xplugin.h"
 #include "../model/errmgrmodel.h"
@@ -79,6 +80,9 @@
 #define debug_file_name "debug.xml"
 #define diagnosis_file_name "diagnosis.xml"
 
+#define update_file_name    "update.txt"
+
+//! \todo need the file size query
 #define max_file_size       (1024*1024)
 
 #define plugin_root_path()  m_pPlugin->selfPath().toLatin1().data()
@@ -91,6 +95,7 @@ class ActionTable;
 class T4OpPanel;
 }
 
+class QTcpSocket;
 class MRX_T4 : public XPlugin, public T4Para
 {
     Q_OBJECT
@@ -134,8 +139,10 @@ public:
     virtual int serialIn(QXmlStreamReader &reader);
 
 protected Q_SLOTS:
+    void slot_save_pw();
     void slot_save_setting();
     void slot_load_setting();
+    void slot_exception_arrived();
 
 public:
     virtual bool isOnLine();
@@ -169,6 +176,7 @@ public:
 
 protected:
     virtual int onXEvent( XEvent *pEvent );
+    virtual void onDeviceException( int var );
 
 protected:
     void xevent_updateui( XEvent *pEvent );
@@ -189,6 +197,7 @@ protected:
     int startupProc();
 //    int onHoming( QVariant var );
 //    int onFolding( QVariant var );
+
 
 public:
     int robotHandle();
@@ -222,6 +231,8 @@ protected:
 private:
     mrx_t4::ActionTable *m_pRecordView;
     mrx_t4::T4OpPanel *m_pOpPanel;
+
+    QTcpSocket *m_pExceptionSocket;
 
 };
 

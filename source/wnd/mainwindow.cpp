@@ -338,8 +338,8 @@ logDbg();
 
     }while( 0 );
 
-    setSysMode( (sysPara::eSysMode)0 );
-    slot_role_changed();
+//    setSysMode( (sysPara::eSysMode)0 );
+//    slot_role_changed();
 
     //! post startup
     QTimer::singleShot( 0, this, SLOT(slot_post_startup()) );
@@ -470,14 +470,14 @@ void MainWindow::explorerDocFile( const QString &fileName )
     QProcess::execute( "explorer.exe", args );
 }
 
-void MainWindow::slot_role_changed()
-{
-    //! sys mode
-    if ( sysMode() == 0 )
-    { m_pLabConVer->setText( tr("Operator") ); }
-    else
-    { m_pLabConVer->setText( tr("Administrator") ); }
-}
+//void MainWindow::slot_role_changed()
+//{
+//    //! sys mode
+//    if ( sysMode() == 0 )
+//    { m_pLabConVer->setText( tr("Operator") ); }
+//    else
+//    { m_pLabConVer->setText( tr("Administrator") ); }
+//}
 
 void MainWindow::slot_plugin_operable( bool b )
 {
@@ -794,7 +794,7 @@ void MainWindow::retranslateUi()
 
 void MainWindow::adaptToUserRole()
 {
-    ui->actionChange_Password->setVisible( sysMode() == sysPara::e_sys_admin );
+//    ui->actionChange_Password->setVisible( sysMode() == sysPara::e_sys_admin );
 }
 
 void MainWindow::savePref()
@@ -861,42 +861,42 @@ void MainWindow::on_actionPref_triggered()
     {}
 }
 
-void MainWindow::on_actionChange_Password_triggered()
-{
-    ChangedPw  changePwWnd;
+//void MainWindow::on_actionChange_Password_triggered()
+//{
+//    ChangedPw  changePwWnd;
 
-    if ( changePwWnd.exec() == QDialog::Accepted )
-    {
-        mPref.mPw = qCompress( changePwWnd.getPw().toLatin1() );
-        savePref();
-    }
-    else
-    {}
-}
+//    if ( changePwWnd.exec() == QDialog::Accepted )
+//    {
+//        mPref.mPw = qCompress( changePwWnd.getPw().toLatin1() );
+//        savePref();
+//    }
+//    else
+//    {}
+//}
 
-void MainWindow::on_actionSwitch_User_triggered()
-{
-    //! log in
-    LogIn logIn;
-    logIn.setPw( mPref.mPw );
+//void MainWindow::on_actionSwitch_User_triggered()
+//{
+//    //! log in
+//    LogIn logIn;
+//    logIn.setPw( mPref.mPw );
 
-    int ret = logIn.exec();
-    if ( ret == QDialog::Accepted )
-    {
-        if ( logIn.getUserRole() == 0 )
-        { setSysMode( sysPara::e_sys_user ); }
-        else
-        { setSysMode( sysPara::e_sys_admin ); }
+//    int ret = logIn.exec();
+//    if ( ret == QDialog::Accepted )
+//    {
+//        if ( logIn.getUserRole() == 0 )
+//        { setSysMode( sysPara::e_sys_user ); }
+//        else
+//        { setSysMode( sysPara::e_sys_admin ); }
 
-        slot_role_changed();
+//        slot_role_changed();
 
-        m_roboConfig->userRoleChanged();
-    }
-    else
-    {
-        return;
-    }
-}
+//        m_roboConfig->userRoleChanged();
+//    }
+//    else
+//    {
+//        return;
+//    }
+//}
 
 //! test used
 #include "../plugin/factory/pluginfactory.h"
@@ -919,10 +919,10 @@ void MainWindow::on_actiontest_triggered()
 //    m_roboConfig->rootItem()->addChild( pRoboRoot );
 }
 
-void MainWindow::on_actionErrant_triggered()
-{
-    explorerDocFile( "errant.txt");
-}
+//void MainWindow::on_actionErrant_triggered()
+//{
+//    explorerDocFile( "errant.txt" );
+//}
 
 void MainWindow::on_actionFAQ_triggered()
 {
@@ -931,7 +931,7 @@ void MainWindow::on_actionFAQ_triggered()
 
 void MainWindow::on_actionRead_me_triggered()
 {
-    explorerDocFile( "readme.txt");
+    explorerDocFile( "readme.txt" );
 }
 
 

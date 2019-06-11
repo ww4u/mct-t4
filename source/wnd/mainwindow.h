@@ -89,7 +89,7 @@ signals:
     void signal_prompt( const QString &info, int lev );
 
 private slots:
-    void slot_role_changed();
+//    void slot_role_changed();
     void slot_plugin_operable( bool b );
     void slot_plugin_online( bool b );
 
@@ -127,13 +127,13 @@ private slots:
 
     void on_actionPref_triggered();
 
-    void on_actionChange_Password_triggered();
+//    void on_actionChange_Password_triggered();
 
-    void on_actionSwitch_User_triggered();
+//    void on_actionSwitch_User_triggered();
 
     void on_actiontest_triggered();
 
-    void on_actionErrant_triggered();
+//    void on_actionErrant_triggered();
 
     void on_actionFAQ_triggered();
 
@@ -149,7 +149,6 @@ private:
     //! lang/style action
     QAction *m_pChAction, *m_pEnAction, *m_pTrChAction;
     QAction *m_pMegaAction, *m_pSystemAction;
-//    *m_pClasAction,
 
     QLabel *m_pLabStatus, *m_pLabMctVer, *m_pLabConVer;
 
@@ -174,8 +173,6 @@ private:
     QTranslator mTranslator;
 
     QString mHelpModel, mHelpName;
-
-//    int mLogInRet;
 };
 
 #endif // MAINWINDOW_H

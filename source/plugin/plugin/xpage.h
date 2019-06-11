@@ -97,11 +97,13 @@ public:
     void showFocusHelp();
 
     void attachUpdateWorking( XPage::procDo proc,
+                              int wType,
                               const QString &desc = "",
                               void *pContext = NULL,
                               int tmo = 100
                         );
     void attachUpdateWorking( XPage::procDo proc,
+                              int wType,
                         XPage::preDo pre,
                         XPage::postDo post,
                         const QString &desc = "",

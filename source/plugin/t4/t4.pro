@@ -1,5 +1,5 @@
 TEMPLATE=lib
-QT       += gui widgets concurrent
+QT       += gui widgets concurrent network
 CONFIG += static
 CONFIG += c++11
 TARGET = ../../../../lib/mrx-t4

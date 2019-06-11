@@ -154,6 +154,7 @@ int XPlugin::load( const QString &fileName )
     if ( !bOk )
     { return -1; }
 
+    //! \todo need the file size
     QByteArray theAry;
     theAry.reserve( 1024 * 1024 );
 
@@ -245,6 +246,11 @@ int XPlugin::startDemo( int id )
 int XPlugin::stopDemo( int id )
 { return 0; }
 
+void XPlugin::emit_user_role_change()
+{
+    emit_setting_changed( XPage::e_setting_user_role, QVariant() );
+}
+
 void XPlugin::emit_timer_op( QTimer *pTimer, int tmo, bool b )
 {
     emit signal_timer_op( pTimer, tmo, b );
@@ -312,12 +318,12 @@ QString XPlugin::homePath()
 
 QString XPlugin::selfPath()
 {
-    return "/home/megarobo/MCT/" + model() + "/" + SN();
+    return QString(mct_path) + "/" + model() + "/" + SN();
 }
 
 QString XPlugin::demoPath()
 {
-    return "/home/megarobo/MCT/" + model() + "/demo";
+    return QString(mct_path) + "/" + model() + "/demo";
 }
 
 QString XPlugin::modelPath()
@@ -344,6 +350,7 @@ void XPlugin::awakeUpdate()
 }
 
 void XPlugin::attachUpdateWorking( XPage *pObj,
+                             WorkingApi::eWorkingType eType,
                              XPage::procDo proc,
                              const QString &desc,
                              void *pContext,
@@ -352,24 +359,12 @@ void XPlugin::attachUpdateWorking( XPage *pObj,
 {
     Q_ASSERT( NULL != pObj );
 
-    attachUpdateWorking( pObj, proc, NULL, NULL, desc, pContext, tmoms );
-
-//    WorkingApi *pApi = new WorkingApi();
-//    if ( NULL == pApi )
-//    { return; }
-
-//    pApi->m_pIsEnabled = isEnabled;
-
-//    pApi->m_pProcDo = proc;
-//    pApi->m_pContext = pContext;
-//    pApi->m_pObj = pObj;
-
-//    Q_ASSERT( m_pUpdateWorking );
-//    m_pUpdateWorking->attach( pApi );
+    attachUpdateWorking( pObj, eType, proc, NULL, NULL, desc, pContext, tmoms );
 }
 
 void XPlugin::attachUpdateWorking(
                     XPage *pObj,
+                    WorkingApi::eWorkingType eType,
                     XPage::procDo proc,
                     XPage::preDo pre,
                     XPage::postDo post,
@@ -383,6 +378,8 @@ void XPlugin::attachUpdateWorking(
     WorkingApi *pApi = new WorkingApi();
     if ( NULL == pApi )
     { return; }
+
+    pApi->mWorkingType = eType;
 
     pApi->m_pIsEnabled = isEnabled;
 
@@ -402,8 +399,9 @@ void XPlugin::attachUpdateWorking(
     { m_pUpdateWorking->start(); }
 }
 
-void XPlugin::_attachUpdateWorking(
+void XPlugin::__attachUpdateWorking(
                     XPage *pObj,
+                    WorkingApi::eWorkingType eType,
                     XPage::procDo proc,
                     XPage::preDo pre,
                     XPage::postDo post,
@@ -417,6 +415,8 @@ void XPlugin::_attachUpdateWorking(
     WorkingApi *pApi = new WorkingApi();
     if ( NULL == pApi )
     { return; }
+
+    pApi->mWorkingType = eType;
 
     pApi->m_pIsEnabled = isEnabled;
 
@@ -599,11 +599,17 @@ int XPlugin::onXEvent( XEvent *pEvent )
     }
     else if ( pEvent->type() == XEvent::e_xevent_startup )
     { startup(); }
+    else if ( pEvent->type() == XEvent::e_xevent_device_exception )
+    { onDeviceException( pEvent->mVar1.toInt() );}
     else
     {}
 
-
     return 0;
+}
+
+void XPlugin::onDeviceException( int var )
+{
+
 }
 
 void XPlugin::slot_save_setting()

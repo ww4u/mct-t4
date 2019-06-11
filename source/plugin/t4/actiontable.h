@@ -74,6 +74,9 @@ protected:
 
     void postDoLoad();
 
+    int _doSave( const QString &fileName );
+    int _doLoad( const QString &fileName );
+
 protected:
     void updateControl();
 
@@ -144,6 +147,10 @@ protected Q_SLOTS:
 private slots:
     void on_toolExport_clicked();
     void on_toolImport_clicked();
+
+    void on_toolOpen_clicked();
+    void on_toolSaveAs_clicked();
+
     void on_toolUp_clicked();
     void on_toolDown_clicked();
     void on_toolDel_clicked();

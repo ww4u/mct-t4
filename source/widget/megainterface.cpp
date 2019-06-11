@@ -9,6 +9,7 @@
 #include "sysapi.h"
 #include "xthread.h"
 #include "../include/mystd.h"
+#include "../plugin/plugin/xplugin.h"
 
 #define ICON_WIDTH      64
 #define ICON_HEIGHT     64
@@ -51,8 +52,10 @@ MegaInterface::MegaInterface(SysPara *pPara, QWidget *parent) :
     connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(slotSelectDevices()));
 
-    connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)),
-            this, SLOT(close()));
+//    connect(ui->tableView, SIGNAL(doubleClicked(QModelIndex)),
+//            this, SLOT(close()));
+    connect( ui->buttonBox, SIGNAL(rejected()),
+             this, SLOT(close()) );
 
     //! interface type
     ui->comboBox_DevType->setCurrentIndex( m_pPara->mIntfIndex );
@@ -247,7 +250,6 @@ void MegaInterface::slotSelectDevices()
     //! "addr,model,sn,firmwareVer,mechanicalVer"
     //!
     QStringList strList;
-    //strList<<QString("%1,%2,%3,%4,%5,%6,%7,%8").arg( strFullAddr).arg( strModel ).arg(sn).arg(firmwareVer).arg(mechanicalVer);
     strList<<QString("%1,%2,%3,%4,%5,%6,%7,%8,%9,%10,%11,%12").arg( strFullAddr).arg( strModel ).arg(sn).arg(firmwareVer).arg(mechanicalVer).arg(typeMRQ).arg(snMRQ).arg(softVer).arg(firmWareHard).arg(FirmWareBoot).arg(FirmWareFpga).arg(devId);
     logDbg()<<strList;
 
@@ -261,7 +263,7 @@ void MegaInterface::on_buttonBox_clicked(QAbstractButton *button)
     {
         slotSelectDevices();
     }
-    close();
+//    close();
 }
 
 void MegaInterface::on_pushButton_Scan_clicked()
@@ -362,7 +364,7 @@ void MegaInterface::on_pushButton_Scan_clicked()
                     if(ret <= 0){
                         continue;
                     }else{}
-logDbg()<<tInfo.mFMSN;
+
                     //! \note use the device sn
                     char sns[128];
                     ret = mrgGetDeviceSerialNumber( visa, roboIds[i], sns );
@@ -373,6 +375,7 @@ logDbg()<<tInfo.mFMSN;
 logDbg()<<tInfo.mFMSN;
                     tInfo.mDevInfo.mId = devName[0];
 
+                    //! \note invalid sn
                     char buf[128];
                     ret = mrgGetDeviceInfo(visa, devName[0], buf);
                     if(ret != 0){
@@ -381,7 +384,13 @@ logDbg()<<tInfo.mFMSN;
 
                     QString t( buf );
                     QStringList tList = t.split(":");
+logDbg()<<tList<<buf;
+//                    tList.at(0);
 
+                    //! \note the sn
+                    tInfo.mFMSN = tList.at(0);
+
+                    //! the mrq sn
                     tInfo.mDevInfo.mSN = tList.at(0);
                     tInfo.mDevInfo.mFirmWareHard = tList.at(1);
                     tInfo.mDevInfo.mSoftVer = tList.at(2);

@@ -94,6 +94,17 @@ void ControllerStatus::setWarning( const QString &warning )
 void ControllerStatus::setError( const QString &error )
 { ui->edtError->setText( error ); }
 
+void ControllerStatus::setRole( int role )
+{
+    if ( role == 0 )
+    {
+        ui->labRole->setText( tr("Operator") );
+    }
+    else
+    {
+        ui->labRole->setText( tr("Administrator") );
+    }
+}
 void ControllerStatus::setWorkingStatus( const QString &status )
 { ui->labWorkingStatus->setText( status );}
 void ControllerStatus::setRecordName( const QString &name )

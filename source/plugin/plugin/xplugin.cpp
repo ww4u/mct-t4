@@ -320,6 +320,10 @@ QString XPlugin::demoPath()
     return "/home/megarobo/MCT/" + model() + "/demo";
 }
 
+QString XPlugin::modelPath()
+{
+    return "/home/megarobo/MCT/" + model();
+}
 void XPlugin::lockWorking()
 {
     mEmergMutex.lock();

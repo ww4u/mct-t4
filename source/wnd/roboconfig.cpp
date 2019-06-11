@@ -451,7 +451,6 @@ void RoboConfig::slotActionDelete()
             delete m_pCurTreeItem;
 
         QApplication::restoreOverrideCursor();
-        msgBox_Information_ok( tr("Information"), tr("Delete Success!") );
     }
 }
 

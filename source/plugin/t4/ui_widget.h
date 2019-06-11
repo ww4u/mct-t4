@@ -56,7 +56,7 @@ public:
         label->setMaximumSize(QSize(16777215, 70));
         buttonBox = new QDialogButtonBox(Widget);
         buttonBox->setObjectName(QStringLiteral("buttonBox"));
-        buttonBox->setGeometry(QRect(330, 440, 156, 41));
+        buttonBox->setGeometry(QRect(340, 450, 156, 41));
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
         label_2 = new QLabel(Widget);
         label_2->setObjectName(QStringLiteral("label_2"));
@@ -84,7 +84,7 @@ public:
         btnShow->setCheckable(true);
         labelStatus = new QLabel(Widget);
         labelStatus->setObjectName(QStringLiteral("labelStatus"));
-        labelStatus->setGeometry(QRect(10, 440, 161, 21));
+        labelStatus->setGeometry(QRect(10, 430, 161, 21));
 
         retranslateUi(Widget);
 

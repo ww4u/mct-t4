@@ -136,12 +136,15 @@ void Maintain::on_btnHistory_clicked()
                         update_file_name,
                         (quint8*)ary.data() );
     if ( ret <= 0 )
-    { return; }
+    {
+        sysError(tr("Read File Fail"));
+        return;
+    }
 
     ary.resize( ret );
 
     //! write
-    QString fileName = QDir::homePath() + "/AppData/Roaming/mct/MRX-T4/" + update_file_name;
+    QString fileName = QDir::tempPath() + "/" + update_file_name;
     QFile file( fileName );
     if ( file.open(QIODevice::WriteOnly ) )
     {

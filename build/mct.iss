@@ -44,8 +44,6 @@ Source: "doc\*"; DestDir: "{app}\doc";  Flags: recursesubdirs
 
 Source: "MRQ_Update\*"; DestDir: "{app}\MRQ_Update"
 
-Source: "dataset\*"; DestDir: "{app}\dataset"                     
-
 [Dirs]
 ;Name: "{app}\temp"
 

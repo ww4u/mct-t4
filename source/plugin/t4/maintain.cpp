@@ -145,7 +145,7 @@ void Maintain::on_btnHistory_clicked()
     ary.resize( ret );
 
     //! write
-    QString fileName = QDir::homePath() + "/AppData/Roaming/mct/MRX-T4/" + update_file_name;
+    QString fileName = QDir::tempPath() + "/" + update_file_name;
     QFile file( fileName );
     if ( file.open(QIODevice::WriteOnly ) )
     {

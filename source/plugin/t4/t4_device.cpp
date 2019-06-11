@@ -338,6 +338,7 @@ int MRX_T4::onXEvent( XEvent *pEvent )
 void MRX_T4::onDeviceException( int var )
 {
     //! prompt
+    //! \todo convert to string by the error table
     sysPrompt( ( QString::number( var) ), 2 );
 
     //! post load the diagnosis

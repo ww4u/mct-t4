@@ -279,6 +279,7 @@ int ActionTable::upload()
             sysError( tr("File read fail") + " " + fileAry );
             break;
         }
+        ary.resize( ret );
 
         ret = mrgStorageWriteFile( plugin_root_dir(),
                              (record_file_name),
@@ -304,6 +305,7 @@ int ActionTable::download()
 
     TreeModel *model = (TreeModel *)ui->view->model();
     int ret = model->exportOut( stream );
+    stream.flush();
     if ( ret != 0 )
     { return ret; }
 

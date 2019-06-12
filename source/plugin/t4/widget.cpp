@@ -4,12 +4,32 @@
 #include <QDebug>
 #include <QtConcurrent>
 #include "../../sys/sysapi.h"
+#include <QDir>
 
 
 #define MRQ_UPDATE  "/mrq.dat"
 #define MRH_UPDATE  "/mrh.dat"
 #define UNDOEXE     "/undo.exe"
 #define MRQ_UPDATE_EXE "/MRQ_Update/MegaRobo_Update.exe"
+
+//! file path
+#define DIR_TEMP    QDir::tempPath()
+
+#define MRQ_FILE    (DIR_TEMP + "/output/mrq.dat")
+#define MRH_FILE    (DIR_TEMP + "/output/mrh.dat")
+
+#define UPDATE_FILE (DIR_TEMP + "/output/update.txt")
+
+#define DEMO0_MCT_MOTION_FILE   (DIR_TEMP + "/output/demo/0/MCT_motion.mrp");
+#define DEMO0_MCT_MOTION_FILE   (DIR_TEMP + "/output/demo/0/debug.xml");
+
+#define DEMO0_MCT_MOTION_FILE   (DIR_TEMP + "/output/demo/1/MCT_motion.mrp");
+#define DEMO0_MCT_MOTION_FILE   (DIR_TEMP + "/output/demo/1/debug.xml");
+
+#define DEMO0_MCT_MOTION_FILE   (DIR_TEMP + "/output/demo/2/MCT_motion.mrp");
+#define DEMO0_MCT_MOTION_FILE   (DIR_TEMP + "/output/demo/2/debug.xml");
+
+
 
 Widget::Widget(QWidget *parent) :
     QDialog(parent),
@@ -107,11 +127,12 @@ void Widget::on_toolButton_clicked()
           tr("Open File"), NULL, tr("(*.upd)"));
     ui->lineEdit->setText(sPath);
 }
+
 int Widget::upgressMRH()
 {
     int ret;
     do{
-        QFile mrhFile(sPath.left(sPath.lastIndexOf("/")) + MRH_UPDATE);
+        QFile mrhFile(MRH_FILE);
         if(!mrhFile.open(QIODevice::ReadOnly)){
             ret = -1;
             break;
@@ -182,7 +203,9 @@ int Widget::copyDemo()
 
             QByteArray ba;
             {
-                QFile f( qApp->applicationDirPath()+"/dataset/demo/" +it.key() + "/" + str );
+                QString path = QString("%1%2/%3/%4").arg(DIR_TEMP).arg("/output/demo").arg(it.key()).arg(str);
+                qDebug() << path;
+                QFile f( path );
                 if( !f.open(QIODevice::ReadOnly) ){
                     continue;
                 }
@@ -224,13 +247,13 @@ int Widget::copyUpdateInfo()
         cmd = "mkdir -p " + m_pPlugin->modelPath();
         ret = mrgSystemRunCmd( m_vi, cmd.toLatin1().data(), 0 );
         if(ret != 0){
-            sysInfo("mkdir fail", 1);
+            sysInfo("Mkdir Fail", 1);
             break;
         }
 
-        QFile f(qApp->applicationDirPath()+"/doc/readme.txt");
+        QFile f(UPDATE_FILE);
         if(!f.open(QIODevice::ReadOnly)){
-            sysInfo("Open readme.txt fail", 1);
+            sysInfo("Open Update.txt Fail", 1);
             ret = -1;
             break;
         }
@@ -247,7 +270,7 @@ int Widget::copyUpdateInfo()
                                    ba.size()
                                    );
         if(ret != 0){
-            sysInfo("Write update.txt fail", 1);
+            sysInfo("Write update.txt Fail", 1);
             break;
         }
 
@@ -317,7 +340,8 @@ void Widget::slot_startMRQUpdate(int)
 
     QString updateMRQProgram = qApp->applicationDirPath() + MRQ_UPDATE_EXE;
     QStringList arguments;
-    arguments << (sPath.left(sPath.lastIndexOf("/")) + MRQ_UPDATE) << m_addr << recvID;
+    //arguments << (sPath.left(sPath.lastIndexOf("/")) + MRQ_UPDATE) << m_addr << recvID;
+    arguments << MRQ_FILE << m_addr << recvID;
 
     mthread->setExeCmd(updateMRQProgram);
     mthread->setArguments(arguments);

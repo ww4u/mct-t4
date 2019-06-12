@@ -1,5 +1,5 @@
 #include "storage.h"
-#include "system.h"
+
 /*
 * 查询存储器中，可用的运动文件
 * vi :visa设备句柄
@@ -62,19 +62,26 @@ EXPORT_API int CALL mrgStorageMotionFileContextRead(ViSession vi, char* ps8FileN
     {
         return -2;
     }
+
+    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_lock(&mutex);
+
     snprintf(args, SEND_LEN, "STORage:FILe:MOTion:CONTEXT:READ? %s\n", ps8FileName);
     if (busWrite(vi, args, strlen(args)) == 0)
     {
+        pthread_mutex_unlock(&mutex);
         return 0;
     }
     // 1. 先读回一个#9的头。
     retlen = busRead(vi, as8Ret, 12);
     if (retlen <= 0)
     {
+        pthread_mutex_unlock(&mutex);
         return 0;
     }
     if (as8Ret[0] != '#')//格式错误
     {
+        pthread_mutex_unlock(&mutex);
         return count;
     }
     lenOfLen = as8Ret[1] - 0x30;
@@ -82,6 +89,7 @@ EXPORT_API int CALL mrgStorageMotionFileContextRead(ViSession vi, char* ps8FileN
     left = strtoul(as8StrLen, NULL, 10);
     if (left == 0)
     {
+        pthread_mutex_unlock(&mutex);
         return 0;
     }
     ps8Context[0] = as8Ret[11];
@@ -98,6 +106,7 @@ EXPORT_API int CALL mrgStorageMotionFileContextRead(ViSession vi, char* ps8FileN
         count += retlen;
         left -= retlen;
     }
+    pthread_mutex_unlock(&mutex);
     return count;
 }
 /*
@@ -207,18 +216,20 @@ EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *ps8Path
         return -2;
     }
 
-    sprintf( as8Ret, "mkdir -p %s", ps8Path );
-    mrgSystemRunCmd( vi, as8Ret, 0 );
+    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_lock(&mutex);
 
     snprintf(args, SEND_LEN, "SYSTEM:CMDLine? %s%s,%s\n", "mkdir -p ", ps8Path, "WAIT");
     if ((retLen = busQuery(vi, args, strlen(args), as8State, sizeof(as8State))) <= 0)
     {
+        pthread_mutex_unlock(&mutex);
         return -1;
     }
 
     snprintf(args, SEND_LEN, "STORage:FILe:WRITe:START %s,%s,%s\n",isUdisk?"UDISK":"LOCAL", ps8Path, ps8SaveFileName);
     if (busWrite(vi, args, strlen(args)) == 0)//写入文件名
     {
+        pthread_mutex_unlock(&mutex);
         return -1;
     }
     //写入文件内容
@@ -242,6 +253,7 @@ EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *ps8Path
         }
         if( retLen == 0 )
         {
+            pthread_mutex_unlock(&mutex);
             return -2;
         }
 
@@ -258,17 +270,23 @@ EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *ps8Path
     retLen = busQuery(vi, args, strlen(args), as8State, sizeof(as8State));
     if (retLen == 0)//写入文件结束
     {
+        pthread_mutex_unlock(&mutex);
         return -3;
     }
     if(STRCASECMP(as8State, "ERROR") == 0)
+    {
+        pthread_mutex_unlock(&mutex);
         return -4;
+    }
+
 
     snprintf(args, SEND_LEN, "SYSTEM:CMDLine? %s%s,%s\n", "chmod -R 777 ", ps8Path, "WAIT");
     if ((retLen = busQuery(vi, args, strlen(args), as8State, sizeof(as8State))) <= 0)
     {
+        pthread_mutex_unlock(&mutex);
         return -1;
     }
-
+    pthread_mutex_unlock(&mutex);
     return 0;
 }
 /*
@@ -294,21 +312,27 @@ EXPORT_API int CALL mrgStorageReadFile(ViSession vi, int isUdisk, char *ps8Path,
     {
         return 0;
     }
+    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_lock(&mutex);
+
     snprintf(args, SEND_LEN, "STORage:FILe:READ? %s,%s,%s\n",
              isUdisk?"UDISK":"LOCAL", ps8Path, ps8Filename);
 
     if (busWrite(vi, args, strlen(args)) == 0)
     {
+        pthread_mutex_unlock(&mutex);
         return 0;
     }
     // 1. 先读回一个#9的头。
     retlen = busRead(vi, as8Ret, 12);
     if (retlen <= 0)
     {
+        pthread_mutex_unlock(&mutex);
         return 0;
     }
     if (as8Ret[0] != '#')//格式错误
     {
+        pthread_mutex_unlock(&mutex);
         return count;
     }
     lenOfLen = as8Ret[1] - 0x30;
@@ -316,6 +340,7 @@ EXPORT_API int CALL mrgStorageReadFile(ViSession vi, int isUdisk, char *ps8Path,
     left = strtoul(as8StrLen, NULL, 10);
     if (left == 0)
     {
+        pthread_mutex_unlock(&mutex);
         return 0;
     }
     ps8Context[0] = as8Ret[11];
@@ -332,5 +357,6 @@ EXPORT_API int CALL mrgStorageReadFile(ViSession vi, int isUdisk, char *ps8Path,
         count += retlen;
         left -= retlen;
     }
+    pthread_mutex_unlock(&mutex);
     return count;
 }

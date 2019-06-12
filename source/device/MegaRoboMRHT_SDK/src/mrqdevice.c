@@ -2515,16 +2515,22 @@ EXPORT_API int CALL mrgMRQReportQueue_Query(ViSession vi, int name, int ch, int 
     {
         return -2;
     }
+
+    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_lock(&mutex);
+
     snprintf(args, SEND_LEN, "DEVICE:MRQ:REPort:DATA:Queue? %d,%d,%s\n",
              name, ch, changeReportFuncToString(func));
     if (busWrite(vi, args, strlen(args)) == 0)
     {
+        pthread_mutex_unlock(&mutex);
         return 0;
     }
     while ((retLen = busRead(vi, buff, 12)) > 0)
     {
         if (buff[0] != '#')//格式错误
         {
+            pthread_mutex_unlock(&mutex);
             return count;
         }
         lenOfLen = buff[1] - 0x30;
@@ -2537,11 +2543,13 @@ EXPORT_API int CALL mrgMRQReportQueue_Query(ViSession vi, int name, int ch, int 
         }
         else
         {
+            pthread_mutex_unlock(&mutex);
             return count;
         }
         memcpy((char*)&pu32Data[count], buff, retLen);
         count += retLen / 4;
     }
+    pthread_mutex_unlock(&mutex);
     return count;
 }
 /*

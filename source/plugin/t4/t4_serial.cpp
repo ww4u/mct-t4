@@ -115,3 +115,10 @@ void MRX_T4::slot_exception_arrived()
     }
 
 }
+
+void MRX_T4::slotSocketError(QAbstractSocket::SocketError e)
+{
+    logDbg() <<"Socket error: "<< e
+    << m_pExceptionSocket->errorString();
+}
+

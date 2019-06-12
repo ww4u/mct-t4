@@ -181,7 +181,7 @@ unsigned int busRead(ViSession vi, char *buf, unsigned int len)
             break;
         }
         retCount=0;
-        msSleep(5);
+        _msSleep(5);
     }
 
     if( (retCount==0) || STRNCASECMP(buf, "Command error", strlen("Command error")) == 0 )
@@ -219,7 +219,7 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* o
             break;
         }
         retCount=0;
-        msSleep(5);
+        _msSleep(5);
     }
     if( (retCount==0) || STRNCASECMP(output, "Command error", strlen("Command error")) == 0 )
     {
@@ -494,7 +494,7 @@ unsigned int busRead(ViSession vi, char * buf, unsigned int len)
             break;
         }
         retCount = 0;
-        _msSleep(5);
+        msSleep(5);
     }
     if( (retCount == 0) ||  STRNCASECMP(buf, "Command error", strlen("Command error")) == 0 )
     {
@@ -529,7 +529,7 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen,char* ou
             break;
         }
         retCount = 0;
-        _msSleep(5);
+        msSleep(5);
     }
     if( (retCount == 0) ||  STRNCASECMP(output, "Command error", strlen("Command error")) == 0 )
     {

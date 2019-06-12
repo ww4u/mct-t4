@@ -1138,7 +1138,11 @@ int T4OpPanel::onFolding( QVariant var )
                            pRobo->mPackagesAxes[2],
                            pRobo->mPackagesAxes[3],
                            120000);
-    return ret;
+    //! \note mrgSetRobotFold return 1: success
+    if ( ret == 1 )
+    { return 0; }
+    else
+    { return -1; }
 }
 
 int T4OpPanel::onJointStep( QVariant var /*int jId, int dir*/ )
@@ -1462,12 +1466,12 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
         switch(t)
         {
             case 0x02:   /* low 10*/
-                mrgProjectIOSet(device_var_vi(), IOSET_INDEX(i+1),0);
+                mrgProjectIOSet(device_var_vi(), IOSET_INDEX(i+1),0,0);
                 break;
             case 0x00:   /*reserve 00*/
                 break;
             case 0x03:   /* high 11*/
-                mrgProjectIOSet(device_var_vi(), IOSET_INDEX(i+1), 1);
+                mrgProjectIOSet(device_var_vi(), IOSET_INDEX(i+1), 1,0);
                 break;
         }
         iVal = iVal >> 2;

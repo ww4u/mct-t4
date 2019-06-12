@@ -372,6 +372,16 @@ EXPORT_API int CALL mrgRobotMoveL(ViSession vi, int robotname, int wavetable, fl
 */
 EXPORT_API int CALL mrgRobotRelMoveL(ViSession vi, int robotname, int wavetable, float x, float y, float z, float time, int timeout_ms);
 /*
+* 机器人各关节同步运动
+* vi :visa设备句柄
+* robotname: 机器人名称
+* angleX: 各轴运动的角度
+* time : 移动到目标位置期望使用的时间
+* timeout_ms:表示等待超时时间,0表示无限等待，小于零表示不等待，立即返回
+* 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示等待超时
+*/
+EXPORT_API int CALL mrgRobotMoveJ(ViSession vi, int robotname, float angle0, float angle1, float angle2, float angle3, float angle4, float time, int timeout_ms);
+/*
 * 设置机器人当前插值模式
 * vi :visa设备句柄
 * robotname: 机器人名称
@@ -687,6 +697,15 @@ EXPORT_API int CALL mrgGetRobotToolPosition(ViSession vi, int robotname, float *
 * 注： angles是不安全的，外部一定要保证angles的空间足够
 */
 EXPORT_API int CALL mrgGetRobotCurrentAngle(ViSession vi, int robotname, float * angles);
+/*
+* 获取机器人当前各关节的角度值,相对于零位的角度
+* vi :visa设备句柄
+* robotname: 机器人名称
+* 返回值：大于零 表示返回角度值的个数，小于等于零表示出错
+* 说明: 此函数只对T4有效
+*     angles是不安全的，请在外部确保angles的空间足够. 对于T4来说,如果处于零位时,各轴角度为 [0,0,0,0]
+*/
+EXPORT_API int CALL mrgGetRobotCurrentAngleRefZero(ViSession vi, int robotname, float * angles);
 /*
 * 获取机器人末端的位置坐标
 * vi :visa设备句柄

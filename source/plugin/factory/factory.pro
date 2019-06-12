@@ -1,5 +1,5 @@
 TEMPLATE=lib
-QT       += gui widgets
+QT       += gui widgets network
 CONFIG += static
 
 TARGET = ../../../../lib/xfactory

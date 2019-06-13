@@ -61,6 +61,25 @@ EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *ps8Path
 * 返回值：返回实际的文件长度
 */
 EXPORT_API int CALL mrgStorageReadFile(ViSession vi, int isUdisk, char *ps8Path, char* ps8Filename, unsigned char* ps8Context);
+/*
+ * 获取目录文件列表
+ * vi: visa句柄
+ * isUdisk: 是否在U盘上
+ * ps8Path: 目录的绝对路径
+ * ps8FileList: 输出信息
+ * len: 输入ps8FileList的长度,输出实际的长度
+ * 返回值: -1表示失败,成功返回文件大小
+ */
+EXPORT_API int CALL mrgStorageDirectoryEnum(ViSession vi, int isUdisk, const char *ps8Path, char* ps8FileList, int *len);
+/*
+ * 获取文件大小
+ * vi: visa句柄
+ * isUdisk: 是否在U盘上
+ * ps8Path: 文件所在目录绝对路径
+ * ps8Filename: 文件名
+ * 返回值: -1表示失败,成功返回文件大小
+ */
+EXPORT_API int CALL mrgStorageGetFileSize(ViSession vi, int isUdisk, const char *ps8Path, char* ps8Filename);
 
 #if defined(__cplusplus) || defined(__cplusplus__)
 }

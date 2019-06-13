@@ -376,7 +376,7 @@ void TestPanelDialog::on_pushButton_test_clicked()
     }
 #endif
 
-#if 0
+#if 01
     {   //! test 2
         //! 测试下载文件到MRH-T上一个指定的位置
         QString absPathFileName = QFileDialog::getOpenFileName(this, "文件对话框", "", "所有文件(*.*)");

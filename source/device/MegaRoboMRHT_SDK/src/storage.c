@@ -360,3 +360,112 @@ EXPORT_API int CALL mrgStorageReadFile(ViSession vi, int isUdisk, char *ps8Path,
     pthread_mutex_unlock(&mutex);
     return count;
 }
+
+/*
+ * 获取目录文件列表
+ * vi: visa句柄
+ * isUdisk: 是否在U盘上
+ * ps8Path: 目录的绝对路径
+ * ps8FileList: 输出信息
+ * len: 输入ps8FileList的长度,输出实际的长度
+ * 返回值: -1表示失败,成功返回文件大小
+ */
+EXPORT_API int CALL mrgStorageDirectoryEnum(ViSession vi, int isUdisk, const char *ps8Path, char* ps8FileList, int *fileListLen)
+{
+    int retlen = 0;
+    int count = 0;
+    int dataLen = 0;
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
+    char as8StrLen[20];
+    char *as8Buff = NULL;
+    if (ps8Path == NULL || ps8FileList == NULL || *fileListLen == 0)
+    {
+        return 0;
+    }
+
+    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_lock(&mutex);
+
+    snprintf(args, SEND_LEN, "STORage:DIRECTory:ENUM? %s,%s\n",
+             isUdisk?"UDISK":"LOCAL", ps8Path);
+    if (busWrite(vi, args, strlen(args)) == 0)
+    {
+        pthread_mutex_unlock(&mutex);
+        return 0;
+    }
+    // 1. 先读回一个#9的头。
+    retlen = busRead(vi, as8Ret, 12);
+    if (retlen <= 0)
+    {
+        pthread_mutex_unlock(&mutex);
+        return 0;
+    }
+    if (as8Ret[0] != '#')//格式错误
+    {
+        pthread_mutex_unlock(&mutex);
+        return count;
+    }
+    dataLen = as8Ret[1] - 0x30;
+    memcpy(as8StrLen, &as8Ret[2], dataLen);//取出长度字符串
+    dataLen = strtoul(as8StrLen, NULL, 10);
+    if (dataLen == 0)
+    {
+        pthread_mutex_unlock(&mutex);
+        return 0;
+    }
+    as8Buff = (char *)malloc(dataLen+1);
+    as8Buff[0] = as8Ret[11];
+    count = 1;
+    while (dataLen >0)
+    {
+        //返回的#9数据最后，会有一个分号，所以这里多读一个字节。
+        if ((retlen = busRead(vi, as8Ret, ((dataLen > 512) ? 512 : dataLen) )) == 0)
+        {
+            break;
+        }
+        memcpy(&as8Buff[count], as8Ret, retlen);
+        count += retlen;
+        dataLen -= retlen;
+    }
+
+    if(*fileListLen >= count)
+    {
+        memcpy(ps8FileList, as8Buff, count);
+        *fileListLen = count;
+    }
+    else
+    {
+        memset(as8Buff, 0, count);
+        *fileListLen = 0;
+    }
+
+    free(as8Buff);
+    pthread_mutex_unlock(&mutex);
+    return count;
+}
+/*
+ * 获取文件大小
+ * vi: visa句柄
+ * isUdisk: 是否在U盘上
+ * ps8Path: 文件所在目录绝对路径
+ * ps8Filename: 文件名
+ * 返回值: -1表示失败,成功返回文件大小
+ */
+EXPORT_API int CALL mrgStorageGetFileSize(ViSession vi, int isUdisk, const char *ps8Path, char* ps8Filename)
+{
+    int retlen = 0;
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
+    if (ps8Path == NULL || ps8Filename == NULL)
+    {
+        return 0;
+    }
+    snprintf(args, SEND_LEN, "STORage:FILE:SIZE? %s,%s,%s\n",
+             isUdisk?"UDISK":"LOCAL", ps8Path, ps8Filename);
+    if ((retlen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) == 0) {
+        return -1;
+    }
+    retlen = atoi(as8Ret);
+    return retlen;
+}

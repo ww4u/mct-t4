@@ -57,6 +57,7 @@ protected:
 
 public:
     int append( int code, int cnt, const QString &info );
+    int append( int code, DiagnosisElement::DiagnosisType type, QString stmp, QString info, int cnt, QString msg );
 
     void createDebug();
 

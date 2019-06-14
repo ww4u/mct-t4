@@ -277,6 +277,28 @@ int DiagnosisTable::append( int code, int cnt, const QString &info )
     return 0;
 }
 
+int DiagnosisTable::append( int code, DiagnosisElement::DiagnosisType type, QString stmp, QString info, int cnt, QString msg )
+{
+    DiagnosisElement *pEle;
+
+    pEle = new DiagnosisElement();
+    if ( NULL == pEle )
+    { return -1; }
+
+    pEle->mNumber = code;
+    pEle->mType = type;
+    pEle->mTs = stmp;
+    pEle->mInfo = info;
+    pEle->mCounter = cnt;
+    pEle->mMessage = msg;
+
+    beginInsertRows( QModelIndex(), mItems.size() + 1, mItems.size() + 1 );
+    mItems.append( pEle );
+    endInsertRows();
+
+    return 0;
+}
+
 void DiagnosisTable::createDebug()
 {
     DiagnosisElement *pEle;

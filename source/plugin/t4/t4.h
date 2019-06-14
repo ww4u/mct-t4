@@ -79,7 +79,6 @@
 #define error_mgr_file_name "errmgr.xml"
 #define config_file_name  "config.xml"
 #define debug_file_name "debug.xml"
-#define diagnosis_file_name "diagnosis.xml"
 
 #define update_file_name    "update.txt"
 

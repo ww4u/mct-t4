@@ -18,7 +18,6 @@ void MRX_T4::slot_save_pw()
     QString path = selfPath();
 
     //! save file
-//    QString fileName = path + "/" + password_file_name;
     ret = savePw( path, QString(password_file_name) );
     if ( ret != 0 )
     {

@@ -270,6 +270,7 @@ void ErrorMgrTable::doSave()
                                    error_mgr_file_name,
                                    (quint8*)theAry.data(),
                                    theAry.length() );
+
         if ( ret != 0 )
         { break; }
 

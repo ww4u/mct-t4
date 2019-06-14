@@ -132,10 +132,6 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     connect( ui->tvDebug, SIGNAL(customContextMenuRequested(const QPoint &)),
              this, SLOT(slot_customContextMenuRequested(const QPoint &)));
 
-    //! diagnosis
-    connect( &mDiagTable, SIGNAL(signal_data_changed()),
-             this, SLOT(slot_save_diagnosis()) );
-
     //! status
     connect( ui->controllerStatus, SIGNAL(signal_device_power(bool)),
              this, SLOT(slot_pwr_checked(bool)) );
@@ -157,7 +153,7 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     spySetting( MRX_T4::e_setting_record );
 
     //! \note no need the diagnosis read button
-    ui->btnRead->setVisible(false);
+//    ui->btnRead->setVisible(false);
 
     //! step and speed
     connect( ui->cmbSpeed, SIGNAL(activated(int)),
@@ -675,14 +671,6 @@ int T4OpPanel::refreshDiagnosisInfo( void *pContext )
     ret = mrgErrorLogUpload( pRobo->deviceVi(), 0,
                              ary.data());
 
-//    QFile file( "G:/work/mct/doc/Diagnose.log");
-//    if ( file.open( QIODevice::ReadOnly ) )
-//    { ret = file.size(); logDbg()<<ret; }
-//    else
-//    { logDbg(); return -1; }
-//    ary = file.readAll();
-//    file.close();
-
     //! fill the model
     if ( ret > 0 )
     {
@@ -698,7 +686,7 @@ int T4OpPanel::refreshDiagnosisInfo( void *pContext )
         //! model
         DiagnosisTable *pModel = (DiagnosisTable*)ui->tvDiagnosis->model();
 
-        int code, counter;
+        int code;
         bool bOk;
 
         foreach( QByteArray item, aryList )
@@ -714,13 +702,27 @@ int T4OpPanel::refreshDiagnosisInfo( void *pContext )
             if ( !bOk )
             { continue; }
 
-            counter = itemList.at(1).toInt( &bOk );
+            DiagnosisElement::DiagnosisType dType;
+            QString type = itemList.at(1);
+            if( str_equ(type, "F") ){
+                dType = DiagnosisElement::diag_error;
+            }else{
+                dType = DiagnosisElement::diag_warning;
+            }
+
+            QString stmp = itemList.at(2);
+            QString info = itemList.at(3);
+            int cnt = itemList.at(4).toInt( &bOk );
             if ( !bOk )
             { continue; }
+            QString msg = itemList.at(5);
 
             pModel->append( code,
-                            counter,
-                            itemList.at(2)
+                            dType,
+                            stmp,
+                            info,
+                            cnt,
+                            msg
                         );
         }
         return 0;
@@ -1731,40 +1733,10 @@ void T4OpPanel::slot_save_debug()
     }
 
 }
-void T4OpPanel::slot_save_diagnosis()
-{
-    Q_ASSERT( NULL != m_pPlugin );
-    int ret;
-
-    //! diagnosis
-    QString fileName = m_pPlugin->selfPath() + "/" + diagnosis_file_name;
-
-    do
-    {
-        QByteArray theAry;
-        ret = mDiagTable.save( theAry );
-        if ( ret != 0 )
-        { break; }
-
-        ret = mrgStorageWriteFile( plugin_root_dir(),
-                                   diagnosis_file_name,
-                                   (quint8*)theAry.data(),
-                                   theAry.length() );
-        if ( ret != 0 )
-        { break; }
-    }while( 0 );
-
-    if ( ret != 0 )
-    {
-        sysError( fileName + tr(" load fail") );
-    }
-}
 
 void T4OpPanel::slot_request_save()
 {
     slot_save_debug();
-
-    slot_save_diagnosis();
 }
 void T4OpPanel::slot_request_load()
 {
@@ -1797,29 +1769,8 @@ void T4OpPanel::slot_request_load()
         sysError( fileName + tr(" load fail") );
     }
 
-    //! diagnosis
-    fileName = m_pPlugin->selfPath() + "/" + diagnosis_file_name;
-    do
-    {
-        QByteArray theAry;
-        theAry.reserve( max_file_size );
-        ret = mrgStorageReadFile( plugin_root_dir(),
-                                  diagnosis_file_name,
-                                  (quint8*)theAry.data() );logDbg()<<ret;
-        if ( ret <= 0 )
-        {
-            ret = -1;
-            break;
-        }
-        theAry.resize( ret );
-        ret = mDiagTable.load( theAry );
-        if ( ret != 0 )
-        { break; }
-    }while( 0 );
-    if ( ret != 0 )
-    {
-        sysError( fileName + tr(" load fail") );
-    }
+    //! upload diagnosis
+    refreshDiagnosisInfo( NULL );
 }
 
 void T4OpPanel::slot_debug_table_changed()

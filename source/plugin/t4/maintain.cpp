@@ -361,10 +361,13 @@ void Maintain::on_btnResetPw_clicked()
 
 void Maintain::on_chkAutoLogin_stateChanged(int arg1)
 {
+    Q_ASSERT( m_pPlugin != NULL );
     m_pPlugin->setAutoLogin( ui->chkAutoLogin->isChecked() );
 }
 
 }
+
+
 
 
 

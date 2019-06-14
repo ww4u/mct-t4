@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_3">
       <attribute name="title">
@@ -124,6 +124,10 @@
          <property name="text">
           <string>Update</string>
          </property>
+         <property name="icon">
+          <iconset resource="../../../res/res.qrc">
+           <normaloff>:/res/image/icon/upgrade.png</normaloff>:/res/image/icon/upgrade.png</iconset>
+         </property>
         </widget>
        </item>
        <item row="4" column="0">
@@ -185,6 +189,10 @@
         <widget class="QPushButton" name="btnHistory">
          <property name="text">
           <string>History</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../res/res.qrc">
+           <normaloff>:/res/image/icon/history.png</normaloff>:/res/image/icon/history.png</iconset>
          </property>
         </widget>
        </item>

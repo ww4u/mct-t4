@@ -60,26 +60,37 @@ void Widget::attatchPlugin(XPlugin *xp)
 {
     m_pPlugin = xp;
     m_addr = m_pPlugin->addr();
+    isAdmin = m_pPlugin->isAdmin();
 }
-void Widget::reOpenDevice()
+int Widget::reOpenDevice()
 {
+    int ret;
     m_pPlugin->close();
-    m_vi = mrgOpenGateWay(m_addr.toLocal8Bit().data(), 200);
-    if(m_vi <= 0){
-        //! \todo
-    }
-    int robotNames[128] = {0};
-    int ret = mrgGetRobotName(m_vi, robotNames);
-    if(ret <=0){
-        //! \todo
-    }else if(ret ==1){
+
+    do{
+        m_vi = mrgOpenGateWay(m_addr.toLocal8Bit().data(), 200);
+        if( m_vi < 0){
+            ret = -1;
+            sysInfo("Open GateWay Fail", 1);
+            break;
+        }
+
+        int robotNames[128] = {0};
+        ret = mrgGetRobotName(m_vi, robotNames);
+        if(ret <=0){
+            sysInfo("Get Robot Name Fail", 1);
+            ret = -1;
+            break;
+        }
         m_robotID = robotNames[0];
-    }else{}
 
-    int deviceNames[128] = {0};
-    //ret = mrgGetRobotDevice(m_vi, m_robotID, deviceNames);
-    recvID = QString::number(1);
+        int deviceNames[128] = {0};
+        //ret = mrgGetRobotDevice(m_vi, m_robotID, deviceNames);
+        recvID = QString::number(1);
 
+    }while(0);
+
+    return ret;
 }
 void Widget::on_buttonBox_clicked(QAbstractButton *button)
 {
@@ -88,7 +99,13 @@ void Widget::on_buttonBox_clicked(QAbstractButton *button)
     ui->textBrowser->clear();
 
     if((QPushButton*)(button) == ui->buttonBox->button(QDialogButtonBox::Ok)){
-        reOpenDevice();
+        if(reOpenDevice()<0){
+            //!reopen error
+            button->show();
+            ui->labelStatus->setText( tr("Open Device Fail") );
+            ui->labelStatus->show();
+            return;
+        }
         button->hide();
     }else {
         destory();
@@ -99,21 +116,7 @@ void Widget::on_buttonBox_clicked(QAbstractButton *button)
     QString undoExePath = qApp->applicationDirPath() + UNDOEXE;
     QStringList arguments;
     arguments << "-x" << "-p" << sPath;
-//    QProcess *myProcess = new QProcess(this);
-//    m_undoProcess = myProcess;
-//    m_undoProcess->start(undoExePath, arguments);
-//    if( m_undoProcess->waitForFinished(1000) ){
-//        QByteArray st = m_undoProcess->readAllStandardOutput();
-//        if(QString(st).contains("Success")){
-//            slot_startMRQUpdate(0);
-//            delete m_undoProcess;
-//            m_undoProcess = NULL;
-//            return;
-//        }
-//    }
-//    slotHandleError();
-//    delete m_undoProcess;
-//    m_undoProcess = NULL;
+
     MThead *mthread = new MThead;
     connect(mthread,SIGNAL(resultReady(QString)),this,SLOT(slotReadUndoResult(QString)));
     mthread->setExeCmd(undoExePath);
@@ -287,54 +290,8 @@ void Widget::slot_updateMRH()
     watcher->setFuture(future);
 }
 
-void Widget::callback()
-{
-//    m_updateProcess = new QProcess;
-//    connect(m_updateProcess,SIGNAL(finished(int,QProcess::ExitStatus)),m_updateProcess,SLOT(deleteLater()));
-//    connect(m_updateProcess,&QProcess::readyRead,this,[=](){
-
-//        ui->progressBar->show();
-
-//        QByteArray ba = m_updateProcess->readAll();
-//        ui->textBrowser->append(QString(ba));
-
-//        if( ba.contains("Notify:Update Complete!") ){
-//            //! update mrh
-//            slot_updateMRH();
-//        }
-
-//        if( ba.contains("Error") ){
-//            slotHandleError();
-//            delete m_updateProcess;
-//            m_updateProcess = NULL;
-//        }
-
-//        //! percent
-//        QRegExp rx("(\\d+)");
-//        QString _str = QString( ba );
-//        QStringList list;
-//        int pos = 0;
-
-//        while ((pos = rx.indexIn(_str, pos)) != -1) {
-//            list << rx.cap(1);
-//            pos += rx.matchedLength();
-//        }
-//        foreach (QString item, list) {
-//            ui->progressBar->setValue( item.toInt() );
-//        }
-//    });
-
-//    QString updateMRQProgram = qApp->applicationDirPath() + MRQ_UPDATE_EXE;
-//    QStringList arguments;
-//    arguments << (sPath.left(sPath.lastIndexOf("/")) + MRQ_UPDATE) << m_addr << recvID;
-//    m_updateProcess->start(updateMRQProgram, arguments);
-//    m_updateProcess->waitForFinished(-1);
-
-}
-
 void Widget::slot_startMRQUpdate(int)
 {
-//    QtConcurrent::run(this,&Widget::callback);
     MThead *mthread = new MThead;
     connect(mthread,SIGNAL(resultReady(QString)),this,SLOT(slotReadMRQResult(QString)));
 

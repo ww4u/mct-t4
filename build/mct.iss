@@ -3,7 +3,7 @@
 
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING .ISS SCRIPT FILES!
 
-#define appVersion "0.0.1.1"
+#define appVersion "0.0.2.0"
 #define appPublisher "MCT-MRX-T4"
 
 [Setup]
@@ -15,7 +15,8 @@ DefaultGroupName=MEGAROBO Technology
 ;UninstallDisplayIcon={app}\MCT
 Compression=lzma2
 
-SolidCompression=yesOutputBaseFilename= "MCT-MRX-T4 {#appVersion}"
+SolidCompression=yes
+OutputBaseFilename= "MCT-MRX-T4 {#appVersion}"
 
 PrivilegesRequired= admin
 
@@ -44,6 +45,8 @@ Source: "doc\*"; DestDir: "{app}\doc";  Flags: recursesubdirs
 
 Source: "MRQ_Update\*"; DestDir: "{app}\MRQ_Update"
 
+Source: "NetFramework\*"; DestDir: "{app}\NetFramework"
+
 [Dirs]
 ;Name: "{app}\temp"
 
@@ -52,6 +55,7 @@ Source: "MRQ_Update\*"; DestDir: "{app}\MRQ_Update"
 Type: files; Name: "{app}\*.xml"
 
 [Run]
+Filename: "{app}\NetFramework\NetFramework 4.5.exe"; Description: "NETFramework 4.5"; Parameters: ""; Flags: postinstall runascurrentuser
 Filename: "{app}\doc\readme.txt"; Description: "View the readme file"; Flags: postinstall shellexec skipifsilent runascurrentuser waituntilterminated
 
 [UninstallRun] 

@@ -23,7 +23,7 @@ public:
 
     void attatchPlugin(XPlugin *xp);
 
-    void reOpenDevice();
+    int reOpenDevice();
 
     void Append(const QString &text);
 
@@ -32,8 +32,6 @@ public:
     void remove();
 
     void destory();
-
-    void callback();
 
     int upgressMRH();
 
@@ -80,6 +78,8 @@ private:
     QProcess *proUpdateMRQ;
 
     QFutureWatcher<int> *watcher;
+
+    bool isAdmin;
 
 };
 

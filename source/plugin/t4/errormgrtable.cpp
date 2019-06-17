@@ -101,6 +101,14 @@ void ErrorMgrTable::retranslateUi()
     ui->retranslateUi( this );
 }
 
+void ErrorMgrTable::onPluginChanged()
+{
+    XPage::onPluginChanged();
+
+    //! \note get the error message from template
+    rst();
+}
+
 #define def_width     80
 #define wider1_width  200
 void ErrorMgrTable::setModel( QAbstractTableModel *pModel )
@@ -185,16 +193,38 @@ int ErrorMgrTable::upload()
             //! deparse
             parseResponse( response, &reaction, &output );
 
+            QStringList strReactionList;
+            strReactionList << "Free-wheeling" << "QS deceleration" << "Record deceleration" << "Finish Record";
+
             logDbg()<<code<<type<<diagnosis<<response<<enable;
 
-            //! config the code
-//            pModel->setData( pModel->index( i, 6 ), )
-            //! \todo
+            do
+            {
+                //! type
+                if ( type == ErrorMgrItem::e_error )
+                { pModel->setData( pModel->index( i, 2 ), true, Qt::EditRole ); }
+                else if ( type == ErrorMgrItem::e_warning )
+                { pModel->setData( pModel->index( i, 3 ), true, Qt::EditRole ); }
+                else if ( type == ErrorMgrItem::e_info )
+                { pModel->setData( pModel->index( i, 4 ), true, Qt::EditRole ); }
+                else
+                { break; }
+
+                //! action
+                pModel->setData( pModel->index( i, 5 ), strReactionList.at(reaction - 1), Qt::EditRole );
+
+                //! output
+                pModel->setData( pModel->index( i, 6 ), output > 0, Qt::EditRole );
+
+                //! save
+                pModel->setData( pModel->index( i, 7 ), diagnosis > 0, Qt::EditRole );
+             }while( 0 );
+
         }
     }
 
     //! read success + reload
-    doSave();
+//    doSave();
 
 //    doLoad();
 
@@ -245,84 +275,84 @@ int ErrorMgrTable::diff()
     return 0;
 }
 
-void ErrorMgrTable::doSave()
-{
-    QString fileName = m_pPlugin->selfPath() + "/" + error_mgr_file_name;
+//void ErrorMgrTable::doSave()
+//{
+//    QString fileName = m_pPlugin->selfPath() + "/" + error_mgr_file_name;
 
-    int ret = -1;
-    do
-    {
-        MegaTableModel *pTable = (MegaTableModel*)ui->tableView->model();
-        if ( NULL == pTable )
-        {
-            ret = -1;
-            break;
-        }
+//    int ret = -1;
+//    do
+//    {
+//        MegaTableModel *pTable = (MegaTableModel*)ui->tableView->model();
+//        if ( NULL == pTable )
+//        {
+//            ret = -1;
+//            break;
+//        }
 
-        //! export
-        QByteArray theAry;
-        ret = pTable->save( theAry );
-        if ( ret != 0 )
-        { break; }
+//        //! export
+//        QByteArray theAry;
+//        ret = pTable->save( theAry );
+//        if ( ret != 0 )
+//        { break; }
 
-        //! save
-        ret = mrgStorageWriteFile( plugin_root_dir(),
-                                   error_mgr_file_name,
-                                   (quint8*)theAry.data(),
-                                   theAry.length() );
+//        //! save
+//        ret = mrgStorageWriteFile( plugin_root_dir(),
+//                                   error_mgr_file_name,
+//                                   (quint8*)theAry.data(),
+//                                   theAry.length() );
 
-        if ( ret != 0 )
-        { break; }
+//        if ( ret != 0 )
+//        { break; }
 
-    }while( 0 );
+//    }while( 0 );
 
-    if ( ret != 0 )
-    {
-        sysError( fileName + " " + tr("save fail") );
-    }
-}
-void ErrorMgrTable::doLoad()
-{
-    QString fileName = m_pPlugin->selfPath() + "/" + error_mgr_file_name;
-    int ret = -1;
+//    if ( ret != 0 )
+//    {
+//        sysError( fileName + " " + tr("save fail") );
+//    }
+//}
+//void ErrorMgrTable::doLoad()
+//{
+//    QString fileName = m_pPlugin->selfPath() + "/" + error_mgr_file_name;
+//    int ret = -1;
 
-    do
-    {
-        MegaTableModel *pTable = (MegaTableModel*)ui->tableView->model();
-        if ( NULL == pTable )
-        {
-            ret = -1;
-            break;
-        }
+//    do
+//    {
+//        MegaTableModel *pTable = (MegaTableModel*)ui->tableView->model();
+//        if ( NULL == pTable )
+//        {
+//            ret = -1;
+//            break;
+//        }
 
-        QByteArray theAry;
-        theAry.reserve( max_file_size );
-        ret = mrgStorageReadFile( plugin_root_dir(),
-                                  error_mgr_file_name,
-                                  (quint8*)theAry.data() );
-        if ( ret <= 0 )
-        {
-            ret = -2;
-            break;
-        }
-        theAry.resize( ret );
+//        QByteArray theAry;
+//        theAry.reserve( max_file_size );
+//        ret = mrgStorageReadFile( plugin_root_dir(),
+//                                  error_mgr_file_name,
+//                                  (quint8*)theAry.data() );
+//        if ( ret <= 0 )
+//        {
+//            ret = -2;
+//            break;
+//        }
+//        theAry.resize( ret );
 
-        pTable->load( theAry );
+//        pTable->load( theAry );
 
-    }while( 0 );
+//    }while( 0 );
 
-    if ( ret != 0 )
-    {
-        sysError( fileName + " " + tr("load fail") );
-    }logDbg();
+//    if ( ret < 0 )
+//    {
+//        sysError( fileName + " " + tr("load fail") );
+//    }logDbg();
 
-}
+//}
 
-void ErrorMgrTable::slot_request_save()
-{ doSave(); logDbg(); }
+//void ErrorMgrTable::slot_request_save()
+//{ doSave(); logDbg(); }
 
-void ErrorMgrTable::slot_request_load()
-{ doLoad(); }
+//void ErrorMgrTable::slot_request_load()
+//{ doLoad(); }
 
 void ErrorMgrTable::slot_data_changed()
 {

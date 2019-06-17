@@ -66,8 +66,9 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
     //new_widget( mrx_t4::Coordinate, pWig, tr("Coordinate"), ":/res/image/icon/205.png" );
     new_widget( mrx_t4::MotorConfig, pWig, tr("Motor"), ":/res/image/icon/motor.png" );
     new_widget( mrx_t4::ActionTable, m_pRecordView, tr("Record Table"), ":/res/image/icon/table.png" );
-#if 0
+
     new_widget( mrx_t4::ErrorMgrTable, pErrCfgTable, tr("Error Management"), ":/res/image/icon/ErrorSetting.png" );
+#if 0
     new_widget( mrx_t4::FileExplorer, pWig, tr("File"), ":/res/image/icon/fuzhi.png" );
 #endif
 //    new_widget( mrx_t4::TracePlot, pWig, tr("Trace"), ":/res/image/icon/409.png" );logDbg();
@@ -133,9 +134,9 @@ void MRX_T4::retranslateUi()
     mTreeItems.at(1)->setText( 0, tr("Configuration") ) ;
     mTreeItems.at(2)->setText( 0, tr("Motor") ) ;
     mTreeItems.at(3)->setText( 0, tr("Record Table") ) ;
-//    mTreeItems.at(5)->setText( 0, tr("Error Management") ) ;
-    mTreeItems.at(4)->setText( 0, tr("Misc") ) ;
-    mTreeItems.at(5)->setText( 0, tr("Maintain") ) ;
+    mTreeItems.at(4)->setText( 0, tr("Error Management") ) ;
+    mTreeItems.at(5)->setText( 0, tr("Misc") ) ;
+    mTreeItems.at(6)->setText( 0, tr("Maintain") ) ;
 
     //! tree header
 //    headerList<<"Record"<<"Type"

@@ -76,7 +76,7 @@
 
 //! file names
 #define record_file_name  "MCT_motion.mrp"
-#define error_mgr_file_name "errmgr.xml"
+//#define error_mgr_file_name "errmgr.xml"
 #define config_file_name  "config.xml"
 #define debug_file_name "debug.xml"
 

@@ -706,8 +706,10 @@ int T4OpPanel::refreshDiagnosisInfo( void *pContext )
             QString type = itemList.at(1);
             if( str_equ(type, "F") ){
                 dType = DiagnosisElement::diag_error;
-            }else{
+            }else if( str_equ(type, "W") ){
                 dType = DiagnosisElement::diag_warning;
+            }else if( str_equ(type, "I") ){
+                dType = DiagnosisElement::diag_info;
             }
 
             QString stmp = itemList.at(2);

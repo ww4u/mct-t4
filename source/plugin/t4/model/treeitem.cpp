@@ -186,22 +186,24 @@ TreeItem *TreeItem::parent()
 bool TreeItem::removeChildren(int position, int count)
 {
     if (position < 0 || position + count > childItems.size())
+    {
         return false;
+    }
 
     //! remove the item
     for (int row = 0; row < count; ++row)
     {
         //! leaf node
-        if ( childItems.at( position)->level() == 2 )
+        if ( childItems.at( position + row )->level() == 2 )
         {
             delete childItems.takeAt(position);
         }
-        else if ( childItems.at( position)->level() == 1 )
+        else if ( childItems.at( position + row )->level() == 1 )
         {
-            childItems.at( position )->removeChildren( 0, childItems.at( position)->childCount() );
+            childItems.at( position + row )->removeChildren( 0, childItems.at( position)->childCount() );
 
             //! reset data
-            childItems.at( position )->setValid( false );
+            childItems.at( position + row )->setValid( false );
         }
         else
         {

@@ -654,7 +654,7 @@ EXPORT_API int CALL mrgScriptConfigQuery(ViSession vi, char *filename)
     char args[SEND_LEN];
     int retlen = 0;
     snprintf(args, SEND_LEN, "SCRipt:CONFIG?\n");
-    if ((retlen = busQuery(vi, args, strlen(args), filename, sizeof(filename))) <= 0) {
+    if ((retlen = busQuery(vi, args, strlen(args), filename, RECV_LEN)) <= 0) {
         return -1;
     }
     return 0;

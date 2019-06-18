@@ -365,10 +365,15 @@ void Maintain::on_chkAutoLogin_stateChanged(int arg1)
     m_pPlugin->setAutoLogin( ui->chkAutoLogin->isChecked() );
 }
 
+void Maintain::on_btnRecover_clicked()
+{
+
 }
 
+void Maintain::on_btnExport_clicked()
+{
 
+}
 
-
-
+}
 

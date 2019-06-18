@@ -18,18 +18,26 @@ public:
     ~TestPanelDialog();
 
 private slots:
-    void on_pushButton_updateFirmware_clicked();
+    void slotUpdateFirmware();
     void updateFirmwareEndTips(int ret);
 
-    void on_pushButton_ScanMotionFile_clicked();
+    void slotScanMotionFile();
 
-    void on_pushButton_ImportMotionFile_clicked();
+    void slotImportMotionFile();
 
-    void on_pushButton_RunStop_clicked();
+    void slotMotionRunStop();
 
-    void on_pushButton_ReadMotionFile_clicked();
+    void slotReadMotionFile();
 
-    void on_pushButton_test_clicked();
+    void slotSystemPatch();
+
+    void slotScriptDownload();
+
+    void slotScriptUpdateInfo();
+
+    void slotScriptStartStop();
+
+    void slotScriptBoot(bool isBoot);
 
 private:
     Ui::TestPanelDialog *ui;
@@ -39,6 +47,8 @@ private:
 
     bool m_isDebugRunFlag;
     XThread *m_threadOpsDebug;
+
+    bool m_isScriptRunning;
 };
 
 #endif // TESTPANELDIALOG_H

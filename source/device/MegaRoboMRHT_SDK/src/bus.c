@@ -129,7 +129,7 @@ static int SyncRead(int vi, char *data, int dataLen, int isBlock)
     if(ret > 0){
         return ret;
     }
-    if(ret < 0){
+    if(ret < 0 && ret != -VXI11_ERROR_IO_TIMEOUT){
         perror("SyncRead error!");
     }
     return -1;
@@ -190,7 +190,7 @@ unsigned int busRead(ViSession vi, char *buf, unsigned int len)
         return 0;
     }
     UNLOCK();
-    if(buf[retCount-1] == '\n')
+    if(buf[retCount-1] == '\n' && buf[0] != '\#')
         buf[retCount-1] = '\0';
     return (unsigned int)retCount;
 }
@@ -227,8 +227,8 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* o
         return 0;
     }
     UNLOCK();
-    if(buf[output-1] == '\n')
-        buf[output-1] = '\0';
+    if(output[retCount-1] == '\n' && output[0] != '\#')
+        output[retCount-1] = '\0';
     return (unsigned int)retCount;
 }
 
@@ -502,7 +502,7 @@ unsigned int busRead(ViSession vi, char * buf, unsigned int len)
         return 0;
     }
     UNLOCK();
-    if(buf[retCount-1] == '\n')
+    if(buf[retCount-1] == '\n' && buf[0] != '\#')
         buf[retCount-1] = '\0';
     return retCount;
 }
@@ -537,7 +537,7 @@ unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen,char* ou
         return 0;
     }
     UNLOCK();
-    if(output[retCount-1] == '\n')
+    if(output[retCount-1] == '\n' && output[0] != '\#')
         output[retCount-1] = '\0';
     return retCount;
 }

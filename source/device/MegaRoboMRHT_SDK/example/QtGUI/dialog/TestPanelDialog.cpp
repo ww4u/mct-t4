@@ -6,6 +6,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QInputDialog>
+#include <QTimer>
 
 TestPanelDialog::TestPanelDialog(ViSession vi, int robot, int device, QWidget *parent) :
     QDialog(parent),
@@ -24,6 +25,20 @@ TestPanelDialog::TestPanelDialog(ViSession vi, int robot, int device, QWidget *p
      //隐藏
      ui->spinBox_record->setVisible(false);
 
+     connect(ui->pushButton_system_patch, SIGNAL(pressed()),this,SLOT(slotSystemPatch()));
+     connect(ui->pushButton_updateFirmware, SIGNAL(pressed()),this,SLOT(slotUpdateFirmware()));
+
+     connect(ui->pushButton_ScanMotionFile, SIGNAL(pressed()),this,SLOT(slotScanMotionFile()));
+     connect(ui->pushButton_ImportMotionFile, SIGNAL(pressed()),this,SLOT(slotImportMotionFile()));
+     connect(ui->pushButton_MotionRunStop, SIGNAL(pressed()),this,SLOT(slotMotionRunStop()));
+     connect(ui->pushButton_ReadMotionFile, SIGNAL(pressed()),this,SLOT(slotReadMotionFile()));
+
+     connect(ui->toolButton_script_download, SIGNAL(pressed()),this,SLOT(slotScriptDownload()));
+     connect(ui->toolButton_script_update, SIGNAL(pressed()),this,SLOT(slotScriptUpdateInfo()));
+     connect(ui->toolButton_scriptStartStop, SIGNAL(pressed()),this,SLOT(slotScriptStartStop()));
+     connect(ui->checkBox_script_boot, SIGNAL(toggled(bool)),this,SLOT(slotScriptBoot(bool)));
+
+     QTimer::singleShot(500, this, SLOT(slotScriptUpdateInfo()) );
 }
 
 TestPanelDialog::~TestPanelDialog()
@@ -36,7 +51,7 @@ TestPanelDialog::~TestPanelDialog()
     }
 }
 
-void TestPanelDialog::on_pushButton_updateFirmware_clicked()
+void TestPanelDialog::slotUpdateFirmware()
 {
     QString absPathFileName = QFileDialog::getOpenFileName(this, "文件对话框", "", "升级文件(*.mrh)");
     qDebug() << absPathFileName;
@@ -128,7 +143,7 @@ void TestPanelDialog::updateFirmwareEndTips(int ret)
     return;
 }
 
-void TestPanelDialog::on_pushButton_ScanMotionFile_clicked()
+void TestPanelDialog::slotScanMotionFile()
 {
     auto lambda = [&]()
     {
@@ -151,7 +166,7 @@ void TestPanelDialog::on_pushButton_ScanMotionFile_clicked()
     thread->start();
 }
 
-void TestPanelDialog::on_pushButton_ImportMotionFile_clicked()
+void TestPanelDialog::slotImportMotionFile()
 {
     if(m_robotID <= 0)
     {
@@ -171,7 +186,7 @@ void TestPanelDialog::on_pushButton_ImportMotionFile_clicked()
     }
 }
 
-void TestPanelDialog::on_pushButton_RunStop_clicked()
+void TestPanelDialog::slotMotionRunStop()
 {
 
     auto func = [this](int &ret)
@@ -290,7 +305,7 @@ void TestPanelDialog::on_pushButton_RunStop_clicked()
             isCyclic = ui->checkBox_Cyclic->isChecked();
         }while(isCyclic && noBreak);
 
-        ui->pushButton_RunStop->setText("运行");
+        ui->pushButton_MotionRunStop->setText("运行");
         m_isDebugRunFlag = false;
     }; //end func
 
@@ -303,12 +318,12 @@ void TestPanelDialog::on_pushButton_RunStop_clicked()
             m_threadOpsDebug->requestInterruption();
             m_threadOpsDebug->wait();
         }
-        ui->pushButton_RunStop->setText("运行");
+        ui->pushButton_MotionRunStop->setText("运行");
     }
     else
     {
         m_isDebugRunFlag = true;
-        ui->pushButton_RunStop->setText("停止");
+        ui->pushButton_MotionRunStop->setText("停止");
 
         if(m_vi <= 0) return;
         m_threadOpsDebug = new XThread(func);
@@ -318,7 +333,7 @@ void TestPanelDialog::on_pushButton_RunStop_clicked()
 
 }
 
-void TestPanelDialog::on_pushButton_ReadMotionFile_clicked()
+void TestPanelDialog::slotReadMotionFile()
 {
     ui->textBrowser->clear();
 
@@ -356,42 +371,88 @@ void TestPanelDialog::on_pushButton_ReadMotionFile_clicked()
     }
 }
 
-void TestPanelDialog::on_pushButton_test_clicked()
+void TestPanelDialog::slotSystemPatch()
 {
-#if 0
-    {   //! test 1
-        //! 测试系统配置MRQ的序列号和版本号
-        char version[32] = "11.22.33";
-        char sn[32] = "1357924680";
+#if 01
+    //! 系统补丁
+    int ret;
+    QStringList lstAbsPathFileName = QFileDialog::getOpenFileNames(this, "文件对话框", "", "所有文件(*.*)");
+    qDebug() << lstAbsPathFileName;
+    if(lstAbsPathFileName.isEmpty())
+        return;
 
-        int ret = mrgSystemSetMRQConfig(m_vi, version, sn);
-        qDebug() << "set" << "version:" << version << "sn:" << sn << "ret:" << ret;
+    //! 下载文件
+    QString targetAbsPath = "/home/megarobo/update/update.src/";
+    foreach (QString absPathFileName, lstAbsPathFileName)
+    {
+        QFile file(absPathFileName);
+        if(!file.open(QIODevice::ReadOnly))
+        {
+            qDebug() << QString("Can't ReadOnly open the file: %1").arg(absPathFileName);
+            return;
+        }
 
-        QThread::sleep(2);
+        int filesize = file.size();
+        QString filename = absPathFileName.split("/", QString::SkipEmptyParts).last();
 
-        memset(version, 0, sizeof(version));
-        memset(sn, 0, sizeof(sn));
-        ret = mrgSystemGetMRQConfig(m_vi, version, sn);
-        qDebug() << "get" << "version:" << version << "sn:" << sn << "ret:" << ret;
+        qDebug() << "download file start:" << filename << "size:" << filesize;
+        unsigned char *ptr = file.map(0, filesize);
+        ret = mrgStorageWriteFile(m_vi, 0, targetAbsPath.toLocal8Bit().data(),
+                                  filename.toLocal8Bit().data(), ptr, filesize);
+        file.unmap(ptr);
+        file.close();
+        qDebug() << "download file end:" << filename << ((ret!=0)?"ERROR":"OK");
+        if(ret != 0)
+        {
+            ret = -1;
+            return;
+        }
+    }
+
+    //! 执行更新操作
+    QString strCmd = "/bin/bash /home/megarobo/update/sysupdate.sh";
+    ret = mrgSystemRunCmd(m_vi, strCmd.toLocal8Bit().data(), 0);
+    if(ret == 0)
+    {
+        char *textBuff = (char *)malloc(1024 * 1024);
+        mrgStorageReadFile(m_vi, 0, (char *)"/home/megarobo/update/", (char *)"log", (unsigned char*)textBuff);
+        ui->textBrowser->setText(QString(textBuff));
+        free(textBuff);
+        ui->textBrowser->show();
+        QMessageBox::critical(this, "错误", "打补丁出错!");
+        ui->textBrowser->hide();
+        return;
+    }
+    else
+    {
+        char *textBuff = (char *)malloc(1024 * 1024);
+        mrgStorageReadFile(m_vi, 0, (char *)"/home/megarobo/update/", (char *)"history", (unsigned char*)textBuff);
+
+        ui->textBrowser->setText(QString(textBuff));
+        free(textBuff);
+        ui->textBrowser->show();
+        QMessageBox::information(this, "提示", "成功");
+        ui->textBrowser->hide();
     }
 #endif
 
-#if 01
-    {   //! test 2
-        //! 测试下载文件到MRH-T上一个指定的位置
-        QString absPathFileName = QFileDialog::getOpenFileName(this, "文件对话框", "", "所有文件(*.*)");
-        qDebug() << absPathFileName;
-        if(absPathFileName == "")
-            return;
+}
 
-        QString targetAbsPath = QInputDialog::getText(this, tr("输入框"), tr("请输入保存在MRH-T的位置"));
-        if(targetAbsPath == "")
-            return;
+void TestPanelDialog::slotScriptDownload()
+{
+    QStringList lstAbsPathFileName = QFileDialog::getOpenFileNames(this, "文件对话框", "", "所有文件(*.*)");
+    qDebug() << lstAbsPathFileName;
+    if(lstAbsPathFileName.isEmpty())
+        return;
 
-        auto lambda = [=](int &ret)
+    QString targetAbsPath = "/home/megarobo/MRH-T/script/";
+
+    auto lambda = [=](int &ret)
+    {
+        time_t tm_begin = time(NULL);
+
+        foreach (QString absPathFileName, lstAbsPathFileName)
         {
-            time_t tm_begin = time(NULL);
-
             QFile file(absPathFileName);
             if(!file.open(QIODevice::ReadOnly))
             {
@@ -414,21 +475,105 @@ void TestPanelDialog::on_pushButton_test_clicked()
                 ret = -1;
                 return;
             }
+        }
 
-            qDebug() << "Run time:" << time(NULL) - tm_begin;
-            ret = 0;
+        qDebug() << "Run time:" << time(NULL) - tm_begin;
+        ret = 0;
+        return;
+    };
+
+    XThread *thread = new XThread(lambda);
+    thread->start();
+}
+
+void TestPanelDialog::slotScriptUpdateInfo()
+{
+    char buff[4096] = "";
+
+    QString targetAbsPath = "/home/megarobo/MRH-T/script/";
+    int len = sizeof(buff);
+    mrgStorageDirectoryEnum(m_vi, 0, targetAbsPath.toLocal8Bit().data(), buff, &len);
+    qDebug() << "script list:" << QString( buff );
+    ui->comboBox_script_filelist->clear();
+    ui->comboBox_script_filelist->addItems( QString(buff).split("\n", QString::SkipEmptyParts));
+
+    mrgScriptConfigQuery(m_vi, buff);
+    ui->comboBox_script_filelist->setCurrentText(QString(buff));
+
+    int ret = mrgScriptGetCurrentStates(m_vi);
+    if(ret < 0)
+        return;
+
+    qDebug() << "script status:" << ret;
+    ui->label_script_running_status->setText( (ret==1) ? "RUNNING" : "STOP");
+
+    m_isScriptRunning = (ret==1) ? true : false;
+    ui->toolButton_scriptStartStop->setText(m_isScriptRunning ? "停止" : "运行");
+
+}
+
+void TestPanelDialog::slotScriptStartStop()
+{
+    int ret = 0;
+
+    qDebug() << "m_isScriptRunning:" << m_isScriptRunning;
+
+    if( !m_isScriptRunning )
+    {
+        QString strConfigName = ui->comboBox_script_filelist->currentText();
+        bool isBoot = ui->checkBox_script_boot->isChecked();
+
+        if(strConfigName.right(3) != ".py")
+        {
+            QMessageBox::critical(this, "错误", "配置项不是.py文件");
             return;
-        };
+        }
 
-        XThread *thread = new XThread(lambda);
-        thread->start();
+        ret = mrgScriptConfig(m_vi, strConfigName.toLocal8Bit().data(), isBoot?1:0);
+        if(ret!=0)
+        {
+            QMessageBox::critical(this, "错误", "配置失败");
+            return;
+        }
+
+        ret = mrgScriptRun(m_vi);
+        if(ret!=0)
+        {
+            QMessageBox::critical(this, "错误", "运行失败");
+            return;
+        }
+
+        ui->toolButton_scriptStartStop->setText("停止");
     }
-#endif
-
-
-    {   //! test 3
-        //! 测试下载一个目录到MRH-T上
-
+    else
+    {
+        ret = mrgScriptStop(m_vi);
+        if(ret!=0)
+        {
+            QMessageBox::critical(this, "错误", "停止失败");
+            return;
+        }
+        ui->toolButton_scriptStartStop->setText("运行");
     }
 
+    slotScriptUpdateInfo();
+}
+
+void TestPanelDialog::slotScriptBoot(bool isBoot)
+{
+    QString strConfigName = ui->comboBox_script_filelist->currentText();
+    if(strConfigName.right(3) != ".py")
+    {
+        QMessageBox::critical(this, "错误", "配置项不是.py文件");
+        ui->checkBox_script_boot->setChecked(!isBoot);
+        return;
+    }
+
+    int ret = mrgScriptConfig(m_vi, strConfigName.toLocal8Bit().data(), isBoot?1:0);
+    if(ret!=0)
+    {
+        QMessageBox::critical(this, "错误", "配置失败");
+        ui->checkBox_script_boot->setChecked(!isBoot);
+        return;
+    }
 }

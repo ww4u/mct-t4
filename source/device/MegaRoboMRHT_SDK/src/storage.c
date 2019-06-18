@@ -414,9 +414,13 @@ EXPORT_API int CALL mrgStorageDirectoryEnum(ViSession vi, int isUdisk, const cha
         pthread_mutex_unlock(&mutex);
         return 0;
     }
+
     as8Buff = (char *)malloc(dataLen+1);
-    as8Buff[0] = as8Ret[11];
+    memset(as8Buff, 0, dataLen+1);
+
     count = 1;
+    memcpy(as8Buff, &as8Ret[11], count);
+
     while (dataLen >0)
     {
         //返回的#9数据最后，会有一个分号，所以这里多读一个字节。
@@ -424,7 +428,7 @@ EXPORT_API int CALL mrgStorageDirectoryEnum(ViSession vi, int isUdisk, const cha
         {
             break;
         }
-        memcpy(&as8Buff[count], as8Ret, retlen);
+        memcpy(as8Buff + count, as8Ret, retlen);
         count += retlen;
         dataLen -= retlen;
     }

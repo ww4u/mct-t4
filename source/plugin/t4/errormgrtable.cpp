@@ -79,6 +79,11 @@ ErrorMgrTable::ErrorMgrTable(QWidget *parent) :
     m_pCheckDelegate = new CheckDelegate( shape_check, this );
     m_pRadioDelegate = new CheckDelegate( shape_radio, this );
 
+    //! visible role
+    //! \note set errmodel
+    m_pCheckDelegate->setVisibleRole( Qt::UserRole );
+    m_pRadioDelegate->setVisibleRole( Qt::UserRole );
+
     m_pComboxDelegate = new ComboxDelegate( 1, this );
 
     ui->tableView->setItemDelegateForColumn( 2, m_pRadioDelegate );

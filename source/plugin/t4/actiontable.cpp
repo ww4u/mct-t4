@@ -44,6 +44,8 @@ ActionTable::ActionTable(QWidget *parent) :
 
     m_pCheckDelegate = new CheckDelegate( shape_check, this );
     m_pCheckDelegate->setAlignment( Qt::AlignCenter );
+    //! \note set treemodel
+    m_pCheckDelegate->setVisibleRole( (Qt::ItemDataRole)(Qt::UserRole + 2) );
 
     ui->view->setItemDelegateForColumn( 2, m_pDelegateXYZ );
     ui->view->setItemDelegateForColumn( 3, m_pDelegateXYZ );

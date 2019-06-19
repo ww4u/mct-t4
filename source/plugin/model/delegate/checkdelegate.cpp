@@ -36,6 +36,8 @@ CheckDelegate::CheckDelegate( checkShape shp,
     }
     else
     {}
+
+    mVisibleRole = Qt::DisplayRole;
 }
 
 QWidget *CheckDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &option,
@@ -98,16 +100,39 @@ void CheckDelegate::updateEditorGeometry(QWidget *editor,
 
 void CheckDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,const QModelIndex& index)const
 {
+    //! item visible
+    bool bVisible = true;
+
+    QVariant var;
+    if ( mVisibleRole != Qt::DisplayRole )
+    {
+        var = index.model()->data( index, mVisibleRole );
+        if ( var.isValid() )
+        { bVisible = var.toBool(); }
+        else
+        {}
+    }
+
+    //! item checked
     bool checked = index.model()->data(index, Qt::DisplayRole).toBool();
-    if(index.column() == 8){
+    if ( bVisible )
+    {
         QStyleOptionButton checkBoxStyleOption;
         checkBoxStyleOption.state |= QStyle::State_Enabled;
         checkBoxStyleOption.state |= checked? QStyle::State_On : QStyle::State_Off;
         checkBoxStyleOption.rect = CheckBoxRect(option);
 
-        QApplication::style()->drawControl(QStyle::CE_CheckBox,&checkBoxStyleOption,painter);
-    }else{
-        QStyledItemDelegate::paint(painter, option, index);
+        QStyle::ControlElement tCe;
+        if ( mShape == shape_check )
+        { tCe = QStyle::CE_CheckBox; }
+        else
+        { tCe = QStyle::CE_RadioButton; }
+
+        QApplication::style()->drawControl( tCe,&checkBoxStyleOption,painter);
+    }
+    else
+    {
+        //! invisible do nothing
     }
 }
 
@@ -148,3 +173,8 @@ void CheckDelegate::setAlignment(  Qt::Alignment align )
 { mAlign = align; }
 Qt::Alignment CheckDelegate::alignment()
 { return mAlign; }
+
+void CheckDelegate::setVisibleRole( Qt::ItemDataRole tRole )
+{ mVisibleRole = tRole;  }
+Qt::ItemDataRole CheckDelegate::visibleRole()
+{ return mVisibleRole; }

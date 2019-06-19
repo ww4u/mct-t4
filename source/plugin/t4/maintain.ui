@@ -82,20 +82,18 @@
        <string>Operate</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="5">
-        <spacer name="horizontalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="btnHistory">
+         <property name="text">
+          <string>History</string>
          </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
+         <property name="icon">
+          <iconset resource="../../../res/res.qrc">
+           <normaloff>:/res/image/icon/history.png</normaloff>:/res/image/icon/history.png</iconset>
          </property>
-        </spacer>
+        </widget>
        </item>
-       <item row="5" column="0" colspan="6">
+       <item row="4" column="0" colspan="3">
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -108,17 +106,6 @@
          </property>
         </spacer>
        </item>
-       <item row="4" column="3">
-        <widget class="QPushButton" name="btnClearBackup">
-         <property name="text">
-          <string>Clear Backup</string>
-         </property>
-         <property name="icon">
-          <iconset resource="../../../res/res.qrc">
-           <normaloff>:/res/image/icon/trash.png</normaloff>:/res/image/icon/trash.png</iconset>
-         </property>
-        </widget>
-       </item>
        <item row="0" column="0">
         <widget class="QPushButton" name="btnUpdate">
          <property name="text">
@@ -130,16 +117,18 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
-        <widget class="QPushButton" name="btnBackup">
-         <property name="text">
-          <string>Backup</string>
+       <item row="0" column="2">
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
-         <property name="icon">
-          <iconset resource="../../../res/res.qrc">
-           <normaloff>:/res/image/icon/fuzhi.png</normaloff>:/res/image/icon/fuzhi.png</iconset>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
          </property>
-        </widget>
+        </spacer>
        </item>
        <item row="2" column="0">
         <widget class="QPushButton" name="btnFold">
@@ -163,18 +152,25 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="2">
-        <widget class="QPushButton" name="btnExport">
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_5">
+      <attribute name="title">
+       <string>Backup</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="4" column="0" colspan="2">
+        <widget class="QPushButton" name="btnClearBackup">
          <property name="text">
-          <string>Export</string>
+          <string>Clear Backup</string>
          </property>
          <property name="icon">
           <iconset resource="../../../res/res.qrc">
-           <normaloff>:/res/image/icon/icon_baocun.png</normaloff>:/res/image/icon/icon_baocun.png</iconset>
+           <normaloff>:/res/image/icon/trash.png</normaloff>:/res/image/icon/trash.png</iconset>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item row="1" column="0" rowspan="2" colspan="2">
         <widget class="QPushButton" name="btnRecover">
          <property name="text">
           <string>Recover</string>
@@ -185,16 +181,53 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QPushButton" name="btnHistory">
+       <item row="0" column="0" colspan="2">
+        <widget class="QPushButton" name="btnBackup">
          <property name="text">
-          <string>History</string>
+          <string>Backup</string>
          </property>
          <property name="icon">
           <iconset resource="../../../res/res.qrc">
-           <normaloff>:/res/image/icon/history.png</normaloff>:/res/image/icon/history.png</iconset>
+           <normaloff>:/res/image/icon/fuzhi.png</normaloff>:/res/image/icon/fuzhi.png</iconset>
          </property>
         </widget>
+       </item>
+       <item row="5" column="0">
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="3" column="0" colspan="2">
+        <widget class="QPushButton" name="btnExport">
+         <property name="text">
+          <string>Export</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../res/res.qrc">
+           <normaloff>:/res/image/icon/icon_baocun.png</normaloff>:/res/image/icon/icon_baocun.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <spacer name="horizontalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>

@@ -55,11 +55,6 @@ RoboConfig::RoboConfig(QWidget *parent) :
     //! \note
     ui->buttonBox->button( QDialogButtonBox::Reset )->setVisible( false );
 
-#ifndef _WIN32
-    //! 如果在MRH-T上运行自动添加本地
-    addDeviceWithIP("127.0.0.1");
-#endif
-
     qRegisterMetaType<XSetting>( "XSetting" );
 }
 

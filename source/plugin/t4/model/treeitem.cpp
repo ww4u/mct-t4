@@ -186,13 +186,16 @@ TreeItem *TreeItem::parent()
 bool TreeItem::removeChildren(int position, int count)
 {
     if (position < 0 || position + count > childItems.size())
+    {
         return false;
+    }
 
     //! remove the item
     for (int row = 0; row < count; ++row)
     {
         //! leaf node
         if ( childItems.at( position + row)->level() == 2 )
+
         {
             delete childItems.takeAt(position+row);
         }

@@ -38,11 +38,16 @@ public:
 
     void setAlignment(  Qt::Alignment align );
     Qt::Alignment alignment();
+
+    void setVisibleRole( Qt::ItemDataRole tRole );
+    Qt::ItemDataRole visibleRole();
 protected:
     checkShape mShape;
     Qt::Alignment mAlign;
 
     QSize mPrimSize;
+
+    Qt::ItemDataRole mVisibleRole;
 };
 
 //class myInvertButton : public QPushButton

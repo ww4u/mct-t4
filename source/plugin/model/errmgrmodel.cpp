@@ -91,8 +91,6 @@ QVariant ErrorMgrModel::data(const QModelIndex &index, int role) const
     }
     else if ( role == Qt::BackgroundColorRole )
     { return backRole(index); }
-//    else if ( role == Qt::TextAlignmentRole )
-//    { return QVariant( Qt::AlignCenter ); }
     else
     { return QVariant(); }
 

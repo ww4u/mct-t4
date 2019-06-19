@@ -1113,6 +1113,28 @@ EXPORT_API int CALL mrgRobotRelMoveL(ViSession vi, int robotname, int wavetable,
     return mrgRobotWaitEnd(vi, robotname, wavetable,timeout_ms);
 }
 /*
+* 机器人各关节同步运动
+* vi :visa设备句柄
+* robotname: 机器人名称
+* angleX: 各轴运动的角度
+* time : 移动到目标位置期望使用的时间
+* timeout_ms:表示等待超时时间,0表示无限等待，小于零表示不等待，立即返回
+* 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示等待超时
+*/
+EXPORT_API int CALL mrgRobotMoveJ(ViSession vi, int robotname, float angle0, float angle1, float angle2, float angle3, float angle4, float time, int timeout_ms)
+{
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "ROBOT:MOVE:JOINT %d,%f,%f,%f,%f,%f,%f\n", robotname, time, angle0, angle1, angle2, angle3, angle4);
+    if (busWrite(vi, args, strlen(args)) == 0) {
+        return -1;
+    }
+    if (timeout_ms < 0)
+    {
+        return 0;
+    }
+    return mrgRobotWaitEnd(vi, robotname, -1, timeout_ms);
+}
+/*
 * 设置机器人当前插值模式
 * vi :visa设备句柄
 * robotname: 机器人名称
@@ -2008,7 +2030,7 @@ EXPORT_API int CALL mrgGetRobotToolPosition(ViSession vi, int robotname, float *
 * vi :visa设备句柄
 * robotname: 机器人名称
 * 返回值：大于零 表示返回角度值的个数，小于等于零表示出错
-* 说明: angles是不安全的，请在外部确保angles的空间足够
+* 说明: angles是不安全的，请在外部确保angles的空间足够. 对于T4来说,如果处于零位时,各轴角度为 [0,180,90,90]
 */
 EXPORT_API int CALL mrgGetRobotCurrentAngle(ViSession vi, int robotname,float * angles)
 {
@@ -2029,6 +2051,53 @@ EXPORT_API int CALL mrgGetRobotCurrentAngle(ViSession vi, int robotname,float * 
         count++;
     }
     return count;
+}
+/*
+* 获取机器人当前各关节的角度值,相对于零位的角度
+* vi :visa设备句柄
+* robotname: 机器人名称
+* 返回值：大于零 表示返回角度值的个数，小于等于零表示出错
+* 说明: 此函数只对T4有效
+*     angles是不安全的，请在外部确保angles的空间足够. 对于T4来说,如果处于零位时,各轴角度为 [0,0,0,0]
+*/
+EXPORT_API int CALL mrgGetRobotCurrentAngleRefZero(ViSession vi, int robotname, float * angles)
+{
+    int ret = 0;
+    float tmp[5];
+    ret = mrgGetRobotCurrentAngle(vi, robotname, tmp);
+    for (int i = 0; i < ret; i++)
+    {
+        switch (i)
+        {
+        case 0:
+            angles[0] = tmp[0];
+            if (angles[0] > 180.0)
+            {
+                angles[0] -= 360.0f;
+            }
+            break;
+        case 1:
+            angles[1] = tmp[1] - 180.0f;
+            break;
+        case 2:
+            angles[2] = tmp[2] - 90.0f;
+            if (angles[2] > 180.0)
+            {
+                angles[2] -= 360.0f;
+            }
+            break;
+        case 3:
+            angles[3] = tmp[3] - 90.0f;
+            if (angles[3] > 180.0)
+            {
+                angles[3] -= 360.0f;
+            }
+            break;
+        default:
+            break;
+        }
+    }
+    return ret;
 }
 /*
 * 获取机器人末端的位置坐标

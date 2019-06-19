@@ -56,6 +56,10 @@ private slots:
 
     void on_chkAutoLogin_stateChanged(int arg1);
 
+    void on_btnRecover_clicked();
+
+    void on_btnExport_clicked();
+
 private:
     Ui::Maintain *ui;
 };

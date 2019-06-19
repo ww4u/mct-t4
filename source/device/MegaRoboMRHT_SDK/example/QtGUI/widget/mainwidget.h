@@ -61,9 +61,9 @@ private slots:
 
     void on_pushButtonTest_clicked();
 
-    void TcpReadData();
+    void slotTcpRead();
 
-    void TcpReadError(QAbstractSocket::SocketError);
+    void slotTcpError(QAbstractSocket::SocketError);
 
 
 private:
@@ -94,7 +94,7 @@ private:
 
     TestPanelDialog *m_testPanelDialog;
 
-    QTcpSocket *tcpClient;
+    QTcpSocket *m_tcpClient;
 };
 
 #endif // MAINWIDGET_H

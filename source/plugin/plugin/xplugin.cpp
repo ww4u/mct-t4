@@ -136,7 +136,8 @@ int XPlugin::save( const QString &fileName )
     if ( !bOk )
     { return -1; }
 logDbg()<<path<<name<<theAry.length();
-    int ret = mrgStorageWriteFile( mVi,
+    int ret;
+    ret = mrgStorageWriteFile( mVi,
                                    0,
                                    path.toLatin1().data(),
                                    name.toLatin1().data(),
@@ -326,6 +327,10 @@ QString XPlugin::demoPath()
     return QString(mct_path) + "/" + model() + "/demo";
 }
 
+QString XPlugin::modelPath()
+{
+    return "/home/megarobo/MCT/" + model();
+}
 void XPlugin::lockWorking()
 {
     mEmergMutex.lock();

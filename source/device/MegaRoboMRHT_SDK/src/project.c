@@ -33,7 +33,7 @@ EXPORT_API int CALL mrgProjectIOGet(ViSession vi, IOGET_INDEX index, char *strSt
     char args[SEND_LEN];
     char as8Ret[RECV_LEN];
     int retLen = 0;
-    char *ps8IOtables[] = {"X1","X2","X3","X4","X5","X6","X7","X8","X9","X10",
+    char *ps8IOtables[] = {"ALL","X1","X2","X3","X4","X5","X6","X7","X8","X9","X10",
                            "Y1","Y2","Y3","Y4","STOP", "DB15"};
     if (index >= IOGET_MAXNUM || index < 0 || strState == NULL)
     {
@@ -53,18 +53,28 @@ EXPORT_API int CALL mrgProjectIOGet(ViSession vi, IOGET_INDEX index, char *strSt
 * vi :visa设备句柄
 * index: 0->ALL, 1->YOUT1, 2->YOUT2,3->YOUT3, 4->YOUT4
 * state: 0->low| 1->high
+* mask: 屏蔽位. 如果某一位为1表示屏蔽此位,0表示不屏蔽
 * 返回值：0表示执行成功；－1表示执行失败,-2表示参数错误
-* 说明: 不支持 同时写出YOUT
+* 说明: 当index为零时,表示要同时写出YOUT,此时的state的每一位,表示一个YOUT的状态,mask为相应的屏蔽码.
+*      对于MRHT-29,同步写出,目前只对扩展YOUT有效,暂不支持DB15.
 */
-EXPORT_API int CALL mrgProjectIOSet(ViSession vi, IOSET_INDEX index, int state)
+EXPORT_API int CALL mrgProjectIOSet(ViSession vi, IOSET_INDEX index, int state,int mask)
 {
     char args[SEND_LEN];
     char *ps8OutTable[] = {"ALL","Y1","Y2","Y3","Y4","READY","FAULT","ACK","MC","ENABLED"};
-    if (index >= IOSET_MAXNUM || index < 0 ||(state != 0 && state != 1))
+    if (index >= IOSET_MAXNUM || index < 0)
     {
         return -2;
     }
-    snprintf(args, SEND_LEN, "PROJect:YWRITE %s,%s\n", ps8OutTable[index], state ? "H" : "L");
+    if (index == 0)
+    {
+        snprintf(args, SEND_LEN, "PROJect:YWRITE ALL,%d,%d\n",state, mask);
+    }
+    else
+    {
+        snprintf(args, SEND_LEN, "PROJect:YWRITE %s,%s\n", ps8OutTable[index], (state&0x01) ? "H" : "L");
+    }
+    
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
         return -1;

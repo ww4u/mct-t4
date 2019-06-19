@@ -28,6 +28,7 @@ public:
 
 protected:
     virtual void retranslateUi();
+    virtual void onPluginChanged();
 
 public:
     void setModel( QAbstractTableModel *pModel );
@@ -50,8 +51,8 @@ private:
     ComboxDelegate *m_pComboxDelegate;
 
 protected Q_SLOTS:
-    void slot_request_save();
-    void slot_request_load();
+//    void slot_request_save();
+//    void slot_request_load();
 
     void slot_data_changed();
 };

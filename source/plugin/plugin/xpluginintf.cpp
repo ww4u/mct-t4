@@ -337,6 +337,11 @@ void XPluginIntf::attachVi( int vi )
 int XPluginIntf::deviceVi()
 { return mVi; }
 
+void XPluginIntf::lockVi()
+{ mRWMutex.lock(); }
+void XPluginIntf::unlockVi()
+{ mRWMutex.unlock(); }
+
 void XPluginIntf::setUserRole( eUserRole role )
 {
     mUserRole = role;

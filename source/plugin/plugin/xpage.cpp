@@ -64,7 +64,7 @@ void XPage::attachPlugin( XPlugin *pPlugin )
     //! virtual
     connectPlugin();
 
-    updateUi();
+//    updateUi();
 
     onPluginChanged();
 }

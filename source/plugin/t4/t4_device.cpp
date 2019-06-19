@@ -3,7 +3,7 @@
 #include <QTcpSocket>
 #include <QHostAddress>
 #include "MegaGateway.h"
-
+#include <QAbstractSocket>
 #include "../../../include/mystd.h"
 
 #include "../../plugin/xpluginworkingthread.h"
@@ -139,13 +139,17 @@ int MRX_T4::_open( int &vi )
         if ( NULL == m_pExceptionSocket )
         { ret = -1; break; }
 
+        connect( m_pExceptionSocket, SIGNAL(readyRead()), this, SLOT(slot_exception_arrived()));
+        connect( m_pExceptionSocket, SIGNAL(error(QAbstractSocket::SocketError)),
+                 this, SLOT(slotSocketError(QAbstractSocket::SocketError)) );
+
         //! bind success
         QString pureIp = secList.at(1);
         m_pExceptionSocket->connectToHost( pureIp, MEGAROBO_TCP_EXCEPTION_PORT );
         bool b = m_pExceptionSocket->waitForConnected( 200 );
         if ( b )
         {
-            connect( m_pExceptionSocket, SIGNAL(readyRead()), this, SLOT(slot_exception_arrived()));
+            //connect( m_pExceptionSocket, SIGNAL(readyRead()), this, SLOT(slot_exception_arrived()));
         }
         //! \note connect fail, still use the device
         else

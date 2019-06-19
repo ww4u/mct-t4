@@ -211,19 +211,25 @@ int mrgErrorLogUpload(ViSession vi, int format, char* errorLog)
     {
         return -2;
     }
+
+    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_lock(&mutex);
     snprintf(args, SEND_LEN, ":ERRLOG:UPLOAD? %s\n", as8Format[format]);
     if (busWrite(vi, args, strlen(args)) == 0)
     {
+        pthread_mutex_unlock(&mutex);
         return 0;
     }
     // 1. 先读回一个#9的头。
     retlen = busRead(vi, as8Ret, 12);
     if (retlen <= 0)
     {
+        pthread_mutex_unlock(&mutex);
         return retlen;
     }
     if (as8Ret[0] != '#')//格式错误
     {
+        pthread_mutex_unlock(&mutex);
         return count;
     }
     lenOfLen = as8Ret[1] - 0x30;
@@ -231,6 +237,7 @@ int mrgErrorLogUpload(ViSession vi, int format, char* errorLog)
     left = strtoul(as8StrLen, NULL, 10);
     if (left == 0)
     {
+        pthread_mutex_unlock(&mutex);
         return 0;
     }
     errorLog[0] = as8Ret[11];
@@ -247,6 +254,7 @@ int mrgErrorLogUpload(ViSession vi, int format, char* errorLog)
         count += retlen;
         left -= retlen;
     }
+    pthread_mutex_unlock(&mutex);
     return count;
 }
 

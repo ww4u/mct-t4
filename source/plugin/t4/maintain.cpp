@@ -140,7 +140,10 @@ void Maintain::on_btnHistory_clicked()
                         update_file_name,
                         (quint8*)ary.data() );
     if ( ret <= 0 )
-    { return; }
+    {
+        sysError(tr("Read File Fail"));
+        return;
+    }
 
     ary.resize( ret );
 
@@ -358,11 +361,19 @@ void Maintain::on_btnResetPw_clicked()
 
 void Maintain::on_chkAutoLogin_stateChanged(int arg1)
 {
+    Q_ASSERT( m_pPlugin != NULL );
     m_pPlugin->setAutoLogin( ui->chkAutoLogin->isChecked() );
 }
 
+void Maintain::on_btnRecover_clicked()
+{
+
 }
 
+void Maintain::on_btnExport_clicked()
+{
 
+}
 
+}
 

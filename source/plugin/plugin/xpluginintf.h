@@ -125,6 +125,9 @@ public:
     void attachVi( int vi );
     int deviceVi();
 
+    void lockVi();
+    void unlockVi();
+
     void setUserRole( eUserRole role );
     eUserRole userRole();
     bool isAdmin();
@@ -136,6 +139,7 @@ protected:
     //! \note view addr for the user view
     QString mModel, mAddr, mViewAddr;
     int mVi;
+    QMutex mRWMutex;
 
     QString mSN, mFirmwareVer, mMechanicalVer;
 
@@ -150,6 +154,7 @@ protected:
     bool mbAutoLogin;
     QString mUserPw, mAdminPw;
     eUserRole mUserRole;
+
 };
 
 #endif // XPLUGININTF_H

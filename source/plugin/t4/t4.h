@@ -1,8 +1,9 @@
 #ifndef MRX_T4_H
 #define MRX_T4_H
 
-#include <QObject>
 
+#include <QObject>
+#include <QTcpSocket>
 #include <float.h>
 #include "../plugin/xplugin.h"
 #include "../model/errmgrmodel.h"
@@ -75,10 +76,9 @@
 
 //! file names
 #define record_file_name  "MCT_motion.mrp"
-#define error_mgr_file_name "errmgr.xml"
+//#define error_mgr_file_name "errmgr.xml"
 #define config_file_name  "config.xml"
 #define debug_file_name "debug.xml"
-#define diagnosis_file_name "diagnosis.xml"
 
 #define update_file_name    "update.txt"
 
@@ -95,7 +95,7 @@ class ActionTable;
 class T4OpPanel;
 }
 class SequenceItem;
-class QTcpSocket;
+
 class MRX_T4 : public XPlugin, public T4Para
 {
     Q_OBJECT
@@ -143,6 +143,7 @@ protected Q_SLOTS:
     void slot_save_setting();
     void slot_load_setting();
     void slot_exception_arrived();
+    void slotSocketError(QAbstractSocket::SocketError e);
 
 public:
     virtual bool isOnLine();

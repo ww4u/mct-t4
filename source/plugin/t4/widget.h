@@ -23,7 +23,7 @@ public:
 
     void attatchPlugin(XPlugin *xp);
 
-    void reOpenDevice();
+    int reOpenDevice();
 
     void Append(const QString &text);
 
@@ -33,7 +33,13 @@ public:
 
     void destory();
 
-    void callback();
+    int upgressMRH();
+
+    void showError(const QString &text);
+
+    int copyDemo();
+
+    int copyUpdateInfo();
 
 private slots:
     void on_buttonBox_clicked(QAbstractButton *button);
@@ -42,23 +48,22 @@ private slots:
 
     void slot_updateMRH();
 
-    void slot_undo_finished(int i, QProcess::ExitStatus e);
-
-    void slot_updateMRH_finish(int i, QProcess::ExitStatus e);
-
     void slot_startMRQUpdate(int);
+
+    void slotReadUndoResult(QString);
+
+    void slotReadMRQResult(QString);
 
 signals:
     void AppendText(const QString &text);
     void sigReboot();
-    void sigError( QString s );
     void sigProgress( int i );
-    void sigComplete();
+
 private slots:
-    void SlotAppendText(const QString &text);
+//    void SlotAppendText(const QString &text);
     void slotReboot();
     void on_btnShow_toggled(bool checked);
-    void slotHandleError();
+    void slotGetRunState();
 
 private:
     Ui::Widget *ui;
@@ -72,6 +77,37 @@ private:
 
     QProcess *proUpdateMRQ;
 
+    QFutureWatcher<int> *watcher;
+
+    bool isAdmin;
+
 };
 
 #endif // WIDGET_H
+
+class MThead: public QThread
+{
+    Q_OBJECT
+
+public:
+    MThead(QObject *parent = 0);
+
+    void setExeCmd(const QString &str){ cmd = str; }
+    void setArguments(const QStringList &list){ argument = list; }
+
+protected:
+    virtual void run();
+
+signals:
+    void resultReady( QString );
+
+private:
+    QProcess *m_process;
+
+    QString cmd;
+    QStringList argument;
+
+private slots:
+    void slotReadyRead();
+};
+

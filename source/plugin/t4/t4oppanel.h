@@ -400,7 +400,6 @@ protected Q_SLOTS:
 
     //! diagnosis
     void slot_save_debug();
-    void slot_save_diagnosis();
 
     void slot_request_save();
     void slot_request_load();

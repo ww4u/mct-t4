@@ -9,6 +9,7 @@ extern "C" {
 
 typedef enum
 {
+    IOGET_ALL,
     IOGET_X1,
     IOGET_X2,
     IOGET_X3,
@@ -64,10 +65,12 @@ EXPORT_API int CALL mrgProjectIOGet(ViSession vi, IOGET_INDEX index, char *strSt
 * vi :visa设备句柄
 * index: 0->ALL, 1->YOUT1, 2->YOUT2,3->YOUT3, 4->YOUT4
 * state: 0->low| 1->high
+* mask: 屏蔽位. 如果某一位为1表示屏蔽此位,0表示不屏蔽
 * 返回值：0表示执行成功；－1表示执行失败,-2表示参数错误
-* 说明: 不支持 同时写出YOUT
+* 说明: 当index为零时,表示要同时写出YOUT,此时的state的每一位,表示一个YOUT的状态,mask为相应的屏蔽码.
+*      对于MRHT-29,同步写出,目前只对扩展YOUT有效,暂不支持DB15.
 */
-EXPORT_API int CALL mrgProjectIOSet(ViSession vi, IOSET_INDEX index, int state);
+EXPORT_API int CALL mrgProjectIOSet(ViSession vi, IOSET_INDEX index, int state, int mask);
 /*
 * 设置系统的序列号
 * vi :visa设备句柄

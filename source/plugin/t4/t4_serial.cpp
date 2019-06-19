@@ -18,7 +18,6 @@ void MRX_T4::slot_save_pw()
     QString path = selfPath();
 
     //! save file
-//    QString fileName = path + "/" + password_file_name;
     ret = savePw( path, QString(password_file_name) );
     if ( ret != 0 )
     {
@@ -115,3 +114,10 @@ void MRX_T4::slot_exception_arrived()
     }
 
 }
+
+void MRX_T4::slotSocketError(QAbstractSocket::SocketError e)
+{
+    logDbg() <<"Socket error: "<< e
+    << m_pExceptionSocket->errorString();
+}
+

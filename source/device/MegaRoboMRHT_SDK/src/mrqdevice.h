@@ -753,8 +753,8 @@ EXPORT_API int CALL mrgMRQPVTWavetableSize_Query(ViSession vi, int name,int ch, 
 *resp:编码器步数偏差超过阈值后的响应方式 0:NONE;1:ALARM;2:STOP;3:ALARM&STOP
 *返回值：0表示执行成功，－1表示失败
 */
-EXPORT_API int CALL mrgMRQLostStepLineConfig_Query(ViSession vi, int name, 
-                                                   int ch, int wavetable, int *ps32State,float *pf32Threshold, int *ps32Resp);
+EXPORT_API int CALL mrgMRQLostStepLineConfig_Query(ViSession vi, int name,
+                                                   int ch, int wavetable, int *ps32State,unsigned short *pu16Threshold, int *ps32Resp);
 /*
 *设置失步的状态,阈值及失步后的反应
 *vi :visa设备句柄

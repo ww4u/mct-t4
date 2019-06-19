@@ -7,6 +7,7 @@
 #include <QThread>
 #include <QInputDialog>
 #include <QFileDialog>
+#include <QNetworkProxy>
 
 #include "mainwidget.h"
 #include "sysapi.h"
@@ -72,11 +73,12 @@ MainWidget::MainWidget(QWidget *parent) :
 
     initUpdateInfoThread();
 
-    tcpClient = new QTcpSocket(this);   //实例化tcpClient
-    tcpClient->abort();                 //取消原有连接
-    connect(tcpClient, SIGNAL(readyRead()), this, SLOT(TcpReadData()));
-    connect(tcpClient, SIGNAL(error(QAbstractSocket::SocketError)),
-            this, SLOT(TcpReadError(QAbstractSocket::SocketError)));
+    m_tcpClient = new QTcpSocket(this);   //实例化tcpClient
+    m_tcpClient->setProxy(QNetworkProxy::NoProxy);
+    m_tcpClient->abort();                 //取消原有连接
+    connect(m_tcpClient, SIGNAL(readyRead()), this, SLOT(slotTcpRead()));
+    connect(m_tcpClient, SIGNAL(error(QAbstractSocket::SocketError)),
+            this, SLOT(slotTcpError(QAbstractSocket::SocketError)));
 
 }
 
@@ -151,8 +153,8 @@ void MainWidget::slotOpenGateway()
         if( m_strVisaDesc.contains("TCPIP") )
         {
             QString strIP = m_strVisaDesc.split("::", QString::SkipEmptyParts).at(1);
-            tcpClient->connectToHost(strIP, MEGAROBO_TCP_EXCEPTION_PORT );
-            if ( !tcpClient->waitForConnected(1000) )
+            m_tcpClient->connectToHost(strIP, MEGAROBO_TCP_EXCEPTION_PORT );
+            if ( !m_tcpClient->waitForConnected(1000) )
             {
                 QMessageBox::critical(this, "错误", "连接网关的异常上报服务失败!!!");
             }
@@ -186,11 +188,11 @@ void MainWidget::slotCloseGateway()
     {
         if(m_strVisaDesc.contains("TCPIP") )
         {
-            if( tcpClient->state() == QAbstractSocket::ConnectedState )
+            if( m_tcpClient->state() == QAbstractSocket::ConnectedState )
             {
-                tcpClient->disconnectFromHost();
-                if (tcpClient->state() == QAbstractSocket::UnconnectedState
-                        || tcpClient->waitForDisconnected(1000))
+                m_tcpClient->disconnectFromHost();
+                if (m_tcpClient->state() == QAbstractSocket::UnconnectedState
+                        || m_tcpClient->waitForDisconnected(1000))
                 {
                     qDebug() << "TCP Disconnect!";
                 }
@@ -401,9 +403,9 @@ QString MainWidget::getRobotCurrentState()
     return QString(state);
 }
 
-void MainWidget::TcpReadData()
+void MainWidget::slotTcpRead()
 {
-    QByteArray buffer = tcpClient->readAll();
+    QByteArray buffer = m_tcpClient->readAll();
     if(buffer.isEmpty())
     {
         return;
@@ -420,10 +422,10 @@ void MainWidget::TcpReadData()
     QMessageBox::critical(this, "错误", QString("控制器异常!\n  错误码: %1 ").arg(strRecv) );
 }
 
-void MainWidget::TcpReadError(QAbstractSocket::SocketError)
+void MainWidget::slotTcpError(QAbstractSocket::SocketError)
 {
-    tcpClient->disconnectFromHost();
-    QMessageBox::critical(this, "错误", QString("TCP出错,连接中断(%1)").arg(tcpClient->errorString()) );
+    m_tcpClient->disconnectFromHost();
+    QMessageBox::critical(this, "错误", QString("TCP出错,连接中断(%1)").arg(m_tcpClient->errorString()) );
 }
 
 void MainWidget::initUpdateInfoThread()
@@ -456,17 +458,17 @@ void MainWidget::initUpdateInfoThread()
 
             ui->label_robotState->setText(getRobotCurrentState());
 
-            int code = 0;
-            char errBuf[1024] = "";
-            mrgGetRobotErrorInfo(m_vi, m_robotID, &code, errBuf);
-            if(code != 0)
-            {
-                ui->label_ErrorMsg->setText("ERROR[" + QString::number(code) + "]\n" + QString(errBuf));
-            }
-            else
-            {
-                ui->label_ErrorMsg->setText( " " );
-            }
+//            int code = 0;
+//            char errBuf[1024] = "";
+//            mrgGetRobotErrorInfo(m_vi, m_robotID, &code, errBuf);
+//            if(code != 0)
+//            {
+//                ui->label_ErrorMsg->setText("ERROR[" + QString::number(code) + "]\n" + QString(errBuf));
+//            }
+//            else
+//            {
+//                ui->label_ErrorMsg->setText( " " );
+//            }
 
             QThread::msleep(500);
         }

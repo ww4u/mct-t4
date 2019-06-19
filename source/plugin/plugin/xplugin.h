@@ -193,6 +193,7 @@ public:
     QString homePath();
     QString selfPath();
     QString demoPath();
+    QString modelPath();
 
 public:
     void lockWorking();

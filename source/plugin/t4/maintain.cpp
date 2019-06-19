@@ -448,16 +448,16 @@ void Maintain::on_btnExport_clicked()
                 foreach (QString sFile, subFileList) {
                     QByteArray ba;
                     ret = mrgStorageGetFileSize(m_pPlugin->deviceVi(), 0, (path+str+sd).toLocal8Bit().data(), sFile.toLocal8Bit().data());
-                    if(ret<=0){
+                    if(ret<0){
                         continue;
                     }
                     ba.resize(ret);
                     ret = mrgStorageReadFile(m_pPlugin->deviceVi(), 0, (path+str+sd).toLocal8Bit().data(), sFile.toLocal8Bit().data(),(quint8*)ba.data());
-                    if( ret <=0 ){
+                    if( ret <0 ){
                         continue;
                     }
-                    QDir tDir;
-                    if( !tDir.mkpath(dir + "/" + str+sd) )
+                    QDir tDir;logDbg() << dir+str+sd << sFile;
+                    if( !tDir.mkpath(dir +"/"+ str+sd) )
                         continue;
                     QFile f(dir+"/"+str+sd+sFile);
                     if(!f.open(QIODevice::WriteOnly)){

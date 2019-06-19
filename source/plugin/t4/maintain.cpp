@@ -456,7 +456,7 @@ void Maintain::on_btnExport_clicked()
                     if( ret <0 ){
                         continue;
                     }
-                    QDir tDir;logDbg() << dir+str+sd << sFile;
+                    QDir tDir;logDbg() << dir+"/"+str+sd+sFile;
                     if( !tDir.mkpath(dir +"/"+ str+sd) )
                         continue;
                     QFile f(dir+"/"+str+sd+sFile);

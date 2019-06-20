@@ -1336,9 +1336,16 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
         return ret;
 
     //! \todo Terminal move
-    speed = pRobo->mMaxJointSpeeds.at(4) * pItem->v / 100.0;
-    //ret = mrgRobotToolExe(robot_var(), pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
-    //ret = mrgRobotJointMove(robot_var(), 4, pItem->h, 80/speed, guess_dist_time_ms( 80/speed, 80 ));
+    if ( qAbs( pItem->h ) > FLT_EPSILON )
+    {
+        speed = pRobo->mMaxJointSpeeds.at(4) * pItem->v / 100.0;
+        ret = mrgRobotJointMove(robot_var(), 4,
+                                pItem->h,
+                                qAbs(pItem->h)/speed, guess_dist_time_ms( qAbs(pItem->h)/speed, qAbs(pItem->h)) );
+
+        if( ret != 0 )
+        { return ret; }
+    }
 
     return ret;
 }

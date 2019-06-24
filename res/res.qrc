@@ -112,5 +112,6 @@
         <file>image/icon/play-circle.png</file>
         <file>image/icon/history.png</file>
         <file>image/icon/upgrade.png</file>
+        <file>image/icon/folder.png</file>
     </qresource>
 </RCC>

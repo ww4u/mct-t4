@@ -12,6 +12,8 @@
 #include "../../model/delegate/dspindelegate.h"
 #include "../../model/delegate/checkdelegate.h"
 
+#include "filemanager.h"
+
 namespace Ui {
 class ActionTable;
 }
@@ -158,6 +160,7 @@ private slots:
     void on_toolClr_clicked();
     void on_toolInsert_clicked();
     void on_view_clicked(const QModelIndex &index);
+
 };
 
 }

@@ -76,7 +76,7 @@ typedef unsigned long ViSession;
 #define STRCASECMP(x,y)		strcasecmp(x,y)
 #define STRNCASECMP         strncasecmp
 #define STRTOK_S(x,y,z)     	strtok_r(x,y,z)
-#define msSleep(x)            usleep( ((x) * 1000) )
+//#define msSleep(x)            usleep( ((x) * 1000) )
 
 #define EXPORT_API 
 #define CALL

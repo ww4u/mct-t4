@@ -68,8 +68,8 @@
 #define distance_error      (0.001)
 
 #define guess_dist_calc_time_ms( dist )    (dist * 1000)
-//! 运行时间+计算时间+交互时间
-#define guess_dist_time_ms( ts, dist )     ( (ts)*1000 + guess_dist_calc_time_ms(dist) + 500)
+//! 运行时间+计算时间+交互时间   交互时间>800 ms 下发指令到runing状态大概900ms左右
+#define guess_dist_time_ms( ts, dist )     ( (ts)*1000 + guess_dist_calc_time_ms(dist) + 2000)
 
 #define rel_to_abs_speed( rel ) ( rel/100.0*pRobo->mMaxTerminalSpeed )
 

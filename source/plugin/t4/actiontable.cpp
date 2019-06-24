@@ -90,6 +90,7 @@ ActionTable::ActionTable(QWidget *parent) :
 
     spySetting( MRX_T4::e_add_record );
     spySetting( MRX_T4::e_edit_record );
+
 }
 
 ActionTable::~ActionTable()
@@ -774,8 +775,16 @@ int ActionTable::absToHere( QList<QVariant> &vars )
 
     //! \todo the terminal is rel
     speed = pRobo->mMaxJointSpeeds.at(4) * vars.at(6).toDouble() / 100.0;
-    //ret = mrgRobotToolExe(robot_var(), vars.at(5).toDouble(), 80/speed, guess_dist_time_ms( 80/speed, 80 ));
-    ret = mrgRobotJointMove(robot_var(), 4, vars.at(5).toDouble(), 80/speed, guess_dist_time_ms( 80/speed, 80 ));
+    double dis = vars.at(5).toDouble();
+    if( qAbs( dis )>FLT_EPSILON ){
+        speed = pRobo->mMaxJointSpeeds.at(4) * vars.at(6).toDouble() / 100.0;
+        ret = mrgRobotToolExe(robot_var(),
+                              dis,
+                              qAbs(dis)/speed,
+                              guess_dist_time_ms( qAbs( dis )/speed, qAbs(dis))
+                              );
+        if(ret!=0){return ret;}
+    }
 
     return ret;
 }
@@ -1225,38 +1234,44 @@ void ActionTable::on_toolImport_clicked()
 //! \todo list the files
 void ActionTable::on_toolOpen_clicked()
 {
-    QString descripton;
-    bool bOk;
-    descripton = QInputDialog::getText( this,
-                                        tr("Open"),
-                                        tr("Name:"),
-                                        QLineEdit::Normal,
-                                        "mrx-t4_motion_" + QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss_zzz" ),
-                                        &bOk
-                                        );
-    if ( !bOk )
-    { return; }
+//    QString descripton;
+//    bool bOk;
+//    descripton = QInputDialog::getText( this,
+//                                        tr("Open"),
+//                                        tr("Name:"),
+//                                        QLineEdit::Normal,
+//                                        "mrx-t4_motion_" + QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss_zzz" ),
+//                                        &bOk
+//                                        );
+//    if ( !bOk )
+//    { return; }
 
-    //! simple
-    descripton = descripton.simplified();
-    if ( descripton.isEmpty() )
-    {
-        sysPrompt( tr("Invalid description"), 0 );
-        return;
-    }
+//    //! simple
+//    descripton = descripton.simplified();
+//    if ( descripton.isEmpty() )
+//    {
+//        sysPrompt( tr("Invalid description"), 0 );
+//        return;
+//    }
 
-    //!
-    if ( descripton.endsWith(".mrp"), Qt::CaseInsensitive )
-    {
-        descripton.remove( descripton.length() - 4, 4 );
-    }
-    else
-    {}
-    descripton.append( ".mrp" );
+//    //!
+//    if ( descripton.endsWith(".mrp"), Qt::CaseInsensitive )
+//    {
+//        descripton.remove( descripton.length() - 4, 4 );
+//    }
+//    else
+//    {}
+//    descripton.append( ".mrp" );
 
-    int ret = _doLoad( descripton );
-    if ( ret != 0 )
-    { sysError( tr("Load record fail") ); }
+//    int ret = _doLoad( descripton );
+//    if ( ret != 0 )
+//    { sysError( tr("Load record fail") ); }
+
+    FileManager filemg;
+    filemg.attachPlugin(m_pPlugin);
+    filemg.setPath(m_pPlugin->demoPath());
+    filemg.setTitle(tr("Open Demo"));
+    filemg.exec();
 }
 
 //! \todo list the files

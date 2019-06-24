@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "../plugin/xpage.h"
+#include "filemanager.h"
 namespace Ui {
 class Maintain;
 }
@@ -62,6 +63,8 @@ private slots:
 
 private:
     Ui::Maintain *ui;
+
+    FileManager *m_fileMg;
 };
 
 }

@@ -173,7 +173,7 @@
        <item row="1" column="0" rowspan="2" colspan="2">
         <widget class="QPushButton" name="btnRecover">
          <property name="text">
-          <string>Recover</string>
+          <string>Restore</string>
          </property>
          <property name="icon">
           <iconset resource="../../../res/res.qrc">

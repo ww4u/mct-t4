@@ -628,7 +628,7 @@ int T4OpPanel::pingTick( void *pContext )
     //! read only one time
     int ret;
     char idn[128];
-    for ( int i = 0; i < 1; i++ )
+    for ( int i = 0; i < 3; i++ )
     {
         ret = mrgGateWayIDNQuery( (ViSession)pRobo->deviceVi(), idn );
         //! read fail

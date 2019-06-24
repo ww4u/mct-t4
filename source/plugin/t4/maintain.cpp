@@ -21,6 +21,8 @@ Maintain::Maintain(QWidget *parent) :
     setContextHelp("maintain");
 
     on_cmbDemo_currentIndexChanged( ui->cmbDemo->currentIndex() );
+
+    m_fileMg = new FileManager;
 }
 
 Maintain::~Maintain()
@@ -372,103 +374,106 @@ void Maintain::on_btnRecover_clicked()
 
 void Maintain::on_btnExport_clicked()
 {
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Open"));
-    logDbg() << dir;
-    QString path;
-    int ret;
-    do{
-        path = m_pPlugin->selfPath() + "/backup/";
-        char buf[4096]="";
-        int iLen = sizeof(buf);
-        ret = mrgStorageDirectoryEnum( m_pPlugin->deviceVi(), 0, path.toLocal8Bit().data(), buf, &iLen);
-        qDebug() << QString(buf);
-        if(ret<0){
-            ret = -1;
-            break;
-        }else{
-            if(ret=0){
-                sysPrompt(tr("No File To Export"),2);
-                return;
-            }
-        }
+    m_fileMg->attachPlugin(m_pPlugin);
+    m_fileMg->setPath(m_pPlugin->selfPath()+"/backup/");
+    m_fileMg->show();
 
-        QStringList dirList = QString(buf).split("\n", QString::SkipEmptyParts);
-        foreach (QString str, dirList) {
-            //! file list
-            char tBuf[4096]={0};
-            int tLen = sizeof(tBuf);
-            ret = mrgStorageDirectoryEnum( m_pPlugin->deviceVi(), 0, (path + str).toLocal8Bit().data(), tBuf, &tLen);
-            if( ret < 0 ){
-                ret = -1;
-                break;
-            }
+//    QString dir = QFileDialog::getExistingDirectory(this, tr("Open"));
+//    logDbg() << dir;
+//    QString path;
+//    int ret;
+//    do{
+//        path = m_pPlugin->selfPath() + "/backup/";
+//        char buf[4096]="";
+//        int iLen = sizeof(buf);
+//        ret = mrgStorageDirectoryEnum( m_pPlugin->deviceVi(), 0, path.toLocal8Bit().data(), buf, &iLen);
+//        if(ret<0){
+//            ret = -1;
+//            break;
+//        }else{
+//            if(ret==0){
+//                sysPrompt(tr("No File To Export"),2);
+//                return;
+//            }
+//        }
 
-            QStringList tList = QString(tBuf).split("\n", QString::SkipEmptyParts);
-            QStringList subDirList,subFileList;
-            foreach (QString t, tList) {
-                if(t.endsWith("/")){
-                    subDirList << t;
-                }else{
-                    subFileList << t;
-                }
-            }
+//        QStringList dirList = QString(buf).split("\n", QString::SkipEmptyParts);
+//        foreach (QString str, dirList) {
+//            //! file list
+//            char tBuf[4096]={0};
+//            int tLen = sizeof(tBuf);
+//            ret = mrgStorageDirectoryEnum( m_pPlugin->deviceVi(), 0, (path + str).toLocal8Bit().data(), tBuf, &tLen);
+//            if( ret < 0 ){
+//                ret = -1;
+//                break;
+//            }
 
-            //! subFile
-            foreach (QString s, subFileList) {
-                QByteArray ba;
-                ret = mrgStorageGetFileSize(m_pPlugin->deviceVi(), 0, (path + str).toLocal8Bit().data(), s.toLocal8Bit().data());
-                if( ret < 0){
-                    continue;
-                }
-                ba.resize(ret);
-                ret = mrgStorageReadFile(m_pPlugin->deviceVi(), 0, (path+str).toLocal8Bit().data(), s.toLocal8Bit().data(),(quint8*)ba.data());
-                if( ret <=0 ){
-                    continue;
-                }
-                QDir tDir;
-                if( !tDir.mkpath(dir + "/" + str) )
-                    continue;
-                QFile f(dir+"/"+str+s);
-                if(!f.open(QIODevice::WriteOnly)){
-                    continue;
-                }
-                f.write(ba);
-                f.close();
-            }
+//            QStringList tList = QString(tBuf).split("\n", QString::SkipEmptyParts);
+//            QStringList subDirList,subFileList;
+//            foreach (QString t, tList) {
+//                if(t.endsWith("/")){
+//                    subDirList << t;
+//                }else{
+//                    subFileList << t;
+//                }
+//            }
 
-            //! subDir
-            foreach (QString sd, subDirList) {
-                char sdBuf[4096]="";
-                int sdLen = sizeof(sdBuf);
-                ret = mrgStorageDirectoryEnum(m_pPlugin->deviceVi(), 0, (path+str+sd).toLocal8Bit().data(), sdBuf, &sdLen);
-                if(ret<0){
-                    continue;
-                }
-                QStringList subFileList = QString(sdBuf).split("\n", QString::SkipEmptyParts);
-                foreach (QString sFile, subFileList) {
-                    QByteArray ba;
-                    ret = mrgStorageGetFileSize(m_pPlugin->deviceVi(), 0, (path+str+sd).toLocal8Bit().data(), sFile.toLocal8Bit().data());
-                    if(ret<0){
-                        continue;
-                    }
-                    ba.resize(ret);
-                    ret = mrgStorageReadFile(m_pPlugin->deviceVi(), 0, (path+str+sd).toLocal8Bit().data(), sFile.toLocal8Bit().data(),(quint8*)ba.data());
-                    if( ret <0 ){
-                        continue;
-                    }
-                    QDir tDir;logDbg() << dir+"/"+str+sd+sFile;
-                    if( !tDir.mkpath(dir +"/"+ str+sd) )
-                        continue;
-                    QFile f(dir+"/"+str+sd+sFile);
-                    if(!f.open(QIODevice::WriteOnly)){
-                        continue;
-                    }
-                    f.write(ba);
-                    f.close();
-                }
-            }
+//            //! subFile
+//            foreach (QString s, subFileList) {
+//                QByteArray ba;
+//                ret = mrgStorageGetFileSize(m_pPlugin->deviceVi(), 0, (path + str).toLocal8Bit().data(), s.toLocal8Bit().data());
+//                if( ret < 0){
+//                    continue;
+//                }
+//                ba.resize(ret);
+//                ret = mrgStorageReadFile(m_pPlugin->deviceVi(), 0, (path+str).toLocal8Bit().data(), s.toLocal8Bit().data(),(quint8*)ba.data());
+//                if( ret <=0 ){
+//                    continue;
+//                }
+//                QDir tDir;
+//                if( !tDir.mkpath(dir + "/" + str) )
+//                    continue;
+//                QFile f(dir+"/"+str+s);
+//                if(!f.open(QIODevice::WriteOnly)){
+//                    continue;
+//                }
+//                f.write(ba);
+//                f.close();
+//            }
 
-        }
-    }while(0);
+//            //! subDir
+//            foreach (QString sd, subDirList) {
+//                char sdBuf[4096]="";
+//                int sdLen = sizeof(sdBuf);
+//                ret = mrgStorageDirectoryEnum(m_pPlugin->deviceVi(), 0, (path+str+sd).toLocal8Bit().data(), sdBuf, &sdLen);
+//                if(ret<0){
+//                    continue;
+//                }
+//                QStringList subFileList = QString(sdBuf).split("\n", QString::SkipEmptyParts);
+//                foreach (QString sFile, subFileList) {
+//                    QByteArray ba;
+//                    ret = mrgStorageGetFileSize(m_pPlugin->deviceVi(), 0, (path+str+sd).toLocal8Bit().data(), sFile.toLocal8Bit().data());
+//                    if(ret<0){
+//                        continue;
+//                    }
+//                    ba.resize(ret);
+//                    ret = mrgStorageReadFile(m_pPlugin->deviceVi(), 0, (path+str+sd).toLocal8Bit().data(), sFile.toLocal8Bit().data(),(quint8*)ba.data());
+//                    if( ret <0 ){
+//                        continue;
+//                    }
+//                    QDir tDir;logDbg() << dir+"/"+str+sd+sFile;
+//                    if( !tDir.mkpath(dir +"/"+ str+sd) )
+//                        continue;
+//                    QFile f(dir+"/"+str+sd+sFile);
+//                    if(!f.open(QIODevice::WriteOnly)){
+//                        continue;
+//                    }
+//                    f.write(ba);
+//                    f.close();
+//                }
+//            }
+
+//        }
+//    }while(0);
 }
 }

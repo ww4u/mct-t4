@@ -56,10 +56,17 @@ EXPORT_API int CALL mrgSetProjectMode(ViSession vi, int state);
 * 查询外部IO的状态
 * vi :visa设备句柄
 * index: 0->所有,1->X1,2->X2...
-* pu32State: 每一位表示一个IO的状态
+* strState: 各个IO的状态,使用逗号分隔. "H,H,L,L"
 * 返回值：0表示执行成功；－1表示执行失败,-2表示参数错误
 */
 EXPORT_API int CALL mrgProjectIOGet(ViSession vi, IOGET_INDEX index, char *strState);
+/*
+* 查询外部IO的状态
+* vi :visa设备句柄
+* state: 每一位表示一个IO的状态
+* 返回值：0表示执行成功；－1表示执行失败,-2表示参数错误
+*/
+EXPORT_API int CALL mrgProjectIOGetAll(ViSession vi,int *state);
 /*
 * 设置系统的外部输出IO的状态
 * vi :visa设备句柄
@@ -93,6 +100,11 @@ EXPORT_API int CALL mrgProjectGetSerialNum(ViSession vi, char * ps8Serial);
  * 说明：此函数为工程接口函数，不对外开放
  */
 EXPORT_API int CALL mrgWriteDeviceSerial(ViSession  vi, int name, char * ps8Serial);
+
+EXPORT_API int CALL mrgCanTestStart(ViSession  vi, int name);
+EXPORT_API int CALL mrgCanTestStop(ViSession  vi, int name);
+EXPORT_API int CALL mrgGetCanTestResult(ViSession  vi, int name, unsigned int * pu32Send, unsigned int * pu32Rec, unsigned int * pu32Lost, unsigned int * pu32Time_ms);
+
 
 #if defined(__cplusplus) || defined(__cplusplus__)
 }

@@ -27,6 +27,13 @@ MainWidget::MainWidget(QWidget *parent) :
     m_robotType = "";
     m_deviceID = 0;
     m_deviceType = "";
+
+    m_strIP     = "";
+    m_mrhType   = "";
+    m_mrhSN     = "";
+    m_mrhVersion= "";
+    m_isOpened = false;
+
     m_strCmdList.clear();
 
     m_model = new QStandardItemModel(ui->tableView);
@@ -38,13 +45,13 @@ MainWidget::MainWidget(QWidget *parent) :
     m_testPanelDialog = NULL;
 
     connect(ui->pushButtonSearchMRHT, SIGNAL(clicked(bool)), this, SLOT(slotSearchGateway()));
-    connect(ui->pushButtonOpenMRHT, SIGNAL(clicked(bool)), this, SLOT(slotOpenGateway()));
+    connect(ui->pushButtonOpenMRHT, SIGNAL(clicked(bool)), this, SLOT(slotOpenClose()));
 
     connect(ui->pushButton_Identify, &QPushButton::pressed, this,
-            [=](){slotGatewayIdentify(true);});
+            [=](){GatewayIdentify(true);});
 
     connect(ui->pushButton_Identify, &QPushButton::released, this,
-            [=](){slotGatewayIdentify(false);});
+            [=](){GatewayIdentify(false);});
 
     connect(ui->pushButton_Send, SIGNAL(clicked(bool)), this, SLOT(slotGatewaySend()));
 
@@ -107,86 +114,88 @@ void MainWidget::slotSearchGateway()
         mrgFindGateWay(1, buff, sizeof(buff), 1);
         strFindDevices += QString("%1").arg(buff);
 
-        ui->comboBox->addItems(strFindDevices.split(',', QString::SkipEmptyParts));
+        ui->comboBox_mrht->addItems(strFindDevices.split(',', QString::SkipEmptyParts));
     };
 
-    ui->comboBox->clear();
+    ui->comboBox_mrht->clear();
     sysShowProgressBar(true);
     XThread *thread = new XThread(lambda);
-    connect(thread, &XThread::finished,
-            this,[](){
+    connect(thread, &XThread::finished, this,
+            [this]()
+    {
         sysShowProgressBar(false);
+        if( ui->comboBox_mrht->count() != 0 )
+        {
+            ui->pushButtonOpenMRHT->setEnabled(true);
+        }
     });
 
     thread->start();
+    ui->pushButtonOpenMRHT->setEnabled(false);
+    if( m_isOpened )
+    {
+        slotOpenClose();
+    }
 }
 
-void MainWidget::slotOpenGateway()
+void MainWidget::slotOpenClose()
 {
-    if( m_IDN == "")
+    if( !m_isOpened )
     {
-        slotCloseGateway();
-        QString strDesc = ui->comboBox->currentText();
-        m_vi = mrgOpenGateWay(strDesc.toLocal8Bit().data(), 200);
-        if(m_vi <= 0)
+        //! 打开
+        if( !GatewayOpen() )
         {
-            QMessageBox::critical(this, "错误", "打开网关失败 " + QString::number(m_vi));
-            m_vi = 0;
-            m_IDN = "";
-            m_strVisaDesc = "";
+            GatewayClose();
             return;
         }
-        char idn[128] = "";
-        mrgGateWayIDNQuery(m_vi, idn);
-        if(strlen(idn) == 0)
-        {
-            QMessageBox::critical(this, "错误", "获取IDN失败");
-            slotCloseGateway();
-            return;
-        }
-        m_strVisaDesc = strDesc;
-        m_IDN = QString("%1").arg(idn);
+
+        m_isOpened = true;
         ui->labelIDN->setText(m_IDN);
         ui->pushButtonOpenMRHT->setText("关闭");
-        ui->comboBox->setEnabled(false);
+        ui->comboBox_mrht->setEnabled(false);
+        ui->pushButtonSearchMRHT->setEnabled(false);
+        ui->pushButton_Identify->setEnabled(true);
 
-        if( m_strVisaDesc.contains("TCPIP") )
+        ui->pushButton_Send->setEnabled(true);
+        ui->pushButton_searchRobot->setEnabled(true);
+        ui->pushButtonTest->setEnabled(true);
+
+        if( !m_strIP.isEmpty() )
         {
-            QString strIP = m_strVisaDesc.split("::", QString::SkipEmptyParts).at(1);
-            m_tcpClient->connectToHost(strIP, MEGAROBO_TCP_EXCEPTION_PORT );
+            m_tcpClient->connectToHost(m_strIP, MEGAROBO_TCP_EXCEPTION_PORT );
             if ( !m_tcpClient->waitForConnected(1000) )
             {
                 QMessageBox::critical(this, "错误", "连接网关的异常上报服务失败!!!");
             }
-            qDebug() << "TCP Connected" << strIP << MEGAROBO_TCP_EXCEPTION_PORT;
+            qDebug() << "TCP Connected" << m_strIP << MEGAROBO_TCP_EXCEPTION_PORT;
         }
 
         QTimer::singleShot(500, this, SLOT(slotSearchRobot()) );
     }
     else
     {
-        slotCloseGateway();
-        ui->comboBox->setEnabled(true);
+        //! 关闭
+        m_isOpened = false;
+        ui->labelIDN->setText("");
+        ui->comboBox_mrht->setEnabled(true);
+        ui->pushButtonSearchMRHT->setEnabled(true);
         ui->pushButtonOpenMRHT->setText("打开");
-    }
-}
+        ui->pushButton_Identify->setEnabled(false);
 
-void MainWidget::slotGatewayIdentify(bool isOn)
-{
-    if(m_vi <= 0)
-    {
-        return;
-    }
+        ui->label_RobotID->setText("");
+        ui->label_DeviceID->setText("");
+        ui->label_RobotType->setText("");
+        ui->label_DeviceType->setText("");
+        ui->radioButton_updatePos->setChecked(false);
 
-    mrgIdentify(m_vi, isOn?1:0);
-    qDebug() << "slotGatewayIdentify:" << isOn;
-}
+        ui->pushButton_Send->setEnabled(false);
+        ui->pushButton_searchRobot->setEnabled(false);
+        ui->radioButton_updatePos->setEnabled(false);
+        ui->pushButtonTest->setEnabled(false);
+        ui->pushButton_goHome->setEnabled(false);
+        ui->pushButton_stop->setEnabled(false);
 
-void MainWidget::slotCloseGateway()
-{
-    if(m_vi != 0)
-    {
-        if(m_strVisaDesc.contains("TCPIP") )
+        if( !m_strIP.isEmpty() )
         {
             if( m_tcpClient->state() == QAbstractSocket::ConnectedState )
             {
@@ -199,28 +208,14 @@ void MainWidget::slotCloseGateway()
             }
         }
 
-        mrgCloseGateWay(m_vi);
-        m_vi = 0;
-        m_IDN = "";
-        m_strVisaDesc = "";
-        m_robotID = 0;
-        m_robotType = "";
-        m_deviceID = 0;
-        m_deviceType = "";
+        GatewayClose();
     }
-    ui->labelIDN->setText(m_IDN);
-    ui->label_RobotID->setText("");
-    ui->label_DeviceID->setText("");
-    ui->label_RobotType->setText("");
-    ui->label_DeviceType->setText("");
-    ui->radioButton_updatePos->setChecked(false);
-
 }
 
 void MainWidget::slotGatewaySend()
 {
     QString cmd = ui->lineEdit->text();
-    if(cmd == "" || m_vi == 0)
+    if(cmd == "" || !m_isOpened)
     {
         return;
     }
@@ -264,7 +259,7 @@ void MainWidget::slotGatewayQeury()
 
 void MainWidget::slotSearchRobot()
 {
-    if(m_vi <= 0)
+    if(!m_isOpened)
     {
         return;
     }
@@ -274,6 +269,9 @@ void MainWidget::slotSearchRobot()
     if(ret <= 0)
     {
         QMessageBox::critical(this, "错误", "获取机器人失败 " + QString::number(ret));
+        ui->radioButton_updatePos->setEnabled(false);
+        ui->pushButton_goHome->setEnabled(false);
+        ui->pushButton_stop->setEnabled(false);
         return;
     }
 
@@ -292,8 +290,12 @@ void MainWidget::slotSearchRobot()
 
         QString strRobotName = QInputDialog::getItem(this, tr("机器人列表"), tr("请选择机器人: "), strRobotList, -1, false);
         if(strRobotName == "")
+        {
+            ui->radioButton_updatePos->setEnabled(false);
+            ui->pushButton_goHome->setEnabled(false);
+            ui->pushButton_stop->setEnabled(false);
             return;
-
+        }
         m_robotID = strRobotName.split(":", QString::SkipEmptyParts).at(0).toInt();
     }
 
@@ -301,13 +303,17 @@ void MainWidget::slotSearchRobot()
     ui->label_RobotID->setText( QString("%1").arg(m_robotID));
     ui->label_RobotType->setText( m_robotType );
 
+    ui->radioButton_updatePos->setEnabled(true);
+    ui->pushButton_goHome->setEnabled(true);
+    ui->pushButton_stop->setEnabled(true);
+
     slotSearchDevice();
 }
 
 QString MainWidget::parseRobotType(int robotID)
 {
     QString strRobotType = "";
-    if(m_vi <= 0 || robotID <= 0)
+    if(!m_isOpened || robotID <= 0)
         return strRobotType;
 
     int ret = mrgGetRobotType(m_vi, robotID);
@@ -328,7 +334,7 @@ QString MainWidget::parseRobotType(int robotID)
 
 void MainWidget::slotSearchDevice()
 {
-    if(m_vi <= 0)
+    if(!m_isOpened)
     {
         return;
     }
@@ -355,7 +361,7 @@ void MainWidget::slotSearchDevice()
 
 void MainWidget::slotRobotStop()
 {
-    if(m_vi <= 0 || m_robotID <= 0)
+    if(!m_isOpened || m_robotID <= 0)
     {
         return;
     }
@@ -371,7 +377,7 @@ void MainWidget::slotRobotStop()
 
 void MainWidget::slotRobotGoHome()
 {
-    if(m_vi <= 0 || m_robotID <= 0)
+    if(!m_isOpened || m_robotID <= 0)
     {
         return;
     }
@@ -388,7 +394,7 @@ void MainWidget::slotRobotGoHome()
 
 QString MainWidget::getRobotCurrentState()
 {
-    if(m_vi <= 0 || m_robotID <= 0)
+    if(!m_isOpened || m_robotID <= 0)
     {
         return "";
     }
@@ -426,6 +432,79 @@ void MainWidget::slotTcpError(QAbstractSocket::SocketError)
 {
     m_tcpClient->disconnectFromHost();
     QMessageBox::critical(this, "错误", QString("TCP出错,连接中断(%1)").arg(m_tcpClient->errorString()) );
+}
+
+bool MainWidget::GatewayOpen()
+{
+    m_strVisaDesc = ui->comboBox_mrht->currentText();
+    if( m_strVisaDesc.contains("TCPIP") )
+    {
+        m_strIP = m_strVisaDesc.split("::", QString::SkipEmptyParts).at(1);
+    }
+
+    m_vi = mrgOpenGateWay(m_strVisaDesc.toLocal8Bit().data(), 2000);
+    if(m_vi <= 0)
+    {
+        QMessageBox::critical(this, "错误", "打开网关失败 " + QString::number(m_vi));
+        m_vi = 0;
+        return false;
+    }
+
+    char idn[128] = "";
+    mrgGateWayIDNQuery(m_vi, idn);
+    m_IDN = QString("%1").arg(idn);
+    if(m_IDN.isEmpty() || m_IDN.split(",",QString::SkipEmptyParts).length() != 4)
+    {
+        QMessageBox::critical(this, "错误", "获取IDN失败");
+        return false;
+    }
+
+    m_mrhType = m_IDN.split(",",QString::SkipEmptyParts).at(1);
+    m_mrhSN = m_IDN.split(",",QString::SkipEmptyParts).at(2);
+    m_mrhVersion = m_IDN.split(",",QString::SkipEmptyParts).at(3);
+
+    int MajorVer = m_mrhVersion.split(".",QString::SkipEmptyParts).at(2).toInt();
+    int MinVer = m_mrhVersion.split(".",QString::SkipEmptyParts).at(3).toInt();
+    if((MajorVer == 1 && MinVer < 22) || (MajorVer == 2 && MinVer < 6))
+    {
+        //MRH-T-06N版本小于1.22, MRH-T-29N版本小于2.06
+        m_isOldVersion = true;
+    }
+    else
+    {
+        m_isOldVersion = false;
+    }
+
+    return true;
+}
+
+bool MainWidget::GatewayClose()
+{
+    if(m_vi > 0)
+    {
+        mrgCloseGateWay(m_vi);
+    }
+
+    m_vi = 0;
+    m_IDN = "";
+    m_strVisaDesc = "";
+    m_strIP         = "";
+    m_mrhType       = "";
+    m_mrhSN         = "";
+    m_mrhVersion    = "";
+
+    return true;
+}
+
+void MainWidget::GatewayIdentify(bool isOn)
+{
+    if(!m_isOpened)
+    {
+        return;
+    }
+
+    mrgIdentify(m_vi, isOn?1:0);
+    qDebug() << "slotGatewayIdentify:" << isOn;
 }
 
 void MainWidget::initUpdateInfoThread()
@@ -572,11 +651,9 @@ void MainWidget::addItemToTableView(QString cmd)
     }
 }
 
-
-
 void MainWidget::on_pushButtonTest_clicked()
 {
-    if(m_vi <= 0)
+    if(!m_isOpened)
     {
         QMessageBox::warning(this,"警告","没有打开网关");
         return;

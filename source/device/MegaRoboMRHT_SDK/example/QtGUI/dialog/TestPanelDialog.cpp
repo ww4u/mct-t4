@@ -19,6 +19,7 @@ TestPanelDialog::TestPanelDialog(ViSession vi, int robot, int device, QWidget *p
 
      m_isDebugRunFlag = false;
      m_threadOpsDebug = NULL;
+     m_isScriptRunning = false;
 
      ui->textBrowser->setHidden(true);
 
@@ -38,6 +39,7 @@ TestPanelDialog::TestPanelDialog(ViSession vi, int robot, int device, QWidget *p
      connect(ui->toolButton_scriptStartStop, SIGNAL(pressed()),this,SLOT(slotScriptStartStop()));
      connect(ui->checkBox_script_boot, SIGNAL(toggled(bool)),this,SLOT(slotScriptBoot(bool)));
 
+     QTimer::singleShot(500, this, SLOT(slotScanMotionFile()) );
      QTimer::singleShot(500, this, SLOT(slotScriptUpdateInfo()) );
 }
 
@@ -374,9 +376,21 @@ void TestPanelDialog::slotReadMotionFile()
 void TestPanelDialog::slotSystemPatch()
 {
 #if 01
-    //! 系统补丁
     int ret;
-    QStringList lstAbsPathFileName = QFileDialog::getOpenFileNames(this, "文件对话框", "", "所有文件(*.*)");
+    QStringList lstAbsPathFileName;
+    QString strAbsPath = QFileDialog::getExistingDirectory(this, "选择文件夹", "");
+    QDir dir(strAbsPath);
+    if(strAbsPath.isEmpty())
+        return;
+    dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+    dir.setSorting(QDir::Size | QDir::Reversed);
+    QFileInfoList list = dir.entryInfoList();
+    for (int i = 0; i < list.size(); ++i)
+    {
+        QFileInfo fileInfo = list.at(i);
+        lstAbsPathFileName << fileInfo.filePath();
+    }
+
     qDebug() << lstAbsPathFileName;
     if(lstAbsPathFileName.isEmpty())
         return;
@@ -445,11 +459,9 @@ void TestPanelDialog::slotScriptDownload()
     if(lstAbsPathFileName.isEmpty())
         return;
 
-    QString targetAbsPath = "/home/megarobo/MRH-T/script/";
-
     auto lambda = [=](int &ret)
     {
-        time_t tm_begin = time(NULL);
+         QString targetAbsPath = "/home/megarobo/MRH-T/script/";
 
         foreach (QString absPathFileName, lstAbsPathFileName)
         {
@@ -476,8 +488,6 @@ void TestPanelDialog::slotScriptDownload()
                 return;
             }
         }
-
-        qDebug() << "Run time:" << time(NULL) - tm_begin;
         ret = 0;
         return;
     };
@@ -506,10 +516,6 @@ void TestPanelDialog::slotScriptUpdateInfo()
 
     qDebug() << "script status:" << ret;
     ui->label_script_running_status->setText( (ret==1) ? "RUNNING" : "STOP");
-
-    m_isScriptRunning = (ret==1) ? true : false;
-    ui->toolButton_scriptStartStop->setText(m_isScriptRunning ? "停止" : "运行");
-
 }
 
 void TestPanelDialog::slotScriptStartStop()
@@ -543,6 +549,7 @@ void TestPanelDialog::slotScriptStartStop()
             return;
         }
 
+        m_isScriptRunning = true;
         ui->toolButton_scriptStartStop->setText("停止");
     }
     else
@@ -553,6 +560,7 @@ void TestPanelDialog::slotScriptStartStop()
             QMessageBox::critical(this, "错误", "停止失败");
             return;
         }
+        m_isScriptRunning = false;
         ui->toolButton_scriptStartStop->setText("运行");
     }
 
@@ -561,6 +569,7 @@ void TestPanelDialog::slotScriptStartStop()
 
 void TestPanelDialog::slotScriptBoot(bool isBoot)
 {
+    disconnect(ui->checkBox_script_boot, SIGNAL(toggled(bool)),this,SLOT(slotScriptBoot(bool)));
     QString strConfigName = ui->comboBox_script_filelist->currentText();
     if(strConfigName.right(3) != ".py")
     {
@@ -576,4 +585,5 @@ void TestPanelDialog::slotScriptBoot(bool isBoot)
         ui->checkBox_script_boot->setChecked(!isBoot);
         return;
     }
+    connect(ui->checkBox_script_boot, SIGNAL(toggled(bool)),this,SLOT(slotScriptBoot(bool)));
 }

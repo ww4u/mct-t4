@@ -166,6 +166,9 @@
       </item>
       <item row="0" column="0" colspan="3">
        <widget class="QPushButton" name="pushButton_searchRobot">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -250,6 +253,9 @@
       </item>
       <item row="0" column="0" colspan="2">
        <widget class="QRadioButton" name="radioButton_updatePos">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="statusTip">
          <string>开始或停止更新机器人信息</string>
         </property>
@@ -418,7 +424,7 @@
     </widget>
    </item>
    <item row="0" column="0" colspan="8">
-    <widget class="QComboBox" name="comboBox">
+    <widget class="QComboBox" name="comboBox_mrht">
      <property name="font">
       <font>
        <pointsize>12</pointsize>
@@ -431,6 +437,9 @@
    </item>
    <item row="39" column="8">
     <widget class="QPushButton" name="pushButton_stop">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="minimumSize">
       <size>
        <width>0</width>
@@ -467,6 +476,9 @@
    </item>
    <item row="9" column="8">
     <widget class="QPushButton" name="pushButton_Send">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -497,6 +509,9 @@
    </item>
    <item row="38" column="8">
     <widget class="QPushButton" name="pushButton_goHome">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="minimumSize">
       <size>
        <width>0</width>
@@ -557,6 +572,9 @@
    </item>
    <item row="16" column="8">
     <widget class="QPushButton" name="pushButtonTest">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="statusTip">
       <string>打开测试面板</string>
      </property>
@@ -609,6 +627,9 @@
      </property>
      <item>
       <widget class="QPushButton" name="pushButtonOpenMRHT">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -636,6 +657,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="pushButton_Identify">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -707,6 +731,24 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>comboBox_mrht</tabstop>
+  <tabstop>pushButtonSearchMRHT</tabstop>
+  <tabstop>pushButtonOpenMRHT</tabstop>
+  <tabstop>pushButton_Identify</tabstop>
+  <tabstop>lineEdit</tabstop>
+  <tabstop>pushButton_Send</tabstop>
+  <tabstop>textBrowser</tabstop>
+  <tabstop>pushButton_searchRobot</tabstop>
+  <tabstop>tableView</tabstop>
+  <tabstop>radioButton_updatePos</tabstop>
+  <tabstop>doubleSpinBox_posX</tabstop>
+  <tabstop>doubleSpinBox_posY</tabstop>
+  <tabstop>doubleSpinBox_posZ</tabstop>
+  <tabstop>pushButtonTest</tabstop>
+  <tabstop>pushButton_goHome</tabstop>
+  <tabstop>pushButton_stop</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

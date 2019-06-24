@@ -779,8 +779,11 @@ EXPORT_API int CALL mrgRobotStop(ViSession vi, int name, int wavetable)
     {
         snprintf(args, SEND_LEN, "ROBOT:STOP %d\n", name);
     }
+    busWrite(vi, args, strlen(args));
+    msSleep(DELAYTIME);
+    busWrite(vi, args, strlen(args));
+    msSleep(DELAYTIME);
     if (busWrite(vi, args, strlen(args)) == 0) {
-        msSleep(DELAYTIME * 2);
         if (busWrite(vi, args, strlen(args)) == 0) {
             return -1;
         }
@@ -1698,7 +1701,7 @@ EXPORT_API int CALL mrgRobotFileResolve(ViSession vi, int name, int section, int
 
     while(1)
     {
-        msSleep(DELAYTIME);
+        msSleep(DELAYTIME*2);
         mrgGetRobotStates(vi, name, wavetable, state);
         if( ( (0 == STRCASECMP(state, "IDLE")) ||
               (0 == STRCASECMP(state, "STOP"))) &&

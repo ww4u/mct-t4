@@ -9,6 +9,7 @@ extern "C" {
 
 #define  BUS_LAN   0
 #define  BUS_USB   1
+#define  BUS_SOCKET 2
 #define  METHOD_VISA  0
 #define  METHOD_UDP  1
 

@@ -372,7 +372,6 @@ void MegaInterface::on_pushButton_Scan_clicked()
                     { continue; }
 //                    else
 //                    { tInfo.mFMSN = sns; }
-logDbg()<<tInfo.mFMSN;
                     tInfo.mDevInfo.mId = devName[0];
 
                     //! \note invalid sn

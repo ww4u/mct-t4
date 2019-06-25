@@ -1,9 +1,9 @@
 #include "bus.h"
 
 #if defined(_WIN32) && (!defined(__MINGW64__)) && (!defined(__MINGW32__))
-#pragma comment (lib, "ws2_32")
+#pragma comment (lib, "ws2_32.lib")  
 #pragma comment (lib, "visa32.lib")
-#pragma comment (lib,"IPHlpApi.lib")
+#pragma comment (lib, "IPHlpApi.lib")
 #pragma comment (lib, "pthreadVC2.lib")
 #endif
 
@@ -18,7 +18,7 @@ pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
 int socketFindResources(char ip[][100], int timeout);
-
+static int  g_bus_type = BUS_LAN;
 #ifndef _WIN32
 int busFindDevice(int bus, char *output, int len,int method)
 {
@@ -166,7 +166,7 @@ unsigned int busWrite(ViSession vi, char *data, unsigned int len)
 
 unsigned int busRead(ViSession vi, char *buf, unsigned int len)
 {
-    int errCount = 3;
+    int errCount = 1;
     int retCount = 0;
     if (buf == NULL)
     {
@@ -198,7 +198,7 @@ unsigned int busRead(ViSession vi, char *buf, unsigned int len)
 unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen, char* output, unsigned int wantlen)
 {
     int retCount;
-    int errCount = 3;
+    int errCount = 1;
     if (input == NULL || output == NULL)
     {
         return 0;
@@ -304,14 +304,17 @@ int busFindDevice(int bus, char *output, int len,int method)
     {
         return 0;
     }
-
-    /* First we will need to open the default resource manager. */
-    status = viOpenDefaultRM(&defaultRM);
-    if (status < VI_SUCCESS)
+    if (bus != BUS_SOCKET)
     {
-        printf("Could not open a session to the VISA Resource Manager!\n");
-        return 0;
+        /* First we will need to open the default resource manager. */
+        status = viOpenDefaultRM(&defaultRM);
+        if (status < VI_SUCCESS)
+        {
+            printf("Could not open a session to the VISA Resource Manager!\n");
+            return 0;
+        }
     }
+    
     /*
      * Find all the VISA resources in our system and store the number of resources
      * in the system in numInstrs.  Notice the different query descriptions a
@@ -327,7 +330,8 @@ int busFindDevice(int bus, char *output, int len,int method)
      All instruments   "?*INSTR"
      All resources     "?*"
     */
-    if (bus == BUS_LAN)
+    g_bus_type = bus;
+    if (bus == BUS_LAN || bus == BUS_SOCKET)
     {
         if (method == METHOD_VISA)
         {
@@ -382,16 +386,15 @@ int busFindDevice(int bus, char *output, int len,int method)
             strcat(output, instrDescriptor);
         }
     }
-    
 END:
     return 0;
 }
 
-int busOpenDevice(char * ip, int timeout)
+int busOpenDevice_vxi(char * viSrc, int timeout)
 {
     ViStatus status;
     ViSession vi;
-    if (ip == NULL)
+    if (viSrc == NULL)
     {
         return 0;
     }
@@ -400,20 +403,23 @@ int busOpenDevice(char * ip, int timeout)
     {
         return 0;
     }
-    status = viOpen(defaultRM, ip, VI_NO_LOCK, VI_TMO_IMMEDIATE, &vi);
+//    status = viOpen(defaultRM, viSrc, VI_NO_LOCK, VI_TMO_IMMEDIATE, &vi);
+
+	//windows一个主机仅允许打开一个-T
+    status = viOpen(defaultRM, viSrc, VI_EXCLUSIVE_LOCK,VI_TMO_IMMEDIATE, &vi);
     if (status < VI_SUCCESS)
     {
         vi = 0;
         return 0;
     }
-    if (_strnicmp(ip, "USB",3)== 0)
+    if (_strnicmp(viSrc, "USB",3)== 0)
     {
         viSetAttribute(vi, VI_ATTR_TERMCHAR, 0x0A);
         viSetAttribute(vi, VI_ATTR_TERMCHAR_EN, VI_FALSE);
         viSetAttribute(vi, VI_ATTR_SEND_END_EN, VI_TRUE);
         viSetAttribute(vi, VI_ATTR_IO_PROT, 1);
     }
-    else if (_strnicmp(ip, "TCPIP", 5) == 0)
+    else if (_strnicmp(viSrc, "TCPIP", 5) == 0)
     {
         viSetAttribute(vi, VI_ATTR_TCPIP_NODELAY, VI_TRUE);
         viSetAttribute(vi, VI_ATTR_TCPIP_KEEPALIVE, VI_TRUE);
@@ -422,40 +428,82 @@ int busOpenDevice(char * ip, int timeout)
     return vi;
 }
 
-ViSession busOpenSocket(const char *pName, const char *addr, unsigned int port)
+
+ViSession busOpenDevice_socket(const char *rawip,int timeout_ms)
 {
-    ViStatus viSta;
-    ViSession viDef;
-    ViSession viDev;
-    viSta = viOpenDefaultRM(&viDef);
-    if (viSta != VI_SUCCESS)
+    WSADATA Data;
+    int status;
+    fd_set rfd;
+    FD_ZERO(&rfd);
+    struct timeval timeout;  //时间结构体
+    BOOL bDontLinger = FALSE;
+    timeout.tv_sec = 2;//秒
+    timeout.tv_usec = 0;//一百万分之一秒，微
+    /* initialize the Windows Socket DLL */
+    status = WSAStartup(MAKEWORD(1, 1), &Data);
+    if (status != 0)
     {
         return 0;
     }
+        
+    SOCKET sockClient = socket(AF_INET, SOCK_STREAM, 0);//建立套接字
+    SOCKADDR_IN addrSrv;
+    addrSrv.sin_addr.S_un.S_addr = inet_addr(rawip);
+    addrSrv.sin_family = AF_INET;
+    addrSrv.sin_port = htons(MEGA_TCP_SOCKET_PORT);
 
-    //! cat name
-    char rsrc[64];
-    snprintf(rsrc, 64, "TCPIP::%s::%d::SOCKET", addr, port);
-
-    viSta = viOpen(viDef, rsrc, 0, 2000, &viDev);
-    if (viSta != VI_SUCCESS)
+    /* connect to the server */
+    connect(sockClient, (SOCKADDR*)&addrSrv, sizeof(SOCKADDR));//连接到目的主机
+    FD_SET(sockClient, &rfd);
+    status = select(0, 0, &rfd, 0, &timeout);
+    if (status <= 0)
     {
+        closesocket(sockClient);
+        WSACleanup();
         return 0;
     }
-
-    //set attribute
-    viSetAttribute(viDev, VI_ATTR_TERMCHAR, 0X0A);
-    viSetAttribute(viDev, VI_ATTR_TERMCHAR_EN, VI_TRUE);
-
-    //set the name
-    viPrintf(viDev, "%s\n", pName);
-    viFlush(viDev, VI_WRITE_BUF);
-    return viDev;
+    setsockopt(sockClient, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout_ms, sizeof(int));
+    setsockopt(sockClient, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout_ms, sizeof(int));
+    //在调用closesocket后强制关闭
+    setsockopt(sockClient, SOL_SOCKET, SO_DONTLINGER, (const char*)&bDontLinger, sizeof(BOOL));
+    int nZero = 0;
+    setsockopt(sockClient, SOL_SOCKET, SO_SNDBUF,(char*)&nZero, sizeof(int));
+    setsockopt(sockClient, SOL_SOCKET, SO_RCVBUF,(char*)&nZero, sizeof(int));
+    return sockClient;
 }
-
+int busOpenDevice(char * viSrc, int timeout)
+{
+    if (g_bus_type == BUS_SOCKET)
+    {
+        char *p = NULL;
+        char * next = NULL;
+        /* ip = TCPIP0::192.168.2.116::inst0::INSTR*/
+        p = STRTOK_S(viSrc, "::", &next);
+        if (p != NULL)
+        {
+            p = STRTOK_S(NULL, "::", &next);
+        }
+        else
+        {
+            return 0;
+        }
+        return busOpenDevice_socket(p, timeout);
+    }
+    else
+    {
+        return busOpenDevice_vxi(viSrc, timeout);
+    }
+}
 int busCloseDevice(ViSession vi)
 {
-    return viClose(vi);
+    if (g_bus_type == BUS_SOCKET)
+    {
+        return closesocket(vi);
+    }
+    else
+    {
+        return viClose(vi);
+    }
 }
 
 unsigned int busWrite(ViSession vi, char * buf, unsigned int len)
@@ -467,10 +515,21 @@ unsigned int busWrite(ViSession vi, char * buf, unsigned int len)
         return 0;
     }
     LOCK();
-    if(viWrite(vi, (ViBuf)buf, len, &retCount) != VI_SUCCESS)
+    if (g_bus_type == BUS_SOCKET)
     {
-        UNLOCK();
-        return 0;
+        if ((retCount = send(vi, buf, len, 0)) != len)
+        {
+            UNLOCK();
+            return 0;
+        }
+    }
+    else
+    {
+        if (viWrite(vi, (ViBuf)buf, len, &retCount) != VI_SUCCESS)
+        {
+            UNLOCK();
+            return 0;
+        }
     }
     UNLOCK();
     return retCount;
@@ -480,7 +539,7 @@ unsigned int busRead(ViSession vi, char * buf, unsigned int len)
 {
     //返回VI_ERROR_CONN_LOST 表示断开连接
     ViUInt32 retCount = 0;
-    int errCount = 3;
+    int errCount = 1;
     if (buf == NULL)
     {
         return 0;
@@ -488,7 +547,15 @@ unsigned int busRead(ViSession vi, char * buf, unsigned int len)
     LOCK();
     while(errCount--)
     {
-        viRead(vi, (ViBuf)buf, len, &retCount);
+        if (g_bus_type == BUS_SOCKET)
+        {
+            retCount = recv(vi, buf, len, 0);
+        }
+        else
+        {
+            viRead(vi, (ViBuf)buf, len, &retCount);
+        }
+        
         if(retCount > 0)
         {
             break;
@@ -510,20 +577,38 @@ unsigned int busRead(ViSession vi, char * buf, unsigned int len)
 unsigned int busQuery(ViSession vi, char * input, unsigned int inputlen,char* output, unsigned int wantlen)
 {
     ViUInt32 retCount;
-    int errCount = 3;
+    int errCount = 1;
     if (input == NULL || output == NULL)
     {
         return 0;
     }
     LOCK();
-    if (viWrite(vi, (ViBuf)input, inputlen, &retCount) != VI_SUCCESS)
-    {
-        UNLOCK();
-        return 0;
-    }
+	if (g_bus_type == BUS_SOCKET)
+	{
+                if ((retCount = send(vi, input, inputlen, 0)) != inputlen)
+		{
+			UNLOCK();
+			return 0;
+		}
+	}
+	else
+	{
+		if (viWrite(vi, (ViBuf)input, inputlen, &retCount) != VI_SUCCESS)
+		{
+			UNLOCK();
+			return 0;
+		}
+	}
     while(errCount--)
     {
-        viRead(vi, (ViBuf)output, wantlen, &retCount);
+        if (g_bus_type == BUS_SOCKET)
+        {
+            retCount = recv(vi, output, wantlen, 0);
+        }
+        else
+        {
+            viRead(vi, (ViBuf)output, wantlen, &retCount);
+        }
         if(retCount > 0)
         {
             break;

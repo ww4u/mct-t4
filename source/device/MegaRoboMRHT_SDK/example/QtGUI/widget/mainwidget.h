@@ -25,11 +25,7 @@ public:
 private slots:
     void slotSearchGateway();
 
-    void slotOpenGateway();
-
-    void slotGatewayIdentify(bool isOn);
-
-    void slotCloseGateway();
+    void slotOpenClose();
 
     void slotGatewaySend();
 
@@ -65,15 +61,27 @@ private slots:
 
     void slotTcpError(QAbstractSocket::SocketError);
 
+private:
+    bool GatewayOpen();
+
+    bool GatewayClose();
+
+    void GatewayIdentify(bool isOn);
 
 private:
     Ui::MainWidget *ui;
 
-    ViSession   m_vi; //当前句柄
+    bool        m_isOpened;     //当前的打开状态
+    bool        m_isOldVersion; //是否为旧版本的-T,不支持重启和非U盘升级
 
-    QString     m_strVisaDesc; //Visa描述信息,如:TCPIP0::169.254.1.2::...
+    ViSession   m_vi;           //当前句柄
+    QString     m_strVisaDesc;  //Visa描述信息,如:TCPIP0::169.254.1.2::...
+    QString     m_IDN;          //IDN信息
 
-    QString     m_IDN;
+    QString     m_strIP;        //IP地址
+    QString     m_mrhType;      //MRH-T-06N还是MRH-T-29N
+    QString     m_mrhSN;        //MRH-T的序列号
+    QString     m_mrhVersion;   //MRH-T的版本号
 
     int         m_robotID;
     QString     m_robotType;

@@ -411,6 +411,24 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>pushButton_updateFirmware</tabstop>
+  <tabstop>pushButton_system_patch</tabstop>
+  <tabstop>comboBox_MotionFile</tabstop>
+  <tabstop>pushButton_ScanMotionFile</tabstop>
+  <tabstop>pushButton_ReadMotionFile</tabstop>
+  <tabstop>pushButton_ImportMotionFile</tabstop>
+  <tabstop>spinBox_section</tabstop>
+  <tabstop>spinBox_record</tabstop>
+  <tabstop>checkBox_Cyclic</tabstop>
+  <tabstop>pushButton_MotionRunStop</tabstop>
+  <tabstop>textBrowser</tabstop>
+  <tabstop>toolButton_script_download</tabstop>
+  <tabstop>toolButton_script_update</tabstop>
+  <tabstop>comboBox_script_filelist</tabstop>
+  <tabstop>toolButton_scriptStartStop</tabstop>
+  <tabstop>checkBox_script_boot</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -25,7 +25,7 @@ EXPORT_API int CALL mrgSetProjectMode(ViSession vi, int state)
 * 查询外部IO的状态
 * vi :visa设备句柄
 * index: 0->所有,1->X1,2->X2...
-* state: 每一位表示一个IO的状态
+* strState: 各个IO的状态,使用逗号分隔. "H,H,L,L"
 * 返回值：0表示执行成功；－1表示执行失败,-2表示参数错误
 */
 EXPORT_API int CALL mrgProjectIOGet(ViSession vi, IOGET_INDEX index, char *strState)
@@ -47,7 +47,26 @@ EXPORT_API int CALL mrgProjectIOGet(ViSession vi, IOGET_INDEX index, char *strSt
     strcpy(strState, as8Ret);
     return 0;
 }
-
+/*
+* 查询外部IO的状态
+* vi :visa设备句柄
+* state: 每一位表示一个IO的状态
+* 返回值：0表示执行成功；－1表示执行失败,-2表示参数错误
+*/
+EXPORT_API int CALL mrgProjectIOGetAll(ViSession vi, int *state)
+{
+    char args[SEND_LEN];
+    char as8Ret[RECV_LEN];
+    int retLen = 0;
+   
+    snprintf(args, SEND_LEN, "PROJect:XREAD? 0\n");
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, sizeof(as8Ret))) <= 0)
+    {
+        return -1;
+    }
+    *state = atoi(as8Ret);
+    return 0;
+}
 /*
 * 设置系统的外部输出IO的状态
 * vi :visa设备句柄
@@ -145,3 +164,66 @@ EXPORT_API int CALL mrgWriteDeviceSerial(ViSession  vi, int name, char * ps8Seri
     }
     return 0;
 }
+
+#pragma region 测试命令,不对外开放
+EXPORT_API int CALL mrgCanTestStart(ViSession  vi, int name)
+{
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEBUG:CAN:TEST:START %d\n", name);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
+}
+EXPORT_API int CALL mrgCanTestStop(ViSession  vi, int name)
+{
+    char args[SEND_LEN];
+    snprintf(args, SEND_LEN, "DEBUG:CAN:TEST:STOP %d\n", name);
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
+}
+EXPORT_API int CALL mrgGetCanTestResult(ViSession  vi, int name,unsigned int * pu32Send, unsigned int * pu32Rec, unsigned int * pu32Lost, unsigned int * pu32Time_ms)
+{
+    char as8Ret[100];
+    int retLen = 0;
+    char args[SEND_LEN];
+    char *p;
+    char *pNext;
+    snprintf(args, SEND_LEN, "DEBUG:CAN:TEST:INFO? %d\n", name);
+    if (pu32Send == NULL || pu32Rec == NULL || pu32Lost == NULL || pu32Time_ms== NULL)
+    {
+        return -2;
+    }
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, 100)) <= 0)
+    {
+        return -1;
+    }
+    as8Ret[retLen - 1] = 0;
+    p = STRTOK_S(as8Ret, ",", &pNext);
+    if (p)
+    {
+        *pu32Send = strtoul(p, NULL, 0);
+    }
+    p = STRTOK_S(NULL, ",", &pNext);
+    if (p)
+    {
+        *pu32Rec = strtoul(p, NULL, 0);
+    }
+    p = STRTOK_S(NULL, ",", &pNext);
+    if (p)
+    {
+        *pu32Lost = strtoul(p, NULL, 0);
+    }
+    p = STRTOK_S(NULL, ",", &pNext);
+    if (p)
+    {
+        *pu32Time_ms = strtoul(p, NULL, 0);
+    }
+    return 0;
+}
+#pragma endregion
+

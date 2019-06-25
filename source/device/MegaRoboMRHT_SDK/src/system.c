@@ -664,10 +664,15 @@ EXPORT_API int CALL mrgScriptRun(ViSession vi)
 {
     char args[SEND_LEN];
     snprintf(args, SEND_LEN, "SCRipt:START\n");
+    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_lock(&mutex);
     if (busWrite(vi, args, strlen(args)) <= 0)
     {
+        pthread_mutex_unlock(&mutex);
         return -1;
     }
+    msSleep(1000);
+    pthread_mutex_unlock(&mutex);
     return 0;
 }
 

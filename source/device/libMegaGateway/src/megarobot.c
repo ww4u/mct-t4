@@ -1695,7 +1695,7 @@ EXPORT_API int CALL mrgRobotMotionFileExport(ViSession vi, int name,int location
 * 设置末端执行器类型及相应的设备
 * vi :visa设备句柄
 * name: 机器人名称
-* type: 末端执行器类型 0两指爪子;1三指爪子;2 旋转末端
+* type: 末端执行器类型 0两指爪子;1三指爪子;2:TIP;3 旋转末端
 * dev : 末端执行器对应的通道设备 (1@513), 哪个设备的哪个轴
 * 返回值：0表示执行成功，－1：表示出错
 */

@@ -110,11 +110,6 @@
 
 #define enable_edit( control )
 
-//#define enable_edit( control )               if ( sysMode() == sysPara::e_sys_admin )\
-//                                             { control->setEnabled(true);}
-//                                             else \
-//                                             { control->setEnabled(false);}
-
 #define manual_enable_edit( control, b )    { control->setEnabled(b); }
 
 //! spy

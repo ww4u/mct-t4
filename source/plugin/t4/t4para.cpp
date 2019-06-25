@@ -25,6 +25,7 @@ void T4Para::init()
 void T4Para::rst()
 {
     mTerminalType = T4Para::e_terminal_f2;
+    mA5Range = T4Para::e_range_360;
 
     mAxisCurrents[0] = 3.5;
     mAxisCurrents[1] = 3.5;
@@ -82,7 +83,7 @@ void T4Para::rst()
     mMaxTerminalSpeed = 250;
 
     mMaxJointSpeeds.clear();
-    mMaxJointSpeeds<<170<<50<<50<<180<<60;
+    mMaxJointSpeeds<<170<<50<<50<<60<<60;
 
     mbAxisPwr = true;
     mbMctEn = true;
@@ -109,6 +110,7 @@ int T4Para::serialOut( QXmlStreamWriter &writer )
 {
     writer.writeStartElement("terminal");
         writer.writeTextElement( "type", QString::number( (int)mTerminalType ) );
+        writer.writeTextElement( "a5_range", QString::number( (int)mA5Range ) );
     writer.writeEndElement();
 
     writer.writeStartElement( "safe_limit" );
@@ -223,6 +225,10 @@ int T4Para::serialIn( QXmlStreamReader &reader )
                 if ( reader.name() == "type" )
                 {
                     mTerminalType = (eTerminalType)reader.readElementText().toInt();
+                }
+                else if ( reader.name() == "a5_range" )
+                {
+                    mA5Range = (eAxis5Range)reader.readElementText().toInt();
                 }
                 else
                 { reader.skipCurrentElement(); }

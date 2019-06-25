@@ -219,6 +219,9 @@ int XPlugin::download()
 int XPlugin::diff()
 { return 0; }
 
+int XPlugin::jointDir( int jid )
+{ return 1; }
+
 void XPlugin::emit_timer_op( QTimer *pTimer, int tmo, bool b )
 {
     emit signal_timer_op( pTimer, tmo, b );

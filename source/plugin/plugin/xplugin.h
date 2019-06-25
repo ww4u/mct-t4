@@ -161,7 +161,7 @@ public:
     virtual int download();
     virtual int diff();
 
-
+    virtual int jointDir( int jid );
 public:
     void emit_timer_op( QTimer *pTimer, int tmo, bool b );
 

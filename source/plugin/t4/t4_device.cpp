@@ -243,6 +243,18 @@ int MRX_T4::diff()
     return 0;
 }
 
+int MRX_T4::jointDir( int jid )
+{
+    //! by the terminal type
+    if ( jid != 4 )
+    { return 1; }
+
+    if ( mTerminalType != e_terminal_a5 )
+    { return 1; }
+
+    return -1;
+}
+
 int MRX_T4::onXEvent( XEvent *pEvent )
 {
     //! \todo stop/estop/

@@ -150,6 +150,8 @@ public:
     virtual int download();
     virtual int diff();
 
+    virtual int jointDir( int jid );
+
 protected:
     virtual int onXEvent( XEvent *pEvent );
 

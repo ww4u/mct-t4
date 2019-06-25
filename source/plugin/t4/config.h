@@ -43,8 +43,8 @@ private:
 enum TERMINAL_TYPE {
     MRX_F2,
     MRX_F3,
-    MRX_AXIS5,
     MRX_TIP,
+    MRX_AXIS5,
     USER
 };
 

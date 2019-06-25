@@ -923,7 +923,7 @@ void T4OpPanel::stepProc( int jId, int dir )
     if ( isCoordJoint() || jId >= 4 )
     {
         QList<QVariant> vars;
-        vars<<(jId-1)<<dir;
+        vars<<(jId-1)<<dir* m_pPlugin->jointDir( jId - 1 );
         QVariant var( vars );
         on_post_setting( T4OpPanel, onJointStep, tr("Joint step") );
     }
@@ -953,7 +953,7 @@ void T4OpPanel::jogProc( int jId, int dir, bool b )
     QList<QVariant> vars;
     if ( isCoordJoint() || jId >= 4 )
     {
-        vars<<(jId-1)<<dir<<1;
+        vars<<(jId-1)<<dir * m_pPlugin->jointDir( jId - 1 )<<1;
         QVariant var( vars );
         on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Joint jog") );
     }
@@ -1084,7 +1084,7 @@ int T4OpPanel::onJointStep( QVariant var /*int jId, int dir*/ )
     return ret;
 }
 int T4OpPanel::onJointZero( QVariant var )
-{logDbg();
+{
     check_connect_ret( -1 );
 
     int jId, dir;

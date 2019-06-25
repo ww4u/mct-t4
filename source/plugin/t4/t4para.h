@@ -25,8 +25,8 @@ public:
     {
         e_terminal_f2,
         e_terminal_f3,
-        e_terminal_a5,
         e_terminal_tip,
+        e_terminal_a5,
         e_terminal_user
     };
 

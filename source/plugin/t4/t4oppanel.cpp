@@ -1069,18 +1069,23 @@ int T4OpPanel::onJointStep( QVariant var /*int jId, int dir*/ )
     double spd = pRobo->mMaxJointSpeeds.at(jId) * localSpeed() / 100.0;
 
     //! terminal api
-//    ret = mrgRobotToolExe(robot_var(),
-//                          stp*dir,
-//                          stp/spd,
-//                          guess_dist_time_ms( stp/spd, stp)
-//                          );
-
-    ret = mrgMRQAdjust( device_var(),
+    if ( jId == 4 )
+    {
+        ret = mrgRobotToolExe(robot_var(),
+                          stp*dir,
+                          stp/spd,
+                          guess_dist_time_ms( stp/spd, stp)
+                          );
+    }
+    else
+    {
+        ret = mrgMRQAdjust( device_var(),
                         jId,
                         0,
                         dir * stp,
                         stp/spd,
                         guess_dist_time_ms( stp/spd, stp ) );
+    }
     return ret;
 }
 int T4OpPanel::onJointZero( QVariant var )

@@ -28,11 +28,11 @@ Config::Config(QWidget *parent) :
     setContextHelp("config");
 
     //! \note NO F3 FOR 1.0
-    ui->cmbTypeTerminal->addItem( QIcon(":/res/image/t4/f2.png"), tr("MRX-F2"), QVariant(0) );
-//    ui->cmbTypeTerminal->addItem( QIcon(":/res/image/t4/f3.png"), tr("MRX-F3"), QVariant(1) );
-    ui->cmbTypeTerminal->addItem( QIcon(":/res/image/t4/a5.png"), tr("MRX-AXIS5"), QVariant(3) );
-    ui->cmbTypeTerminal->addItem( QIcon(":/res/image/t4/tip.png"), tr("MRX-TIP"), QVariant(2) );
-    ui->cmbTypeTerminal->addItem( QIcon(":/res/image/icon/51.png"), tr("User"), QVariant(4) );
+    ui->cmbTypeTerminal->addItem( QIcon(":/res/image/t4/f2.png"), tr("MRX-F2"), QVariant( (int)T4Para::e_terminal_f2 ) );
+//    ui->cmbTypeTerminal->addItem( QIcon(":/res/image/t4/f3.png"), tr("MRX-F3"), QVariant( (int)T4Para::e_terminal_f3  ) );
+    ui->cmbTypeTerminal->addItem( QIcon(":/res/image/t4/tip.png"), tr("MRX-TIP"), QVariant( (int)T4Para::e_terminal_tip ) );
+    ui->cmbTypeTerminal->addItem( QIcon(":/res/image/t4/a5.png"), tr("MRX-AXIS5"), QVariant( (int)T4Para::e_terminal_a5 ) );
+    ui->cmbTypeTerminal->addItem( QIcon(":/res/image/icon/51.png"), tr("User"), QVariant( (int)T4Para::e_terminal_user ) );
 
     spyEdited();
 
@@ -281,9 +281,9 @@ int Config::download()
     int type = ui->cmbTypeTerminal->currentData().toInt();
 
     char t[4] = {0};
-
+logDbg()<<type;
     //! F2, F3, A5
-    if ( type >= 0 && type <= 2 )
+    if ( type >= T4Para::e_terminal_f2 && type <= T4Para::e_terminal_tip )
     {
         QString baStr = QString("4@%1").arg( device_var_handle() );
         ret = mrgRobotToolSet( robot_var(), type, baStr.toLatin1().data() );

@@ -244,14 +244,14 @@ int MRX_T4::diff()
 }
 
 int MRX_T4::jointDir( int jid )
-{
+{logDbg()<<jid<<mTerminalType;
     //! by the terminal type
     if ( jid != 4 )
     { return 1; }
 
-    if ( mTerminalType != e_terminal_a5 )
+    if ( mTerminalType != T4Para::e_terminal_a5 )
     { return 1; }
-
+logDbg();
     return -1;
 }
 

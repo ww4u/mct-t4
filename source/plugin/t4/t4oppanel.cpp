@@ -606,7 +606,7 @@ int T4OpPanel::pingTick( void *pContext )
     //! read only one time
     int ret;
     char idn[128];
-    for ( int i = 0; i < 1; i++ )
+    for ( int i = 0; i < 3; i++ )
     {
         ret = mrgGateWayIDNQuery( (ViSession)pRobo->deviceVi(), idn );
         //! read fail
@@ -1054,7 +1054,7 @@ int T4OpPanel::onJointStep( QVariant var /*int jId, int dir*/ )
 {
     check_connect_ret( -1 );
 
-    int jId, dir;
+    int jId, dir, ret;
 
     QList<QVariant> vars;
 
@@ -1068,7 +1068,19 @@ int T4OpPanel::onJointStep( QVariant var /*int jId, int dir*/ )
 
     double spd = pRobo->mMaxJointSpeeds.at(jId) * localSpeed() / 100.0;
 
-    int ret = mrgMRQAdjust( device_var(), jId, 0, dir * stp, stp/spd, guess_dist_time_ms( stp/spd, stp ) );
+    //! terminal api
+//    ret = mrgRobotToolExe(robot_var(),
+//                          stp*dir,
+//                          stp/spd,
+//                          guess_dist_time_ms( stp/spd, stp)
+//                          );
+
+    ret = mrgMRQAdjust( device_var(),
+                        jId,
+                        0,
+                        dir * stp,
+                        stp/spd,
+                        guess_dist_time_ms( stp/spd, stp ) );
     return ret;
 }
 int T4OpPanel::onJointZero( QVariant var )
@@ -1339,7 +1351,7 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
     if ( qAbs( pItem->h ) > FLT_EPSILON )
     {
         speed = pRobo->mMaxJointSpeeds.at(4) * pItem->v / 100.0;
-        ret = mrgRobotJointMove(robot_var(), 4,
+        ret = mrgRobotToolExe(robot_var(),
                                 pItem->h,
                                 qAbs(pItem->h)/speed, guess_dist_time_ms( qAbs(pItem->h)/speed, qAbs(pItem->h)) );
 

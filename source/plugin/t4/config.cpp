@@ -259,7 +259,7 @@ int Config::download()
 
     char t[4] = {0};
 
-    QString baStr = QString("4@%1").arg( robot_var_handle() );
+    QString baStr = QString("4@%1").arg( device_var_handle() );
     ret = mrgRobotToolSet( robot_var(), type, baStr.toLatin1().data() );
     if(ret != 0){
         return -1;

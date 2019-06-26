@@ -1028,10 +1028,23 @@ int T4OpPanel::onHoming( QVariant var )
     check_connect_ret( -1 );
 
     int ret;
-logDbg()<<pRobo->mHomeTimeout;
-    ret = mrgRobotGoHome( robot_var(),
-                          pRobo->mHomeTimeout*1000 );
-logDbg();
+logDbg()<<pRobo->mHomeTimeout << pRobo->mTerminalType;
+    do{
+    if( (pRobo->mTerminalType == T4Para::e_terminal_f2)
+            || (pRobo->mTerminalType == T4Para::e_terminal_a5) ){
+
+        ret = mrgRobotToolGoHome( robot_var(),
+                                  pRobo->mHomeTimeout*1000
+                                  );
+        logDbg() << ret;
+        if(ret !=0 ){  }
+    }
+
+        ret = mrgRobotGoHome( robot_var(),
+                              pRobo->mHomeTimeout*1000 );
+        if(ret != 0){ break; }
+
+    }while(0);
     return ret;
 }
 

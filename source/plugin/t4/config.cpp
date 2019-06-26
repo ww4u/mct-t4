@@ -283,7 +283,7 @@ int Config::download()
     char t[4] = {0};
 logDbg()<<type;
     //! F2, F3, A5
-    if ( type >= T4Para::e_terminal_f2 && type <= T4Para::e_terminal_tip )
+    if ( type >= T4Para::e_terminal_f2 && type <= T4Para::e_terminal_a5 )
     {
         QString baStr = QString("4@%1").arg( device_var_handle() );
         ret = mrgRobotToolSet( robot_var(), type, baStr.toLatin1().data() );

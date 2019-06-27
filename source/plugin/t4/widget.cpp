@@ -25,11 +25,12 @@ Widget::Widget(QWidget *parent) :
     ui(new Ui::Widget)
 {
     ui->setupUi(this);
-    setWindowFlags(Qt::WindowTitleHint);
+
     ui->progressBar->hide();
     ui->btnShow->hide();
     ui->textBrowser->hide();
 
+    m_vi = 0;
     m_updateProcess = NULL;
     m_undoProcess = NULL;
 
@@ -45,6 +46,7 @@ Widget::~Widget()
     delete ui;
     if(m_vi>0){
         mrgCloseGateWay( m_vi);
+        m_vi = 0;
     }
 }
 
@@ -102,7 +104,8 @@ void Widget::on_buttonBox_clicked(QAbstractButton *button)
     }else {
         destory();
         if(m_vi > 0){
-            mrgCloseGateWay( m_vi);
+            mrgCloseGateWay( m_vi );
+            m_vi = 0;
         }
         this->close();
         return;
@@ -446,4 +449,13 @@ void MThead::slotReadyRead()
     QByteArray ba = m_process->readAll();
     qDebug() << ba;
     emit resultReady(QString(ba));
+}
+
+void Widget::on_btnShow_clicked()
+{
+    ui->textBrowser->setVisible( ui->btnShow->isChecked() );
+    if( ui->btnShow->isChecked() )
+    { ui->btnShow->setText( tr("Show detail") ); }
+    else
+    { ui->btnShow->setText( tr("Hide detail") ); }
 }

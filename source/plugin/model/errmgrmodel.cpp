@@ -358,7 +358,6 @@ QVariant ErrorMgrModel::backRole( const QModelIndex &index ) const
         else if ( col == 5 )
         {
             back_role(mItems[row]->mbActionAble );
-//            back_role(mItems[row]->mActionList.size() > 0 );
         }
         else if ( col == 6 )
         {  back_role(mItems[row]->mbOutputAble); }
@@ -372,7 +371,7 @@ QVariant ErrorMgrModel::backRole( const QModelIndex &index ) const
     }while ( 0 );
 
     //! disabled
-    return QVariant( QColor( Qt::lightGray ) );
+    return QVariant( QColor( Qt::darkGray ) );
 }
 
 QList< ErrorMgrItem *> *ErrorMgrModel::items()

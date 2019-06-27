@@ -165,6 +165,8 @@ public:
     virtual int download();
     virtual int diff();
 
+    virtual int jointDir( int jid );
+
     virtual int startDemo( int id );
     virtual int stopDemo( int id );
 

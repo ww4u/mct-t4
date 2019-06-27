@@ -175,6 +175,29 @@
          </property>
         </spacer>
        </item>
+       <item row="1" column="0" colspan="2">
+        <widget class="QGroupBox" name="gpRange">
+         <property name="title">
+          <string>Mode</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QRadioButton" name="rad270">
+            <property name="text">
+             <string>0--270</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="rad360">
+            <property name="text">
+             <string>0--360</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tabSafeArea">

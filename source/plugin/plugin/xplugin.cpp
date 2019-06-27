@@ -232,6 +232,9 @@ int XPlugin::download()
 int XPlugin::diff()
 { return 0; }
 
+int XPlugin::jointDir( int jid )
+{ return 1; }
+
 int XPlugin::startDemo( int id )
 { return 0; }
 int XPlugin::stopDemo( int id )

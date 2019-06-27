@@ -113,5 +113,7 @@
         <file>image/icon/history.png</file>
         <file>image/icon/upgrade.png</file>
         <file>image/icon/folder.png</file>
+        <file>image/icon/build.png</file>
+        <file>image/icon/file.png</file>
     </qresource>
 </RCC>

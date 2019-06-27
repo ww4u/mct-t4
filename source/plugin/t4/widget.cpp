@@ -54,6 +54,9 @@ Widget::~Widget()
 {
     destory();
     delete ui;
+    if(m_vi>0){
+        mrgCloseGateWay( m_vi);
+    }
 }
 
 void Widget::attatchPlugin(XPlugin *xp)
@@ -109,6 +112,9 @@ void Widget::on_buttonBox_clicked(QAbstractButton *button)
         button->hide();
     }else {
         destory();
+        if(m_vi > 0){
+            mrgCloseGateWay( m_vi);
+        }
         this->close();
         return;
     }
@@ -225,7 +231,7 @@ int Widget::copyDemo()
                                        );
             if(ret !=0){
                 continue;
-                sysInfo("Write File fail", 1);
+                //sysInfo("Write File fail", 1);
             }else{
                 count += 1;
             }
@@ -356,17 +362,7 @@ void Widget::Append(const QString &text)
 
 void Widget::slotReboot()
 {
-//    QMessageBox msgBox();
-//    msgBox.setText(tr("\n\tUpdate Success\t\t \n\n\tReboot?\t \n"));
-//    msgBox.setStandardButtons(QMessageBox::Ok|QMessageBox::Cancel);
-//    if(msgBox.exec() == QMessageBox::Ok){
-//        //! reboot
-//        if(m_pPlugin->isRebootable()){
-//            mrgSystemRunCmd(m_vi, (char *)"reboot", 0);
-//        }
-//        this->close();
-//    }
-    if( QMessageBox::information(this,tr("reboot"),tr("Reboot will work")) == QMessageBox::Ok ){
+    if( QMessageBox::information(this,tr("reboot"),tr("Reboot now?")) == QMessageBox::Ok ){
         if(m_pPlugin->isRebootable()){
             mrgSystemRunCmd(m_vi, (char *)"reboot", 0);
         }

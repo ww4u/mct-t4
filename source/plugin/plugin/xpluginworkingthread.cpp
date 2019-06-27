@@ -209,7 +209,7 @@ void XPluginWorkingThread::procApi( WorkingApi *pApi )
                     {
                         logDbg()<<ret;
                         if ( pApi->mDescription.length() > 0 )
-                        { sysPrompt( pApi->mDescription + " " + tr("execute fail") ); }
+                        { sysError( pApi->mDescription + " " + tr("execute fail") ); }
                     }
                 }
                 else

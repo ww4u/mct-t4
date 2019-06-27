@@ -529,11 +529,11 @@ int TreeModel::buildDataSet( MDataSet &dataSet )
     return 0;
 }
 
-double TreeModel::MaxTerminalSpeed(double str)
+void TreeModel::setTerminalSpeed(double str)
 {
     mMaxTerminalSpeed = str;
 }
-double TreeModel::MaxJointSpeeds(QList<double> list )
+void TreeModel::setJointSpeeds(QList<double> list )
 {
     mMaxJointSpeeds = list;
 }

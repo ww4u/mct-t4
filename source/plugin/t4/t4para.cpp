@@ -82,7 +82,7 @@ void T4Para::rst()
     mMaxTerminalSpeed = 250;
 
     mMaxJointSpeeds.clear();
-    mMaxJointSpeeds<<170<<50<<50<<180<<60;
+    mMaxJointSpeeds<<170<<50<<50<<60<<60;
 
     mbAxisPwr = true;
     mbMctEn = true;

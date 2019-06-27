@@ -22,7 +22,6 @@ Maintain::Maintain(QWidget *parent) :
 
     on_cmbDemo_currentIndexChanged( ui->cmbDemo->currentIndex() );
 
-    m_fileMg = new FileManager;
 }
 
 Maintain::~Maintain()
@@ -178,78 +177,133 @@ void Maintain::on_btnFold_clicked()
 
 void Maintain::on_btnBackup_clicked()
 {
-    QString descripton;
-    bool bOk;
-    descripton = QInputDialog::getText( this,
-                                        tr("Descripton"),
-                                        tr("Backup description:"),
-                                        QLineEdit::Normal,
-                                        QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss.zzz" ),
-                                        &bOk
-                                        );
-    if ( !bOk )
-    { return; }
+    FileManager manager;
+    manager.attachPlugin(m_pPlugin);
+    manager.setPath( m_pPlugin->selfPath()+"/backup/" );
+    manager.setMode( BACKUP );
+    if( manager.exec() == QDialog::Accepted ){
+    }else{ return; }
 
-    descripton = descripton.simplified();
-    if ( descripton.isEmpty() )
-    {
-        sysPrompt( tr("Invalid description"), 0 );
-        return;
-    }
-
+    QString str = manager.strResult();
     int ret;
     QString cmd, dstPath;
-    do
-    {
-        //! make dir
-        QString uuid = QDateTime::currentDateTimeUtc().toString("yyyyMMddhhmmss_zzz");
-        dstPath = m_pPlugin->selfPath() + "/backup/" + uuid;
+    do{
+        dstPath = m_pPlugin->selfPath() + "/backup/" + str;
         cmd = "mkdir -p " + dstPath;
-        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
+        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLocal8Bit().data(), 0 );
         if ( ret != 0 )
-        { break; }
+        { ret = -1; break; }
 
         //! copy the data in
         cmd = "cp " + m_pPlugin->selfPath() + "/*.xml " + dstPath;
-        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
+        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLocal8Bit().data(), 0 );
         if ( ret != 0 )
-        { break; }
+        { ret = -1;break; }
 
         cmd = "cp " + m_pPlugin->selfPath() + "/*.mrp " + dstPath;
-        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
+        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLocal8Bit().data(), 0 );
         if ( ret != 0 )
-        { break; }
+        { ret = -1;break; }
 
         //! copy the log
         cmd = "cp -r /home/megarobo/MRH-T/log " + dstPath + "/log";
-        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
+        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLocal8Bit().data(), 0 );
         if ( ret != 0 )
-        { break; }
+        { ret = -1;break; }
 
         //! write the description
         ret = mrgStorageWriteFile( m_pPlugin->deviceVi(),
                                    0,
-                                   dstPath.toLatin1().data(),
+                                   dstPath.toLocal8Bit().data(),
                                    "description",
-                                   (quint8*)descripton.toLatin1().data(),
-                                   descripton.length()
+                                   (quint8*)str.toLocal8Bit().data(),
+                                   str.length()
                                    );
         if ( ret != 0 )
-        { break; }
+        { ret = -1;break; }
+    }while(0);
 
-    }while( 0 );
-
-    if ( ret != 0 )
-    {
+    if( ret == -1){
         cmd = "rm -rf " + dstPath;
         ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
+        sysError(tr("Backup Fail"));
 
-        sysPrompt( tr("Backup fail") );
+    }else{
+        sysInfo(tr("Backup Complete"));
     }
-    else
-    {
-        sysPrompt( tr("Backup completed"), 0 );
-    }
+
+//    QString descripton;
+//    bool bOk;
+//    descripton = QInputDialog::getText( this,
+//                                        tr("Descripton"),
+//                                        tr("Backup description:"),
+//                                        QLineEdit::Normal,
+//                                        QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss.zzz" ),
+//                                        &bOk
+//                                        );
+//    if ( !bOk )
+//    { return; }
+
+//    descripton = descripton.simplified();
+//    if ( descripton.isEmpty() )
+//    {
+//        sysPrompt( tr("Invalid description"), 0 );
+//        return;
+//    }
+
+//    int ret;
+//    QString cmd, dstPath;
+//    do
+//    {
+//        //! make dir
+//        QString uuid = QDateTime::currentDateTimeUtc().toString("yyyyMMddhhmmss_zzz");
+//        dstPath = m_pPlugin->selfPath() + "/backup/" + uuid;
+//        cmd = "mkdir -p " + dstPath;
+//        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
+//        if ( ret != 0 )
+//        { break; }
+
+//        //! copy the data in
+//        cmd = "cp " + m_pPlugin->selfPath() + "/*.xml " + dstPath;
+//        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
+//        if ( ret != 0 )
+//        { break; }
+
+//        cmd = "cp " + m_pPlugin->selfPath() + "/*.mrp " + dstPath;
+//        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
+//        if ( ret != 0 )
+//        { break; }
+
+//        //! copy the log
+//        cmd = "cp -r /home/megarobo/MRH-T/log " + dstPath + "/log";
+//        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
+//        if ( ret != 0 )
+//        { break; }
+
+//        //! write the description
+//        ret = mrgStorageWriteFile( m_pPlugin->deviceVi(),
+//                                   0,
+//                                   dstPath.toLatin1().data(),
+//                                   "description",
+//                                   (quint8*)descripton.toLatin1().data(),
+//                                   descripton.length()
+//                                   );
+//        if ( ret != 0 )
+//        { break; }
+
+//    }while( 0 );
+
+//    if ( ret != 0 )
+//    {
+//        cmd = "rm -rf " + dstPath;
+//        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
+
+//        sysPrompt( tr("Backup fail") );
+//    }
+//    else
+//    {
+//        sysPrompt( tr("Backup completed"), 0 );
+//    }
 }
 
 void Maintain::on_btnClearBackup_clicked()
@@ -367,16 +421,44 @@ void Maintain::on_chkAutoLogin_stateChanged(int arg1)
     m_pPlugin->setAutoLogin( ui->chkAutoLogin->isChecked() );
 }
 
-void Maintain::on_btnRecover_clicked()
+void Maintain::on_btnRestore_clicked()
 {
+    FileManager manage;
+    QString str;
+    int ret;
+    manage.setPath(m_pPlugin->selfPath()+"/backup/");
+    manage.attachPlugin(m_pPlugin);
+    manage.setMode(RESTORE);
+    if( manage.exec() == QDialog::Accepted ){
+    }else{return;}
 
+    do{
+        str = manage.strResult();
+        QString sourcePath = m_pPlugin->selfPath()+"/backup/"+str;
+
+        QString cmd = "cp " + sourcePath + "*.xml " + m_pPlugin->selfPath();
+        ret = mrgSystemRunCmd(m_pPlugin->deviceVi(), cmd.toLocal8Bit().data(), 0);
+        if( ret !=0 )
+        { ret = -1; break; }
+
+        cmd = "cp " + sourcePath + "*.mrp " + m_pPlugin->selfPath();
+        ret = mrgSystemRunCmd(m_pPlugin->deviceVi(), cmd.toLocal8Bit().data(), 0);
+        if(ret !=0)
+        { ret = -1; break; }
+
+        //! log ?
+
+    }while(0);
+
+    if(ret ==-1){
+        sysError(tr("Restore Fail"));
+    }else{
+        sysInfo(tr("Restore Complete"));
+    }
 }
 
 void Maintain::on_btnExport_clicked()
 {
-    m_fileMg->attachPlugin(m_pPlugin);
-    m_fileMg->setPath(m_pPlugin->selfPath()+"/backup/");
-    m_fileMg->show();
 
 //    QString dir = QFileDialog::getExistingDirectory(this, tr("Open"));
 //    logDbg() << dir;
@@ -476,4 +558,11 @@ void Maintain::on_btnExport_clicked()
 //        }
 //    }while(0);
 }
+
+void Maintain::on_btnBuild_clicked()
+{
+    //! \todo send file
+
 }
+}
+

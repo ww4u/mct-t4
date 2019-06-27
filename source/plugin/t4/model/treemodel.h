@@ -122,8 +122,8 @@ public:
 
     int buildDataSet( MDataSet &dataset );
 
-    double MaxTerminalSpeed(double str);
-    double MaxJointSpeeds( QList<double> list );
+    void setTerminalSpeed(double str);
+    void setJointSpeeds( QList<double> list );
 
 private:
     int _loadIn( MDataSet &dataSet );

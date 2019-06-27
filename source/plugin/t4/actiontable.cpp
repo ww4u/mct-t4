@@ -181,8 +181,8 @@ void ActionTable::setModel( QAbstractItemModel *pModel )
     ui->view->setModel( pModel );
 
     TreeModel *pMegaModel = (TreeModel*)pModel;
-    pMegaModel->MaxTerminalSpeed( pRobo->mMaxTerminalSpeed );
-    pMegaModel->MaxJointSpeeds( pRobo->mMaxJointSpeeds );
+    pMegaModel->setTerminalSpeed( pRobo->mMaxTerminalSpeed );
+    pMegaModel->setJointSpeeds( pRobo->mMaxJointSpeeds );
 
     if ( NULL != pMegaModel )
     {
@@ -1267,46 +1267,57 @@ void ActionTable::on_toolOpen_clicked()
 //    if ( ret != 0 )
 //    { sysError( tr("Load record fail") ); }
 
-    FileManager filemg;
-    filemg.attachPlugin(m_pPlugin);
-    filemg.setPath(m_pPlugin->demoPath());
-    filemg.setTitle(tr("Open Demo"));
-    filemg.exec();
+    FileManager manager;
+    manager.setMode(OPENACTIONTABLE);
+    manager.attachPlugin(m_pPlugin);
+    manager.setPath(m_pPlugin->selfPath()+"/");
+    if(manager.exec()== QDialog::Accepted ){
+
+    }else{ return; }
+
+    QString strResult = manager.strResult();
+    strResult = strResult.simplified();
+    if ( strResult.isEmpty() )
+    {
+        sysPrompt( tr("Invalid File"), 0 );
+        return;
+    }
+
+    int ret = _doLoad(strResult);
+    if ( ret != 0 )
+    { sysError( tr("Load record fail") ); }
+
 }
 
 //! \todo list the files
 void ActionTable::on_toolSaveAs_clicked()
 {
-    QString descripton;
-    bool bOk;
-    descripton = QInputDialog::getText( this,
-                                        tr("Save as"),
-                                        tr("Name:"),
-                                        QLineEdit::Normal,
-                                        "mrx-t4_motion_" + QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss_zzz" ),
-                                        &bOk
-                                        );
-    if ( !bOk )
-    { return; }
+    FileManager manager;
+    manager.setMode(SAVEAS);
+    manager.attachPlugin(m_pPlugin);
+    manager.setPath(m_pPlugin->selfPath()+"/");
+    if( manager.exec() == QDialog::Accepted ){
 
-    //! simple
-    descripton = descripton.simplified();
-    if ( descripton.isEmpty() )
+    }else{ return; }
+
+    QString strResult = manager.strResult();
+    strResult = strResult.simplified();
+    if ( strResult.isEmpty() )
     {
         sysPrompt( tr("Invalid description"), 0 );
         return;
     }
 
     //! clear
-    if ( descripton.endsWith(".mrp"), Qt::CaseInsensitive )
+    if ( strResult.endsWith(".mrp", Qt::CaseInsensitive) )
     {
-        descripton.remove( descripton.length() - 4, 4 );
+        strResult.remove( strResult.length() - 4, 4 );
     }
     else
     {}
-    descripton.append( ".mrp" );
+    strResult.append( ".mrp" );
 
-    int ret = _doSave( descripton );
+    int ret = _doSave( strResult );
     if ( ret != 0 )
     { sysError( tr("Save record fail") ); }
 }

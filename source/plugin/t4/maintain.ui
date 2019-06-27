@@ -82,18 +82,7 @@
        <string>Operate</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="1" column="0">
-        <widget class="QPushButton" name="btnHistory">
-         <property name="text">
-          <string>History</string>
-         </property>
-         <property name="icon">
-          <iconset resource="../../../res/res.qrc">
-           <normaloff>:/res/image/icon/history.png</normaloff>:/res/image/icon/history.png</iconset>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0" colspan="3">
+       <item row="5" column="0" colspan="3">
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -106,14 +95,14 @@
          </property>
         </spacer>
        </item>
-       <item row="0" column="0">
-        <widget class="QPushButton" name="btnUpdate">
+       <item row="1" column="0">
+        <widget class="QPushButton" name="btnHistory">
          <property name="text">
-          <string>Update</string>
+          <string>History</string>
          </property>
          <property name="icon">
           <iconset resource="../../../res/res.qrc">
-           <normaloff>:/res/image/icon/upgrade.png</normaloff>:/res/image/icon/upgrade.png</iconset>
+           <normaloff>:/res/image/icon/history.png</normaloff>:/res/image/icon/history.png</iconset>
          </property>
         </widget>
        </item>
@@ -141,6 +130,17 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="0">
+        <widget class="QPushButton" name="btnUpdate">
+         <property name="text">
+          <string>Update</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../res/res.qrc">
+           <normaloff>:/res/image/icon/upgrade.png</normaloff>:/res/image/icon/upgrade.png</iconset>
+         </property>
+        </widget>
+       </item>
        <item row="3" column="0">
         <widget class="QPushButton" name="btnReset">
          <property name="text">
@@ -149,6 +149,17 @@
          <property name="icon">
           <iconset resource="../../../res/res.qrc">
            <normaloff>:/res/image/icon/ErrorSetting.png</normaloff>:/res/image/icon/ErrorSetting.png</iconset>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QPushButton" name="btnBuild">
+         <property name="text">
+          <string>Build</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../../../res/res.qrc">
+           <normaloff>:/res/image/icon/build.png</normaloff>:/res/image/icon/build.png</iconset>
          </property>
         </widget>
        </item>
@@ -171,7 +182,7 @@
         </widget>
        </item>
        <item row="1" column="0" rowspan="2" colspan="2">
-        <widget class="QPushButton" name="btnRecover">
+        <widget class="QPushButton" name="btnRestore">
          <property name="text">
           <string>Restore</string>
          </property>

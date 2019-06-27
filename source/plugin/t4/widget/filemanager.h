@@ -12,7 +12,10 @@ enum MODE{
     BACKUP,
     RESTORE,
     EXPORT,
-    CLEAR
+    CLEAR,
+    SAVEAS,
+    OPENACTIONTABLE,
+    REMOVEACTIONTABLE
 };
 
 namespace Ui {
@@ -48,9 +51,13 @@ public:
     void setMode(MODE mode);
     MODE mode();
 
+    void on_mode_changed(MODE m);
+
+    QString strResult();
+
 Q_SIGNALS:
 
-    void sigOpenDemo(QString s);
+    void sigAccept(QString text);
 
 protected:
     virtual void doStartWork();
@@ -60,18 +67,29 @@ protected:
 private:
     int getDirInfo();
 
+    void clear();
+
 private slots:
 
     void on_lineEdit_textChanged(const QString &arg1);
 
     void on_treeView_activated(const QModelIndex &index);
 
+
+
+    void on_buttonBox_accepted();
+
+    void on_buttonBox_rejected();
+
 private:
     Ui::FileManager *ui;
     XPlugin *m_pPlugin;
     QStringList m_dirList;
     QStringList m_fileList;
+    QStringList mrpFileList;
     QString m_Path;
+
+    QString m_result;
 
     MODE m_mode;
 };

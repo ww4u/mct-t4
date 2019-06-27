@@ -57,14 +57,15 @@ private slots:
 
     void on_chkAutoLogin_stateChanged(int arg1);
 
-    void on_btnRecover_clicked();
+    void on_btnRestore_clicked();
 
     void on_btnExport_clicked();
+
+    void on_btnBuild_clicked();
 
 private:
     Ui::Maintain *ui;
 
-    FileManager *m_fileMg;
 };
 
 }

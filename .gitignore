@@ -1,4 +1,7 @@
 build-*/
+build/*.exe
+build/MRQ_Update/*.exe
+build/NetFramework/*.exe
 build/output/*
 installer/
 unittest/

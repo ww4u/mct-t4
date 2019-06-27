@@ -13,16 +13,10 @@ XPlugin::XPlugin( QObject *parent ) : XPluginIntf( parent )
     m_pViewObj = NULL;
 
     //! updateing
-//    m_pUpdateWorking = new XPluginUpdateingThread(  );
     m_pUpdateWorking = new XPluginWorkingThread( this );
-//    m_pUpdateWorking->moveToThread( m_pUpdateWorking );
     m_pUpdateWorking->attachMutex( &mUpdateMutex );
     m_pUpdateWorking->start();
     m_pUpdateWorking->setTick( 1000 );
-//    m_pUpdateWorking->setTick( 100 );
-
-//    m_pMapper = new QSignalMapper();
-//    m_pMapper->moveToThread( m_pUpdateWorking );
 
     m_pMissionWorking = new XPluginWorkingThread( this );
     m_pMissionWorking->attachMutex( &mMissionMutex );
@@ -45,15 +39,11 @@ XPlugin::XPlugin( QObject *parent ) : XPluginIntf( parent )
     connect( this, SIGNAL(signal_api_operate(QObject*,bool)),
              m_pUpdateWorking, SLOT(slot_api_operate(QObject*,bool)));
 
-//    //! maped object
-//    connect( m_pMapper, SIGNAL(mapped(QObject*)),
-//             m_pUpdateWorking, SLOT(slot_api_proc(QObject*)), Qt::QueuedConnection );
 }
 
 XPlugin::~XPlugin()
 {
     m_pUpdateWorking->requestInterruption();
-//    m_pUpdateWorking->quit( );
     m_pUpdateWorking->wait();
 
     m_pMissionWorking->requestInterruption();

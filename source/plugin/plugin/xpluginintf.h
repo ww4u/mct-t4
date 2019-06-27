@@ -14,6 +14,13 @@ public:
         user_user,
         user_admin,
     };
+
+    enum eWorkingRole
+    {
+        working_normal,
+        working_mrq_corrupted,
+    };
+
 public:
     enum ePluginAttr{
         plugin_attr_none = 0,
@@ -132,6 +139,9 @@ public:
     eUserRole userRole();
     bool isAdmin();
 
+    void setWorkingRole( eWorkingRole role );
+    eWorkingRole workingRole();
+
 protected:
     bool mbOperateAble;
     bool mbOnLine;
@@ -154,6 +164,7 @@ protected:
     bool mbAutoLogin;
     QString mUserPw, mAdminPw;
     eUserRole mUserRole;
+    eWorkingRole mWorkingRole;
 
 };
 

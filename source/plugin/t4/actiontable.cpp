@@ -170,6 +170,12 @@ void ActionTable::buildConnection()
 
     connect( ui->view, SIGNAL(pressed(const QModelIndex &)),
              this, SLOT(on_view_clicked(const QModelIndex &)));
+
+    //! post timer
+    connect( &mPostSaveTimer, SIGNAL(timeout()),
+             this, SLOT(slot_post_save_timeout()) );
+    mPostSaveTimer.setSingleShot( true );
+    mPostSaveTimer.setInterval( 1000 );
 }
 
 void ActionTable::setModel( QAbstractItemModel *pModel )
@@ -487,12 +493,8 @@ void ActionTable::editRecord( XSetting setting )
 
 void ActionTable::doSave()
 {
-    int ret = -1;
-
-    ret = _doSave( record_file_name );
-
-    if ( ret != 0 )
-    { sysError( QString(record_file_name) + QString(" ") + tr("save fail") ); return; }
+    //! delay save
+    mPostSaveTimer.start();
 }
 
 void ActionTable::doLoad()
@@ -1040,7 +1042,12 @@ void ActionTable::slot_resize()
 
 void ActionTable::slot_post_save_timeout()
 {
+    int ret = -1;
 
+    ret = _doSave( record_file_name );
+
+    if ( ret != 0 )
+    { sysError( QString(record_file_name) + QString(" ") + tr("save fail") ); return; }
 }
 
 void ActionTable::slot_customContextMenuRequested(const QPoint &pos)

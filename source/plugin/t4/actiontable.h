@@ -82,8 +82,6 @@ protected:
 protected:
     void updateControl();
 
-
-
     int onToHere( QVariant var );
     int onHoming( QVariant var );
 
@@ -119,6 +117,7 @@ private:
 
     QAction *m_pActionResize;
 
+    QTimer mPostSaveTimer;
 Q_SIGNALS:
 
 

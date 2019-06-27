@@ -14,6 +14,8 @@ XPluginIntf::XPluginIntf( QObject *parent ) : QObject( parent )
     mbOperateAble = true;
     mbOnLine = true;
 
+    mWorkingRole = working_normal;
+
     rstAuthority();
 }
 
@@ -354,5 +356,10 @@ XPluginIntf::eUserRole XPluginIntf::userRole()
 
 bool XPluginIntf::isAdmin()
 { return mUserRole == user_admin; }
+
+void XPluginIntf::setWorkingRole( XPluginIntf::eWorkingRole role )
+{ mWorkingRole = role; }
+XPluginIntf::eWorkingRole XPluginIntf::workingRole()
+{ return mWorkingRole; }
 
 

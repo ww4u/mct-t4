@@ -20,15 +20,6 @@
 
 #define UPDATE_FILE (DIR_TEMP + "/output/update.txt")
 
-#define DEMO0_MCT_MOTION_FILE   (DIR_TEMP + "/output/demo/0/MCT_motion.mrp");
-#define DEMO0_MCT_MOTION_FILE   (DIR_TEMP + "/output/demo/0/debug.xml");
-
-#define DEMO0_MCT_MOTION_FILE   (DIR_TEMP + "/output/demo/1/MCT_motion.mrp");
-#define DEMO0_MCT_MOTION_FILE   (DIR_TEMP + "/output/demo/1/debug.xml");
-
-#define DEMO0_MCT_MOTION_FILE   (DIR_TEMP + "/output/demo/2/MCT_motion.mrp");
-#define DEMO0_MCT_MOTION_FILE   (DIR_TEMP + "/output/demo/2/debug.xml");
-
 
 
 Widget::Widget(QWidget *parent) :
@@ -40,6 +31,8 @@ Widget::Widget(QWidget *parent) :
     ui->progressBar->hide();
     ui->btnShow->hide();
     ui->textBrowser->hide();
+
+    m_vi = 0;
 
     m_updateProcess = NULL;
     m_undoProcess = NULL;

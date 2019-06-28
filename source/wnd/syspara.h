@@ -36,7 +36,7 @@ public:
     int mStyleIndex;
 
     bool mbAutoExpand, mbAutoLoad, mbAutoSearch;
-//    mbAutoLogin;
+    bool mbAutoMax;
     bool mbAutoRpp;
     int mIntfIndex;
     int mRefreshIndex;

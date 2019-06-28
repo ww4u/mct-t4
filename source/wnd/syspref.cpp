@@ -17,6 +17,7 @@ SysPref::SysPref( const SysPara &para, QWidget *parent ) :
     //! copy
     mbAutoExpand = para.mbAutoExpand;
     mbAutoLoad = para.mbAutoLoad;
+    mbAutoMax = para.mbAutoMax;
     mbAutoSearch = para.mbAutoSearch;
 
     mbAutoRpp = para.mbAutoRpp;
@@ -24,7 +25,6 @@ SysPref::SysPref( const SysPara &para, QWidget *parent ) :
     mIntfIndex = para.mIntfIndex;
     mRefreshIndex = para.mRefreshIndex;
     mStyleIndex = para.mStyleIndex;
-//    mSysMode = para.mSysMode;
 
     mPlugins = para.mPlugins;
 }
@@ -50,7 +50,7 @@ void SysPref::updateUi()
     ui->chkAutoExpand->setChecked( mbAutoExpand );
     ui->chkAutoLoad->setChecked( mbAutoLoad );
     ui->chkAutoSearch->setChecked( mbAutoSearch );
-//    ui->chkAutoLogin->setChecked( mbAutoLogin );
+    ui->chkMax->setChecked( mbAutoMax );
 
     ui->chkAutoRpp->setChecked( mbAutoRpp );
 }
@@ -59,7 +59,7 @@ void SysPref::updateData()
     mbAutoExpand = ui->chkAutoExpand->isChecked();
     mbAutoLoad = ui->chkAutoLoad->isChecked();
     mbAutoSearch = ui->chkAutoSearch->isChecked();
-//    mbAutoLogin = ui->chkAutoLogin->isChecked();
+    mbAutoMax = ui->chkMax->isChecked();
 
     mbAutoRpp = ui->chkAutoRpp->isChecked();
 }

@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_3">
       <attribute name="title">
@@ -31,6 +31,9 @@
            <width>100</width>
            <height>16777215</height>
           </size>
+         </property>
+         <property name="toolTip">
+          <string>Run the slected demo</string>
          </property>
          <property name="text">
           <string>start</string>
@@ -97,6 +100,9 @@
        </item>
        <item row="1" column="0">
         <widget class="QPushButton" name="btnHistory">
+         <property name="toolTip">
+          <string>Show the version history</string>
+         </property>
          <property name="text">
           <string>History</string>
          </property>
@@ -121,6 +127,9 @@
        </item>
        <item row="2" column="0">
         <widget class="QPushButton" name="btnFold">
+         <property name="toolTip">
+          <string>Fold the device for package</string>
+         </property>
          <property name="text">
           <string>Fold</string>
          </property>
@@ -132,6 +141,9 @@
        </item>
        <item row="0" column="0">
         <widget class="QPushButton" name="btnUpdate">
+         <property name="toolTip">
+          <string>Update the device</string>
+         </property>
          <property name="text">
           <string>Update</string>
          </property>
@@ -143,6 +155,9 @@
        </item>
        <item row="3" column="0">
         <widget class="QPushButton" name="btnReset">
+         <property name="toolTip">
+          <string>Restore the factory settings</string>
+         </property>
          <property name="text">
           <string>Reset</string>
          </property>
@@ -154,6 +169,9 @@
        </item>
        <item row="4" column="0">
         <widget class="QPushButton" name="btnBuild">
+         <property name="toolTip">
+          <string>Match the components of the device</string>
+         </property>
          <property name="text">
           <string>Build</string>
          </property>
@@ -172,6 +190,9 @@
       <layout class="QGridLayout" name="gridLayout_5">
        <item row="4" column="0" colspan="2">
         <widget class="QPushButton" name="btnClearBackup">
+         <property name="toolTip">
+          <string>Clear all backups</string>
+         </property>
          <property name="text">
           <string>Clear Backup</string>
          </property>
@@ -183,6 +204,9 @@
        </item>
        <item row="1" column="0" rowspan="2" colspan="2">
         <widget class="QPushButton" name="btnRestore">
+         <property name="toolTip">
+          <string>Restore the settings from backup</string>
+         </property>
          <property name="text">
           <string>Restore</string>
          </property>
@@ -194,6 +218,9 @@
        </item>
        <item row="0" column="0" colspan="2">
         <widget class="QPushButton" name="btnBackup">
+         <property name="toolTip">
+          <string>Backup the device settings</string>
+         </property>
          <property name="text">
           <string>Backup</string>
          </property>
@@ -218,6 +245,9 @@
        </item>
        <item row="3" column="0" colspan="2">
         <widget class="QPushButton" name="btnExport">
+         <property name="toolTip">
+          <string>Export the setting to local disk</string>
+         </property>
          <property name="text">
           <string>Export</string>
          </property>
@@ -249,6 +279,9 @@
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
         <widget class="QPushButton" name="btnRestart">
+         <property name="toolTip">
+          <string>Reboot the device</string>
+         </property>
          <property name="text">
           <string>Restart</string>
          </property>
@@ -260,6 +293,9 @@
        </item>
        <item row="1" column="0">
         <widget class="QPushButton" name="btnShutDown">
+         <property name="toolTip">
+          <string>Shutdown the device</string>
+         </property>
          <property name="text">
           <string>Shutdown</string>
          </property>
@@ -391,6 +427,9 @@
        </item>
        <item row="0" column="0">
         <widget class="QCheckBox" name="chkAutoLogin">
+         <property name="toolTip">
+          <string>Auto login</string>
+         </property>
          <property name="layoutDirection">
           <enum>Qt::RightToLeft</enum>
          </property>

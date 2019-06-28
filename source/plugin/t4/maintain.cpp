@@ -53,9 +53,10 @@ void Maintain::setOpened( bool b )
 void Maintain::updateRole()
 {
     bool bAdmin = m_pPlugin->isAdmin();
-logDbg()<<bAdmin;
+
     ui->btnResetPw->setVisible( bAdmin );
     ui->cmbRstUser->setVisible( bAdmin );
+    ui->btnBuild->setVisible( bAdmin );
 }
 
 void Maintain::updateUi()
@@ -122,7 +123,6 @@ void Maintain::on_btnReset_clicked()
 
 void Maintain::on_btnUpdate_clicked()
 {
-    //! \todo
     Widget w;
     w.attatchPlugin(m_pPlugin);
     w.exec();

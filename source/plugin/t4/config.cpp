@@ -135,7 +135,7 @@ void Config::updateData()
     int ret;
     selfPara->mbAxisSafeEnable = ui->lmtSafeArea->limitOn();
     selfPara->mbAxisSoftEnable = ui->lmtSoftLimit->limitOn();
-    for ( int i; i < selfPara->_limit_axis_cnt ; i++ )
+    for ( int i=0; i < selfPara->_limit_axis_cnt ; i++ )
     {
         ret = ui->lmtSafeArea->range( i, l, h);
         if ( ret != 0 )
@@ -437,11 +437,6 @@ void Config::spyEdited()
     };
 
     install_spy();
-
-//    foreach( QLineEdit *pEdit, mAxesEdits )
-//    {
-//        spy_control_edit( pEdit );
-//    }
 }
 
 void Config::retranslateUi()

@@ -34,6 +34,11 @@ void Maintain::enterMission()
 void Maintain::exitMission()
 { setOperAble( true ); }
 
+void Maintain::retranslateUi()
+{
+    ui->retranslateUi( this );
+}
+
 void Maintain::setOperAble( bool b )
 {
     //! for each page operate able

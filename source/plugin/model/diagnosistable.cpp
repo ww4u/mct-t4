@@ -23,7 +23,7 @@ DiagnosisTable::DiagnosisTable( ): MegaTableModel( )
 {
     mHeaderList<<QObject::tr("No.")
                <<QObject::tr("Type")
-               <<QObject::tr("Time stamp")
+               <<QObject::tr("Timestamp")
                <<QObject::tr("Additional info")
                <<QObject::tr("Counter")
                <<QObject::tr("Message");

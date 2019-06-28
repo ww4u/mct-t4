@@ -21,6 +21,8 @@ public:
 protected:
     virtual void enterMission();
     virtual void exitMission();
+
+    virtual void retranslateUi();
 public:
     virtual void setOperAble( bool b );
     virtual void setOpened( bool b );

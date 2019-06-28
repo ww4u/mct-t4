@@ -1018,7 +1018,7 @@ void T4OpPanel::stepProc( int jId, int dir )
     if ( isCoordJoint() || jId >= 4 )
     {
         QList<QVariant> vars;
-        vars<<(jId-1)<<dir;
+        vars<<(jId-1)<<dir* m_pPlugin->jointDir( jId - 1 );
         QVariant var( vars );
         on_post_setting( T4OpPanel, onJointStep, tr("Joint step") );
     }
@@ -1048,7 +1048,7 @@ void T4OpPanel::jogProc( int jId, int dir, bool b )
     QList<QVariant> vars;
     if ( isCoordJoint() || jId >= 4 )
     {
-        vars<<(jId-1)<<dir<<1;
+        vars<<(jId-1)<<dir * m_pPlugin->jointDir( jId - 1 )<<1;
         QVariant var( vars );
         on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Joint jog") );
     }
@@ -1118,15 +1118,24 @@ logDbg()<<t<<vars.at(3).toDouble()<<dist<<guess_dist_time_ms( t, dist );
     return ret;
 }
 
+//! terminal + body
 int T4OpPanel::onHoming( QVariant var )
 {
     check_connect_ret( -1 );
 
     int ret;
-logDbg()<<pRobo->mHomeTimeout;
+    //! \note only for the valid tool
+    if ( pRobo->mTerminalType == T4Para::e_terminal_f2
+         || pRobo->mTerminalType == T4Para::e_terminal_f3
+         || pRobo->mTerminalType == T4Para::e_terminal_a5 )
+    {
+        ret = mrgRobotToolGoHome( robot_var(),pRobo->mHomeTimeout*1000 );
+        if ( ret != 0 )
+        { return ret; }
+    }
+
     ret = mrgRobotGoHome( robot_var(),
                           pRobo->mHomeTimeout*1000 );
-logDbg();
     return ret;
 }
 
@@ -1167,7 +1176,24 @@ int T4OpPanel::onJointStep( QVariant var /*int jId, int dir*/ )
 
     double spd = pRobo->mMaxJointSpeeds.at(jId) * localSpeed() / 100.0;
 
-    int ret = mrgMRQAdjust( device_var(), jId, 0, dir * stp, stp/spd, guess_dist_time_ms( stp/spd, stp ) );
+    int ret;
+    if ( jId == 4 )
+    {
+        ret = mrgRobotToolExe(robot_var(),
+                          stp*dir,
+                          stp/spd,
+                          guess_dist_time_ms( stp/spd, stp)
+                          );
+    }
+    else
+    {
+        ret = mrgMRQAdjust( device_var(),
+                        jId,
+                        0,
+                        dir * stp,
+                        stp/spd,
+                        guess_dist_time_ms( stp/spd, stp ) );
+    }
     return ret;
 }
 int T4OpPanel::onJointZero( QVariant var )

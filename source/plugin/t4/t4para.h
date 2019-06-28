@@ -25,8 +25,8 @@ public:
     {
         e_terminal_f2,
         e_terminal_f3,
-        e_terminal_a5,
         e_terminal_tip,
+        e_terminal_a5,
         e_terminal_user
     };
 
@@ -36,8 +36,14 @@ public:
         e_coord_tool,
         e_coord_obj,
         e_coord_user,
-
     };
+
+    enum eAxis5Range
+    {
+       e_range_270,
+       e_range_360,
+    };
+
 
 public:
     T4Para();
@@ -56,6 +62,8 @@ public:
     const static int _limit_axis_cnt = 4;
 
     eTerminalType mTerminalType;
+    eAxis5Range mA5Range;
+
     float mAxisCurrents[ T4Para::_axis_cnt ];
     float mAxisIdleCurrents[ T4Para::_axis_cnt ];
 //    float mAxisSwitchTimes[ T4Para::_axis_cnt ];

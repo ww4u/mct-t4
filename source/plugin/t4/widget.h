@@ -65,6 +65,8 @@ private slots:
     void on_btnShow_toggled(bool checked);
     void slotGetRunState();
 
+    void on_btnShow_clicked();
+
 private:
     Ui::Widget *ui;
     QString sPath;

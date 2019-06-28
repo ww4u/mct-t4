@@ -27,6 +27,14 @@ Config::Config(QWidget *parent) :
 
     setContextHelp("config");
 
+    //! clear all
+    ui->cmbTypeTerminal->clear();
+    ui->cmbTypeTerminal->addItem( QIcon(":/res/image/t4/f2.png"), tr("MRX-F2"), QVariant( (int)T4Para::e_terminal_f2 ) );
+//    ui->cmbTypeTerminal->addItem( QIcon(":/res/image/t4/f3.png"), tr("MRX-F3"), QVariant( (int)T4Para::e_terminal_f3  ) );
+    ui->cmbTypeTerminal->addItem( QIcon(":/res/image/t4/tip.png"), tr("MRX-TIP"), QVariant( (int)T4Para::e_terminal_tip ) );
+    ui->cmbTypeTerminal->addItem( QIcon(":/res/image/t4/a5.png"), tr("MRX-AXIS5"), QVariant( (int)T4Para::e_terminal_a5 ) );
+    ui->cmbTypeTerminal->addItem( QIcon(":/res/image/icon/51.png"), tr("User"), QVariant( (int)T4Para::e_terminal_user ) );
+
     spyEdited();
 
     set_page_rstable();
@@ -68,11 +76,26 @@ void Config::setOpened( bool b )
 void Config::updateUi()
 {
     //! set type
-    ui->cmbTypeTerminal->setCurrentIndex( (int)selfPara->mTerminalType );
+    int id;
+    ui->cmbTypeTerminal->setCurrentIndex( 0 );
+    for ( int i = 0; i < ui->cmbTypeTerminal->count(); i++ )
+    {
+        id = ui->cmbTypeTerminal->itemData( i ).toInt();
+        if ( id == (int)selfPara->mTerminalType )
+        {
+            ui->cmbTypeTerminal->setCurrentIndex( i );
+            break;
+        }
+    }
     on_cmbTypeTerminal_currentIndexChanged( ui->cmbTypeTerminal->currentIndex() );
-logDbg()<<selfPara->mAxisZero[0];
+
+    if ( selfPara->mA5Range == T4Para::e_range_360 )
+    { ui->rad360->setChecked( true ); }
+    else
+    { ui->rad270->setChecked( true ); }
+
+
     //! zero
-//    ui->spinZero0->setValue( selfPara->mAxisZero[0] );
     set_zero( 0 );
     set_zero( 1 );
     set_zero( 2 );
@@ -99,7 +122,8 @@ logDbg()<<selfPara->mAxisZero[0];
 
 void Config::updateData()
 {
-    selfPara->mTerminalType = (T4Para::eTerminalType)ui->cmbTypeTerminal->currentIndex();
+    selfPara->mTerminalType = (T4Para::eTerminalType)ui->cmbTypeTerminal->currentData().toInt();
+    selfPara->mA5Range = ui->rad360->isChecked() ? T4Para::e_range_360 : T4Para::e_range_270;
 
     get_zero( 0 );
     get_zero( 1 );
@@ -224,8 +248,11 @@ int Config::upload()
     //! slow ratio
     int a, b;
     char type[1]={0};
-    //int ret = mrgRobotGetToolType(device_var(), type);
-    if( int(type[0]) == TERMINAL_TYPE::USER ){
+
+    //! \todo the user tool type
+//    int ret = mrgRobotGetToolType(device_var(), type);
+    if( int(type[0]) == T4Para::e_terminal_user )
+    {
         ret = mrgMRQMotorGearRatio_Query( device_var(),
                                     4,
                                     &a, &b );
@@ -255,15 +282,20 @@ int Config::download()
     double angle;
 
     //! set terminal
-    int type = ui->cmbTypeTerminal->currentIndex();
+    int type = ui->cmbTypeTerminal->currentData().toInt();
 
     char t[4] = {0};
 
-    QString baStr = QString("4@%1").arg( device_var_handle() );
-    ret = mrgRobotToolSet( robot_var(), type, baStr.toLatin1().data() );
-    if(ret != 0){
-        return -1;
+    //! F2, F3, A5
+    if ( type >= T4Para::e_terminal_f2 && type <= T4Para::e_terminal_a5 )
+    {
+        QString baStr = QString("4@%1").arg( device_var_handle() );
+        ret = mrgRobotToolSet( robot_var(), type, baStr.toLatin1().data() );
+        if(ret != 0){
+            return -1;
+        }
     }
+
     //! set zero
     if( ui->tabZero->isEnabled() )
     {
@@ -372,6 +404,9 @@ void Config::spyEdited()
 //        ui->chkEn
     };
     QRadioButton *radBoxes[] = {
+        ui->rad270,
+        ui->rad360,
+
     };
     QLineEdit *edits[]={
 
@@ -424,7 +459,12 @@ void Config::updateRole()
 }
 
 void Config::on_cmbTypeTerminal_currentIndexChanged(int index)
-{logDbg();
+{
+    if ( NULL == m_pPlugin )
+    { return; }
+
+    int typeId = ui->cmbTypeTerminal->currentData().toInt();
+
     QIcon icon = ui->cmbTypeTerminal->itemIcon( index );
     if ( icon.isNull() )
     {
@@ -435,15 +475,13 @@ void Config::on_cmbTypeTerminal_currentIndexChanged(int index)
     {
         ui->labelTerminalImg->setPixmap( icon.pixmap( 160,160 ) );
         ui->labelTerminalImg->setVisible( true );
-        if( index == TERMINAL_TYPE::USER ){
-            ui->gpSlow->setVisible( true );
-        }else{
-            ui->gpSlow->setVisible( false );
-        }
+
+        ui->gpSlow->setVisible( typeId == T4Para::e_terminal_user );
+        ui->gpRange->setVisible( typeId == T4Para::e_terminal_a5 );
     }
 
     //! validate the terminal
-    if ( index == 3 || index == 4 )
+    if ( typeId == T4Para::e_terminal_tip || typeId == T4Para::e_terminal_user )
     {
         Q_ASSERT( NULL != m_pPlugin );
         m_pPlugin->emit_setting_changed( (eXSetting)MRX_T4::e_setting_terminal, false );

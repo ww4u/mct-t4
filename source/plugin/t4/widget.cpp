@@ -21,7 +21,6 @@
 #define UPDATE_FILE (DIR_TEMP + "/output/update.txt")
 
 
-
 Widget::Widget(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Widget)
@@ -84,6 +83,12 @@ int Widget::reOpenDevice()
         //ret = mrgGetRobotDevice(m_vi, m_robotID, deviceNames);
         recvID = QString::number(1);
 
+        ret = mrgModeSwitch(m_vi, 1);
+        if(ret < 0){
+            sysInfo(tr("Switch Mode Fail"));
+            break;
+        }
+
     }while(0);
 
     return ret;
@@ -105,9 +110,6 @@ void Widget::on_buttonBox_clicked(QAbstractButton *button)
         button->hide();
     }else {
         destory();
-        if(m_vi > 0){
-            mrgCloseGateWay( m_vi);
-        }
         this->close();
         return;
     }

@@ -32,6 +32,9 @@
            <height>16777215</height>
           </size>
          </property>
+         <property name="toolTip">
+          <string>Run demo</string>
+         </property>
          <property name="text">
           <string>start</string>
          </property>
@@ -97,6 +100,9 @@
        </item>
        <item row="1" column="0">
         <widget class="QPushButton" name="btnHistory">
+         <property name="toolTip">
+          <string>view history upgrade info</string>
+         </property>
          <property name="text">
           <string>History</string>
          </property>
@@ -121,6 +127,9 @@
        </item>
        <item row="2" column="0">
         <widget class="QPushButton" name="btnFold">
+         <property name="toolTip">
+          <string>Fold</string>
+         </property>
          <property name="text">
           <string>Fold</string>
          </property>
@@ -132,6 +141,9 @@
        </item>
        <item row="0" column="0">
         <widget class="QPushButton" name="btnUpdate">
+         <property name="toolTip">
+          <string>upgrade</string>
+         </property>
          <property name="text">
           <string>Update</string>
          </property>
@@ -143,6 +155,9 @@
        </item>
        <item row="3" column="0">
         <widget class="QPushButton" name="btnReset">
+         <property name="toolTip">
+          <string>Reset</string>
+         </property>
          <property name="text">
           <string>Reset</string>
          </property>
@@ -154,6 +169,9 @@
        </item>
        <item row="4" column="0">
         <widget class="QPushButton" name="btnBuild">
+         <property name="toolTip">
+          <string>Send file</string>
+         </property>
          <property name="text">
           <string>Build</string>
          </property>
@@ -172,6 +190,9 @@
       <layout class="QGridLayout" name="gridLayout_5">
        <item row="4" column="0" colspan="2">
         <widget class="QPushButton" name="btnClearBackup">
+         <property name="toolTip">
+          <string>Clear Backup</string>
+         </property>
          <property name="text">
           <string>Clear Backup</string>
          </property>
@@ -183,6 +204,9 @@
        </item>
        <item row="1" column="0" rowspan="2" colspan="2">
         <widget class="QPushButton" name="btnRestore">
+         <property name="toolTip">
+          <string>Restore</string>
+         </property>
          <property name="text">
           <string>Restore</string>
          </property>
@@ -194,6 +218,9 @@
        </item>
        <item row="0" column="0" colspan="2">
         <widget class="QPushButton" name="btnBackup">
+         <property name="toolTip">
+          <string>Backup</string>
+         </property>
          <property name="text">
           <string>Backup</string>
          </property>
@@ -218,6 +245,9 @@
        </item>
        <item row="3" column="0" colspan="2">
         <widget class="QPushButton" name="btnExport">
+         <property name="toolTip">
+          <string>Export</string>
+         </property>
          <property name="text">
           <string>Export</string>
          </property>
@@ -249,6 +279,9 @@
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
         <widget class="QPushButton" name="btnRestart">
+         <property name="toolTip">
+          <string>Restart controller</string>
+         </property>
          <property name="text">
           <string>Restart</string>
          </property>
@@ -260,6 +293,9 @@
        </item>
        <item row="1" column="0">
         <widget class="QPushButton" name="btnShutDown">
+         <property name="toolTip">
+          <string>Shutdown controller</string>
+         </property>
          <property name="text">
           <string>Shutdown</string>
          </property>

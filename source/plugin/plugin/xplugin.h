@@ -273,15 +273,9 @@ public:
     XPluginWorkingThread *m_pMissionWorking;
     XPluginWorkingThread *m_pUpdateWorking;
 
-//    XPluginWorkingThread *m_pPoolWorking;
-//    XPluginWorkingThread *m_pPoolWorking;
-
     XPluginBgThread *m_pBgWorking;
 
     QMutex mEmergMutex, mMissionMutex, mUpdateMutex;
-
-//    QSignalMapper mMapper;
-//    QSignalMapper *m_pMapper;
 
 protected Q_SLOTS:
     virtual void slot_save_setting();

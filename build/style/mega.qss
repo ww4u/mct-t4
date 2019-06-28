@@ -626,6 +626,10 @@ QDockWidget::close-button, QDockWidget::float-button {
       padding: 1px -1px -1px 1px;
   }
 
+QWidget#Maintain QPushButton{
+    width: 150
+}
+  
 /* \todo for images */
 QRadioButton#radES::indicator:checked {
 	/*background-color:green;*/

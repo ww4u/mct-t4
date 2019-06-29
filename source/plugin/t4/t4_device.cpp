@@ -32,10 +32,8 @@ int MRX_T4::open()
         emit_setting_changed( XPage::e_setting_user_role, QVariant() );
 
         //! note work role
-//        setWorkingRole( working_normal );
-//        emit_setting_changed( XPage::e_setting_work_role, QVariant((int)working_normal) );
-        setWorkingRole( working_mrq_corrupted );
-        emit_setting_changed( XPage::e_setting_work_role, QVariant((int)working_mrq_corrupted) );
+        setWorkingRole( working_normal );
+        emit_setting_changed( XPage::e_setting_work_role, QVariant((int)working_normal) );
 
         //! change setting
         //! update the angle

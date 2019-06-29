@@ -36,6 +36,8 @@ public:
         e_setting_op_able,
         e_setting_online,
         e_setting_opened,
+        e_setting_work_role,
+
         e_setting_update_ui,
         e_setting_mission_working,
         e_setting_user_role,
@@ -86,6 +88,7 @@ public:
     virtual void startup();
 
     virtual void updateRole();
+    virtual void updateWorkingRole( int wRole );
 
     virtual int upload();
     virtual int download();

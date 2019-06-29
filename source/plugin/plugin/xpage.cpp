@@ -132,6 +132,22 @@ void XPage::startup()
 void XPage::updateRole()
 {}
 
+void XPage::updateWorkingRole( int role )
+{
+    if ( role == XPluginIntf::working_unk )
+    { setEnabled( false ); }
+    else if ( role == XPluginIntf::working_disconnected )
+    { setEnabled( false ); }
+    else if ( role == XPluginIntf::working_normal )
+    { }
+    else if ( role == XPluginIntf::working_mrq_corrupted )
+    { setEnabled( false ); }
+    else if ( role == XPluginIntf::working_device_not_ready )
+    { setEnabled( false ); }
+    else
+    {}
+}
+
 //! exchange
 int XPage::upload()
 { return 0; }
@@ -180,6 +196,12 @@ void XPage::onSetting( XSetting setting )
     { updateUi(); }
     else if ( setting.mSetting == XPage::e_setting_user_role )
     { updateRole(); }
+    else if ( setting.mSetting == XPage::e_setting_work_role )
+    {
+        check_para1();
+
+        updateWorkingRole( setting.mPara1.toInt() );
+    }
     else
     {}
 }

@@ -17,8 +17,15 @@ public:
 
     enum eWorkingRole
     {
+        working_unk,
+
+        //! disconnected
+        working_disconnected,
+
+        //! connected
         working_normal,
         working_mrq_corrupted,
+        working_device_not_ready,
     };
 
 public:

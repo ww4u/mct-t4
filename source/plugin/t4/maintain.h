@@ -28,6 +28,7 @@ public:
     virtual void setOpened( bool b );
 
     virtual void updateRole();
+    virtual void updateWorkingRole( int wRole );
 
     virtual void updateUi();
 private slots:

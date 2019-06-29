@@ -14,7 +14,7 @@ XPluginIntf::XPluginIntf( QObject *parent ) : QObject( parent )
     mbOperateAble = true;
     mbOnLine = true;
 
-    mWorkingRole = working_normal;
+    mWorkingRole = working_unk;
 
     rstAuthority();
 }

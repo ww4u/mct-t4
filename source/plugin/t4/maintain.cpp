@@ -64,6 +64,28 @@ void Maintain::updateRole()
     ui->btnBuild->setVisible( bAdmin );
 }
 
+void Maintain::updateWorkingRole( int wRole )
+{
+    if ( wRole == XPluginIntf::working_mrq_corrupted )
+    {
+        //! enabled at first
+        setEnabled( true );
+
+        //! \note only the update can be used
+        ui->tab_2->setEnabled( false );
+        ui->tab_3->setEnabled( false );
+        ui->tab_4->setEnabled( false );
+        ui->tab_5->setEnabled( false );
+
+        ui->btnHistory->setEnabled( false );
+        ui->btnFold->setEnabled( false );
+        ui->btnReset->setEnabled( false );
+        ui->btnBuild->setEnabled( false );
+    }
+    else
+    { XPage::updateWorkingRole( wRole); }
+}
+
 void Maintain::updateUi()
 {
     ui->chkAutoLogin->setChecked( m_pPlugin->isAutoLogin() );

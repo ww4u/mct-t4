@@ -20,7 +20,7 @@ void SysPara::reset()
     mbAutoExpand = true;
     mbAutoLoad = true;
     mbAutoSearch = false;
-//    mbAutoLogin = false;
+    mbAutoMax = true;
     mbAutoRpp = true;
 
     mIntfIndex = 0;
@@ -104,13 +104,12 @@ int SysPara::serialOut( QXmlStreamWriter &writer )
         writer.writeTextElement( "auto_expand", QString::number( mbAutoExpand ) );
         writer.writeTextElement( "auto_load", QString::number( mbAutoLoad ) );
         writer.writeTextElement( "auto_search", QString::number( mbAutoSearch ) );
-//        writer.writeTextElement( "auto_login", QString::number( mbAutoLogin ) );
+        writer.writeTextElement( "auto_max", QString::number( mbAutoMax ) );
         writer.writeTextElement( "auto_rpp", QString::number(mbAutoRpp) );
 
         writer.writeTextElement( "intf", QString::number(mIntfIndex) );
         writer.writeTextElement( "refresh",QString::number( mRefreshIndex ));
 
-//        writer.writeTextElement( "sys_mode", QString::number(mSysMode) );
         writer.writeTextElement( "code", mPw.toBase64() );
     writer.writeEndElement();
 
@@ -142,16 +141,14 @@ int SysPara::serialIn( QXmlStreamReader &reader )
                 { mbAutoLoad = reader.readElementText().toInt() > 0; }
                 else if ( reader.name() == "auto_search" )
                 { mbAutoSearch = reader.readElementText().toInt() > 0; }
-//                else if ( reader.name() == "auto_login" )
-//                { mbAutoLogin = reader.readElementText().toInt() > 0; }
+                else if ( reader.name() == "auto_max" )
+                { mbAutoMax = reader.readElementText().toInt() > 0; }
                 else if ( reader.name() == "auto_rpp" )
                 { mbAutoRpp = reader.readElementText().toInt() > 0; }
                 else if ( reader.name() == "intf" )
                 { mIntfIndex = reader.readElementText().toInt(); }
                 else if ( reader.name() == "refresh" )
                 { mRefreshIndex = reader.readElementText().toInt(); }
-//                else if ( reader.name() == "sys_mode" )
-//                { mSysMode = reader.readElementText().toInt(); }
                 else if ( reader.name() == "code" )
                 { mPw = (QByteArray::fromBase64( reader.readElementText().toLatin1() )); }
                 else

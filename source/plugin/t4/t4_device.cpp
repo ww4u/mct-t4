@@ -31,6 +31,9 @@ int MRX_T4::open()
 
         emit_setting_changed( XPage::e_setting_user_role, QVariant() );
 
+        //! note work role
+        setWorkingRole( working_normal );
+        emit_setting_changed( XPage::e_setting_work_role, QVariant((int)working_normal) );
 
         //! change setting
         //! update the angle
@@ -84,6 +87,10 @@ int MRX_T4::open()
     else
     {
         emit_setting_changed( XPage::e_setting_opened, false );
+
+        //! note work role
+        setWorkingRole( working_disconnected );
+        emit_setting_changed( XPage::e_setting_work_role, QVariant((int)working_disconnected) );
     }
 
     return ret;
@@ -191,6 +198,10 @@ void MRX_T4::close()
     unlockWorking();
 
     emit_setting_changed( XPage::e_setting_opened, false );
+
+    //! note work role
+    setWorkingRole( working_disconnected );
+    emit_setting_changed( XPage::e_setting_work_role, QVariant((int)(working_disconnected)) );
 }
 
 void MRX_T4::startup()

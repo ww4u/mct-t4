@@ -456,7 +456,8 @@ int T4OpPanel::posRefreshProc( void *pContext )
     MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
     Q_ASSERT( NULL != pRobo );
 
-    if ( pRobo->isOpened() )
+    //! \note the background ok
+    if ( pRobo->isOpened() && pRobo->workingRole() == XPluginIntf::working_normal )
     {}
     else
     { return 0; }
@@ -759,23 +760,11 @@ void T4OpPanel::attachWorkings()
                          NULL,
                          m_pPref->refreshIntervalMs() );
 
-//    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::monitorRefreshProc ),
-//                         tr("Monitor refresh"),
-//                         NULL,
-//                         m_pPref->refreshIntervalMs() );
-
     attachUpdateWorking( (XPage::procDo)( &T4OpPanel::pingTick ),
                          WorkingApi::e_work_loop,
                          tr("ping tick"),
                          NULL,
                          m_pPref->refreshIntervalMs() );
-    //! \todo
-    //! \note bypass for simplify the MRH load
-    //! diagnosis
-//    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::refreshDiagnosisInfo ),
-//                         tr("Diagnosis refresh"),
-//                         NULL,
-//                         m_pPref->refreshIntervalMs() );
 }
 
 void T4OpPanel::updateUi()

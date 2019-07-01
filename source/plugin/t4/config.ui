@@ -50,54 +50,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="cmbTypeTerminal">
-           <item>
-            <property name="text">
-             <string>MRX-F2</string>
-            </property>
-            <property name="icon">
-             <iconset resource="../../../res/res.qrc">
-              <normaloff>:/res/image/t4/f2.png</normaloff>:/res/image/t4/f2.png</iconset>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>MRX-F3</string>
-            </property>
-            <property name="icon">
-             <iconset resource="../../../res/res.qrc">
-              <normaloff>:/res/image/t4/f3.png</normaloff>:/res/image/t4/f3.png</iconset>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>MRX-AXIS5</string>
-            </property>
-            <property name="icon">
-             <iconset resource="../../../res/res.qrc">
-              <normaloff>:/res/image/t4/a5.png</normaloff>:/res/image/t4/a5.png</iconset>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>MRX-TIP</string>
-            </property>
-            <property name="icon">
-             <iconset resource="../../../res/res.qrc">
-              <normaloff>:/res/image/t4/tip.png</normaloff>:/res/image/t4/tip.png</iconset>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>User</string>
-            </property>
-            <property name="icon">
-             <iconset>
-              <normalon>:/res/image/icon/51.png</normalon>
-             </iconset>
-            </property>
-           </item>
-          </widget>
+          <widget class="QComboBox" name="cmbTypeTerminal"/>
          </item>
         </layout>
        </item>

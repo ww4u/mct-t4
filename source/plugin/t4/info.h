@@ -20,8 +20,7 @@ public:
 
 public:
     virtual void updateUi();
-
-    virtual void onSetting(XSetting setting);
+    virtual void updateRole();
 
 protected:
     virtual void retranslateUi();

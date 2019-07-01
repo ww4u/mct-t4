@@ -59,7 +59,11 @@ void Info::updateUi()
     m_T4Items[7]->setData( Qt::DisplayRole, m_pPlugin->FirmWareHard_MRQ() );
     m_T4Items[9]->setData( Qt::DisplayRole, m_pPlugin->FirmWareBoot_MRQ() );
     m_T4Items[11]->setData( Qt::DisplayRole, m_pPlugin->FirmWareFpga_MRQ() );
+}
 
+void Info::updateRole()
+{
+    ui->tableWidget2->setVisible( m_pPlugin->isAdmin() );
 }
 
 void Info::retranslateUi()
@@ -78,17 +82,6 @@ void Info::retranslateUi()
     m_T4Items[6]->setData( Qt::DisplayRole, tr("Hardware") );
     m_T4Items[8]->setData( Qt::DisplayRole, tr("Boot") );
     m_T4Items[10]->setData( Qt::DisplayRole, tr("FPGA") );
-}
-
-void Info::onSetting(XSetting setting)
-{
-    XPage::onSetting( setting );
-
-    if ( (int)setting.mSetting == XPage::e_setting_user_role )
-    {
-        bool bVisible = ( m_pPlugin->isAdmin() );
-        ui->tableWidget2->setVisible(bVisible);
-    }
 }
 
 }

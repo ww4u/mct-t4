@@ -33,7 +33,7 @@
           </size>
          </property>
          <property name="toolTip">
-          <string>Run demo</string>
+          <string>Run the slected demo</string>
          </property>
          <property name="text">
           <string>start</string>
@@ -101,7 +101,7 @@
        <item row="1" column="0">
         <widget class="QPushButton" name="btnHistory">
          <property name="toolTip">
-          <string>view history upgrade info</string>
+          <string>Show the version history</string>
          </property>
          <property name="text">
           <string>History</string>
@@ -128,7 +128,7 @@
        <item row="2" column="0">
         <widget class="QPushButton" name="btnFold">
          <property name="toolTip">
-          <string>Fold</string>
+          <string>Fold the device for package</string>
          </property>
          <property name="text">
           <string>Fold</string>
@@ -142,7 +142,7 @@
        <item row="0" column="0">
         <widget class="QPushButton" name="btnUpdate">
          <property name="toolTip">
-          <string>upgrade</string>
+          <string>Update the device</string>
          </property>
          <property name="text">
           <string>Update</string>
@@ -156,7 +156,7 @@
        <item row="3" column="0">
         <widget class="QPushButton" name="btnReset">
          <property name="toolTip">
-          <string>Reset</string>
+          <string>Restore the factory settings</string>
          </property>
          <property name="text">
           <string>Reset</string>
@@ -170,7 +170,7 @@
        <item row="4" column="0">
         <widget class="QPushButton" name="btnBuild">
          <property name="toolTip">
-          <string>Send file</string>
+          <string>Match the components of the device</string>
          </property>
          <property name="text">
           <string>Build</string>
@@ -191,7 +191,7 @@
        <item row="4" column="0" colspan="2">
         <widget class="QPushButton" name="btnClearBackup">
          <property name="toolTip">
-          <string>Clear Backup</string>
+          <string>Clear all backups</string>
          </property>
          <property name="text">
           <string>Clear Backup</string>
@@ -205,7 +205,7 @@
        <item row="1" column="0" rowspan="2" colspan="2">
         <widget class="QPushButton" name="btnRestore">
          <property name="toolTip">
-          <string>Restore</string>
+          <string>Restore the settings from backup</string>
          </property>
          <property name="text">
           <string>Restore</string>
@@ -219,7 +219,7 @@
        <item row="0" column="0" colspan="2">
         <widget class="QPushButton" name="btnBackup">
          <property name="toolTip">
-          <string>Backup</string>
+          <string>Backup the device settings</string>
          </property>
          <property name="text">
           <string>Backup</string>
@@ -246,7 +246,7 @@
        <item row="3" column="0" colspan="2">
         <widget class="QPushButton" name="btnExport">
          <property name="toolTip">
-          <string>Export</string>
+          <string>Export the setting to local disk</string>
          </property>
          <property name="text">
           <string>Export</string>
@@ -280,7 +280,7 @@
        <item row="0" column="0">
         <widget class="QPushButton" name="btnRestart">
          <property name="toolTip">
-          <string>Restart controller</string>
+          <string>Reboot the device</string>
          </property>
          <property name="text">
           <string>Restart</string>
@@ -294,7 +294,7 @@
        <item row="1" column="0">
         <widget class="QPushButton" name="btnShutDown">
          <property name="toolTip">
-          <string>Shutdown controller</string>
+          <string>Shutdown the device</string>
          </property>
          <property name="text">
           <string>Shutdown</string>
@@ -427,6 +427,9 @@
        </item>
        <item row="0" column="0">
         <widget class="QCheckBox" name="chkAutoLogin">
+         <property name="toolTip">
+          <string>Auto login</string>
+         </property>
          <property name="layoutDirection">
           <enum>Qt::RightToLeft</enum>
          </property>

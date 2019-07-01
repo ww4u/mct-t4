@@ -63,7 +63,7 @@ signals:
 private slots:
 //    void SlotAppendText(const QString &text);
     void slotReboot();
-    void on_btnShow_toggled(bool checked);
+
     void slotGetRunState();
 
     void on_btnShow_clicked();

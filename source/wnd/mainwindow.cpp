@@ -300,46 +300,6 @@ void MainWindow::loadConfig()
     changeLanguage();
 
     changeStyle();
-logDbg();
-    do
-    {
-//#ifdef QT_DEBUG
-//        mPref.mSysMode = 0;
-//        setSysMode( sysPara::eSysMode( mPref.mSysMode ) );
-//        mLogInRet == QDialog::Accepted;
-        break;
-//#endif
-
-//        //! skip, use the last mode
-//        if ( mPref.mbAutoLogin )
-//        { break; }
-
-//        //! log in
-//        LogIn logIn;
-//        logIn.setPw( mPref.mPw );
-
-//        mLogInRet = logIn.exec();
-//        if ( mLogInRet == QDialog::Accepted )
-//        {
-//            if ( logIn.getUserRole() == 0 )
-//            { setSysMode( sysPara::e_sys_user ); }
-//            else
-//            { setSysMode( sysPara::e_sys_admin ); }
-
-//            //! save mode
-//            mPref.mSysMode = logIn.getUserRole();
-
-//            QTimer::singleShot( 0, this, SLOT( slot_save_sysPref()) );
-//        }
-//        else
-//        {
-//            return;
-//        }
-
-    }while( 0 );
-
-//    setSysMode( (sysPara::eSysMode)0 );
-//    slot_role_changed();
 
     //! post startup
     QTimer::singleShot( 0, this, SLOT(slot_post_startup()) );
@@ -528,8 +488,6 @@ void MainWindow::slot_post_startup()
     //! change the style
     if ( mPref.mStyleIndex == 0 )
     { m_pMegaAction->setChecked( true ); }
-//    else if ( mPref.mStyleIndex == 1 )
-//    { m_pClasAction->setChecked( true ); }
     else
     { m_pSystemAction->setChecked( true); }
 
@@ -538,6 +496,9 @@ void MainWindow::slot_post_startup()
 
     m_pHelpAction->triggered(true);
 
+    //! max mize
+    if ( mPref.mbAutoMax )
+    { showMaximized(); }
 }
 
 void MainWindow::on_actionStop_triggered()

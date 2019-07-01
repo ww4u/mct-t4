@@ -40,8 +40,8 @@ bool XPluginIntf::isEqual( const QString &_addr,
               const QString &_model,
               const QString &_sn )
 {
-    if ( QString::compare( addr(), _addr, Qt::CaseInsensitive) != 0 )
-    { return false; }
+//    if ( QString::compare( addr(), _addr, Qt::CaseInsensitive) != 0 )
+//    { return false; }
 
     if ( QString::compare( model(), _model, Qt::CaseInsensitive) != 0 )
     { return false; }

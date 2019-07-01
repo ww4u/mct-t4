@@ -45,7 +45,7 @@ Source: "doc\*"; DestDir: "{app}\doc";  Flags: recursesubdirs
 
 Source: "MRQ_Update\*"; DestDir: "{app}\MRQ_Update"
 
-Source: "NetFramework\*"; DestDir: "{app}\NetFramework"
+;Source: "NetFramework\*"; DestDir: "{app}\NetFramework"
 
 [Dirs]
 ;Name: "{app}\temp"
@@ -55,7 +55,7 @@ Source: "NetFramework\*"; DestDir: "{app}\NetFramework"
 Type: files; Name: "{app}\*.xml"
 
 [Run]
-Filename: "{app}\NetFramework\NetFramework 4.5.exe"; Description: "NETFramework 4.5"; Parameters: ""; Flags: postinstall runascurrentuser
+;Filename: "{app}\NetFramework\NetFramework 4.5.exe"; Description: "NETFramework 4.5"; Parameters: ""; Flags: postinstall runascurrentuser
 Filename: "{app}\doc\readme.txt"; Description: "View the readme file"; Flags: postinstall shellexec skipifsilent runascurrentuser waituntilterminated
 
 [UninstallRun] 

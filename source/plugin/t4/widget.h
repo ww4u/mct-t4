@@ -23,8 +23,6 @@ public:
 
     void attatchPlugin(XPlugin *xp);
 
-    int reOpenDevice();
-
     void Append(const QString &text);
 
     void reboot();
@@ -40,6 +38,9 @@ public:
     int copyDemo();
 
     int copyUpdateInfo();
+
+    int openDevice();
+    void closeDevice();
 
 private slots:
     void on_buttonBox_clicked(QAbstractButton *button);
@@ -66,6 +67,8 @@ private slots:
     void slotGetRunState();
 
     void on_btnShow_clicked();
+
+    void slotLineEditTextChanged(QString);
 
 private:
     Ui::Widget *ui;

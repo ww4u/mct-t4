@@ -269,6 +269,7 @@ void FileManager::on_mode_changed(MODE m)
             break;
         case EXPORT:
             this->setWindowTitle(tr("Export"));
+            ui->lineEdit->setReadOnly(true);
             break;
         case CLEAR:
             this->setWindowTitle(tr("Clear"));

@@ -36,10 +36,14 @@ Widget::Widget(QWidget *parent) :
     m_updateProcess = NULL;
     m_undoProcess = NULL;
 
+    connect(ui->lineEdit,SIGNAL(textChanged(QString)),this,SLOT(slotLineEditTextChanged(QString)));
+
     connect(this, SIGNAL(sigReboot()),this, SLOT(slotReboot()));
 
     watcher = new QFutureWatcher<int>;
     connect(watcher, SIGNAL(finished()),this, SLOT(slotGetRunState()));
+
+    slotLineEditTextChanged(ui->lineEdit->text());
 }
 
 Widget::~Widget()
@@ -58,42 +62,7 @@ void Widget::attatchPlugin(XPlugin *xp)
     m_addr = m_pPlugin->addr();
     isAdmin = m_pPlugin->isAdmin();
 }
-int Widget::reOpenDevice()
-{
-    int ret;
-    m_pPlugin->close();
 
-    do{
-        m_vi = mrgOpenGateWay(m_addr.toLocal8Bit().data(), 200);
-        if( m_vi < 0){
-            ret = -1;
-            sysInfo("Open GateWay Fail", 1);
-            break;
-        }
-
-        int robotNames[128] = {0};
-        ret = mrgGetRobotName(m_vi, robotNames);
-        if(ret <=0){
-            sysInfo("Get Robot Name Fail", 1);
-            ret = -1;
-            break;
-        }
-        m_robotID = robotNames[0];
-
-        int deviceNames[128] = {0};
-        //ret = mrgGetRobotDevice(m_vi, m_robotID, deviceNames);
-        recvID = QString::number(1);
-
-        ret = mrgModeSwitch(m_vi, 1);
-        if(ret < 0){
-            sysInfo(tr("Switch Mode Fail"));
-            break;
-        }
-
-    }while(0);
-
-    return ret;
-}
 void Widget::on_buttonBox_clicked(QAbstractButton *button)
 {
     ui->labelStatus->hide();
@@ -101,13 +70,14 @@ void Widget::on_buttonBox_clicked(QAbstractButton *button)
     ui->textBrowser->clear();
 
     if((QPushButton*)(button) == ui->buttonBox->button(QDialogButtonBox::Ok)){
-        if(reOpenDevice()<0){
-            //!reopen error
+        m_pPlugin->close();
+        if(openDevice()<0){
             button->show();
             ui->labelStatus->setText( tr("Open Device Fail") );
             ui->labelStatus->show();
             return;
         }
+        closeDevice();
         button->hide();
     }else {
         this->close();
@@ -135,6 +105,10 @@ void Widget::on_toolButton_clicked()
 int Widget::upgressMRH()
 {
     int ret;
+    //! \todo
+    m_vi = mrgOpenGateWay(m_addr.toLocal8Bit().data(), 200);
+
+
     do{
         QFile mrhFile(MRH_FILE);
         if(!mrhFile.open(QIODevice::ReadOnly)){
@@ -166,7 +140,10 @@ int Widget::upgressMRH()
             break;
     }while(0);
 
+    //mrgCloseGateWay(m_vi);
+
     if(ret!=0){
+        closeDevice();
         return -1;
     }else{
         return 0;
@@ -197,10 +174,10 @@ int Widget::copyDemo()
     while(it.hasNext()){
         it.next();
         cmd = "mkdir -p " + m_pPlugin->demoPath() + "/" + it.key();
-        ret = mrgSystemRunCmd( m_vi, cmd.toLatin1().data(), 0 );
-        if(ret != 0){
+        ret = mrgSystemRunCmd( m_vi, cmd.toLocal8Bit().data(), 0 );
+        if(ret != 0){logDbg()<<cmd << ret;
             sysInfo("mkdir fail", 1);
-            continue;
+            break;
         }
 
         foreach (QString str, it.value()) {
@@ -208,10 +185,10 @@ int Widget::copyDemo()
             QByteArray ba;
             {
                 QString path = QString("%1%2/%3/%4").arg(DIR_TEMP).arg("/output/demo").arg(it.key()).arg(str);
-                qDebug() << path;
+                logDbg() << path;
                 QFile f( path );
                 if( !f.open(QIODevice::ReadOnly) ){
-                    continue;
+                    break;
                 }
                 ba = f.readAll();
                 f.close();
@@ -219,13 +196,13 @@ int Widget::copyDemo()
 
             ret = mrgStorageWriteFile( m_vi,
                                        0,
-                                       (m_pPlugin->demoPath()+"/" + it.key()).toLatin1().data(),
-                                       str.toLatin1().data(),
+                                       (m_pPlugin->demoPath()+"/" + it.key()).toLocal8Bit().data(),
+                                       str.toLocal8Bit().data(),
                                        (unsigned char*)(ba.data()),
                                        ba.size()
                                        );
-            if(ret !=0){
-                continue;
+            if(ret !=0){logDbg()<<ret;
+                break;
                 //sysInfo("Write File fail", 1);
             }else{
                 count += 1;
@@ -234,8 +211,8 @@ int Widget::copyDemo()
     }
 
     //! count = keysnum * length
-    int num = demoMap.keys().size() * demoMap.value(demoMap.firstKey()).size();qDebug() << num;
-    //! file num
+    int num = demoMap.keys().size() * demoMap.value(demoMap.firstKey()).size();
+
     if(count != num){
         //! \todo error
         return -1;
@@ -250,7 +227,7 @@ int Widget::copyUpdateInfo()
     do{
         cmd = "mkdir -p " + m_pPlugin->modelPath();
         ret = mrgSystemRunCmd( m_vi, cmd.toLatin1().data(), 0 );
-        if(ret != 0){
+        if(ret != 0){logDbg()<<cmd<< ret;
             sysInfo("Mkdir Fail", 1);
             break;
         }
@@ -273,7 +250,7 @@ int Widget::copyUpdateInfo()
                                    (unsigned char*)(ba.data()),
                                    ba.size()
                                    );
-        if(ret != 0){
+        if(ret != 0){logDbg()<<ret;
             sysInfo("Write update.txt Fail", 1);
             break;
         }
@@ -313,7 +290,7 @@ void Widget::slotReadUndoResult(QString text)
         slot_startMRQUpdate(0);
     }
     if( text.contains("Error") ){
-        ui->labelStatus->setText( tr("File Error") );
+        ui->labelStatus->setText( tr("Unpacking Error") );
         ui->labelStatus->show();
         ui->buttonBox->button(QDialogButtonBox::Ok)->show();
     }
@@ -401,20 +378,9 @@ void Widget::destory()
     }
 }
 
-void Widget::on_btnShow_toggled(bool checked)
-{
-    if(checked){
-        ui->btnShow->setText( tr("Hide Information") );
-        ui->textBrowser->show();
-    }else{
-        ui->btnShow->setText( tr("Show Information") );
-        ui->textBrowser->hide();
-    }
-}
-
 void Widget::slotGetRunState()
 {
-    int state = watcher->result();qDebug() << "state:" << state;
+    int state = watcher->result();
     if( state != 0 ){
         showError( "Error: MRH Update Fail" );
         ui->buttonBox->button(QDialogButtonBox::Ok)->show();
@@ -442,7 +408,8 @@ void MThead::run()
     connect(m_process,SIGNAL(readyRead()),this,SLOT(slotReadyRead()));
     m_process->start(cmd,argument);
     if(!m_process->waitForStarted()){
-        qDebug() << "Error: Start Fail";
+        emit resultReady(QString("Error: Start Exe Fail"));
+        return;
     }
     m_process->waitForFinished(-1);
 }
@@ -456,9 +423,52 @@ void MThead::slotReadyRead()
 
 void Widget::on_btnShow_clicked()
 {
-    ui->textBrowser->setVisible( ui->btnShow->isChecked() );
+    ui->textBrowser->setVisible( !ui->btnShow->isChecked() );
     if( ui->btnShow->isChecked() )
     { ui->btnShow->setText( tr("Show detail") ); }
     else
     { ui->btnShow->setText( tr("Hide detail") ); }
+}
+
+void Widget::slotLineEditTextChanged(QString s)
+{logDbg();
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(s.length()>0);
+}
+
+int Widget::openDevice()
+{
+    int ret = 0;
+    do{
+        m_vi = mrgOpenGateWay(m_addr.toLocal8Bit().data(), 200);
+        if( m_vi < 0){
+            ret = -1;
+            break;
+        }
+
+        int robotNames[128] = {0};
+        ret = mrgGetRobotName(m_vi, robotNames);
+        if(ret <=0){
+            sysInfo("Get Robot Name Fail", 1);
+            ret = -1;
+            break;
+        }
+        m_robotID = robotNames[0];
+
+        int deviceNames[128] = {0};
+        //ret = mrgGetRobotDevice(m_vi, m_robotID, deviceNames);
+        recvID = QString::number(1);
+
+    }while(0);
+    if(m_vi>0 && ret<0){
+        mrgCloseGateWay(m_vi);
+    }
+
+    return ret;
+}
+void Widget::closeDevice()
+{
+    if(m_vi >0){
+        mrgCloseGateWay(m_vi);
+        m_vi = 0;
+    }
 }

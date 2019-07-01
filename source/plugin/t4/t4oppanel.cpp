@@ -153,7 +153,7 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     spySetting( MRX_T4::e_setting_record );
 
     //! \note no need the diagnosis read button
-//    ui->btnRead->setVisible(false);
+    ui->btnRead->setVisible(false);
 
     //! step and speed
     connect( ui->cmbSpeed, SIGNAL(activated(int)),

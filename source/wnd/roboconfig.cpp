@@ -879,7 +879,10 @@ void RoboConfig::pluginHome()
     {
         QMessageBox::information( this, tr("Too many device"), tr("Operate the device from the node") );
     }
-    else
+    else if( mPluginList.size() == 0 )
+    {
+        return;
+    }else
     {
         mPluginList[0]->home();
     }

@@ -232,78 +232,6 @@ void Maintain::on_btnBackup_clicked()
         sysInfo(tr("Backup Complete"));
     }
 
-//    QString descripton;
-//    bool bOk;
-//    descripton = QInputDialog::getText( this,
-//                                        tr("Descripton"),
-//                                        tr("Backup description:"),
-//                                        QLineEdit::Normal,
-//                                        QDateTime::currentDateTime().toString("yyyy/MM/dd hh:mm:ss.zzz" ),
-//                                        &bOk
-//                                        );
-//    if ( !bOk )
-//    { return; }
-
-//    descripton = descripton.simplified();
-//    if ( descripton.isEmpty() )
-//    {
-//        sysPrompt( tr("Invalid description"), 0 );
-//        return;
-//    }
-
-//    int ret;
-//    QString cmd, dstPath;
-//    do
-//    {
-//        //! make dir
-//        QString uuid = QDateTime::currentDateTimeUtc().toString("yyyyMMddhhmmss_zzz");
-//        dstPath = m_pPlugin->selfPath() + "/backup/" + uuid;
-//        cmd = "mkdir -p " + dstPath;
-//        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
-//        if ( ret != 0 )
-//        { break; }
-
-//        //! copy the data in
-//        cmd = "cp " + m_pPlugin->selfPath() + "/*.xml " + dstPath;
-//        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
-//        if ( ret != 0 )
-//        { break; }
-
-//        cmd = "cp " + m_pPlugin->selfPath() + "/*.mrp " + dstPath;
-//        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
-//        if ( ret != 0 )
-//        { break; }
-
-//        //! copy the log
-//        cmd = "cp -r /home/megarobo/MRH-T/log " + dstPath + "/log";
-//        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
-//        if ( ret != 0 )
-//        { break; }
-
-//        //! write the description
-//        ret = mrgStorageWriteFile( m_pPlugin->deviceVi(),
-//                                   0,
-//                                   dstPath.toLatin1().data(),
-//                                   "description",
-//                                   (quint8*)descripton.toLatin1().data(),
-//                                   descripton.length()
-//                                   );
-//        if ( ret != 0 )
-//        { break; }
-
-//    }while( 0 );
-
-//    if ( ret != 0 )
-//    {
-//        cmd = "rm -rf " + dstPath;
-//        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
-
-//        sysPrompt( tr("Backup fail") );
-//    }
-//    else
-//    {
-//        sysPrompt( tr("Backup completed"), 0 );
-//    }
 }
 
 void Maintain::on_btnClearBackup_clicked()
@@ -315,7 +243,7 @@ void Maintain::on_btnClearBackup_clicked()
 
         cmd = "rm -rf " + m_pPlugin->selfPath() + "/backup";
         ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
-    }
+    }else{ return; }
 
     if ( ret != 0 )
     {
@@ -459,104 +387,99 @@ void Maintain::on_btnRestore_clicked()
 
 void Maintain::on_btnExport_clicked()
 {
+    int ret;
+    FileManager manager;
+    manager.setMode(EXPORT);
+    manager.attachPlugin(m_pPlugin);
+    manager.setPath(m_pPlugin->selfPath()+"/backup/");
+    if(manager.exec() == QDialog::Accepted){
 
-//    QString dir = QFileDialog::getExistingDirectory(this, tr("Open"));
-//    logDbg() << dir;
-//    QString path;
-//    int ret;
-//    do{
-//        path = m_pPlugin->selfPath() + "/backup/";
-//        char buf[4096]="";
-//        int iLen = sizeof(buf);
-//        ret = mrgStorageDirectoryEnum( m_pPlugin->deviceVi(), 0, path.toLocal8Bit().data(), buf, &iLen);
-//        if(ret<0){
-//            ret = -1;
-//            break;
-//        }else{
-//            if(ret==0){
-//                sysPrompt(tr("No File To Export"),2);
-//                return;
-//            }
-//        }
+    }else{ return; }
 
-//        QStringList dirList = QString(buf).split("\n", QString::SkipEmptyParts);
-//        foreach (QString str, dirList) {
-//            //! file list
-//            char tBuf[4096]={0};
-//            int tLen = sizeof(tBuf);
-//            ret = mrgStorageDirectoryEnum( m_pPlugin->deviceVi(), 0, (path + str).toLocal8Bit().data(), tBuf, &tLen);
-//            if( ret < 0 ){
-//                ret = -1;
-//                break;
-//            }
+    QString str = manager.strResult();
 
-//            QStringList tList = QString(tBuf).split("\n", QString::SkipEmptyParts);
-//            QStringList subDirList,subFileList;
-//            foreach (QString t, tList) {
-//                if(t.endsWith("/")){
-//                    subDirList << t;
-//                }else{
-//                    subFileList << t;
-//                }
-//            }
+    QString sourceDir = m_pPlugin->selfPath()+"/backup/"+str;
+    QString distDir = QFileDialog::getExistingDirectory(this,tr("Export"));
+    if(distDir.isEmpty())   return;
 
-//            //! subFile
-//            foreach (QString s, subFileList) {
-//                QByteArray ba;
-//                ret = mrgStorageGetFileSize(m_pPlugin->deviceVi(), 0, (path + str).toLocal8Bit().data(), s.toLocal8Bit().data());
-//                if( ret < 0){
-//                    continue;
-//                }
-//                ba.resize(ret);
-//                ret = mrgStorageReadFile(m_pPlugin->deviceVi(), 0, (path+str).toLocal8Bit().data(), s.toLocal8Bit().data(),(quint8*)ba.data());
-//                if( ret <=0 ){
-//                    continue;
-//                }
-//                QDir tDir;
-//                if( !tDir.mkpath(dir + "/" + str) )
-//                    continue;
-//                QFile f(dir+"/"+str+s);
-//                if(!f.open(QIODevice::WriteOnly)){
-//                    continue;
-//                }
-//                f.write(ba);
-//                f.close();
-//            }
+    QDir dir;
+    bool bOk = dir.mkpath( distDir+"/"+ str +"log" );
+    if(bOk){
 
-//            //! subDir
-//            foreach (QString sd, subDirList) {
-//                char sdBuf[4096]="";
-//                int sdLen = sizeof(sdBuf);
-//                ret = mrgStorageDirectoryEnum(m_pPlugin->deviceVi(), 0, (path+str+sd).toLocal8Bit().data(), sdBuf, &sdLen);
-//                if(ret<0){
-//                    continue;
-//                }
-//                QStringList subFileList = QString(sdBuf).split("\n", QString::SkipEmptyParts);
-//                foreach (QString sFile, subFileList) {
-//                    QByteArray ba;
-//                    ret = mrgStorageGetFileSize(m_pPlugin->deviceVi(), 0, (path+str+sd).toLocal8Bit().data(), sFile.toLocal8Bit().data());
-//                    if(ret<0){
-//                        continue;
-//                    }
-//                    ba.resize(ret);
-//                    ret = mrgStorageReadFile(m_pPlugin->deviceVi(), 0, (path+str+sd).toLocal8Bit().data(), sFile.toLocal8Bit().data(),(quint8*)ba.data());
-//                    if( ret <0 ){
-//                        continue;
-//                    }
-//                    QDir tDir;logDbg() << dir+"/"+str+sd+sFile;
-//                    if( !tDir.mkpath(dir +"/"+ str+sd) )
-//                        continue;
-//                    QFile f(dir+"/"+str+sd+sFile);
-//                    if(!f.open(QIODevice::WriteOnly)){
-//                        continue;
-//                    }
-//                    f.write(ba);
-//                    f.close();
-//                }
-//            }
+    }else{ sysInfo(tr("Mkdir Fail"),1);return; }
 
-//        }
-//    }while(0);
+    QStringList fileList;
+    fileList << "config.xml" << "debug.xml" << "description"
+             << "diagnosis.xml" << "MCT_motion.mrp" << "password.xml";
+
+    foreach (QString s, fileList) {
+        QByteArray ba;
+        ret = mrgStorageGetFileSize(m_pPlugin->deviceVi(), 0,
+                                        sourceDir.toLocal8Bit().data(),
+                                        s.toLocal8Bit().data());
+        if(ret<0){
+            ret = -1;
+            break;
+        }
+
+        ba.resize(ret);
+        ret = mrgStorageReadFile(m_pPlugin->deviceVi(), 0,
+                                 sourceDir.toLocal8Bit().data(),
+                                 s.toLocal8Bit().data(),
+                                 (quint8*)ba.data());
+        if( ret <0 ){logDbg()<<s<<ret;
+            ret = -1;
+            break;
+        }
+
+        //! write
+        QFile f(distDir+"/"+str+s);
+        if(!f.open(QIODevice::WriteOnly)){
+            sysInfo(tr("Open Fail"),1);
+            ret = -1;
+            break;
+        }
+        f.write(ba);
+        f.close();
+    }
+
+    //! log
+    char Buf[4096]="";
+    int iLen = sizeof(Buf);
+    ret = mrgStorageDirectoryEnum(m_pPlugin->deviceVi(),0,
+                            (sourceDir+"log/").toLocal8Bit().data(),
+                            Buf,
+                            &iLen);
+    if(ret <0){ sysInfo(tr("Enum log fail"));return; }
+
+    QStringList logList = QString(Buf).split("\n", QString::SkipEmptyParts);
+    foreach (QString l, logList) {
+        QByteArray ba;
+        ret = mrgStorageGetFileSize(m_pPlugin->deviceVi(), 0,
+                                    (sourceDir+"log/").toLocal8Bit().data(),
+                                     l.toLocal8Bit().data());
+        if(ret<0){
+            break;
+        }
+
+        ba.resize(ret);
+        ret = mrgStorageReadFile(m_pPlugin->deviceVi(), 0,
+                                 (sourceDir+"log/").toLocal8Bit().data(),
+                                 l.toLocal8Bit().data(),
+                                 (quint8*)ba.data());
+        if( ret <0 ){logDbg()<<l<<ret;
+            break;
+        }
+
+        //! write
+        QFile f(distDir+"/"+str+"log/"+l);
+        if(!f.open(QIODevice::WriteOnly)){
+            sysInfo(tr("Open Fail"),1);
+            break;
+        }
+        f.write(ba);
+        f.close();
+    }
 }
 
 void Maintain::on_btnBuild_clicked()

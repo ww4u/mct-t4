@@ -74,7 +74,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>3</number>
          </property>
          <property name="elideMode">
           <enum>Qt::ElideNone</enum>
@@ -1950,6 +1950,12 @@
  </widget>
  <customwidgets>
   <customwidget>
+   <class>IoIndicator</class>
+   <extends>QWidget</extends>
+   <header>ioindicator.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>LogoutWidget</class>
    <extends>QListView</extends>
    <header>logoutwidget.h</header>
@@ -1970,12 +1976,6 @@
    <class>KeyTableView</class>
    <extends>QTableView</extends>
    <header>keytableview.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>IoIndicator</class>
-   <extends>QWidget</extends>
-   <header>ioindicator.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

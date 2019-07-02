@@ -297,19 +297,11 @@ void T4OpPanel::retranslateUi()
     //! to the control status
     ui->controllerStatus->translateUi();
 
-    //! cmb stepx
-//    for( int i = 0; i < mStepxList.size(); i++ )
-//    {
-//        ui->cmbStepXx->setItemText( i, mStepxList.at( i ) );
-//    }
-
     //! joint name
-    ui->joint1->setJointName( tr("Base") );
-    ui->joint2->setJointName( tr("Shoulder") );
-    ui->joint3->setJointName( tr("Elbow") );
     ui->joint4->setJointName( tr("Wrist") );
-
     ui->joint5->setJointName( tr("Terminal") );
+
+    switchCoordMode();
 
     //! monitor context
     if ( NULL != m_pActionExportImage )
@@ -989,6 +981,7 @@ void T4OpPanel::setOnLine( bool b )
     //! \note disable the run
     ui->tabWidget->widget( 2 )->setEnabled( local_on_line() );
     ui->toolButton_debugRun->setEnabled( local_on_line() );
+    ui->btnStepNext->setEnabled( local_on_line() );
 }
 
 void T4OpPanel::setOpened( bool b )
@@ -1643,7 +1636,12 @@ int T4OpPanel::exportDataSets( QTextStream &stream,
 //! switch mode
 void T4OpPanel::switchCoordMode()
 {
-    Q_ASSERT( NULL != m_pPlugin );
+    //! \note only for plugin
+    if ( NULL != m_pPlugin )
+    {}
+    else
+    { return; }
+
     bool bAbsAngleVisible = m_pPlugin->isAdmin();
 
     //! joint
@@ -1815,8 +1813,6 @@ void T4OpPanel::slot_debug_table_changed()
 
         ui->btnUp->setEnabled( false );
         ui->btnDown->setEnabled( false );
-
-        return;
     }
 
     if ( ui->tvDebug->model()->rowCount() > 1 )
@@ -1825,8 +1821,6 @@ void T4OpPanel::slot_debug_table_changed()
     {
         ui->btnUp->setEnabled( false );
         ui->btnDown->setEnabled( false );
-
-        return;
     }
 
     if ( curIndex.row() > 0 )
@@ -1838,6 +1832,14 @@ void T4OpPanel::slot_debug_table_changed()
     { ui->btnDown->setEnabled(true); }
     else
     { ui->btnDown->setEnabled( false ); }
+
+    //! run && run seq
+    {
+        bool bValidRun = ui->tvDebug->model()->rowCount() > 0;
+        ui->toolButton_debugRun -> setEnabled( bValidRun );
+        ui->btnStepNext->setEnabled( bValidRun );
+    }
+
 }
 
 void T4OpPanel::slot_debug_current_changed( int cur )

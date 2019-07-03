@@ -58,13 +58,6 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
         strComment = QString("%1 [%2%3]").arg(strRaw).arg( strDecimal).arg( char_deg );
         mStepxList<<strComment;
     }
-//    for ( int i = 0; i < ui->cmbStepXx->count(); i++ ){
-//        strRaw = ui->comboBox->itemText( i );
-//        strDecimal = strRaw;
-//        strDecimal.remove(0,1);        //! remove the X
-//        strComment = QString("%1 [%2%3 or mm]").arg(strRaw).arg( strDecimal).arg( char_deg );
-//        mJointStepxList<<strComment;
-//    }
 
     m_pDebugContextMenu = NULL;
     m_pMonitorContextMenu = NULL;
@@ -94,7 +87,6 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     //! set model
     ui->logout->setModel( pModel );
 
-
     ui->tvDebug->setModel( &mDebugTable );
     ui->tvDiagnosis->setModel( &mDiagTable );
 
@@ -111,7 +103,6 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
 
     connect( &mDebugTable, SIGNAL(signal_current_changed(int)),
              this, SLOT(slot_debug_current_changed(int)) );
-
 
     connect( ui->tvDebug, SIGNAL(activated( const QModelIndex &)),
              this, SLOT(slot_debug_table_changed()) );
@@ -221,7 +212,7 @@ bool T4OpPanel::event(QEvent *e)
                                 pEvent->mVars );
             }
             else if ( (int)pEvent->type() == OpEvent::debug_exit )
-            {   on_debug_exit( pEvent->mVar1.toInt(), pEvent->mVar2.toInt() ); }
+            { on_debug_exit( pEvent->mVar1.toInt(), pEvent->mVar2.toInt() ); }
             else if ( (int)pEvent->type() == OpEvent::monitor_event )
             { updateMonitor( e ); }
             else if ( (int)pEvent->type() == OpEvent::update_pose )
@@ -229,7 +220,6 @@ bool T4OpPanel::event(QEvent *e)
             else if ( (int)pEvent->type() == OpEvent::communicate_fail )
             {
                 //! close the plugin
-
                 sysPrompt( tr("Communicate fail") );
 
                 m_pPlugin->stop();
@@ -873,12 +863,18 @@ void T4OpPanel::onSetting(XSetting setting)
 
 void T4OpPanel::home()
 {
+    begin_page_log();
+    end_page_log();
+
     QVariant var;
 
     m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onHoming), var, tr("Homing") );
 }
 void T4OpPanel::fold()
 {
+    begin_page_log();
+    end_page_log();
+
     QVariant var;
 
     m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&T4OpPanel::onFolding), var, tr("Folding") );
@@ -996,6 +992,9 @@ void T4OpPanel::setOpened( bool b )
 
 void T4OpPanel::stepProc( int jId, int dir )
 {
+    begin_page_log2(jId,dir);
+    end_page_log();
+
     //! joint step
     if ( isCoordJoint() || jId >= 4 )
     {
@@ -1016,6 +1015,9 @@ void T4OpPanel::stepProc( int jId, int dir )
 
 void T4OpPanel::jogProc( int jId, int dir, bool b )
 {
+    begin_page_log3( jId,dir,b );
+    end_page_log();
+
     //! jog on
     if ( b )
     {}
@@ -1684,7 +1686,6 @@ void T4OpPanel::switchCoordMode()
     //! \todo other apis
 }
 
-
 void T4OpPanel::slot_mct_checked( bool b )
 {
     check_connect( );
@@ -1839,7 +1840,6 @@ void T4OpPanel::slot_debug_table_changed()
         ui->toolButton_debugRun -> setEnabled( bValidRun );
         ui->btnStepNext->setEnabled( bValidRun );
     }
-
 }
 
 void T4OpPanel::slot_debug_current_changed( int cur )
@@ -2211,7 +2211,7 @@ void T4OpPanel::on_btnDown_clicked()
     }
 }
 
-//! diagnosis   set invisiable
+//! diagnosis  set invisiable
 void T4OpPanel::on_btnRead_clicked()
 {
     check_connect();

@@ -19,6 +19,18 @@ class WorkingApi;
                             else\
                             { return; }
 
+#define begin_page_log()    do{ \
+                                if( NULL == m_pPlugin ){ break; }\
+                                if ( NULL == m_pPlugin->m_pLog ){ break; }\
+                                m_pPlugin->begin_log(); (*m_pPlugin->m_pLog)<<QDateTime::currentDateTime().toString("yyyyMMdd-hhmmss-zzz ")\
+                                                                            <<__FUNCTION__<<" "<<__LINE__<<" "
+#define begin_page_log1( v1 ) begin_page_log()<<v1
+#define begin_page_log2( v1,v2 ) begin_page_log1(v1)<<" "<<v2
+#define begin_page_log3( v1,v2,v3 ) begin_page_log2(v1,v2)<<" "<<v3
+#define begin_page_log4( v1,v2,v3,v4 ) begin_page_log3(v1,v2,v3)<<" "<<v4
+
+#define end_page_log()      (*m_pPlugin->m_pLog)<<"\n"; m_pPlugin->end_log(); } while( 0 );
+
 class XPage : public QWidget
 {
     Q_OBJECT

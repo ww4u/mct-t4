@@ -10,7 +10,6 @@
 #define msgBox_Warning_ok( title, content )     (QMessageBox::warning(this, title, content, QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ? 1:0)
 #define msgBox_Information_ok( title, content ) (QMessageBox::information(this, title, content, QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ? 1:0)
 
-
 namespace mrx_t4 {
 Maintain::Maintain(QWidget *parent) :
     XPage(parent),
@@ -93,13 +92,15 @@ void Maintain::updateUi()
 
 void Maintain::on_cmbDemo_currentIndexChanged(int index)
 {
+    begin_page_log1(index);
+    end_page_log();
     //! set the demo info
 
     QStringList strList;
-    strList<<tr("Demo0:\n"
+    strList<<tr("Demo1:\n"
                 "* drag and drop in two points.\n"
                 )
-            <<tr("Demo1:\n"
+            <<tr("Demo2:\n"
                  "* Moving in the working space.\n"
                  "* It is used in the factory test procedure.\n"
                   );
@@ -120,6 +121,9 @@ void Maintain::on_cmbDemo_currentIndexChanged(int index)
 
 void Maintain::on_btnDemo_clicked()
 {
+    begin_page_log();
+    end_page_log();
+
     Q_ASSERT( NULL != m_pPlugin );
 
     int ret = m_pPlugin->startDemo( ui->cmbDemo->currentIndex() );
@@ -132,24 +136,36 @@ void Maintain::on_btnDemo_clicked()
 
 void Maintain::on_btnRestart_clicked()
 {
+    begin_page_log();
+    end_page_log();
+
     if( msgBox_Warning_ok( tr("Warning"), tr("Confirm Reboot?") ) )
     { m_pPlugin->reboot(); }
 }
 
 void Maintain::on_btnShutDown_clicked()
 {
+    begin_page_log();
+    end_page_log();
+
     if(msgBox_Warning_ok( tr("Warning"), tr("Confirm PowerOff?") ))
     { m_pPlugin->powerOff(); }
 }
 
 void Maintain::on_btnReset_clicked()
 {
+    begin_page_log();
+    end_page_log();
+
     if ( msgBox_Warning_ok( tr("Warning"), tr("Confirm Reset?") ))
     { m_pPlugin->rst(); }
 }
 
 void Maintain::on_btnUpdate_clicked()
 {
+    begin_page_log();
+    end_page_log();
+
     Widget w;
     w.attatchPlugin(m_pPlugin);
     w.exec();
@@ -157,6 +173,9 @@ void Maintain::on_btnUpdate_clicked()
 
 void Maintain::on_btnHistory_clicked()
 {
+    begin_page_log();
+    end_page_log();
+
     //! \todo need the file size api
     QByteArray ary;
     ary.reserve( 1024 * 1024 );
@@ -199,11 +218,17 @@ void Maintain::on_btnHistory_clicked()
 
 void Maintain::on_btnFold_clicked()
 {
+    begin_page_log();
+    end_page_log();
+
     m_pPlugin->fold();
 }
 
 void Maintain::on_btnBackup_clicked()
 {
+    begin_page_log();
+    end_page_log();
+
     FileManager manager;
     manager.attachPlugin(m_pPlugin);
     manager.setPath( m_pPlugin->selfPath()+"/backup/" );
@@ -258,11 +283,13 @@ void Maintain::on_btnBackup_clicked()
     }else{
         sysInfo(tr("Backup Complete"));
     }
-
 }
 
 void Maintain::on_btnClearBackup_clicked()
 {
+    begin_page_log();
+    end_page_log();
+
     int ret = -1;
     if( msgBox_Warning_ok( tr("Warning"), tr("Confirm Clear?") ) )
     {
@@ -284,6 +311,9 @@ void Maintain::on_btnClearBackup_clicked()
 
 void Maintain::on_cmbUser_currentIndexChanged(int index)
 {
+    begin_page_log1( index );
+    end_page_log();
+
     //! is equal
     if ( index == (int)m_pPlugin->userRole() )
     { return; }
@@ -327,6 +357,9 @@ void Maintain::on_cmbUser_currentIndexChanged(int index)
 
 void Maintain::on_btnChange_clicked()
 {
+    begin_page_log();
+    end_page_log();
+
     ChangedPw changePw;
 
     if ( QDialog::Accepted != changePw.exec() )
@@ -350,6 +383,9 @@ void Maintain::on_btnChange_clicked()
 //! \note only for admin
 void Maintain::on_btnResetPw_clicked()
 {
+    begin_page_log();
+    end_page_log();
+
     bool bOk;
     QString pw;
     pw = QInputDialog::getText( this, tr("Password"), tr("Admin Password"), QLineEdit::Password, QString(), &bOk );
@@ -372,12 +408,18 @@ void Maintain::on_btnResetPw_clicked()
 
 void Maintain::on_chkAutoLogin_stateChanged(int arg1)
 {
+    begin_page_log();
+    end_page_log();
+
     Q_ASSERT( m_pPlugin != NULL );
     m_pPlugin->setAutoLogin( ui->chkAutoLogin->isChecked() );
 }
 
 void Maintain::on_btnRestore_clicked()
 {
+    begin_page_log();
+    end_page_log();
+
     FileManager manage;
     QString str;
     int ret;
@@ -414,6 +456,9 @@ void Maintain::on_btnRestore_clicked()
 
 void Maintain::on_btnExport_clicked()
 {
+    begin_page_log();
+    end_page_log();
+
     int ret;
     FileManager manager;
     manager.setMode(EXPORT);
@@ -511,8 +556,12 @@ void Maintain::on_btnExport_clicked()
 
 void Maintain::on_btnBuild_clicked()
 {
+    begin_page_log();
+    end_page_log();
+
     //! \todo send file
 
 }
+
 }
 

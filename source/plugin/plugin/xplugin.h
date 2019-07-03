@@ -6,14 +6,14 @@
 #include <QTreeWidgetItem>
 #include <QDockWidget>
 #include <QThread>
+#include <QMutex>
 
 #include "../../../source/wnd/syspara.h"
 #include "xpage.h"
 #include "xpluginintf.h"
 #include "xpluginworkingthread.h"
 
-//    var->adapteToUserMode(sysMode());
-//var->adapteToUserMode(sysMode());
+#include "mlog.h"
 
 //! macros
 #define new_widget( type, var, txt, icon ) \
@@ -52,6 +52,9 @@ do{ \
     stack->addWidget( var ); \
     mPluginWidgets.append( var ); \
 }while(0)
+
+#define _begin_log()    begin_log(); m_pLog<<__FUNCTION__<<__LINE__
+#define _end_log()      end_log()
 
 class XPluginWorkingThread;
 class XPluginBgThread;
@@ -203,6 +206,11 @@ public:
 
     void awakeUpdate();
 
+    void begin_log();
+    void end_log();
+    void clean_log();
+    void flush_log();
+
     void attachUpdateWorking( XPage *pObj,
                         WorkingApi::eWorkingType eType,
                         XPage::procDo proc,
@@ -270,6 +278,10 @@ protected:
 
     SysPara *m_pPref;
 
+public:
+    MLog *m_pLog;
+    QMutex mLogMutex;
+    QByteArray mLogStream;
 public:
     XPluginWorkingThread *m_pEmergencyWorking;
     XPluginWorkingThread *m_pMissionWorking;

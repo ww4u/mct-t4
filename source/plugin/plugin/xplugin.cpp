@@ -4,6 +4,9 @@
 
 #include "MegaGateway.h"
 
+#define log_file_path   homePath() + "/log"
+#define log_file_name   log_file_path + "/" + QDateTime::currentDateTime().toString("yyyy_M_d")+".dat"
+
 XPlugin::XPlugin( QObject *parent ) : XPluginIntf( parent )
 {
     m_pRootWidgetItem = NULL;
@@ -11,6 +14,8 @@ XPlugin::XPlugin( QObject *parent ) : XPluginIntf( parent )
     m_pPref = NULL;
     m_pPanelWidget = NULL;
     m_pViewObj = NULL;
+    m_pLog = new MLog( &mLogStream, QIODevice::WriteOnly );
+    Q_ASSERT( NULL != m_pLog );
 
     //! updateing
     m_pUpdateWorking = new XPluginWorkingThread( this );
@@ -54,6 +59,10 @@ XPlugin::~XPlugin()
 
     m_pBgWorking->requestInterruption();
     m_pBgWorking->wait();
+
+    //! flush file
+    flush_log();
+    delete m_pLog;
 
     //! \note only close, delete by the parent
     foreach( QWidget *pWidget, mPluginWidgets )
@@ -341,6 +350,77 @@ void XPlugin::awakeUpdate()
 {
     if ( NULL != m_pUpdateWorking )
     { m_pUpdateWorking->awake(); }
+}
+
+void XPlugin::begin_log()
+{
+    Q_ASSERT( NULL != m_pLog );
+    mLogMutex.lock();
+}
+void XPlugin::end_log()
+{
+    m_pLog->flush();
+
+    //! write file
+
+    //! sure the path
+    if ( assurePath( log_file_path ) != 0 )
+    { return; }
+
+    //! over flush
+    if ( mLogStream.size() > 5120 )
+    {
+        flush_log();
+    }
+    else
+    {}
+
+    mLogMutex.unlock();
+}
+
+//! delete the oldest one
+void XPlugin::clean_log()
+{
+    QDir dir( log_file_path );
+
+    QStringList logList;
+    logList = dir.entryList( QDir::Files, QDir::Time | QDir::Reversed );
+
+    logDbg()<<logList;
+    for( int i = 0; i < logList.size() - 7; i++ )
+    {
+        dir.remove( logList.at( i ) );
+    }
+}
+
+void XPlugin::flush_log()
+{
+    //! clean log
+    clean_log();
+
+    QFile file( log_file_name );
+    if ( file.open( QIODevice::Append ) )
+    {
+        do
+        {
+            QTextCodec *pCoder = QTextCodec::codecForName("UTF-8");
+            if ( NULL == pCoder )
+            { break; }
+
+            QTextEncoder *pEnc = pCoder->makeEncoder();
+            if ( NULL == pEnc )
+            { break; }
+
+            file.write( pEnc->fromUnicode( mLogStream ) );
+            delete pEnc;
+        }while( 0 );
+
+        file.close();
+
+        mLogStream.clear();
+        //! \note seek 0
+        m_pLog->seek( 0 );
+    }
 }
 
 void XPlugin::attachUpdateWorking( XPage *pObj,

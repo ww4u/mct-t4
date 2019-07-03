@@ -21,13 +21,15 @@ SOURCES = \
     xplugin.cpp \
     xpage.cpp \
     xpluginintf.cpp \
-    xpluginworkingthread.cpp
+    xpluginworkingthread.cpp \
+    mlog.cpp
 
 HEADERS = \
     xplugin.h \
     xpage.h \
     xpluginintf.h \
-    xpluginworkingthread.h
+    xpluginworkingthread.h \
+    mlog.h
 
 
 

@@ -303,3 +303,12 @@ void FileManager::on_buttonBox_rejected()
 {
     this->reject();
 }
+
+void FileManager::on_treeView_doubleClicked(const QModelIndex &index)
+{logDbg() << index.isValid();
+    if(mode() == OPENACTIONTABLE){
+        int iRow = index.row();
+        m_result = mrpFileList.at( iRow );
+        this->accept();
+    }
+}

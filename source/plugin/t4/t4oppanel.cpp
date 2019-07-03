@@ -446,8 +446,19 @@ void T4OpPanel::updateRefreshPara( QEvent *e )
     //! \todo IOs,status,warning,error
     ui->controllerStatus->setRecordName( mRefreshPara.mRecordName );
     ui->controllerStatus->setWorkingStatus( mRefreshPara.mRoboState );
-}
 
+    //! db15
+    IoIndicator *radio[]={ui->radRDYEN, ui->radDI1,
+                          ui->radDI2,   ui->radDI3,
+                          ui->radDI4,   ui->radDI5,
+                          ui->radDI6,   ui->radStart,
+                          ui->radENBLE, ui->radReset,
+                          ui->radENABLED,ui->radFAULT,
+                          ui->radACK,   ui->radMC};
+    for(int i =0; i < sizeof(radio)/sizeof(*radio);i++){
+        radio[i]->setChecked( mRefreshPara.ListDb15.at( i ) );
+    }
+}
 //! \note 24bit encoder
 #define ABS_ANGLE_TO_DEG( angle )   (360.0f* ( (angle)&(0x0ffffff))) /((1<<18)-1)
 int T4OpPanel::posRefreshProc( void *pContext )
@@ -578,6 +589,28 @@ int T4OpPanel::posRefreshProc( void *pContext )
             }
 
             mRefreshPara.bHomeValid = bHomeValid;
+        }
+
+        //! \todo
+        ret = mrgSetProjectMode(device_var_vi(), 1);
+        if(ret ==0){
+
+        }else{ sysError( tr("Set project mode fail"), e_out_log );break; }
+
+        char cState[4096]={0};
+        ret = mrgProjectIOGet( device_var_vi(), IOGET_DB15, cState );
+
+        mrgSetProjectMode(device_var_vi(), 0);
+        if( ret !=0 ){}
+
+        if ( ret != 0 )
+        { sysError( tr("Get IO fail"), e_out_log );break; }
+
+        QString sState = QString(cState);
+        mRefreshPara.ListDb15.clear();
+        for(int i =0; i < sState.length(); i++){
+            QChar t = sState.at(i);
+            mRefreshPara.ListDb15.append( t==QChar('1') );
         }
 
         //! post refresh
@@ -989,6 +1022,7 @@ void T4OpPanel::setOnLine( bool b )
     //! \note disable the run
     ui->tabWidget->widget( 2 )->setEnabled( local_on_line() );
     ui->toolButton_debugRun->setEnabled( local_on_line() );
+    ui->btnStepNext->setEnabled( local_on_line() );
 }
 
 void T4OpPanel::setOpened( bool b )

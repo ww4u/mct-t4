@@ -81,6 +81,8 @@ private slots:
 
     void on_buttonBox_rejected();
 
+    void on_treeView_doubleClicked(const QModelIndex &index);
+
 private:
     Ui::FileManager *ui;
     XPlugin *m_pPlugin;

@@ -95,10 +95,6 @@ void XPlugin::rstErrorMgrTable()
 void XPlugin::rstRecordTable()
 {}
 
-//void XPlugin::ErrorMgrTable( QByteArray &ary )
-//{}
-//void XPlugin::RecordTable( QByteArray &ary )
-//{}
 void XPlugin::onOperateAble( bool b )
 {
     emit_setting_changed( XPage::e_setting_op_able, b );
@@ -204,7 +200,14 @@ bool XPlugin::isEnabled( void *context )
 { return isOpened(); }
 
 void XPlugin::onSetting( XSetting setting )
-{}
+{
+    if ( setting.mSetting == XPage::e_setting_mission_working )
+    { setWorking( setting.mPara1.toBool() ); }
+    else
+    {
+        //! do nothing
+    }
+}
 
 void XPlugin::updateUi()
 {
@@ -266,6 +269,8 @@ void XPlugin::emit_setting_changed( XPage::eXSetting setting, bool b )
     lSetting.mSetting = setting;
     lSetting.mPara1.setValue( b );
     emit signal_setting_changed( lSetting );
+
+    //! on setting
 }
 
 void XPlugin::emit_setting_changed( XPage::eXSetting setting, QVariant var )
@@ -695,18 +700,6 @@ void XPlugin::slot_load_setting()
 
 void XPlugin::slot_plugin_setting_changed( XSetting setting )
 {
-//    do
-//    {
-//        //! sys setting
-//        if ( (int)setting.mSetting < (int)e_setting_user )
-//        { break; }
-
-//        //! not in filter
-//        if ( filterSetting( setting ) )
-//        { return; }
-
-//    }while( 0 );
-
     onSetting( setting );
 }
 

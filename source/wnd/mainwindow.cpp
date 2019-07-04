@@ -449,11 +449,6 @@ void MainWindow::slot_plugin_operable( bool b )
     ui->actionStore->setEnabled( b );
 
     ui->actionHome->setVisible( b );
-
-    //! \todo plugin opened
-    //! plugin operable
-//    ui->actionStop->setEnabled( b );
-//    m_pStopWidget->setEnabled( b );
 }
 
 void MainWindow::slot_plugin_online( bool b )

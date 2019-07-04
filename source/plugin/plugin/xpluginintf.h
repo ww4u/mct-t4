@@ -61,6 +61,9 @@ public:
 
     virtual void onOnLine( bool b );
 
+    void setWorking( bool b );
+    bool isWorking();
+
     void setModel( const QString &model );
     QString model();
 
@@ -152,6 +155,7 @@ public:
 protected:
     bool mbOperateAble;
     bool mbOnLine;
+    bool mbWorking;
 
     //! \note view addr for the user view
     QString mModel, mAddr, mViewAddr;

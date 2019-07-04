@@ -713,9 +713,8 @@ int T4OpPanel::refreshDiagnosisInfo( void *pContext )
         return 0;
     }
     else
-    //! \todo read error!
     {
-        sysPrompt( tr("Read diagnosis fail") );
+        sysWarning( tr("Read diagnosis fail") );
         return -1;
     }
 }
@@ -2221,11 +2220,23 @@ void T4OpPanel::on_btnRead_clicked()
 
 void T4OpPanel::on_btnDelete_clicked()
 {
+    if ( msgBox_Warning_ok( tr("Clear Error"), tr("Clear Error") ) )
+    {}
+    else
+    { return; }
+
+    check_connect();
+
     int rCount = ui->tvDiagnosis->model()->rowCount();
     if ( rCount > 0 )
     {
         ui->tvDiagnosis->model()->removeRows( 0, rCount );
     }
+
+    //! clear the log in device
+    int ret = mrgErrorLogClear( pRobo->deviceVi() );
+    if ( ret != 0 )
+    { sysError( tr("clear error") );}
 }
 
 void T4OpPanel::on_btnExport_2_clicked()

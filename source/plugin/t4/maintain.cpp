@@ -3,12 +3,9 @@
 
 #include "t4.h"
 #include "MegaGateway.h"
-#include <qmessagebox.h>
 #include "widget.h"
 
 #include "../../wnd/changedpw.h"
-#define msgBox_Warning_ok( title, content )     (QMessageBox::warning(this, title, content, QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ? 1:0)
-#define msgBox_Information_ok( title, content ) (QMessageBox::information(this, title, content, QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ? 1:0)
 
 namespace mrx_t4 {
 Maintain::Maintain(QWidget *parent) :
@@ -43,6 +40,13 @@ void Maintain::setOperAble( bool b )
     //! for each page operate able
     setOpened( b );
 }
+
+void Maintain::setOnLine( bool b )
+{
+    //! demo tab disabled
+    ui->tab_3->setEnabled( b );
+}
+
 void Maintain::setOpened( bool b )
 {
     //! for each page operate

@@ -1984,7 +1984,7 @@ void T4OpPanel::slot_speed_verify()
 
     //! remove all
     int curIndex;
-    curIndex = ui->cmbSpeed->currentIndex();
+    curIndex = ui->cmbSpeed->currentIndex();logDbg()<<curIndex;
     for ( int i = ui->cmbSpeed->count(); i >=0 ; i-- )
     {
         ui->cmbSpeed->removeItem( i );
@@ -2002,7 +2002,7 @@ void T4OpPanel::slot_speed_verify()
         else
         { break; }
     }
-
+logDbg()<<ui->cmbSpeed->count();
     //! change the cur index
     if ( curIndex > ui->cmbSpeed->count() )
     {
@@ -2524,11 +2524,15 @@ void T4OpPanel::on_btnStepNext_clicked()
 void T4OpPanel::on_radCoordXyz_clicked()
 {
     switchCoordMode();
+
+    slot_speed_verify();
 }
 
 void T4OpPanel::on_radCoordJoint_clicked()
 {
     switchCoordMode();
+
+    slot_speed_verify();
 }
 
 }

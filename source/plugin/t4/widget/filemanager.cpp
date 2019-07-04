@@ -11,6 +11,14 @@ FileManager::FileManager(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    QRegExpValidator *pValidator = new QRegExpValidator( this );
+    Q_ASSERT( NULL != pValidator );
+
+    //! only character
+    pValidator->setLocale( QLocale(QLocale::English ));
+    pValidator->setRegExp( QRegExp("[0-9a-zA-Z]+") );
+
+    ui->lineEdit->setValidator( pValidator );
     connect( ui->treeView, SIGNAL(clicked(const QModelIndex &)),
              this, SLOT(on_treeView_activated(const QModelIndex &)) );
 
@@ -310,7 +318,8 @@ void FileManager::on_treeView_doubleClicked(const QModelIndex &index)
 {
     //! mode
     if ( m_mode == OPENACTIONTABLE
-         || m_mode == RESTORE )
+         || m_mode == RESTORE
+         || m_mode == EXPORT )
     {
         m_result = index.data().toString();
         this->accept();

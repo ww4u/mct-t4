@@ -475,14 +475,25 @@ void Maintain::on_btnExport_clicked()
     QString str = manager.strResult();
 
     QString sourceDir = m_pPlugin->selfPath()+"/backup/"+str;
-    QString distDir = QFileDialog::getExistingDirectory(this,tr("Export"));
+    QString distDir = QFileDialog::getExistingDirectory(this,tr("Export") );
     if(distDir.isEmpty())   return;
 
     QDir dir;
-    bool bOk = dir.mkpath( distDir+"/"+ str +"log" );
-    if(bOk){
 
-    }else{ sysInfo(tr("Mkdir Fail"),1);return; }
+    //! check exist
+    if ( QDir( distDir+"/"+ str +"log" ).exists() )
+    {
+        if ( msgBox_Warning_ok( tr("Warning"), tr("Directory is not empty, overwrite?") ) )
+        {}
+        else
+        { return; }
+    }
+    else
+    {
+        bool bOk = dir.mkpath( distDir+"/"+ str +"log" );
+        if(bOk){
+        }else{ sysInfo(tr("Mkdir Fail"),1);return; }
+    }
 
     QStringList fileList;
     fileList << "config.xml" << "debug.xml" << "description"
@@ -490,9 +501,9 @@ void Maintain::on_btnExport_clicked()
 
     foreach (QString s, fileList) {
         QByteArray ba;
-        ret = mrgStorageGetFileSize(m_pPlugin->deviceVi(), 0,
-                                        sourceDir.toLocal8Bit().data(),
-                                        s.toLocal8Bit().data());
+        ret = mrgStorageGetFileSize( m_pPlugin->deviceVi(), 0,
+                                     sourceDir.toLocal8Bit().data(),
+                                     s.toLocal8Bit().data());
         if(ret<0){
             ret = -1;
             break;

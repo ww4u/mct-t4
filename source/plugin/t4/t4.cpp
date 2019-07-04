@@ -208,6 +208,9 @@ void MRX_T4::RecordData( QByteArray &ary )
 
 void MRX_T4::onSetting(XSetting setting)
 {
+    //! call base
+    XPlugin::onSetting( setting );
+
     if ( setting.mSetting == XPage::e_setting_opened )
     {
         if ( setting.mPara1.isValid() )

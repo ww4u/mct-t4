@@ -25,6 +25,7 @@ protected:
     virtual void retranslateUi();
 public:
     virtual void setOperAble( bool b );
+    virtual void setOnLine( bool b );
     virtual void setOpened( bool b );
 
     virtual void updateRole();

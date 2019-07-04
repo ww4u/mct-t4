@@ -449,11 +449,6 @@ void MainWindow::slot_plugin_operable( bool b )
     ui->actionStore->setEnabled( b );
 
     ui->actionHome->setVisible( b );
-
-    //! \todo plugin opened
-    //! plugin operable
-//    ui->actionStop->setEnabled( b );
-//    m_pStopWidget->setEnabled( b );
 }
 
 void MainWindow::slot_plugin_online( bool b )
@@ -713,9 +708,10 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     if ( m_pDockOps->isVisible() && event->oldSize().height() > 0 )
     {
         h = m_pSysLogout->size().height() * event->size().height()/ event->oldSize().height();
-        if ( h > 450 )
-        { h = 450; }
-        resizeDocks( { m_pDockOps }, { h }, Qt::Vertical  );
+        if ( h < 420 )
+        { h = 420; }
+//        resizeDocks( { m_pDockOps }, { h }, Qt::Vertical  );
+        logDbg()<<h;
     }
     else
     {}

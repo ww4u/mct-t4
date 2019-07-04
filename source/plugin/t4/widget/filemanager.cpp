@@ -283,6 +283,8 @@ void FileManager::on_mode_changed(MODE m)
             this->setWindowTitle(tr("Open"));
             ui->lineEdit->setReadOnly(true);
             break;
+        default:
+            break;
     }
 }
 
@@ -305,10 +307,14 @@ void FileManager::on_buttonBox_rejected()
 }
 
 void FileManager::on_treeView_doubleClicked(const QModelIndex &index)
-{logDbg() << index.isValid();
-    if(mode() == OPENACTIONTABLE){
-        int iRow = index.row();
-        m_result = mrpFileList.at( iRow );
+{
+    //! mode
+    if ( m_mode == OPENACTIONTABLE
+         || m_mode == RESTORE )
+    {
+        m_result = index.data().toString();
         this->accept();
     }
+    else
+    { return; }
 }

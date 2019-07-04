@@ -36,6 +36,7 @@ RoboConfig::RoboConfig(QWidget *parent) :
     m_pActionClose = NULL;
 
     m_pActionHome = NULL;
+    m_pActionDelete = NULL;
 
     m_pProjectContextMenu = NULL;
     m_pActionDelAll = NULL;
@@ -353,9 +354,9 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
             if ( NULL== m_pRoboContextMenu->addSeparator() )
             { gc_context_menu(); return; }
 
-            QAction *actionDelete = m_pRoboContextMenu->addAction(tr("Delete"));
-            actionDelete->setIcon( QIcon(":/res/image/icon/trash.png") );
-            if ( NULL == actionDelete )
+            m_pActionDelete = m_pRoboContextMenu->addAction(tr("Delete"));
+            m_pActionDelete->setIcon( QIcon(":/res/image/icon/trash.png") );
+            if ( NULL == m_pActionDelete )
             { gc_context_menu(); return; }
 
             //! add action
@@ -364,7 +365,7 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
 
             connect(m_pActionHome, SIGNAL(triggered(bool)), this, SLOT(slotActionHome()));
 
-            connect(actionDelete, SIGNAL(triggered(bool)), this, SLOT(slotActionDelete()));
+            connect(m_pActionDelete, SIGNAL(triggered(bool)), this, SLOT(slotActionDelete()));
         }
 
         //! modify
@@ -372,16 +373,21 @@ void RoboConfig::slotShowContextPlugin( const QPoint &pos )
         {
             m_pActionOpen->setVisible(false);
             m_pActionClose->setVisible(true);
-
             m_pActionHome->setVisible( true && m_pCurPlugin->isOnLine() );
         }
         else
         {
             m_pActionOpen->setVisible(true);
             m_pActionClose->setVisible(false);
-
             m_pActionHome->setVisible( false );
         }
+
+        //! enable/disable
+        bool bEn = !m_pCurPlugin->isWorking();
+        m_pActionOpen->setEnabled( bEn );
+        m_pActionClose->setEnabled( bEn );
+        m_pActionHome->setEnabled( bEn );
+        m_pActionDelete->setEnabled( bEn );
 
         //! pop proc
         m_pRoboContextMenu->exec(QCursor::pos());
@@ -427,10 +433,6 @@ void RoboConfig::slotActionClose()
     Q_ASSERT( NULL != m_pCurPlugin );
     m_pCurPlugin->close();
 }
-
-#include <qmessagebox.h>
-#define msgBox_Warning_ok( title, content )     (QMessageBox::warning(this, title, content, QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ? 1:0)
-#define msgBox_Information_ok( title, content ) (QMessageBox::information(this, title, content, QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ? 1:0)
 
 void RoboConfig::slotActionHome()
 {

@@ -13,6 +13,7 @@ XPluginIntf::XPluginIntf( QObject *parent ) : QObject( parent )
 
     mbOperateAble = true;
     mbOnLine = true;
+    mbWorking = false;
 
     mWorkingRole = working_unk;
 
@@ -92,6 +93,11 @@ bool XPluginIntf::onLine()
 
 void XPluginIntf::onOnLine( bool b )
 { }
+
+void XPluginIntf::setWorking( bool b )
+{ mbWorking = b; }
+bool XPluginIntf::isWorking()
+{ return mbWorking; }
 
 void XPluginIntf::setModel( const QString &model )
 { mModel = model; }

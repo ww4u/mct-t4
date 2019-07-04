@@ -56,6 +56,12 @@ do{ \
 #define _begin_log()    begin_log(); m_pLog<<__FUNCTION__<<__LINE__
 #define _end_log()      end_log()
 
+//! message box
+#include <qmessagebox.h>
+#define msgBox_Warning_ok( title, content )     (QMessageBox::warning(this, title, content, QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ? 1:0)
+#define msgBox_Information_ok( title, content ) (QMessageBox::information(this, title, content, QMessageBox::Ok | QMessageBox::Cancel) == QMessageBox::Ok ? 1:0)
+
+
 class XPluginWorkingThread;
 class XPluginBgThread;
 

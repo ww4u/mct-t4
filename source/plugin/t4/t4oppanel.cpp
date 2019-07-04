@@ -145,6 +145,7 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
 
     //! \note no need the diagnosis read button
     ui->btnRead->setVisible(false);
+    ui->groupBox_5->setVisible( false );
 
     //! step and speed
     connect( ui->cmbSpeed, SIGNAL(activated(int)),

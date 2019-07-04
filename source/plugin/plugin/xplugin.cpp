@@ -392,6 +392,7 @@ void XPlugin::clean_log()
     logList = dir.entryList( QDir::Files, QDir::Time | QDir::Reversed );
 
     logDbg()<<logList;
+
     for( int i = 0; i < logList.size() - 7; i++ )
     {
         dir.remove( logList.at( i ) );

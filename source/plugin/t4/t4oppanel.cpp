@@ -430,15 +430,17 @@ void T4OpPanel::updateRefreshPara( QEvent *e )
     ui->controllerStatus->setWorkingStatus( mRefreshPara.mRoboState );
 
     //! db15
-    IoIndicator *radio[]={ui->radRDYEN, ui->radDI1,
-                          ui->radDI2,   ui->radDI3,
-                          ui->radDI4,   ui->radDI5,
-                          ui->radDI6,   ui->radStart,
-                          ui->radENBLE, ui->radReset,
-                          ui->radENABLED,ui->radFAULT,
-                          ui->radACK,   ui->radMC};
-    for(int i =0; i < sizeof(radio)/sizeof(*radio);i++){
-        radio[i]->setChecked( mRefreshPara.ListDb15.at( i ) );
+    if( mRefreshPara.ListDb15.size() == 15 ){
+        IoIndicator *radio[]={ui->radRDYEN, ui->radDI1,
+                              ui->radDI2,   ui->radDI3,
+                              ui->radDI4,   ui->radDI5,
+                              ui->radDI6,   ui->radStart,
+                              ui->radENBLE, ui->radReset,
+                              ui->radENABLED,ui->radFAULT,
+                              ui->radACK,   ui->radMC};
+        for(int i =0; i < sizeof(radio)/sizeof(*radio);i++){
+            radio[i]->setChecked( mRefreshPara.ListDb15.at( i ) );
+        }
     }
 }
 //! \note 24bit encoder

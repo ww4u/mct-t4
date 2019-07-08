@@ -306,6 +306,9 @@
          <property name="buttonSymbols">
           <enum>QAbstractSpinBox::NoButtons</enum>
          </property>
+         <property name="suffix">
+          <string>°</string>
+         </property>
          <property name="maximum">
           <double>360.000000000000000</double>
          </property>
@@ -315,6 +318,12 @@
         <widget class="QDoubleSpinBox" name="spinZero3">
          <property name="buttonSymbols">
           <enum>QAbstractSpinBox::NoButtons</enum>
+         </property>
+         <property name="prefix">
+          <string/>
+         </property>
+         <property name="suffix">
+          <string>°</string>
          </property>
          <property name="maximum">
           <double>360.000000000000000</double>
@@ -346,6 +355,9 @@
          <property name="buttonSymbols">
           <enum>QAbstractSpinBox::NoButtons</enum>
          </property>
+         <property name="suffix">
+          <string>°</string>
+         </property>
          <property name="maximum">
           <double>360.000000000000000</double>
          </property>
@@ -368,6 +380,9 @@
         <widget class="QDoubleSpinBox" name="spinZero1">
          <property name="buttonSymbols">
           <enum>QAbstractSpinBox::NoButtons</enum>
+         </property>
+         <property name="suffix">
+          <string>°</string>
          </property>
          <property name="maximum">
           <double>360.000000000000000</double>
@@ -432,6 +447,9 @@
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
             </property>
+            <property name="suffix">
+             <string>mm</string>
+            </property>
             <property name="minimum">
              <double>1.000000000000000</double>
             </property>
@@ -444,6 +462,9 @@
            <widget class="QDoubleSpinBox" name="spinBase">
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="suffix">
+             <string>mm</string>
             </property>
             <property name="minimum">
              <double>1.000000000000000</double>
@@ -471,6 +492,9 @@
            <widget class="QDoubleSpinBox" name="spinBA">
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::NoButtons</enum>
+            </property>
+            <property name="suffix">
+             <string>mm</string>
             </property>
             <property name="minimum">
              <double>1.000000000000000</double>

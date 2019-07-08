@@ -1788,7 +1788,7 @@ EXPORT_API int CALL mrgRobotGetToolType(ViSession vi, int robotname, int *ps32Ty
         return -2;
     }
     snprintf(args, SEND_LEN, "ROBOT:EFFECTor:TYPe? %d\n", robotname);
-    while (1)
+    //while (1)
     {
         if ((retlen = busQuery(vi, args, strlen(args), state, sizeof(state))) == 0) {
             return -1;

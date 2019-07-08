@@ -22,6 +22,8 @@ public:
 
     virtual int upload();
     virtual int download();
+
+    void onSetting( XSetting setting );
 protected:
     virtual void spyEdited();
     virtual void retranslateUi();

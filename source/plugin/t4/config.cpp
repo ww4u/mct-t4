@@ -250,8 +250,12 @@ int Config::upload()
     char type[1]={0};
 
     //! \todo the user tool type
-//    int ret = mrgRobotGetToolType(device_var(), type);
-    if( int(type[0]) == T4Para::e_terminal_user )
+    int iTerminalType;
+    ret = mrgRobotGetToolType(robot_var(), &iTerminalType);
+    logDbg() << "terminaltype: " <<iTerminalType;
+    selfPara->mTerminalType = T4Para::eTerminalType(iTerminalType);
+
+    if( T4Para::eTerminalType(iTerminalType) == T4Para::e_terminal_user )
     {
         ret = mrgMRQMotorGearRatio_Query( device_var(),
                                     4,

@@ -17,6 +17,8 @@ MotorConfig::MotorConfig(QWidget *parent) :
     spyEdited();
 
     set_page_rstable();
+
+    spySetting( MRX_T4::e_setting_terminal );
 }
 
 MotorConfig::~MotorConfig()
@@ -41,8 +43,11 @@ void MotorConfig::updateUi()
     set_current( 1 );
     set_current( 2 );
     set_current( 3 );
-
     set_current( 4 );
+
+    //! tip
+    ui->current4->setVisible( selfPara->mTerminalType != T4Para::e_terminal_tip );
+    ui->label->setVisible( selfPara->mTerminalType != T4Para::e_terminal_tip );
 }
 
 void MotorConfig::updateData()
@@ -121,6 +126,10 @@ int MotorConfig::download()
     double dc,ic;
     for ( int i = 0; i < pRobo->_axis_cnt; i++ )
     {
+        //! terminaltype tip
+        if( i == 4 && selfPara->mTerminalType == T4Para::e_terminal_tip )
+            continue;
+
         spins[i]->getData( dc, ic);
 
         ret = mrgMRQDriverCurrent( device_var(),
@@ -137,6 +146,22 @@ int MotorConfig::download()
     }
 
     return 0;
+}
+
+void MotorConfig::onSetting(XSetting setting)
+{
+    XPage::onSetting(setting);
+
+    if ( (int)setting.mSetting == (int)MRX_T4::e_setting_terminal )
+    {
+        if ( setting.mPara1.isValid() )
+        {}
+        else
+        { return; }
+
+        ui->current4->setVisible( setting.mPara1.toBool() );
+        ui->label->setVisible( setting.mPara1.toBool() );
+    }else{}
 }
 
 #define current_spins( id ) ui->current##id->doubleSpinCurrent(),\

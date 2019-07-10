@@ -12,54 +12,22 @@ IOWidget::IOWidget(int w, QWidget *parent) :
     mWidth = w;
 
     //! adapt to the width
-    cat_widgets( ui->checkBox );
-    cat_widgets( ui->checkBox_2 );
-    cat_widgets( ui->checkBox_3 );
-    cat_widgets( ui->checkBox_4 ); mSpanWidgets.append( ui->label );
+    cat_widgets( ui->widget );
+    cat_widgets( ui->widget_2 );
+    cat_widgets( ui->widget_3 );
+    cat_widgets( ui->widget_4 ); mSpanWidgets.append( ui->label );
 
-    cat_widgets( ui->checkBox_5 );
-    cat_widgets( ui->checkBox_6 );
-    cat_widgets( ui->checkBox_7 );
-    cat_widgets( ui->checkBox_8 );
-
-    cat_widgets( ui->checkBox_9 );
-    cat_widgets( ui->checkBox_10 );
-    cat_widgets( ui->checkBox_11 );
-    cat_widgets( ui->checkBox_12 ); mSpanWidgets.append( ui->label_2 );
-
-
-    cat_widgets( ui->checkBox_13 );
-    cat_widgets( ui->checkBox_14 );
-    cat_widgets( ui->checkBox_15 );
-    cat_widgets( ui->checkBox_16 );
-
-    cat_widgets( ui->checkBox_17 );
-    cat_widgets( ui->checkBox_18 );
-    cat_widgets( ui->checkBox_19 );
-    cat_widgets( ui->checkBox_20 ); mSpanWidgets.append( ui->label_3 );
-
-    cat_widgets( ui->checkBox_21 );
-    cat_widgets( ui->checkBox_22 );
-    cat_widgets( ui->checkBox_23 );
-    cat_widgets( ui->checkBox_24 );
-
-    cat_widgets( ui->checkBox_25 );
-    cat_widgets( ui->checkBox_26 );
-    cat_widgets( ui->checkBox_27 );
-    cat_widgets( ui->checkBox_28 ); mSpanWidgets.append( ui->label_4 );
-
-    cat_widgets( ui->checkBox_29 );
-    cat_widgets( ui->checkBox_30 );
-    cat_widgets( ui->checkBox_31 );
-    cat_widgets( ui->checkBox_32 );
+    cat_widgets( ui->widget_5 );
+    cat_widgets( ui->widget_6 );
+    cat_widgets( ui->widget_7 );
+    cat_widgets( ui->widget_8 );
 
     //! adapt the widgets
     int i = 0;
     for ( i = 0; i < w; i++ )
     {
         mBits[i]->setVisible( true );
-        mBits[i]->setTristate();
-        mBits[i]->setText(QString("Y[%1]").arg(i+1));
+        mBits[i]->setName(QString("Y%1").arg(i+1));
     }
 
     //! find the w
@@ -83,34 +51,35 @@ void IOWidget::setData( quint32 dat )
         //mBits.at(i)->setCheckState( Qt::CheckState( dat & 0x03) );
         quint32 t = dat & 0x03;
         if(t == 0x03){
-            mBits.at(i)->setCheckState(Qt::CheckState(2));
+            mBits.at(i)->setValue( HLX::e_hlx_h );
         }
         if(t == 0x00){
-            mBits.at(i)->setCheckState(Qt::CheckState(1));
+            mBits.at(i)->setValue( HLX::e_hlx_x );
         }
         if(t == 0x02){
-            mBits.at(i)->setCheckState(Qt::CheckState(0));
+            mBits.at(i)->setValue( HLX::e_hlx_l );
         }
 
         dat >>= 2;
     }
 }
+
 quint32 IOWidget::getData( )
 {
     quint32 dat = 0;
+    HLX::hlxValue iVal;
     for ( int i = 0; i < mWidth; i++ )
     {
-        //dat |= ( mBits.at(i)->checkState()<<(i*2));
-        auto j = mBits.at(i)->checkState() & 0x03;
-        switch (j)
+        iVal = mBits.at(i)->value();
+        switch ( iVal )
         {
-            case 0:
+            case HLX::e_hlx_l:
                 dat |= 0x02 << (i*2);
                 continue;
-            case 1:
+            case HLX::e_hlx_x:
                 dat |= 0x00 << (i*2);
                 continue;
-            case 2:
+            case HLX::e_hlx_h:
                 dat |= 0x03 << (i*2);
                 continue;
             default:

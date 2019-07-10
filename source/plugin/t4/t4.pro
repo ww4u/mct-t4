@@ -62,7 +62,8 @@ SOURCES = \
     widget/axislimit.cpp \
     maintain.cpp \
     widget.cpp \
-    widget/filemanager.cpp
+    widget/filemanager.cpp \
+    hlx.cpp
 
 
 HEADERS = \
@@ -99,7 +100,8 @@ HEADERS = \
     widget/axislimit.h \
     maintain.h \
     widget.h \
-    widget/filemanager.h
+    widget/filemanager.h \
+    hlx.h
 
 FORMS += \
     config.ui \
@@ -124,7 +126,8 @@ FORMS += \
     widget/axislimit.ui \
     maintain.ui \
     widget.ui \
-    widget/filemanager.ui
+    widget/filemanager.ui \
+    hlx.ui
 
 RESOURCES += ../../../res/res.qrc
 

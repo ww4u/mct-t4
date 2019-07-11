@@ -14,10 +14,13 @@ Maintain::Maintain(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //! create movie
+    m_pDemoMovie = new QMovie( this );
+    m_pDemoMovie->setCacheMode( QMovie::CacheAll );
+
     setContextHelp("maintain");
 
     on_cmbDemo_currentIndexChanged( ui->cmbDemo->currentIndex() );
-
 }
 
 Maintain::~Maintain()
@@ -121,6 +124,19 @@ void Maintain::on_cmbDemo_currentIndexChanged(int index)
     {
         ui->txtDemoInfo->setText( tr("No demo descripton") );
     }
+
+    m_pDemoMovie->stop();
+    ui->label_3->clear();
+
+    //! \todo record the gif
+    if ( index == 0 )
+    { m_pDemoMovie->setFileName( ":/res/image/t4/ttt.gif" ); }
+    else
+    { m_pDemoMovie->setFileName( ":/res/image/t4/ttt2.gif" ); }
+
+    ui->label_3->setMovie( m_pDemoMovie );
+    m_pDemoMovie->start();
+
 }
 
 void Maintain::on_btnDemo_clicked()

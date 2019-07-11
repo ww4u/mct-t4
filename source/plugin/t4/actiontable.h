@@ -85,6 +85,7 @@ protected:
     int onToHere( QVariant var );
     int onHoming( QVariant var );
 
+    int terminalAction( QList<QVariant> &vars );
     int relToHere( QList<QVariant> &vars );
     int absToHere( QList<QVariant> &vars );
     int rellabsToHere( QList<QVariant> &vars );

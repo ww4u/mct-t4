@@ -8,7 +8,7 @@
 #include "traceplot.h"
 #include "actiontable.h"
 #include "advpara.h"
-#include "maintain.h"
+#include "maintainpage.h"
 
 #include "errormgrtable.h"
 #include "coordinate.h"
@@ -74,7 +74,7 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
 //    new_widget( mrx_t4::TracePlot, pWig, tr("Trace"), ":/res/image/icon/409.png" );logDbg();
 //    new_widget( mrx_t4::ScriptEditor, pWig, tr("Script"), ":/res/image/icon/activity.png" );logDbg();
     new_widget( mrx_t4::AdvPara, pWig, tr("Misc"), ":/res/image/icon/qita.png" );
-    new_widget( mrx_t4::Maintain, pWig, tr("Maintain"), ":/res/image/icon/qita.png" );
+    new_widget( mrx_t4::MaintainPage, pWig, tr("Maintain"), ":/res/image/icon/qita.png" );
 
     //! default
     QByteArray ary;

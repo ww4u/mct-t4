@@ -8,18 +8,39 @@
 
 
 #define MRQ_UPDATE  "/mrq.dat"
-#define MRH_UPDATE  "/mrh.dat"
+#define MRH_UPDATE  "/mrh.tar.gz"
 #define UNDOEXE     "/undo.exe"
 #define MRQ_UPDATE_EXE "/MRQ_Update/MegaRobo_Update.exe"
 
 //! file path
 #define DIR_TEMP    QDir::tempPath()
 
-#define MRQ_FILE    (DIR_TEMP + "/output/mrq.dat")
+#define MRQ_FILE    (DIR_TEMP + "/output/temp.dat")
 #define MRH_FILE    (DIR_TEMP + "/output/mrh.dat")
 
 #define UPDATE_FILE (DIR_TEMP + "/output/update.txt")
 
+//! ByteArray to int
+static int byteArrayToInt(QByteArray arr)
+{
+    if (arr.size() < 4)
+        return 0;
+
+    int res = 0;
+
+    // 小端模式
+    res = arr.at(0) & 0x000000FF;
+    res |= (arr.at(1) << 8) & 0x0000FF00;
+    res |= (arr.at(2) << 16) & 0x00FF0000;
+    res |= (arr.at(3) << 24) & 0xFF000000;
+
+    // 大端模式
+//    res = (arr.at(0) << 24) & 0xFF000000;
+//    res |= (arr.at(1) << 16) & 0x00FF0000;
+//    res |= arr.at(2) << 8 & 0x0000FF00;
+//    res |= arr.at(3) & 0x000000FF;
+    return res;
+}
 
 Widget::Widget(QWidget *parent) :
     QDialog(parent),
@@ -35,6 +56,8 @@ Widget::Widget(QWidget *parent) :
 
     m_updateProcess = NULL;
     m_undoProcess = NULL;
+    m_mrqEntity = NULL;
+    m_mrhEntity = NULL;
 
     connect(ui->lineEdit,SIGNAL(textChanged(QString)),this,SLOT(slotLineEditTextChanged(QString)));
 
@@ -65,89 +88,212 @@ void Widget::attatchPlugin(XPlugin *xp)
 
 void Widget::on_buttonBox_clicked(QAbstractButton *button)
 {
+    begin_page_log();
+    end_page_log();
     ui->labelStatus->hide();
     ui->btnShow->show();
     ui->textBrowser->clear();
 
     if((QPushButton*)(button) == ui->buttonBox->button(QDialogButtonBox::Ok)){
         m_pPlugin->close();
+
         if(openDevice()<0){
             button->show();
             ui->labelStatus->setText( tr("Open Device Fail") );
             ui->labelStatus->show();
             return;
         }
-        closeDevice();
-        button->hide();
+        button->setDisabled( true );
     }else {
         this->close();
         return;
     }
 
-    QString undoExePath = qApp->applicationDirPath() + UNDOEXE;
-    QStringList arguments;
-    arguments << "-x" << "-p" << sPath;
+    int ret = 0;
 
-    MThead *mthread = new MThead;
-    connect(mthread,SIGNAL(resultReady(QString)),this,SLOT(slotReadUndoResult(QString)));
-    mthread->setExeCmd(undoExePath);
-    mthread->setArguments(arguments);
-    mthread->start();
+    do{
+        QFile qFile( sPath );
+        if( qFile.open( QIODevice::ReadWrite ) ){
+        }else{
+            ret = -1;
+            break;
+        }
+
+        QByteArray in = qFile.readAll();
+        if( parseUpdateFile(in) < 0){
+            ret = -1;
+            break;
+        }
+
+        if( m_mrqEntity == NULL || m_mrhEntity == NULL ){
+            ret = -1;
+            break;
+        }
+
+        QDir dir;
+        if( !dir.mkpath( QDir::tempPath() + "/output" )){
+            ret = -1;
+            break;
+        }
+        QFile f( QDir::tempPath() + "/output/temp.dat" );
+        if( f.open(QIODevice::WriteOnly) ){
+
+        }else{
+            ret = -1;
+            break;
+        }
+
+        f.write( m_mrqEntity->mPayload );
+        f.close();
+        qFile.close();
+
+    }while(0);
+
+    //! \todo
+    if( ret !=0 ){
+        ui->textBrowser->append( tr( "Error: Invalid File" ) );
+        return;
+    }else{}
+
+    ui->textBrowser->append( tr("Desc:%1").arg( m_desc ) );
+    ret = versionComparison(m_desc);
+    if( ret == 1 ){
+        slot_startMRQUpdate();
+    }else {
+        //! version = ...
+        ui->textBrowser->append( tr( "Notify: Version Is Same.No Need To Update" ) );
+    }
+    closeDevice();
+}
+
+//! return value:0 =; 1: !=;
+int Widget::versionComparison( QString inVersion )
+{
+    //! MRX-T4_R0.0.0.1
+    //! MRX-T4_M0.0.0.1
+
+    QByteArray ary;
+    ary.reserve( 1024 * 1024 );
+
+    int ret = 0;
+    QString version, mrh, mrq, builTime;
+
+    //! read the history from remote and show
+    ret = mrgStorageReadFile( m_vi, 0,
+                        (QString(mct_path) + "/" + "MRX-T4").toLatin1().data(),
+                        "update.xml",
+                        (quint8*)ary.data() );
+    if( ret  == 0 ){
+        return 1;
+    }
+    ary.resize( ret );
+
+    QXmlStreamReader reader(ary);
+    while( reader.readNextStartElement() ){
+        if( reader.name() == "data" ){
+            while( reader.readNextStartElement() ){
+                if( reader.name() == "block" ){
+                    if( reader.attributes().hasAttribute("id") ){
+                        qDebug() << reader.attributes().value("id").toString();
+                        while(reader.readNextStartElement()){
+                            if( reader.name() == "version" ){
+                                version = reader.readElementText();
+                            }else if( reader.name() == "mrh" ){
+                                mrh = reader.readElementText();
+                            }else if( reader.name() == "mrq" ){
+                                mrq = reader.readElementText();
+                            }else if( reader.name() == "build_time" ){
+                                builTime = reader.readElementText();
+                            }else{
+                                reader.skipCurrentElement();
+                            }
+                        }
+                        break;
+                    }
+                }else{
+                    reader.skipCurrentElement();
+                }
+                break;
+            }
+        }else{
+            reader.skipCurrentElement();
+        }
+    }
+
+    QStringList inList = inVersion.mid(8).split(".");
+    QStringList tList = version.mid( 8 ).split(".");
+    for( int i = 0; i < inList.size(); i++ ){
+        if( inList.at( i ) != tList.at( i ) )
+        return 1;
+    }
+    return 0;
 }
 
 void Widget::on_toolButton_clicked()
 {
+    begin_page_log();
+    end_page_log();
+
     sPath = QFileDialog::getOpenFileName(this,
           tr("Open File"), NULL, tr("(*.upd)"));
     ui->lineEdit->setText(sPath);
 }
 
+// return: -1: system error ; -2: net; -3:invalid file;
 int Widget::upgressMRH()
 {
-    int ret;
-    //! \todo
-    m_vi = mrgOpenGateWay(m_addr.toLocal8Bit().data(), 200);
+    begin_page_log();
+    end_page_log();
 
+    int ret = 0;
+    //! \todo
+    m_vi = mrgOpenGateWay(m_addr.toLocal8Bit().data(), 2000);
+    if( m_vi < 0 ){
+        m_vi = 0;
+        return -2;
+    }
 
     do{
-        QFile mrhFile(MRH_FILE);
-        if(!mrhFile.open(QIODevice::ReadOnly)){
+        if( m_mrhEntity == NULL ){
+            ret = -3;
+            break;
+        }
+
+        QByteArray ba = m_mrhEntity->mPayload;
+        ret = mrgStorageWriteFile(m_vi, 0, (char *)"/media/usb0/",
+                                  (char *)MRH_UPDATE,
+                                  (unsigned char*)(ba.data()),
+                                  ba.size());
+        if(ret!=0){
+            ret = -2;
+            break;
+        }
+
+//        QString strCmd = "rm -rf /media/usb0/" + QString(MRH_UPDATE);
+        QString strCmd = "sh /home/megarobo/MCT/MRX-T4/update.sh";
+        ret = mrgSystemRunCmd(m_vi, strCmd.toLocal8Bit().data(), 0);
+        logDbg() << ret;
+        if(ret !=0){
+            ret = -3;
+            break;
+        }
+
+        ret = mrgSysUpdateFileStart(m_vi, (char *)"mrh.dat");
+        if(ret !=0 ){
             ret = -1;
             break;
         }
 
-        QByteArray ba = mrhFile.readAll();
-        ret = mrgStorageWriteFile(m_vi, 0, (char *)"/media/usb0/",
-                                  (char *)MRH_UPDATE, (unsigned char*)(ba.data()), ba.size());
-        if(ret!=0){
-            break;
-        }
-
-        ret = mrgSysUpdateFileStart(m_vi, (char *)MRH_UPDATE);
-        if(ret !=0 ){
-            break;
-        }
-
-        QString strCmd = "rm -rf /media/usb0/" + QString(MRH_UPDATE);
-        mrgSystemRunCmd(m_vi, strCmd.toLocal8Bit().data(), 1);
-
-        ret = copyDemo();
-        if( ret != 0 )
-            break;
-
-        ret = copyUpdateInfo();
-        if(ret != 0)
-            break;
     }while(0);
 
-    //mrgCloseGateWay(m_vi);
+    QString str = "rm -rf /media/usb0/*";
+    mrgSystemRunCmd(m_vi, str.toLocal8Bit().data(), 0);
 
     if(ret!=0){
         closeDevice();
-        return -1;
-    }else{
-        return 0;
-    }
+    }else{}
+
+    return ret;
 }
 void Widget::showError(const QString &text)
 {
@@ -158,109 +304,11 @@ void Widget::showError(const QString &text)
     }
 }
 
-int Widget::copyDemo()
-{
-    QMap<QString, QStringList> demoMap;
-
-    demoMap["0"] = QStringList() << "MCT_motion.mrp" << "debug.xml";
-    demoMap["1"] = QStringList() << "MCT_motion.mrp" << "debug.xml";
-    demoMap["2"] = QStringList() << "MCT_motion.mrp" << "debug.xml";
-
-    QString cmd;
-    int ret;
-    int count=0;
-
-    QMapIterator<QString, QStringList> it(demoMap);
-    while(it.hasNext()){
-        it.next();
-        cmd = "mkdir -p " + m_pPlugin->demoPath() + "/" + it.key();
-        ret = mrgSystemRunCmd( m_vi, cmd.toLocal8Bit().data(), 0 );
-        if(ret != 0){logDbg()<<cmd << ret;
-            sysInfo("mkdir fail", 1);
-            break;
-        }
-
-        foreach (QString str, it.value()) {
-
-            QByteArray ba;
-            {
-                QString path = QString("%1%2/%3/%4").arg(DIR_TEMP).arg("/output/demo").arg(it.key()).arg(str);
-                logDbg() << path;
-                QFile f( path );
-                if( !f.open(QIODevice::ReadOnly) ){
-                    break;
-                }
-                ba = f.readAll();
-                f.close();
-            }
-
-            ret = mrgStorageWriteFile( m_vi,
-                                       0,
-                                       (m_pPlugin->demoPath()+"/" + it.key()).toLocal8Bit().data(),
-                                       str.toLocal8Bit().data(),
-                                       (unsigned char*)(ba.data()),
-                                       ba.size()
-                                       );
-            if(ret !=0){logDbg()<<ret;
-                break;
-                //sysInfo("Write File fail", 1);
-            }else{
-                count += 1;
-            }
-        }
-    }
-
-    //! count = keysnum * length
-    int num = demoMap.keys().size() * demoMap.value(demoMap.firstKey()).size();
-
-    if(count != num){
-        //! \todo error
-        return -1;
-    }
-    return 0;
-}
-
-int Widget::copyUpdateInfo()
-{
-    QString cmd;
-    int ret;
-    do{
-        cmd = "mkdir -p " + m_pPlugin->modelPath();
-        ret = mrgSystemRunCmd( m_vi, cmd.toLatin1().data(), 0 );
-        if(ret != 0){logDbg()<<cmd<< ret;
-            sysInfo("Mkdir Fail", 1);
-            break;
-        }
-
-        QFile f(UPDATE_FILE);
-        if(!f.open(QIODevice::ReadOnly)){
-            sysInfo("Open Update.txt Fail", 1);
-            ret = -1;
-            break;
-        }
-
-        QByteArray ba;
-        ba = f.readAll();
-        f.close();
-
-        ret = mrgStorageWriteFile( m_vi,
-                                   0,
-                                   m_pPlugin->modelPath().toLatin1().data(),
-                                   QString("update.txt").toLatin1().data(),
-                                   (unsigned char*)(ba.data()),
-                                   ba.size()
-                                   );
-        if(ret != 0){logDbg()<<ret;
-            sysInfo("Write update.txt Fail", 1);
-            break;
-        }
-
-    }while(0);
-    return ret;
-}
-
 void Widget::slot_updateMRH()
 {
+    begin_page_log();
+    end_page_log();
+
     ui->progressBar->setMaximum(0);
     ui->textBrowser->append("Notify: MRH Updating...\n");
 
@@ -268,14 +316,19 @@ void Widget::slot_updateMRH()
     watcher->setFuture(future);
 }
 
-void Widget::slot_startMRQUpdate(int)
+void Widget::slot_startMRQUpdate()
 {
-    MThead *mthread = new MThead;
-    connect(mthread,SIGNAL(resultReady(QString)),this,SLOT(slotReadMRQResult(QString)));
+    begin_page_log();
+    end_page_log();
 
-    QString updateMRQProgram = qApp->applicationDirPath() + MRQ_UPDATE_EXE;
+    MThead *mthread = new MThead;
+    connect(mthread,SIGNAL(resultReady(QString)),
+            this,SLOT(slotReadMRQResult(QString)));
+
+    QString updateMRQProgram = qApp->applicationDirPath()
+                                + MRQ_UPDATE_EXE;
+
     QStringList arguments;
-    //arguments << (sPath.left(sPath.lastIndexOf("/")) + MRQ_UPDATE) << m_addr << recvID;
     arguments << MRQ_FILE << m_addr << recvID;
 
     mthread->setExeCmd(updateMRQProgram);
@@ -283,21 +336,11 @@ void Widget::slot_startMRQUpdate(int)
     mthread->start();
 }
 
-void Widget::slotReadUndoResult(QString text)
-{
-    ui->textBrowser->append(text);
-    if(text.contains("Success")){
-        slot_startMRQUpdate(0);
-    }
-    if( text.contains("Error") ){
-        ui->labelStatus->setText( tr("Unpacking Error") );
-        ui->labelStatus->show();
-        ui->buttonBox->button(QDialogButtonBox::Ok)->show();
-    }
-}
-
 void Widget::slotReadMRQResult(QString text)
 {
+    begin_page_log();
+    end_page_log();
+
     ui->textBrowser->append(text);
     ui->progressBar->show();
 
@@ -327,45 +370,29 @@ void Widget::slotReadMRQResult(QString text)
     }
 }
 
-void Widget::Append(const QString &text)
-{
-    emit AppendText(text);
-}
-
 void Widget::slotReboot()
 {
-    if( QMessageBox::information(this,tr("reboot"),tr("Reboot now?")) == QMessageBox::Ok ){
+    begin_page_log();
+    end_page_log();
+
+    ui->progressBar->setMaximum(100);
+    ui->progressBar->setValue( 100 );
+    if( msgBox_Information_ok("Information", "Please Restart Now") ){
         if(m_pPlugin->isRebootable()){
             mrgSystemRunCmd(m_vi, (char *)"reboot", 0);
         }
         this->close();
-
-        //！ delete
-
     }else{
-
+        closeDevice();
     }
 }
 void Widget::reboot()
 {
     emit sigReboot();
 }
-void Widget::remove()
-{
-    QString qfilePath = qApp->applicationDirPath() + MRQ_UPDATE;
-    QString hfilePath = qApp->applicationDirPath() + MRH_UPDATE;
-    QFile qfile(qfilePath);
-    QFile hfile(hfilePath);
-    if(qfile.exists()){
-        qfile.remove();
-    }
-    if(hfile.exists()){
-        hfile.remove();
-    }
-}
+
 void Widget::destory()
 {
-    remove();
     if(m_updateProcess){
         m_updateProcess->close();
         delete m_updateProcess;
@@ -380,16 +407,27 @@ void Widget::destory()
 
 void Widget::slotGetRunState()
 {
+    begin_page_log();
+    end_page_log();
+
     int state = watcher->result();
-    if( state != 0 ){
-        showError( "Error: MRH Update Fail" );
-        ui->buttonBox->button(QDialogButtonBox::Ok)->show();
-    }
-    else{
-        ui->progressBar->setValue(100);
-        ui->labelStatus->setText( tr("Update Complete!") );
+    //-1: system error ; -2: net; -3:invalid file;
+    QString strError;
+    if( state == -1 ){
+        strError = tr( "Error: System Error" );
+    }else if( state == -2){
+        strError = tr( "Error: Network Error" );
+    }else if( state == -3 ){
+        strError = tr( "Error: Data Check Fail" );
+    }else if( state == 0 ){
+        strError = tr( "Notify: Update Complete" );
         reboot();
-    }
+        return;
+    }else{}
+
+    ui->progressBar->setMaximum(100);
+    ui->progressBar->setValue(0);
+    showError( strError );
 }
 
 
@@ -431,15 +469,18 @@ void Widget::on_btnShow_clicked()
 }
 
 void Widget::slotLineEditTextChanged(QString s)
-{logDbg();
+{
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(s.length()>0);
 }
 
 int Widget::openDevice()
 {
+    begin_page_log();
+    end_page_log();
+
     int ret = 0;
     do{
-        m_vi = mrgOpenGateWay(m_addr.toLocal8Bit().data(), 200);
+        m_vi = mrgOpenGateWay(m_addr.toLocal8Bit().data(), 2000);
         if( m_vi < 0){
             ret = -1;
             break;
@@ -467,8 +508,55 @@ int Widget::openDevice()
 }
 void Widget::closeDevice()
 {
+    begin_page_log();
+    end_page_log();
+
     if(m_vi >0){
         mrgCloseGateWay(m_vi);
         m_vi = 0;
     }
+}
+
+int Widget::parseUpdateFile(QByteArray &in)
+{
+    int iDesLen =  byteArrayToInt( in.mid( 0, 4 ) );
+    m_desc = QString::fromLocal8Bit( in.mid( 4, iDesLen ) );
+    int iId = byteArrayToInt( in.mid( 4+iDesLen, 4 ) );
+    if( iId != Entity::PACKAGE ){
+        return -1;
+    }
+    int iSize = byteArrayToInt( in.mid( iDesLen+8, 4 ) );
+    int iCheck = byteArrayToInt( in.mid( iDesLen+12, 4 ) );
+    int iFormat = byteArrayToInt( in.mid( iDesLen+16, 4 ));
+    int iSections = byteArrayToInt( in.mid( iDesLen+20, 4 ));
+    QByteArray ba = in.mid( iDesLen+24, iSize );
+    QByteArray t = qUncompress( ba );
+
+    for( quint32 i=0; i< iSections; i++ )
+    {
+        Entity *e = new Entity(this);
+        e->mDescLen = byteArrayToInt( t.mid(0, 4) );
+        e->mDescription = QString::fromLocal8Bit( t.mid( 4, e->mDescLen ) );
+        e->mId = byteArrayToInt(t.mid( 4+e->mDescLen, 4 ));
+        e->mSize = byteArrayToInt(t.mid( e->mDescLen+8, 4 ));
+        e->mCheck = byteArrayToInt(t.mid( e->mDescLen+12, 4 ));
+        e->mFormat = byteArrayToInt(t.mid( e->mDescLen+16, 4 ));
+        e->mSections = byteArrayToInt(t.mid( e->mDescLen+20, 4 ));
+        e->mPayload = t.mid( e->mDescLen+24, e->mSize );
+
+        if( e->mId == Entity::MRQ_ENTITY ){
+            m_mrqEntity = e;
+        }else if( e->mId == Entity::MRH_ENTITY ){
+            m_mrhEntity = e;
+        }else{}
+
+        t = t.mid( e->mDescLen+24+e->mSize );
+    }
+
+    return 0;
+}
+
+Entity::Entity(QObject *parent) : QObject(parent)
+{
+
 }

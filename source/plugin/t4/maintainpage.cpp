@@ -1,5 +1,5 @@
-#include "maintain.h"
-#include "ui_maintain.h"
+#include "maintainpage.h"
+#include "ui_maintainpage.h"
 
 #include "t4.h"
 #include "MegaGateway.h"
@@ -8,9 +8,9 @@
 #include "../../wnd/changedpw.h"
 
 namespace mrx_t4 {
-Maintain::Maintain(QWidget *parent) :
+MaintainPage::MaintainPage(QWidget *parent) :
     XPage(parent),
-    ui(new Ui::Maintain)
+    ui(new Ui::MaintainPage)
 {
     ui->setupUi(this);
 
@@ -20,34 +20,34 @@ Maintain::Maintain(QWidget *parent) :
 
 }
 
-Maintain::~Maintain()
+MaintainPage::~MaintainPage()
 {
     delete ui;
 }
 
-void Maintain::enterMission()
+void MaintainPage::enterMission()
 { setOperAble( false ) ;}
-void Maintain::exitMission()
+void MaintainPage::exitMission()
 { setOperAble( true ); }
 
-void Maintain::retranslateUi()
+void MaintainPage::retranslateUi()
 {
     ui->retranslateUi( this );
 }
 
-void Maintain::setOperAble( bool b )
+void MaintainPage::setOperAble( bool b )
 {
     //! for each page operate able
     setOpened( b );
 }
 
-void Maintain::setOnLine( bool b )
+void MaintainPage::setOnLine( bool b )
 {
     //! demo tab disabled
     ui->tab_3->setEnabled( b );
 }
 
-void Maintain::setOpened( bool b )
+void MaintainPage::setOpened( bool b )
 {
     //! for each page operate
     for ( int i = 0; i < ui->tabWidget->count(); i++ )
@@ -58,7 +58,7 @@ void Maintain::setOpened( bool b )
     logDbg()<<b;
 }
 
-void Maintain::updateRole()
+void MaintainPage::updateRole()
 {
     bool bAdmin = m_pPlugin->isAdmin();
 
@@ -67,7 +67,7 @@ void Maintain::updateRole()
     ui->btnBuild->setVisible( bAdmin );
 }
 
-void Maintain::updateWorkingRole( int wRole )
+void MaintainPage::updateWorkingRole( int wRole )
 {
     if ( wRole == XPluginIntf::working_mrq_corrupted )
     {
@@ -89,12 +89,12 @@ void Maintain::updateWorkingRole( int wRole )
     { XPage::updateWorkingRole( wRole); }
 }
 
-void Maintain::updateUi()
+void MaintainPage::updateUi()
 {
     ui->chkAutoLogin->setChecked( m_pPlugin->isAutoLogin() );
 }
 
-void Maintain::on_cmbDemo_currentIndexChanged(int index)
+void MaintainPage::on_cmbDemo_currentIndexChanged(int index)
 {
     begin_page_log1(index);
     end_page_log();
@@ -123,7 +123,7 @@ void Maintain::on_cmbDemo_currentIndexChanged(int index)
     }
 }
 
-void Maintain::on_btnDemo_clicked()
+void MaintainPage::on_btnDemo_clicked()
 {
     begin_page_log();
     end_page_log();
@@ -138,7 +138,7 @@ void Maintain::on_btnDemo_clicked()
     }
 }
 
-void Maintain::on_btnRestart_clicked()
+void MaintainPage::on_btnRestart_clicked()
 {
     begin_page_log();
     end_page_log();
@@ -147,7 +147,7 @@ void Maintain::on_btnRestart_clicked()
     { m_pPlugin->reboot(); }
 }
 
-void Maintain::on_btnShutDown_clicked()
+void MaintainPage::on_btnShutDown_clicked()
 {
     begin_page_log();
     end_page_log();
@@ -156,7 +156,7 @@ void Maintain::on_btnShutDown_clicked()
     { m_pPlugin->powerOff(); }
 }
 
-void Maintain::on_btnReset_clicked()
+void MaintainPage::on_btnReset_clicked()
 {
     begin_page_log();
     end_page_log();
@@ -165,7 +165,7 @@ void Maintain::on_btnReset_clicked()
     { m_pPlugin->rst(); }
 }
 
-void Maintain::on_btnUpdate_clicked()
+void MaintainPage::on_btnUpdate_clicked()
 {
     begin_page_log();
     end_page_log();
@@ -175,7 +175,7 @@ void Maintain::on_btnUpdate_clicked()
     w.exec();
 }
 
-void Maintain::on_btnHistory_clicked()
+void MaintainPage::on_btnHistory_clicked()
 {
     begin_page_log();
     end_page_log();
@@ -220,7 +220,7 @@ void Maintain::on_btnHistory_clicked()
     QProcess::execute( "explorer.exe", args );
 }
 
-void Maintain::on_btnFold_clicked()
+void MaintainPage::on_btnFold_clicked()
 {
     begin_page_log();
     end_page_log();
@@ -228,7 +228,7 @@ void Maintain::on_btnFold_clicked()
     m_pPlugin->fold();
 }
 
-void Maintain::on_btnBackup_clicked()
+void MaintainPage::on_btnBackup_clicked()
 {
     begin_page_log();
     end_page_log();
@@ -289,7 +289,7 @@ void Maintain::on_btnBackup_clicked()
     }
 }
 
-void Maintain::on_btnClearBackup_clicked()
+void MaintainPage::on_btnClearBackup_clicked()
 {
     begin_page_log();
     end_page_log();
@@ -313,7 +313,7 @@ void Maintain::on_btnClearBackup_clicked()
     }
 }
 
-void Maintain::on_cmbUser_currentIndexChanged(int index)
+void MaintainPage::on_cmbUser_currentIndexChanged(int index)
 {
     begin_page_log1( index );
     end_page_log();
@@ -359,7 +359,7 @@ void Maintain::on_cmbUser_currentIndexChanged(int index)
     }
 }
 
-void Maintain::on_btnChange_clicked()
+void MaintainPage::on_btnChange_clicked()
 {
     begin_page_log();
     end_page_log();
@@ -385,7 +385,7 @@ void Maintain::on_btnChange_clicked()
 }
 
 //! \note only for admin
-void Maintain::on_btnResetPw_clicked()
+void MaintainPage::on_btnResetPw_clicked()
 {
     begin_page_log();
     end_page_log();
@@ -410,7 +410,7 @@ void Maintain::on_btnResetPw_clicked()
     m_pPlugin->rstPw( (XPluginIntf::eUserRole)ui->cmbRstUser->currentIndex() );
 }
 
-void Maintain::on_chkAutoLogin_stateChanged(int arg1)
+void MaintainPage::on_chkAutoLogin_stateChanged(int arg1)
 {
     begin_page_log();
     end_page_log();
@@ -419,7 +419,7 @@ void Maintain::on_chkAutoLogin_stateChanged(int arg1)
     m_pPlugin->setAutoLogin( ui->chkAutoLogin->isChecked() );
 }
 
-void Maintain::on_btnRestore_clicked()
+void MaintainPage::on_btnRestore_clicked()
 {
     begin_page_log();
     end_page_log();
@@ -458,7 +458,7 @@ void Maintain::on_btnRestore_clicked()
     }
 }
 
-void Maintain::on_btnExport_clicked()
+void MaintainPage::on_btnExport_clicked()
 {
     begin_page_log();
     end_page_log();
@@ -558,7 +558,7 @@ void Maintain::on_btnExport_clicked()
     }
 }
 
-void Maintain::on_btnBuild_clicked()
+void MaintainPage::on_btnBuild_clicked()
 {
     begin_page_log();
     end_page_log();

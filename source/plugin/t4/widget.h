@@ -13,6 +13,7 @@ namespace Ui {
 class Widget;
 }
 class XPlugin;
+class Entity;
 class Widget : public QDialog
 {
     Q_OBJECT
@@ -23,11 +24,7 @@ public:
 
     void attatchPlugin(XPlugin *xp);
 
-    void Append(const QString &text);
-
     void reboot();
-
-    void remove();
 
     void destory();
 
@@ -35,23 +32,21 @@ public:
 
     void showError(const QString &text);
 
-    int copyDemo();
-
-    int copyUpdateInfo();
-
     int openDevice();
     void closeDevice();
 
+    int parseUpdateFile(QByteArray &in );
+
 private slots:
     void on_buttonBox_clicked(QAbstractButton *button);
+
+    int versionComparison(QString);
 
     void on_toolButton_clicked();
 
     void slot_updateMRH();
 
-    void slot_startMRQUpdate(int);
-
-    void slotReadUndoResult(QString);
+    void slot_startMRQUpdate();
 
     void slotReadMRQResult(QString);
 
@@ -83,6 +78,10 @@ private:
     QProcess *proUpdateMRQ;
 
     QFutureWatcher<int> *watcher;
+
+    Entity *m_mrqEntity, *m_mrhEntity;
+
+    QString m_desc;
 
     bool isAdmin;
 
@@ -116,3 +115,27 @@ private slots:
     void slotReadyRead();
 };
 
+//! entity
+class Entity : public QObject
+{
+    Q_OBJECT
+public:
+    enum ID{
+        MRH_ENTITY,
+        MRQ_ENTITY,
+        MCT_ENTITY,
+        PACKAGE
+    };
+public:
+    int mDescLen;
+    QString mDescription;
+    quint32 mId;
+    quint32 mSize;
+    quint32 mCheck;
+    quint32 mFormat;
+    quint32 mSections;
+    QByteArray mPayload;
+
+public:
+    Entity(QObject *parent = nullptr);
+};

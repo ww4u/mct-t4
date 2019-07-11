@@ -294,10 +294,13 @@ void MegaInterface::on_pushButton_Scan_clicked()
 
         //! split
         strFindDevices = QString("%1").arg(buff);
+        //! removeDuplicates
+        QStringList l = strFindDevices.split(',', QString::SkipEmptyParts);
+        l.removeDuplicates();
 
         int idCnt;
         RoboInfo tInfo;
-        foreach ( QString strDevice, strFindDevices.split(',', QString::SkipEmptyParts) )
+        foreach ( QString strDevice, l )
         {
             sysInfo( strDevice );
 

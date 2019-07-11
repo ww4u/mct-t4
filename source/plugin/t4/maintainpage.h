@@ -5,18 +5,18 @@
 #include "../plugin/xpage.h"
 #include "filemanager.h"
 namespace Ui {
-class Maintain;
+class MaintainPage;
 }
 
 namespace mrx_t4 {
 
-class Maintain : public XPage
+class MaintainPage : public XPage
 {
     Q_OBJECT
 
 public:
-    explicit Maintain(QWidget *parent = 0);
-    ~Maintain();
+    explicit MaintainPage(QWidget *parent = 0);
+    ~MaintainPage();
 
 protected:
     virtual void enterMission();
@@ -68,7 +68,7 @@ private slots:
     void on_btnBuild_clicked();
 
 private:
-    Ui::Maintain *ui;
+    Ui::MaintainPage *ui;
 
 };
 

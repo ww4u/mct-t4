@@ -137,6 +137,65 @@ int MRX_T4::_open( int &vi )
         mDeviceHandle = deviceHandles[0];
         sysInfo( tr("Device"), mDeviceHandle );
 
+        //! \todo get mrx-t4 ver
+
+        //! get mrh info
+        {
+            char vers[128];
+
+            //! MegaRobo Technologies,MRH-T-29-N,MRHT10000519700001,00.00.02.07
+            ret = mrgGateWayIDNQuery( vi, vers );
+            if ( ret != 0 )
+            { ret = -1; break; }
+
+            QStringList infoList = QString(vers).split(',', QString::SkipEmptyParts );
+            if ( infoList.size() < 4 )
+            { ret = -1; break; }
+
+            setMRHType( infoList.at(1) );
+
+            setMRHSN( infoList.at(2) );
+
+            ret = mrgSysGetProjectSoftVersion( vi, vers );
+            if ( ret != 0 )
+            { ret = -1; break; }
+            setMRHVer( vers );
+
+            ret = mrgSysGetBackBoardSoftVersion( vi, vers );
+            if ( ret != 0 )
+            { ret = -1; break; }
+            setMRHBBSw( vers );
+
+            ret = mrgSysGetBackBoardHardVersion( vi, vers );
+            if ( ret != 0 )
+            { ret = -1; break; }
+            setMRHBBHw( vers );
+        }
+
+        //! get mrq info
+        {
+            char buf[128];
+            ret = mrgGetDeviceInfo( vi, mDeviceHandle, buf);
+            if(ret != 0)
+            { ret = -1; break; }
+
+            QString t( buf );
+            QStringList tList = t.split(":");
+            if ( tList.size() < 5 )
+            { ret = -2; break; }
+
+            setSN_MRQ( tList.at( 0 ) );
+            setFirmWareHard_MRQ( tList.at(1) );
+            setSoftVer_MRQ( tList.at(2) );
+            setFirmWareBoot_MRQ( tList.at( 3 ) );
+            setFirmWareFpga_MRQ( tList.at( 4) );
+
+            ret = mrgGetDeviceType( vi, mDeviceHandle, buf);
+            if(ret!=0)
+            { ret = -1; break; }
+            setType_MRQ( buf );
+        }
+
         //! connect socket
         QStringList secList = mAddr.split("::");
         if ( secList.size() < 3 )

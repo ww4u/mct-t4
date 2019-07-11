@@ -84,6 +84,22 @@ public:
     void setMechanicalVer( const QString &ver );
     QString mechanicalVer();
 
+    //! MRH-T Info
+    void setMRHType( const QString &type );
+    QString mrhType();
+
+    void setMRHSN( const QString &sn );
+    QString mrhSn();
+
+    void setMRHVer( const QString &ver );
+    QString mrhVer();
+
+    void setMRHBBSw( const QString &sw );
+    QString mrhBBSw();
+
+    void setMRHBBHw( const QString &hw );
+    QString mrhBBHw();
+
     //! mrq attr
     void setType_MRQ( const QString &s ){ mType = s; }
     QString Type_MRQ(){ return  mType; }
@@ -163,6 +179,9 @@ protected:
     QMutex mRWMutex;
 
     QString mSN, mFirmwareVer, mMechanicalVer;
+
+    //! MRH Info
+    QString mMRHType, mMRHSN, mMRHVer, mMRHBBSw, mMRHBBHw;
 
     //! MRQ info
     QString mType, mSN_MRQ, mSoftVer_MRQ, mFirmWareHard_MRQ, mFirmWareBoot_MRQ, mFirmWareFpga_MRQ;

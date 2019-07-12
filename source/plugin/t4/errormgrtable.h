@@ -19,8 +19,8 @@ class ErrorMgrTable : public XPage
 {
     Q_OBJECT
 public:
-    static int calcResponse(int reaction, int outputAble);
-    static int parseResponse(int response,int *reaction, int *outputAble);
+//    static int calcResponse(int reaction, int outputAble);
+//    static int parseResponse(int response,int *reaction, int *outputAble);
 
 public:
     explicit ErrorMgrTable(QWidget *parent = 0);
@@ -47,8 +47,9 @@ protected:
 private:
     Ui::ErrorMgrTable *ui;
 
-    CheckDelegate *m_pCheckDelegate, *m_pRadioDelegate;
-    ComboxDelegate *m_pComboxDelegate;
+    CheckDelegate *m_pCheckDelegate;
+//    *m_pRadioDelegate;
+//    ComboxDelegate *m_pComboxDelegate;
 
 protected Q_SLOTS:
 //    void slot_request_save();

@@ -12,41 +12,42 @@
 class ErrorMgrItem
 {
 public:
-    enum e_event_type
-    {
-        e_error = 1,
-        e_warning,
-        e_info
-    };
+    static QString encode( bool b );
+    static bool decode( const QString &str );
 
-    //! bits
-    enum eColumnAttr
-    {
-        column_unk = 0,
-        column_editable = 0,
-        column_empty = 1,
-    };
 public:
     ErrorMgrItem();
 
 public:
-    void setEventType( e_event_type evt, bool b );
-    e_event_type eventType();
+    void setOutput( bool b );
+    bool getOutput();
+    bool isOutputAble();
 
-    void snap( int &code, int &type, int &action, int &output, int &save );
+    void setLed( bool b );
+    bool getLed();
+    bool isLedAble();
+
 public:
-    bool mbErrorAble, mbWarnAble, mbInfoAble;
-    bool mbOutputAble;
-    bool mbSaveAble;
-    bool mbActionAble;
+    QString mCodeKey; QString mCode;
+    QString mTypeKey; QString mType;
 
-    int mNr;
-    QString mErr;
-    e_event_type mEventType;
+    QStringList mBriefKey;
+    QStringList mBrief;
+
+    QStringList mReasonKey;
+    QStringList mReason;
+
+    QStringList mDetailKey;
+    QStringList mDetail;
+
+    QString mActionKey;
     QString mAction;
-    QStringList mActionList;
-    bool mbOutput;
-    bool mbSaveDiagnosis;
+
+    QString mOutputKey;
+    QString mOutput;
+
+    QString mLedKey;
+    QString mLed;
 };
 
 class ErrorMgrModel : public MegaTableModel
@@ -64,26 +65,29 @@ public:
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role);
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
 
-    virtual bool insertRows(int position, int rows, const QModelIndex &parent);
-    virtual bool removeRows(int position, int rows, const QModelIndex &parent);
+//    virtual bool insertRows(int position, int rows, const QModelIndex &parent);
+//    virtual bool removeRows(int position, int rows, const QModelIndex &parent);
 
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
 protected:
-    QVariant userRole_Visible( const QModelIndex &index ) const;
-    QVariant backRole( const QModelIndex &index ) const;
+//    QVariant userRole_Visible( const QModelIndex &index ) const;
+//    QVariant backRole( const QModelIndex &index ) const;
 
 public:
     QList< ErrorMgrItem *> *items();
 
-    int save( const QString &fileName );
+//    int save( const QString &fileName );
     int load( const QString &fileName );
     int load( QByteArray &ary );
 
-    int serialOut( QXmlStreamWriter & writer );
-    int serialIn( QXmlStreamReader & reader );
+//    int serialOut( QXmlStreamWriter & writer );
+//    int serialIn( QXmlStreamReader & reader );
 
-    void createDebug();
+    int serialOut( QTextStream & writer );
+    int serialIn( QTextStream & reader );
+
+//    void createDebug();
 
 public:
     QList< ErrorMgrItem *> mItems;

@@ -591,7 +591,14 @@ void MaintainPage::on_btnBuild_clicked()
     end_page_log();
 
     //! \todo send file
-
+    int ret;
+    ret = mrgSystemSetMRQConfig( m_pPlugin->deviceVi(),
+                                 m_pPlugin->SoftVer_MRQ().toLatin1().data(),
+                                 m_pPlugin->SN_MRQ().toLatin1().data() );
+    if ( ret != 0 )
+    {
+        sysError( "build fail", e_out_log );
+    }
 }
 
 }

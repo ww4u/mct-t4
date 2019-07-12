@@ -31,7 +31,7 @@ EXPORT_API int CALL mrgGateWayRead(ViSession  vi, char * output, int wantlen)
 EXPORT_API int CALL mrgGateWayQuery(ViSession  vi, char* cmd, char * output, int wantlen)
 {
     int retlen = 0;
-    retlen = busQuery(vi, cmd, strlen(cmd), output, wantlen>MAX_TRANSMIT_LEN?MAX_TRANSMIT_LEN:wantlen);
+    retlen = busQuery(vi, cmd, strlen(cmd), output, wantlen);
     return retlen;
 }
 
@@ -158,10 +158,12 @@ EXPORT_API int CALL mrgGetDeviceFirmWareBoot(ViSession vi, int name, char *buf)
 {
     char args[SEND_BUF_LEN];
     int retLen = 0;
+    char as8Ret[RECV_BUF_LEN];
     snprintf(args, SEND_BUF_LEN, "DEVice:FIRMware:BOOT? %d\n", name);
-    if ((retLen = busQuery(vi, args, strlen(args), buf, RECV_BUF_LEN)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, RECV_BUF_LEN)) == 0) {
         return -1;
     }
+    strcpy(buf, as8Ret);
     return 0;
 }
 
@@ -169,21 +171,25 @@ EXPORT_API int CALL mrgGetDeviceFirmWareFpga(ViSession vi, int name, char *buf)
 {
     char args[SEND_BUF_LEN];
     int retLen = 0;
+    char as8Ret[RECV_BUF_LEN];
     snprintf(args, SEND_BUF_LEN, "DEVice:FIRMware:FPGA? %d\n", name);
-    if ((retLen = busQuery(vi, args, strlen(args), buf, RECV_BUF_LEN)) == 0) {
+    if ((retLen = busQuery(vi, args, strlen(args), as8Ret, RECV_BUF_LEN)) == 0) {
         return -1;
     }
+    strcpy(buf, as8Ret);
     return 0;
 }
 
 EXPORT_API int CALL mrgGetDeviceSerialNumber(ViSession vi, int name, char * ps8Serial)
 {
     char args[SEND_BUF_LEN];
+    char as8Ret[RECV_BUF_LEN];
     int len = 0;
     snprintf(args, SEND_BUF_LEN, "DEVICE:FIRMWARE:SN? %d\n", name);
-    if ((len = busQuery(vi, args, strlen(args), ps8Serial, RECV_BUF_LEN)) == 0) {
+    if ((len = busQuery(vi, args, strlen(args), as8Ret, RECV_BUF_LEN)) == 0) {
         return -1;
     }
+    strcpy(ps8Serial, as8Ret);
     return 0;
 }
 

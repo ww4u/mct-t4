@@ -521,11 +521,13 @@ EXPORT_API int CALL mrgScriptSetConfig(ViSession vi, char *filename, int isBoot)
 EXPORT_API int CALL mrgScriptGetConfig(ViSession vi, char *filename)
 {
     char args[SEND_BUF_LEN];
+    char ret[SEND_BUF_LEN];
     int retlen = 0;
     snprintf(args, SEND_BUF_LEN, "SCRipt:CONFIG?\n");
-    if ((retlen = busQuery(vi, args, strlen(args), filename, RECV_BUF_LEN)) <= 0) {
+    if ((retlen = busQuery(vi, args, strlen(args), ret, RECV_BUF_LEN)) <= 0) {
         return -1;
     }
+    strcpy(filename, ret);
     return 0;
 }
 

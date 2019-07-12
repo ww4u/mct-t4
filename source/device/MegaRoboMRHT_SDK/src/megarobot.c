@@ -308,15 +308,17 @@ EXPORT_API int CALL mrgSetRobotMachineSerialNum(ViSession vi, int robotname, cha
 EXPORT_API int CALL mrgGetRobotMachineSerialNum(ViSession vi, int robotname,char*serial)
 {
     char args[SEND_BUF_LEN];
+    char as8Ret[RECV_BUF_LEN];
     int retlen = 0;
     if (serial == NULL)
     {
         return -2;
     }
     snprintf(args, SEND_BUF_LEN, "ROBOT:CONFIGuration:SN? %d\n", robotname);
-    if ((retlen = busQuery(vi, args, strlen(args), serial, RECV_BUF_LEN)) == 0) {
+    if ((retlen = busQuery(vi, args, strlen(args), as8Ret, RECV_BUF_LEN)) == 0) {
         return -1;
     }
+    strcpy(serial, as8Ret);
     return 0;
 }
 /*
@@ -748,6 +750,7 @@ EXPORT_API int CALL mrgRobotStop(ViSession vi, int name, int wavetable)
 EXPORT_API int CALL mrgGetRobotStates(ViSession vi, int robotname, int wavetable, char *state)
 {
     char args[SEND_BUF_LEN];
+    char as8Ret[RECV_BUF_LEN];
     int retlen = 0;
 
     if (wavetable >= WAVETABLE_MIN && wavetable <= WAVETABLE_MAX)
@@ -759,10 +762,11 @@ EXPORT_API int CALL mrgGetRobotStates(ViSession vi, int robotname, int wavetable
         snprintf(args, SEND_BUF_LEN, "ROBOT:STATe? %d\n", robotname);
     }
 
-    if ((retlen = busQuery(vi, args, strlen(args), state, RECV_BUF_LEN)) == 0)
+    if ((retlen = busQuery(vi, args, strlen(args), as8Ret, RECV_BUF_LEN)) == 0)
     {
         return -1;
     }
+    strcpy(state, as8Ret);
     return 0;
 }
 /*

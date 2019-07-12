@@ -368,15 +368,6 @@ void MegaInterface::on_pushButton_Scan_clicked()
                         continue;
                     }else{}
 
-                    //! \note use the device sn
-                    char sns[128];
-                    ret = mrgGetDeviceSerialNumber( visa, roboIds[i], sns );
-                    if ( ret != 0 )
-                    { continue; }
-//                    else
-//                    { tInfo.mFMSN = sns; }
-                    tInfo.mDevInfo.mId = devName[0];
-
                     //! \note invalid sn
                     char buf[128];
                     ret = mrgGetDeviceInfo(visa, devName[0], buf);

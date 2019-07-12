@@ -14,10 +14,13 @@ MaintainPage::MaintainPage(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    //! create movie
+    m_pDemoMovie = new QMovie( this );
+    m_pDemoMovie->setCacheMode( QMovie::CacheAll );
+
     setContextHelp("maintain");
 
     on_cmbDemo_currentIndexChanged( ui->cmbDemo->currentIndex() );
-
 }
 
 MaintainPage::~MaintainPage()
@@ -121,6 +124,19 @@ void MaintainPage::on_cmbDemo_currentIndexChanged(int index)
     {
         ui->txtDemoInfo->setText( tr("No demo descripton") );
     }
+
+    m_pDemoMovie->stop();
+    ui->label_3->clear();
+
+    //! \todo record the gif
+    if ( index == 0 )
+    { m_pDemoMovie->setFileName( ":/res/image/t4/ttt.gif" ); }
+    else
+    { m_pDemoMovie->setFileName( ":/res/image/t4/ttt2.gif" ); }
+
+    ui->label_3->setMovie( m_pDemoMovie );
+    m_pDemoMovie->start();
+
 }
 
 void MaintainPage::on_btnDemo_clicked()
@@ -475,14 +491,25 @@ void MaintainPage::on_btnExport_clicked()
     QString str = manager.strResult();
 
     QString sourceDir = m_pPlugin->selfPath()+"/backup/"+str;
-    QString distDir = QFileDialog::getExistingDirectory(this,tr("Export"));
+    QString distDir = QFileDialog::getExistingDirectory(this,tr("Export") );
     if(distDir.isEmpty())   return;
 
     QDir dir;
-    bool bOk = dir.mkpath( distDir+"/"+ str +"log" );
-    if(bOk){
 
-    }else{ sysInfo(tr("Mkdir Fail"),1);return; }
+    //! check exist
+    if ( QDir( distDir+"/"+ str +"log" ).exists() )
+    {
+        if ( msgBox_Warning_ok( tr("Warning"), tr("Directory is not empty, overwrite?") ) )
+        {}
+        else
+        { return; }
+    }
+    else
+    {
+        bool bOk = dir.mkpath( distDir+"/"+ str +"log" );
+        if(bOk){
+        }else{ sysInfo(tr("Mkdir Fail"),1);return; }
+    }
 
     QStringList fileList;
     fileList << "config.xml" << "debug.xml" << "description"
@@ -490,9 +517,9 @@ void MaintainPage::on_btnExport_clicked()
 
     foreach (QString s, fileList) {
         QByteArray ba;
-        ret = mrgStorageGetFileSize(m_pPlugin->deviceVi(), 0,
-                                        sourceDir.toLocal8Bit().data(),
-                                        s.toLocal8Bit().data());
+        ret = mrgStorageGetFileSize( m_pPlugin->deviceVi(), 0,
+                                     sourceDir.toLocal8Bit().data(),
+                                     s.toLocal8Bit().data());
         if(ret<0){
             ret = -1;
             break;

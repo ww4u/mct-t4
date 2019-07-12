@@ -36,8 +36,9 @@ public:
     QGridLayout *gridLayout;
     QPushButton *btnDemo;
     QComboBox *cmbDemo;
-    QSpacerItem *horizontalSpacer;
     QTextEdit *txtDemoInfo;
+    QLabel *label_3;
+    QSpacerItem *horizontalSpacer;
     QWidget *tab;
     QGridLayout *gridLayout_3;
     QSpacerItem *verticalSpacer;
@@ -77,7 +78,7 @@ public:
     {
         if (MaintainPage->objectName().isEmpty())
             MaintainPage->setObjectName(QStringLiteral("MaintainPage"));
-        MaintainPage->resize(400, 245);
+        MaintainPage->resize(463, 245);
         verticalLayout = new QVBoxLayout(MaintainPage);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         tabWidget = new QTabWidget(MaintainPage);
@@ -102,15 +103,27 @@ public:
 
         gridLayout->addWidget(cmbDemo, 0, 0, 1, 1);
 
-        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        gridLayout->addItem(horizontalSpacer, 0, 2, 1, 1);
-
         txtDemoInfo = new QTextEdit(tab_3);
         txtDemoInfo->setObjectName(QStringLiteral("txtDemoInfo"));
         txtDemoInfo->setEnabled(false);
 
         gridLayout->addWidget(txtDemoInfo, 1, 0, 1, 3);
+
+        label_3 = new QLabel(tab_3);
+        label_3->setObjectName(QStringLiteral("label_3"));
+        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy.setHorizontalStretch(1);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(label_3->sizePolicy().hasHeightForWidth());
+        label_3->setSizePolicy(sizePolicy);
+        label_3->setScaledContents(false);
+        label_3->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
+
+        gridLayout->addWidget(label_3, 1, 3, 1, 1);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        gridLayout->addItem(horizontalSpacer, 0, 2, 1, 2);
 
         tabWidget->addTab(tab_3, QString());
         tab = new QWidget();
@@ -319,6 +332,7 @@ public:
         cmbDemo->setItemText(0, QApplication::translate("MaintainPage", "Demo1", nullptr));
         cmbDemo->setItemText(1, QApplication::translate("MaintainPage", "Demo2", nullptr));
 
+        label_3->setText(QString());
         tabWidget->setTabText(tabWidget->indexOf(tab_3), QApplication::translate("MaintainPage", "Demo", nullptr));
 #ifndef QT_NO_TOOLTIP
         btnHistory->setToolTip(QApplication::translate("MaintainPage", "Show the version history", nullptr));

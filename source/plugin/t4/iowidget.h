@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QCheckBox>
+#include "hlx.h"
 namespace Ui {
 class IOWidget;
 }
@@ -23,7 +24,7 @@ private:
     Ui::IOWidget *ui;
 
     int mWidth;
-    QList<QCheckBox*> mBits;
+    QList<HLX*> mBits;
     QList<QWidget*> mSpanWidgets;
 };
 

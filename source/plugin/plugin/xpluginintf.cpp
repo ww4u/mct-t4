@@ -129,6 +129,31 @@ void XPluginIntf::setMechanicalVer( const QString &ver )
 QString XPluginIntf::mechanicalVer()
 { return mMechanicalVer; }
 
+void XPluginIntf::setMRHType( const QString &type )
+{ mMRHType = type; }
+QString XPluginIntf::mrhType()
+{ return mMRHType; }
+
+void XPluginIntf::setMRHSN( const QString &sn )
+{ mMRHSN = sn; }
+QString XPluginIntf::mrhSn()
+{ return mMRHSN; }
+
+void XPluginIntf::setMRHVer( const QString &ver )
+{ mMRHVer = ver; }
+QString XPluginIntf::mrhVer()
+{ return mMRHVer; }
+
+void XPluginIntf::setMRHBBSw( const QString &sw )
+{ mMRHBBSw = sw; }
+QString XPluginIntf::mrhBBSw()
+{ return mMRHBBSw; }
+
+void XPluginIntf::setMRHBBHw( const QString &hw )
+{ mMRHBBHw = hw; }
+QString XPluginIntf::mrhBBHw()
+{ return mMRHBBHw; }
+
 void XPluginIntf::setPw( XPluginIntf::eUserRole role, const QString &pw )
 {
     do

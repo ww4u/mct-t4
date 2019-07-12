@@ -1507,25 +1507,6 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
         mDebugConsoleModel.append( pItem->mComment );
     }
 
-    //! \todo DO
-    int iVal = pItem->mDo;
-    for( int i = 0; i < 2; i++ ){
-        int t = iVal & 0x03;
-        //! set io state
-        switch(t)
-        {
-            case 0x02:   /* low 10*/
-                mrgProjectIOSet(device_var_vi(), IOSET_INDEX(i+1),0,0);
-                break;
-            case 0x00:   /*reserve 00*/
-                break;
-            case 0x03:   /* high 11*/
-                mrgProjectIOSet(device_var_vi(), IOSET_INDEX(i+1), 1,0);
-                break;
-        }
-        iVal = iVal >> 2;
-    }
-
     //! \note Wrist move
     float angle,speed;
     angle = pItem->pw;
@@ -1546,6 +1527,27 @@ int T4OpPanel::procSequence( SequenceItem* pItem )
 
         if( ret != 0 )
         { return ret; }
+    }
+
+    //! DOUT
+    {
+        int iVal = pItem->mDo;
+        for( int i = 0; i < 2; i++ ){
+            int t = iVal & 0x03;
+            //! set io state
+            switch(t)
+            {
+                case 0x02:   /* low 10*/
+                    mrgProjectIOSet(device_var_vi(), IOSET_INDEX(i+1),0,0);
+                    break;
+                case 0x00:   /*reserve 00*/
+                    break;
+                case 0x03:   /* high 11*/
+                    mrgProjectIOSet(device_var_vi(), IOSET_INDEX(i+1), 1,0);
+                    break;
+            }
+            iVal = iVal >> 2;
+        }
     }
 
     return ret;
@@ -2019,7 +2021,7 @@ void T4OpPanel::slot_speed_verify()
 
     //! remove all
     int curIndex;
-    curIndex = ui->cmbSpeed->currentIndex();
+    curIndex = ui->cmbSpeed->currentIndex();logDbg()<<curIndex;
     for ( int i = ui->cmbSpeed->count(); i >=0 ; i-- )
     {
         ui->cmbSpeed->removeItem( i );
@@ -2037,7 +2039,7 @@ void T4OpPanel::slot_speed_verify()
         else
         { break; }
     }
-
+logDbg()<<ui->cmbSpeed->count();
     //! change the cur index
     if ( curIndex > ui->cmbSpeed->count() )
     {
@@ -2559,11 +2561,15 @@ void T4OpPanel::on_btnStepNext_clicked()
 void T4OpPanel::on_radCoordXyz_clicked()
 {
     switchCoordMode();
+
+    slot_speed_verify();
 }
 
 void T4OpPanel::on_radCoordJoint_clicked()
 {
     switchCoordMode();
+
+    slot_speed_verify();
 }
 
 }

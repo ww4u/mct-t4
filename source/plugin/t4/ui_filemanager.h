@@ -57,6 +57,7 @@ public:
 
         lineEdit = new QLineEdit(FileManager);
         lineEdit->setObjectName(QStringLiteral("lineEdit"));
+        lineEdit->setInputMethodHints(Qt::ImhLatinOnly);
 
         horizontalLayout->addWidget(lineEdit);
 

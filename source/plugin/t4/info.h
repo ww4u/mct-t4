@@ -29,6 +29,7 @@ private:
     Ui::Info *ui;
 
     QList<QTableWidgetItem *> mTableItems;  /* MRH */
+    QList<QTableWidgetItem *> mMRH_T;       /* MRH-T */
     QList<QTableWidgetItem *> m_T4Items;    /* MRQ */
 };
 

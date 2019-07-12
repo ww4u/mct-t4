@@ -2,6 +2,7 @@
 #define MAINTAIN_H
 
 #include <QWidget>
+#include <QMovie>
 #include "../plugin/xpage.h"
 #include "filemanager.h"
 namespace Ui {
@@ -69,6 +70,7 @@ private slots:
 
 private:
     Ui::MaintainPage *ui;
+    QMovie *m_pDemoMovie;
 
 };
 

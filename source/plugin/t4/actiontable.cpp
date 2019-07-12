@@ -687,6 +687,7 @@ int ActionTable::onToHere( QVariant var )
 {
     check_connect_ret( -1 );
 
+    int ret;
     QList<QVariant> vars;
 
     vars = var.toList();
@@ -702,23 +703,31 @@ logDbg()<<QThread::currentThreadId()
       <<vars.at(7).toBool();
     if ( str_is( vars.at(0).toString(), "PA" ) )
     {
-        return absToHere( vars );
+        ret = absToHere( vars );
     }
     else if ( str_is( vars.at(0).toString(), "PRA" )
               || str_is( vars.at(0).toString(), "PRN" ))
     {
-        return relToHere( vars );
+        ret = relToHere( vars );
     }
     //! \todo the last abs position
     else if ( str_is( vars.at(0).toString(), "PRLA" ) )
     {
-        return rellabsToHere( vars );
+        ret = rellabsToHere( vars );
     }
     else
     {
         sysError( tr("Invalid input") );
         return -1;
     }
+
+    if ( ret != 0 )
+    { return ret; }
+
+    //! terminal
+    ret = terminalAction( vars );
+
+    return ret;
 
 }
 int ActionTable::onHoming( QVariant var )
@@ -733,6 +742,36 @@ logDbg();
 logDbg();
     return ret;
 }
+
+int ActionTable::terminalAction( QList<QVariant> &vars )
+{
+    check_connect_ret( -1 );
+
+    int ret;
+
+    //! Wrist
+    float speed = pRobo->mMaxJointSpeeds.at(3) * vars.at(6).toDouble() / 100.0;
+
+    ret = mrgSetRobotWristPose(robot_var(), 0, vars.at(4).toDouble(), speed, guess_dist_time_ms( 180/speed, 180 ));
+    if( ret != 0 )
+        return ret;
+
+    //! \todo the terminal is rel
+    speed = pRobo->mMaxJointSpeeds.at(4) * vars.at(6).toDouble() / 100.0;
+    double dis = vars.at(5).toDouble();
+    if( qAbs( dis )>FLT_EPSILON ){
+        speed = pRobo->mMaxJointSpeeds.at(4) * vars.at(6).toDouble() / 100.0;
+        ret = mrgRobotToolExe(robot_var(),
+                              dis,
+                              qAbs(dis)/speed,
+                              guess_dist_time_ms( qAbs( dis )/speed, qAbs(dis))
+                              );
+        if(ret!=0){return ret;}
+    }
+
+    return ret;
+}
+
 int ActionTable::relToHere( QList<QVariant> &vars )
 {logDbg();
     check_connect_ret( -1 );
@@ -744,6 +783,8 @@ int ActionTable::relToHere( QList<QVariant> &vars )
                           vars.at(4).toDouble(), vars.at(5).toDouble(),
                           rel_to_abs_speed( vars.at(6).toDouble() ), vars.at(7).toBool()
                           );
+    if( ret != 0 )
+        return ret;
 
     //! \todo the terminal is rel
 
@@ -767,26 +808,25 @@ int ActionTable::absToHere( QList<QVariant> &vars )
                          vars.at(4).toDouble(), vars.at(5).toDouble(),
                          rel_to_abs_speed( vars.at(6).toDouble() ), vars.at(7).toBool() );
 
-    //! Wrist
-    //float speed = rel_to_abs_speed( vars.at(6).toDouble() );
-    float speed = pRobo->mMaxJointSpeeds.at(3) * vars.at(6).toDouble() / 100.0;
+//    //! Wrist
+//    float speed = pRobo->mMaxJointSpeeds.at(3) * vars.at(6).toDouble() / 100.0;
 
-    ret = mrgSetRobotWristPose(robot_var(), 0, vars.at(4).toDouble(), speed, guess_dist_time_ms( 180/speed, 180 ));
-    if( ret != 0 )
-        return ret;
+//    ret = mrgSetRobotWristPose(robot_var(), 0, vars.at(4).toDouble(), speed, guess_dist_time_ms( 180/speed, 180 ));
+//    if( ret != 0 )
+//        return ret;
 
-    //! \todo the terminal is rel
-    speed = pRobo->mMaxJointSpeeds.at(4) * vars.at(6).toDouble() / 100.0;
-    double dis = vars.at(5).toDouble();
-    if( qAbs( dis )>FLT_EPSILON ){
-        speed = pRobo->mMaxJointSpeeds.at(4) * vars.at(6).toDouble() / 100.0;
-        ret = mrgRobotToolExe(robot_var(),
-                              dis,
-                              qAbs(dis)/speed,
-                              guess_dist_time_ms( qAbs( dis )/speed, qAbs(dis))
-                              );
-        if(ret!=0){return ret;}
-    }
+//    //! \todo the terminal is rel
+//    speed = pRobo->mMaxJointSpeeds.at(4) * vars.at(6).toDouble() / 100.0;
+//    double dis = vars.at(5).toDouble();
+//    if( qAbs( dis )>FLT_EPSILON ){
+//        speed = pRobo->mMaxJointSpeeds.at(4) * vars.at(6).toDouble() / 100.0;
+//        ret = mrgRobotToolExe(robot_var(),
+//                              dis,
+//                              qAbs(dis)/speed,
+//                              guess_dist_time_ms( qAbs( dis )/speed, qAbs(dis))
+//                              );
+//        if(ret!=0){return ret;}
+//    }
 
     return ret;
 }

@@ -60,9 +60,10 @@ SOURCES = \
     widget/ioindicator.cpp \
     widget/keytableview.cpp \
     widget/axislimit.cpp \
-    widget/filemanager.cpp \
     maintainpage.cpp \
-    updatedialog.cpp
+    updatedialog.cpp \
+    widget/filemanager.cpp \
+    hlx.cpp
 
 
 HEADERS = \
@@ -97,9 +98,10 @@ HEADERS = \
     widget/ioindicator.h \
     widget/keytableview.h \
     widget/axislimit.h \
-    widget/filemanager.h \
     maintainpage.h \
-    updatedialog.h
+    updatedialog.h \
+    widget/filemanager.h \
+    hlx.h
 
 FORMS += \
     config.ui \
@@ -122,9 +124,10 @@ FORMS += \
     widget/ioindicator.ui \
     t4oppanel.ui \
     widget/axislimit.ui \
-    widget/filemanager.ui \
     maintainpage.ui \
-    updatedialog.ui
+    updatedialog.ui \
+    widget/filemanager.ui \
+    hlx.ui
 
 RESOURCES += ../../../res/res.qrc
 

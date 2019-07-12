@@ -139,7 +139,7 @@ void XPage::updateWorkingRole( int role )
     else if ( role == XPluginIntf::working_disconnected )
     { setEnabled( false ); }
     else if ( role == XPluginIntf::working_normal )
-    { }
+    { setEnabled( true ); }
     else if ( role == XPluginIntf::working_mrq_corrupted )
     { setEnabled( false ); }
     else if ( role == XPluginIntf::working_device_not_ready )

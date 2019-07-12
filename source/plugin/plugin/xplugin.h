@@ -16,14 +16,14 @@
 #include "mlog.h"
 
 //! macros
-#define new_widget( type, var, txt, icon ) \
+#define new_widget_base( type, var, idstr, txt, icon ) \
 do{ \
     var = new type;\
     Q_ASSERT( NULL != var ); \
     var->attachPref( m_pPref );\
     var->attachPlugin( this );\
     var->attachWorkings(); \
-    var->setObjectName( txt );\
+    var->setObjectName( idstr );\
     \
     QTreeWidgetItem *plwItem = new QTreeWidgetItem();   \
     Q_ASSERT( NULL != plwItem ); \
@@ -36,6 +36,8 @@ do{ \
     stack->addWidget( var );     \
     mPluginWidgets.append( var ); \
 }while(0)
+
+#define new_widget( type, var, txt, icon ) new_widget_base( type, var, txt, txt, icon )
 
 #define new_root_widget( type, var, txt, icon, root ) \
 do{ \

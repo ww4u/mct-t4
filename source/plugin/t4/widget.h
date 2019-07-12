@@ -14,6 +14,7 @@ class Widget;
 }
 class XPlugin;
 class Entity;
+class MThead;
 class Widget : public QDialog
 {
     Q_OBJECT
@@ -24,23 +25,20 @@ public:
 
     void attatchPlugin(XPlugin *xp);
 
-    void reboot();
-
-    void destory();
-
-    int upgressMRH();
-
+protected:
     void showError(const QString &text);
 
     int openDevice();
-    void closeDevice();
+
+    int loadRemoteInfo( int vi );
 
     int parseUpdateFile(QByteArray &in );
 
 private slots:
     void on_buttonBox_clicked(QAbstractButton *button);
 
-    int versionComparison(QString);
+    int versionComparison(const QString &fileVer,
+                          const QByteArray &remoteVerStream );
 
     void on_toolButton_clicked();
 
@@ -50,41 +48,31 @@ private slots:
 
     void slotReadMRQResult(QString);
 
-signals:
-    void AppendText(const QString &text);
-    void sigReboot();
-    void sigProgress( int i );
-
 private slots:
-//    void SlotAppendText(const QString &text);
-    void slotReboot();
-
-    void slotGetRunState();
+    void slotGetRunState(int state);
 
     void on_btnShow_clicked();
 
     void slotLineEditTextChanged(QString);
 
+    void on_lineEdit_textChanged(const QString &arg1);
+
 private:
     Ui::Widget *ui;
-    QString sPath;
-    XPlugin *m_pPlugin;
-    QString m_addr,recvID;
-    QProcess *m_updateProcess,*m_undoProcess;
-
-    ViSession   m_vi;
-    int         m_robotID;
-
-    QProcess *proUpdateMRQ;
-
-    QFutureWatcher<int> *watcher;
 
     Entity *m_mrqEntity, *m_mrhEntity;
 
+    QByteArray mRemoteVerionStream;
+
+    QProcess *proUpdateMRQ;
+    QString m_addr,recvID;
+    MThead *m_mrhThread;
+    XPlugin *m_pPlugin;
+    MThead *m_threaad;
     QString m_desc;
-
+    QString sPath;
+    int m_robotID;
     bool isAdmin;
-
 };
 
 #endif // WIDGET_H
@@ -99,17 +87,27 @@ public:
     void setExeCmd(const QString &str){ cmd = str; }
     void setArguments(const QStringList &list){ argument = list; }
 
+    void setAddr( QString str ){ m_addr = str; }
+    void setId( int i ){ id = i; }
+    void setPayload( QByteArray &in ){ mPayLoad = in; }
+
 protected:
     virtual void run();
 
 signals:
     void resultReady( QString );
+    void resultReady( int );
 
 private:
     QProcess *m_process;
 
     QString cmd;
     QStringList argument;
+
+    int id;
+
+    QByteArray mPayLoad;
+    QString m_addr;
 
 private slots:
     void slotReadyRead();

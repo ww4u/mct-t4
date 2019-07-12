@@ -627,7 +627,7 @@ QDockWidget::close-button, QDockWidget::float-button {
   }
 
 QWidget#Maintain QPushButton{
-    width: 150
+    width: 150;
 }
   
 /* \todo for images */

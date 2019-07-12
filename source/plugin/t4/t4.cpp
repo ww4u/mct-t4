@@ -74,7 +74,7 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
 //    new_widget( mrx_t4::TracePlot, pWig, tr("Trace"), ":/res/image/icon/409.png" );logDbg();
 //    new_widget( mrx_t4::ScriptEditor, pWig, tr("Script"), ":/res/image/icon/activity.png" );logDbg();
     new_widget( mrx_t4::AdvPara, pWig, tr("Misc"), ":/res/image/icon/qita.png" );
-    new_widget( mrx_t4::MaintainPage, pWig, tr("Maintain"), ":/res/image/icon/qita.png" );
+    new_widget_base( mrx_t4::MaintainPage, pWig, "Maintain", tr("Maintain"), ":/res/image/icon/qita.png" );
 
     //! default
     QByteArray ary;

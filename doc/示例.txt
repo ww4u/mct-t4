@@ -1,0 +1,32 @@
+# 注释行
+##############################################################
+[code]: 以00开头的表示MRH-T的错误,以FF开头的表示MRQ的错误
+[brief][CN]: 中文摘要
+[brief][EN]: 英文摘要
+[reason][CN]: 中文原因
+[reason][EN]: 英文原因
+[handle][CN]: 中文处理方式
+[handle][EN]: 英文处理方式
+[detail][1]: 详细信息1, detail可以没有,也可以有多个
+[detail][2]: 详细信息2
+[detail][3]: 详细信息3
+[detail][...]:
+[level]: ERROR或者WARNING,二选一, 不可修改
+[response][xx]: 00表示无响应或不可选,10表示不关闭输出级,11表示关闭输出级, 第二个方括号中xx填默认值
+[led][xx]: 00表示不可选, 10表示不闪灯, 11表示闪灯, 第二个方括号xx中填默认值
+
+
+示例:
+[code]: 0x00000001
+[brief][CN]: 软件错误,升级时检测到一个内部固件错误
+[brief][EN]: software error
+[reason][CN]: 固件被损坏,或者固件与当前设备硬件不匹配
+[reason][EN]: xxxxxx
+[handle][CN]: 重新更新固件
+[handle][EN]: yyyyyy
+[detail][1]: Greatshot error
+[detail][2]: backboard error
+[detail][3]: kernel error
+[level]: ERROR
+[response][00]: 00
+[led][11]: 11

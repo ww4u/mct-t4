@@ -102,11 +102,11 @@ void Config::updateUi()
     set_zero( 3 )
 
     //! range
-    ui->lmtSafeArea->setLimitOn( selfPara->mbAxisSafeEnable );
+//    ui->lmtSafeArea->setLimitOn( selfPara->mbAxisSafeEnable );
     ui->lmtSoftLimit->setLimitOn( selfPara->mbAxisSoftEnable );
     for ( int i = 0; i < selfPara->_limit_axis_cnt; i++ )
     {
-        ui->lmtSafeArea->setRange( i, selfPara->mAxisSafeLower[i], selfPara->mAxisSafeUpper[i] );
+//        ui->lmtSafeArea->setRange( i, selfPara->mAxisSafeLower[i], selfPara->mAxisSafeUpper[i] );
         ui->lmtSoftLimit->setRange( i, selfPara->mAxisSoftLower[i], selfPara->mAxisSoftUpper[i] );
     }
 
@@ -133,13 +133,13 @@ void Config::updateData()
     //! range
     double h, l;
     int ret;
-    selfPara->mbAxisSafeEnable = ui->lmtSafeArea->limitOn();
+//    selfPara->mbAxisSafeEnable = ui->lmtSafeArea->limitOn();
     selfPara->mbAxisSoftEnable = ui->lmtSoftLimit->limitOn();
     for ( int i=0; i < selfPara->_limit_axis_cnt ; i++ )
     {
-        ret = ui->lmtSafeArea->range( i, l, h);
-        if ( ret != 0 )
-        { continue; }
+//        ret = ui->lmtSafeArea->range( i, l, h);
+//        if ( ret != 0 )
+//        { continue; }
         selfPara->mAxisSafeLower[ i ] = l;
         selfPara->mAxisSafeUpper[ i ] = h;
 
@@ -163,8 +163,6 @@ int Config::upload()
     double angle;
 
     //! get zero
-//    QList<QDoubleSpinBox*> spins;
-//    spins<<ui->spinZero0<<ui->spinZero1<<ui->spinZero2<<ui->spinZero3;
     for ( int i = 0; i < 4; i++ )
     {
         ret = mrgMRQAbsEncoderZeroValue_Query( device_var(),
@@ -175,7 +173,6 @@ int Config::upload()
 
         //! convert the value
         angle = ABS_ANGLE_TO_DEG( val );
-//        spins[i]->setValue( angle );
         selfPara->mAxisZero[i] = angle;
     }
 
@@ -218,10 +215,6 @@ int Config::upload()
             selfPara->mAxisSoftUpper[i] = lmtH;
         }
 
-
-//        logDbg()<<lmtL<<lmtH;
-//        sysInfo( QString("%1 %2").arg(lmtL).arg(lmtH) );
-
         ret = mrgMRQAbsEncoderAlarmState_Query( device_var(), i, &lmtOnOff );
         if ( ret != 0 )
         { return ret; }
@@ -231,6 +224,44 @@ int Config::upload()
     selfPara->mbAxisSoftEnable = lmtsOnOff;
 
     //! \todo safe area
+
+    //! slow ratio
+    int a, b;
+    char type[1]={0};
+
+    int iTerminalType;
+    ret = mrgRobotGetToolType( robot_var(), &iTerminalType );
+    logDbg() << "terminaltype: " <<iTerminalType;
+    selfPara->mTerminalType = T4Para::eTerminalType(iTerminalType);
+
+    if( T4Para::eTerminalType(iTerminalType) == T4Para::e_terminal_user )
+    {
+        ret = mrgMRQMotorGearRatio_Query( device_var(),
+                                    4,
+                                    &a, &b );
+        if ( ret == 0 )
+        {
+            selfPara->mSlowMult = a;
+            selfPara->mSlowDiv = b;
+
+        }else{
+            return ret;
+        }
+    }
+    else if ( iTerminalType == T4Para::e_terminal_a5 )
+    {
+        int mode;
+        ret = mrgRobotToolExeMode_Query( robot_var(), &mode );
+        if ( ret == 0 )
+        {
+            selfPara->mA5Range = (T4Para::eAxis5Range)mode;
+        }
+        else
+        { sysError( "read terminal fail", e_out_log ); }
+    }
+    else {
+
+    }
 
     //! arm length
     //! \todo
@@ -243,37 +274,6 @@ int Config::upload()
     for ( int al = 0; al < 3; al++ )
     {
         selfPara->mArmLength[al] = link[al];
-    }
-
-    //! slow ratio
-    int a, b;
-    char type[1]={0};
-
-    //! \todo the user tool type
-    int iTerminalType;
-    ret = mrgRobotGetToolType(robot_var(), &iTerminalType);
-    logDbg() << "terminaltype: " <<iTerminalType;
-    selfPara->mTerminalType = T4Para::eTerminalType(iTerminalType);
-
-    if( T4Para::eTerminalType(iTerminalType) == T4Para::e_terminal_user )
-    {
-        ret = mrgMRQMotorGearRatio_Query( device_var(),
-                                    4,
-                                    &a, &b );
-        if ( ret == 0 )
-        {
-//            ui->spinMult->setValue( a );
-//            ui->spinDiv->setValue( b );
-//            ui->gpSlow->setVisible( true );
-
-            selfPara->mSlowMult = a;
-            selfPara->mSlowDiv = b;
-
-        }else{
-            return ret;
-        }
-    }else{
-//        ui->gpSlow->setVisible( false );
     }
 
     return 0;
@@ -298,6 +298,21 @@ int Config::download()
         if(ret != 0){
             return -1;
         }
+
+        //! a5
+        if ( type == T4Para::e_terminal_a5 )
+        {
+            ret = mrgRobotToolExeMode( robot_var(), ui->rad270->isChecked() ? 0 : 1 );
+        }
+        else if ( type == T4Para::e_terminal_f2 )
+        {
+            ret = mrgRobotToolExeMode( robot_var(), 0 );
+        }
+        //! \todo f3
+        else if ( type == T4Para::e_terminal_f3 )
+        {}
+        else
+        {}
     }
 
     //! set zero

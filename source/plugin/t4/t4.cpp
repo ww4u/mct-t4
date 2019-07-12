@@ -185,14 +185,14 @@ void MRX_T4::rstRecordTable()
     m_pRecordModel->loadIn( stream );
 }
 
-const char _meta_tables[]=
+const unsigned char _meta_tables[]=
 {
     #include "./dataset/errmgr_default.cpp"
 };
 void MRX_T4::ErrorMgrTable( QByteArray &ary )
 {
     ary.clear();
-    ary.setRawData( _meta_tables, sizeof( _meta_tables )/sizeof( _meta_tables[0] ) );
+    ary.setRawData( (const char*)_meta_tables, sizeof( _meta_tables )/sizeof( _meta_tables[0] ) );
 }
 
 const char _record_datas[]=

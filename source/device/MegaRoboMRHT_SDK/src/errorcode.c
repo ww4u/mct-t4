@@ -1,31 +1,20 @@
 #include "errorcode.h"
+#include "storage.h"
 
-/*
-  上传错误代码配置
-  vi :visa设备句柄
-  code:错误代码值
-  error:返回错误代码配置值
-  len: 长度
-*/
 int mrgErrorCodeConfigUpload(ViSession vi, int code, int *type,  int *response, int *diagnose, int *enable)
 {
-    char error[RECV_LEN] = "";
-    int len = RECV_LEN;
-    char args[SEND_LEN];
+    char error[RECV_BUF_LEN] = "";
+    int len = RECV_BUF_LEN;
+    char args[SEND_BUF_LEN];
     int retlen = 0;
-    int count = 0;
-    snprintf(args, SEND_LEN, ":ERRCode:UPLoad? %d\n", code);
+    char values[32][64] = {""};
+
+    snprintf(args, SEND_BUF_LEN, ":ERRCode:UPLoad? %d\n", code);
     if ((retlen = busQuery(vi, args, strlen(args), error, len)) == 0) {
         return -1;
     }
 
-    char *p, *pNext;
-    char values[32][64] = {""};
-    p = STRTOK_S(error, ",", &pNext);
-    while (p){
-        strcpy(values[count++], p);
-        p = STRTOK_S(NULL, ",", &pNext);
-    }
+    splitString(error, ",", values);
 
     //! type
     if(STRCASECMP(values[0], "F") == 0){
@@ -96,18 +85,9 @@ int mrgErrorCodeConfigUpload(ViSession vi, int code, int *type,  int *response, 
     return 0;
 }
 
-/*
-  下载错误代码配置
-  vi :visa设备句柄
-  code:错误代码值
-  type:类型，F/W/I ->错误/警告/信息 -> 1,2,3
-  diagnose: 诊断器是否配置 必配/选配 -> 0,1
-  response: 错误响应，A/B/C/D/E/F/G -> 1,2,3,4,5,6,7
-  enable: 是否使能 Y/N ->0,1
-*/
 int mrgErrorCodeConfigDownload(ViSession vi, int code, int type, int response, int diagnose, int enable)
 {
-    char args[SEND_LEN];
+    char args[SEND_BUF_LEN];
     int retlen = 0;
 
     char ps8Type[10] = "";
@@ -180,93 +160,23 @@ int mrgErrorCodeConfigDownload(ViSession vi, int code, int type, int response, i
         return -4;
     }
 
-    snprintf(args, SEND_LEN, ":ERRCode:DOWNLoad %d,%s,%s,%s,%s\n", code, ps8Type, ps8Response, ps8Diagnose, ps8Enable);
+    snprintf(args, SEND_BUF_LEN, ":ERRCode:DOWNLoad %d,%s,%s,%s,%s\n", code, ps8Type, ps8Response, ps8Diagnose, ps8Enable);
     if ((retlen = busWrite(vi, args, strlen(args))) <= 0) {
         return -5;
     }
     return 0;
 }
 
-/*
- * 读取错误文件内容到上位机
- * vi :visa设备句柄
- * format: NORMAL|ZIP|TARGZ|TAR -> 0,1,2,3
- * errorLog:返回错误日志
- * wantlen： errorLog（存储区）的长度
- * 返回值：返回实际的文件长度
- */
-int mrgErrorLogUpload(ViSession vi, int format, char* errorLog)
+int mrgErrorLogUpload(ViSession vi, char* errorLog)
 {
-    int retlen = 0;
-    int count = 0;
-    int lenOfLen = 0;
-    int readLen = 0;
-    int left = 0;
-    char args[SEND_LEN];
-    char as8Ret[RECV_LEN];
-    char as8StrLen[20];
-    char *as8Format[] = { "NORMAL","ZIP","TARGZ","TAR" };
-
-    if (format < 0 || format > 3)
-    {
-        return -2;
-    }
-
-    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-    pthread_mutex_lock(&mutex);
-    snprintf(args, SEND_LEN, ":ERRLOG:UPLOAD? %s\n", as8Format[format]);
-    if (busWrite(vi, args, strlen(args)) == 0)
-    {
-        pthread_mutex_unlock(&mutex);
-        return 0;
-    }
-    // 1. 先读回一个#9的头。
-    retlen = busRead(vi, as8Ret, 12);
-    if (retlen <= 0)
-    {
-        pthread_mutex_unlock(&mutex);
-        return retlen;
-    }
-    if (as8Ret[0] != '#')//格式错误
-    {
-        pthread_mutex_unlock(&mutex);
-        return count;
-    }
-    lenOfLen = as8Ret[1] - 0x30;
-    memcpy(as8StrLen, &as8Ret[2], lenOfLen);//取出长度字符串
-    left = strtoul(as8StrLen, NULL, 10);
-    if (left == 0)
-    {
-        pthread_mutex_unlock(&mutex);
-        return 0;
-    }
-    errorLog[0] = as8Ret[11];
-    count = 1;
-    while (left >0)
-    {
-        readLen = (left > 512) ? 512 : left;
-        //返回的#9数据最后，会有一个分号，所以这里多读一个字节。
-        if ((retlen = busRead(vi, as8Ret, readLen)) == 0)
-        {
-            break;
-        }
-        memcpy(&errorLog[count], as8Ret, retlen);
-        count += retlen;
-        left -= retlen;
-    }
-    pthread_mutex_unlock(&mutex);
-    return count;
+    return mrgStorageReadFile(vi, 0, "/home/megarobo/MRH-T/diagnose", "Diagnose.log", (unsigned char *)errorLog);
 }
 
-/*
-  清除错误日志
-  vi :visa设备句柄
-*/
 int mrgErrorLogClear(ViSession vi)
 {
-    char args[SEND_LEN];
+    char args[SEND_BUF_LEN];
     int retlen = 0;
-    snprintf(args, SEND_LEN, ":ERRLOG:CLEAR\n");
+    snprintf(args, SEND_BUF_LEN, ":ERRLOG:CLEAR\n");
     if ((retlen = busWrite(vi, args, strlen(args))) == 0) {
         return -1;
     }

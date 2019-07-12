@@ -9,6 +9,7 @@
 #include "MegaGateway.h"
 #include "xthread.h"
 #include "TestPanelDialog.h"
+#include "CanDebugDialog.h"
 
 namespace Ui {
 class MainWidget;
@@ -61,6 +62,8 @@ private slots:
 
     void slotTcpError(QAbstractSocket::SocketError);
 
+    void on_pushButton_cantool_clicked();
+
 private:
     bool GatewayOpen();
 
@@ -101,6 +104,7 @@ private:
     QString getRobotCurrentState();
 
     TestPanelDialog *m_testPanelDialog;
+    CanDebugDialog *m_canDebugDialog;
 
     QTcpSocket *m_tcpClient;
 };

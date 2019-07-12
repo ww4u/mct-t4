@@ -43,6 +43,7 @@ MainWidget::MainWidget(QWidget *parent) :
     m_threadUpdateInfo = NULL;
 
     m_testPanelDialog = NULL;
+    m_canDebugDialog = NULL;
 
     connect(ui->pushButtonSearchMRHT, SIGNAL(clicked(bool)), this, SLOT(slotSearchGateway()));
     connect(ui->pushButtonOpenMRHT, SIGNAL(clicked(bool)), this, SLOT(slotOpenClose()));
@@ -94,6 +95,11 @@ MainWidget::~MainWidget()
     if(m_testPanelDialog != NULL)
         delete m_testPanelDialog;
 
+    if(m_canDebugDialog != NULL)
+        delete m_canDebugDialog;
+
+    delete m_tcpClient;
+    delete m_model;
     delete ui;
 }
 
@@ -106,13 +112,8 @@ void MainWidget::slotSearchGateway()
 
         //! 搜索网络
         memset(buff, 0, sizeof(buff));
-        mrgFindGateWay(0, buff, sizeof(buff), 1);
+        mrgFindGateWay(BUS_VXI, buff, sizeof(buff));
         strFindDevices = QString("%1").arg(buff);
-
-        //! 搜索USB
-        memset(buff, 0, sizeof(buff));
-        mrgFindGateWay(1, buff, sizeof(buff), 1);
-        strFindDevices += QString("%1").arg(buff);
 
         ui->comboBox_mrht->addItems(strFindDevices.split(',', QString::SkipEmptyParts));
     };
@@ -159,6 +160,7 @@ void MainWidget::slotOpenClose()
         ui->pushButton_Send->setEnabled(true);
         ui->pushButton_searchRobot->setEnabled(true);
         ui->pushButtonTest->setEnabled(true);
+        ui->pushButton_cantool->setEnabled(true);
 
         if( !m_strIP.isEmpty() )
         {
@@ -192,6 +194,7 @@ void MainWidget::slotOpenClose()
         ui->pushButton_searchRobot->setEnabled(false);
         ui->radioButton_updatePos->setEnabled(false);
         ui->pushButtonTest->setEnabled(false);
+        ui->pushButton_cantool->setEnabled(false);
         ui->pushButton_goHome->setEnabled(false);
         ui->pushButton_stop->setEnabled(false);
 
@@ -203,7 +206,7 @@ void MainWidget::slotOpenClose()
                 if (m_tcpClient->state() == QAbstractSocket::UnconnectedState
                         || m_tcpClient->waitForDisconnected(1000))
                 {
-                    qDebug() << "TCP Disconnect!";
+                    qDebug() << "TCP Disconnect!"<< MEGAROBO_TCP_EXCEPTION_PORT;
                 }
             }
         }
@@ -368,7 +371,7 @@ void MainWidget::slotRobotStop()
 
     auto lambda = [&]()
     {
-        mrgRobotStop(m_vi, m_robotID, -1);
+        mrgRobotStop(m_vi, m_robotID, WAVETABLE_DEFAULT);
     };
 
     XThread *thread = new XThread(lambda);
@@ -411,21 +414,17 @@ QString MainWidget::getRobotCurrentState()
 
 void MainWidget::slotTcpRead()
 {
-    QByteArray buffer = m_tcpClient->readAll();
-    if(buffer.isEmpty())
+    while(1)
     {
-        return;
-    }
-    qDebug() << "TCP Recv:" << buffer;
+        QByteArray buffer = m_tcpClient->readLine();
+        if(buffer.isEmpty())
+        {
+            break;
+        }
+        QString strInfo = QString(buffer).split(",", QString::SkipEmptyParts).join("<br>");
 
-    QStringList strListError =  QString(buffer).split("\n");
-    QString strRecv = QString(buffer);
-    if(strListError.count() > 1){
-         strRecv = strListError.join("->");
-         strRecv = strRecv.left(strRecv.length()-2);
+        QMessageBox::critical(this, "错误", QString("<center>控制器异常:") + strInfo + "</center>");
     }
-
-    QMessageBox::critical(this, "错误", QString("控制器异常!\n  错误码: %1 ").arg(strRecv) );
 }
 
 void MainWidget::slotTcpError(QAbstractSocket::SocketError)
@@ -442,7 +441,7 @@ bool MainWidget::GatewayOpen()
         m_strIP = m_strVisaDesc.split("::", QString::SkipEmptyParts).at(1);
     }
 
-    m_vi = mrgOpenGateWay(m_strVisaDesc.toLocal8Bit().data(), 2000);
+    m_vi = mrgOpenGateWay(BUS_VXI, m_strVisaDesc.toLocal8Bit().data(), 500);
     if(m_vi <= 0)
     {
         QMessageBox::critical(this, "错误", "打开网关失败 " + QString::number(m_vi));
@@ -670,3 +669,21 @@ void MainWidget::on_pushButtonTest_clicked()
     m_testPanelDialog->show();
 }
 
+
+void MainWidget::on_pushButton_cantool_clicked()
+{
+    if(!m_isOpened)
+    {
+        QMessageBox::warning(this,"警告","没有打开网关");
+        return;
+    }
+
+    if(m_canDebugDialog != NULL)
+    {
+        delete m_canDebugDialog;
+        m_canDebugDialog = NULL;
+    }
+
+    m_canDebugDialog = new CanDebugDialog(m_vi, m_strIP, this);
+    m_canDebugDialog->show();
+}

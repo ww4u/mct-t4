@@ -112,7 +112,7 @@ int MegaInterface::deviceOpen()
     QString fullAddr = QString("TCPIP0::%1::inst0::INSTR").arg(strAddr);
 
     //! open
-    int visa =  mrgOpenGateWay( fullAddr.toLocal8Bit().data(), 3000 );
+    int visa =  mrgOpenGateWay( 1, fullAddr.toLocal8Bit().data(), 3000 );
     if(visa <= 0){
         QMessageBox::critical(this,tr("error"),tr("open device error"));
     }
@@ -279,15 +279,15 @@ void MegaInterface::on_pushButton_Scan_clicked()
 
         char buff[4096] = "";
 
-        int ret;
+        int ret = 0;
         if(m_devType == TYPE_LAN)
-        { ret = mrgFindGateWay(0, buff, sizeof(buff), 1); }
+        { ret += mrgFindGateWay(1, buff, sizeof(buff) ); }
         else if(m_devType == TYPE_USB)
-        { ret = mrgFindGateWay(1, buff, sizeof(buff), 1); }
+        { ret += mrgFindGateWay(3, buff, sizeof(buff) ); }
         else
         { return; }
 
-        if( ret !=0 ){
+        if( ret <= 0 ){
                     sysError("Find GateWay fail");
                     return;
                 }
@@ -304,7 +304,7 @@ void MegaInterface::on_pushButton_Scan_clicked()
         {
             sysInfo( strDevice );
 
-            int visa =  mrgOpenGateWay(strDevice.toLocal8Bit().data(), 2000);
+            int visa =  mrgOpenGateWay(1, strDevice.toLocal8Bit().data(), 2000);
             if(visa <= 0)
             {
                 sysError( strDevice + " " + tr("Open fail!")  );

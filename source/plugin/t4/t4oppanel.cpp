@@ -687,7 +687,7 @@ int T4OpPanel::refreshDiagnosisInfo( void *pContext )
     ary.reserve( 4096 );
 
     int ret=0;
-    ret = mrgErrorLogUpload( pRobo->deviceVi(), 0,
+    ret = mrgErrorLogUpload( pRobo->deviceVi(),
                              ary.data());
 
     //! fill the model

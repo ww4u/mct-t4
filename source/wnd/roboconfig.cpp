@@ -656,7 +656,7 @@ int RoboConfig::createRobot( const QStringList &strInfos )
         QString path = QString( mct_path ) + "/" + strInfos.at(1) + "/" + strInfos.at(2);
 
         //! open
-        int vi = mrgOpenGateWay( strInfos.at(0).toLatin1().data(), 2000 );
+        int vi = mrgOpenGateWay( 2, strInfos.at(0).toLatin1().data(), 2000 );
         if ( vi <=0 )
         { return -1; }
 

@@ -1,5 +1,5 @@
-#include "widget.h"
-#include "ui_widget.h"
+#include "updatedialog.h"
+#include "ui_updatedialog.h"
 #include <QFileDialog>
 #include <QDebug>
 #include <QtConcurrent>
@@ -36,7 +36,7 @@ static int byteArrayToInt(QByteArray arr)
     return res;
 }
 
-Widget::Widget(QWidget *parent) :
+UpdateDialog::UpdateDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Widget)
 {
@@ -67,7 +67,7 @@ Widget::Widget(QWidget *parent) :
             this,SLOT(slotGetRunState(int)));
 }
 
-Widget::~Widget()
+UpdateDialog::~UpdateDialog()
 {
     m_threaad->requestInterruption();
     m_threaad->wait();
@@ -81,14 +81,14 @@ Widget::~Widget()
     delete ui;
 }
 
-void Widget::attatchPlugin(XPlugin *xp)
+void UpdateDialog::attatchPlugin(XPlugin *xp)
 {
     m_pPlugin = xp;
     m_addr = m_pPlugin->addr();
     isAdmin = m_pPlugin->isAdmin();
 }
 
-void Widget::on_buttonBox_clicked(QAbstractButton *button)
+void UpdateDialog::on_buttonBox_clicked(QAbstractButton *button)
 {
     begin_page_log();
     end_page_log();
@@ -165,7 +165,7 @@ void Widget::on_buttonBox_clicked(QAbstractButton *button)
 }
 
 //! return value:0 =; 1: !=;
-int Widget::versionComparison( const QString &inVersion,
+int UpdateDialog::versionComparison( const QString &inVersion,
                                const QByteArray &remoteVerStream )
 {
     //! MRX-T4_R0.0.0.1
@@ -215,7 +215,7 @@ int Widget::versionComparison( const QString &inVersion,
     return 0;
 }
 
-void Widget::on_toolButton_clicked()
+void UpdateDialog::on_toolButton_clicked()
 {
     begin_page_log();
     end_page_log();
@@ -226,7 +226,7 @@ void Widget::on_toolButton_clicked()
 }
 
 // return: -1: system error ; -2: net; -3:invalid file;
-void Widget::showError(const QString &text)
+void UpdateDialog::showError(const QString &text)
 {
     ui->textBrowser->append(text);
     if( text.contains("Error") ){
@@ -235,7 +235,7 @@ void Widget::showError(const QString &text)
     }
 }
 
-void Widget::slot_updateMRH()
+void UpdateDialog::slot_updateMRH()
 {
     begin_page_log();
     end_page_log();
@@ -248,7 +248,7 @@ void Widget::slot_updateMRH()
     m_mrhThread->start();
 }
 
-void Widget::slot_startMRQUpdate()
+void UpdateDialog::slot_startMRQUpdate()
 {
     begin_page_log();
     end_page_log();
@@ -264,7 +264,7 @@ void Widget::slot_startMRQUpdate()
     m_threaad->start();
 }
 
-void Widget::slotReadMRQResult(QString text)
+void UpdateDialog::slotReadMRQResult(QString text)
 {
     begin_page_log();
     end_page_log();
@@ -300,7 +300,7 @@ void Widget::slotReadMRQResult(QString text)
     }
 }
 
-void Widget::slotGetRunState(int state)
+void UpdateDialog::slotGetRunState(int state)
 {
     begin_page_log();
     end_page_log();
@@ -372,7 +372,7 @@ void MThead::run()
         int vi;
         try{
 
-            vi = mrgOpenGateWay(m_addr.toLocal8Bit().data(), 2000);
+            vi = mrgOpenGateWay(1, m_addr.toLocal8Bit().data(), 2000);
             if( vi < 0 ){
                 ret = -2;
             }
@@ -428,7 +428,7 @@ void MThead::slotReadyRead()
     emit resultReady(QString(ba));
 }
 
-void Widget::on_btnShow_clicked()
+void UpdateDialog::on_btnShow_clicked()
 {
     ui->textBrowser->setVisible( !ui->btnShow->isChecked() );
     if( ui->btnShow->isChecked() )
@@ -437,7 +437,7 @@ void Widget::on_btnShow_clicked()
     { ui->btnShow->setText( tr("Hide detail") ); }
 }
 
-void Widget::slotLineEditTextChanged(QString s)
+void UpdateDialog::slotLineEditTextChanged(QString s)
 {
     QFile f(s);
     if( f.open(QIODevice::ReadOnly) ){
@@ -458,12 +458,12 @@ void Widget::slotLineEditTextChanged(QString s)
     }
 }
 
-void Widget::on_lineEdit_textChanged(const QString &arg1)
+void UpdateDialog::on_lineEdit_textChanged(const QString &arg1)
 {
     ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( arg1.length() );
 }
 
-int Widget::openDevice()
+int UpdateDialog::openDevice()
 {
     begin_page_log();
     end_page_log();
@@ -472,7 +472,7 @@ int Widget::openDevice()
     int vi = -1;
     do{
         //! device handle
-        vi = mrgOpenGateWay( m_addr.toLocal8Bit().data(), 2000);
+        vi = mrgOpenGateWay( 1, m_addr.toLocal8Bit().data(), 2000);
         if( vi < 0){
             ret = -1;
             break;
@@ -504,7 +504,7 @@ int Widget::openDevice()
     return ret;
 }
 
-int Widget::loadRemoteInfo( int vi )
+int UpdateDialog::loadRemoteInfo( int vi )
 {
     QByteArray ary;
     ary.reserve( 1024 * 1024 );
@@ -526,7 +526,7 @@ int Widget::loadRemoteInfo( int vi )
     return 0;
 }
 
-int Widget::parseUpdateFile(QByteArray &in)
+int UpdateDialog::parseUpdateFile(QByteArray &in)
 {
     int iDesLen =  byteArrayToInt( in.mid( 0, 4 ) );
     m_desc = QString::fromLocal8Bit( in.mid( 4, iDesLen ) );

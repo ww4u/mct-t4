@@ -35,9 +35,9 @@ class MageGateway(object):
             info = os.popen('file /bin/ls').readlines()[0]
             cpuarch = info.split(",")[1]
             if 'x86' in cpuarch:
-                self._dll = cdll.LoadLibrary(pwd + "/../linux/libMegaRobo.so.1.0")
+                self._dll = cdll.LoadLibrary(pwd + "/../linux/libMegaGateway.so")
             else:
-                self._dll = cdll.LoadLibrary(pwd + "/../armlinux/libMegaRobo.so.1.0")
+                self._dll = cdll.LoadLibrary(pwd + "/../armlinux/libMegaGateway.so")
 
 ############################################################
 ### device.h
@@ -67,12 +67,12 @@ class MageGateway(object):
 
 
     def mrgGateWaySendCmd(self, fd, cmd):
-        return self._dll.busWrite(fd, string_to_charp(cmd), len(cmd))
+        return self._dll.mrgGateWaySendCmd(fd, string_to_charp(cmd), len(cmd))
 
     
-    def mrgGateWayRead(self, fd, length):
+    def mrgGateWayRead(self, fd):
         buf = create_string_buffer(1024)
-        ret = self._dll.mrgGateWayRead(fd, buf, length)
+        ret = self._dll.mrgGateWayRead(fd, buf, 1024)
         if ret < 0:
             return ""
         else:
@@ -81,7 +81,7 @@ class MageGateway(object):
 
     def mrgGateWayQuery(self, fd, cmd):
         buf = create_string_buffer(1024)
-        ret = self._dll.busQuery(fd, string_to_charp(cmd), len(cmd), buf, 1024)
+        ret = self._dll.mrgGateWayQuery(fd, string_to_charp(cmd), buf, 1024)
         if ret < 0:
             return ""
         else:

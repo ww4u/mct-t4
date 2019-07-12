@@ -19,8 +19,8 @@ class MegaInterface;
 
 enum _DEV_TYPES
 {
-    TYPE_LAN = 0,
-    TYPE_USB = 1
+    TYPE_LAN = 2,
+    TYPE_USB = 3
 };
 
 class DevInfo

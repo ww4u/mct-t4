@@ -7,138 +7,225 @@
 extern "C" {
 #endif
 
-/*
-* 查找网关。
-* bus :总线类型. ＝0，网络接口；＝1，USBTMC接口
-* output：查找到的设备描述符，多个设备之间以逗号分隔
-* len : output的最大容量（字节个数）
-* method:当网关设备使用网络连接时，在查找网关设备时有两种查找方式：
-method = 0,使用VISA查找方式；
-method = 1,使用UDP方式查找
-* 返回值：查找到的设备个数
-*/
-EXPORT_API int CALL mrgFindGateWay(int  bus, char *output, int len, int method);
-/*
-* 打开网关设备。
-* desc :findGateWay()返回的设备描述符
-* timeout：设备通讯时的最大超时时间
-* 返回值：0表示执行成功，－1表示失败
-*/
-EXPORT_API int CALL mrgOpenGateWay(char * desc, int timeout_ms);
-/*
-* 关闭网关设备。
-* desc :findGateWay()返回的设备描述符
-* 返回值：0表示执行成功，－1表示失败
-*/
+/**
+ * @brief mrgFindGateWay
+ * 查找网关
+ * @param mode
+ * 通讯模式
+ * BUS_VXI
+ * BUS_SOCKET
+ * BUS_USB
+ * @param output
+ * 查找到的设备描述符,以逗号分隔
+ * @param len
+ * 提供的空间容量
+ * @return
+ * 查找到的设备数量,零或负数表示失败
+ */
+EXPORT_API int CALL mrgFindGateWay(int mode, char *output, int len);
+/**
+ * @brief mrgOpenGateWay
+ * 打开网关
+ * @param mode
+ * 通讯模式
+ * BUS_VXI
+ * BUS_SOCKET
+ * BUS_USB
+ * @param desc
+ * 设备描述符
+ * @param timeout_ms
+ * 设备通讯时的超时时间
+ * @return
+ * 成功返回网关句柄,零或负数表示失败
+ */
+EXPORT_API int CALL mrgOpenGateWay(int mode, char * desc, int timeout_ms);
+/**
+ * @brief mrgCloseGateWay
+ * 关闭网关
+ * @param vi
+ * 网关句柄
+ * @return
+ * 0表示执行成功,否则失败
+ */
 EXPORT_API int CALL mrgCloseGateWay(ViSession  vi);
-/*
-* 向网关直接发送设置命令。
-* vi :设备句柄
-* cmd：要发送的设置命令
-* 返回值：0表示执行成功，－1表示失败
-*/
+/**
+ * @brief mrgGateWaySendCmd
+ * 发送命令给网关
+ * @param vi
+ * 网关句柄
+ * @param cmd
+ * SCPI指令信息
+ * @param len
+ * 指令长度
+ * @return
+ * >0表示成功发送的字节数,否则失败
+ */
 EXPORT_API int CALL mrgGateWaySendCmd(ViSession  vi, char* cmd, int len);
-/*
-* 向网关发送读取命令。
-* vi :设备句柄
-* output:查询命令的返回
-* wantlen:期望查询命令返回的长度，即output的长度
-* 返回值：实际返回的数据长度
-*/
+/**
+ * @brief mrgGateWayRead
+ * 网关从接收数据
+ * @param vi
+ * 网关句柄
+ * @param output
+ * 接收数据的存放地址
+ * @param wantlen
+ * 接收数据长度
+ * @return
+ * >0表示成功接收的字节数,否则失败
+ */
 EXPORT_API int CALL mrgGateWayRead(ViSession  vi, char * output, int wantlen);
-/*
-* 向网关直接发送查询命令。
-* vi :设备句柄
-* cmd：要发送的设置命令
-* len:命令长度
-* output:查询命令的返回
-* wantlen:期望查询命令返回的长度，即output的长度
-* 返回值：实际返回的数据长度
-*/
-EXPORT_API int CALL mrgGateWayQuery(ViSession  vi, char* cmd, char * output, int wantlen);
-/*
-* 查询网关设备的*IDN。
-* idn :返回的设备描述符
-* len：idn缓存长度
-* 返回值：0表示执行成功，－1表示失败
-*/
-EXPORT_API int CALL mrgGateWayIDNQuery(ViSession  vi, char * idn);
-/*
-* 查找连接在网关上的设备。
-* vi :visa设备句柄
-* timeout为最长查找时间，单位：ms.
-* 返回值：查找到的设备个数
-*/
+/**
+ * @brief mrgGateWayQuery
+ * 发送查询命令并获取查询结果
+ * @param vi
+ * 网关句柄
+ * @param cmd
+ * 要发送的设置命令
+ * @param output
+ * 接收数据的存放地址
+ * @param wantlen
+ * 接收数据长度
+ * @return
+ * >0表示成功接收的字节数,否则失败
+ */
+EXPORT_API int CALL mrgGateWayQuery(ViSession  vi, char* cmd, char *output, int wantlen);
+/**
+ * @brief mrgGateWayIDNQuery
+ * 获取网关识别信息
+ * @param vi
+ * 网关句柄
+ * @param idn
+ * 输出信息
+ * @return
+ * 0表示成功,负数表示失败
+ */
+EXPORT_API int CALL mrgGateWayIDNQuery(ViSession  vi, char *idn);
+/**
+ * @brief mrgFindDevice
+ * 查找连接在网关上的设备
+ * @param vi
+ * 网关句柄
+ * @param timeout_ms
+ * 查找超时时间
+ * @return
+ * 成功返回查找到的设备个数,零或负数表示失败
+ */
 EXPORT_API int CALL mrgFindDevice(ViSession vi, int timeout_ms);
-/*
-* 获取所有与网关相连的设备名称（sendid的字符形式）
-* vi :visa设备句柄
-* names：返回名称的存放处
-* 返回值：大于零表示设备名称个数; -1表示没有返回,-2表示参数错误
-*/
+/**
+ * @brief mrgGetDeviceName
+ * 获取网关上连接的所有设备名称
+ * @param vi
+ * 网关句柄
+ * @param names
+ * 输出设备ID
+ * @return
+ * 大于零表示设备名称个数, -1表示获取失败, -2表示参数错误
+ */
 EXPORT_API int CALL mrgGetDeviceName(ViSession vi, int* names);
-/*
-* 获取指定设备的类型
-* vi :visa设备句柄
-* type：返回设备类型的存储区
-* type可能的取值： “MRQM2304”，“MRQM2305”，“MRQT2305”，“MRQM2310”，“MRQC23D”，“MRQC23S”，
-* 返回值：0表示执行成功，－1表示失败; -2表示参数错误
-*/
+/**
+ * @brief mrgGetDeviceType
+ * 获取设备的类型
+ * @param vi
+ * 网关句柄
+ * @param name
+ * 设备ID
+ * @param ps8Type
+ * 输出类型
+ * @return
+ * 0表示执行成功,－1表示失败,-2表示参数错误
+ */
 EXPORT_API int CALL mrgGetDeviceType(ViSession vi, int name, char * ps8Type);
-/*
-*查询指定设备的通道个数,name为仪器名
-*vi :visa设备句柄
-*name:机器人的名字
-*返回值：大于零，表示通道个数，小于或等于零表示失败
-*/
+/**
+ * @brief mrgGetDeviceChannelCount
+ * 查询设备的通道个数
+ * @param vi
+ * 网关句柄
+ * @param name
+ * 设备ID
+ * @return
+ * 大于零表示通道个数,小于或等于零表示失败
+ */
 EXPORT_API int CALL mrgGetDeviceChannelCount(ViSession vi, int name);
-
-/*
-* 获取指定设备的信息，包括（序列号：硬件版本号：软件版本号：boot版本号：逻辑版本号）
-* vi :visa设备句柄
-* ps8Info：返回信息的存储区,ps8Info是不安全的,请保持ps8Info最小长度为100字节
-* 返回值：0表示执行成功，－1表示失败; -2表示参数错误
-*/
+/**
+ * @brief mrgGetDeviceInfo
+ * 获取设备的信息
+ * @param vi
+ * 网关句柄
+ * @param name
+ * 设备ID
+ * @param ps8Info
+ * 输出信息
+ * @return
+ * 0表示执行成功,－1表示失败,-2表示参数错误
+ */
 EXPORT_API int CALL mrgGetDeviceInfo(ViSession vi, int name, char * ps8Info);
-/*
-* 获取指定设备的软件版本号
-* vi :visa设备句柄
-* version：返回设备版本号的存储区
-
-* 返回值：0表示执行成功，－1表示失败; -2表示参数错误
-*/
+/**
+ * @brief mrgGetDeviceSoftVersion
+ * 获取设备的软件版本号
+ * @param vi
+ * 网关句柄
+ * @param name
+ * 设备ID
+ * @param version
+ * 输出信息
+ * @return
+ * 0表示执行成功,－1表示失败,-2表示参数错误
+ */
 EXPORT_API int CALL mrgGetDeviceSoftVersion(ViSession vi, int name, char * version);
-/*
-*查询设备硬件版本号
-*vi :visa设备句柄
-*name:机器人的名字
-*buf:设备硬件版本号,长度最少12个字节
-*返回值：0表示执行成功，－1表示失败; -2表示参数错误
-*/
+/**
+ * @brief mrgGetDeviceFirmWareHard
+ * 查询设备硬件版本号
+ * @param vi
+ * 网关句柄
+ * @param name
+ * 设备ID
+ * @param buf
+ * 输出信息
+ * @return
+ * 0表示执行成功,－1表示失败,-2表示参数错误
+ */
 EXPORT_API int CALL mrgGetDeviceFirmWareHard(ViSession vi, int name, char *buf);
-/*
-*查询设备BOOT版本号
-*vi :visa设备句柄
-*name:机器人的名字
-*buf:设备BOOT版本号
-*返回值：0表示执行成功，－1表示失败; -2表示参数错误
-*/
+/**
+ * @brief mrgGetDeviceFirmWareBoot
+ * 查询设备Boot版本号
+ * @param vi
+ * 网关句柄
+ * @param name
+ * 设备ID
+ * @param buf
+ * 输出信息
+ * @return
+ * 0表示执行成功,－1表示失败,-2表示参数错误
+ */
 EXPORT_API int CALL mrgGetDeviceFirmWareBoot(ViSession vi, int name, char *buf);
-/*
-*查询设备逻辑版本号
-*vi :visa设备句柄
-*name:机器人的名字
-*buf:设备逻辑版本号
-*返回值：0表示执行成功，－1表示失败; -2表示参数错误
-*/
+/**
+ * @brief mrgGetDeviceFirmWareFpga
+ * 查询设备FPGA版本号
+ * @param vi
+ * 网关句柄
+ * @param name
+ * 设备ID
+ * @param buf
+ * 输出信息
+ * @return
+ * 0表示执行成功,－1表示失败,-2表示参数错误
+ */
 EXPORT_API int CALL mrgGetDeviceFirmWareFpga(ViSession vi, int name, char *buf);
-/*
- * 获取指定设备的序列号
- * vi :visa设备句柄
- * serial：返回设备序列号的存储区
- * 返回值：0表示执行成功，－1表示失败; -2表示参数错误
+/**
+ * @brief mrgGetDeviceSerialNumber
+ * 查询设备序列号
+ * @param vi
+ * 网关句柄
+ * @param name
+ * 设备ID
+ * @param ps8Serial
+ * 输出信息
+ * @return
+ * 0表示执行成功,－1表示失败,-2表示参数错误
  */
 EXPORT_API int CALL mrgGetDeviceSerialNumber(ViSession vi, int name, char * ps8Serial);
+
+
 
 #if defined(__cplusplus) || defined(__cplusplus__)
 }

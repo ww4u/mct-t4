@@ -7,8 +7,14 @@
 #include <time.h> 
 #include <math.h>
 
-#define  SEND_LEN   (512)
-#define  RECV_LEN   (1024)
+#include "megatype.h"
+#include "common.h"
+
+//通信每包数据最大长度
+#define  MAX_TRANSMIT_LEN   (1024)
+
+#define  SEND_BUF_LEN   (512)
+#define  RECV_BUF_LEN   (1024)
 
 #define strcpy_s(x,y,z)     	strncpy(x,z,y)
 
@@ -82,8 +88,6 @@ typedef unsigned long ViSession;
 #define CALL
 
 #endif //_WIN32
-
-
 
 
 #endif //__PLATFORM_H__

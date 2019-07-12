@@ -7,17 +7,6 @@
 extern "C" {
 #endif
 
-enum MRX_TYPE
-{
-    MRX_TYPE_T4 = 0,  //arm
-    MRX_TYPE_AS,  //megatron
-    MRX_TYPE_H2,  //H2
-    MRX_TYPE_DELTA,
-    MRX_TYPE_RAW, //此类的机器人指的是没有构形,只有电机的机器人.这类机器人不需要空间解算,只接受PVT.
-    MRX_TYPE_OTHER,
-    MRX_TYPE_UNKOWN,
-};
-
 /*********************** 机器人操作 *******************************/
 /*
 * 构建一个机器人
@@ -375,12 +364,13 @@ EXPORT_API int CALL mrgRobotRelMoveL(ViSession vi, int robotname, int wavetable,
 * 机器人各关节同步运动
 * vi :visa设备句柄
 * robotname: 机器人名称
-* angleX: 各轴运动的角度
+* angles: 各轴运动的角度
+* count: 轴的个数,也表示angles中有几个有效数据
 * time : 移动到目标位置期望使用的时间
 * timeout_ms:表示等待超时时间,0表示无限等待，小于零表示不等待，立即返回
 * 返回值：0表示执行成功，－1：表示等待过程中出错，－2：表示运行状态出错；－3：表示等待超时
 */
-EXPORT_API int CALL mrgRobotMoveJ(ViSession vi, int robotname, float angle0, float angle1, float angle2, float angle3, float angle4, float time, int timeout_ms);
+EXPORT_API int CALL mrgRobotMoveJ(ViSession vi, int robotname, float *angles, float time, int count, int timeout_ms);
 /*
 * 设置机器人当前插值模式
 * vi :visa设备句柄
@@ -658,10 +648,10 @@ EXPORT_API int CALL mrgRobotToolStop(ViSession vi, int robotname);
 */
 EXPORT_API int CALL mrgRobotToolStopGoHome(ViSession vi, int robotname);
 /*
-* 末端执行器执行模式
+* 查询末端执行器执行模式
 * vi :visa设备句柄
 * robotname: 机器人名称
-* mode: 末端执行器执行模式. 0:正常模式; 1:先张开,再闭合到目标位置
+* mode: 末端执行器执行模式.对于两指 0:正常模式; 1:先张开,再闭合到目标位置; 对于旋转末端,0指0~270范围,1指0~360范围
 * 返回值：0表示执行成功，－1：表示出错，
 */
 EXPORT_API int CALL mrgRobotToolExeMode(ViSession vi, int robotname, int mode);
@@ -669,7 +659,7 @@ EXPORT_API int CALL mrgRobotToolExeMode(ViSession vi, int robotname, int mode);
 * 查询末端执行器执行模式
 * vi :visa设备句柄
 * robotname: 机器人名称
-* mode: 末端执行器执行模式. 0:正常模式; 1:先张开,再闭合到目标位置
+* mode: 末端执行器执行模式.对于两指 0:正常模式; 1:先张开,再闭合到目标位置; 对于旋转末端,0指0~270范围,1指0~360范围
 * 返回值：0表示执行成功，－1：表示出错，
 */
 EXPORT_API int CALL mrgRobotToolExeMode_Query(ViSession vi, int robotname, int* mode);

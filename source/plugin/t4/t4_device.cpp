@@ -104,7 +104,7 @@ int MRX_T4::_open( int &vi )
     vi = 0;
 
     //! local vi
-    vi = mrgOpenGateWay( mAddr.toLatin1().data(), 2000 );
+    vi = mrgOpenGateWay(1, mAddr.toLatin1().data(), 2000 );
     if ( vi > 0 )
     {
         //! \note delay setting changed
@@ -233,12 +233,13 @@ int MRX_T4::fStop()
     m_pMissionWorking->requestInterruption();
     m_pMissionWorking->wait();
 
-    int ret = mrgSysSetEmergencyStop( mVi, 1 );
+    //int ret = mrgSysSetEmergencyStop( mVi, 1 );
+    int ret = mrgRobotStop( mVi, mRobotHandle, -1 );
     if ( ret != 0 )
     { sysError( tr("Stop fail") );}
 
     //! stop off
-    mrgSysSetEmergencyStop( mVi, 0 );
+//    mrgSysSetEmergencyStop( mVi, 0 );
 
     return 0;
 }

@@ -15,13 +15,13 @@ class Widget;
 class XPlugin;
 class Entity;
 class MThead;
-class Widget : public QDialog
+class UpdateDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit Widget(QWidget *parent = 0);
-    ~Widget();
+    explicit UpdateDialog(QWidget *parent = 0);
+    ~UpdateDialog();
 
     void attatchPlugin(XPlugin *xp);
 

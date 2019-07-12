@@ -2,6 +2,7 @@
 
 import sys
 import os
+import time
 pwd = os.path.abspath(os.path.dirname(__file__))
 sys.path.append( pwd + "/../../lib/python")
 from MegaGateway import *
@@ -70,62 +71,64 @@ if __name__ == "__main__":
 
 ###############################################################################
     print("########### 开始测试 ###########")
+    ret = gw.mrgIdentify(visa, 1)
+    print("mrgIdentify on", ret)
+    time.sleep(2)
+    ret = gw.mrgIdentify(visa, 0)
+    print("mrgIdentify off", ret)
 
-    ### 回零
-    gw.mrgMRQDriverState(visa, deviceID, 0, 1)
-    gw.mrgMRQDriverState(visa, deviceID, 1, 1)
+    print("mrgSysGetProjectSoftVersion", gw.mrgSysGetProjectSoftVersion(visa))
+    print("mrgSysGetSoftVersion", gw.mrgSysGetSoftVersion(visa))
+    print("mrgSysGetBackBoardSoftVersion", gw.mrgSysGetBackBoardSoftVersion(visa))
+    print("mrgSysGetBackBoardHardVersion", gw.mrgSysGetBackBoardHardVersion(visa))
+    print("mrgSysStartCan", gw.mrgSysStartCan(visa))
+    print("mrgSysResetCan", gw.mrgSysResetCan(visa))
 
-    gw.mrgRobotGoHome(visa, robotID, 0)
-    print( gw.mrgGetRobotCurrentPosition(visa, robotID) )
+    gw.mrgSysConfCan(visa, 2000000)
+    print("mrgSysConfCan 2000000 ==>", gw.mrgSysConfCan_Query(visa))
 
-    if robotType == "MRX-H2":
-        gw.mrgRobotRelMove(visa, robotID, -1, 0, 300, 0, 1, 0)
-        print( gw.mrgGetRobotCurrentPosition(visa, robotID) )
+    gw.mrgSysConfCan(visa, 1000000)
+    print("mrgSysConfCan 1000000 ==>", gw.mrgSysConfCan_Query(visa))
 
-        gw.mrgRobotRelMove(visa, robotID, -1, 300, 0, 0, 1, 0)
-        print( gw.mrgGetRobotCurrentPosition(visa, robotID) )
-
-        gw.mrgRobotRelMove(visa, robotID, -1, 0, -300, 0, 1, 0)
-        print( gw.mrgGetRobotCurrentPosition(visa, robotID) )
-        
-        gw.mrgRobotRelMove(visa, robotID, -1, -100, 0, 0, 0.5, 0)
-        print( gw.mrgGetRobotCurrentPosition(visa, robotID) )
-
-    elif robotType == "MRX-T4":
-        ### 前后
-        gw.mrgRobotRelMove(visa, robotID, -1, 150, 0, 0, 2, 0)
-        print( gw.mrgGetRobotCurrentPosition(visa, robotID) )
-
-        gw.mrgRobotRelMove(visa, robotID, -1, -150, 0, 0, 2, 0)
-        print( gw.mrgGetRobotCurrentPosition(visa, robotID) )
-        ### 右转
-        gw.mrgRobotRelMove(visa, robotID, -1, 0, -200, 0, 2, 0)
-        print( gw.mrgGetRobotCurrentPosition(visa, robotID) )
-        
-        gw.mrgRobotRelMove(visa, robotID, -1, 0, 200, 0, 2, 0)
-        print( gw.mrgGetRobotCurrentPosition(visa, robotID) )
-        ### 左转
-        gw.mrgRobotRelMove(visa, robotID, -1, 0, 200, 0, 2, 0)
-        print( gw.mrgGetRobotCurrentPosition(visa, robotID) )
-        
-        gw.mrgRobotRelMove(visa, robotID, -1, 0, -200, 0, 2, 0)
-        print( gw.mrgGetRobotCurrentPosition(visa, robotID) )
-        ### 上下
-        gw.mrgRobotRelMove(visa, robotID, -1, 0, 0, -300, 2, 0)
-        print( gw.mrgGetRobotCurrentPosition(visa, robotID) )
-        
-        gw.mrgRobotRelMove(visa, robotID, -1, 0, 0, 300, 2, 0)
-        print( gw.mrgGetRobotCurrentPosition(visa, robotID) )
-
-        pass
-
-    gw.mrgRobotStop(visa, robotID, -1)
-   
+    sysMode = gw.mrgGetSysMode(visa)
+    ret = gw.mrgSysModeSwitch(visa, 1-sysMode)
+    print("mrgSysModeSwitch ", 1-sysMode , ret)
+    time.sleep(2)
+    ret = gw.mrgSysModeSwitch(visa, sysMode)
+    print("mrgSysModeSwitch ", sysMode, ret)
 
 
 
+    # gw.mrgSysInstructionMode
+    # gw.mrgSysInstructionMode_Query
+    # gw.mrgSysSetNetworkIPMode
+    # gw.mrgSysGetNetworkIPMode
+    # gw.mrgSysWifiScan
+    # gw.mrgSysWifiConfig
+    # gw.mrgSysWifiUpDown
+    # gw.mrgSysWifiCheckState
+    # gw.mrgSysGetWifiConnected
 
-
+    # gw.mrgSysSetHeartPeriod
+    # gw.mrgSysGetHeartPeriod
+    # gw.mrgSysSetPowerOn
+    # gw.mrgSysGetPowerOn
+    # gw.mrgSysSetInterface
+    # gw.mrgSysGetInterface
+    # gw.mrgSysSetEmergencyStop
+    # gw.mrgSysGetEmergencyStopState
+    # gw.mrgSysUpdateFileSearch
+    # gw.mrgSysUpdateFileStart
+    # gw.mrgSysUpdateFirmwareStatusQuery
+    # gw.mrgScriptSearch
+    # gw.mrgScriptConfig
+    # gw.mrgScriptConfigQuery
+    # gw.mrgScriptRun
+    # gw.mrgScriptStop
+    # gw.mrgScriptGetCurrentStates
+    # gw.mrgSystemRunCmd
+    # gw.mrgSystemSetMRQConfig
+    # gw.mrgSystemGetMRQConfig
 
     print("########### 测试结束 ###########")
 ###############################################################################

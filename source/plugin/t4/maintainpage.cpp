@@ -3,7 +3,7 @@
 
 #include "t4.h"
 #include "MegaGateway.h"
-#include "widget.h"
+#include "updatedialog.h"
 
 #include "../../wnd/changedpw.h"
 
@@ -170,7 +170,7 @@ void MaintainPage::on_btnUpdate_clicked()
     begin_page_log();
     end_page_log();
 
-    Widget w;
+    UpdateDialog w;
     w.attatchPlugin(m_pPlugin);
     w.exec();
 }

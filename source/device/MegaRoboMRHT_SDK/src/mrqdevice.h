@@ -7,36 +7,6 @@
 extern "C" {
 #endif
         
-enum RUN_STATE
-{
-    RS_IDLE,  //"IDLE"
-    RS_LOADING, //"LOADING"
-    RS_READY,   // "READY"
-    RS_RUNNING, // "RUNNING"
-    RS_STOP,    //"STOP"
-    RS_ERROR,   //"ERROR"
-    RS_RESERVE  //
-};
-
-enum MT_STATE
-{
-    MTSTATE_POWERON,
-    MTSTATE_RESET,
-    MTSTATE_CALCING,
-    MTSTATE_CALCEND,
-    MTSTATE_STANDBY,
-    MTSTATE_RUNNING,
-    MTSTATE_ERROR,
-    MTSTATE_RESERVE,
-};
-enum MT_SWITCH
-{
-    MTSWITCH_RESET,
-    MTSWITCH_STOP,
-    MTSWITCH_RUN,
-    MTSWITCH_PREPARE,
-    MTSWITCH_EMERGSTOP
-};
 /*
 *MRQ模块识别
 *vi :visa设备句柄

@@ -26,17 +26,20 @@ INCLUDEPATH += ./thread
 SOURCES +=  \
     mainwindow/mainwindow.cpp   \
     widget/mainwidget.cpp       \
-    dialog/TestPanelDialog.cpp
+    dialog/TestPanelDialog.cpp \
+    dialog/CanDebugDialog.cpp
 
 HEADERS += \
     mainwindow/mainwindow.h     \
     widget/mainwidget.h         \
-    dialog/TestPanelDialog.h
+    dialog/TestPanelDialog.h \
+    dialog/CanDebugDialog.h
 
 FORMS += \
     mainwindow/mainwindow.ui    \
     widget/mainwidget.ui        \
-    dialog/TestPanelDialog.ui
+    dialog/TestPanelDialog.ui \
+    dialog/CanDebugDialog.ui
 
 
 RC_ICONS = resource/app.ico
@@ -44,15 +47,42 @@ RC_ICONS = resource/app.ico
 RESOURCES += \
     resource/res.qrc
 
+#DEFINES += ARM_LINUX    # 表示arm上的Linux,比如树莓派
+#DEFINES += ANDROID      # 表示安卓
+
+unix {
+    contains(DEFINES, ANDROID) {
+        message( "Configuring for android" )
+    }
+    else {
+        contains(DEFINES, ARM_LINUX) {
+            message( "Configuring for arm_Linux" )
+        }
+        else{
+            message( "Configuring for x86_Linux" )
+        }
+    }
+}
+
+win32 {
+    message( "Configuring for x86_windows" )
+    message( "Use visa" )
+}
 
 ################### SDK ###################
 unix {
-INCLUDEPATH += ../src/lib/vxi11
-HEADERS += ../../src/vxi11/vxi11.h
-HEADERS += ../../src/vxi11/vxi11_user.h
-SOURCES += ../../src/vxi11/vxi11_clnt.c
-SOURCES += ../../src/vxi11/vxi11_user.c
-SOURCES += ../../src/vxi11/vxi11_xdr.c
+    contains(DEFINES, ANDROID) {
+        message( "Use TCP socket" )
+    }
+    else {
+        message( "Use vxi11" )
+        DEFINES += _VXI11_
+        HEADERS += ../../src/vxi11/vxi11.h
+        HEADERS += ../../src/vxi11/vxi11_user.h
+        SOURCES += ../../src/vxi11/vxi11_clnt.c
+        SOURCES += ../../src/vxi11/vxi11_user.c
+        SOURCES += ../../src/vxi11/vxi11_xdr.c
+    }
 }
 
 INCLUDEPATH += ../../src/
@@ -65,6 +95,7 @@ SOURCES += ./main.cpp \
         ../../src/project.c \
         ../../src/storage.c \
         ../../src/system.c \
+        ../../src/common.c  \
     thread/xthread.cpp \
     sysapi.cpp
 
@@ -79,15 +110,29 @@ HEADERS += \
         ../../src/project.h \
         ../../src/storage.h \
         ../../src/system.h \
+        ../../src/megatype.h \
+        ../../src/common.h \
     thread/xthread.h \
     sysapi.h
 
 ################### LIBS ###################
 win32 {
-INCLUDEPATH += "../../win"
-DEPENDPATH += "../../win"
-LIBS += -L"../../win" -llibws2_32
-LIBS += -L"../../win" -llibiphlpapi
-LIBS += -L"../../win" -lvisa32
+INCLUDEPATH += $$PWD/../../win
+DEPENDPATH += $$PWD/../../win
+
+LIBS += -L$$PWD/../../win -llibws2_32
+PRE_TARGETDEPS += $$PWD/../../win/libws2_32.a
+
+LIBS += -L$$PWD/../../win/ -llibiphlpapi
+PRE_TARGETDEPS += $$PWD/../../win/libiphlpapi.a
+
+LIBS += -L$$PWD/../../win/ -lvisa32
+PRE_TARGETDEPS += $$PWD/../../win/visa32.lib
+
+LIBS += -L$$PWD/../../win/ -llibmsvcr100
+PRE_TARGETDEPS += $$PWD/../../win/libmsvcr100.a
 }
 
+CONFIG(debug, debug|release) {
+    DEFINES += MRG_DEBUG
+}

@@ -96,8 +96,8 @@ void TestPanelDialog::slotUpdateFirmware()
         ret = mrgSysUpdateFileStart(m_vi, filename.toLocal8Bit().data());
         qDebug() << "system update end:" << ret;
 
-        QString strCmd = "rm -rf /media/usb0/" + filename;
-        mrgSystemRunCmd(m_vi, strCmd.toLocal8Bit().data(), 1);
+        QString strCmd = "rm -rf /media/usb0/MRH-T*.mrh";
+        mrgSystemRunCmd(m_vi, strCmd.toLocal8Bit().data(), 0);
         if(ret != 0)
         {
             ret = -2;
@@ -258,7 +258,7 @@ void TestPanelDialog::slotMotionRunStop()
                 break;
             }
 #else            
-            ret = mrgRobotFileResolve(m_vi, m_robotID, section, line, 0, -1);
+            ret = mrgRobotFileResolve(m_vi, m_robotID, section, line, WAVETABLE_DEFAULT, -1);
             if(ret != 0) {
                 qDebug() << "mrgRobotFileResolve" << ret;
                 return;
@@ -279,7 +279,7 @@ void TestPanelDialog::slotMotionRunStop()
                 }
 
                 char state[8] = "";
-                mrgGetRobotStates(m_vi, m_robotID, 0, state);
+                mrgGetRobotStates(m_vi, m_robotID, WAVETABLE_DEFAULT, state);
                 QString strState = QString(state);
                 if(strState == "ERROR")
                 {
@@ -297,7 +297,7 @@ void TestPanelDialog::slotMotionRunStop()
                 strLastStates = strState;
 
                 if ( m_threadOpsDebug->isInterruptionRequested() ){
-                    mrgRobotStop(m_vi, m_robotID, -1);
+                    mrgRobotStop(m_vi, m_robotID, WAVETABLE_DEFAULT);
                     noBreak = false;
                     break;
                 }
@@ -507,7 +507,7 @@ void TestPanelDialog::slotScriptUpdateInfo()
     ui->comboBox_script_filelist->clear();
     ui->comboBox_script_filelist->addItems( QString(buff).split("\n", QString::SkipEmptyParts));
 
-    mrgScriptConfigQuery(m_vi, buff);
+    mrgScriptGetConfig(m_vi, buff);
     ui->comboBox_script_filelist->setCurrentText(QString(buff));
 
     int ret = mrgScriptGetCurrentStates(m_vi);
@@ -535,7 +535,7 @@ void TestPanelDialog::slotScriptStartStop()
             return;
         }
 
-        ret = mrgScriptConfig(m_vi, strConfigName.toLocal8Bit().data(), isBoot?1:0);
+        ret = mrgScriptSetConfig(m_vi, strConfigName.toLocal8Bit().data(), isBoot?1:0);
         if(ret!=0)
         {
             QMessageBox::critical(this, "错误", "配置失败");
@@ -578,7 +578,7 @@ void TestPanelDialog::slotScriptBoot(bool isBoot)
         return;
     }
 
-    int ret = mrgScriptConfig(m_vi, strConfigName.toLocal8Bit().data(), isBoot?1:0);
+    int ret = mrgScriptSetConfig(m_vi, strConfigName.toLocal8Bit().data(), isBoot?1:0);
     if(ret!=0)
     {
         QMessageBox::critical(this, "错误", "配置失败");

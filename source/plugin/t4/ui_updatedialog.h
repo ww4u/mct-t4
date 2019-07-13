@@ -15,55 +15,46 @@
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QProgressBar>
-#include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QToolButton>
-#include <QtWidgets/QVBoxLayout>
 
 QT_BEGIN_NAMESPACE
 
 class Ui_Widget
 {
 public:
-    QVBoxLayout *verticalLayout;
+    QGridLayout *gridLayout;
     QHBoxLayout *horizontalLayout;
     QLabel *label_2;
     QLineEdit *lineEdit;
     QToolButton *toolButton;
-    QProgressBar *progressBar;
     QLineEdit *desLineEdit;
-    QHBoxLayout *horizontalLayout_3;
-    QPushButton *btnShow;
-    QSpacerItem *horizontalSpacer;
-    QTextBrowser *textBrowser;
-    QHBoxLayout *horizontalLayout_2;
+    QProgressBar *progressBar;
+    QHBoxLayout *hLayout;
     QSpacerItem *horizontalSpacer_2;
     QDialogButtonBox *buttonBox;
-    QLabel *labelStatus;
-    QSpacerItem *verticalSpacer;
 
     void setupUi(QDialog *Widget)
     {
         if (Widget->objectName().isEmpty())
             Widget->setObjectName(QStringLiteral("Widget"));
-        Widget->resize(517, 302);
+        Widget->resize(517, 201);
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(Widget->sizePolicy().hasHeightForWidth());
         Widget->setSizePolicy(sizePolicy);
         Widget->setMinimumSize(QSize(300, 150));
-        verticalLayout = new QVBoxLayout(Widget);
-        verticalLayout->setSpacing(0);
-        verticalLayout->setContentsMargins(11, 11, 11, 11);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        verticalLayout->setContentsMargins(-1, -1, -1, 0);
+        gridLayout = new QGridLayout(Widget);
+        gridLayout->setSpacing(6);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
+        gridLayout->setObjectName(QStringLiteral("gridLayout"));
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(6);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
@@ -89,86 +80,43 @@ public:
         horizontalLayout->addWidget(toolButton);
 
 
-        verticalLayout->addLayout(horizontalLayout);
-
-        progressBar = new QProgressBar(Widget);
-        progressBar->setObjectName(QStringLiteral("progressBar"));
-        progressBar->setValue(0);
-        progressBar->setTextVisible(true);
-        progressBar->setOrientation(Qt::Horizontal);
-
-        verticalLayout->addWidget(progressBar);
+        gridLayout->addLayout(horizontalLayout, 0, 0, 1, 1);
 
         desLineEdit = new QLineEdit(Widget);
         desLineEdit->setObjectName(QStringLiteral("desLineEdit"));
         desLineEdit->setReadOnly(true);
 
-        verticalLayout->addWidget(desLineEdit);
+        gridLayout->addWidget(desLineEdit, 1, 0, 1, 1);
 
-        horizontalLayout_3 = new QHBoxLayout();
-        horizontalLayout_3->setSpacing(6);
-        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
-        btnShow = new QPushButton(Widget);
-        btnShow->setObjectName(QStringLiteral("btnShow"));
-        QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(btnShow->sizePolicy().hasHeightForWidth());
-        btnShow->setSizePolicy(sizePolicy2);
-        btnShow->setMinimumSize(QSize(50, 0));
-        btnShow->setCheckable(true);
-        btnShow->setChecked(true);
+        progressBar = new QProgressBar(Widget);
+        progressBar->setObjectName(QStringLiteral("progressBar"));
+        progressBar->setMinimumSize(QSize(0, 50));
+        progressBar->setValue(0);
+        progressBar->setTextVisible(true);
+        progressBar->setOrientation(Qt::Horizontal);
 
-        horizontalLayout_3->addWidget(btnShow);
+        gridLayout->addWidget(progressBar, 2, 0, 1, 1);
 
-        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-
-        horizontalLayout_3->addItem(horizontalSpacer);
-
-
-        verticalLayout->addLayout(horizontalLayout_3);
-
-        textBrowser = new QTextBrowser(Widget);
-        textBrowser->setObjectName(QStringLiteral("textBrowser"));
-        QSizePolicy sizePolicy3(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(1);
-        sizePolicy3.setHeightForWidth(textBrowser->sizePolicy().hasHeightForWidth());
-        textBrowser->setSizePolicy(sizePolicy3);
-        textBrowser->setMinimumSize(QSize(100, 50));
-        textBrowser->setMaximumSize(QSize(16777215, 16777215));
-
-        verticalLayout->addWidget(textBrowser);
-
-        horizontalLayout_2 = new QHBoxLayout();
-        horizontalLayout_2->setSpacing(6);
-        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
+        hLayout = new QHBoxLayout();
+        hLayout->setSpacing(6);
+        hLayout->setObjectName(QStringLiteral("hLayout"));
         horizontalSpacer_2 = new QSpacerItem(80, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
-        horizontalLayout_2->addItem(horizontalSpacer_2);
+        hLayout->addItem(horizontalSpacer_2);
 
         buttonBox = new QDialogButtonBox(Widget);
         buttonBox->setObjectName(QStringLiteral("buttonBox"));
+        QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
         sizePolicy2.setHeightForWidth(buttonBox->sizePolicy().hasHeightForWidth());
         buttonBox->setSizePolicy(sizePolicy2);
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
 
-        horizontalLayout_2->addWidget(buttonBox);
+        hLayout->addWidget(buttonBox);
 
 
-        verticalLayout->addLayout(horizontalLayout_2);
-
-        labelStatus = new QLabel(Widget);
-        labelStatus->setObjectName(QStringLiteral("labelStatus"));
-        sizePolicy.setHeightForWidth(labelStatus->sizePolicy().hasHeightForWidth());
-        labelStatus->setSizePolicy(sizePolicy);
-        labelStatus->setMinimumSize(QSize(0, 20));
-
-        verticalLayout->addWidget(labelStatus);
-
-        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-        verticalLayout->addItem(verticalSpacer);
+        gridLayout->addLayout(hLayout, 3, 0, 1, 1);
 
 
         retranslateUi(Widget);
@@ -180,8 +128,6 @@ public:
     {
         label_2->setText(QApplication::translate("Widget", "FilePath", nullptr));
         toolButton->setText(QApplication::translate("Widget", "...", nullptr));
-        btnShow->setText(QApplication::translate("Widget", "Show detail", nullptr));
-        labelStatus->setText(QString());
         Q_UNUSED(Widget);
     } // retranslateUi
 

@@ -9,6 +9,28 @@
 #include "../plugin/xplugin.h"
 
 
+#define MRHT_SYSTEM_ERROR       -1
+#define NET_ERROR               -2
+#define MRHT_FILE_INVALID       -3
+#define CONNECT_FAIL            -5      /* "Error:Cannot establish communication! Please check the connection !" */
+#define BOOT_OLD                -6      /* "Error:The BOOT version is very old,Cannot update to this version!" */
+#define MRQ_File_INVALID        -7      /* "Error:The update file is invalid !" */
+#define GET_BOOT_VERS_FAIL      -8      /* "Error:Cannot get the BOOT version!" */
+#define RELOAD_FAIL             -9      /* "Error:Reload failed !" */
+#define GET_DEV_SOFTVER_FAIL    -10     /* "Error:Cannot get the software version of the device !" */
+#define ARM_FILE_INVALID        -11     /* "Error:ARM file has validation error, file may be corrupted,Stop updating!" */
+#define BOOT_DOWN_FAIL          -12     /* "Error:BOOT data download failed !" */
+#define NOT_RESPOND             -13     /* "Error:Does not respond" */
+#define FPGA1_FILE_INVALID      -14     /* "Error:FPGA1 file has validation error, file may be corrupted,Stop updating!" */
+#define ERASE_FLASH_FAIL        -15     /* "Error:Erase the FLASH failed!" */
+#define FPGA2_FILE_INVALID      -16     /* "Error:FPGA2 file has validation error, file may be corrupted,Stop updating!" */
+#define OPEN_MRH_FAIL           -18     /* "Notify:Open MRH-T Failed" */
+#define DEVICE_UPDATE_SUCCESS   9       /* "Notify:Update Complete!" */
+#define MRHT_UPDATE_SUCCESS     0
+#define MRQ_BEGIN_UPDATE        1
+#define MRHT_BEGIN_UPDATE       2
+
+
 namespace Ui {
 class Widget;
 }
@@ -26,13 +48,21 @@ public:
     void attatchPlugin(XPlugin *xp);
 
 protected:
-    void showError(const QString &text);
-
     int openDevice();
 
     int loadRemoteInfo( int vi );
 
     int parseUpdateFile(QByteArray &in );
+
+signals:
+
+    //! control thread
+    //! 0: standby  1:begin
+    void changeTheadWorkMode( int mode );
+
+public slots:
+    void updateUi( int i );
+    void updateProgress(QString );
 
 private slots:
     void on_buttonBox_clicked(QAbstractButton *button);
@@ -42,17 +72,6 @@ private slots:
 
     void on_toolButton_clicked();
 
-    void slot_updateMRH();
-
-    void slot_startMRQUpdate();
-
-    void slotReadMRQResult(QString);
-
-private slots:
-    void slotGetRunState(int state);
-
-    void on_btnShow_clicked();
-
     void slotLineEditTextChanged(QString);
 
     void on_lineEdit_textChanged(const QString &arg1);
@@ -60,19 +79,21 @@ private slots:
 private:
     Ui::Widget *ui;
 
+    QStatusBar *pStatusBar;
+
     Entity *m_mrqEntity, *m_mrhEntity;
 
     QByteArray mRemoteVerionStream;
 
-    QProcess *proUpdateMRQ;
     QString m_addr,recvID;
-    MThead *m_mrhThread;
     XPlugin *m_pPlugin;
-    MThead *m_threaad;
     QString m_desc;
     QString sPath;
     int m_robotID;
     bool isAdmin;
+
+    MThead *pWorkThead;
+
 };
 
 #endif // WIDGET_H
@@ -82,14 +103,18 @@ class MThead: public QThread
     Q_OBJECT
 
 public:
+
     MThead(QObject *parent = 0);
 
-    void setExeCmd(const QString &str){ cmd = str; }
-    void setArguments(const QStringList &list){ argument = list; }
-
     void setAddr( QString str ){ m_addr = str; }
-    void setId( int i ){ id = i; }
-    void setPayload( QByteArray &in ){ mPayLoad = in; }
+
+    void attachEntity_MRQ( Entity *e ){ pEntity_MRQ = e; }
+    void attachEntity_MRH( Entity *e ){ PEntity_MRH = e; }
+
+    virtual int generateDevUpdateFile();
+
+    virtual int updateDevice();
+    virtual int updateController();
 
 protected:
     virtual void run();
@@ -99,18 +124,30 @@ signals:
     void resultReady( int );
 
 private:
-    QProcess *m_process;
+    QProcess *pProc;
 
-    QString cmd;
-    QStringList argument;
-
-    int id;
-
-    QByteArray mPayLoad;
     QString m_addr;
+
+    int iFlag;
+
+    Entity *pEntity_MRQ;
+    Entity *PEntity_MRH;
+
+    int iProgress;
+
+    //! flat mrq update complete
+    int iEndFlag;
+
+signals:
+    void sigStandOutput( QByteArray &ba );
 
 private slots:
     void slotReadyRead();
+
+public slots:
+    void switchWorkMode( int mode );
+
+    void parseStandOutput();
 };
 
 //! entity

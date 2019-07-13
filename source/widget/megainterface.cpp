@@ -336,7 +336,7 @@ void MegaInterface::on_pushButton_Scan_clicked()
                 tInfo.mFMVer = infoList.at(3);
 
                 //! device name
-                int roboIds[128];
+                int roboIds[1025];
                 idCnt = mrgGetRobotName( visa, roboIds );
                 if ( idCnt < 1 )
                 { break; }

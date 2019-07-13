@@ -270,18 +270,16 @@ void UpdateDialog::slotReadMRQResult(QString text)
     end_page_log();
 
     ui->progressBar->show();
-
+    ui->textBrowser->append(text);
     if( text.contains("Notify:Update Complete!") ){
         //! update mrh
         slot_updateMRH();
-        ui->textBrowser->append(text);
     }
 
     if( text.contains("Error") ){
         ui->labelStatus->setText(tr("Update MRQ Fail"));
         ui->labelStatus->show();
 
-        ui->textBrowser->append(text);
         return;
     }
 
@@ -314,118 +312,16 @@ void UpdateDialog::slotGetRunState(int state)
     }else if( state == -3 ){
         strError = tr( "Error: Data Check Fail" );
     }else if( state == 0 ){
-        strError = tr( "Notify: Update Complete" );
+        strError = tr( "Notify: Update Success" );
+        ui->progressBar->setMaximum(100);
+        ui->progressBar->setValue(100);
+        ui->textBrowser->append( strError );
         return;
     }else{}
 
     ui->progressBar->setMaximum(100);
     ui->progressBar->setValue(0);
     showError( strError );
-}
-
-
-MThead::MThead(QObject *parent):
-    QThread(parent)
-{
-
-}
-
-void MThead::run()
-{   
-    //! \todo
-
-    if( id == 0 ){
-        try{
-            Q_ASSERT(cmd != NULL);
-            Q_ASSERT(!argument.isEmpty());
-            //            QProcess::execute( cmd, argument );
-            //            emit resultReady(QString("Notify:Update Complete!"));
-            m_process = new QProcess;
-
-            connect(m_process,SIGNAL(readyRead()),this,SLOT(slotReadyRead()));
-            m_process->start(cmd,argument);
-            if(!m_process->waitForStarted()){
-                emit resultReady(QString("Error: Start Exe Fail"));
-                return;
-            }
-            logDbg();
-            //! \todo add tmo
-            do
-            {
-                localSleep( 100 );
-                //! process complted
-                if ( m_process->waitForFinished(0) )
-                { break; }
-                else
-                {}
-                //            }while( m_process->state() != QProcess::NotRunning );
-            }while( true );
-            logDbg();
-        }
-        catch(QException e){
-            m_process->terminate();
-        }
-        delete m_process;
-
-    }else if( id == 1 ){
-        int ret = 0;
-        int vi;
-        try{
-
-            vi = mrgOpenGateWay(1, m_addr.toLocal8Bit().data(), 2000);
-            if( vi < 0 ){
-                ret = -2;
-            }
-
-            do{
-                if( mPayLoad.isEmpty() ){
-                    ret = -3;
-                    break;
-                }
-
-                ret = mrgStorageWriteFile(vi, 0, (char *)"/media/usb0/",
-                                          (char *)MRH_UPDATE,
-                                          (unsigned char*)(mPayLoad.data()),
-                                          mPayLoad.size());
-                if(ret!=0){
-                    ret = -2;
-                    break;
-                }
-
-                QString strCmd = "sh /home/megarobo/MCT/MRX-T4/update.sh";
-                ret = mrgSystemRunCmd(vi, strCmd.toLocal8Bit().data(), 0);
-                logDbg() << ret;
-                if(ret !=0){
-                    ret = -3;
-                    break;
-                }
-
-                ret = mrgSysUpdateFileStart(vi, (char *)"mrh.dat");
-                if(ret !=0 ){
-                    ret = -1;
-                    break;
-                }
-
-            }while(0);
-
-            QString str = "rm -rf /media/usb0/*";
-            mrgSystemRunCmd(vi, str.toLocal8Bit().data(), 0);
-
-            mrgSystemRunCmd( vi, (char *)"reboot", 0 );
-
-            resultReady(ret);
-        }catch(QException &e){
-            logDbg();
-        }
-
-        mrgCloseGateWay(vi);
-    }
-}
-void MThead::slotReadyRead()
-{
-    QByteArray ba = m_process->readAll();
-    qDebug() << ba;
-    emit resultReady(QString(ba));
 }
 
 void UpdateDialog::on_btnShow_clicked()
@@ -565,6 +461,129 @@ int UpdateDialog::parseUpdateFile(QByteArray &in)
     return 0;
 }
 
+
+//! Class MThead
+MThead::MThead(QObject *parent):
+    QThread(parent)
+{
+
+}
+
+void MThead::run()
+{
+    //! \todo
+
+    if( id == 0 ){
+        try{
+            Q_ASSERT(cmd != NULL);
+            Q_ASSERT(!argument.isEmpty());
+            //            QProcess::execute( cmd, argument );
+            //            emit resultReady(QString("Notify:Update Complete!"));
+            m_process = new QProcess;
+
+            connect(m_process,SIGNAL(readyRead()),this,SLOT(slotReadyRead()));
+            m_process->start(cmd,argument);
+            if(!m_process->waitForStarted()){
+                emit resultReady(QString("Error: Start Exe Fail"));
+                return;
+            }
+
+            //! \todo add tmo
+            do
+            {
+                localSleep( 100 );
+                //! process complted
+                if ( m_process->waitForFinished(0) )
+                { break; }
+                else
+                {}
+                //            }while( m_process->state() != QProcess::NotRunning );
+            }while( true );
+            logDbg();
+        }
+        catch(QException e){
+            m_process->terminate();
+        }
+        delete m_process;
+
+    }else if( id == 1 ){
+        int ret = 0;
+        int vi;
+        try{
+
+            vi = mrgOpenGateWay(1, m_addr.toLocal8Bit().data(), 2000);
+            if( vi < 0 ){
+                ret = -2;
+            }
+
+            do{
+                if( mPayLoad.isEmpty() ){
+                    ret = -3;
+                    break;
+                }
+
+                ret = mrgStorageWriteFile(vi, 0, (char *)"/media/usb0/",
+                                          (char *)MRH_UPDATE,
+                                          (unsigned char*)(mPayLoad.data()),
+                                          mPayLoad.size());
+                if(ret!=0){
+                    ret = -2;
+                    break;
+                }
+
+                QString strCmd = "tar xzvf /media/usb0/mrh.tar.gz -C /media/usb0/";
+                ret = mrgSystemRunCmd(vi, strCmd.toLocal8Bit().data(), 0);
+                if( ret !=0 ){
+                    ret = -3;
+                    break;
+                }
+
+                strCmd = "cp /media/usb0/update.sh /home/megarobo/MCT/MRX-T4/update.sh";
+                ret = mrgSystemRunCmd(vi, strCmd.toLocal8Bit().data(), 0);
+                if( ret !=0 ){
+                    ret = -3;
+                    break;
+                }
+
+                strCmd = "sh /home/megarobo/MCT/MRX-T4/update.sh";
+                ret = mrgSystemRunCmd(vi, strCmd.toLocal8Bit().data(), 0);
+                logDbg() << ret;
+                if(ret !=0){
+                    ret = -3;
+                    break;
+                }
+
+                ret = mrgSysUpdateFileStart(vi, (char *)"mrh.dat");
+                if(ret !=0 ){
+                    ret = -1;
+                    break;
+                }
+
+            }while(0);
+
+            QString str = "rm -rf /media/usb0/*";
+            mrgSystemRunCmd(vi, str.toLocal8Bit().data(), 0);
+
+            mrgSystemRunCmd( vi, (char *)"reboot", 0 );
+
+            resultReady(ret);
+        }catch(QException &e){
+            logDbg();
+        }
+
+        mrgCloseGateWay(vi);
+    }
+}
+void MThead::slotReadyRead()
+{
+    QByteArray ba = m_process->readAll();
+    qDebug() << ba;
+    emit resultReady(QString(ba));
+}
+
+
+
+//! Class Entity
 Entity::Entity(QObject *parent) : QObject(parent)
 {
 

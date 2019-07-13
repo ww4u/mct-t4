@@ -17,14 +17,16 @@
 
 #include "../plugin/model/megaloglistmodel.h"
 
+#include "../sys/sysapi.h"
+
 namespace Ui {
 class MainWindow;
 }
 
 enum {
-    LANG_EN = 0,
-    LANG_CN,
-    LANG_TR_CN,
+    LANG_EN = e_lang_en,
+    LANG_CN = e_lang_cn,
+    LANG_TR_CN = e_lang_tcn,
 };
 
 enum {
@@ -46,7 +48,7 @@ public:
     static void requestPrompt( const QString &info, int lev=2 );
 
     static void showStatus(const QString str);
-
+    static int langIndex();
 protected:
     virtual void changeEvent( QEvent *event );
     virtual void resizeEvent(QResizeEvent *event);
@@ -57,7 +59,9 @@ public:
     void emit_progress( const QString &info, bool b, int now, int mi, int ma );
     void emit_prompt( const QString &info, int );
 
-//    int loginRet();
+public:
+    int languageIndex();
+
 protected:
     void retranslateUi();
 
@@ -127,13 +131,7 @@ private slots:
 
     void on_actionPref_triggered();
 
-//    void on_actionChange_Password_triggered();
-
-//    void on_actionSwitch_User_triggered();
-
     void on_actiontest_triggered();
-
-//    void on_actionErrant_triggered();
 
     void on_actionFAQ_triggered();
 

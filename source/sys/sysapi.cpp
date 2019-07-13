@@ -10,6 +10,11 @@ static sysPara _sysPara = { 0, 0 };
 //sysPara::eSysMode sysMode()
 //{ return _sysPara.mMode; }
 
+int sysLangIndex()
+{
+    return MainWindow::langIndex();
+}
+
 void sysSetArg( int argc, char **argv )
 {
     _sysPara.mArgc = argc;

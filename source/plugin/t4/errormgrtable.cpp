@@ -369,5 +369,30 @@ void ErrorMgrTable::slot_data_changed()
 //    m_pPlugin->emit_setting_changed( (eXSetting)(MRX_T4::e_setting_record), var );
 }
 
+void ErrorMgrTable::on_tableView_activated(const QModelIndex &index)
+{
+    QVariant var = ui->tableView->model()->data( index );
+    if ( var.isValid() )
+    {}
+    else
+    { return; }
+
+    if( index.column() == 1
+         || index.column() == 3
+         || index.column() == 4 )
+    {}
+    else
+    { return; }
+
+    ui->textEdit->setText( var.toString() );
 }
+
+void ErrorMgrTable::on_tableView_clicked(const QModelIndex &index)
+{
+    on_tableView_activated( index );
+}
+
+}
+
+
 

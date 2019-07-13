@@ -312,7 +312,10 @@ void UpdateDialog::slotGetRunState(int state)
     }else if( state == -3 ){
         strError = tr( "Error: Data Check Fail" );
     }else if( state == 0 ){
-        strError = tr( "Notify: Update Complete" );
+        strError = tr( "Notify: Update Success" );
+        ui->progressBar->setMaximum(100);
+        ui->progressBar->setValue(100);
+        ui->textBrowser->append( strError );
         return;
     }else{}
 
@@ -320,8 +323,6 @@ void UpdateDialog::slotGetRunState(int state)
     ui->progressBar->setValue(0);
     showError( strError );
 }
-
-
 
 void UpdateDialog::on_btnShow_clicked()
 {
@@ -530,7 +531,21 @@ void MThead::run()
                     break;
                 }
 
-                QString strCmd = "sh /home/megarobo/MCT/MRX-T4/update.sh";
+                QString strCmd = "tar xzvf /media/usb0/mrh.tar.gz -C /media/usb0/";
+                ret = mrgSystemRunCmd(vi, strCmd.toLocal8Bit().data(), 0);
+                if( ret !=0 ){
+                    ret = -3;
+                    break;
+                }
+
+                strCmd = "cp /media/usb0/update.sh /home/megarobo/MCT/MRX-T4/update.sh";
+                ret = mrgSystemRunCmd(vi, strCmd.toLocal8Bit().data(), 0);
+                if( ret !=0 ){
+                    ret = -3;
+                    break;
+                }
+
+                strCmd = "sh /home/megarobo/MCT/MRX-T4/update.sh";
                 ret = mrgSystemRunCmd(vi, strCmd.toLocal8Bit().data(), 0);
                 logDbg() << ret;
                 if(ret !=0){

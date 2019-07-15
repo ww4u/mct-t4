@@ -34,7 +34,6 @@ public:
     QLabel *label_2;
     QLineEdit *lineEdit;
     QToolButton *toolButton;
-    QLineEdit *desLineEdit;
     QProgressBar *progressBar;
     QHBoxLayout *hLayout;
     QSpacerItem *horizontalSpacer_2;
@@ -44,13 +43,13 @@ public:
     {
         if (Widget->objectName().isEmpty())
             Widget->setObjectName(QStringLiteral("Widget"));
-        Widget->resize(517, 201);
+        Widget->resize(517, 186);
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(Widget->sizePolicy().hasHeightForWidth());
         Widget->setSizePolicy(sizePolicy);
-        Widget->setMinimumSize(QSize(300, 150));
+        Widget->setMinimumSize(QSize(300, 180));
         gridLayout = new QGridLayout(Widget);
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
@@ -82,12 +81,6 @@ public:
 
         gridLayout->addLayout(horizontalLayout, 0, 0, 1, 1);
 
-        desLineEdit = new QLineEdit(Widget);
-        desLineEdit->setObjectName(QStringLiteral("desLineEdit"));
-        desLineEdit->setReadOnly(true);
-
-        gridLayout->addWidget(desLineEdit, 1, 0, 1, 1);
-
         progressBar = new QProgressBar(Widget);
         progressBar->setObjectName(QStringLiteral("progressBar"));
         progressBar->setMinimumSize(QSize(0, 50));
@@ -95,7 +88,7 @@ public:
         progressBar->setTextVisible(true);
         progressBar->setOrientation(Qt::Horizontal);
 
-        gridLayout->addWidget(progressBar, 2, 0, 1, 1);
+        gridLayout->addWidget(progressBar, 1, 0, 1, 1);
 
         hLayout = new QHBoxLayout();
         hLayout->setSpacing(6);
@@ -116,7 +109,7 @@ public:
         hLayout->addWidget(buttonBox);
 
 
-        gridLayout->addLayout(hLayout, 3, 0, 1, 1);
+        gridLayout->addLayout(hLayout, 2, 0, 1, 1);
 
 
         retranslateUi(Widget);

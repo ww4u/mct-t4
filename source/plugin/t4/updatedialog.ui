@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>517</width>
-    <height>201</height>
+    <height>186</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,7 +19,7 @@
   <property name="minimumSize">
    <size>
     <width>300</width>
-    <height>150</height>
+    <height>180</height>
    </size>
   </property>
   <layout class="QGridLayout" name="gridLayout">
@@ -55,13 +55,6 @@
     </layout>
    </item>
    <item row="1" column="0">
-    <widget class="QLineEdit" name="desLineEdit">
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
     <widget class="QProgressBar" name="progressBar">
      <property name="minimumSize">
       <size>
@@ -80,7 +73,7 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
+   <item row="2" column="0">
     <layout class="QHBoxLayout" name="hLayout">
      <item>
       <spacer name="horizontalSpacer_2">

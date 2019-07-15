@@ -49,8 +49,6 @@ UpdateDialog::UpdateDialog(QWidget *parent) :
     m_mrqEntity = NULL;
     m_mrhEntity = NULL;
 
-    ui->desLineEdit->hide();
-
     connect(ui->lineEdit,SIGNAL(textChanged(QString)),
             this,SLOT(slotLineEditTextChanged(QString)));
 
@@ -63,6 +61,18 @@ UpdateDialog::UpdateDialog(QWidget *parent) :
     connect( pWorkThead, SIGNAL( resultReady(QString)), this, SLOT( updateProgress( QString ) ));
 
     pStatusBar = new QStatusBar(this);
+    ui->gridLayout->addWidget(pStatusBar, 3, 0, 1, 1);
+    ui->progressBar->setStyleSheet( ("QProgressBar{border:1px solid #FFFFFF;"
+                                     "height:30;"
+                                     "background:red;"
+                                     "text-align:center;"
+                                     "color:rgb(255,255,0);}"
+                                     "QProgressBar::chunk{"
+                                     "border:1px solid black;"
+                                     "background-color:#00aa00;"
+                                     "width:8px;margin:0.5px;}"
+                                     ) );
+
 }
 
 UpdateDialog::~UpdateDialog()
@@ -98,47 +108,44 @@ void UpdateDialog::updateUi( int i )
         case -3:
             str = tr("File Invalid");
             break;
-        case -4:
+        case -5:
             str = tr("Connect Fail");
             break;
-        case -5:
-            str = tr("");
-            break;
         case -6:
-            str = tr("");
+            str = tr("The BOOT Version Is Old");
             break;
         case -7:
-            str = tr("");
+            str = tr("The MRQ File Is Invalid");
             break;
         case -8:
-            str = tr("");
+            str = tr("Cannot Get Ehe BOOT Version");
             break;
         case -9:
-            str = tr("");
+            str = tr("Reload Failed");
             break;
         case -10:
-            str = tr("");
+            str = tr("Get Software Version Error");
             break;
         case -11:
-            str = tr("");
+            str = tr("Arm File Check Error");
             break;
         case -12:
-            str = tr("");
+            str = tr("BOOT Data Download Failed");
             break;
         case -13:
-            str = tr("");
+            str = tr("Does Not Respond");
             break;
         case -14:
-            str = tr("");
+            str = tr("FPGA1 File Check Error");
             break;
         case -15:
-            str = tr("");
+            str = tr("Erase The FLASH Failed");
             break;
         case -16:
-            str = tr("");
+            str = tr("FPGA2 File Check Error");
             break;
         case -18:
-            str = tr("");
+            str = tr("Open MRH-T Failed");
             break;
         case 0:
             str = tr("MRH Update Complete");
@@ -174,6 +181,9 @@ void UpdateDialog::on_buttonBox_clicked(QAbstractButton *button)
 
         button->setDisabled( true );
 
+        ui->lineEdit->setReadOnly( true );
+        ui->toolButton->setDisabled( true );
+
         pWorkThead->setAddr( m_addr );
         pWorkThead->attachEntity_MRQ( m_mrqEntity );
         pWorkThead->attachEntity_MRH( m_mrhEntity );
@@ -184,76 +194,6 @@ void UpdateDialog::on_buttonBox_clicked(QAbstractButton *button)
         pWorkThead->wait();
     }
 
-
-//    ui->labelStatus->hide();
-//    ui->btnShow->show();
-//    ui->textEdit->clear();
-//    ui->lineEdit->setReadOnly(true);
-
-//    if((QPushButton*)(button) == ui->buttonBox->button(QDialogButtonBox::Ok)){
-//        m_pPlugin->close();
-
-//        if(openDevice()<0){
-//            button->show();
-//            ui->labelStatus->setText( tr("Open Device Fail") );
-//            ui->labelStatus->show();
-//            return;
-//        }
-//        else
-//        {}
-
-//        button->setDisabled( true );
-
-//        ui->lineEdit->setEnabled( false );
-//        ui->toolButton->setEnabled( false );
-
-//    }else {
-//        this->close();
-//        return;
-//    }
-
-//    int ret = 0;
-
-//    do{
-
-//        if( m_mrqEntity == NULL || m_mrhEntity == NULL ){
-//            ret = -1;
-//            break;
-//        }
-
-//        QDir dir;
-//        if( !dir.mkpath( QDir::tempPath() + "/output" )){
-//            ret = -1;
-//            break;
-//        }
-//        QFile f( QDir::tempPath() + "/output/temp.dat" );
-//        if( f.open(QIODevice::WriteOnly) ){
-
-//        }else{
-//            ret = -1;
-//            break;
-//        }
-
-//        f.write( m_mrqEntity->mPayload );
-//        f.close();
-
-//    }while(0);
-
-//    //! \todo
-//    if( ret !=0 ){
-//        ui->textEdit->append( tr( "Error: Invalid File" ) );
-//        return;
-//    }else{}
-
-//    //! version compare
-//    //! \todo remote from the plugin
-//    ret = versionComparison( m_desc, mRemoteVerionStream );
-//    if( ret == 1 ){
-//        slot_startMRQUpdate();
-//    }else {
-//        //! version = ...
-//        ui->textEdit->append( tr( "Notify: Version Is Same, No Need To Update." ) );
-//    }
 }
 
 //! return value:0 =; 1: !=;
@@ -322,7 +262,10 @@ void UpdateDialog::slotLineEditTextChanged(QString s)
     QFile f(s);
     if( f.open(QIODevice::ReadOnly) ){
 
-    }else{return;}
+    }else{
+        pStatusBar->showMessage( tr("Open Fail") );
+        return;
+    }
 
     QByteArray ba = f.readAll();
     if( ba.isEmpty()){
@@ -331,10 +274,11 @@ void UpdateDialog::slotLineEditTextChanged(QString s)
 
     if( parseUpdateFile( ba ) != 0){
         pStatusBar->showMessage( tr("Invalid File") );
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setVisible( false );
     }else{
-        ui->desLineEdit->setText( m_desc );
-        ui->desLineEdit->show();
+        this->pStatusBar->showMessage(QString("Desc: %1").arg(m_desc));
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(s.length()>0);
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setVisible( true );
     }
 }
 
@@ -599,13 +543,12 @@ void MThead::run()
         {logDbg();
             iProgress = 0;
 
-            //! mrq
-
             emit resultReady(1);
 
             updateDevice();
 
             if( iEndFlag == 1 ){
+                emit resultReady(9);
                 emit resultReady(2);
 
                 int ret = updateController();
@@ -674,6 +617,8 @@ void MThead::parseStandOutput()
         iEndFlag = 1;
         iProgress = 50;
         ret = 9;
+    }else{
+        ret = 1;
     }
     qDebug() << ba;
     emit resultReady(ret);

@@ -56,6 +56,9 @@ protected Q_SLOTS:
 //    void slot_request_load();
 
     void slot_data_changed();
+private slots:
+    void on_tableView_activated(const QModelIndex &index);
+    void on_tableView_clicked(const QModelIndex &index);
 };
 }
 

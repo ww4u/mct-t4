@@ -52,6 +52,14 @@ void MainWindow::showStatus( const QString str)
     MainWindow::_pBackendProxy->emit_status(str);
 }
 
+int MainWindow::langIndex()
+{
+    if( NULL == MainWindow::_pBackendProxy )
+    { return 0; }
+
+    return MainWindow::_pBackendProxy->languageIndex();
+}
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
@@ -735,6 +743,9 @@ void MainWindow::emit_prompt( const QString &info, int lev )
 
 //int MainWindow::loginRet()
 //{ return mLogInRet; }
+
+int MainWindow::languageIndex()
+{ return mPref.mLangIndex; }
 
 void MainWindow::retranslateUi()
 {

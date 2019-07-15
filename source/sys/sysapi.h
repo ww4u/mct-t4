@@ -24,6 +24,15 @@ enum eOutHandle
     e_out_log
 };
 
+enum eLangIndex
+{
+    e_lang_en,
+    e_lang_cn,
+    e_lang_tcn,
+};
+
+int sysLangIndex();
+
 //void setSysMode( sysPara::eSysMode mode );
 //sysPara::eSysMode sysMode();
 

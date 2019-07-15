@@ -425,8 +425,18 @@ int MRX_T4::onXEvent( XEvent *pEvent )
 void MRX_T4::onDeviceException( int var )
 {
     //! prompt
-    //! \todo convert to string by the error table
-    sysPrompt( ( QString::number( var) ), 2 );
+    QString prompt;
+
+    //! the lang index in error
+    int langIndex = m_pPref->mLangIndex == e_lang_cn ? 0 : 1;
+
+    QVariant briefVar = mErrorConfigTable.errorBrief( var, langIndex );
+    if ( briefVar.isValid() )
+    { prompt = briefVar.toString(); }
+    else
+    { }
+
+    sysPrompt( QString::number( var ) + " " + prompt, 2 );
 
     //! post load the diagnosis
     m_pOpPanel->postRefreshDiagnosisInfo();

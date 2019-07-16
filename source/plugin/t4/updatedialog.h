@@ -7,6 +7,7 @@
 #include <QProcess>
 #include "MegaGateway.h"
 #include "../plugin/xplugin.h"
+#include <QSemaphore>
 
 
 #define MRHT_SYSTEM_ERROR       -1
@@ -72,9 +73,7 @@ private slots:
 
     void on_toolButton_clicked();
 
-    void slotLineEditTextChanged(QString);
-
-    void on_lineEdit_textChanged(const QString &arg1);
+    void on_lineEdit_textChanged(const QString &s);
 
 private:
     Ui::Widget *ui;
@@ -137,6 +136,8 @@ private:
 
     //! flat mrq update complete
     int iEndFlag;
+
+    QSemaphore *pSemaphore;
 
 signals:
     void sigStandOutput( QByteArray &ba );

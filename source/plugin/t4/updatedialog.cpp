@@ -48,17 +48,11 @@ UpdateDialog::UpdateDialog(QWidget *parent) :
 
     m_mrqEntity = NULL;
     m_mrhEntity = NULL;
-
-    connect(ui->lineEdit,SIGNAL(textChanged(QString)),
-            this,SLOT(slotLineEditTextChanged(QString)));
+    pWorkThead = NULL;
 
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled( false );
 
     //! update thread
-    pWorkThead = new MThead;
-    connect( this, SIGNAL(changeTheadWorkMode(int)), pWorkThead, SLOT(switchWorkMode(int)) );
-    connect( pWorkThead, SIGNAL( resultReady(int)), this, SLOT( updateUi( int ) ) );
-    connect( pWorkThead, SIGNAL( resultReady(QString)), this, SLOT( updateProgress( QString ) ));
 
     pStatusBar = new QStatusBar(this);
     ui->gridLayout->addWidget(pStatusBar, 3, 0, 1, 1);
@@ -70,17 +64,19 @@ UpdateDialog::UpdateDialog(QWidget *parent) :
                                      "QProgressBar::chunk{"
                                      "border:1px solid black;"
                                      "background-color:#00aa00;"
-                                     "width:8px;margin:0.5px;}"
+                                     "width:10px;margin:0px;}"
                                      ) );
 
 }
 
 UpdateDialog::~UpdateDialog()
 {
-    pWorkThead->requestInterruption();
-    pWorkThead->wait();
+    if( pWorkThead != NULL ){
+        pWorkThead->requestInterruption();
+        pWorkThead->wait();
+        delete pWorkThead;
+    }
 
-    delete pWorkThead;
     delete ui;
 }
 
@@ -184,14 +180,32 @@ void UpdateDialog::on_buttonBox_clicked(QAbstractButton *button)
         ui->lineEdit->setReadOnly( true );
         ui->toolButton->setDisabled( true );
 
+        if( pWorkThead != NULL ){
+            delete pWorkThead;
+            pWorkThead == NULL;
+        }
+        pWorkThead = new MThead;
+        connect( this, SIGNAL(changeTheadWorkMode(int)), pWorkThead, SLOT(switchWorkMode(int)) );
+        connect( pWorkThead, SIGNAL( resultReady(int)), this, SLOT( updateUi( int ) ) );
+        connect( pWorkThead, SIGNAL( resultReady(QString)), this, SLOT( updateProgress( QString ) ));
+        pWorkThead->start();
         pWorkThead->setAddr( m_addr );
         pWorkThead->attachEntity_MRQ( m_mrqEntity );
         pWorkThead->attachEntity_MRH( m_mrhEntity );
         changeTheadWorkMode(1);
-        pWorkThead->start();
     }else{
-        pWorkThead->requestInterruption();
-        pWorkThead->wait();
+        if( pWorkThead != NULL ){
+            pWorkThead->requestInterruption();
+            pWorkThead->wait();
+            delete pWorkThead;
+            pWorkThead = NULL;
+        }
+
+        ui->lineEdit->setReadOnly( false );
+        ui->toolButton->setDisabled( false );
+        ui->lineEdit->clear();
+        ui->progressBar->hide();
+        pStatusBar->showMessage( tr("Cancle"),  5000);
     }
 
 }
@@ -257,20 +271,25 @@ void UpdateDialog::on_toolButton_clicked()
     ui->lineEdit->setText(sPath);
 }
 
-void UpdateDialog::slotLineEditTextChanged(QString s)
-{
+void UpdateDialog::on_lineEdit_textChanged(const QString &s)
+{logDbg() << s;
+    //ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( arg1.length() );
+    pStatusBar->clearMessage();
+
+    if( s.isEmpty() ){
+        return;
+    }
+
     QFile f(s);
     if( f.open(QIODevice::ReadOnly) ){
 
     }else{
         pStatusBar->showMessage( tr("Open Fail") );
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setVisible( false );
         return;
     }
 
     QByteArray ba = f.readAll();
-    if( ba.isEmpty()){
-        return;
-    }
 
     if( parseUpdateFile( ba ) != 0){
         pStatusBar->showMessage( tr("Invalid File") );
@@ -280,11 +299,7 @@ void UpdateDialog::slotLineEditTextChanged(QString s)
         ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(s.length()>0);
         ui->buttonBox->button(QDialogButtonBox::Ok)->setVisible( true );
     }
-}
 
-void UpdateDialog::on_lineEdit_textChanged(const QString &arg1)
-{
-    ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( arg1.length() );
 }
 
 int UpdateDialog::openDevice()
@@ -352,6 +367,10 @@ int UpdateDialog::loadRemoteInfo( int vi )
 
 int UpdateDialog::parseUpdateFile(QByteArray &in)
 {
+    if( in.isEmpty()){
+        return -1;
+    }
+
     int iDesLen =  byteArrayToInt( in.mid( 0, 4 ) );
     m_desc = QString::fromLocal8Bit( in.mid( 4, iDesLen ) );
     int iId = byteArrayToInt( in.mid( 4+iDesLen, 4 ) );
@@ -399,7 +418,7 @@ MThead::MThead(QObject *parent):
     PEntity_MRH(NULL),
     iEndFlag(0)
 {
-
+    pSemaphore = new QSemaphore(1);
 }
 
 int MThead::generateDevUpdateFile()
@@ -426,7 +445,7 @@ int MThead::generateDevUpdateFile()
 }
 
 int MThead::updateDevice()
-{logDbg();
+{logDbg()<<QThread::currentThreadId();
     //! \todo err code
     if( generateDevUpdateFile() != 0 ){logDbg();
         return -1;
@@ -448,17 +467,19 @@ int MThead::updateDevice()
             );
 
     pProc->start( (qApp->applicationDirPath() + MRQ_UPDATE_EXE), argument );
-    pProc->waitForStarted(-1);
+    pProc->waitForStarted();
 
     do{
         localSleep( 100 );
+
         //! process complted
         if ( pProc->waitForFinished(0) )
-        { break; }
+        {
+            break;
+        }
         else
         {}
     }while( true );
-    logDbg();
 
     return 0;
 }
@@ -539,35 +560,71 @@ void MThead::run()
 {logDbg();
     //! \todo
     try{
-        while( iFlag )
+        while( 1 )
         {logDbg();
-            iProgress = 0;
+            if ( isInterruptionRequested() )
+            { return; }
 
-            emit resultReady(1);
+            if( iFlag )
+            {
+                iProgress = 0;
 
-            updateDevice();
+                emit resultReady(1);
 
-            if( iEndFlag == 1 ){
-                emit resultReady(9);
-                emit resultReady(2);
+                pSemaphore->acquire(1);
+                int ret = updateDevice();
 
-                int ret = updateController();
+                //! wait
+                if( pSemaphore->tryAcquire(1, 10000) ){
 
-                emit resultReady( ret );
+                }else{
+                    pSemaphore->release(1);
+                    goto SLEEP;
+                }
+                pSemaphore->release(1);
 
-                iEndFlag = 0;
+                if( iEndFlag == 0 || ret < 0 ){
+                    pSemaphore->acquire(1);
+                    ret = updateDevice();
+                    if( pSemaphore->tryAcquire(1, 10000) ){
+
+                    }else{
+                        pSemaphore->release(1);
+                        goto SLEEP;
+                    }
+                    pSemaphore->release(1);
+                }
+
+                if( iEndFlag == 1 )
+                {
+                    emit resultReady(9);
+                    emit resultReady(2);
+
+                    ret = updateController();
+                    emit resultReady( ret );
+                    if( ret < 0 ){
+                        ret = updateController();
+                    }
+
+                    emit resultReady( ret );
+
+                    iEndFlag = 0;
+                }
+                iFlag = 0;
             }
-            iFlag = 0;
 
+            SLEEP:
+            logDbg() << QThread::currentThreadId();
             localSleep(500);
         }
     }
     catch( QException &e )
     {
         //! \todo free
-        pProc->terminate();
+        if( pProc )
+        pProc->close();
     }
-    delete pProc;
+    //delete pProc;
 }
 void MThead::slotReadyRead()
 {
@@ -582,7 +639,7 @@ void MThead::switchWorkMode(int mode)
 }
 
 void MThead::parseStandOutput()
-{
+{logDbg()<<QThread::currentThreadId();
     iProgress += 10;
     QByteArray ba = pProc->readAll();
     //! \todo err code
@@ -619,8 +676,12 @@ void MThead::parseStandOutput()
         ret = 9;
     }else{
         ret = 1;
+    }   
+
+    if( ret != 1 ){
+        pSemaphore->release(1);
     }
-    qDebug() << ba;
+
     emit resultReady(ret);
     emit resultReady( QString::number(iProgress) );
     //! percent
@@ -640,5 +701,3 @@ Entity::Entity(QObject *parent) : QObject(parent)
 {
 
 }
-
-

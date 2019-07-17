@@ -174,6 +174,18 @@ void UpdateDialog::on_buttonBox_clicked(QAbstractButton *button)
 
     if((QPushButton*)(button) == ui->buttonBox->button(QDialogButtonBox::Ok))
     {
+        //! Warning message
+        int ret = QMessageBox::warning(this, tr("Warning"),
+                                       tr("Please do not power off\n"
+                                          "during the upgrade."),
+                                       QMessageBox::Ok | QMessageBox::Cancel
+                                       );
+        if( ret == QMessageBox::Ok ){
+
+        }else{
+            return;
+        }
+
         m_pPlugin->close();
 
         button->setDisabled( true );
@@ -603,6 +615,7 @@ void MThead::run()
 
                 if( iEndFlag == 0 || ret < 0 ){
                     pSemaphore->acquire(1);
+                    iProgress = 0;
                     ret = updateDevice();
                     if( pSemaphore->tryAcquire(1, 10000) ){
 
@@ -657,9 +670,9 @@ void MThead::switchWorkMode(int mode)
 }
 
 void MThead::parseStandOutput()
-{logDbg()<<QThread::currentThreadId();
-    iProgress += 10;
-    QByteArray ba = pProc->readAll();
+{
+    iProgress += 1;
+    QByteArray ba = pProc->readAll();logDbg() << ba;
     //! \todo err code
     int ret = 99;
     if( ba.contains("Error:Cannot establish communication!") ){
@@ -690,7 +703,7 @@ void MThead::parseStandOutput()
         ret = -18;
     }else if( ba.contains( "Notify:Update Complete" ) ){
         iEndFlag = 1;
-        iProgress = 50;
+        iProgress = 55;
         ret = 9;
     }else{
         ret = 1;
@@ -701,7 +714,7 @@ void MThead::parseStandOutput()
     }
 
     emit resultReady(ret);
-    emit resultReady( QString::number(iProgress) );
+    emit resultReady( QString::number(iProgress/4) );
     //! percent
 //    QRegExp rx("(\\d+)");
 //    QString _str = QString( ba );

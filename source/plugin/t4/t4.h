@@ -65,7 +65,7 @@
 #define on_post_setting_emerge( cls, onSetting, desc ) m_pPlugin->attachEmergencyWorking( this, (XPage::onMsg)(&cls::onSetting), var, desc );
 
 #define wave_table  0
-#define distance_error      (0.001)
+#define distance_error      (0.1)
 
 #define guess_dist_calc_time_ms( dist )    (dist * 1000)
 //! 运行时间+计算时间+交互时间   交互时间>800 ms 下发指令到runing状态大概900ms左右

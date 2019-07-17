@@ -37,8 +37,11 @@ public:
     QStringList mReasonKey;
     QStringList mReason;
 
-    QStringList mDetailKey;
-    QStringList mDetail;
+    QStringList mDetail1Key;
+    QStringList mDetail1;
+
+    QStringList mDetail2Key;
+    QStringList mDetail2;
 
     QStringList mActionKey;
     QStringList mAction;

@@ -58,7 +58,7 @@ UpdateDialog::UpdateDialog(QWidget *parent) :
     ui->gridLayout->addWidget(pStatusBar, 3, 0, 1, 1);
     ui->progressBar->setStyleSheet( ("QProgressBar{border:1px solid #FFFFFF;"
                                      "height:30;"
-                                     "background:red;"
+                                     "background:#0000ff;"
                                      "text-align:center;"
                                      "color:rgb(255,255,0);}"
                                      "QProgressBar::chunk{"
@@ -703,7 +703,7 @@ void MThead::parseStandOutput()
         ret = -18;
     }else if( ba.contains( "Notify:Update Complete" ) ){
         iEndFlag = 1;
-        iProgress = 55;
+        iProgress = 55*4;   /* 55% */
         ret = 9;
     }else{
         ret = 1;

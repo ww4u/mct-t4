@@ -43,13 +43,14 @@ public:
     {
         if (Widget->objectName().isEmpty())
             Widget->setObjectName(QStringLiteral("Widget"));
-        Widget->resize(517, 186);
+        Widget->resize(517, 170);
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(Widget->sizePolicy().hasHeightForWidth());
         Widget->setSizePolicy(sizePolicy);
-        Widget->setMinimumSize(QSize(300, 180));
+        Widget->setMinimumSize(QSize(300, 170));
+        Widget->setMaximumSize(QSize(16777215, 170));
         gridLayout = new QGridLayout(Widget);
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);

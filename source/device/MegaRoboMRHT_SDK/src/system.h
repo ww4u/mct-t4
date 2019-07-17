@@ -461,6 +461,64 @@ EXPORT_API int CALL mrgSystemSetMRQConfig(ViSession vi, const char *version, con
  * 0表示成功,-1表示失败
  */
 EXPORT_API int CALL mrgSystemGetMRQConfig(ViSession vi, char *version, char *sn);
+/**
+ * @brief mrgSysErrorSetAlertConf
+ * 设置错误发生后报警灯的配置状态
+ * @param vi
+ * 网关句柄
+ * @param errorCode
+ * 错误码
+ * @param isAlert
+ * 设置报警灯是否闪烁,1表示闪烁,0表示不闪烁
+ * @return
+ * 成功返回0,失败返回-1
+ */
+EXPORT_API int CALL mrgSysErrorSetAlertConf(ViSession vi, unsigned int errorCode, int isAlert);
+/**
+ * @brief mrgSysErrorGetAlertConf
+ * 查询错误发生后报警灯的配置状态
+ * @param vi
+ * 网关句柄
+ * @param errorCode
+ * 错误码
+ * @return
+ * 返回0表示不关闭输出级,返回1表示关闭输出级,失败返回负数
+ */
+EXPORT_API int CALL mrgSysErrorGetAlertConf(ViSession vi, unsigned int errorCode);
+/**
+ * @brief mrgSysErrorSetOutputConf
+ * 设置错误输出级配置
+ * @param vi
+ * 网关句柄
+ * @param errorCode
+ * 错误码
+ * @param isCloseOutput
+ * 是否关闭输出级,1表示关闭,0表示不关闭
+ * @return
+ * 成功返回0,失败返回-1
+ */
+EXPORT_API int CALL mrgSysErrorSetOutputConf(ViSession vi, unsigned int errorCode, int isCloseOutput);
+/**
+ * @brief mrgSysErrorGetOutputConf
+ * 查询错误输出级配置
+ * @param vi
+ * 网关句柄
+ * @param errorCode
+ * 错误码
+ * @return
+ * 返回0表示不关闭输出级,返回1表示关闭输出级,失败返回负数
+ */
+EXPORT_API int CALL mrgSysErrorGetOutputConf(ViSession vi, unsigned int errorCode);
+/**
+ * @brief mrgSystemErrorAck
+ * 系统错误确认,在用户处理完错误后执行此操作
+ * @param vi
+ * 网关句柄
+ * @return
+ * 成功返回0,失败返回-1
+ */
+EXPORT_API int CALL mrgSystemErrorAck(ViSession vi);
+
 
 #if defined(__cplusplus) || defined(__cplusplus__)
 }

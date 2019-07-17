@@ -381,7 +381,7 @@ EXPORT_API int CALL mrgSysGetDateTime(ViSession vi, char *ps8Date)
     {
         return -1;
     }
-    memcpy(ps8Date, as8Ret, retLen);
+    memcpy(ps8Date, as8Ret, retLen - 1);
     return 0;
 }
 EXPORT_API int CALL mrgSysSetEmergencyStopState(ViSession vi, int state)
@@ -617,5 +617,74 @@ EXPORT_API int CALL mrgSystemGetMRQConfig(ViSession vi, char *version, char *sn)
     splitString(state, ",", strVal);
     strcpy(version, strVal[0]);
     strcpy(sn, strVal[1]);
+    return 0;
+}
+
+EXPORT_API int CALL mrgSysErrorSetAlertConf(ViSession vi, unsigned int errorCode, int isAlert)
+{
+    char args[SEND_BUF_LEN];
+    snprintf(args, SEND_BUF_LEN, "SYSTEM:ERRCOnf:ALERT 0x%08X,%s\n", errorCode, isAlert?"ON":"OFF");
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
+}
+
+EXPORT_API int CALL mrgSysErrorGetAlertConf(ViSession vi, unsigned int errorCode)
+{
+    char args[SEND_BUF_LEN];
+    char ret[SEND_BUF_LEN];
+    int retlen = 0;
+    snprintf(args, SEND_BUF_LEN, "SYSTEM:ERRCOnf:ALERT? 0x%08X\n", errorCode);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, RECV_BUF_LEN)) <= 0) {
+        return -1;
+    }
+    if(0 == STRCASECMP(ret, "ERROR") )
+        return -2;
+    if(0 == STRCASECMP(ret, "ON") )
+        return 1;
+    if(0 == STRCASECMP(ret, "OFF") )
+        return 0;
+    return -3;
+}
+
+EXPORT_API int CALL mrgSysErrorSetOutputConf(ViSession vi, unsigned int errorCode, int isCloseOutput)
+{
+    char args[SEND_BUF_LEN];
+    snprintf(args, SEND_BUF_LEN, "SYSTEM:ERRCOnf:OUTPUT 0x%08X,%s\n", errorCode, isCloseOutput?"ON":"OFF");
+    if (busWrite(vi, args, strlen(args)) <= 0)
+    {
+        return -1;
+    }
+    return 0;
+}
+
+EXPORT_API int CALL mrgSysErrorGetOutputConf(ViSession vi, unsigned int errorCode)
+{
+    char args[SEND_BUF_LEN];
+    char ret[SEND_BUF_LEN];
+    int retlen = 0;
+    snprintf(args, SEND_BUF_LEN, "SYSTEM:ERRCOnf:OUTPUT? 0x%08X\n", errorCode);
+    if ((retlen = busQuery(vi, args, strlen(args), ret, RECV_BUF_LEN)) <= 0) {
+        return -1;
+    }
+    if(0 == STRCASECMP(ret, "ERROR") )
+        return -2;
+    if(0 == STRCASECMP(ret, "ON") )
+        return 1;
+    if(0 == STRCASECMP(ret, "OFF") )
+        return 0;
+    return -3;
+}
+
+EXPORT_API int CALL mrgSystemErrorAck(ViSession vi)
+{
+    char args[SEND_BUF_LEN];
+    int retlen = 0;
+    snprintf(args, SEND_BUF_LEN, "SYSTEM:ERROR:ANSWER\n");
+    if ((retlen = busWrite(vi, args, strlen(args))) == 0) {
+        return -1;
+    }
     return 0;
 }

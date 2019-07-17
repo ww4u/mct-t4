@@ -113,19 +113,19 @@ EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *ps8Path
     }
 
     pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-//    pthread_mutex_lock(&mutex);
+    //pthread_mutex_lock(&mutex);
 
     snprintf(args, SEND_BUF_LEN, "SYSTEM:CMDLine? %s%s,%s\n", "mkdir -p ", ps8Path, "WAIT");
     if ((retLen = busQuery(vi, args, strlen(args), as8State, sizeof(as8State))) <= 0)
     {
-//        pthread_mutex_unlock(&mutex);
+        //pthread_mutex_unlock(&mutex);
         return -1;
     }
 
     snprintf(args, SEND_BUF_LEN, "STORage:FILe:WRITe:START %s,%s,%s\n",isUdisk?"UDISK":"LOCAL", ps8Path, ps8SaveFileName);
     if (busWrite(vi, args, strlen(args)) == 0)//写入文件名
     {
-//        pthread_mutex_unlock(&mutex);
+        //pthread_mutex_unlock(&mutex);
         return -3;
     }
     //写入文件内容
@@ -138,7 +138,7 @@ EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *ps8Path
 
         if (busWrite(vi, as8Ret, writeLen + cmdLen) == 0)
         {
-//            pthread_mutex_unlock(&mutex);
+            //pthread_mutex_unlock(&mutex);
             return -4;
         }
 
@@ -146,7 +146,6 @@ EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *ps8Path
         while(errCount--)
         {
             msSleep(5);
-
             memset(as8State,0,sizeof(as8State));
             retLen = busRead(vi, as8State, sizeof(as8State));
             if (retLen > 0)

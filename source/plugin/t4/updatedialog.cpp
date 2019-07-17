@@ -144,7 +144,8 @@ void UpdateDialog::updateUi( int i )
             str = tr("Open MRH-T Failed");
             break;
         case 0:
-            str = tr("MRH Update Complete");
+            str = tr("Update Complete");
+            ui->buttonBox->hide();
             break;
         case 1:
             str = tr("MRQ Begin Update");
@@ -211,8 +212,7 @@ void UpdateDialog::on_buttonBox_clicked(QAbstractButton *button)
 }
 
 //! return value:0 =; 1: !=;
-int UpdateDialog::versionComparison( const QString &inVersion,
-                               const QByteArray &remoteVerStream )
+int UpdateDialog::versionComparison( const QString &inVersion )
 {
     //! MRX-T4_R0.0.0.1
     //! MRX-T4_M0.0.0.1
@@ -220,7 +220,15 @@ int UpdateDialog::versionComparison( const QString &inVersion,
     int ret = 0;
     QString version, mrh, mrq, builTime;
 
-    QXmlStreamReader reader( remoteVerStream );
+    QByteArray ba;
+    ba.reserve( 1024*1024 );
+    ret = mrgStorageReadFile( m_pPlugin->deviceVi(), 0,
+                        (QString(mct_path) + "/" + "MRX-T4").toLatin1().data(),
+                        "update.xml",
+                        (quint8*)ba.data() );
+    ba.resize( ret );
+
+    QXmlStreamReader reader( ba );
     while( reader.readNextStartElement() ){
         if( reader.name() == "data" ){
             while( reader.readNextStartElement() ){
@@ -295,9 +303,16 @@ void UpdateDialog::on_lineEdit_textChanged(const QString &s)
         pStatusBar->showMessage( tr("Invalid File") );
         ui->buttonBox->button(QDialogButtonBox::Ok)->setVisible( false );
     }else{
-        this->pStatusBar->showMessage(QString("Desc: %1").arg(m_desc));
-        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(s.length()>0);
-        ui->buttonBox->button(QDialogButtonBox::Ok)->setVisible( true );
+        if( !versionComparison( m_desc ) && !isAdmin){
+            this->pStatusBar->showMessage(QString("Desc: %1, %2").arg(m_desc).arg(QString("Permission not allowed")));
+            ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled( false );
+            ui->buttonBox->button(QDialogButtonBox::Ok)->setVisible( false );
+        }else{
+            this->pStatusBar->showMessage(QString("Desc: %1").arg(m_desc));
+            ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(s.length()>0);
+            ui->buttonBox->button(QDialogButtonBox::Ok)->setVisible( true );
+        }
+
     }
 
 }
@@ -375,6 +390,7 @@ int UpdateDialog::parseUpdateFile(QByteArray &in)
     m_desc = QString::fromLocal8Bit( in.mid( 4, iDesLen ) );
     int iId = byteArrayToInt( in.mid( 4+iDesLen, 4 ) );
     if( iId != Entity::PACKAGE ){
+        m_desc.clear();
         return -1;
     }
     int iSize = byteArrayToInt( in.mid( iDesLen+8, 4 ) );
@@ -549,7 +565,9 @@ int MThead::updateController()
         QString str = "rm -rf /media/usb0/*";
         mrgSystemRunCmd(vi, str.toLocal8Bit().data(), 0);
 
-        mrgSystemRunCmd( vi, (char *)"reboot", 0 );
+        if( ret == 0 ){
+            mrgSystemRunCmd( vi, (char *)"reboot", 0 );
+        }
 
     mrgCloseGateWay(vi);
 

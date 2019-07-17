@@ -93,7 +93,7 @@ QTreeWidgetItem* MRX_T4::createPrefPages( QStackedWidget *stack )
 #ifndef QT_DEBUG
     rstRecordTable();
 #else
-    m_pRecordModel->loadIn("G:/work/mct/doc/template2.mrp");
+    //m_pRecordModel->loadIn("G:/work/mct/doc/template2.mrp");
 #endif
 
     //! attach model

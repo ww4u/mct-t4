@@ -68,8 +68,7 @@ public slots:
 private slots:
     void on_buttonBox_clicked(QAbstractButton *button);
 
-    int versionComparison(const QString &fileVer,
-                          const QByteArray &remoteVerStream );
+    int versionComparison(const QString &fileVer);
 
     void on_toolButton_clicked();
 

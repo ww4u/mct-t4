@@ -1847,7 +1847,7 @@ EXPORT_API int CALL mrgRobotToolStop(ViSession vi, int robotname)
 * 末端执行器执行模式
 * vi :visa设备句柄
 * robotname: 机器人名称
-* mode: 末端执行器执行模式.对于F2: 0表示正常模式; 1表示先张开,再闭合到目标位置. 对于旋转末端:0表示0~270度模式,1表示0~360度模式
+* mode: 末端执行器执行模式. 0:正常模式; 1:先张开,再闭合到目标位置
 * 返回值：0表示执行成功，－1：表示出错，
 */
 EXPORT_API int CALL mrgRobotToolExeMode(ViSession vi, int robotname, int mode)

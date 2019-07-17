@@ -738,9 +738,15 @@ int MRX_T4::absMove( QString para,
 
     Q_ASSERT( v > 0 );
 
+    float amax = 16*250/3;
     float t = qAbs( dist ) / v;
+    float a = 16*qAbs( dist )/(3*t*t);
+    if( qAbs( a - amax ) > 0.00001f ){
+        t = sqrt( 16*qAbs( dist )/3*amax );
+    }else{
+    }
 
-    logDbg()<<x<<y<<z<<t<<guess_dist_time_ms( t, dist );
+    logDbg()<<x<<y<<z<<t<<guess_dist_time_ms( t, dist ) << v << a;
 
     if ( bLine )
     {
@@ -750,7 +756,7 @@ int MRX_T4::absMove( QString para,
                              y,
                              z,
                              t,
-                             guess_dist_time_ms( v, dist )
+                             guess_dist_time_ms( t, dist )
                              );
     }
     else
@@ -761,7 +767,7 @@ int MRX_T4::absMove( QString para,
                                y,
                                z,
                                t,
-                               guess_dist_time_ms( v, dist )
+                               guess_dist_time_ms( t, dist )
                                );
     }
 

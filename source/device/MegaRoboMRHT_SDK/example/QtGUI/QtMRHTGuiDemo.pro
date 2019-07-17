@@ -47,8 +47,8 @@ RC_ICONS = resource/app.ico
 RESOURCES += \
     resource/res.qrc
 
-#DEFINES += ARM_LINUX    # ±Ì æarm…œµƒLinux,±»»Á ˜›Æ≈…
-#DEFINES += ANDROID      # ±Ì æ∞≤◊ø
+#DEFINES += ARM_LINUX    # Ë°®Á§∫arm‰∏äÁöÑLinux,ÊØîÂ¶ÇÊ†ëËéìÊ¥æ
+#DEFINES += ANDROID      # Ë°®Á§∫ÂÆâÂçì
 
 unix {
     contains(DEFINES, ANDROID) {
@@ -89,7 +89,6 @@ INCLUDEPATH += ../../src/
 SOURCES += ./main.cpp \
         ../../src/bus.c \
         ../../src/device.c \
-        ../../src/errorcode.c \
         ../../src/megarobot.c \
         ../../src/mrqdevice.c \
         ../../src/project.c \
@@ -102,7 +101,6 @@ SOURCES += ./main.cpp \
 HEADERS += \
         ../../src/bus.h \
         ../../src/device.h \
-        ../../src/errorcode.h \
         ../../src/MegaGateway.h \
         ../../src/megarobot.h \
         ../../src/mrqdevice.h \

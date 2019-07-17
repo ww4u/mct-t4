@@ -232,11 +232,19 @@ int ErrorMgrTable::upload()
 }
 int ErrorMgrTable::download()
 {
-//    ErrorMgrModel *pModel;
+    ErrorMgrModel *pModel;
 
-//    pModel = (ErrorMgrModel*)ui->tableView->model();
-//    if ( NULL==pModel )
-//    { return -1; }
+    pModel = (ErrorMgrModel*)ui->tableView->model();
+    if ( NULL==pModel )
+    { return -1; }
+
+    QFile file( qApp->applicationDirPath() + "/err.txt");
+    file.open( QIODevice::WriteOnly );
+    QTextStream stream( &file );
+    pModel->serialOut( stream );
+
+    file.close();
+    return 0;
 
 //    //! to local
 //    MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;

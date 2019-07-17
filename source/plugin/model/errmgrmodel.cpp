@@ -269,11 +269,11 @@ int ErrorMgrModel::load( QByteArray &ary )
     return ret;
 }
 
-#define output_item( item )    writer<<item##Key<<item<<endl;
+#define output_item( item )    writer<<item##Key<<":"<<item<<endl;
 #define output_items(  items  ) Q_ASSERT( items.size() == items##Key.size() );\
                                 for ( int i = 0; i < items.size(); i++ )\
                                 {  \
-                                    writer<<items##Key.at(i)<<items.at(i)<<endl;\
+                                    writer<<items##Key.at(i)<<":"<<items.at(i)<<endl;\
                                 }
 int ErrorMgrModel::serialOut( QTextStream & writer )
 {
@@ -281,13 +281,15 @@ int ErrorMgrModel::serialOut( QTextStream & writer )
     {
         writer<<"################"<<endl;
         output_item( pItem->mCode );
-        output_item( pItem->mType );
 
         output_items( pItem->mBrief );
         output_items( pItem->mReason );
-        output_items( pItem->mDetail );
-
         output_items( pItem->mAction );
+
+        output_items( pItem->mDetail1 );
+        output_items( pItem->mDetail2 );
+
+        output_item( pItem->mType );
         output_item( pItem->mOutput );
 
         output_item( pItem->mLed );
@@ -302,6 +304,11 @@ if ( kvlist.size() == 2 )\
 {\
     tItem##Key.append( kvlist.at(0) );\
     tItem.append( kvlist.at(1));\
+}\
+else if ( kvlist.size() == 1 )\
+{\
+    tItem##Key.append( kvlist.at(0) );\
+    tItem.append("");\
 }\
 else\
 {\
@@ -364,9 +371,13 @@ int ErrorMgrModel::serialIn( QTextStream & reader )
         {
             cat_items( pItem->mAction );
         }
-        else if ( lineStr.startsWith("[detail]") )
+        else if ( lineStr.startsWith("[detail1]") )
         {
-            cat_items( pItem->mDetail );
+            cat_items( pItem->mDetail1 );
+        }
+        else if ( lineStr.startsWith("[detail2]") )
+        {
+            cat_items( pItem->mDetail2 );
         }
         else if ( lineStr.startsWith("[level]") )
         {

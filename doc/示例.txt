@@ -1,32 +1,51 @@
-# ×¢ÊÍĞĞ
-##############################################################
-[code]: ÒÔ00¿ªÍ·µÄ±íÊ¾MRH-TµÄ´íÎó,ÒÔFF¿ªÍ·µÄ±íÊ¾MRQµÄ´íÎó
-[brief][CN]: ÖĞÎÄÕªÒª
-[brief][EN]: Ó¢ÎÄÕªÒª
-[reason][CN]: ÖĞÎÄÔ­Òò
-[reason][EN]: Ó¢ÎÄÔ­Òò
-[handle][CN]: ÖĞÎÄ´¦Àí·½Ê½
-[handle][EN]: Ó¢ÎÄ´¦Àí·½Ê½
-[detail][1]: ÏêÏ¸ĞÅÏ¢1, detail¿ÉÒÔÃ»ÓĞ,Ò²¿ÉÒÔÓĞ¶à¸ö
-[detail][2]: ÏêÏ¸ĞÅÏ¢2
-[detail][3]: ÏêÏ¸ĞÅÏ¢3
-[detail][...]:
-[level]: ERROR»òÕßWARNING,¶şÑ¡Ò», ²»¿ÉĞŞ¸Ä
-[response][xx]: 00±íÊ¾ÎŞÏìÓ¦»ò²»¿ÉÑ¡,10±íÊ¾²»¹Ø±ÕÊä³ö¼¶,11±íÊ¾¹Ø±ÕÊä³ö¼¶, µÚ¶ş¸ö·½À¨ºÅÖĞxxÌîÄ¬ÈÏÖµ
-[led][xx]: 00±íÊ¾²»¿ÉÑ¡, 10±íÊ¾²»ÉÁµÆ, 11±íÊ¾ÉÁµÆ, µÚ¶ş¸ö·½À¨ºÅxxÖĞÌîÄ¬ÈÏÖµ
+################
+[code]:0xFF21
+[brief][CN]:EEPROMå­˜å‚¨ç»“æ„ä½“è¯»å¤±è´¥
+[brief][EN]:EEPROM fails to read
+[reason][CN]:1.EEPROMæ—¶åºè¢«æ‰“ä¹± 2.EEPROMå—å¹²æ‰°æ•°æ®ä¸¢å¤±
+[reason][EN]:1. EEPROM broken 2. EEPROM lose data
+[handle][CN]:é‡æ–°ä¸‹è½½å‚æ•°ï¼Œæ— æ•ˆè”ç³»å®¢æœ
+[handle][EN]:Rewrite Call MEGAROBO
+
+[detail1][0]:module1
+[detail1][1]:module2
+[detail1][2]:module3
+[detail1][3]:module4
+[detail1][4]:module5
+[detail1][5]:module6
+[detail1][6]:module7
+[detail1][7]:module8
+[detail1][8]:module9
+[detail1][9]:module10
+[detail1][10]:module11
+[detail1][11]:module12
+[detail1][12]:module13
+
+[level]:Error
+[response][00]:00
+[led][11]:11
+
+################
+[code]:0xFF23
+[brief][CN]:æµ‹è·ä¼ æ„Ÿå™¨æ•°æ®å¼‚å¸¸
+[brief][EN]:Invalid distance sensor's data, sensor1, level1
+[reason][CN]:1.æµ‹è·ä¼ æ„Ÿå™¨å†…éƒ¨æŸå 2.æµ‹è·ä¼ æ„Ÿå™¨å—å¹²æ‰°é€šä¿¡å¼‚å¸¸
+[reason][EN]:1. Distance sensor broken 2. Distance sensor communication fail
+[handle][CN]:è”ç³»å®¢æœ
+[handle][EN]:Call MEGAROBO
+
+[detail1][0]:sensor1
+[detail1][1]:sensor2
+[detail1][2]:sensor3
+[detail1][3]:sensor4
+
+[detail2][0]:level1
+[detail2][1]:level2
+[detail2][2]:level3
+[detail2][3]:level4
+
+[level]:Error
+[response][00]:00
+[led][11]:11
 
 
-Ê¾Àı:
-[code]: 0x00000001
-[brief][CN]: Èí¼ş´íÎó,Éı¼¶Ê±¼ì²âµ½Ò»¸öÄÚ²¿¹Ì¼ş´íÎó
-[brief][EN]: software error
-[reason][CN]: ¹Ì¼ş±»Ëğ»µ,»òÕß¹Ì¼şÓëµ±Ç°Éè±¸Ó²¼ş²»Æ¥Åä
-[reason][EN]: xxxxxx
-[handle][CN]: ÖØĞÂ¸üĞÂ¹Ì¼ş
-[handle][EN]: yyyyyy
-[detail][1]: Greatshot error
-[detail][2]: backboard error
-[detail][3]: kernel error
-[level]: ERROR
-[response][00]: 00
-[led][11]: 11

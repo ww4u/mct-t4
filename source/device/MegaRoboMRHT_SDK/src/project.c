@@ -121,7 +121,7 @@ EXPORT_API int CALL mrgWriteDeviceSerial(ViSession  vi, int name, char * ps8Seri
     }
     return 0;
 }
-
+#if 0
 EXPORT_API int CALL mrgCanTestStart(ViSession  vi, int name)
 {
     char args[SEND_BUF_LEN];
@@ -167,4 +167,4 @@ EXPORT_API int CALL mrgGetCanTestResult(ViSession  vi, int name,unsigned int * p
 
     return 0;
 }
-
+#endif

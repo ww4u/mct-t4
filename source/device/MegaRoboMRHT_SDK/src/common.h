@@ -22,7 +22,7 @@ void print_buffer(char* msg, unsigned char* pBuff, unsigned long ulLen);
  * @param output 输出结果
  * @return 数量
  */
-int splitStringToIntArray(char *str, const char *split, int *output);
+int splitStringToIntArray(const char *str, const char *split, int *output);
 /**
  * @brief splitStringToFloatArray
  * 拆分字符串到数组
@@ -31,7 +31,7 @@ int splitStringToIntArray(char *str, const char *split, int *output);
  * @param output 输出结果
  * @return 数量
  */
-int splitStringToFloatArray(char *str, const char *split, float *output);
+int splitStringToFloatArray(const char *str, const char *split, float *output);
 /**
  * @brief splitString
  * 拆分字符串到数组
@@ -40,6 +40,6 @@ int splitStringToFloatArray(char *str, const char *split, float *output);
  * @param output 输出结果
  * @return 数量
  */
-int splitString(char *str, const char *split, char output[][64]);
+int splitString(const char *str, const char *split, char output[][64]);
 
 #endif // COMMON_H

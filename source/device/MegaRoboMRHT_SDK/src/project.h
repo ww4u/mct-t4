@@ -133,12 +133,6 @@ EXPORT_API int CALL mrgProjectGetSerialNum(ViSession vi, char * ps8Serial);
  */
 EXPORT_API int CALL mrgWriteDeviceSerial(ViSession  vi, int name, char * ps8Serial);
 
-
-EXPORT_API int CALL mrgCanTestStart(ViSession  vi, int name);
-EXPORT_API int CALL mrgCanTestStop(ViSession  vi, int name);
-EXPORT_API int CALL mrgGetCanTestResult(ViSession  vi, int name, size_t *pu32Send, size_t *pu32Rec, size_t *pu32Lost, size_t * pu32Time_ms);
-
-
 #if defined(__cplusplus) || defined(__cplusplus__)
 }
 #endif

@@ -18,7 +18,7 @@ static int g_bus_type = BUS_SOCKET;
 static char _g_gateway_ip[512] = "";
 static size_t _g_timeout = 500;
 
-#ifndef _WIN32
+#if (!defined(_WIN32)) && (!defined(VXI_NOT_SUPPORT))
 VXI11_CLINK *_g_clink = NULL;
 #else
 void *_g_clink = NULL;
@@ -352,13 +352,13 @@ ERR:
 
 static size_t busOpenDevice_vxi(const char *ip, size_t timeout)
 {
-    unsigned long fd;
+    unsigned long fd = 0;
 
     memset(_g_gateway_ip, '\0', sizeof(_g_gateway_ip));
     _g_clink = NULL;
     _g_timeout = timeout;
 
-#ifdef _WIN32
+#if defined(_WIN32)
     int status;
     static unsigned long defaultRM;
     char viSrc[64] = "";
@@ -383,8 +383,7 @@ static size_t busOpenDevice_vxi(const char *ip, size_t timeout)
     viSetAttribute(fd, VI_ATTR_TCPIP_KEEPALIVE, VI_TRUE);
     viSetAttribute(fd, VI_ATTR_TMO_VALUE, timeout);
 
-#else
-
+#elif (!defined(VXI_NOT_SUPPORT))
     VXI11_CLINK *clink;
     if(vxi11_open_device(&clink, ip, NULL))
     {
@@ -429,8 +428,11 @@ static int SocketRead(unsigned long fd, unsigned char *data, size_t dataLen)
 
 static int VxiWrite(unsigned long fd, unsigned char *data, size_t dataLen)
 {
-    time_t tm = time(NULL);
+    (void)fd;
+    (void)data;
+    (void)dataLen;
 #ifdef _WIN32
+    time_t tm = time(NULL);
     unsigned long retCount = -1;
     if (viWrite(fd, data, dataLen, &retCount) != 0)
     {
@@ -438,7 +440,9 @@ static int VxiWrite(unsigned long fd, unsigned char *data, size_t dataLen)
     }
     MRG_LOG("sendData[len:%d][time:%d]: %s\n", retCount, time(NULL) - tm, data);
     return (int)retCount;
-#else
+
+#elif (!defined(VXI_NOT_SUPPORT))
+    time_t tm = time(NULL);
     (void)fd;
     int ret = -1;
     if(_g_clink == NULL)
@@ -447,7 +451,7 @@ static int VxiWrite(unsigned long fd, unsigned char *data, size_t dataLen)
     ret = vxi11_send(_g_clink, (char *)data, dataLen);
     if(ret > 0)
     {
-        LOG("sendData[len:%d][time:%d]: %s\n", ret, time(NULL) - tm, data);
+        MRG_LOG("sendData[len:%d][time:%d]: %s\n", ret, time(NULL) - tm, data);
         return ret;
     }
     if(ret < 0)
@@ -455,21 +459,26 @@ static int VxiWrite(unsigned long fd, unsigned char *data, size_t dataLen)
         perror("SyncSend error!");
     }
     return -1;
+#else
+    return -1;
 #endif
 }
 
 static int VxiRead(unsigned long fd, unsigned char *data, size_t dataLen)
 {
-    time_t tm = time(NULL);
+    (void)fd;
+    (void)data;
+    (void)dataLen;
     memset(data, 0, dataLen);
-
 #ifdef _WIN32
+    time_t tm = time(NULL);
     unsigned long retCount = -1;
     viRead(fd, (unsigned char *)data, dataLen, &retCount);
     MRG_LOG("recvData[len:%d][time:%ds]: %s\n", retCount, time(NULL) - tm, data);
     return (int)retCount;
-#else
+#elif (!defined(VXI_NOT_SUPPORT))
     (void)fd;
+    time_t tm = time(NULL);
     int ret = -1;
     if(_g_clink == NULL || data == NULL)
         return -1;
@@ -478,13 +487,15 @@ static int VxiRead(unsigned long fd, unsigned char *data, size_t dataLen)
     ret = vxi11_receive_timeout(_g_clink, (char *)data, dataLen, _g_timeout);
     if(ret > 0)
     {
-        LOG("recvData[len:%d][time:%ds]: %s\n", ret, time(NULL) - tm, data);
+        MRG_LOG("recvData[len:%d][time:%ds]: %s\n", ret, time(NULL) - tm, data);
         return ret;
     }
     if(ret < 0 && ret != -VXI11_ERROR_IO_TIMEOUT)
     {
         perror("SyncRead error!");
     }
+    return -1;
+#else
     return -1;
 #endif
 
@@ -505,12 +516,13 @@ static int SocketClose(unsigned long fd)
 
 static int VxiClose(unsigned long fd)
 {
+    (void)fd;
 #ifdef _WIN32
     if(fd > 0)
     {
         viClose(fd);
     }
-#else
+#elif !defined(VXI_NOT_SUPPORT)
     (void)fd;
     if( (_g_clink != NULL) && (0!=strcmp(_g_gateway_ip,"")) )
     {
@@ -528,7 +540,7 @@ int busFindDevice(int mode, char *output, size_t len)
 {
     //! 通过网络广播查找MRH-T
     char ip_list[256][100];
-    int r = 0;
+    int r = 0, i = 0;
     int count = 0;
 
     if (mode == BUS_USB)
@@ -542,7 +554,7 @@ int busFindDevice(int mode, char *output, size_t len)
         count = socketFindResources(ip_list, _g_timeout);
         if(count > 0)
         {
-            for (int i = 0; i < count; i++)
+            for (i = 0; i < count; i++)
             {
                 snprintf(&output[r], len - r, "TCPIP0::%s::inst0::INSTR,", ip_list[i]);
                 r = strlen(output);

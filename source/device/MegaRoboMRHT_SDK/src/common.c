@@ -70,15 +70,19 @@ void print_buffer(char* msg, unsigned char* pBuff, unsigned long ulLen)
 }
 #endif
 
-int splitStringToIntArray(char *str, const char *split, int *output)
+int splitStringToIntArray(const char *str, const char *split, int *output)
 {
     char *p = NULL;
     char *pNext = NULL;
     int count = 0;
     long val = 0;
     char *endptr = NULL;
+    char strBuff[4096] = "";
+    if(strlen(str) > sizeof(strBuff))
+        return -1;
 
-    p = STRTOK_S(str, split, &pNext);
+    strcpy(strBuff, str);
+    p = STRTOK_S(strBuff, split, &pNext);
     while (p)
     {
         errno = 0;
@@ -99,15 +103,19 @@ int splitStringToIntArray(char *str, const char *split, int *output)
     return count;
 }
 
-int splitStringToFloatArray(char *str, const char *split, float *output)
+int splitStringToFloatArray(const char *str, const char *split, float *output)
 {
     char *p = NULL;
     char *pNext = NULL;
     int count = 0;
     float val = 0;
     char *endptr = NULL;
+    char strBuff[4096] = "";
+    if(strlen(str) > sizeof(strBuff))
+        return -1;
 
-    p = STRTOK_S(str, split, &pNext);
+    strcpy(strBuff, str);
+    p = STRTOK_S(strBuff, split, &pNext);
     while (p)
     {
         errno = 0;
@@ -128,13 +136,16 @@ int splitStringToFloatArray(char *str, const char *split, float *output)
     return count;
 }
 
-int splitString(char *str, const char *split, char output[][64])
+int splitString(const char *str, const char *split, char output[][64])
 {
     char *p = NULL;
     char *pNext = NULL;
     int count = 0;
-
-    p = STRTOK_S(str, split, &pNext);
+    char strBuff[4096] = "";
+    if(strlen(str) > sizeof(strBuff))
+        return -1;
+    strcpy(strBuff, str);
+    p = STRTOK_S(strBuff, split, &pNext);
     while (p)
     {
         strcpy( output[count++], p);

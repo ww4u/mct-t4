@@ -22,6 +22,11 @@ public:
 //    static int calcResponse(int reaction, int outputAble);
 //    static int parseResponse(int response,int *reaction, int *outputAble);
 
+    enum eActionEvent
+    {
+        e_event_post_load = Qt::UserRole + 1
+    };
+
 public:
     explicit ErrorMgrTable(QWidget *parent = 0);
     ~ErrorMgrTable();

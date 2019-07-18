@@ -163,120 +163,73 @@ void ErrorMgrTable::rst()
 //QT_TRANSLATE_NOOP("HEADER", "Output stage on"),
 //QT_TRANSLATE_NOOP("HEADER", "Save diagnosis"),
 int ErrorMgrTable::upload()
-{
-//    ErrorMgrModel *pModel;
+{    
+    MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
+    Q_ASSERT( NULL != pRobo );
 
-//    pModel = (ErrorMgrModel*)ui->tableView->model();
-//    if ( NULL==pModel )
-//    { return -1; }
-
-//    //! to local
-//    MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
-//    Q_ASSERT( NULL != pRobo );
-
-//    int ret, code;
-//    int type, diagnosis, response, enable;
-//    int reaction, output;
-
-////    ui->tableview
-//    QModelIndex index;
-//    for ( int i = 0; i < pModel->rowCount(QModelIndex()); i++ )
-//    {
-//        index = pModel->index( i,0 );
-//        code = pModel->data( index, Qt::EditRole ).toInt( );
-
-//        ret = mrgErrorCodeConfigUpload( pRobo->deviceVi(),
-//                                        code,
-//                                        &type,
-//                                        &response,
-//                                        &diagnosis,
-//                                        &enable );
-//        if ( ret != 0 )
-//        { return ret; }
-//        else
-//        {
-//            //! deparse
-//            parseResponse( response, &reaction, &output );
-
-//            QStringList strReactionList;
-//            strReactionList << "Free-wheeling" << "QS deceleration" << "Record deceleration" << "Finish Record";
-
-//            logDbg()<<code<<type<<diagnosis<<response<<enable;
-
-//            do
-//            {
-//                //! type
-//                if ( type == ErrorMgrItem::e_error )
-//                { pModel->setData( pModel->index( i, 2 ), true, Qt::EditRole ); }
-//                else if ( type == ErrorMgrItem::e_warning )
-//                { pModel->setData( pModel->index( i, 3 ), true, Qt::EditRole ); }
-//                else if ( type == ErrorMgrItem::e_info )
-//                { pModel->setData( pModel->index( i, 4 ), true, Qt::EditRole ); }
-//                else
-//                { break; }
-
-//                //! action
-//                pModel->setData( pModel->index( i, 5 ), strReactionList.at(reaction - 1), Qt::EditRole );
-
-//                //! output
-//                pModel->setData( pModel->index( i, 6 ), output > 0, Qt::EditRole );
-
-//                //! save
-//                pModel->setData( pModel->index( i, 7 ), diagnosis > 0, Qt::EditRole );
-//             }while( 0 );
-
-//        }
-//    }
-
-    return 0;
-}
-int ErrorMgrTable::download()
-{
     ErrorMgrModel *pModel;
+    int ret = 0;
 
     pModel = (ErrorMgrModel*)ui->tableView->model();
     if ( NULL==pModel )
     { return -1; }
 
-    QFile file( qApp->applicationDirPath() + "/err.txt");
-    file.open( QIODevice::WriteOnly );
-    QTextStream stream( &file );
+    do{
+        ret = mrgStorageGetFileSize(pRobo->deviceVi(),
+                              0,
+                              "/home/megarobo/MRH-T/diagnose/",
+                              "errtable.txt");
+        if( ret <= 0 ){
+            break;
+        }
+
+        QByteArray ba;
+        ba.resize( ret );
+
+        ret = mrgStorageReadFile(pRobo->deviceVi(),
+                           0,
+                           "/home/megarobo/MRH-T/diagnose/",
+                           "errtable.txt",
+                           (unsigned char *)(ba.data())
+                           );
+        if( ret == 0 ){
+            ret = -1;
+            break;
+        }
+
+        ret = pModel->load(ba);
+        if( ret == -1 ){
+            break;
+        }
+
+    }while(0);
+
+    return ret;
+}
+int ErrorMgrTable::download()
+{
+    MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
+    Q_ASSERT( NULL != pRobo );
+
+    ErrorMgrModel *pModel;
+    pModel = (ErrorMgrModel*)ui->tableView->model();
+    if ( NULL==pModel )
+    { return -1; }
+
+    QByteArray ba;
+    QTextStream stream(&ba);
     pModel->serialOut( stream );
+    stream.flush();
 
-    file.close();
-    return 0;
+    int ret = mrgStorageWriteFile(pRobo->deviceVi(),
+                                  0,
+                                  "/home/megarobo/MRH-T/diagnose/",
+                                  "errtable.txt",
+                                  (quint8 *)( ba.data() ),
+                                  ba.size()
+                                  );
 
-//    //! to local
-//    MRX_T4 *pRobo = (MRX_T4*)m_pPlugin;
-//    Q_ASSERT( NULL != pRobo );
-
-//    int ret, code;
-//    int type, response, output, save;
-//    int reaction;
-//    QList< ErrorMgrItem *> *pItems = pModel->items();
-//    for ( int i = 0; i < pItems->size(); i++ )
-//    {
-//        //! snap
-//        pItems->at( i )->snap( code, type, reaction, output, save );
-
-//        response = calcResponse( reaction, output );
-
-//        //! config
-//        ret = mrgErrorCodeConfigDownload( pRobo->deviceVi(),
-//                                        code,
-//                                        type,
-//                                        response,
-//                                        save,
-//                                        1 );
-//        logDbg()<<code<<type<<response<<output<<save<<ret;
-//        if ( ret != 0 )
-//        { return ret; }
-//        else
-//        {
-//        }
-//    }
-
-    return 0;
+    return ret;
 }
 int ErrorMgrTable::diff()
 {

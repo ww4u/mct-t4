@@ -478,8 +478,8 @@ int MRX_T4::_uploadProc()
                 logDbg()<<pPage->objectName()<<ret;
                 sysError( tr("Upload fail") );
                 //! \todo
-//                return ret;
-                return 0;
+                return ret;
+//                return 0;
             }
 
             //! update data

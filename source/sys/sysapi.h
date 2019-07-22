@@ -53,6 +53,9 @@ void sysError( const QString &info , const int &val, eOutHandle oHandle = e_out_
 
 void sysProgress( const QString &info, bool b, int now = 0, int mi=0, int ma=100 );
 
+//! 0 -- info
+//! 1 -- warn
+//! 2 -- error
 void sysPrompt( const QString &info, int lev=2 );
 
 void sysShowStatus(const QString &statusInfo);

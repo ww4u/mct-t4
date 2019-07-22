@@ -182,6 +182,7 @@ protected:
     virtual void onDeviceException( QVariant &var );
 
 protected:
+    void updateUis();
     void xevent_updateui( XEvent *pEvent );
 
 protected:

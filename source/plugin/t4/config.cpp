@@ -191,7 +191,7 @@ int Config::upload()
 
         //! convert the value
         lmtL = ABS_ANGLE_TO_DEG( val );
-        logDbg() << i << val;
+        logDbg() << i << val<<lmtL;
         //! up
         ret = mrgMRQAbsEncoderAlarmUpLimit_Query( device_var(),
                                         i,
@@ -201,7 +201,7 @@ int Config::upload()
 
         //! convert the value
         lmtH = ABS_ANGLE_TO_DEG( val );
-        logDbg() << i << val;
+        logDbg() << i << val<<lmtH;
 //        ui->lmtSoftLimit->setRange( i, lmtL, lmtH );
 
         if ( _axis_enc_dirs[i] < 0 )

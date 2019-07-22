@@ -439,6 +439,7 @@ void T4OpPanel::updateRefreshPara( QEvent *e )
                               ui->radENBLE, ui->radReset,
                               ui->radENABLED,ui->radFAULT,
                               ui->radACK,   ui->radMC};
+
         for(int i =0; i < sizeof(radio)/sizeof(*radio);i++){
             radio[i]->setChecked( mRefreshPara.ListDb15.at( i ) );
         }
@@ -593,6 +594,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
 
         QString sState = QString(cState);
         mRefreshPara.ListDb15.clear();
+
         for(int i =0; i < sState.length(); i++){
             QChar t = sState.at(i);
             mRefreshPara.ListDb15.append( t==QChar('1') );

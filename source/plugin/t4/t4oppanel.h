@@ -236,7 +236,7 @@ public:
     bool bMC;
     bool bError;
     bool bWarning;
-    QList<bool> ListDb15;
+    QList<bool> IO_MRHT29;
 };
 
 class T4OpPanel : public XPage

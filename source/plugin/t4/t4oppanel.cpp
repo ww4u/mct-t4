@@ -430,8 +430,8 @@ void T4OpPanel::updateRefreshPara( QEvent *e )
     ui->controllerStatus->setRecordName( mRefreshPara.mRecordName );
     ui->controllerStatus->setWorkingStatus( mRefreshPara.mRoboState );
 
-    //! db15
-    if( mRefreshPara.ListDb15.size() == 15 ){
+    //! IO_MRH-29
+    if( mRefreshPara.IO_MRHT29.size() == 15 ){
         IoIndicator *radio[]={ui->radRDYEN, ui->radDI1,
                               ui->radDI2,   ui->radDI3,
                               ui->radDI4,   ui->radDI5,
@@ -441,7 +441,7 @@ void T4OpPanel::updateRefreshPara( QEvent *e )
                               ui->radACK,   ui->radMC};
 
         for(int i =0; i < sizeof(radio)/sizeof(*radio);i++){
-            radio[i]->setChecked( mRefreshPara.ListDb15.at( i ) );
+            radio[i]->setChecked( mRefreshPara.IO_MRHT29.at( i ) );
         }
     }
 }
@@ -579,25 +579,27 @@ int T4OpPanel::posRefreshProc( void *pContext )
 
         //! \todo
         ret = mrgSetProjectMode(device_var_vi(), 1);
-        if(ret ==0){
+        if(ret == 0){
 
         }else{ sysError( tr("Set project mode fail"), e_out_log );break; }
 
-        char cState[4096]={0};
-        ret = mrgProjectIOGet( device_var_vi(), IOGET_DB15, cState );
+        int state;
+        ret = mrgProjectIOGetAll( device_var_vi(), &state );
+        if( ret == 0 ){
+
+        }else {
+            sysError( tr("Get IO fail"),  e_out_log);
+            break;
+        }
+
+        //! \todo ioget mrgProjectIOGetAll
 
         mrgSetProjectMode(device_var_vi(), 0);
-        if( ret !=0 ){}
 
-        if ( ret != 0 )
-        { sysError( tr("Get IO fail"), e_out_log );break; }
+        mRefreshPara.IO_MRHT29.clear();
 
-        QString sState = QString(cState);
-        mRefreshPara.ListDb15.clear();
-
-        for(int i =0; i < sState.length(); i++){
-            QChar t = sState.at(i);
-            mRefreshPara.ListDb15.append( t==QChar('1') );
+        for(int i =0; i < 15; i++){
+            mRefreshPara.IO_MRHT29.append( ( state & (1 << i)) != 0 );
         }
 
         //! post refresh

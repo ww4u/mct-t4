@@ -179,7 +179,7 @@ public:
 
 protected:
     virtual int onXEvent( XEvent *pEvent );
-    virtual void onDeviceException( int var );
+    virtual void onDeviceException( QVariant &var );
 
 protected:
     void xevent_updateui( XEvent *pEvent );

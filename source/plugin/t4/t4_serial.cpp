@@ -79,6 +79,7 @@ void MRX_T4::slot_exception_arrived()
         QByteArray theData;
         if ( m_pExceptionSocket->canReadLine() )
         {
+            //"0xFF31,WARNING,2019/07/22_11:16:50,MRQ,1,ENCODER3
             theData = m_pExceptionSocket->readAll();
             logDbg()<<theData;
         }
@@ -89,14 +90,14 @@ void MRX_T4::slot_exception_arrived()
     QStringList exceptionList = QString( theData).split( '\n' );
     QString item;
     bool bOk;
-    int exceptId;
+
     for ( int i = 0; i < exceptionList.size(); i++ )
     {
         item = exceptionList.at(i);
-        exceptId = item.toInt( &bOk );
+
         if ( bOk )
         {
-            XEvent *pEvent = new XEvent( XEvent::e_xevent_device_exception, exceptId );
+            XEvent *pEvent = new XEvent( XEvent::e_xevent_device_exception, item );
             if ( NULL != pEvent )
             {
                 qApp->postEvent( this, pEvent );
@@ -109,7 +110,7 @@ void MRX_T4::slot_exception_arrived()
         }
         else
         {
-            sysError( tr("Invaid exception id") );
+            sysError( tr("Invalid exception id") );
         }
     }
 

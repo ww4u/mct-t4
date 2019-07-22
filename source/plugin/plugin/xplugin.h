@@ -273,7 +273,7 @@ protected:
     virtual bool event(QEvent *event);
     virtual int onXEvent( XEvent *pEvent );
 
-     virtual void onDeviceException( int var );
+     virtual void onDeviceException( QVariant &var );
 protected:
     QTreeWidgetItem *m_pRootWidgetItem;
     QWidget *m_pPanelWidget;

@@ -191,7 +191,7 @@ int Config::upload()
 
         //! convert the value
         lmtL = ABS_ANGLE_TO_DEG( val );
-
+        logDbg() << i << val;
         //! up
         ret = mrgMRQAbsEncoderAlarmUpLimit_Query( device_var(),
                                         i,
@@ -201,7 +201,7 @@ int Config::upload()
 
         //! convert the value
         lmtH = ABS_ANGLE_TO_DEG( val );
-
+        logDbg() << i << val;
 //        ui->lmtSoftLimit->setRange( i, lmtL, lmtH );
 
         if ( _axis_enc_dirs[i] < 0 )
@@ -218,7 +218,7 @@ int Config::upload()
         ret = mrgMRQAbsEncoderAlarmState_Query( device_var(), i, &lmtOnOff );
         if ( ret != 0 )
         { return ret; }
-
+        logDbg() << lmtsOnOff;
         lmtsOnOff = lmtsOnOff && (lmtOnOff > 0 );
     }
     selfPara->mbAxisSoftEnable = lmtsOnOff;

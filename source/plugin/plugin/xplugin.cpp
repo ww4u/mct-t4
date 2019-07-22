@@ -680,14 +680,14 @@ int XPlugin::onXEvent( XEvent *pEvent )
     else if ( pEvent->type() == XEvent::e_xevent_startup )
     { startup(); }
     else if ( pEvent->type() == XEvent::e_xevent_device_exception )
-    { onDeviceException( pEvent->mVar1.toInt() );}
+    { onDeviceException( pEvent->mVar1 );}
     else
     {}
 
     return 0;
 }
 
-void XPlugin::onDeviceException( int var )
+void XPlugin::onDeviceException( QVariant &var )
 {
 
 }

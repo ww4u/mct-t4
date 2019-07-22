@@ -422,24 +422,16 @@ int MRX_T4::onXEvent( XEvent *pEvent )
     return XPlugin::onXEvent( pEvent );
 }
 
-void MRX_T4::onDeviceException( int var )
+void MRX_T4::onDeviceException( QVariant &var )
 {
     //! prompt
-    QString prompt;
+    if ( var.isValid() )
+    {
+        sysPrompt( var.toString(), 2 );
+    }
 
-    //! the lang index in error
-    int langIndex = m_pPref->mLangIndex == e_lang_cn ? 0 : 1;
-
-    QVariant briefVar = mErrorConfigTable.errorBrief( var, langIndex );
-    if ( briefVar.isValid() )
-    { prompt = briefVar.toString(); }
-    else
-    { }
-
-    sysPrompt( QString::number( var ) + " " + prompt, 2 );
-
-    //! post load the diagnosis
     m_pOpPanel->postRefreshDiagnosisInfo();
+
 }
 
 void MRX_T4::xevent_updateui( XEvent *pEvent )
@@ -478,8 +470,8 @@ int MRX_T4::_uploadProc()
                 logDbg()<<pPage->objectName()<<ret;
                 sysError( tr("Upload fail") );
                 //! \todo
-                return ret;
-//                return 0;
+//                return ret;
+                return 0;
             }
 
             //! update data

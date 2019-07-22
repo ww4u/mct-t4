@@ -182,11 +182,10 @@ void RoboConfig::slotUpload()
             sysPrompt( mPluginList.at(i)->SN() + " " + tr("upload fail") );
             failCnt++;
         }
-
     }
 
-    if ( failCnt == 0 )
-    { sysPrompt( tr("Upload success"), 0 ); }
+    if ( failCnt != 0 )
+    { sysPrompt( tr("Upload fail"), 0 ); }
 }
 
 void RoboConfig::slotStore()

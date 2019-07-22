@@ -515,6 +515,13 @@ int MRX_T4::uploadProc()
         {
             qApp->postEvent( this, pEvent );
         }
+
+        sysPrompt( tr("Upload success"), 0 );
+    }
+    //! upload fail
+    else
+    {
+        sysPrompt( tr("Upload fail") );
     }
 
     sysProgress( "Uploading...", false );
@@ -555,6 +562,11 @@ int MRX_T4::downloadProc()
     ret = _downloadProc();
 
     sysProgress( "Downloading...", false );
+
+    if ( ret != 0 )
+    {
+        sysPrompt( tr("Download fail") );
+    }
 
     return 0;
 }

@@ -156,8 +156,6 @@ void RoboConfig::slotDownload()
             failCnt++;
         }
     }
-    if ( failCnt == 0 )
-    { sysPrompt( tr("Download success"), 0 ); }
 }
 
 void RoboConfig::slotUpload()
@@ -183,9 +181,6 @@ void RoboConfig::slotUpload()
             failCnt++;
         }
     }
-
-    if ( failCnt != 0 )
-    { sysPrompt( tr("Upload fail"), 0 ); }
 }
 
 void RoboConfig::slotStore()
@@ -547,9 +542,6 @@ logDbg();
     on_treeWidget_currentItemChanged( ui->treeWidget->currentItem(),
                                       NULL );
 
-    //! hide the reset and download
-//    ui->buttonBox->button( QDialogButtonBox::Reset )->setVisible( false );
-
 }
 
 void RoboConfig::cancelBgWorking()
@@ -757,8 +749,7 @@ logDbg();
     //! open
     if ( plugin->open() == 0 )
     {
-        //! try load the setup device
-        plugin->emit_load();
+
     }
     else
     {
@@ -767,7 +758,6 @@ logDbg();
 
     //! adapt the role
     plugin->setUserRole( (XPluginIntf::eUserRole)userRole );
-//    plugin->emit_setting_changed( XPage::e_setting_user_role, QVariant() );
 
     //! synclize the setup from the device
     //! \todo

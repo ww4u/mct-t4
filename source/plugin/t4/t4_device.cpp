@@ -80,9 +80,13 @@ int MRX_T4::open()
             }
         }
 
-        //! \note upload the data from device
-        upload();
+        emit_load();
 
+        //! update ui
+        updateUis();
+
+        //! startup
+        _startupProc();
     }
     else
     {
@@ -434,6 +438,28 @@ void MRX_T4::onDeviceException( QVariant &var )
 
 }
 
+void MRX_T4::updateUis()
+{
+    XPage* pPage;
+    foreach( QWidget *pWig, mPluginWidgets )
+    {
+        Q_ASSERT( NULL != pWig );
+        pPage = dynamic_cast<XPage*>( pWig );
+        if ( NULL != pPage )
+        {
+            do
+            {
+                XEvent *pEvent = new XEvent( MRX_T4::e_x_update_ui, QVariant::fromValue( (QObject*)pWig) );
+                if ( NULL == pEvent )
+                { logDbg(); break; }
+
+                qApp->postEvent( this, pEvent );
+
+            }while( 0 );
+        }
+    }
+}
+
 void MRX_T4::xevent_updateui( XEvent *pEvent )
 {logDbg();
     //! cast to page
@@ -469,8 +495,6 @@ int MRX_T4::_uploadProc()
             {
                 logDbg()<<pPage->objectName()<<ret;
                 sysError( tr("Upload fail") );
-                //! \todo
-//                return ret;
                 return 0;
             }
 
@@ -486,7 +510,6 @@ int MRX_T4::_uploadProc()
                     qApp->postEvent( this, pEvent );
 
                 }while( 0 );
-
             }
         }
     }

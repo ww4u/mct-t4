@@ -43,7 +43,7 @@
      <widget class="QWidget" name="scrollAreaWidgetContents_2">
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>-146</x>
         <y>0</y>
         <width>1063</width>
         <height>323</height>
@@ -83,7 +83,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>1</number>
          </property>
          <property name="elideMode">
           <enum>Qt::ElideNone</enum>
@@ -739,34 +739,34 @@
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_4">
               <item>
-               <widget class="IoIndicator" name="radDI1" native="true"/>
+               <widget class="IoIndicator" name="radXI1" native="true"/>
               </item>
               <item>
-               <widget class="IoIndicator" name="radDI2" native="true"/>
+               <widget class="IoIndicator" name="radXI2" native="true"/>
               </item>
               <item>
-               <widget class="IoIndicator" name="radDI3" native="true"/>
+               <widget class="IoIndicator" name="radXI3" native="true"/>
               </item>
               <item>
-               <widget class="IoIndicator" name="radDI4" native="true"/>
+               <widget class="IoIndicator" name="radXI4" native="true"/>
               </item>
               <item>
-               <widget class="IoIndicator" name="radDI5" native="true"/>
+               <widget class="IoIndicator" name="radXI5" native="true"/>
               </item>
               <item>
-               <widget class="IoIndicator" name="radDI6" native="true"/>
+               <widget class="IoIndicator" name="radXI6" native="true"/>
               </item>
               <item>
-               <widget class="IoIndicator" name="radStart" native="true"/>
+               <widget class="IoIndicator" name="radXI7" native="true"/>
               </item>
               <item>
-               <widget class="IoIndicator" name="radReset" native="true"/>
+               <widget class="IoIndicator" name="radXI8" native="true"/>
               </item>
               <item>
-               <widget class="IoIndicator" name="radRDYEN" native="true"/>
+               <widget class="IoIndicator" name="radXI9" native="true"/>
               </item>
               <item>
-               <widget class="IoIndicator" name="radENBLE" native="true"/>
+               <widget class="IoIndicator" name="radXI10" native="true"/>
               </item>
               <item>
                <spacer name="verticalSpacer_3">
@@ -804,16 +804,16 @@
                </spacer>
               </item>
               <item row="8" column="0">
-               <widget class="IoIndicator" name="radMC" native="true"/>
+               <widget class="IoIndicator" name="radY4" native="true"/>
               </item>
               <item row="7" column="0">
-               <widget class="IoIndicator" name="radACK" native="true"/>
+               <widget class="IoIndicator" name="radY3" native="true"/>
               </item>
               <item row="6" column="0">
-               <widget class="IoIndicator" name="radFAULT" native="true"/>
+               <widget class="IoIndicator" name="radY2" native="true"/>
               </item>
               <item row="5" column="0">
-               <widget class="IoIndicator" name="radENABLED" native="true"/>
+               <widget class="IoIndicator" name="radY1" native="true"/>
               </item>
               <item row="9" column="1">
                <spacer name="horizontalSpacer">

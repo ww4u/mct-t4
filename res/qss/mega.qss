@@ -649,36 +649,12 @@ QRadioButton#radHome::indicator:checked,QRadioButton#radioButton_homing_valid::i
 	image: url(:/res/image/widget/radiobutton_checked_yellow.png);
 }
 
-IoIndicator#radEn > QRadioButton::indicator:checked, IoIndicator#radTo > QRadioButton::indicator:checked, IoIndicator#radReady > QRadioButton::indicator:checked, IoIndicator#radMc > QRadioButton::indicator:checked {
+IoIndicator > QRadioButton::indicator:checked {
 	/*background-color:red;*/
 	image: url(:/res/image/widget/radiobutton_checked_green.png);
 }
 
-IoIndicator#radError > QRadioButton::indicator:checked {
+IoIndicator#radFault > QRadioButton::indicator:checked {
 	/*background-color:red;*/
 	image: url(:/res/image/widget/radiobutton_checked_red.png);
 }
-IoIndicator#radWarning > QRadioButton::indicator:checked {
-	image: url(:/res/image/widget/radiobutton_checked_yellow.png);
-}
-
-IoIndicator#radEn > QRadioButton::indicator:!checked, IoIndicator#radTo > QRadioButton::indicator:!checked, IoIndicator#radReady > QRadioButton::indicator:!checked, IoIndicator#radMc > QRadioButton::indicator:!checked {
-	/*background-color:red;*/
-	image: url(:/res/image/widget/radiobutton_checked_red.png);
-}
-IoIndicator#radError > QRadioButton::indicator:!checked, IoIndicator#radWarning > QRadioButton::indicator:!checked {
-	image: url(:/res/image/widget/radiobutton_checked_green.png);
-}
-IoIndicator#radDI1 > QRadioButton::indicator:checked, IoIndicator#radDI2 > QRadioButton::indicator:checked, IoIndicator#radDI3 > QRadioButton::indicator:checked, IoIndicator#radDI4 > QRadioButton::indicator:checked, IoIndicator#radDI5 > QRadioButton::indicator:checked, IoIndicator#radDI6 > QRadioButton::indicator:checked {
-	image: url(:/res/image/widget/radiobutton_checked_green.png);
-} 
-IoIndicator#radDI1 > QRadioButton::indicator:!checked, IoIndicator#radDI2 > QRadioButton::indicator:!checked, IoIndicator#radDI3 > QRadioButton::indicator:!checked, IoIndicator#radDI4 > QRadioButton::indicator:!checked, IoIndicator#radDI5 > QRadioButton::indicator:!checked, IoIndicator#radDI6 > QRadioButton::indicator:!checked {
-	image: url(:/res/image/widget/radiobutton_checked_red.png);
-} 
-
-IoIndicator#radStart > QRadioButton::indicator:checked, IoIndicator#radReset > QRadioButton::indicator:checked, IoIndicator#radENBLE > QRadioButton::indicator:checked, IoIndicator#radRDYEN > QRadioButton::indicator:checked, IoIndicator#radMC > QRadioButton::indicator:checked, IoIndicator#radFAULT > QRadioButton::indicator:checked, IoIndicator#radENABLED > QRadioButton::indicator:checked, IoIndicator#radACK > QRadioButton::indicator:checked {
-	image: url(:/res/image/widget/radiobutton_checked_green.png);
-} 
-IoIndicator#radStart > QRadioButton::indicator:!checked, IoIndicator#radReset > QRadioButton::indicator:!checked, IoIndicator#radENBLE > QRadioButton::indicator:!checked, IoIndicator#radRDYEN > QRadioButton::indicator:!checked, IoIndicator#radMC > QRadioButton::indicator:!checked, IoIndicator#radFAULT > QRadioButton::indicator:!checked, IoIndicator#radENABLED > QRadioButton::indicator:!checked, IoIndicator#radACK > QRadioButton::indicator:!checked {
-	image: url(:/res/image/widget/radiobutton_checked_red.png);
-} 

@@ -8,12 +8,22 @@ IoIndicator::IoIndicator(QWidget *parent) :
     ui->setupUi(this);
 
     mIOIndiction<<"L"<<"H";
+
+    connect( ui->radioButton, SIGNAL(clicked(bool)),
+             this, SIGNAL(signal_clicked()));
+    connect( ui->radioButton, SIGNAL(clicked(bool)),
+             this, SLOT(slot_rad_clicked()) );
 }
 
 IoIndicator::~IoIndicator()
 {
     delete ui;
 }
+
+void IoIndicator::setClickAble( bool b )
+{ ui->radioButton->setEnabled( b );}
+bool IoIndicator::isClickAble()
+{ return ui->radioButton->isEnabled(); }
 
 void IoIndicator::setIndication( const QStringList &indi )
 {
@@ -33,3 +43,8 @@ void IoIndicator::setText( const QString &text )
 { ui->label->setText( text ); }
 QString IoIndicator::text()
 { return ui->label->text(); }
+#include <QDebug>
+void IoIndicator::slot_rad_clicked()
+{
+    qDebug()<<__FUNCTION__<<__LINE__;
+}

@@ -97,9 +97,10 @@ void T4Para::rst()
     //! digital inputs name
     if( listIoName.size() !=0 )
         listIoName.clear();
-    listIoName << QString("DI1") << QString("DI2") << QString("DI3") << QString("DI4")
-               << QString("DI5") << QString("DI6") << QString("START") << QString("RESET") << QString("RDYEN") << QString("ENBLE")
-               << QString("ACK") << QString("ENABLED") << QString("FAULT") << QString("MC");
+    listIoName << QString("XIN1") << QString("XIN2") << QString("XIN3") << QString("XIN4")
+               << QString("XIN5") << QString("XIN6") << QString("XIN7") << QString("XIN8")
+               << QString("XIN9") << QString("XIN10")
+               << QString("Y1") << QString("Y2") << QString("Y3") << QString("Y4");
 }
 
 double T4Para::velocity()

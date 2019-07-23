@@ -236,7 +236,8 @@ public:
     bool bMC;
     bool bError;
     bool bWarning;
-    QList<bool> IO_MRHT29;
+
+    qint32 mIOVal;
 };
 
 class T4OpPanel : public XPage
@@ -356,6 +357,7 @@ protected:
 
     void on_demo_start( );
 
+    void setYOut( int id, bool b );
 private:
     Ui::T4OpPanel *ui;
 
@@ -391,6 +393,8 @@ protected:
     QAction *m_pActionRename;
     IoIndicator *currentRenameObj;
 
+    QList< IoIndicator * > mIoList;
+
 Q_SIGNALS:
 
 protected Q_SLOTS:
@@ -419,6 +423,11 @@ protected Q_SLOTS:
 
     //! slot speed verify
     void slot_speed_verify();
+
+    void slot_yout1_clicked();
+    void slot_yout2_clicked();
+    void slot_yout3_clicked();
+    void slot_yout4_clicked();
 
 private slots:
     void on_toolSingleAdd_clicked();
@@ -450,6 +459,7 @@ private slots:
 
     void on_radCoordXyz_clicked();
     void on_radCoordJoint_clicked();
+
 
 };
 

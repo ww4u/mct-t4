@@ -15,6 +15,9 @@ public:
     explicit IoIndicator(QWidget *parent = 0);
     ~IoIndicator();
 
+    void setClickAble( bool b );
+    bool isClickAble();
+
     void setIndication( const QStringList &indi );
 
     void setChecked( bool b );
@@ -22,6 +25,12 @@ public:
 
     void setText( const QString &text );
     QString text();
+
+Q_SIGNALS:
+    void signal_clicked();
+
+protected Q_SLOTS:
+    void slot_rad_clicked();
 
 private:
     Ui::IoIndicator *ui;

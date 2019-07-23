@@ -274,35 +274,39 @@ void MRX_T4::startup()
 
 int MRX_T4::stop()
 {
+    if ( isOpened() )
+    {}
+    else
+    { return 0; }
+
     //! stop working
     m_pMissionWorking->requestInterruption();
     m_pMissionWorking->wait();
 
-//    int ret = mrgSysSetEmergencyStop( mVi, 1 );
     int ret = mrgRobotStop( mVi, mRobotHandle, wave_table );
     if ( ret != 0 )
     { sysError( tr("Stop fail") );}
-
-    //! request the upload
-
-//    post_setting( )
 
     return 0;
 }
 
 int MRX_T4::fStop()
 {
+    if (isOpened())
+    {}
+    else
+    { return 0; }
+
     //! stop working
     m_pMissionWorking->requestInterruption();
     m_pMissionWorking->wait();
 
-    //int ret = mrgSysSetEmergencyStop( mVi, 1 );
-    int ret = mrgRobotStop( mVi, mRobotHandle, -1 );
+    int ret = mrgSysSetEmergencyStopState( mVi, 1 );
     if ( ret != 0 )
     { sysError( tr("Stop fail") );}
 
     //! stop off
-//    mrgSysSetEmergencyStop( mVi, 0 );
+    mrgSysSetEmergencyStopState( mVi, 0 );
 
     return 0;
 }
@@ -426,12 +430,54 @@ int MRX_T4::onXEvent( XEvent *pEvent )
     return XPlugin::onXEvent( pEvent );
 }
 
+//! 0xFF31,WARNING,2019/07/22_11:16:50,MRQ,1,ENCODER3
 void MRX_T4::onDeviceException( QVariant &var )
 {
     //! prompt
     if ( var.isValid() )
     {
-        sysPrompt( var.toString(), 2 );
+        //! try decode the info
+        QStringList itemList = var.toString().split(",", QString::SkipEmptyParts );
+        QString promptString;
+
+        do
+        {
+            //! default
+            promptString = var.toString();
+
+            if ( itemList.size() > 0 )
+            {
+                //! try get the index
+                int errCode;
+                bool bOk;
+                errCode = itemList.at( 0 ).toInt( &bOk, 16 );
+                if ( bOk )
+                {
+                    QVariant var;
+                    var = mErrorConfigTable.errorBrief( errCode, sysLangIndex() );
+                    if ( var.isValid() )
+                    {  promptString = var.toString(); }
+                    else
+                    {
+                        //! invlid var
+                    }
+                }
+                else
+                {   //! invalid err code
+                }
+            }
+            else
+            {
+
+            }
+
+        }while( 0 );
+
+        sysPrompt( promptString, 2 );
+    }
+    else
+    {
+        sysWarning( tr("Invalid exception info") );
     }
 
     m_pOpPanel->postRefreshDiagnosisInfo();

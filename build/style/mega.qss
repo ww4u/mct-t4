@@ -420,7 +420,7 @@ QComboBox::drop-down:disabled {
 	  
 	  selection-background-color:#00a3d9;
   }
-QDoubleSpinBox  
+QDoubleSpinBox,QSpinBox  
 {
   font: 18px bold;
   

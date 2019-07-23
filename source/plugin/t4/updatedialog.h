@@ -13,6 +13,7 @@
 #define MRHT_SYSTEM_ERROR       -1
 #define NET_ERROR               -2
 #define MRHT_FILE_INVALID       -3
+#define CONFIG_ERROR            -4
 #define CONNECT_FAIL            -5      /* "Error:Cannot establish communication! Please check the connection !" */
 #define BOOT_OLD                -6      /* "Error:The BOOT version is very old,Cannot update to this version!" */
 #define MRQ_File_INVALID        -7      /* "Error:The update file is invalid !" */
@@ -114,6 +115,8 @@ public:
     virtual int updateDevice();
     virtual int updateController();
 
+    void attatchPlugin(XPlugin *xp);
+
 protected:
     virtual void run();
 
@@ -137,6 +140,8 @@ private:
     int iEndFlag;
 
     QSemaphore *pSemaphore;
+
+    XPlugin *pXPlugin;
 
 signals:
     void sigStandOutput( QByteArray &ba );

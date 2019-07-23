@@ -94,6 +94,9 @@ void UpdateDialog::updateUi( int i )
         case -3:
             str = tr("File Invalid");
             break;
+        case -4:
+            str = tr("Config Error");
+            break;
         case -5:
             str = tr("Connect Fail");
             break;
@@ -196,6 +199,7 @@ void UpdateDialog::on_buttonBox_clicked(QAbstractButton *button)
         pWorkThead->setAddr( m_addr );
         pWorkThead->attachEntity_MRQ( m_mrqEntity );
         pWorkThead->attachEntity_MRH( m_mrhEntity );
+        pWorkThead->attatchPlugin( m_pPlugin );
         changeTheadWorkMode(1);
     }else{
         if( pWorkThead != NULL ){
@@ -545,7 +549,6 @@ int MThead::updateController()
 
             strCmd = "sh /home/megarobo/MCT/MRX-T4/update.sh";
             ret = mrgSystemRunCmd(vi, strCmd.toLocal8Bit().data(), 0);
-            logDbg() << ret;
             if(ret !=0){
                 ret = -3;
                 break;
@@ -558,6 +561,16 @@ int MThead::updateController()
                 ret = -1;
                 break;
             }
+
+            ret = mrgSystemSetMRQConfig( vi,
+                                         pEntity_MRQ->mDescription.toLatin1().data(),
+                                         pXPlugin->SN_MRQ().toLatin1().data() );
+            if ( ret != 0 ){
+                sysError( tr("Set MRQConfig Error"), e_out_log );
+                ret = -4;
+                break;
+            }
+
             emit resultReady( QString::number( 100 ) );
 
         }while(0);
@@ -574,11 +587,16 @@ int MThead::updateController()
     return ret;
 }
 
+void MThead::attatchPlugin(XPlugin *xp)
+{
+    pXPlugin = xp;
+}
+
 void MThead::run()
 {
     try{
         while( 1 )
-        {logDbg();
+        {
             if ( isInterruptionRequested() )
             { return; }
 
@@ -632,7 +650,6 @@ void MThead::run()
             }
 
             SLEEP:
-            logDbg() << QThread::currentThreadId();
             localSleep(500);
         }
     }
@@ -659,7 +676,7 @@ void MThead::switchWorkMode(int mode)
 void MThead::parseStandOutput()
 {
     iProgress += 1;
-    QByteArray ba = pProc->readAll();logDbg() << ba;
+    QByteArray ba = pProc->readAll();
     //! \todo err code
     int ret = 99;
     if( ba.contains("Error:Cannot establish communication!") ){

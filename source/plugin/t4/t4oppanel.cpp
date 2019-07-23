@@ -131,6 +131,20 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     connect( ui->controllerStatus, SIGNAL(signal_ack_error()),
              this, SLOT(slot_ack_error()) );
 
+    //! YOUT click
+    connect( ui->radY1, SIGNAL(signal_clicked()),
+             this, SLOT(slot_yout1_clicked()) );
+    connect( ui->radY2, SIGNAL(signal_clicked()),
+             this, SLOT(slot_yout2_clicked()) );
+    connect( ui->radY3, SIGNAL(signal_clicked()),
+             this, SLOT(slot_yout3_clicked()) );
+    connect( ui->radY4, SIGNAL(signal_clicked()),
+             this, SLOT(slot_yout4_clicked()) );
+    ui->radY1->setClickAble( true );
+    ui->radY2->setClickAble( true );
+    ui->radY3->setClickAble( true );
+    ui->radY4->setClickAble( true );
+
     spyEdited();
 
     //! joint name
@@ -155,35 +169,17 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
 
     //! \todo
     //! init digital inputs name
-    connect( ui->radDI1, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
-    connect( ui->radDI2, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
-    connect( ui->radDI3, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
-    connect( ui->radDI4, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
-    connect( ui->radDI5, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
-    connect( ui->radDI6, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
-    connect( ui->radStart, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
-    connect( ui->radReset, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
-    connect( ui->radENBLE, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
-    connect( ui->radRDYEN, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
-    connect( ui->radMC, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)));
-    connect( ui->radFAULT, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
-    connect( ui->radENABLED, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
-    connect( ui->radACK, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
+    mIoList<<ui->radXI1<<ui->radXI2<<ui->radXI3<<ui->radXI4
+           <<ui->radXI5<<ui->radXI6<<ui->radXI7<<ui->radXI8
+           <<ui->radXI9<<ui->radXI10
+           <<ui->radY1<<ui->radY2<<ui->radY3<<ui->radY4;
+    for ( int i = 0; i < mIoList.size(); i++ )
+    {
+        connect( mIoList.at(i), SIGNAL(customContextMenuRequested(QPoint)),
+                 this, SLOT(slot_digitalInputsCustomContextMenuRequested(QPoint)) );
 
-    ui->radDI1->setChecked(false);
-    ui->radDI2->setChecked(false);
-    ui->radDI3->setChecked(false);
-    ui->radDI4->setChecked(false);
-    ui->radDI5->setChecked(false);
-    ui->radDI6->setChecked(false);
-    ui->radStart->setChecked(false);
-    ui->radReset->setChecked(false);
-    ui->radENBLE->setChecked(false);
-    ui->radRDYEN->setChecked(false);
-    ui->radMC->setChecked(false);
-    ui->radFAULT->setChecked(false);
-    ui->radENABLED->setChecked(false);
-    ui->radACK->setChecked(false);
+        mIoList.at(i)->setChecked( false );
+    }
 }
 
 T4OpPanel::~T4OpPanel()
@@ -430,19 +426,62 @@ void T4OpPanel::updateRefreshPara( QEvent *e )
     ui->controllerStatus->setRecordName( mRefreshPara.mRecordName );
     ui->controllerStatus->setWorkingStatus( mRefreshPara.mRoboState );
 
-    //! db15
-    if( mRefreshPara.ListDb15.size() == 15 ){
-        IoIndicator *radio[]={ui->radRDYEN, ui->radDI1,
-                              ui->radDI2,   ui->radDI3,
-                              ui->radDI4,   ui->radDI5,
-                              ui->radDI6,   ui->radStart,
-                              ui->radENBLE, ui->radReset,
-                              ui->radENABLED,ui->radFAULT,
-                              ui->radACK,   ui->radMC};
+//    typedef enum
+//    {
+//        IOMRHT29_RDYEN,
+//        IOMRHT29_DIX0,
+//        IOMRHT29_DIX1,
+//        IOMRHT29_DIX2,
+//        IOMRHT29_DIX3,
+//        IOMRHT29_DIX4,
+//        IOMRHT29_DIX5,
+//        IOMRHT29_START,
+//        IOMRHT29_ENABLE,
+//        IOMRHT29_RESET,
+//        IOMRHT29_ENABLED,
+//        IOMRHT29_FAULT,
+//        IOMRHT29_ACK,
+//        IOMRHT29_MC,
+//        IOMRHT29_REV1,
+//        IOMRHT29_REV2,
 
-        for(int i =0; i < sizeof(radio)/sizeof(*radio);i++){
-            radio[i]->setChecked( mRefreshPara.ListDb15.at( i ) );
-        }
+//        IOMRHT29_XIN0,
+//        IOMRHT29_XIN1,
+//        IOMRHT29_XIN2,
+//        IOMRHT29_XIN3,
+//        IOMRHT29_XIN4,
+//        IOMRHT29_XIN5,
+//        IOMRHT29_XIN6,
+//        IOMRHT29_XIN7,
+//        IOMRHT29_XIN8,
+//        IOMRHT29_XIN9,
+//        IOMRHT29_Y1,
+//        IOMRHT29_Y2,
+//        IOMRHT29_Y3,
+//        IOMRHT29_Y4,
+//        IOMRHT29_ESTOP,
+//    }IO_MRHT29_INDEX;
+
+    //! io val
+    IoIndicator *radios[] = {
+        ui->radXI1,ui->radXI2,ui->radXI3,ui->radXI4,
+        ui->radXI5,ui->radXI6,ui->radXI7,ui->radXI8,
+        ui->radXI9,ui->radXI10,
+        ui->radY1,ui->radY2,ui->radY3,ui->radY4,
+    };
+    for ( int i = IOMRHT29_XIN0; i <= IOMRHT29_Y4; i++ )
+    {
+        radios[ i - IOMRHT29_XIN0 ]->setChecked( is_bit1( mRefreshPara.mIOVal, i ) ) ;
+    }
+
+    //! for conroller status
+    int db15Shifts[]=
+    { IOMRHT29_RDYEN, IOMRHT29_START, IOMRHT29_ENABLE, IOMRHT29_ENABLED,
+      IOMRHT29_FAULT, IOMRHT29_ACK, IOMRHT29_MC,
+    };
+    for ( int i = 0; i < sizeof_array(db15Shifts); i++ )
+    {
+        ui->controllerStatus->setDeviceStatCheck( i, is_bit1( mRefreshPara.mIOVal, db15Shifts[i]) );
     }
 }
 //! \note 24bit encoder
@@ -523,7 +562,6 @@ int T4OpPanel::posRefreshProc( void *pContext )
             double dAngles[4];
             int dir []= { -1, -1, 1, -1 };
 
-//            double baseAngles[] = { 0, 180, 90, 90 };
             for ( int i = 0; i < 4; i++ )
             {
                 dAngles[ i ] = normalizeDegreeN180_180( angles[ i ] - pRobo->mAxisZero[i] ) * dir[i];
@@ -578,27 +616,29 @@ int T4OpPanel::posRefreshProc( void *pContext )
         }
 
         //! \todo
-        ret = mrgSetProjectMode(device_var_vi(), 1);
-        if(ret ==0){
+//        ret = mrgSetProjectMode(device_var_vi(), 1);
+//        if(ret ==0){
 
-        }else{ sysError( tr("Set project mode fail"), e_out_log );break; }
+//        }else{ sysError( tr("Set project mode fail"), e_out_log );break; }
 
-        char cState[4096]={0};
-        ret = mrgProjectIOGet( device_var_vi(), IOGET_DB15, cState );
+//        char cState[4096]={0};
+//        ret = mrgProjectIOGet( device_var_vi(), IOGET_DB15, cState );
 
-        mrgSetProjectMode(device_var_vi(), 0);
-        if( ret !=0 ){}
+        ret = mrgProjectIOGetAll( device_var_vi(), &mRefreshPara.mIOVal );
+
+//        mrgSetProjectMode(device_var_vi(), 0);
+//        if( ret !=0 ){}
 
         if ( ret != 0 )
         { sysError( tr("Get IO fail"), e_out_log );break; }
 
-        QString sState = QString(cState);
-        mRefreshPara.ListDb15.clear();
+//        QString sState = QString(cState);
+//        mRefreshPara.ListDb15.clear();
 
-        for(int i =0; i < sState.length(); i++){
-            QChar t = sState.at(i);
-            mRefreshPara.ListDb15.append( t==QChar('1') );
-        }
+//        for(int i =0; i < sState.length(); i++){
+//            QChar t = sState.at(i);
+//            mRefreshPara.ListDb15.append( t==QChar('1') );
+//        }
 
         //! post refresh
         OpEvent *updateEvent = new OpEvent( OpEvent::update_pose );
@@ -723,7 +763,7 @@ int T4OpPanel::refreshDiagnosisInfo( void *pContext )
             if ( !bOk )
             { continue; }
 
-            DiagnosisElement::DiagnosisType dType;
+            DiagnosisElement::DiagnosisType dType = DiagnosisElement::diag_error;
             QString type = itemList.at(1);
             if( str_equ(type, "F") ){
                 dType = DiagnosisElement::diag_error;
@@ -732,6 +772,11 @@ int T4OpPanel::refreshDiagnosisInfo( void *pContext )
             }else if( str_equ(type, "I") ){
                 dType = DiagnosisElement::diag_info;
             }
+            else
+            {
+                dType = DiagnosisElement::diag_error;
+            }
+
 
             QString stmp = itemList.at(2);
             QString info = itemList.at(3);
@@ -805,20 +850,13 @@ void T4OpPanel::updateUi()
     ui->tabWidget->setCurrentIndex( DEFAULT_PAGE_INDEX );
 
     //! update digital inputs name
-    ui->radDI1->setText( pRobo->listIoName.at(0) );
-    ui->radDI2->setText( pRobo->listIoName.at(1) );
-    ui->radDI3->setText( pRobo->listIoName.at(2) );
-    ui->radDI4->setText( pRobo->listIoName.at(3) );
-    ui->radDI5->setText( pRobo->listIoName.at(4) );
-    ui->radDI6->setText( pRobo->listIoName.at(5) );
-    ui->radStart->setText( pRobo->listIoName.at(6) );
-    ui->radReset->setText( pRobo->listIoName.at(7) );
-    ui->radRDYEN->setText( pRobo->listIoName.at(8) );
-    ui->radENBLE->setText( pRobo->listIoName.at(9) );
-    ui->radACK->setText( pRobo->listIoName.at(10) );
-    ui->radENABLED->setText( pRobo->listIoName.at(11) );
-    ui->radFAULT->setText( pRobo->listIoName.at(12) );
-    ui->radMC->setText( pRobo->listIoName.at(13) );
+    if ( mIoList.size() == pRobo->listIoName.size() )
+    {
+        for ( int i = 0; i < mIoList.size(); i++ )
+        {
+            mIoList.at(i)->setText( pRobo->listIoName.at( i ) );
+        }
+    }
 }
 
 void T4OpPanel::updateData()
@@ -1959,13 +1997,11 @@ void T4OpPanel::slot_Rename()
             Q_ASSERT( pRobo != NULL );
 
             pRobo->listIoName.clear();
-            pRobo->listIoName << ui->radDI1->text() << ui->radDI2->text() << ui->radDI3->text() << ui->radDI4->text() << ui->radDI5->text()
-                              << ui->radDI6->text() << ui->radStart->text() << ui->radReset->text() << ui->radRDYEN->text() << ui->radENBLE->text()
-                              << ui->radACK->text() << ui->radENABLED->text() << ui->radFAULT->text() << ui->radMC->text();
+            for ( int i = 0; i < mIoList.size(); i++ )
+            {
+                pRobo->listIoName<<mIoList.at(i)->text();
+            }
 
-            //t->emit_save(); not work
-//            pRobo->save( pRobo->homePath() + "/" + "config.xml" );
-//            m_pPlugin->emit_save();
             emit signal_request_save();
         }
     }
@@ -2041,7 +2077,7 @@ void T4OpPanel::slot_speed_verify()
         else
         { break; }
     }
-logDbg()<<ui->cmbSpeed->count();
+
     //! change the cur index
     if ( curIndex > ui->cmbSpeed->count() )
     {
@@ -2052,6 +2088,23 @@ logDbg()<<ui->cmbSpeed->count();
     {
         ui->cmbSpeed->setCurrentIndex( curIndex );
     }
+}
+
+void T4OpPanel::slot_yout1_clicked()
+{logDbg();
+    setYOut( 0, ui->radY1->isChecked() );
+}
+void T4OpPanel::slot_yout2_clicked()
+{
+    setYOut( 1, ui->radY2->isChecked() );
+}
+void T4OpPanel::slot_yout3_clicked()
+{
+    setYOut( 2, ui->radY2->isChecked() );
+}
+void T4OpPanel::slot_yout4_clicked()
+{
+    setYOut( 3, ui->radY3->isChecked() );
 }
 
 void T4OpPanel::on_toolSingleAdd_clicked()
@@ -2529,6 +2582,17 @@ void T4OpPanel::on_demo_start( )
     ui->tvDebug->setCurrentIndex( index );
 
     on_toolButton_debugRun_clicked();
+}
+
+void T4OpPanel::setYOut( int id, bool b )
+{
+    check_connect();
+
+    int ret = mrgProjectIOSet(  device_var_vi(), id + 1, b, 0 );
+    if ( ret != 0 )
+    {
+        sysError( tr("YOUT set fail"), e_out_log );
+    }
 }
 
 //! start the run thread

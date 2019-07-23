@@ -36,8 +36,8 @@ protected:
 public:
     void setOut( SysOut e, bool b );
     void setWorkingMode( const QString &mode );
-    void setWarning( const QString &warning );
-    void setError( const QString &error );
+//    void setWarning( const QString &warning );
+//    void setError( const QString &error );
 
     void setRole( int role );
     void setWorkingStatus( const QString &status );

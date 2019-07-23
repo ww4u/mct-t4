@@ -26,7 +26,7 @@
    <property name="bottomMargin">
     <number>0</number>
    </property>
-   <item row="0" column="0">
+   <item row="1" column="0">
     <widget class="QScrollArea" name="scrollArea_2">
      <property name="frameShape">
       <enum>QFrame::NoFrame</enum>
@@ -43,9 +43,9 @@
      <widget class="QWidget" name="scrollAreaWidgetContents_2">
       <property name="geometry">
        <rect>
-        <x>-146</x>
+        <x>0</x>
         <y>0</y>
-        <width>1063</width>
+        <width>1266</width>
         <height>323</height>
        </rect>
       </property>
@@ -827,6 +827,31 @@
                  </size>
                 </property>
                </spacer>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_7">
+             <property name="title">
+              <string/>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_10">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label_4">
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="pixmap">
+                 <pixmap resource="../../../res/res.qrc">:/res/image/t4/xin_yout.png</pixmap>
+                </property>
+                <property name="scaledContents">
+                 <bool>false</bool>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+                </property>
+               </widget>
               </item>
              </layout>
             </widget>

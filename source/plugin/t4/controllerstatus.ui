@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>344</width>
-    <height>229</height>
+    <height>249</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -161,7 +161,7 @@
          <string>User role</string>
         </property>
         <property name="text">
-         <string>User</string>
+         <string/>
         </property>
        </widget>
       </item>

@@ -43,8 +43,8 @@ void IoIndicator::setText( const QString &text )
 { ui->label->setText( text ); }
 QString IoIndicator::text()
 { return ui->label->text(); }
-#include <QDebug>
+
 void IoIndicator::slot_rad_clicked()
 {
-    qDebug()<<__FUNCTION__<<__LINE__;
+    ui->radioButton->setText( mIOIndiction.at( isChecked() ));
 }

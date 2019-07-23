@@ -40,6 +40,11 @@ static double _stepRatio[]={ 0.1,   //! 0
                         Q_ASSERT( m_pCaches[id] != NULL );\
                         m_pCaches[id]->mWSema.release();
 
+RefreshPara::RefreshPara()
+{
+    mRefreshTs = 0;
+}
+
 T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     XPage(parent),
     ui(new Ui::T4OpPanel)
@@ -69,6 +74,8 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     m_pIOContextMenu = NULL;
     m_pActionRename = NULL;
     currentRenameObj = NULL;
+
+    mEventTs = 0;
 
     //! data cache
 //    m_pCaches[0] = new DataCache( this ); m_pCaches[0]->mWSema.release();
@@ -427,26 +434,30 @@ void T4OpPanel::updateRefreshPara( QEvent *e )
     ui->controllerStatus->setRecordName( mRefreshPara.mRecordName );
     ui->controllerStatus->setWorkingStatus( mRefreshPara.mRoboState );
 
-    //! io val
-    IoIndicator *radios[] = {
-        ui->radXI1,ui->radXI2,ui->radXI3,ui->radXI4,
-        ui->radXI5,ui->radXI6,ui->radXI7,ui->radXI8,
-        ui->radXI9,ui->radXI10,
-        ui->radY1,ui->radY2,ui->radY3,ui->radY4,
-    };
-    for ( int i = IOMRHT29_XIN0; i <= IOMRHT29_Y4; i++ )
+    //! \note the yout may changed by the ui
+    if ( mRefreshPara.mRefreshTs < mEventTs )
     {
-        radios[ i - IOMRHT29_XIN0 ]->setChecked( is_bit1( mRefreshPara.mIOVal, i ) ) ;
-    }
+        //! io val
+        IoIndicator *radios[] = {
+            ui->radXI1,ui->radXI2,ui->radXI3,ui->radXI4,
+            ui->radXI5,ui->radXI6,ui->radXI7,ui->radXI8,
+            ui->radXI9,ui->radXI10,
+            ui->radY1,ui->radY2,ui->radY3,ui->radY4,
+        };
+        for ( int i = IOMRHT29_XIN0; i <= IOMRHT29_Y4; i++ )
+        {
+            radios[ i - IOMRHT29_XIN0 ]->setChecked( is_bit1( mRefreshPara.mIOVal, i ) ) ;
+        }
 
-    //! for conroller status
-    int db15Shifts[]=
-    { IOMRHT29_RDYEN, IOMRHT29_START, IOMRHT29_ENABLE, IOMRHT29_ENABLED,
-      IOMRHT29_FAULT, IOMRHT29_ACK, IOMRHT29_MC,
-    };
-    for ( int i = 0; i < sizeof_array(db15Shifts); i++ )
-    {
-        ui->controllerStatus->setDeviceStatCheck( i, is_bit1( mRefreshPara.mIOVal, db15Shifts[i]) );
+        //! for conroller status
+        int db15Shifts[]=
+        { IOMRHT29_RDYEN, IOMRHT29_START, IOMRHT29_ENABLE, IOMRHT29_ENABLED,
+          IOMRHT29_FAULT, IOMRHT29_ACK, IOMRHT29_MC,
+        };
+        for ( int i = 0; i < sizeof_array(db15Shifts); i++ )
+        {
+            ui->controllerStatus->setDeviceStatCheck( i, is_bit1( mRefreshPara.mIOVal, db15Shifts[i]) );
+        }
     }
 }
 //! \note 24bit encoder
@@ -586,6 +597,9 @@ int T4OpPanel::posRefreshProc( void *pContext )
         OpEvent *updateEvent = new OpEvent( OpEvent::update_pose );
         if ( NULL != updateEvent )
         { qApp->postEvent( this, updateEvent ); }
+
+        //! ts
+        mRefreshPara.mRefreshTs = QDateTime::currentMSecsSinceEpoch();
 
         return 0;
 
@@ -2063,19 +2077,23 @@ void T4OpPanel::slot_speed_verify()
 }
 
 void T4OpPanel::slot_yout1_clicked()
-{logDbg();
+{
+    mEventTs = QDateTime::currentMSecsSinceEpoch();
     setYOut( 0, ui->radY1->isChecked() );
 }
 void T4OpPanel::slot_yout2_clicked()
 {
+    mEventTs = QDateTime::currentMSecsSinceEpoch();
     setYOut( 1, ui->radY2->isChecked() );
 }
 void T4OpPanel::slot_yout3_clicked()
 {
+    mEventTs = QDateTime::currentMSecsSinceEpoch();
     setYOut( 2, ui->radY2->isChecked() );
 }
 void T4OpPanel::slot_yout4_clicked()
 {
+    mEventTs = QDateTime::currentMSecsSinceEpoch();
     setYOut( 3, ui->radY3->isChecked() );
 }
 

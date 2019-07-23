@@ -214,6 +214,8 @@ public:
 class RefreshPara
 {
 public:
+    RefreshPara();
+public:
     CPose poseNow;
     double angles[5];
     double deltaAngles[5];
@@ -238,6 +240,8 @@ public:
     bool bWarning;
 
     qint32 mIOVal;
+
+    qint64 mRefreshTs;
 };
 
 class T4OpPanel : public XPage
@@ -394,6 +398,9 @@ protected:
     IoIndicator *currentRenameObj;
 
     QList< IoIndicator * > mIoList;
+
+    //! event time
+    qint64 mEventTs;
 
 Q_SIGNALS:
 

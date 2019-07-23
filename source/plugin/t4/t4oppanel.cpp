@@ -666,9 +666,19 @@ int T4OpPanel::refreshDiagnosisInfo( void *pContext )
     else
     { return 0; }
 
-    //! \todo check the file size by the file size api
+    int fileSize;
+    fileSize = mrgStorageGetFileSize( pRobo->deviceVi(),
+                           0,
+                           "/home/megarobo/MRH-T/diagnose",
+                           "Diagnose.log");
+    if ( fileSize > 0 )
+    {}
+    else
+    { return -1; }
+
+    //!
     QByteArray ary;
-    ary.reserve( 4096 );
+    ary.reserve( fileSize );
 
     int ret=0;
     ret = mrgErrorLogUpload( pRobo->deviceVi(),
@@ -701,17 +711,27 @@ int T4OpPanel::refreshDiagnosisInfo( void *pContext )
             else
             { continue; }
 
-            code = itemList.at(0).toInt( &bOk );
-            if ( !bOk )
-            { continue; }
+            do
+            {
+                code = itemList.at(0).toInt( &bOk );
+                if ( bOk )
+                { break; }
+
+                code = itemList.at(0).toInt( &bOk, 16 );
+                if ( bOk )
+                { break; }
+
+                continue;
+
+            }while(0);
 
             DiagnosisElement::DiagnosisType dType = DiagnosisElement::diag_error;
             QString type = itemList.at(1);
-            if( str_equ(type, "F") ){
+            if( str_is_2(type, "F", "ERROR") ){
                 dType = DiagnosisElement::diag_error;
-            }else if( str_equ(type, "W") ){
+            }else if( str_is_2(type, "W", "WARNING") ){
                 dType = DiagnosisElement::diag_warning;
-            }else if( str_equ(type, "I") ){
+            }else if( str_is_2(type, "I", "INFO") ){
                 dType = DiagnosisElement::diag_info;
             }
             else
@@ -719,12 +739,22 @@ int T4OpPanel::refreshDiagnosisInfo( void *pContext )
                 dType = DiagnosisElement::diag_error;
             }
 
-
             QString stmp = itemList.at(2);
             QString info = itemList.at(3);
-            int cnt = itemList.at(4).toInt( &bOk );
-            if ( !bOk )
-            { continue; }
+            int cnt;
+            do
+            {
+                cnt = itemList.at(4).toInt( &bOk );
+                if ( bOk )
+                { break; }
+
+                cnt = itemList.at(4).toInt( &bOk, 16 );
+                if ( bOk )
+                { break; }
+
+                continue;
+            }while( 0 );
+
             QString msg = itemList.at(5);
 
             pModel->append( code,

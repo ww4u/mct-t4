@@ -377,8 +377,6 @@ void MegaInterface::on_pushButton_Scan_clicked()
 
                     QString t( buf );
                     QStringList tList = t.split(":");
-logDbg()<<tList<<buf;
-//                    tList.at(0);
 
                     //! \note the sn
                     tInfo.mFMSN = tList.at(0);

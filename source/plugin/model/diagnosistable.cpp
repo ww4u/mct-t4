@@ -53,7 +53,7 @@ QVariant DiagnosisTable::data(const QModelIndex &index, int role) const
     { return QVariant(); }
 
     if ( col == 0 )
-    { return QVariant( mItems[row]->mNumber ); }
+    { return QVariant( QString("0x%1").arg( mItems[row]->mNumber,4,16,QChar('0') ) ); }
     if ( col == 1 )
     { return QVariant( DiagnosisElement::toString( mItems[row]->mType ) ); }
     if ( col == 2 )

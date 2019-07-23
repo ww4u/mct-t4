@@ -489,7 +489,7 @@ void MRX_T4::onDeviceException( QVariant &var )
 
         }while( 0 );
 
-        sysPrompt( promptString, 1 );
+        sysPrompt( promptString, errLev );
     }
     else
     {

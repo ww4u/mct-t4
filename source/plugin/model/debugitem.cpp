@@ -5,8 +5,8 @@
 
 const static char *_headers[] =
 {
-    QT_TRANSLATE_NOOP("HEADER", "No."),
-    QT_TRANSLATE_NOOP("HEADER", "Delay(s)"),
+    QT_TR_NOOP( "No."),
+    QT_TR_NOOP( "Delay(s)"),
 };
 
 int DebugItem::columns()
@@ -17,7 +17,8 @@ QString DebugItem::header( int col )
 {
     Q_ASSERT( col >= 0 && col <= sizeof_array(_headers) );
 
-    return qApp->translate("HEADER", _headers[col]);
+//    return qApp->translate("HEADER", _headers[col]);
+    return QObject::tr( _headers[col] );
 }
 
 DebugItem::DebugItem()

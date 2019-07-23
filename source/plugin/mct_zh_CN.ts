@@ -158,23 +158,73 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/widget/axislimit.ui" line="39"/>
+        <location filename="t4/widget/axislimit.ui" line="32"/>
+        <location filename="t4/widget/axislimit.ui" line="52"/>
+        <location filename="t4/widget/axislimit.ui" line="68"/>
+        <location filename="t4/widget/axislimit.ui" line="81"/>
+        <location filename="t4/widget/axislimit.ui" line="104"/>
+        <location filename="t4/widget/axislimit.ui" line="120"/>
+        <location filename="t4/widget/axislimit.ui" line="140"/>
+        <location filename="t4/widget/axislimit.ui" line="163"/>
+        <source>°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/widget/axislimit.ui" line="42"/>
         <source>Base</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/widget/axislimit.ui" line="82"/>
+        <location filename="t4/widget/axislimit.ui" line="94"/>
         <source>Wrist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/widget/axislimit.ui" line="112"/>
+        <location filename="t4/widget/axislimit.ui" line="130"/>
         <source>Elbow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/widget/axislimit.ui" line="132"/>
+        <location filename="t4/widget/axislimit.ui" line="153"/>
         <source>Shoulder</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ChangedPw</name>
+    <message>
+        <location filename="../wnd/changedpw.ui" line="14"/>
+        <source>Change password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/changedpw.ui" line="20"/>
+        <source>Enter the new password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/changedpw.ui" line="33"/>
+        <source>New Password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/changedpw.ui" line="40"/>
+        <source>New Password again</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/changedpw.ui" line="57"/>
+        <source>Enter the new password again</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/changedpw.ui" line="70"/>
+        <source>Old Password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/changedpw.ui" line="77"/>
+        <source>Enter the old password</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -226,67 +276,76 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/config.ui" line="158"/>
-        <source>Safe Area</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="t4/config.ui" line="186"/>
-        <location filename="t4/config.ui" line="277"/>
+        <location filename="t4/config.ui" line="212"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;table border=&quot;1&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px;&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tr&gt;&lt;td width=&quot;89&quot; style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;/&gt;&lt;td width=&quot;179&quot; style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;Angle(Degree)&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;Wrist&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;[-180,180]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;Elbow&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;[-50,90]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;Shoulder&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;[-80,20]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;Base&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;td style=&quot; vertical-align:top; padding-left:0; padding-right:0; padding-top:0; padding-bottom:0;&quot;&gt;&lt;p&gt;&lt;span style=&quot; font-family:&apos;宋体&apos;; font-size:10.5pt;&quot;&gt;[-170,170]&lt;/span&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/config.ui" line="223"/>
+        <location filename="t4/config.ui" line="158"/>
         <source>Soft Limit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/config.ui" line="226"/>
+        <location filename="t4/config.ui" line="161"/>
         <source>Soft limitation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/config.ui" line="291"/>
+        <location filename="t4/config.ui" line="226"/>
         <source>Zero</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/config.ui" line="294"/>
+        <location filename="t4/config.ui" line="229"/>
         <source>Joint Zero Configuration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/config.ui" line="300"/>
-        <location filename="t4/config.ui" line="466"/>
+        <location filename="t4/config.ui" line="235"/>
+        <location filename="t4/config.ui" line="422"/>
         <source>Shoulder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/config.ui" line="327"/>
+        <location filename="t4/config.ui" line="245"/>
+        <location filename="t4/config.ui" line="261"/>
+        <location filename="t4/config.ui" line="294"/>
+        <location filename="t4/config.ui" line="320"/>
+        <source>°</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/config.ui" line="271"/>
         <source>Wrist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/config.ui" line="380"/>
-        <location filename="t4/config.ui" line="426"/>
+        <location filename="t4/config.ui" line="330"/>
+        <location filename="t4/config.ui" line="376"/>
         <source>Elbow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/config.ui" line="387"/>
-        <location filename="t4/config.ui" line="459"/>
+        <location filename="t4/config.ui" line="337"/>
+        <location filename="t4/config.ui" line="415"/>
         <source>Base</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/config.ui" line="414"/>
+        <location filename="t4/config.ui" line="364"/>
         <source>Arm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/config.ui" line="420"/>
+        <location filename="t4/config.ui" line="370"/>
         <source>Arm Length</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/config.ui" line="386"/>
+        <location filename="t4/config.ui" line="402"/>
+        <location filename="t4/config.ui" line="432"/>
+        <source>mm</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -504,6 +563,39 @@
     <message>
         <location filename="t4/coordinate.ui" line="97"/>
         <source>User10</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DiagnosisTable</name>
+    <message>
+        <location filename="model/diagnosistable.cpp" line="141"/>
+        <source>No.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="model/diagnosistable.cpp" line="142"/>
+        <source>Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="model/diagnosistable.cpp" line="143"/>
+        <source>Timestamp</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="model/diagnosistable.cpp" line="144"/>
+        <source>Additional info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="model/diagnosistable.cpp" line="145"/>
+        <source>Counter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="model/diagnosistable.cpp" line="146"/>
+        <source>Message</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1102,19 +1194,6 @@
     </message>
 </context>
 <context>
-    <name>HEADER</name>
-    <message>
-        <location filename="model/debugitem.cpp" line="8"/>
-        <source>No.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="model/debugitem.cpp" line="9"/>
-        <source>Delay(s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>HLX</name>
     <message>
         <location filename="t4/hlx.ui" line="14"/>
@@ -1139,6 +1218,14 @@
     <message>
         <location filename="t4/hlx.ui" line="65"/>
         <source>X</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>HelpPanel</name>
+    <message>
+        <location filename="../wnd/helppanel.ui" line="20"/>
+        <source>MEGAROBO</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1249,6 +1336,29 @@
     </message>
 </context>
 <context>
+    <name>LogIn</name>
+    <message>
+        <location filename="../wnd/login.ui" line="14"/>
+        <source>LogIn</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/login.ui" line="42"/>
+        <source>Operator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/login.ui" line="51"/>
+        <source>Administrator</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/login.ui" line="80"/>
+        <source>Password</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>LogoutWidget</name>
     <message>
         <location filename="model/widget/logoutwidget.cpp" line="42"/>
@@ -1273,102 +1383,97 @@
     <name>MRX_T4</name>
     <message>
         <location filename="t4/t4.cpp" line="63"/>
-        <location filename="t4/t4.cpp" line="133"/>
+        <location filename="t4/t4.cpp" line="128"/>
         <source>MRX-T4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="t4/t4.cpp" line="64"/>
-        <location filename="t4/t4.cpp" line="134"/>
+        <location filename="t4/t4.cpp" line="129"/>
         <source>Configuration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4.cpp" line="67"/>
-        <location filename="t4/t4.cpp" line="135"/>
+        <location filename="t4/t4.cpp" line="66"/>
+        <location filename="t4/t4.cpp" line="130"/>
         <source>Motor</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4.cpp" line="68"/>
-        <location filename="t4/t4.cpp" line="136"/>
+        <location filename="t4/t4.cpp" line="67"/>
+        <location filename="t4/t4.cpp" line="131"/>
         <source>Record Table</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4.cpp" line="70"/>
-        <location filename="t4/t4.cpp" line="137"/>
+        <location filename="t4/t4.cpp" line="69"/>
+        <location filename="t4/t4.cpp" line="132"/>
         <source>Error Management</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4.cpp" line="72"/>
-        <source>File</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="t4/t4.cpp" line="76"/>
-        <location filename="t4/t4.cpp" line="138"/>
+        <location filename="t4/t4.cpp" line="71"/>
+        <location filename="t4/t4.cpp" line="133"/>
         <source>Misc</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4.cpp" line="77"/>
-        <location filename="t4/t4.cpp" line="139"/>
+        <location filename="t4/t4.cpp" line="72"/>
+        <location filename="t4/t4.cpp" line="134"/>
         <source>Maintain</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4.cpp" line="86"/>
-        <location filename="t4/t4.cpp" line="150"/>
+        <location filename="t4/t4.cpp" line="81"/>
+        <location filename="t4/t4.cpp" line="145"/>
         <source>Record</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4.cpp" line="86"/>
-        <location filename="t4/t4.cpp" line="152"/>
+        <location filename="t4/t4.cpp" line="81"/>
+        <location filename="t4/t4.cpp" line="147"/>
         <source>Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4.cpp" line="89"/>
-        <location filename="t4/t4.cpp" line="155"/>
+        <location filename="t4/t4.cpp" line="84"/>
+        <location filename="t4/t4.cpp" line="150"/>
         <source>Wrist</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4.cpp" line="89"/>
-        <location filename="t4/t4.cpp" line="157"/>
+        <location filename="t4/t4.cpp" line="84"/>
+        <location filename="t4/t4.cpp" line="152"/>
         <source>Terminal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4.cpp" line="90"/>
-        <location filename="t4/t4.cpp" line="159"/>
+        <location filename="t4/t4.cpp" line="85"/>
+        <location filename="t4/t4.cpp" line="154"/>
         <source>V</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4.cpp" line="90"/>
-        <location filename="t4/t4.cpp" line="161"/>
+        <location filename="t4/t4.cpp" line="85"/>
+        <location filename="t4/t4.cpp" line="156"/>
         <source>Line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4.cpp" line="90"/>
-        <location filename="t4/t4.cpp" line="164"/>
+        <location filename="t4/t4.cpp" line="85"/>
+        <location filename="t4/t4.cpp" line="159"/>
         <source>Output</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4.cpp" line="90"/>
-        <location filename="t4/t4.cpp" line="167"/>
+        <location filename="t4/t4.cpp" line="85"/>
+        <location filename="t4/t4.cpp" line="162"/>
         <source>Delay</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4.cpp" line="91"/>
-        <location filename="t4/t4.cpp" line="170"/>
+        <location filename="t4/t4.cpp" line="86"/>
+        <location filename="t4/t4.cpp" line="165"/>
         <source>comment</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1388,50 +1493,62 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4_device.cpp" line="130"/>
+        <location filename="t4/t4_device.cpp" line="134"/>
         <source>Robot</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4_device.cpp" line="138"/>
+        <location filename="t4/t4_device.cpp" line="142"/>
         <source>Device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4_device.cpp" line="223"/>
-        <location filename="t4/t4_device.cpp" line="224"/>
+        <location filename="t4/t4_device.cpp" line="227"/>
+        <location filename="t4/t4_device.cpp" line="228"/>
         <source>Connect exception port fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4_device.cpp" line="280"/>
-        <location filename="t4/t4_device.cpp" line="297"/>
+        <location filename="t4/t4_device.cpp" line="284"/>
+        <location filename="t4/t4_device.cpp" line="302"/>
         <source>Stop fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4_device.cpp" line="336"/>
+        <location filename="t4/t4_device.cpp" line="341"/>
         <source>Reboot fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4_device.cpp" line="346"/>
+        <location filename="t4/t4_device.cpp" line="351"/>
         <source>Poweroff fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4_device.cpp" line="468"/>
+        <location filename="t4/t4_device.cpp" line="497"/>
+        <location filename="t4/t4_device.cpp" line="547"/>
         <source>Upload fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4_device.cpp" line="539"/>
+        <location filename="t4/t4_device.cpp" line="542"/>
+        <source>Upload success</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/t4_device.cpp" line="572"/>
+        <location filename="t4/t4_device.cpp" line="591"/>
         <source>Download fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4_device.cpp" line="715"/>
+        <location filename="t4/t4_device.cpp" line="753"/>
         <source>Position read fail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/t4_device.cpp" line="779"/>
+        <source>Slow the velocity</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1455,221 +1572,634 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4_serial.cpp" line="106"/>
+        <location filename="t4/t4_serial.cpp" line="107"/>
         <source>New event fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4_serial.cpp" line="112"/>
-        <source>Invaid exception id</source>
+        <location filename="t4/t4_serial.cpp" line="113"/>
+        <source>Invalid exception id</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>Maintain</name>
+    <name>MainWindow</name>
     <message>
-        <location filename="t4/maintain.ui" line="14"/>
+        <location filename="../wnd/mainwindow.ui" line="29"/>
+        <source>MCT-MRX-T4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="47"/>
+        <source>File(&amp;F)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="55"/>
+        <source>Operate(&amp;O)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="69"/>
+        <source>Help(&amp;H)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="77"/>
+        <source>Tool(&amp;T)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="84"/>
+        <source>View(&amp;V)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="104"/>
+        <source>Tool</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="135"/>
+        <source>&amp;Stop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="138"/>
+        <source>Emergency Stop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="141"/>
+        <source>Ctrl+E</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="146"/>
+        <source>&amp;Exit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="149"/>
+        <source>Ctrl+Q</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="154"/>
+        <source>&amp;About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="157"/>
+        <source>Ctrl+I</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="162"/>
+        <source>&amp;Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="171"/>
+        <source>&amp;Upload</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="174"/>
+        <source>Ctrl+U</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="183"/>
+        <source>&amp;Download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="186"/>
+        <source>Ctrl+D</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="195"/>
+        <source>S&amp;tore</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="198"/>
+        <source>Ctrl+T</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="207"/>
+        <source>S&amp;ync</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="210"/>
+        <source>Ctrl+Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="218"/>
+        <source>&amp;Chinese</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="229"/>
+        <source>&amp;English</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="240"/>
+        <source>&amp;MEGAROBO</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="251"/>
+        <source>&amp;Classic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="260"/>
+        <source>&amp;Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="263"/>
+        <source>SearchDevice</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="266"/>
+        <source>Ctrl+F</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="275"/>
+        <location filename="../wnd/mainwindow.ui" line="278"/>
+        <source>Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="281"/>
+        <source>Ctrl+L</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="289"/>
+        <source>MRX-H2:[0.0.0.0]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="294"/>
+        <source>&amp;Reboot</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="297"/>
+        <source>Ctrl+Alt+R</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="302"/>
+        <source>&amp;Poweroff</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="305"/>
+        <source>Ctrl+Alt+P</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="310"/>
+        <source>&amp;Wifi</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="315"/>
+        <source>test</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="324"/>
+        <location filename="../wnd/mainwindow.cpp" line="118"/>
+        <source>Pref</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="329"/>
+        <source>FAQ...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="334"/>
+        <source>Read me...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="343"/>
+        <source>Change Password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="346"/>
+        <source>Change administrator password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="355"/>
+        <source>Home</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.ui" line="364"/>
+        <source>Switch User...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.cpp" line="132"/>
+        <location filename="../wnd/mainwindow.cpp" line="758"/>
+        <source>Ops</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.cpp" line="151"/>
+        <location filename="../wnd/mainwindow.cpp" line="757"/>
+        <source>Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.cpp" line="160"/>
+        <location filename="../wnd/mainwindow.cpp" line="756"/>
+        <source>Show Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.cpp" line="169"/>
+        <source>Chinese</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.cpp" line="171"/>
+        <source>English</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.cpp" line="173"/>
+        <source>Traditional Chinese</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.cpp" line="178"/>
+        <location filename="../wnd/mainwindow.cpp" line="753"/>
+        <source>MEGAROBO</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.cpp" line="182"/>
+        <location filename="../wnd/mainwindow.cpp" line="754"/>
+        <source>System</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.cpp" line="185"/>
+        <source>Language</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.cpp" line="188"/>
+        <source>Style</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.cpp" line="234"/>
+        <location filename="../wnd/mainwindow.cpp" line="760"/>
+        <source>MEGAROBO Configuration Tool</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.cpp" line="344"/>
+        <source>Invalid language</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.cpp" line="409"/>
+        <source>Style apply fail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.cpp" line="781"/>
+        <source>Pref save fail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.cpp" line="792"/>
+        <source>Pref load fail</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MaintainPage</name>
+    <message>
+        <location filename="t4/maintainpage.ui" line="14"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="24"/>
+        <location filename="t4/maintainpage.ui" line="24"/>
         <source>Demo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="36"/>
+        <location filename="t4/maintainpage.ui" line="36"/>
         <source>Run the slected demo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="39"/>
+        <location filename="t4/maintainpage.ui" line="39"/>
         <source>start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="51"/>
+        <location filename="t4/maintainpage.ui" line="51"/>
         <source>Demo1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="56"/>
+        <location filename="t4/maintainpage.ui" line="56"/>
         <source>Demo2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="104"/>
+        <location filename="t4/maintainpage.ui" line="104"/>
         <source>Operate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="123"/>
+        <location filename="t4/maintainpage.ui" line="123"/>
         <source>Show the version history</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="126"/>
+        <location filename="t4/maintainpage.ui" line="126"/>
         <source>History</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="150"/>
+        <location filename="t4/maintainpage.ui" line="150"/>
         <source>Fold the device for package</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="153"/>
+        <location filename="t4/maintainpage.ui" line="153"/>
         <source>Fold</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="164"/>
+        <location filename="t4/maintainpage.ui" line="164"/>
         <source>Update the device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="167"/>
+        <location filename="t4/maintainpage.ui" line="167"/>
         <source>Update</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="178"/>
+        <location filename="t4/maintainpage.ui" line="178"/>
         <source>Restore the factory settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="181"/>
+        <location filename="t4/maintainpage.ui" line="181"/>
         <source>Reset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="192"/>
+        <location filename="t4/maintainpage.ui" line="192"/>
         <source>Match the components of the device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="195"/>
+        <location filename="t4/maintainpage.ui" line="195"/>
         <source>Build</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="207"/>
-        <location filename="t4/maintain.ui" line="244"/>
+        <location filename="t4/maintainpage.ui" line="207"/>
+        <location filename="t4/maintainpage.ui" line="244"/>
         <source>Backup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="213"/>
+        <location filename="t4/maintainpage.ui" line="213"/>
         <source>Clear all backups</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="216"/>
+        <location filename="t4/maintainpage.ui" line="216"/>
         <source>Clear Backup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="227"/>
+        <location filename="t4/maintainpage.ui" line="227"/>
         <source>Restore the settings from backup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="230"/>
+        <location filename="t4/maintainpage.ui" line="230"/>
         <source>Restore</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="241"/>
+        <location filename="t4/maintainpage.ui" line="241"/>
         <source>Backup the device settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="268"/>
+        <location filename="t4/maintainpage.ui" line="268"/>
         <source>Export the setting to local disk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="271"/>
+        <location filename="t4/maintainpage.ui" line="271"/>
         <source>Export</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="296"/>
+        <location filename="t4/maintainpage.ui" line="296"/>
         <source>Power</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="302"/>
+        <location filename="t4/maintainpage.ui" line="302"/>
         <source>Reboot the device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="305"/>
+        <location filename="t4/maintainpage.ui" line="305"/>
         <source>Restart</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="316"/>
+        <location filename="t4/maintainpage.ui" line="316"/>
         <source>Shutdown the device</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="319"/>
+        <location filename="t4/maintainpage.ui" line="319"/>
         <source>Shutdown</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="357"/>
-        <location filename="t4/maintain.ui" line="426"/>
+        <location filename="t4/maintainpage.ui" line="357"/>
+        <location filename="t4/maintainpage.ui" line="426"/>
         <source>User</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="363"/>
+        <location filename="t4/maintainpage.ui" line="363"/>
         <source>Reset user</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="367"/>
-        <location filename="t4/maintain.ui" line="437"/>
+        <location filename="t4/maintainpage.ui" line="367"/>
+        <location filename="t4/maintainpage.ui" line="437"/>
         <source>Operator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="372"/>
-        <location filename="t4/maintain.ui" line="442"/>
+        <location filename="t4/maintainpage.ui" line="372"/>
+        <location filename="t4/maintainpage.ui" line="442"/>
         <source>Administrator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="380"/>
+        <location filename="t4/maintainpage.ui" line="380"/>
         <source>Change password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="383"/>
+        <location filename="t4/maintainpage.ui" line="383"/>
         <source>Change Pw</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="416"/>
+        <location filename="t4/maintainpage.ui" line="416"/>
         <source>Reset the password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="419"/>
+        <location filename="t4/maintainpage.ui" line="419"/>
         <source>Reset Pw</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="433"/>
+        <location filename="t4/maintainpage.ui" line="433"/>
         <source>Current user role</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.ui" line="450"/>
-        <location filename="t4/maintain.ui" line="456"/>
+        <location filename="t4/maintainpage.ui" line="450"/>
+        <location filename="t4/maintainpage.ui" line="456"/>
         <source>Auto login</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MegaDeleteAffirmMessageBox</name>
+    <message>
+        <location filename="../widget/megamessagebox.cpp" line="47"/>
+        <source>Affirm to delete?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widget/megamessagebox.cpp" line="48"/>
+        <source>Affirm</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>MegaInterface</name>
+    <message>
+        <location filename="../widget/megainterface.ui" line="29"/>
+        <source>Interface</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widget/megainterface.ui" line="94"/>
+        <source>LAN</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widget/megainterface.ui" line="103"/>
+        <source>USB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widget/megainterface.ui" line="144"/>
+        <source>Scan</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widget/megainterface.cpp" line="78"/>
+        <location filename="../widget/megainterface.cpp" line="93"/>
+        <source>Identify ON</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widget/megainterface.cpp" line="79"/>
+        <location filename="../widget/megainterface.cpp" line="94"/>
+        <source>Identify OFF</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widget/megainterface.cpp" line="117"/>
+        <source>error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widget/megainterface.cpp" line="117"/>
+        <source>open device error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widget/megainterface.cpp" line="139"/>
+        <source>IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widget/megainterface.cpp" line="140"/>
+        <location filename="../widget/megainterface.cpp" line="148"/>
+        <source>Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widget/megainterface.cpp" line="141"/>
+        <location filename="../widget/megainterface.cpp" line="149"/>
+        <source>SN</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widget/megainterface.cpp" line="142"/>
+        <location filename="../widget/megainterface.cpp" line="150"/>
+        <source>Version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widget/megainterface.cpp" line="143"/>
+        <location filename="../widget/megainterface.cpp" line="151"/>
+        <source>Model</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widget/megainterface.cpp" line="147"/>
+        <source>USBID</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../widget/megainterface.cpp" line="310"/>
+        <source>Open fail!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1742,11 +2272,19 @@
     </message>
 </context>
 <context>
+    <name>Prompt</name>
+    <message>
+        <location filename="../wnd/prompt.ui" line="14"/>
+        <source>Notify</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QObject</name>
     <message>
         <location filename="t4/model/debugtable.cpp" line="9"/>
         <location filename="model/diagnosistable.cpp" line="24"/>
-        <location filename="model/errmgrmodel.cpp" line="51"/>
+        <location filename="model/errmgrmodel.cpp" line="35"/>
         <source>No.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1763,18 +2301,17 @@
     </message>
     <message>
         <location filename="model/diagnosistable.cpp" line="8"/>
-        <location filename="model/errmgrmodel.cpp" line="54"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="model/diagnosistable.cpp" line="10"/>
-        <location filename="model/errmgrmodel.cpp" line="53"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="model/diagnosistable.cpp" line="25"/>
+        <location filename="model/errmgrmodel.cpp" line="37"/>
         <source>Type</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1799,28 +2336,43 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="model/errmgrmodel.cpp" line="52"/>
-        <source>Error Text</source>
+        <location filename="model/errmgrmodel.cpp" line="36"/>
+        <source>Brief</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="model/errmgrmodel.cpp" line="55"/>
-        <source>Information</source>
+        <location filename="model/errmgrmodel.cpp" line="38"/>
+        <source>Reason</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="model/errmgrmodel.cpp" line="56"/>
-        <source>Reaction on error</source>
+        <location filename="model/errmgrmodel.cpp" line="39"/>
+        <source>Action</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="model/errmgrmodel.cpp" line="57"/>
-        <source>Output stage on</source>
+        <location filename="model/errmgrmodel.cpp" line="40"/>
+        <source>Output</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="model/errmgrmodel.cpp" line="58"/>
-        <source>Save diagnosis</source>
+        <location filename="model/errmgrmodel.cpp" line="41"/>
+        <source>Blink</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../sys/sysapi.cpp" line="143"/>
+        <source>create fail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.cpp" line="371"/>
+        <source>Info</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/mainwindow.cpp" line="372"/>
+        <source>language loss</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1829,6 +2381,129 @@
     <message>
         <location filename="t4/quadwiget.ui" line="14"/>
         <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>RoboConfig</name>
+    <message>
+        <location filename="../wnd/roboconfig.ui" line="32"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="72"/>
+        <location filename="../wnd/roboconfig.cpp" line="87"/>
+        <source>Project</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="86"/>
+        <location filename="../wnd/roboconfig.cpp" line="482"/>
+        <source>Reset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="114"/>
+        <source>removed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="148"/>
+        <location filename="../wnd/roboconfig.cpp" line="173"/>
+        <source>is not opened</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="155"/>
+        <source>download fail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="180"/>
+        <source>upload fail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="275"/>
+        <source>Delete all</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="330"/>
+        <location filename="../wnd/roboconfig.cpp" line="908"/>
+        <source>Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="335"/>
+        <location filename="../wnd/roboconfig.cpp" line="915"/>
+        <source>Disconnect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="343"/>
+        <source>Home</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="351"/>
+        <source>Delete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="417"/>
+        <source>Open fail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="439"/>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="439"/>
+        <source>Confirm Delete?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="482"/>
+        <source>Sure to reset all?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="680"/>
+        <source>Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="680"/>
+        <source>Invalid password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="690"/>
+        <source>No model</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="756"/>
+        <source>open fail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="848"/>
+        <source>connect fail</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="871"/>
+        <source>Too many device</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/roboconfig.cpp" line="871"/>
+        <source>Operate the device from the node</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1854,6 +2529,80 @@
     <message>
         <location filename="t4/scripteditor.ui" line="53"/>
         <source>Run</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SpaceWidget</name>
+    <message>
+        <location filename="../wnd/spacewidget.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>StopWidget</name>
+    <message>
+        <location filename="../wnd/stopwidget.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/stopwidget.ui" line="47"/>
+        <source>Emergency Stop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/stopwidget.ui" line="50"/>
+        <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SysLogout</name>
+    <message>
+        <location filename="../wnd/syslogout.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/syslogout.ui" line="27"/>
+        <location filename="../wnd/syslogout.cpp" line="49"/>
+        <source>Logout</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SysPref</name>
+    <message>
+        <location filename="../wnd/syspref.ui" line="14"/>
+        <location filename="../wnd/syspref.ui" line="27"/>
+        <source>Pref</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/syspref.ui" line="33"/>
+        <source>Auto search on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/syspref.ui" line="43"/>
+        <source>Auto Expand</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/syspref.ui" line="50"/>
+        <source>Auto RPP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/syspref.ui" line="83"/>
+        <source>Auto Load last</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/syspref.ui" line="90"/>
+        <source>Auto Maximize</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2220,75 +2969,167 @@
     </message>
 </context>
 <context>
-    <name>Widget</name>
+    <name>UpdateDialog</name>
     <message>
-        <location filename="t4/widget.ui" line="29"/>
-        <source>FilePath</source>
+        <location filename="t4/updatedialog.cpp" line="99"/>
+        <source>System Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/widget.ui" line="88"/>
-        <source>...</source>
+        <location filename="t4/updatedialog.cpp" line="102"/>
+        <source>Net Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/widget.ui" line="114"/>
-        <source>Show Information</source>
+        <location filename="t4/updatedialog.cpp" line="105"/>
+        <source>File Invalid</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/widget.cpp" line="76"/>
-        <source>Open Device Fail</source>
+        <location filename="t4/updatedialog.cpp" line="108"/>
+        <source>Connect Fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/widget.cpp" line="101"/>
+        <location filename="t4/updatedialog.cpp" line="111"/>
+        <source>The BOOT Version Is Old</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/updatedialog.cpp" line="114"/>
+        <source>The MRQ File Is Invalid</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/updatedialog.cpp" line="117"/>
+        <source>Cannot Get Ehe BOOT Version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/updatedialog.cpp" line="120"/>
+        <source>Reload Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/updatedialog.cpp" line="123"/>
+        <source>Get Software Version Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/updatedialog.cpp" line="126"/>
+        <source>Arm File Check Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/updatedialog.cpp" line="129"/>
+        <source>BOOT Data Download Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/updatedialog.cpp" line="132"/>
+        <source>Does Not Respond</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/updatedialog.cpp" line="135"/>
+        <source>FPGA1 File Check Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/updatedialog.cpp" line="138"/>
+        <source>Erase The FLASH Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/updatedialog.cpp" line="141"/>
+        <source>FPGA2 File Check Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/updatedialog.cpp" line="144"/>
+        <source>Open MRH-T Failed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/updatedialog.cpp" line="147"/>
+        <source>Update Complete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/updatedialog.cpp" line="151"/>
+        <source>MRQ Begin Update</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/updatedialog.cpp" line="154"/>
+        <source>MRH Begin Update</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/updatedialog.cpp" line="157"/>
+        <source>MRQ Update Complete</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/updatedialog.cpp" line="178"/>
+        <source>Warning</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/updatedialog.cpp" line="179"/>
+        <source>Please do not power off
+during the upgrade.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/updatedialog.cpp" line="221"/>
+        <source>Cancle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="t4/updatedialog.cpp" line="290"/>
         <source>Open File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/widget.cpp" line="101"/>
+        <location filename="t4/updatedialog.cpp" line="290"/>
         <source>(*.upd)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/widget.cpp" line="156"/>
-        <source>Update Error</source>
+        <location filename="t4/updatedialog.cpp" line="307"/>
+        <source>Open Fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/widget.cpp" line="293"/>
-        <source>Unpacking Error</source>
+        <location filename="t4/updatedialog.cpp" line="315"/>
+        <source>Invalid File</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>WelcomePage</name>
+    <message>
+        <location filename="../wnd/welcomepage.ui" line="14"/>
+        <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/widget.cpp" line="310"/>
-        <source>Update MRQ Fail</source>
+        <location filename="../wnd/welcomepage.ui" line="42"/>
+        <source>www.megarobo.tech</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Widget</name>
+    <message>
+        <location filename="t4/updatedialog.ui" line="43"/>
+        <source>FilePath</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/widget.cpp" line="337"/>
-        <source>reboot</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="t4/widget.cpp" line="337"/>
-        <source>Reboot now?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="t4/widget.cpp" line="390"/>
-        <source>Update Complete!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="t4/widget.cpp" line="428"/>
-        <source>Show detail</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="t4/widget.cpp" line="430"/>
-        <source>Hide detail</source>
+        <location filename="t4/updatedialog.ui" line="57"/>
+        <source>...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2302,9 +3143,27 @@
     </message>
 </context>
 <context>
+    <name>aboutDlg</name>
+    <message>
+        <location filename="../wnd/aboutdlg.ui" line="20"/>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/aboutdlg.ui" line="77"/>
+        <source>MEGAROBO Config Tool</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../wnd/aboutdlg.ui" line="84"/>
+        <source>0.0.2</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>mrx_t4</name>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="2308"/>
+        <location filename="t4/t4oppanel.cpp" line="2314"/>
         <source>Joint zero</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2353,107 +3212,107 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="719"/>
+        <location filename="t4/actiontable.cpp" line="720"/>
         <source>Invalid input</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="804"/>
+        <location filename="t4/actiontable.cpp" line="844"/>
         <source>Invalid absolute position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="879"/>
+        <location filename="t4/actiontable.cpp" line="919"/>
         <source>To here</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="1050"/>
+        <location filename="t4/actiontable.cpp" line="1090"/>
         <source>save fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="1074"/>
+        <location filename="t4/actiontable.cpp" line="1114"/>
         <source>To Here</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="1080"/>
+        <location filename="t4/actiontable.cpp" line="1120"/>
         <source>Add Before</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="1081"/>
+        <location filename="t4/actiontable.cpp" line="1121"/>
         <source>Add Below</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="1082"/>
+        <location filename="t4/actiontable.cpp" line="1122"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="1089"/>
+        <location filename="t4/actiontable.cpp" line="1129"/>
         <source>Up</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="1090"/>
+        <location filename="t4/actiontable.cpp" line="1130"/>
         <source>Down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="1096"/>
+        <location filename="t4/actiontable.cpp" line="1136"/>
         <source>All Expand</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="1097"/>
+        <location filename="t4/actiontable.cpp" line="1137"/>
         <source>All Collapse</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="1100"/>
+        <location filename="t4/actiontable.cpp" line="1140"/>
         <source>Homing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="1203"/>
+        <location filename="t4/actiontable.cpp" line="1243"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="1203"/>
-        <location filename="t4/actiontable.cpp" line="1224"/>
+        <location filename="t4/actiontable.cpp" line="1243"/>
+        <location filename="t4/actiontable.cpp" line="1264"/>
         <source>Record (*.mrp)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="1211"/>
-        <location filename="t4/actiontable.cpp" line="1218"/>
-        <location filename="t4/actiontable.cpp" line="1329"/>
+        <location filename="t4/actiontable.cpp" line="1251"/>
+        <location filename="t4/actiontable.cpp" line="1258"/>
+        <location filename="t4/actiontable.cpp" line="1369"/>
         <source>Save record fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="1224"/>
+        <location filename="t4/actiontable.cpp" line="1264"/>
         <source>Open</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="1232"/>
-        <location filename="t4/actiontable.cpp" line="1238"/>
-        <location filename="t4/actiontable.cpp" line="1295"/>
+        <location filename="t4/actiontable.cpp" line="1272"/>
+        <location filename="t4/actiontable.cpp" line="1278"/>
+        <location filename="t4/actiontable.cpp" line="1335"/>
         <source>Load record fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="1289"/>
+        <location filename="t4/actiontable.cpp" line="1329"/>
         <source>Invalid File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/actiontable.cpp" line="1314"/>
+        <location filename="t4/actiontable.cpp" line="1354"/>
         <source>Invalid description</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2554,16 +3413,16 @@
     </message>
 </context>
 <context>
-    <name>mrx_t4::Maintain</name>
+    <name>mrx_t4::MaintainPage</name>
     <message>
-        <location filename="t4/maintain.cpp" line="107"/>
+        <location filename="t4/maintainpage.cpp" line="107"/>
         <source>Demo1:
 * drag and drop in two points.
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="110"/>
+        <location filename="t4/maintainpage.cpp" line="110"/>
         <source>Demo2:
 * Moving in the working space.
 * It is used in the factory test procedure.
@@ -2571,127 +3430,127 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="125"/>
+        <location filename="t4/maintainpage.cpp" line="125"/>
         <source>No demo descripton</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="153"/>
+        <location filename="t4/maintainpage.cpp" line="153"/>
         <source>Demo fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="162"/>
-        <location filename="t4/maintain.cpp" line="171"/>
-        <location filename="t4/maintain.cpp" line="180"/>
-        <location filename="t4/maintain.cpp" line="314"/>
-        <location filename="t4/maintain.cpp" line="502"/>
+        <location filename="t4/maintainpage.cpp" line="162"/>
+        <location filename="t4/maintainpage.cpp" line="171"/>
+        <location filename="t4/maintainpage.cpp" line="180"/>
+        <location filename="t4/maintainpage.cpp" line="314"/>
+        <location filename="t4/maintainpage.cpp" line="502"/>
         <source>Warning</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="162"/>
+        <location filename="t4/maintainpage.cpp" line="162"/>
         <source>Confirm Reboot?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="171"/>
+        <location filename="t4/maintainpage.cpp" line="171"/>
         <source>Confirm PowerOff?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="180"/>
+        <location filename="t4/maintainpage.cpp" line="180"/>
         <source>Confirm Reset?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="211"/>
+        <location filename="t4/maintainpage.cpp" line="211"/>
         <source>Read File Fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="301"/>
+        <location filename="t4/maintainpage.cpp" line="301"/>
         <source>Backup Fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="304"/>
+        <location filename="t4/maintainpage.cpp" line="304"/>
         <source>Backup Complete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="314"/>
+        <location filename="t4/maintainpage.cpp" line="314"/>
         <source>Confirm Clear?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="324"/>
+        <location filename="t4/maintainpage.cpp" line="324"/>
         <source>Clear fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="328"/>
+        <location filename="t4/maintainpage.cpp" line="328"/>
         <source>Clear completed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="362"/>
-        <location filename="t4/maintain.cpp" line="411"/>
+        <location filename="t4/maintainpage.cpp" line="362"/>
+        <location filename="t4/maintainpage.cpp" line="411"/>
         <source>Password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="371"/>
-        <location filename="t4/maintain.cpp" line="394"/>
-        <location filename="t4/maintain.cpp" line="421"/>
+        <location filename="t4/maintainpage.cpp" line="371"/>
+        <location filename="t4/maintainpage.cpp" line="394"/>
+        <location filename="t4/maintainpage.cpp" line="421"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="371"/>
-        <location filename="t4/maintain.cpp" line="394"/>
-        <location filename="t4/maintain.cpp" line="421"/>
+        <location filename="t4/maintainpage.cpp" line="371"/>
+        <location filename="t4/maintainpage.cpp" line="394"/>
+        <location filename="t4/maintainpage.cpp" line="421"/>
         <source>Invalid password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="411"/>
+        <location filename="t4/maintainpage.cpp" line="411"/>
         <source>Admin Password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="471"/>
+        <location filename="t4/maintainpage.cpp" line="471"/>
         <source>Restore Fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="473"/>
+        <location filename="t4/maintainpage.cpp" line="473"/>
         <source>Restore Complete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="494"/>
+        <location filename="t4/maintainpage.cpp" line="494"/>
         <source>Export</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="502"/>
+        <location filename="t4/maintainpage.cpp" line="502"/>
         <source>Directory is not empty, overwrite?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="511"/>
+        <location filename="t4/maintainpage.cpp" line="511"/>
         <source>Mkdir Fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="541"/>
-        <location filename="t4/maintain.cpp" line="580"/>
+        <location filename="t4/maintainpage.cpp" line="541"/>
+        <location filename="t4/maintainpage.cpp" line="580"/>
         <source>Open Fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/maintain.cpp" line="556"/>
+        <location filename="t4/maintainpage.cpp" line="556"/>
         <source>Enum log fail</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2729,223 +3588,223 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="471"/>
+        <location filename="t4/t4oppanel.cpp" line="472"/>
         <source>Record read fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="480"/>
+        <location filename="t4/t4oppanel.cpp" line="481"/>
         <source>Target read fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="492"/>
+        <location filename="t4/t4oppanel.cpp" line="493"/>
         <source>Current read fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="507"/>
+        <location filename="t4/t4oppanel.cpp" line="508"/>
         <source>report data query fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="540"/>
+        <location filename="t4/t4oppanel.cpp" line="541"/>
         <source>get tool position fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="555"/>
+        <location filename="t4/t4oppanel.cpp" line="556"/>
         <source>get state fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="572"/>
+        <location filename="t4/t4oppanel.cpp" line="573"/>
         <source>Homeing status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="583"/>
+        <location filename="t4/t4oppanel.cpp" line="584"/>
         <source>Set project mode fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="592"/>
+        <location filename="t4/t4oppanel.cpp" line="591"/>
         <source>Get IO fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="753"/>
+        <location filename="t4/t4oppanel.cpp" line="757"/>
         <source>Read diagnosis fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="763"/>
+        <location filename="t4/t4oppanel.cpp" line="767"/>
         <source>Diagnosis refresh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="776"/>
+        <location filename="t4/t4oppanel.cpp" line="780"/>
         <source>Position refresh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="782"/>
+        <location filename="t4/t4oppanel.cpp" line="786"/>
         <source>ping tick</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="906"/>
+        <location filename="t4/t4oppanel.cpp" line="910"/>
         <source>Homing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="915"/>
+        <location filename="t4/t4oppanel.cpp" line="919"/>
         <source>Folding</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="945"/>
+        <location filename="t4/t4oppanel.cpp" line="949"/>
         <source>load fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1039"/>
+        <location filename="t4/t4oppanel.cpp" line="1043"/>
         <source>Joint step</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1072"/>
+        <location filename="t4/t4oppanel.cpp" line="1076"/>
         <source>Joint jog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1087"/>
+        <location filename="t4/t4oppanel.cpp" line="1091"/>
         <source>TCP jog</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1101"/>
+        <location filename="t4/t4oppanel.cpp" line="1105"/>
         <source>Step</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1270"/>
+        <location filename="t4/t4oppanel.cpp" line="1274"/>
         <source>Jog end fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1313"/>
-        <location filename="t4/t4oppanel.cpp" line="1564"/>
+        <location filename="t4/t4oppanel.cpp" line="1317"/>
+        <location filename="t4/t4oppanel.cpp" line="1570"/>
         <source>Exec fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1336"/>
+        <location filename="t4/t4oppanel.cpp" line="1340"/>
         <source>RPP fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1353"/>
-        <location filename="t4/t4oppanel.cpp" line="1590"/>
+        <location filename="t4/t4oppanel.cpp" line="1357"/>
+        <location filename="t4/t4oppanel.cpp" line="1596"/>
         <source>Anchor fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1379"/>
+        <location filename="t4/t4oppanel.cpp" line="1383"/>
         <source>Single execute completed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1485"/>
+        <location filename="t4/t4oppanel.cpp" line="1489"/>
         <source>Invalid last absolution position</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1622"/>
+        <location filename="t4/t4oppanel.cpp" line="1628"/>
         <source>Step execute completed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1687"/>
+        <location filename="t4/t4oppanel.cpp" line="1693"/>
         <source>Base</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1688"/>
+        <location filename="t4/t4oppanel.cpp" line="1694"/>
         <source>Shoulder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1689"/>
+        <location filename="t4/t4oppanel.cpp" line="1695"/>
         <source>Elbow</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1743"/>
+        <location filename="t4/t4oppanel.cpp" line="1749"/>
         <source>power config fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1754"/>
+        <location filename="t4/t4oppanel.cpp" line="1760"/>
         <source>ack_error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1783"/>
+        <location filename="t4/t4oppanel.cpp" line="1789"/>
         <source> save fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1820"/>
+        <location filename="t4/t4oppanel.cpp" line="1826"/>
         <source> load fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1897"/>
+        <location filename="t4/t4oppanel.cpp" line="1903"/>
         <source>To Here</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1926"/>
-        <location filename="t4/t4oppanel.cpp" line="1947"/>
+        <location filename="t4/t4oppanel.cpp" line="1932"/>
+        <location filename="t4/t4oppanel.cpp" line="1953"/>
         <source>Rename</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="1947"/>
+        <location filename="t4/t4oppanel.cpp" line="1953"/>
         <source>New Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="2045"/>
+        <location filename="t4/t4oppanel.cpp" line="2051"/>
         <source>Current speed changed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="2099"/>
-        <location filename="t4/t4oppanel.cpp" line="2122"/>
+        <location filename="t4/t4oppanel.cpp" line="2105"/>
+        <location filename="t4/t4oppanel.cpp" line="2128"/>
         <source>Debug(*.dbg)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="2112"/>
-        <location filename="t4/t4oppanel.cpp" line="2135"/>
-        <location filename="t4/t4oppanel.cpp" line="2296"/>
+        <location filename="t4/t4oppanel.cpp" line="2118"/>
+        <location filename="t4/t4oppanel.cpp" line="2141"/>
+        <location filename="t4/t4oppanel.cpp" line="2302"/>
         <source>save fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="2259"/>
+        <location filename="t4/t4oppanel.cpp" line="2265"/>
         <source>Clear Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="2275"/>
+        <location filename="t4/t4oppanel.cpp" line="2281"/>
         <source>clear error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="t4/t4oppanel.cpp" line="2283"/>
+        <location filename="t4/t4oppanel.cpp" line="2289"/>
         <source>Diagnosis(*.dia)</source>
         <translation type="unfinished"></translation>
     </message>

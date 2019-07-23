@@ -137,11 +137,23 @@ bool DiagnosisTable::removeRows(int position, int rows, const QModelIndex &paren
 
 QVariant DiagnosisTable::headerData(int section, Qt::Orientation orientation, int role ) const
 {
+    static const char *header_strings[] = {
+          QT_TR_NOOP("No."),
+          QT_TR_NOOP("Type"),
+          QT_TR_NOOP("Timestamp"),
+          QT_TR_NOOP("Additional info"),
+          QT_TR_NOOP("Counter"),
+          QT_TR_NOOP("Message")
+      };
+
     if ( role != Qt::DisplayRole )
     { return QVariant(); }
 
-    if ( orientation == Qt::Horizontal )
-    { return QVariant( mHeaderList.at(section) ); }
+    if ( orientation == Qt::Horizontal
+         && section < sizeof(header_strings)/sizeof(header_strings[0]) )
+    {
+        return QVariant( QObject::tr( header_strings[section] ) );
+    }
     else
     { return QVariant(section);}
 }

@@ -87,7 +87,7 @@ void MRX_T4::slot_exception_arrived()
     unlockWorking();
 
     //! now try parse
-    QStringList exceptionList = QString( theData).split( '\n' );
+    QStringList exceptionList = QString( theData).split( '\n', QString::SkipEmptyParts );
     QString item;
     bool bOk;
 
@@ -95,22 +95,14 @@ void MRX_T4::slot_exception_arrived()
     {
         item = exceptionList.at(i);
 
-        if ( bOk )
+        XEvent *pEvent = new XEvent( XEvent::e_xevent_device_exception, item );
+        if ( NULL != pEvent )
         {
-            XEvent *pEvent = new XEvent( XEvent::e_xevent_device_exception, item );
-            if ( NULL != pEvent )
-            {
-                qApp->postEvent( this, pEvent );
-            }
-            else
-            {
-                sysError( tr("New event fail") );
-            }
-
+            qApp->postEvent( this, pEvent );
         }
         else
         {
-            sysError( tr("Invalid exception id") );
+            sysError( tr("New event fail") );
         }
     }
 

@@ -39,8 +39,7 @@ void T4Para::rst()
     mAxisIdleCurrents[3] = 1;
     mAxisIdleCurrents[4] = 0.5;
 
-    //! \note not change the zero
-
+    //! \note do not change the zero
     mbAxisSoftEnable = false;
     mbAxisSafeEnable = true;
     for ( int i = 0; i < T4Para::_axis_cnt; i++ )
@@ -79,6 +78,7 @@ void T4Para::rst()
 
     mMaxAcc = 10;
     mMaxJerk = 10;
+    mAutoAcc = 25;
 
     mMaxTerminalSpeed = 250;
 
@@ -124,7 +124,6 @@ int T4Para::serialOut( QXmlStreamWriter &writer )
         writer.writeStartElement("axis");
             writer.writeTextElement( "current", QString::number( mAxisCurrents[i]) );
             writer.writeTextElement( "idle_current", QString::number( mAxisIdleCurrents[i]) );
-//            writer.writeTextElement( "switch_time", QString::number( mAxisSwitchTimes[i]) );
 
             writer.writeTextElement( "zero", QString::number( mAxisZero[i]) );
 
@@ -182,8 +181,9 @@ int T4Para::serialOut( QXmlStreamWriter &writer )
 
     //! speed
     writer.writeStartElement("max_speed");
-    writer.writeTextElement( "acc", QString::number( mMaxAcc ) );
+        writer.writeTextElement( "acc", QString::number( mMaxAcc ) );
         writer.writeTextElement( "jerk", QString::number( mMaxJerk ) );
+        writer.writeTextElement( "auto_acc", QString::number( mAutoAcc ) );
 
         writer.writeTextElement( "terminal", QString::number( mMaxTerminalSpeed ) );
 
@@ -384,6 +384,8 @@ int T4Para::serialIn( QXmlStreamReader &reader )
                 { mMaxAcc = reader.readElementText().toDouble(); }
                 else if ( reader.name() == "jerk" )
                 { mMaxJerk = reader.readElementText().toDouble(); }
+                else if ( reader.name() == "auto_acc" )
+                { mAutoAcc = reader.readElementText().toInt(); }
                 else if ( reader.name() == "joint" )
                 {
                     mMaxJointSpeeds[jid++] = reader.readElementText().toDouble();

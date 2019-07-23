@@ -87,7 +87,7 @@ void MRX_T4::slot_exception_arrived()
     unlockWorking();
 
     //! now try parse
-    QStringList exceptionList = QString( theData).split( '\n' );
+    QStringList exceptionList = QString( theData).split( '\n', QString::SkipEmptyParts );
     QString item;
     bool bOk;
 

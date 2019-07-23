@@ -590,7 +590,7 @@ void MaintainPage::on_btnBuild_clicked()
     begin_page_log();
     end_page_log();
 
-
+logDbg()<<m_pPlugin->mrqVer();
     int ret;
     ret = mrgSystemSetMRQConfig( m_pPlugin->deviceVi(),
                                  m_pPlugin->SoftVer_MRQ().toLatin1().data(),

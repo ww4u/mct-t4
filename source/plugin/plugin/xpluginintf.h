@@ -110,6 +110,11 @@ public:
     void setSoftVer_MRQ( const QString &s ){ mSoftVer_MRQ = s; }
     QString SoftVer_MRQ(){ return mSoftVer_MRQ; }
 
+    void setMrqVer( const QString &ver )
+    { mMrqVer = ver; }
+    QString mrqVer()
+    { return mMrqVer; }
+
     void setFirmWareHard_MRQ( const QString &s ){ mFirmWareHard_MRQ = s; }
     QString FirmWareHard_MRQ(){ return mFirmWareHard_MRQ; }
 
@@ -184,7 +189,9 @@ protected:
     QString mMRHType, mMRHSN, mMRHVer, mMRHBBSw, mMRHBBHw;
 
     //! MRQ info
-    QString mType, mSN_MRQ, mSoftVer_MRQ, mFirmWareHard_MRQ, mFirmWareBoot_MRQ, mFirmWareFpga_MRQ;
+    QString mType, mSN_MRQ, mFirmWareHard_MRQ, mFirmWareBoot_MRQ, mFirmWareFpga_MRQ;
+    QString mSoftVer_MRQ;   //! full ver
+    QString mMrqVer;        //! brief ver
 
     ePluginAttr mAttr;
     int mDevId;

@@ -198,6 +198,12 @@ int MRX_T4::_open( int &vi )
             if(ret!=0)
             { ret = -1; break; }
             setType_MRQ( buf );
+
+            mrgGetDeviceSoftVersion( vi, mDeviceHandle, buf );
+            if ( ret != 0 )
+            { ret = -1; break; }
+            setMrqVer( buf );
+
         }
 
         //! connect socket
@@ -438,23 +444,26 @@ void MRX_T4::onDeviceException( QVariant &var )
     {
         //! try decode the info
         QStringList itemList = var.toString().split(",", QString::SkipEmptyParts );
+
         QString promptString;
+        int errLev = 2;
+        bool bOk;
 
         do
         {
             //! default
             promptString = var.toString();
+            sysInfo( promptString );
 
             if ( itemList.size() > 0 )
             {
                 //! try get the index
                 int errCode;
-                bool bOk;
                 errCode = itemList.at( 0 ).toInt( &bOk, 16 );
                 if ( bOk )
                 {
                     QVariant var;
-                    var = mErrorConfigTable.errorBrief( errCode, sysLangIndex() );
+                    var = mErrorConfigTable.errorBrief( errCode, sysLangIndex() == e_lang_cn ? 0 : 1 );
                     if ( var.isValid() )
                     {  promptString = var.toString(); }
                     else
@@ -466,14 +475,21 @@ void MRX_T4::onDeviceException( QVariant &var )
                 {   //! invalid err code
                 }
             }
-            else
-            {
 
+            //! level
+            if ( itemList.size() > 1 )
+            {
+                if ( str_is( itemList.at(1), "WARNING") )
+                { errLev = 1; }
+                else if ( str_is( itemList.at(1), "ERROR") )
+                { errLev = 2; }
+                else
+                { errLev = 0; }
             }
 
         }while( 0 );
 
-        sysPrompt( promptString, 2 );
+        sysPrompt( promptString, 1 );
     }
     else
     {

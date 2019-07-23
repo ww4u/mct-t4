@@ -53,18 +53,19 @@ void AdvPara::updateUi()
     bool bDir = true;
 
     exchange_spin( spinHomeSpeed, pRobo->mHomeSpeed, bDir );
-    exchange_spin( spinHomeTimeout, pRobo->mHomeTimeout, bDir )
+    exchange_spin( spinHomeTimeout, pRobo->mHomeTimeout, bDir );
 
-    exchange_spin( spinAcc, pRobo->mMaxAcc, bDir )
-    exchange_spin( spinJerk, pRobo->mMaxJerk, bDir )
+    exchange_spin( spinAcc, pRobo->mMaxAcc, bDir );
+    exchange_spin( spinJerk, pRobo->mMaxJerk, bDir );
+    exchange_spin( spinAutoAcc, pRobo->mAutoAcc, bDir );
 
-    exchange_spin( spinJoint0Speed, pRobo->mMaxJointSpeeds[0], bDir )
-    exchange_spin( spinJoint1Speed, pRobo->mMaxJointSpeeds[1], bDir )
-    exchange_spin( spinJoint2Speed, pRobo->mMaxJointSpeeds[2], bDir )
-    exchange_spin( spinJoint3Speed, pRobo->mMaxJointSpeeds[3], bDir )
-    exchange_spin( spinJoint4Speed, pRobo->mMaxJointSpeeds[4], bDir )
+    exchange_spin( spinJoint0Speed, pRobo->mMaxJointSpeeds[0], bDir );
+    exchange_spin( spinJoint1Speed, pRobo->mMaxJointSpeeds[1], bDir );
+    exchange_spin( spinJoint2Speed, pRobo->mMaxJointSpeeds[2], bDir );
+    exchange_spin( spinJoint3Speed, pRobo->mMaxJointSpeeds[3], bDir );
+    exchange_spin( spinJoint4Speed, pRobo->mMaxJointSpeeds[4], bDir );
 
-    exchange_spin( spinTerminalSpeed, pRobo->mMaxTerminalSpeed, bDir )
+    exchange_spin( spinTerminalSpeed, pRobo->mMaxTerminalSpeed, bDir );
 }
 
 void AdvPara::updateData()
@@ -75,18 +76,19 @@ void AdvPara::updateData()
     bool bDir = false;
 
     exchange_spin( spinHomeSpeed, pRobo->mHomeSpeed, bDir );
-    exchange_spin( spinHomeTimeout, pRobo->mHomeTimeout, bDir )
+    exchange_spin( spinHomeTimeout, pRobo->mHomeTimeout, bDir );
 
-    exchange_spin( spinAcc, pRobo->mMaxAcc, bDir )
-    exchange_spin( spinJerk, pRobo->mMaxJerk, bDir )
+    exchange_spin( spinAcc, pRobo->mMaxAcc, bDir );
+    exchange_spin( spinJerk, pRobo->mMaxJerk, bDir );
+    exchange_spin( spinAutoAcc, pRobo->mAutoAcc, bDir );
 
-    exchange_spin( spinJoint0Speed, pRobo->mMaxJointSpeeds[0], bDir )
-    exchange_spin( spinJoint1Speed, pRobo->mMaxJointSpeeds[1], bDir )
-    exchange_spin( spinJoint2Speed, pRobo->mMaxJointSpeeds[2], bDir )
-    exchange_spin( spinJoint3Speed, pRobo->mMaxJointSpeeds[3], bDir )
-    exchange_spin( spinJoint4Speed, pRobo->mMaxJointSpeeds[4], bDir )
+    exchange_spin( spinJoint0Speed, pRobo->mMaxJointSpeeds[0], bDir );
+    exchange_spin( spinJoint1Speed, pRobo->mMaxJointSpeeds[1], bDir );
+    exchange_spin( spinJoint2Speed, pRobo->mMaxJointSpeeds[2], bDir );
+    exchange_spin( spinJoint3Speed, pRobo->mMaxJointSpeeds[3], bDir );
+    exchange_spin( spinJoint4Speed, pRobo->mMaxJointSpeeds[4], bDir );
 
-    exchange_spin( spinTerminalSpeed, pRobo->mMaxTerminalSpeed, bDir )
+    exchange_spin( spinTerminalSpeed, pRobo->mMaxTerminalSpeed, bDir );
 }
 
 void AdvPara::spyEdited()
@@ -105,7 +107,7 @@ void AdvPara::spyEdited()
     };
 
     QSpinBox *spinBoxes[]={
-
+        ui->spinAutoAcc
     };
 
     QDoubleSpinBox *doubleSpinBoxes[]={

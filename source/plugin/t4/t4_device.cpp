@@ -770,19 +770,14 @@ int MRX_T4::absMove( QString para,
     float a = 16*qAbs( dist )/(3*t*t);
 
     //! tune the t for a
-//    if ( dist < 10 )
-    {
-        float amax = 16*mMaxTerminalSpeed/3/4;
+    float amax = 16*mMaxTerminalSpeed / 3 * mAutoAcc / 100;
 
-        if( a > amax ){
-            t = sqrt( 16*qAbs( dist )/(3*amax) );
-            sysInfo( tr("Slow the velocity") );
-        }else{
-            //! no change
-        }
+    if( a > amax ){
+        t = sqrt( 16*qAbs( dist )/(3*amax) );
+        sysInfo( tr("Slow the velocity") );
+    }else{
+        //! no change
     }
-//    else
-//    {}
 
     logDbg()<<x<<y<<z<<t<<guess_dist_time_ms( t, dist ) <<dist<<qAbs( dist ) / v<<v << a;
 

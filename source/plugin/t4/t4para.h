@@ -66,7 +66,6 @@ public:
 
     float mAxisCurrents[ T4Para::_axis_cnt ];
     float mAxisIdleCurrents[ T4Para::_axis_cnt ];
-//    float mAxisSwitchTimes[ T4Para::_axis_cnt ];
 
     double mAxisZero[ T4Para::_axis_cnt ];
 
@@ -82,9 +81,6 @@ public:
     double mSpeed;      //! percent
     eCoordinateType mCoord;
 
-//    int mJointStepIndex;
-//    double mJointSpeed;
-
     Coordinate mCoordPara[10+2];
 
     double mArmLength[3];
@@ -92,6 +88,7 @@ public:
     double mHomeSpeed, mHomeTimeout;
 
     double mMaxAcc, mMaxJerk;
+    int    mAutoAcc;
 
     double mMaxJointSpeed;
     double mMaxTerminalSpeed;

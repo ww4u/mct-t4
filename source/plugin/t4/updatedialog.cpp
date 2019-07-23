@@ -51,22 +51,12 @@ UpdateDialog::UpdateDialog(QWidget *parent) :
     pWorkThead = NULL;
 
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled( false );
+    ui->buttonBox->button( QDialogButtonBox::Cancel )->setEnabled( false );
 
     //! update thread
 
     pStatusBar = new QStatusBar(this);
     ui->gridLayout->addWidget(pStatusBar, 3, 0, 1, 1);
-    ui->progressBar->setStyleSheet( ("QProgressBar{border:1px solid #FFFFFF;"
-                                     "height:30;"
-                                     "background:#0000ff;"
-                                     "text-align:center;"
-                                     "color:rgb(255,255,0);}"
-                                     "QProgressBar::chunk{"
-                                     "border:1px solid black;"
-                                     "background-color:#00aa00;"
-                                     "width:10px;margin:0px;}"
-                                     ) );
-
 }
 
 UpdateDialog::~UpdateDialog()
@@ -168,11 +158,11 @@ void UpdateDialog::updateProgress( QString str )
 
 void UpdateDialog::on_buttonBox_clicked(QAbstractButton *button)
 {
-
     begin_page_log();
     end_page_log();
 
-    if((QPushButton*)(button) == ui->buttonBox->button(QDialogButtonBox::Ok))
+    if((QPushButton*)(button) ==
+        ui->buttonBox->button(QDialogButtonBox::Ok))
     {
         //! Warning message
         int ret = QMessageBox::warning(this, tr("Warning"),
@@ -189,6 +179,7 @@ void UpdateDialog::on_buttonBox_clicked(QAbstractButton *button)
         m_pPlugin->close();
 
         button->setDisabled( true );
+        ui->buttonBox->button( QDialogButtonBox::Cancel )->setEnabled( true );
 
         ui->lineEdit->setReadOnly( true );
         ui->toolButton->setDisabled( true );
@@ -219,6 +210,7 @@ void UpdateDialog::on_buttonBox_clicked(QAbstractButton *button)
         ui->lineEdit->clear();
         ui->progressBar->hide();
         pStatusBar->showMessage( tr("Cancle"),  5000);
+        ui->buttonBox->button( QDialogButtonBox::Cancel )->setEnabled( false );
     }
 
 }
@@ -292,8 +284,7 @@ void UpdateDialog::on_toolButton_clicked()
 }
 
 void UpdateDialog::on_lineEdit_textChanged(const QString &s)
-{logDbg() << s;
-    //ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( arg1.length() );
+{
     pStatusBar->clearMessage();
 
     if( s.isEmpty() ){
@@ -305,7 +296,7 @@ void UpdateDialog::on_lineEdit_textChanged(const QString &s)
 
     }else{
         pStatusBar->showMessage( tr("Open Fail") );
-        ui->buttonBox->button(QDialogButtonBox::Ok)->setVisible( false );
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled( false );
         return;
     }
 
@@ -313,16 +304,14 @@ void UpdateDialog::on_lineEdit_textChanged(const QString &s)
 
     if( parseUpdateFile( ba ) != 0){
         pStatusBar->showMessage( tr("Invalid File") );
-        ui->buttonBox->button(QDialogButtonBox::Ok)->setVisible( false );
+        ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled( false );
     }else{
         if( !versionComparison( m_desc ) && !isAdmin){
             this->pStatusBar->showMessage(QString("Desc: %1, %2").arg(m_desc).arg(QString("Permission not allowed")));
             ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled( false );
-            ui->buttonBox->button(QDialogButtonBox::Ok)->setVisible( false );
         }else{
             this->pStatusBar->showMessage(QString("Desc: %1").arg(m_desc));
             ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(s.length()>0);
-            ui->buttonBox->button(QDialogButtonBox::Ok)->setVisible( true );
         }
 
     }
@@ -473,9 +462,8 @@ int MThead::generateDevUpdateFile()
 }
 
 int MThead::updateDevice()
-{logDbg()<<QThread::currentThreadId();
-    //! \todo err code
-    if( generateDevUpdateFile() != 0 ){logDbg();
+{
+    if( generateDevUpdateFile() != 0 ){
         return -1;
     }
 
@@ -587,8 +575,7 @@ int MThead::updateController()
 }
 
 void MThead::run()
-{logDbg();
-    //! \todo
+{
     try{
         while( 1 )
         {logDbg();

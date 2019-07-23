@@ -601,7 +601,7 @@ int T4OpPanel::posRefreshProc( void *pContext )
         for(int i =0; i < 15; i++){
             mRefreshPara.IO_MRHT29.append( ( state & (1 << i)) != 0 );
         }
-
+        logDbg() << mRefreshPara.IO_MRHT29;
         //! post refresh
         OpEvent *updateEvent = new OpEvent( OpEvent::update_pose );
         if ( NULL != updateEvent )
@@ -1755,7 +1755,7 @@ void T4OpPanel::slot_ack_error()
 {
     check_connect( );
 
-    int ret = mrgErrorLogClear( pRobo->deviceVi() );
+    int ret = mrgSystemErrorAck( pRobo->deviceVi() );
     if ( ret != 0 )
     { sysError( tr("ack_error") );}
 }

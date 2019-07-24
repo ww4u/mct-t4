@@ -19,7 +19,6 @@
 #include "iostate.h"
 #include "ioindicator.h"
 
-//#define MONITOR_EVENT   (QEvent::Type)( QEvent::User + 1 )
 typedef QList<QPointF> PointList;
 
 class PlotDataSets

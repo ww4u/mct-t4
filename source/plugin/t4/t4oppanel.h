@@ -361,6 +361,9 @@ protected:
     void on_demo_start( );
 
     void setYOut( int id, bool b );
+
+    int post_save_debug( void *pContext );
+
 private:
     Ui::T4OpPanel *ui;
 

@@ -299,6 +299,8 @@ public:
 
     QMutex mEmergMutex, mMissionMutex, mUpdateMutex;
 
+    QMutex mShareMutex;
+
 protected Q_SLOTS:
     virtual void slot_save_setting();
     virtual void slot_load_setting();
@@ -312,6 +314,7 @@ class XPluginBgThread : public QThread
 public:
     XPluginBgThread( XPlugin *plugin, QObject *parent = NULL );
 
+    void attachShareMutex( QMutex *pMutex );
 protected:
     virtual void run();
 
@@ -322,6 +325,8 @@ protected:
     XPlugin *m_pPlugin;
     QQueue< XPlugin::bgProc > mApis;
     QMutex mMutex;
+
+    QMutex *m_pShareMutex;
 };
 
 

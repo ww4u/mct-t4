@@ -34,6 +34,12 @@ XPlugin::XPlugin( QObject *parent ) : XPluginIntf( parent )
     m_pBgWorking = new XPluginBgThread( this, this );
     m_pBgWorking->start();
 
+    //! attach share mutex
+    m_pUpdateWorking->attachShareMutex( &mShareMutex );
+    m_pBgWorking->attachShareMutex( &mShareMutex );
+
+//    m_pMissionWorking->attachShareMutex( &mShareMutex );
+
     connect( this, SIGNAL(signal_request_load()),
              this, SLOT(slot_load_setting()) );
 
@@ -705,7 +711,16 @@ void XPlugin::slot_plugin_setting_changed( XSetting setting )
 }
 
 XPluginBgThread::XPluginBgThread( XPlugin *plugin, QObject *parent ) :QThread(parent),m_pPlugin(plugin)
-{}
+{
+    m_pShareMutex = NULL;
+}
+
+void XPluginBgThread::attachShareMutex( QMutex *pMutex )
+{
+    Q_ASSERT( NULL != pMutex );
+
+    m_pShareMutex = pMutex;
+}
 
 void XPluginBgThread::run()
 {
@@ -719,7 +734,13 @@ void XPluginBgThread::run()
 
         proc = mApis.dequeue();
 
-        ret = (m_pPlugin->*proc)();
+        if ( NULL != m_pShareMutex )
+        { m_pShareMutex->lock(); }
+
+            ret = (m_pPlugin->*proc)();
+
+        if ( NULL != m_pShareMutex )
+        { m_pShareMutex->unlock(); }
     }
 }
 

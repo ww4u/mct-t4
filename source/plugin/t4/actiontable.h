@@ -79,6 +79,8 @@ protected:
     int _doSave( const QString &fileName );
     int _doLoad( const QString &fileName );
 
+    int postSaveProc( void *pContext );
+
 protected:
     void updateControl();
 
@@ -119,6 +121,7 @@ private:
     QAction *m_pActionResize;
 
     QTimer mPostSaveTimer;
+    QString mPostSaveFileName;
 Q_SIGNALS:
 
 

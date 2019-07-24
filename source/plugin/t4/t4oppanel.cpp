@@ -1771,34 +1771,13 @@ void T4OpPanel::slot_ack_error()
 }
 
 void T4OpPanel::slot_save_debug()
-{logDbg();
-    Q_ASSERT( NULL != m_pPlugin );
-    int ret;
-
-    //! debug
-    QString fileName = m_pPlugin->selfPath() + "/" + debug_file_name;
-
-    do
-    {
-        QByteArray theAry;
-        ret = mDebugTable.save( theAry );
-        if ( ret != 0 )
-        { break; }
-
-        ret = mrgStorageWriteFile( plugin_root_dir(),
-                                   debug_file_name,
-                                   (quint8*)theAry.data(),
-                                   theAry.length()
-                             );
-        if ( ret != 0 )
-        { break; }
-    }while( 0 );
-
-    if ( ret != 0 )
-    {
-        sysError( fileName + tr(" save fail") );
-    }
-
+{
+    //! \note attach to working
+    attachUpdateWorking( (XPage::procDo)( &T4OpPanel::post_save_debug ),
+                         WorkingApi::e_work_single,
+                         tr("save debug"),
+                         NULL,
+                         0 );
 }
 
 void T4OpPanel::slot_request_save()
@@ -2571,6 +2550,38 @@ void T4OpPanel::setYOut( int id, bool b )
     {
         sysError( tr("YOUT set fail"), e_out_log );
     }
+}
+
+int T4OpPanel::post_save_debug( void *pContext )
+{
+    Q_ASSERT( NULL != m_pPlugin );
+    int ret;
+
+    //! debug
+    QString fileName = m_pPlugin->selfPath() + "/" + debug_file_name;
+
+    do
+    {
+        QByteArray theAry;
+        ret = mDebugTable.save( theAry );
+        if ( ret != 0 )
+        { break; }
+
+        ret = mrgStorageWriteFile( plugin_root_dir(),
+                                   debug_file_name,
+                                   (quint8*)theAry.data(),
+                                   theAry.length()
+                             );
+        if ( ret != 0 )
+        { break; }
+    }while( 0 );
+
+    if ( ret != 0 )
+    {
+        sysError( fileName + tr(" save fail") );
+    }
+
+    return ret;
 }
 
 //! start the run thread

@@ -45,6 +45,7 @@ void WorkingApi::setMission( bool b )
 XPluginWorkingThread::XPluginWorkingThread( QObject *parent ) : QThread( parent )
 {
     m_pWorkMutex = NULL;
+    m_pShareMutex = NULL;
 
     mTickms = 100;
 }
@@ -60,6 +61,13 @@ void XPluginWorkingThread::attachMutex( QMutex *pMutex )
 
     m_pWorkMutex = pMutex;
     logDbg()<<m_pWorkMutex;
+}
+
+void XPluginWorkingThread::attachShareMutex( QMutex *pMutex )
+{
+    Q_ASSERT( NULL != pMutex );
+
+    m_pShareMutex = pMutex;
 }
 
 void XPluginWorkingThread::slot_api_proc( QObject *pApi )
@@ -118,6 +126,7 @@ void XPluginWorkingThread::awake()
 
 void XPluginWorkingThread::run()
 {
+    bool bLocked = false;
     try
     {
         forever
@@ -131,13 +140,20 @@ void XPluginWorkingThread::run()
                 continue;
             }
 
-            //! proc
-            procApis();
+            if ( NULL != m_pShareMutex )
+            { m_pShareMutex->lock(); bLocked = true; }
+
+                //! proc
+                procApis();
+
+            if ( NULL != m_pShareMutex )
+            { m_pShareMutex->unlock(); bLocked = false; }
         }
     }
     catch( QException &e )
     {
-        logDbg();
+        if ( NULL != m_pShareMutex && bLocked )
+        { m_pShareMutex->unlock(); bLocked = false; }
     }
 
     delete_all( mApis );

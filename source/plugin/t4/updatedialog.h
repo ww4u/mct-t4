@@ -127,6 +127,7 @@ private:
     QProcess *pProc;
 
     QString m_addr;
+    int vi;
 
     int iFlag;
 

@@ -436,6 +436,7 @@ MThead::MThead(QObject *parent):
     iEndFlag(0)
 {
     pSemaphore = new QSemaphore(1);
+    vi = 0;
 }
 
 int MThead::generateDevUpdateFile()
@@ -503,7 +504,6 @@ int MThead::updateDevice()
 int MThead::updateController()
 {
     int ret = 0;
-    int vi;
 
         vi = mrgOpenGateWay(1, m_addr.toLocal8Bit().data(), 2000);
         if( vi < 0 ){
@@ -654,6 +654,11 @@ void MThead::run()
         //! \todo free
         if( pProc )
         pProc->close();
+
+        if( vi > 0 ){
+            mrgCloseGateWay(vi);
+            vi = 0;
+        }
     }
     //delete pProc;
 }

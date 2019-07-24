@@ -23,6 +23,8 @@ public:
     int setRange( int id, double l, double h );
     int range( int id, double &l, double &h );
 
+    virtual void retranslateUi();
+
 private:
     Ui::AxisLimit *ui;
 

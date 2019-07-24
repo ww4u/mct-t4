@@ -8,6 +8,8 @@ ControllerStatus::ControllerStatus(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    mRole = 0;
+
     //! connect ui
     connect( ui->chkMct,SIGNAL(toggled(bool)),
              this, SIGNAL(signal_mct_checked(bool)) );
@@ -80,6 +82,20 @@ void ControllerStatus::retranslateUi()
     ui->radAck->setText( tr("ACK") );
 
     ui->radMc->setText( tr("MC") );
+
+    updateRole( mRole );
+}
+
+void ControllerStatus::updateRole( int role )
+{
+    if ( role == 0 )
+    {
+        ui->labRole->setText( tr("Operator") );
+    }
+    else
+    {
+        ui->labRole->setText( tr("Administrator") );
+    }
 }
 
 void ControllerStatus::setOut( SysOut e, bool b )
@@ -93,14 +109,8 @@ void ControllerStatus::setWorkingMode( const QString &mode )
 
 void ControllerStatus::setRole( int role )
 {
-    if ( role == 0 )
-    {
-        ui->labRole->setText( tr("Operator") );
-    }
-    else
-    {
-        ui->labRole->setText( tr("Administrator") );
-    }
+    mRole = role;
+    updateRole( mRole );
 }
 void ControllerStatus::setWorkingStatus( const QString &status )
 { ui->labWorkingStatus->setText( status );}

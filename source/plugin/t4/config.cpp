@@ -461,6 +461,7 @@ void Config::spyEdited()
 void Config::retranslateUi()
 {
     ui->retranslateUi( this );
+    ui->lmtSoftLimit->retranslateUi();
 }
 
 void Config::updateRole()

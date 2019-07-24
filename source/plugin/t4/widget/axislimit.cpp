@@ -45,4 +45,8 @@ int AxisLimit::range( int id, double &l, double &h )
 
     return 0;
 }
+void AxisLimit::retranslateUi()
+{
+    ui->retranslateUi(this);
+}
 

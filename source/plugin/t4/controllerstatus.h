@@ -32,6 +32,7 @@ public:
 
 protected:
     void retranslateUi();
+    void updateRole( int role );
 
 public:
     void setOut( SysOut e, bool b );
@@ -58,6 +59,7 @@ private:
     Ui::ControllerStatus *ui;
 
     QList<IoIndicator *> IoIndicatorList;
+    int mRole;
 
 Q_SIGNALS:
     void signal_mct_checked( bool b );

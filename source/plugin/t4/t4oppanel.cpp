@@ -175,8 +175,6 @@ T4OpPanel::T4OpPanel(QAbstractListModel *pModel, QWidget *parent) :
     connect( ui->cmbStepXx, SIGNAL(activated(int)),
              this, SLOT(slot_speed_verify()) );
 
-    //! \todo
-    //! init digital inputs name
     mIoList<<ui->radXI1<<ui->radXI2<<ui->radXI3<<ui->radXI4
            <<ui->radXI5<<ui->radXI6<<ui->radXI7<<ui->radXI8
            <<ui->radXI9<<ui->radXI10
@@ -680,19 +678,9 @@ int T4OpPanel::refreshDiagnosisInfo( void *pContext )
     else
     { return 0; }
 
-    int fileSize;
-//    fileSize = mrgStorageGetFileSize( pRobo->deviceVi(),
-//                           0,
-//                           "/home/megarobo/MRH-T/diagnose",
-//                           "Diagnose.log");
-//    if ( fileSize > 0 )
-//    {}
-//    else
-//    { return -1; }
-
-    //!
+    //! \note max 1000 counts of the log
     QByteArray ary;
-    ary.reserve( 1024*1024*10 );
+    ary.reserve( 1*1024*1024 );
 
     int ret=0;
     ret = mrgErrorLogUpload( pRobo->deviceVi(),

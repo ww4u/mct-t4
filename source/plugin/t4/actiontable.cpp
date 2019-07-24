@@ -90,7 +90,6 @@ ActionTable::ActionTable(QWidget *parent) :
 
     spySetting( MRX_T4::e_add_record );
     spySetting( MRX_T4::e_edit_record );
-
 }
 
 ActionTable::~ActionTable()
@@ -206,9 +205,6 @@ void ActionTable::setModel( QAbstractItemModel *pModel )
     if (hasCurrent) {
         ui->view->closePersistentEditor( ui->view->selectionModel()->currentIndex());
     }
-
-//    adapteToUserMode( sysMode() );
-//    setEnabled( false );
 }
 
 void ActionTable::onSetting(XSetting setting)
@@ -268,7 +264,6 @@ int ActionTable::upload()
         QString fileList( QByteArray( fileListAry, fileListLen ) );
 
         //! check the file exist
-        //QString fileAry = m_pPlugin->model().toLower() + record_file_name;
         QString fileAry = QString(record_file_name);
         if ( fileList.contains( fileAry.toLatin1().data() ) )
         {}
@@ -282,7 +277,6 @@ int ActionTable::upload()
         int ret = mrgStorageMotionFileContextRead( pRobo->deviceVi(),
                                                fileAry.toLatin1().data(),
                                                ary.data());
-
         if ( ret <= 0 )
         {
             sysError( tr("File read fail") + " " + fileAry );
@@ -453,7 +447,6 @@ void ActionTable::editRecord( XSetting setting )
     bool bOk;
     foreach (QVariant var, coords)
     {
-//        logDbg()<<var.toDouble();
         vals<<var.toDouble( &bOk );
         if ( bOk )
         {}
@@ -601,7 +594,6 @@ void ActionTable::updateControl()
     else
     { return; }
 
-    //! \todo
     QModelIndex index = ui->view->currentIndex();
     if ( index.isValid() )
     {}
@@ -692,15 +684,6 @@ int ActionTable::onToHere( QVariant var )
 
     vars = var.toList();
 
-logDbg()<<QThread::currentThreadId()
-       <<vars.at(0).toString()
-      <<vars.at(1).toDouble()
-      <<vars.at(2).toDouble()
-      <<vars.at(3).toDouble()
-      <<vars.at(4).toDouble()
-      <<vars.at(5).toDouble()
-      <<vars.at(6).toDouble()
-      <<vars.at(7).toBool();
     if ( str_is( vars.at(0).toString(), "PA" ) )
     {
         ret = absToHere( vars );
@@ -735,11 +718,10 @@ int ActionTable::onHoming( QVariant var )
     check_connect_ret( -1 );
 
     int ret;
-logDbg();
+
     ret = mrgRobotGoHome( robot_var(),
-//                          pRobo->mHomeSpeed,
                           pRobo->mHomeTimeout*1000 );
-logDbg();
+
     return ret;
 }
 
@@ -756,7 +738,7 @@ int ActionTable::terminalAction( QList<QVariant> &vars )
     if( ret != 0 )
         return ret;
 
-    //! \todo the terminal is rel
+    //! \note the terminal is rel
     speed = pRobo->mMaxJointSpeeds.at(4) * vars.at(6).toDouble() / 100.0;
     double dis = vars.at(5).toDouble();
     if( qAbs( dis )>FLT_EPSILON ){
@@ -773,7 +755,7 @@ int ActionTable::terminalAction( QList<QVariant> &vars )
 }
 
 int ActionTable::relToHere( QList<QVariant> &vars )
-{logDbg();
+{
     check_connect_ret( -1 );
 
     int ret;
@@ -791,7 +773,7 @@ int ActionTable::relToHere( QList<QVariant> &vars )
     return ret;
 }
 int ActionTable::absToHere( QList<QVariant> &vars )
-{logDbg();
+{
     check_connect_ret( -1 );
 
     int ret;
@@ -807,26 +789,6 @@ int ActionTable::absToHere( QList<QVariant> &vars )
     pRobo->setAbsMarker( vars.at(1).toDouble(), vars.at(2).toDouble(), vars.at(3).toDouble(),
                          vars.at(4).toDouble(), vars.at(5).toDouble(),
                          rel_to_abs_speed( vars.at(6).toDouble() ), vars.at(7).toBool() );
-
-//    //! Wrist
-//    float speed = pRobo->mMaxJointSpeeds.at(3) * vars.at(6).toDouble() / 100.0;
-
-//    ret = mrgSetRobotWristPose(robot_var(), 0, vars.at(4).toDouble(), speed, guess_dist_time_ms( 180/speed, 180 ));
-//    if( ret != 0 )
-//        return ret;
-
-//    //! \todo the terminal is rel
-//    speed = pRobo->mMaxJointSpeeds.at(4) * vars.at(6).toDouble() / 100.0;
-//    double dis = vars.at(5).toDouble();
-//    if( qAbs( dis )>FLT_EPSILON ){
-//        speed = pRobo->mMaxJointSpeeds.at(4) * vars.at(6).toDouble() / 100.0;
-//        ret = mrgRobotToolExe(robot_var(),
-//                              dis,
-//                              qAbs(dis)/speed,
-//                              guess_dist_time_ms( qAbs( dis )/speed, qAbs(dis))
-//                              );
-//        if(ret!=0){return ret;}
-//    }
 
     return ret;
 }
@@ -871,9 +833,6 @@ void ActionTable::slot_data_changed()
     Q_ASSERT( NULL != m_pPlugin );
 
     QVariant var;
-//    QList<QVariant> coords;
-
-//    coords.append( ui->view->model()->rowCount() );
 
     var.setValue( ui->view->model()->rowCount() );
 
@@ -884,7 +843,6 @@ void ActionTable::slot_data_changed()
 
 #define get_data( val, col )    val = pItem->dataSets().at( col );\
 vars<<val;
-
 void ActionTable::slot_toHere()
 {
     QModelIndex index = ui->view->currentIndex();
@@ -982,10 +940,6 @@ void ActionTable::slot_add_below()
         else
         { return; }
 
-        logDbg()<<index;
-//        parIndex = ui->view->model()->index( index.row(), 0, index.parent() );
-//        parIndex = index;
-        logDbg()<<parIndex;
         dstRow = 0;
     }
     //! sibling
@@ -1013,8 +967,6 @@ void ActionTable::slot_add_below()
         if ( !bRet )
         { logDbg()<<iterIndex<<parIndex<<vars.at(i); return; }
     }
-
-    logDbg();
 
     return;
 }
@@ -1065,19 +1017,15 @@ void ActionTable::slot_collapseAll()
 {
     ui->view->collapseAll();
 }
-//! \todo
+
 void ActionTable::slot_homing()
-{logDbg();
+{
     QVariant var;
 
     m_pPlugin->attachMissionWorking( this, (XPage::onMsg)(&ActionTable::onHoming), var );
 }
 void ActionTable::slot_resize()
 {
-    for (int column = 0; column < ui->view->model()->columnCount(); ++column)
-    {
-//        ui->view->resizeColumnToContents(column);
-    }
 }
 
 void ActionTable::slot_post_save_timeout()
@@ -1139,11 +1087,6 @@ void ActionTable::slot_customContextMenuRequested(const QPoint &pos)
             m_pContextMenu->addSeparator();
             m_pActionHoming = m_pContextMenu->addAction( tr("Homing") );
 
-//            m_pContextMenu->addSeparator();
-//            m_pActionResize = m_pContextMenu->addAction( tr("Auto Resize") );
-//            m_pContextMenu->addSeparator();
-//            m_pActionReset = m_pContextMenu->addAction( tr("Reset") );
-
             //! connect
             connect( m_pActionToHere, SIGNAL(triggered(bool)),
                      this, SLOT(slot_toHere()) );
@@ -1168,71 +1111,11 @@ void ActionTable::slot_customContextMenuRequested(const QPoint &pos)
             connect(m_pActionHoming, SIGNAL(triggered(bool)),
                     this, SLOT( slot_homing() ) );
 
-//            connect(m_pActionResize, SIGNAL(triggered(bool)),
-//                    this, SLOT( slot_resize() ) );
-
-//            connect(m_pActionReset, SIGNAL(triggered(bool)),
-//                    this, SLOT( slot_reset( ) ) );
-
         }
         else
         {}
 
-        //! \todo
-//        ui->view->selectRow( ui->view->currentIndex().row() );
-
         updateControl();
-
-//        QModelIndex index = ui->view->currentIndex();
-//        if ( index.isValid() )
-//        {}
-//        else
-//        { return; }
-
-//        TreeItem *pItem = static_cast<TreeItem*>( index.internalPointer() );
-//        if ( NULL == pItem )
-//        { return; }
-
-//        TreeItem *pParent = pItem->parent();
-//        if ( NULL == pParent )
-//        { return; }
-
-//        //! menu
-//        if ( pItem->level() == 1 )
-//        {
-//            m_pActionAddBefore->setEnabled( false );
-//            m_pActionAddBelow->setEnabled( true );
-//            m_pActionDelete->setEnabled( false );
-//        }
-//        else if ( pItem->level() == 2 )
-//        {
-//            m_pActionAddBefore->setEnabled( true );
-//            m_pActionAddBelow->setEnabled( true );
-//            m_pActionDelete->setEnabled( true );
-//        }
-//        else
-//        { return; }
-
-//        //! rst
-//        m_pActionUp->setEnabled( true );
-//        m_pActionDown->setEnabled( true );
-//        if ( index.row() < 1 )
-//        { m_pActionUp->setEnabled( false ); }
-
-//        if ( index.row() >= pParent->childCount() - 1 )
-//        { m_pActionDown->setEnabled( false ); }
-
-//        //! change the to here
-//        QString strToHereSuffix;
-//        strToHereSuffix = QString("(%1,%2,%3)").arg( pItem->data(2).toDouble(),0,'f',2 )
-//                                               .arg( pItem->data(3).toDouble(),0,'f',2 )
-//                                               .arg( pItem->data(4).toDouble(),0,'f',2 );
-
-//        //! PA && RA
-//        if ( str_is( pItem->data( 1 ).toString(), "PA") )
-//        { m_pActionToHere->setText( tr("To:") + " " + strToHereSuffix ); }
-//        else
-//        { m_pActionToHere->setText( tr("Step:") + " " + strToHereSuffix );}
 
         m_pContextMenu->exec(QCursor::pos());
     }
@@ -1278,42 +1161,8 @@ void ActionTable::on_toolImport_clicked()
     { sysError( tr("Load record fail") ); }
 }
 
-//! \todo list the files
 void ActionTable::on_toolOpen_clicked()
 {
-//    QString descripton;
-//    bool bOk;
-//    descripton = QInputDialog::getText( this,
-//                                        tr("Open"),
-//                                        tr("Name:"),
-//                                        QLineEdit::Normal,
-//                                        "mrx-t4_motion_" + QDateTime::currentDateTime().toString("yyyyMMdd_hhmmss_zzz" ),
-//                                        &bOk
-//                                        );
-//    if ( !bOk )
-//    { return; }
-
-//    //! simple
-//    descripton = descripton.simplified();
-//    if ( descripton.isEmpty() )
-//    {
-//        sysPrompt( tr("Invalid description"), 0 );
-//        return;
-//    }
-
-//    //!
-//    if ( descripton.endsWith(".mrp"), Qt::CaseInsensitive )
-//    {
-//        descripton.remove( descripton.length() - 4, 4 );
-//    }
-//    else
-//    {}
-//    descripton.append( ".mrp" );
-
-//    int ret = _doLoad( descripton );
-//    if ( ret != 0 )
-//    { sysError( tr("Load record fail") ); }
-
     FileManager manager;
     manager.setMode(OPENACTIONTABLE);
     manager.attachPlugin(m_pPlugin);

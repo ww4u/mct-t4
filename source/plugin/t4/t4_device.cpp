@@ -453,7 +453,6 @@ void MRX_T4::onDeviceException( QVariant &var )
         {
             //! default
             promptString = var.toString();
-//            sysInfo( promptString );
 
             if ( itemList.size() > 0 )
             {
@@ -496,8 +495,8 @@ void MRX_T4::onDeviceException( QVariant &var )
         sysWarning( tr("Invalid exception info") );
     }
 
-    //m_pOpPanel->postRefreshDiagnosisInfo();
-
+    //! \note post refresh for combine the logs
+    mRefTimer.start( 5000 );
 }
 
 void MRX_T4::updateUis()

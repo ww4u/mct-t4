@@ -259,7 +259,6 @@ int XPluginIntf::savePw( const QString &path, const QString &name )
     //! compress
     QByteArray encData;
     encData = qCompress( theAry );
-//    encData = theAry;
 
     //! write data
     int ret;

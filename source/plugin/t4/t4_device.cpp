@@ -651,6 +651,10 @@ int MRX_T4::downloadProc()
     {
         sysPrompt( tr("Download fail") );
     }
+    else
+    {
+        sysPrompt( tr("Download success"), 0 );
+    }
 
     return 0;
 }

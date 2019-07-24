@@ -68,6 +68,7 @@ public:
     virtual ~XPluginWorkingThread();
 
     void attachMutex( QMutex *pMutex );
+    void attachShareMutex( QMutex *pMutex );
 Q_SIGNALS:
     void signal_enter_working( WorkingApi *api);
     void signal_exit_working( WorkingApi *api, int );
@@ -107,6 +108,7 @@ protected:
     QMutex mMutex;
 
     QMutex *m_pWorkMutex;
+    QMutex *m_pShareMutex;
 
     QSemaphore mWakeupSema;
 };

@@ -586,6 +586,21 @@ int ActionTable::_doLoad( const QString &name )
     return ret;
 }
 
+int ActionTable::postSaveProc(void *pContext)
+{
+    if ( NULL == pContext )
+    { return -1; }
+
+    int ret = -1;
+
+    ret = _doSave( mPostSaveFileName );
+
+    if ( ret != 0 )
+    { sysError( QString(mPostSaveFileName) + QString(" ") + tr("save fail") ); }
+
+    return ret;
+}
+
 //! change the status by the current item
 void ActionTable::updateControl()
 {
@@ -1030,12 +1045,14 @@ void ActionTable::slot_resize()
 
 void ActionTable::slot_post_save_timeout()
 {
-    int ret = -1;
+    //! \note attach to working
+    mPostSaveFileName = record_file_name;
+    attachUpdateWorking( (XPage::procDo)( &ActionTable::postSaveProc ),
+                         WorkingApi::e_work_single,
+                         tr("save mrp"),
+                         &mPostSaveFileName,
+                         0 );
 
-    ret = _doSave( record_file_name );
-
-    if ( ret != 0 )
-    { sysError( QString(record_file_name) + QString(" ") + tr("save fail") ); return; }
 }
 
 void ActionTable::slot_customContextMenuRequested(const QPoint &pos)
@@ -1213,9 +1230,13 @@ void ActionTable::on_toolSaveAs_clicked()
     {}
     strResult.append( ".mrp" );
 
-    int ret = _doSave( strResult );
-    if ( ret != 0 )
-    { sysError( tr("Save record fail") ); }
+    //! \note attach to working
+    mPostSaveFileName = strResult;
+    attachUpdateWorking( (XPage::procDo)( &ActionTable::postSaveProc ),
+                         WorkingApi::e_work_single,
+                         tr("save mrp"),
+                         &mPostSaveFileName,
+                         0 );
 }
 
 void ActionTable::on_toolUp_clicked()

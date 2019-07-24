@@ -9,17 +9,13 @@
 #include <QStatusBar>
 #include <QVBoxLayout>
 
-#define MRQ_UPDATE  "/mrq.dat"
-#define MRH_UPDATE  "/mrh.tar.gz"
+#define MRH_UPDATE  "mrh.tar.gz"
 #define MRQ_UPDATE_EXE "/MRQ_Update/MegaRobo_Update.exe"
 
 //! file path
 #define DIR_TEMP    QDir::tempPath()
 #define DIR_TEMP_OUTPUT (DIR_TEMP + "/output")
 #define MRQ_FILE    (DIR_TEMP + "/output/temp.dat")
-#define MRH_FILE    (DIR_TEMP + "/output/mrh.dat")
-
-#define UPDATE_FILE (DIR_TEMP + "/output/update.txt")
 
 //! ByteArray to int
 static int byteArrayToInt(QByteArray arr)
@@ -86,7 +82,7 @@ void UpdateDialog::updateUi( int i )
     switch (i)
     {
         case -1:
-            str = tr("System Error");
+            str = tr("Update Backbord Error");
             break;
         case -2:
             str = tr("Net Error");

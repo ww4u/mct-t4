@@ -681,18 +681,18 @@ int T4OpPanel::refreshDiagnosisInfo( void *pContext )
     { return 0; }
 
     int fileSize;
-    fileSize = mrgStorageGetFileSize( pRobo->deviceVi(),
-                           0,
-                           "/home/megarobo/MRH-T/diagnose",
-                           "Diagnose.log");
-    if ( fileSize > 0 )
-    {}
-    else
-    { return -1; }
+//    fileSize = mrgStorageGetFileSize( pRobo->deviceVi(),
+//                           0,
+//                           "/home/megarobo/MRH-T/diagnose",
+//                           "Diagnose.log");
+//    if ( fileSize > 0 )
+//    {}
+//    else
+//    { return -1; }
 
     //!
     QByteArray ary;
-    ary.reserve( fileSize );
+    ary.reserve( 1024*1024*10 );
 
     int ret=0;
     ret = mrgErrorLogUpload( pRobo->deviceVi(),

@@ -10,7 +10,7 @@
 #include <QSemaphore>
 
 
-#define MRHT_SYSTEM_ERROR       -1
+#define MRHT_SYSTEM_ERROR       -1      /* backbord update error */
 #define NET_ERROR               -2
 #define MRHT_FILE_INVALID       -3
 #define CONFIG_ERROR            -4
@@ -102,7 +102,6 @@ class MThead: public QThread
     Q_OBJECT
 
 public:
-
     MThead(QObject *parent = 0);
 
     void setAddr( QString str ){ m_addr = str; }
@@ -166,6 +165,7 @@ public:
         MCT_ENTITY,
         PACKAGE
     };
+
 public:
     int mDescLen;
     QString mDescription;

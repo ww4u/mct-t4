@@ -2,6 +2,8 @@
 #include <QTcpSocket>
 #include "t4.h"
 
+#include "t4oppanel.h"
+
 int MRX_T4::serialOut(QXmlStreamWriter &writer)
 {
     return T4Para::serialOut( writer );
@@ -112,5 +114,11 @@ void MRX_T4::slotSocketError(QAbstractSocket::SocketError e)
 {
     logDbg() <<"Socket error: "<< e
     << m_pExceptionSocket->errorString();
+}
+
+void MRX_T4::slot_dia_refresh_timeout()
+{logDbg();
+    if ( NULL != m_pOpPanel )
+    { m_pOpPanel->postRefreshDiagnosisInfo(); }
 }
 

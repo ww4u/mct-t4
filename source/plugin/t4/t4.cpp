@@ -33,6 +33,10 @@ MRX_T4::MRX_T4( QObject *parent ) : XPlugin( parent )
 
     connect( this, SIGNAL(signal_request_pw_save()),
              this, SLOT(slot_save_pw()) );
+
+    connect( &mRefTimer, SIGNAL(timeout()),
+             this, SLOT(slot_dia_refresh_timeout()) );
+    mRefTimer.setSingleShot( true );
 }
 
 MRX_T4::~MRX_T4()

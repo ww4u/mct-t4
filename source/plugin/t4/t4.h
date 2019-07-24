@@ -145,6 +145,8 @@ protected Q_SLOTS:
     void slot_exception_arrived();
     void slotSocketError(QAbstractSocket::SocketError e);
 
+    void slot_dia_refresh_timeout();
+
 public:
     virtual bool isOnLine();
 
@@ -243,6 +245,7 @@ private:
 
 private:
     SequenceItem *m_pMarkerItem;
+    QTimer mRefTimer;
 
 };
 

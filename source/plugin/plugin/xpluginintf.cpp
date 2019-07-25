@@ -53,7 +53,6 @@ bool XPluginIntf::isEqual( const QString &_addr,
     return true;
 }
 
-
 //! \see SysPara plugin
 QString XPluginIntf::description()
 {
@@ -250,8 +249,8 @@ int XPluginIntf::savePw( const QString &path, const QString &name )
 
         writer.writeStartElement("pw");
             writer.writeTextElement( "login", QString::number(mbAutoLogin) );
-            writer.writeTextElement( "user", mUserPw );
-            writer.writeTextElement( "admin", mAdminPw );
+            writer.writeTextElement( "user", mUserPw );logDbg()<<mUserPw;
+            writer.writeTextElement( "admin", mAdminPw );logDbg()<<mAdminPw;
         writer.writeEndElement();
 
     writer.writeEndDocument();
@@ -259,6 +258,7 @@ int XPluginIntf::savePw( const QString &path, const QString &name )
     //! compress
     QByteArray encData;
     encData = qCompress( theAry );
+//    encData = theAry;
 
     //! write data
     int ret;
@@ -294,6 +294,7 @@ int XPluginIntf::loadPw( const QString &path, const QString &name )
     QByteArray rawData;
     rawData = qUncompress( theData );
 //    rawData = theData;
+//    logDbg()<<rawData;
 
     //! deparse the data
     ret = -2;
@@ -307,18 +308,18 @@ int XPluginIntf::loadPw( const QString &path, const QString &name )
                 if ( reader.name() == "login" )
                 {
                     mbAutoLogin = reader.readElementText().toInt() > 0;
-                    logDbg()<<mbAutoLogin;
+//                    logDbg()<<mbAutoLogin;
                 }
                 else if ( reader.name() == "user" )
                 {
                     mUserPw = reader.readElementText();
-                    logDbg()<<mUserPw;
+//                    logDbg()<<mUserPw;
                 }
                 else if ( reader.name() == "admin" )
                 {
                     mAdminPw = reader.readElementText();
                     ret = 0;
-                    logDbg()<<mAdminPw;
+//                    logDbg()<<mAdminPw;
                 }
                 else
                 {}

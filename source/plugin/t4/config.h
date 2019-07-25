@@ -16,10 +16,10 @@ class Config : public XPage
 public:
     explicit Config(QWidget *parent = 0);
     ~Config();
-
+protected:
     virtual void setOperAble( bool b );
     virtual void setOpened( bool b );
-
+public:
     virtual void updateUi();
     virtual void updateData();
 

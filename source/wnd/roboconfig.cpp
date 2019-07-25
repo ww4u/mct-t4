@@ -518,11 +518,11 @@ void RoboConfig::attachConnectWidget( QAction *pAction )
 void RoboConfig::postStartup()
 {
     Q_ASSERT( NULL != m_pPref );
-logDbg();
+
     //! search
     if ( m_pPref->mbAutoSearch )
     { slotSearch(); }
-logDbg();
+
     //! load
     //! \note load last corrupt
     //! \todo

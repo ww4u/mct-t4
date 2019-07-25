@@ -766,11 +766,11 @@ int T4OpPanel::refreshDiagnosisInfo( void *pContext )
                             cnt,
                             msg
                         );
-        }
+        }logDbg();
         return 0;
     }
     else
-    {
+    {logDbg();
         sysWarning( tr("Read diagnosis fail") );
         return -1;
     }
@@ -1814,9 +1814,9 @@ void T4OpPanel::slot_request_load()
     {
         sysError( fileName + tr(" load fail") );
     }
-
+logDbg();
     //! upload diagnosis
-    refreshDiagnosisInfo( NULL );
+    refreshDiagnosisInfo( NULL );logDbg();
 }
 
 void T4OpPanel::slot_debug_table_changed()

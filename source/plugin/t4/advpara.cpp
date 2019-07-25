@@ -146,7 +146,7 @@ void AdvPara::retranslateUi()
 { ui->retranslateUi( this ); }
 
 void AdvPara::updateRole()
-{
+{logDbg()<<m_pPlugin->isAdmin();
     setEnabled( m_pPlugin->isAdmin() );
 }
 

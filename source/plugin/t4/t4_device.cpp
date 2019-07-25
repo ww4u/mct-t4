@@ -26,16 +26,6 @@ int MRX_T4::open()
     {
         mVi = localVi;
 
-        //! changed
-        emit_setting_changed( XPage::e_setting_opened, true );
-
-        emit_setting_changed( XPage::e_setting_user_role, QVariant() );
-
-        //! note work role
-        setWorkingRole( working_normal );
-        emit_setting_changed( XPage::e_setting_work_role, QVariant((int)working_normal) );
-
-        //! change setting
         //! update the angle
         float zeroAngles[4];
         ret = mrgGetRobotHomeAngle( self_robot_var(), zeroAngles );
@@ -80,13 +70,24 @@ int MRX_T4::open()
             }
         }
 
-        emit_load();
+        mShareMutex.lock();
+            emit_load();
+        mShareMutex.unlock();
 
         //! update ui
         updateUis();
 
         //! startup
         _startupProc();
+
+        //! changed
+        emit_setting_changed( XPage::e_setting_opened, true );
+
+        //! note work role
+        setWorkingRole( working_normal );
+        emit_setting_changed( XPage::e_setting_work_role, QVariant((int)working_normal) );
+
+        emit_setting_changed( XPage::e_setting_user_role, QVariant() );
     }
     else
     {
@@ -522,7 +523,7 @@ void MRX_T4::updateUis()
 }
 
 void MRX_T4::xevent_updateui( XEvent *pEvent )
-{logDbg();
+{
     //! cast to page
     QObject *pObj;
     pObj = pEvent->mVar1.value<QObject*>();
@@ -532,8 +533,8 @@ void MRX_T4::xevent_updateui( XEvent *pEvent )
     XPage *pPage = dynamic_cast<XPage*>(pObj);
     if ( NULL == pPage )
     { logDbg(); return; }
-logDbg()<<pObj->objectName();
-    pPage->updateUi();logDbg()<<pObj->objectName();
+//logDbg()<<pObj->objectName();
+    pPage->updateUi();//logDbg()<<pObj->objectName();
 }
 
 int MRX_T4::_uploadProc()

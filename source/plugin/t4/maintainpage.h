@@ -24,7 +24,7 @@ protected:
     virtual void exitMission();
 
     virtual void retranslateUi();
-public:
+
     virtual void setOperAble( bool b );
     virtual void setOnLine( bool b );
     virtual void setOpened( bool b );
@@ -33,6 +33,10 @@ public:
     virtual void updateWorkingRole( int wRole );
 
     virtual void updateUi();
+
+protected:
+    int post_save_backup( void *pContext );
+
 private slots:
     void on_cmbDemo_currentIndexChanged(int index);
 
@@ -71,6 +75,7 @@ private slots:
 private:
     Ui::MaintainPage *ui;
     QMovie *m_pDemoMovie;
+    QString mBackupName;
 
 };
 

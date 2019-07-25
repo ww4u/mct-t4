@@ -95,6 +95,60 @@ void MaintainPage::updateWorkingRole( int wRole )
 void MaintainPage::updateUi()
 {
     ui->chkAutoLogin->setChecked( m_pPlugin->isAutoLogin() );
+    logDbg()<<m_pPlugin->isAutoLogin();
+}
+
+int MaintainPage::post_save_backup( void *pContext )
+{
+    QString str = mBackupName;
+    int ret;
+    QString cmd, dstPath;
+    do{
+        dstPath = m_pPlugin->selfPath() + "/backup/" + str;
+        cmd = "mkdir -p " + dstPath;
+        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLocal8Bit().data(), 0 );
+        if ( ret != 0 )
+        { ret = -1; break; }
+
+        //! copy the data in
+        cmd = "cp " + m_pPlugin->selfPath() + "/*.xml " + dstPath;
+        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLocal8Bit().data(), 0 );
+        if ( ret != 0 )
+        { ret = -1;break; }
+
+        cmd = "cp " + m_pPlugin->selfPath() + "/*.mrp " + dstPath;
+        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLocal8Bit().data(), 0 );
+        if ( ret != 0 )
+        { ret = -1;break; }
+
+        //! copy the log
+        cmd = "cp -r /home/megarobo/MRH-T/log " + dstPath + "/log";
+        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLocal8Bit().data(), 0 );
+        if ( ret != 0 )
+        { ret = -1;break; }
+
+        //! write the description
+        ret = mrgStorageWriteFile( m_pPlugin->deviceVi(),
+                                   0,
+                                   dstPath.toLocal8Bit().data(),
+                                   "description",
+                                   (quint8*)str.toLocal8Bit().data(),
+                                   str.length()
+                                   );
+        if ( ret != 0 )
+        { ret = -1;break; }
+    }while(0);
+
+    if( ret == -1){
+        cmd = "rm -rf " + dstPath;
+        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
+        sysError(tr("Backup Fail"));
+
+    }else{
+        sysInfo(tr("Backup Complete"));
+    }
+
+    return ret;
 }
 
 void MaintainPage::on_cmbDemo_currentIndexChanged(int index)
@@ -256,53 +310,15 @@ void MaintainPage::on_btnBackup_clicked()
     if( manager.exec() == QDialog::Accepted ){
     }else{ return; }
 
-    QString str = manager.strResult();
-    int ret;
-    QString cmd, dstPath;
-    do{
-        dstPath = m_pPlugin->selfPath() + "/backup/" + str;
-        cmd = "mkdir -p " + dstPath;
-        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLocal8Bit().data(), 0 );
-        if ( ret != 0 )
-        { ret = -1; break; }
+    mBackupName = manager.strResult();
 
-        //! copy the data in
-        cmd = "cp " + m_pPlugin->selfPath() + "/*.xml " + dstPath;
-        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLocal8Bit().data(), 0 );
-        if ( ret != 0 )
-        { ret = -1;break; }
+    //! post save
+    attachUpdateWorking( (XPage::procDo)( &MaintainPage::post_save_backup ),
+                         WorkingApi::e_work_single,
+                         tr("save backup"),
+                         NULL,
+                         0 );
 
-        cmd = "cp " + m_pPlugin->selfPath() + "/*.mrp " + dstPath;
-        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLocal8Bit().data(), 0 );
-        if ( ret != 0 )
-        { ret = -1;break; }
-
-        //! copy the log
-        cmd = "cp -r /home/megarobo/MRH-T/log " + dstPath + "/log";
-        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLocal8Bit().data(), 0 );
-        if ( ret != 0 )
-        { ret = -1;break; }
-
-        //! write the description
-        ret = mrgStorageWriteFile( m_pPlugin->deviceVi(),
-                                   0,
-                                   dstPath.toLocal8Bit().data(),
-                                   "description",
-                                   (quint8*)str.toLocal8Bit().data(),
-                                   str.length()
-                                   );
-        if ( ret != 0 )
-        { ret = -1;break; }
-    }while(0);
-
-    if( ret == -1){
-        cmd = "rm -rf " + dstPath;
-        ret = mrgSystemRunCmd( m_pPlugin->deviceVi(), cmd.toLatin1().data(), 0 );
-        sysError(tr("Backup Fail"));
-
-    }else{
-        sysInfo(tr("Backup Complete"));
-    }
 }
 
 void MaintainPage::on_btnClearBackup_clicked()

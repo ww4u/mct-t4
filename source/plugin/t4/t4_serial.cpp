@@ -13,7 +13,7 @@ int MRX_T4::serialIn(QXmlStreamReader &reader)
     return T4Para::serialIn( reader );
 }
 
-void MRX_T4::slot_save_pw()
+int MRX_T4::post_save_pw( )
 {
     int ret;
 
@@ -23,11 +23,13 @@ void MRX_T4::slot_save_pw()
     ret = savePw( path, QString(password_file_name) );
     if ( ret != 0 )
     {
-        sysError( tr("Password save fail") );
+        sysPrompt( tr("Password save fail"), 2 );
     }
+
+    return ret;
 }
 
-void MRX_T4::slot_save_setting()
+int MRX_T4::post_save_setting()
 {
     int ret;
 
@@ -41,7 +43,19 @@ void MRX_T4::slot_save_setting()
         sysError( tr("Config save fail") );
     }
 
-    logDbg()<<setupfileName;
+    return ret;
+}
+
+void MRX_T4::slot_save_pw()
+{
+    //! \note post save pw
+    attachBgWorking( (XPlugin::bgProc)(&MRX_T4::post_save_pw), "save pw" );
+}
+
+void MRX_T4::slot_save_setting()
+{
+    //! \note post save setting
+    attachBgWorking( (XPlugin::bgProc)(&MRX_T4::post_save_setting), "save setting" );
 }
 
 void MRX_T4::slot_load_setting()
@@ -58,8 +72,6 @@ void MRX_T4::slot_load_setting()
         sysError( tr("Config load fail") );
     }
 
-    XPlugin::slot_load_setting();
-
     //! load pw
     ret = loadPw( path, QString(password_file_name) );
     if ( ret != 0 )
@@ -71,7 +83,12 @@ void MRX_T4::slot_load_setting()
         rstPw( user_admin );
     }
     else
-    {}
+    {
+    }
+
+    logDbg()<<mUserPw<<mAdminPw<<mbAutoLogin;
+
+    XPlugin::slot_load_setting();
 }
 
 void MRX_T4::slot_exception_arrived()

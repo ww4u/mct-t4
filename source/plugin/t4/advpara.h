@@ -20,6 +20,7 @@ public:
 public:
     virtual void updateUi();
     virtual void updateData();
+
 protected:
     virtual void spyEdited();
     virtual void retranslateUi();

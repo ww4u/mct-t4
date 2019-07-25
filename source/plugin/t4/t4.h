@@ -138,6 +138,10 @@ public:
     virtual int serialOut(QXmlStreamWriter &writer);
     virtual int serialIn(QXmlStreamReader &reader);
 
+protected:
+    int post_save_pw( );
+    int post_save_setting();
+
 protected Q_SLOTS:
     void slot_save_pw();
     void slot_save_setting();

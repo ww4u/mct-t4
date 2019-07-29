@@ -80,7 +80,9 @@ EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* ps8Conte
  * @return
  * 0表示成功, 负数表示失败
  */
-EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *ps8Path, char *ps8SaveFileName, unsigned char *pu8Data, int dataLen);
+EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *ps8Path, char *ps8SaveFileName,
+                                        unsigned char *pu8Data, int dataLen,
+                                        P_FUNC_PROC pProc=NULL, void *pContext = NULL );
 /**
  * @brief mrgStorageReadFile
  * 读取文件到上位机

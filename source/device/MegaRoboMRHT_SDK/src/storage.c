@@ -96,7 +96,9 @@ EXPORT_API int CALL mrgStorageMotionFileSaveContext(ViSession vi, char* ps8Conte
     return mrgStorageWriteFile(vi, 0, "/home/megarobo/MRH-T/motionfile/", ps8SaveFileName, (unsigned char *)ps8Context, len);
 }
 
-EXPORT_API int CALL _mrgStorageWriteFile(ViSession vi, int isUdisk, char *ps8Path, char *ps8SaveFileName,unsigned char *pu8Data, int dataLen)
+EXPORT_API int CALL _mrgStorageWriteFile(ViSession vi, int isUdisk, char *ps8Path, char *ps8SaveFileName,
+                                         unsigned char *pu8Data, int dataLen,
+                                         P_FUNC_PROC pProc, void *pContext )
 {
     int retLen = -1;
     int count = 0;
@@ -166,6 +168,12 @@ EXPORT_API int CALL _mrgStorageWriteFile(ViSession vi, int isUdisk, char *ps8Pat
         }
         len -= writeLen;
         count += writeLen;
+
+        //! call back
+        if ( pProc != NULL )
+        {
+            pProc( pContext, dataLen, count );
+        }
     }
     snprintf(args, SEND_BUF_LEN, "STORage:FILe:WRITe:END? %d\n", dataLen);
     memset(as8State,0,sizeof(as8State));
@@ -191,14 +199,17 @@ EXPORT_API int CALL _mrgStorageWriteFile(ViSession vi, int isUdisk, char *ps8Pat
     return 0;
 }
 
-EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *ps8Path, char *ps8SaveFileName,unsigned char *pu8Data, int dataLen)
+EXPORT_API int CALL mrgStorageWriteFile(ViSession vi, int isUdisk, char *ps8Path, char *ps8SaveFileName,unsigned char *pu8Data,
+                                        int dataLen,
+                                        P_FUNC_PROC pFunc, void *pContext )
 {
     int ret;
 
     pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_lock(&mutex);
 
-        ret = _mrgStorageWriteFile( vi, isUdisk, ps8Path, ps8SaveFileName, pu8Data, dataLen );
+        ret = _mrgStorageWriteFile( vi, isUdisk, ps8Path, ps8SaveFileName, pu8Data, dataLen,
+                                    pFunc, pContext );
 
     pthread_mutex_unlock(&mutex);
 

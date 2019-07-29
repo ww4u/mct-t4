@@ -50,9 +50,9 @@ public:
     void attatchPlugin(XPlugin *xp);
 
 protected:
-    int openDevice();
+//    int openDevice();
 
-    int loadRemoteInfo( int vi );
+//    int loadRemoteInfo( int vi );
 
     int parseUpdateFile(QByteArray &in );
 
@@ -115,6 +115,8 @@ public:
     virtual int updateController();
 
     void attatchPlugin(XPlugin *xp);
+public:
+    void emit_progress( const QString &str );
 
 protected:
     virtual void run();

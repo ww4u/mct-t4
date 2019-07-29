@@ -36,6 +36,7 @@ protected:
 
 protected:
     int post_save_backup( void *pContext );
+    int post_export_backup( void *pContext );
 
 private slots:
     void on_cmbDemo_currentIndexChanged(int index);
@@ -75,8 +76,9 @@ private slots:
 private:
     Ui::MaintainPage *ui;
     QMovie *m_pDemoMovie;
-    QString mBackupName;
 
+    QString mBackupName;
+    QString mExportName;
 };
 
 }

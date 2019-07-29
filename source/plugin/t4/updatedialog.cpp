@@ -17,6 +17,11 @@
 #define DIR_TEMP_OUTPUT (DIR_TEMP + "/output")
 #define MRQ_FILE    (DIR_TEMP + "/output/temp.dat")
 
+#define MRQ_CODE    0
+#define MRH_CODE    (-100)
+
+#define encode_code( code, module )    ( code + ( code != 0 ? module : 0 ) )
+
 //! ByteArray to int
 static int byteArrayToInt(QByteArray arr)
 {
@@ -75,12 +80,11 @@ void UpdateDialog::attatchPlugin(XPlugin *xp)
 
 void UpdateDialog::updateUi( int i )
 {
-    //! \todo ui
-
     QString str;
 
     switch (i)
     {
+        //! MRQ
         case -1:
             str = tr("Update Backbord Error");
             break;
@@ -136,6 +140,36 @@ void UpdateDialog::updateUi( int i )
             str = tr("Update Complete");
             ui->buttonBox->hide();
             break;
+
+        //! MRH + CODE
+        case -101:
+            str = tr("MRH update failed");
+            break;
+
+        case -102:
+            str = tr("MRH open failed");
+            break;
+
+        case -103:
+            str = tr("MRH invalid file");
+            break;
+
+        case -104:
+            str = tr("MRH download fail");
+            break;
+
+        case -105:
+            str = tr("MRH execute script fail");
+            break;
+
+        case -106:
+            str = tr("MRH upgrade fail");
+            break;
+
+        case -107:
+            str = tr("MRH config fail");
+            break;
+
         case 1:
             str = tr("MRQ Begin Update");
             break;
@@ -180,8 +214,8 @@ void UpdateDialog::on_buttonBox_clicked(QAbstractButton *button)
         button->setDisabled( true );
         ui->buttonBox->button( QDialogButtonBox::Cancel )->setEnabled( true );
 
-        ui->lineEdit->setReadOnly( true );
-        ui->toolButton->setDisabled( true );
+        ui->lineEdit->setEnabled( false );
+        ui->toolButton->setEnabled( false );
 
         if( pWorkThead != NULL ){
             delete pWorkThead;
@@ -205,11 +239,14 @@ void UpdateDialog::on_buttonBox_clicked(QAbstractButton *button)
             pWorkThead = NULL;
         }
 
-        ui->lineEdit->setReadOnly( false );
-        ui->toolButton->setDisabled( false );
+        //! cancel
+        QApplication::processEvents();
+
+        ui->lineEdit->setEnabled( true );
+        ui->toolButton->setEnabled( true );
         ui->lineEdit->clear();
         ui->progressBar->hide();
-        pStatusBar->showMessage( tr("Cancle"),  5000);
+        pStatusBar->showMessage( tr("Cancel"),  5000);
         ui->buttonBox->button( QDialogButtonBox::Cancel )->setEnabled( false );
     }
 
@@ -318,68 +355,68 @@ void UpdateDialog::on_lineEdit_textChanged(const QString &s)
 
 }
 
-int UpdateDialog::openDevice()
-{
-    begin_page_log();
-    end_page_log();
+//int UpdateDialog::openDevice()
+//{
+//    begin_page_log();
+//    end_page_log();
 
-    int ret = 0;
-    int vi = -1;
-    do{
-        //! device handle
-        vi = mrgOpenGateWay( 1, m_addr.toLocal8Bit().data(), 2000);
-        if( vi < 0){
-            ret = -1;
-            break;
-        }
+//    int ret = 0;
+//    int vi = -1;
+//    do{
+//        //! device handle
+//        vi = mrgOpenGateWay( 1, m_addr.toLocal8Bit().data(), 2000);
+//        if( vi < 0){
+//            ret = -1;
+//            break;
+//        }
 
-        int robotNames[128] = {0};
-        ret = mrgGetRobotName(vi, robotNames);
-        if(ret <=0){
-            sysInfo("Get Robot Name Fail", 1);
-            ret = -1;
-            break;
-        }
-        m_robotID = robotNames[0];
+//        int robotNames[128] = {0};
+//        ret = mrgGetRobotName(vi, robotNames);
+//        if(ret <=0){
+//            sysInfo("Get Robot Name Fail", 1);
+//            ret = -1;
+//            break;
+//        }
+//        m_robotID = robotNames[0];
 
-        int deviceNames[128] = {0};
-        //ret = mrgGetRobotDevice(m_vi, m_robotID, deviceNames);
-        recvID = QString::number(1);
+//        int deviceNames[128] = {0};
+//        //ret = mrgGetRobotDevice(m_vi, m_robotID, deviceNames);
+//        recvID = QString::number(1);
 
-        //! info
-        ret = loadRemoteInfo( vi );
-        if ( ret != 0 )
-        { break; }
+//        //! info
+//        ret = loadRemoteInfo( vi );
+//        if ( ret != 0 )
+//        { break; }
 
-    }while(0);
-    if ( vi > 0 ){
-        mrgCloseGateWay( vi );
-    }
+//    }while(0);
+//    if ( vi > 0 ){
+//        mrgCloseGateWay( vi );
+//    }
 
-    return ret;
-}
+//    return ret;
+//}
 
-int UpdateDialog::loadRemoteInfo( int vi )
-{
-    QByteArray ary;
-    ary.reserve( 1024 * 1024 );
+//int UpdateDialog::loadRemoteInfo( int vi )
+//{
+//    QByteArray ary;
+//    ary.reserve( 1024 * 1024 );
 
-    int ret = 0;
+//    int ret = 0;
 
-    //! read the history from remote and show
-    ret = mrgStorageReadFile( vi, 0,
-                        (QString(mct_path) + "/" + "MRX-T4").toLatin1().data(),
-                        "update.xml",
-                        (quint8*)ary.data() );
-    if( ret  == 0 ){
-        return 1;
-    }
-    ary.resize( ret );
+//    //! read the history from remote and show
+//    ret = mrgStorageReadFile( vi, 0,
+//                        (QString(mct_path) + "/" + "MRX-T4").toLatin1().data(),
+//                        "update.xml",
+//                        (quint8*)ary.data() );
+//    if( ret  == 0 ){
+//        return 1;
+//    }
+//    ary.resize( ret );
 
-    mRemoteVerionStream = ary;
+//    mRemoteVerionStream = ary;
 
-    return 0;
-}
+//    return 0;
+//}
 
 int UpdateDialog::parseUpdateFile(QByteArray &in)
 {
@@ -435,7 +472,7 @@ MThead::MThead(QObject *parent):
     PEntity_MRH(NULL),
     iEndFlag(0)
 {
-    pSemaphore = new QSemaphore(1);
+//    pSemaphore = new QSemaphore(1);
     vi = 0;
 }
 
@@ -501,6 +538,19 @@ int MThead::updateDevice()
     return 0;
 }
 
+//! downloading progress
+static void transferProg( void *pContext, int total, int count )
+{
+    if ( NULL == pContext )
+    { return; }
+
+    MThead *pThread = (MThead*)pContext;
+
+    //! \note the 55 is the MRQ end
+    int prog = 55 + 25.0 * count / total;
+    pThread->emit_progress( QString::number( prog ) );
+}
+
 int MThead::updateController()
 {
     int ret = 0;
@@ -519,42 +569,46 @@ int MThead::updateController()
             ret = mrgStorageWriteFile(vi, 0, (char *)"/media/usb0/",
                                       (char *)MRH_UPDATE,
                                       (unsigned char*)(PEntity_MRH->mPayload.data()),
-                                      PEntity_MRH->mPayload.size());
+                                      PEntity_MRH->mPayload.size(),
+                                      transferProg, this
+                                      );
             if(ret!=0){
-                ret = -2;
-                break;
-            }
-
-            emit resultReady( QString::number( 60 ) );
-
-            QString strCmd = "tar xzvf /media/usb0/mrh.tar.gz -C /media/usb0/";
-            ret = mrgSystemRunCmd(vi, strCmd.toLocal8Bit().data(), 0);
-            if( ret !=0 ){
-                ret = -3;
-                break;
-            }
-
-            emit resultReady( QString::number( 70 ) );
-
-            strCmd = "cp /media/usb0/update.sh /home/megarobo/MCT/MRX-T4/update.sh";
-            ret = mrgSystemRunCmd(vi, strCmd.toLocal8Bit().data(), 0);
-            if( ret !=0 ){
-                ret = -3;
-                break;
-            }
-
-            strCmd = "sh /home/megarobo/MCT/MRX-T4/update.sh";
-            ret = mrgSystemRunCmd(vi, strCmd.toLocal8Bit().data(), 0);
-            if(ret !=0){
-                ret = -3;
+                ret = -4;
                 break;
             }
 
             emit resultReady( QString::number( 80 ) );
 
+            //! first untar
+            QString strCmd = "tar xzvf /media/usb0/mrh.tar.gz -C /media/usb0/";
+            ret = mrgSystemRunCmd(vi, strCmd.toLocal8Bit().data(), 0);
+            if( ret !=0 ){
+                ret = -5;
+                break;
+            }
+
+            emit resultReady( QString::number( 85 ) );
+
+            strCmd = "cp /media/usb0/update.sh /home/megarobo/MCT/MRX-T4/update.sh";
+            ret = mrgSystemRunCmd(vi, strCmd.toLocal8Bit().data(), 0);
+            if( ret !=0 ){
+                ret = -5;
+                break;
+            }
+
+            //! re untar
+            strCmd = "sh /home/megarobo/MCT/MRX-T4/update.sh";
+            ret = mrgSystemRunCmd(vi, strCmd.toLocal8Bit().data(), 0);
+            if(ret !=0){
+                ret = -5;
+                break;
+            }
+
+            emit resultReady( QString::number( 90 ) );
+
             ret = mrgSysUpdateFileStart(vi, (char *)"mrh.dat");
             if(ret !=0 ){
-                ret = -1;
+                ret = -6;
                 break;
             }
 
@@ -563,7 +617,7 @@ int MThead::updateController()
                                          pXPlugin->SN_MRQ().toLatin1().data() );
             if ( ret != 0 ){
                 sysError( tr("Set MRQConfig Error"), e_out_log );
-                ret = -4;
+                ret = -7;
                 break;
             }
 
@@ -579,6 +633,7 @@ int MThead::updateController()
         }
 
     mrgCloseGateWay(vi);
+    vi = 0;
 
     return ret;
 }
@@ -588,10 +643,16 @@ void MThead::attatchPlugin(XPlugin *xp)
     pXPlugin = xp;
 }
 
+void MThead::emit_progress( const QString &str )
+{
+    emit resultReady( str );
+}
+
 void MThead::run()
 {
     try{
-        while( 1 )
+//        while( 1 )
+        do
         {
             if ( isInterruptionRequested() )
             { return; }
@@ -602,43 +663,46 @@ void MThead::run()
 
                 emit resultReady(1);
 
-                pSemaphore->acquire(1);
+//                pSemaphore->acquire(1);
                 int ret = updateDevice();
 
-                //! wait
-                if( pSemaphore->tryAcquire(1, 10000) ){
+//                //! wait
+//                if( pSemaphore->tryAcquire(1, 10000) ){
 
-                }else{
-                    pSemaphore->release(1);
-                    goto SLEEP;
-                }
-                pSemaphore->release(1);
+//                }else{
+//                    pSemaphore->release(1);
+//                    goto SLEEP;
+//                }
+//                pSemaphore->release(1);
 
-                if( iEndFlag == 0 || ret < 0 ){
-                    pSemaphore->acquire(1);
-                    iProgress = 0;
-                    ret = updateDevice();
-                    if( pSemaphore->tryAcquire(1, 10000) ){
+//                //! MRQ Update
+//                if( iEndFlag == 0 || ret < 0 ){
+//                    pSemaphore->acquire(1);
+//                    iProgress = 0;
+//                    ret = updateDevice();
+//                    if( pSemaphore->tryAcquire(1, 10000) ){
 
-                    }else{
-                        pSemaphore->release(1);
-                        goto SLEEP;
-                    }
-                    pSemaphore->release(1);
-                }
+//                    }else{
+//                        pSemaphore->release(1);
+//                        goto SLEEP;
+//                    }
+//                    pSemaphore->release(1);
+//                }
 
+                //! MRH Update
                 if( iEndFlag == 1 )
                 {
                     emit resultReady(9);
                     emit resultReady(2);
 
                     ret = updateController();
-                    emit resultReady( ret );
-                    if( ret < 0 ){
-                        ret = updateController();
-                    }
 
-                    emit resultReady( ret );
+                    emit resultReady( encode_code( ret, MRH_CODE ) );
+//                    if( ret < 0 ){
+//                        ret = updateController();
+//                    }
+
+//                    emit resultReady( ret );
 
                     iEndFlag = 0;
                 }
@@ -646,14 +710,13 @@ void MThead::run()
             }
 
             SLEEP:
-            localSleep(500);
-        }
+                localSleep(500);
+        }while( 0 );
     }
     catch( QException &e )
-    {
-        //! \todo free
+    {        
         if( pProc )
-        pProc->close();
+        { pProc->close(); }
 
         if( vi > 0 ){
             mrgCloseGateWay(vi);
@@ -714,22 +777,12 @@ void MThead::parseStandOutput()
         ret = 1;
     }   
 
-    if( ret != 1 ){
-        pSemaphore->release(1);
-    }
+//    if( ret != 1 ){
+//        pSemaphore->release(1);
+//    }
 
     emit resultReady(ret);
     emit resultReady( QString::number(iProgress/4) );
-    //! percent
-//    QRegExp rx("(\\d+)");
-//    QString _str = QString( ba );
-//    QStringList list;
-//    int pos = 0;
-
-//    while ((pos = rx.indexIn(_str, pos)) != -1) {
-//        list << rx.cap(1);
-//        pos += rx.matchedLength();
-//    }
 }
 
 //! Class Entity

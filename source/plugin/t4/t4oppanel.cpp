@@ -2032,7 +2032,7 @@ void T4OpPanel::slot_speed_verify()
     }
 
     //! change the cur index
-    if ( curIndex > ui->cmbSpeed->count() )
+    if ( curIndex >= ui->cmbSpeed->count() )
     {
         ui->cmbSpeed->setCurrentIndex( ui->cmbSpeed->count() -1 );
         sysPrompt( tr("Current speed changed"), 0 );

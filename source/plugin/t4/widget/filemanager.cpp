@@ -269,7 +269,7 @@ void FileManager::on_mode_changed(MODE m)
     {
         case BACKUP:
             this->setWindowTitle(tr("Backup"));
-            ui->lineEdit->setText( QDateTime::currentDateTimeUtc().toString("yyyyMMddhhmmss_zzz") );
+            ui->lineEdit->setText( QDateTime::currentDateTime().toString("yyyyMMddhhmmss_zzz") );
             break;
         case RESTORE:
             this->setWindowTitle(tr("Restore"));

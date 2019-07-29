@@ -54,6 +54,9 @@
 
 #define EXPORT_API __declspec(dllexport)
 #define CALL    __cdecl
+
+typedef void (*P_FUNC_PROC)( void *pContext, int total, int transfered );
+
 //#define CALL  __stdcall
 #else
 //////////////////////////////////

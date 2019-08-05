@@ -289,6 +289,7 @@ int Config::download()
     //! set terminal
     int type = ui->cmbTypeTerminal->currentData().toInt();
 
+<<<<<<< HEAD
     char t[4] = {0};
 
     //! F2, F3, A5
@@ -314,6 +315,13 @@ int Config::download()
         {}
         else
         {}
+=======
+    QString baStr = QString("4@%1").arg( robot_var_handle() );
+    ret = mrgRobotToolSet( robot_var(), type, baStr.toLatin1().data() );
+
+    if(ret != 0){
+        return -1;
+>>>>>>> a43ebcf5685501fbaef541db20e9b533fc2693de
     }
 
     //! set zero

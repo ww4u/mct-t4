@@ -55,6 +55,7 @@ SOURCES = \
     model\treeitem.cpp \
     model\treemodel.cpp \
     motorcurrent.cpp \
+<<<<<<< HEAD
     iostate.cpp \
     regexpinputdialog.cpp \
     widget/ioindicator.cpp \
@@ -64,6 +65,9 @@ SOURCES = \
     updatedialog.cpp \
     widget/filemanager.cpp \
     hlx.cpp
+=======
+    controlbar.cpp
+>>>>>>> a43ebcf5685501fbaef541db20e9b533fc2693de
 
 
 HEADERS = \
@@ -93,6 +97,7 @@ HEADERS = \
     model\treeitem.h \
     model\treemodel.h \
     motorcurrent.h \
+<<<<<<< HEAD
     iostate.h \
     regexpinputdialog.h \
     widget/ioindicator.h \
@@ -102,6 +107,9 @@ HEADERS = \
     updatedialog.h \
     widget/filemanager.h \
     hlx.h
+=======
+    controlbar.h
+>>>>>>> a43ebcf5685501fbaef541db20e9b533fc2693de
 
 FORMS += \
     config.ui \
@@ -120,6 +128,7 @@ FORMS += \
     coordpara.ui \
     advpara.ui \
     motorcurrent.ui \
+<<<<<<< HEAD
     iostate.ui \
     widget/ioindicator.ui \
     t4oppanel.ui \
@@ -128,6 +137,9 @@ FORMS += \
     updatedialog.ui \
     widget/filemanager.ui \
     hlx.ui
+=======
+    controlbar.ui
+>>>>>>> a43ebcf5685501fbaef541db20e9b533fc2693de
 
 RESOURCES += ../../../res/res.qrc
 

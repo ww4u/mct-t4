@@ -8,5 +8,8 @@ SUBDIRS = ./t4/t4.pro \
           ../device/device.pro
 #          ../../prj/mct.pro
 
+<<<<<<< HEAD
 #TRANSLATIONS += ../plugin/mct_zh_CN.ts \
 #                ../plugin/mct_EN.ts
+=======
+>>>>>>> a43ebcf5685501fbaef541db20e9b533fc2693de

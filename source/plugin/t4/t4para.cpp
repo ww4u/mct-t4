@@ -170,11 +170,19 @@ int T4Para::serialOut( QXmlStreamWriter &writer )
         writer.writeTextElement( "step", QString::number( mStepIndex ) );
     writer.writeEndElement();
 
+<<<<<<< HEAD
 //    //! joint speed
 //    writer.writeStartElement("joint_speed");
 //        writer.writeTextElement( "percent", QString::number( mJointStepIndex ) );
 //        writer.writeTextElement( "step", QString::number( mJointStepIndex ) );
 //    writer.writeEndElement();
+=======
+    //! joint speed
+    writer.writeStartElement("joint_speed");
+        writer.writeTextElement( "percent", QString::number( mJointSpeed ) );
+        writer.writeTextElement( "step", QString::number( mJointStepIndex ) );
+    writer.writeEndElement();
+>>>>>>> a43ebcf5685501fbaef541db20e9b533fc2693de
 
     //! home
     writer.writeStartElement("home");

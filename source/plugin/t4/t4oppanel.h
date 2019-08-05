@@ -374,6 +374,7 @@ private:
 
     QStringList mStepxList;
     QStringList mJointStepxList;
+
 protected:
     DebugTable mDebugTable;
     DiagnosisTable mDiagTable;
@@ -466,12 +467,15 @@ private slots:
     void on_tabWidget_currentChanged(int index);
 
     void on_toolButton_debugRun_clicked();
+<<<<<<< HEAD
     void on_btnStepNext_clicked();
 
     void on_radCoordXyz_clicked();
     void on_radCoordJoint_clicked();
 
 
+=======
+>>>>>>> a43ebcf5685501fbaef541db20e9b533fc2693de
 };
 
 }

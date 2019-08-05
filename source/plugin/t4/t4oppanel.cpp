@@ -811,8 +811,9 @@ void T4OpPanel::updateUi()
     Q_ASSERT( NULL != pRobo );
 
     ui->cmbStepXx->setCurrentIndex( pRobo->mStepIndex );
-    //! \todo the display format
+
     ui->cmbSpeed->setCurrentText( QString("%1").arg( pRobo->mSpeed ) );
+    ui->cmbCSpeed->setCurrentText( QString("%1").arg( pRobo->mCSpeed ) );
 
     slot_speed_verify();
 
@@ -841,7 +842,7 @@ void T4OpPanel::updateData()
     //! save
     pRobo->mStepIndex = ui->cmbStepXx->currentIndex();
     pRobo->mSpeed = ui->cmbSpeed->currentText().toDouble();
-
+    pRobo->mCSpeed = ui->cmbCSpeed->currentText().toDouble();
     pRobo->mbMctEn = ui->controllerStatus->isMctChecked();
     pRobo->mbAxisPwr = ui->controllerStatus->getDevicePower();
 }
@@ -967,6 +968,11 @@ double T4OpPanel::localSpeed()
     return ui->cmbSpeed->currentText().toDouble();
 }
 
+double T4OpPanel::localJogSpeed()
+{
+    return ui->cmbCSpeed->currentText().toDouble();
+}
+
 double T4OpPanel::localStep()
 {
     Q_ASSERT( ui->cmbStepXx->currentIndex() < sizeof_array( _stepRatio) );
@@ -1077,24 +1083,32 @@ void T4OpPanel::jogProc( int jId, int dir, bool b )
         return;
     }
 
+    check_connect();
+
     //! joint jog
     QList<QVariant> vars;
     if ( isCoordJoint() || jId >= 4 )
     {
+        //! check the F3
+        if ( pRobo->mTerminalType == T4Para::e_terminal_f3 && jId == 5 )
+        { dir = -dir; }
+        else
+        {}
+
         vars<<(jId-1)<<dir * m_pPlugin->jointDir( jId - 1 )<<1;
+
         QVariant var( vars );
         on_post_setting_n_mission( T4OpPanel, onJointJog, tr("Joint jog") );
     }
     //! x,y,z step
     else
     {
-
         QList<QVariant> vars;
 
         vars<<(double)(jId == 3 ? dir : 0)
             <<(double)(jId == 2 ? dir : 0)
             <<(double)(jId == 1 ? dir : 0)
-            <<localSpeed();
+            <<localJogSpeed();
 
         QVariant var( vars );
 
@@ -1157,6 +1171,12 @@ int T4OpPanel::onHoming( QVariant var )
     check_connect_ret( -1 );
 
     int ret;
+
+    //! \note clear the err
+    ret = mrgSystemErrorAck( pRobo->deviceVi() );
+    if ( ret != 0 )
+    { return ret; }
+
     //! \note only for the valid tool
     if ( pRobo->mTerminalType == T4Para::e_terminal_f2
          || pRobo->mTerminalType == T4Para::e_terminal_f3
@@ -1167,8 +1187,10 @@ int T4OpPanel::onHoming( QVariant var )
         { return ret; }
     }
 
-    ret = mrgRobotGoHome( robot_var(),
-                          pRobo->mHomeTimeout*1000 );
+    ret = mrgRobotGoHomeWithParam( robot_var(),
+                                   pRobo->mHomeSpeed,
+                                   pRobo->mHomeTimeout*1000 );
+
     return ret;
 }
 
@@ -1230,7 +1252,7 @@ int T4OpPanel::onJointStep( QVariant var /*int jId, int dir*/ )
     return ret;
 }
 int T4OpPanel::onJointZero( QVariant var )
-{logDbg();
+{
     check_connect_ret( -1 );
 
     int jId, dir;
@@ -1264,7 +1286,7 @@ int T4OpPanel::onJointJog( QVariant var )
     dir = vars[1].toInt();
     btnId = vars[2].toInt();
 
-    double speed = pRobo->mMaxJointSpeeds.at(jId) * localSpeed() / 100.0;
+    double speed = pRobo->mMaxJointSpeeds.at(jId) * localJogSpeed() / 100.0;
 
     int ret = -1;
     //! \todo stop2

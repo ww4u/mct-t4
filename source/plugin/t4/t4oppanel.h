@@ -300,6 +300,8 @@ public:
 
 protected:
     double localSpeed();
+    double localJogSpeed();
+
     double localStep();
     bool   isContinous();
     bool   isCoordJoint();

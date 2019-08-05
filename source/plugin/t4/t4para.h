@@ -79,6 +79,7 @@ public:
 
     int mStepIndex;
     double mSpeed;      //! percent
+    double mCSpeed;     //! percent
     eCoordinateType mCoord;
 
     Coordinate mCoordPara[10+2];

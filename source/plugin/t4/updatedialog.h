@@ -60,11 +60,14 @@ signals:
 
     //! control thread
     //! 0: standby  1:begin
-    void changeTheadWorkMode( int mode );
+//    void changeTheadWorkMode( int mode );
 
 public slots:
     void updateUi( int i );
     void updateProgress(QString );
+
+    void slot_begin();
+    void slot_end( int ret );
 
 private slots:
     void on_buttonBox_clicked(QAbstractButton *button);
@@ -114,6 +117,7 @@ public:
     virtual int updateDevice();
     virtual int updateController();
 
+public:
     void attatchPlugin(XPlugin *xp);
 public:
     void emit_progress( const QString &str );
@@ -124,6 +128,9 @@ protected:
 signals:
     void resultReady( QString );
     void resultReady( int );
+
+    void signal_start();
+    void signal_end( int ret );
 
 private:
     QProcess *pProc;

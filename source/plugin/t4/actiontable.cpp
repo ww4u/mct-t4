@@ -185,6 +185,9 @@ void ActionTable::setModel( QAbstractItemModel *pModel )
 
     ui->view->setModel( pModel );
 
+    //! \note hide the line
+    ui->view->setColumnHidden( 8, true );
+
     TreeModel *pMegaModel = (TreeModel*)pModel;
     pMegaModel->setTerminalSpeed( pRobo->mMaxTerminalSpeed );
     pMegaModel->setJointSpeeds( pRobo->mMaxJointSpeeds );

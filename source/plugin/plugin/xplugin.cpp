@@ -20,6 +20,7 @@ XPlugin::XPlugin( QObject *parent ) : XPluginIntf( parent )
     //! updateing
     m_pUpdateWorking = new XPluginWorkingThread( this );
     m_pUpdateWorking->attachMutex( &mUpdateMutex );
+    m_pUpdateWorking->setPriority( QThread::LowPriority );
     m_pUpdateWorking->start();
     m_pUpdateWorking->setTick( 1000 );
 

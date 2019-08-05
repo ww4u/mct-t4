@@ -700,14 +700,18 @@ size_t busQuery(unsigned long fd, char *input, size_t inputlen, char *output, si
             break;
         }
         retCount = 0;
-        _msSleep(5);
-    }
-    if( (retCount == 0) ||  STRNCASECMP(output, "Command error", strlen("Command error")) == 0 )
-    {
-        UNLOCK();
-        return 0;
+
+        //! try count
+//        if ( errCount > 0 )
+//        { _msSleep(5); }
     }
     UNLOCK();
+
+    if( (retCount == 0) ||  STRNCASECMP(output, "Command error", strlen("Command error")) == 0 )
+    {
+        return 0;
+    }
+
     if(output[retCount-1] == '\n' && output[0] != '#')
         output[retCount-1] = '\0';
     return retCount;

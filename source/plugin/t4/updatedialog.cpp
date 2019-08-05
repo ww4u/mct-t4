@@ -52,12 +52,15 @@ UpdateDialog::UpdateDialog(QWidget *parent) :
     pWorkThead = NULL;
 
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled( false );
-    ui->buttonBox->button( QDialogButtonBox::Cancel )->setEnabled( false );
+//    ui->buttonBox->button( QDialogButtonBox::Cancel )->setEnabled( false );
+//    ui->buttonBox->button( QDialogButtonBox::Cancel )->setVisible( false );
 
     //! update thread
 
     pStatusBar = new QStatusBar(this);
     ui->gridLayout->addWidget(pStatusBar, 3, 0, 1, 1);
+
+    setWindowFlag( Qt::WindowCloseButtonHint, false );
 }
 
 UpdateDialog::~UpdateDialog()
@@ -86,7 +89,7 @@ void UpdateDialog::updateUi( int i )
     {
         //! MRQ
         case -1:
-            str = tr("Update Backbord Error");
+            str = tr("Update Backboard Error");
             break;
         case -2:
             str = tr("Net Error");
@@ -136,9 +139,14 @@ void UpdateDialog::updateUi( int i )
         case -18:
             str = tr("Open MRH-T Failed");
             break;
+
+        case -19:
+            str = tr("MRQ failed to ack");
+            break;
+
         case 0:
             str = tr("Update Complete");
-            ui->buttonBox->hide();
+//            ui->buttonBox->hide();
             break;
 
         //! MRH + CODE
@@ -179,6 +187,10 @@ void UpdateDialog::updateUi( int i )
         case 9:
             str = tr("MRQ Update Complete");
             break;
+
+        default:
+            str = tr("Update fail");
+            break;
     }
 
     pStatusBar->showMessage( str );
@@ -187,6 +199,24 @@ void UpdateDialog::updateProgress( QString str )
 {
     ui->progressBar->setValue( str.toInt() );
     ui->progressBar->show();
+}
+
+void UpdateDialog::slot_begin()
+{
+    ui->buttonBox->button( QDialogButtonBox::Close )->setEnabled( false );
+}
+void UpdateDialog::slot_end( int ret )
+{
+    ui->buttonBox->button( QDialogButtonBox::Close )->setEnabled( true );
+
+    //! enable
+    if ( ret != 0 )
+    {
+        ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( true );
+
+        ui->lineEdit->setEnabled( true );
+        ui->toolButton->setEnabled( true );
+    }
 }
 
 void UpdateDialog::on_buttonBox_clicked(QAbstractButton *button)
@@ -211,43 +241,51 @@ void UpdateDialog::on_buttonBox_clicked(QAbstractButton *button)
 
         m_pPlugin->close();
 
-        button->setDisabled( true );
-        ui->buttonBox->button( QDialogButtonBox::Cancel )->setEnabled( true );
+        //! disable
+        ui->buttonBox->button( QDialogButtonBox::Ok )->setEnabled( false );
+//        ui->buttonBox->button( QDialogButtonBox::Cancel )->setEnabled( true );
 
         ui->lineEdit->setEnabled( false );
         ui->toolButton->setEnabled( false );
 
         if( pWorkThead != NULL ){
             delete pWorkThead;
-            pWorkThead == NULL;
+            pWorkThead = NULL;
         }
         pWorkThead = new MThead;
-        connect( this, SIGNAL(changeTheadWorkMode(int)), pWorkThead, SLOT(switchWorkMode(int)) );
+//        connect( this, SIGNAL(changeTheadWorkMode(int)), pWorkThead, SLOT(switchWorkMode(int)) );
         connect( pWorkThead, SIGNAL( resultReady(int)), this, SLOT( updateUi( int ) ) );
         connect( pWorkThead, SIGNAL( resultReady(QString)), this, SLOT( updateProgress( QString ) ));
+
+        //! begin && end
+        connect( pWorkThead, SIGNAL( started()), this, SLOT(slot_begin()) );
+        connect( pWorkThead, SIGNAL( signal_end(int)), this, SLOT(slot_end(int)) );
+
+        pWorkThead->switchWorkMode( 1 );
+
         pWorkThead->start();
         pWorkThead->setAddr( m_addr );
         pWorkThead->attachEntity_MRQ( m_mrqEntity );
         pWorkThead->attachEntity_MRH( m_mrhEntity );
         pWorkThead->attatchPlugin( m_pPlugin );
-        changeTheadWorkMode(1);
-    }else{
-        if( pWorkThead != NULL ){
-            pWorkThead->requestInterruption();
-            pWorkThead->wait();
-            delete pWorkThead;
-            pWorkThead = NULL;
-        }
+    }
+    else{
+//        if( pWorkThead != NULL ){
+//            pWorkThead->requestInterruption();
+//            pWorkThead->wait();
+//            delete pWorkThead;
+//            pWorkThead = NULL;
+//        }
 
-        //! cancel
-        QApplication::processEvents();
+//        //! cancel
+//        QApplication::processEvents();
 
-        ui->lineEdit->setEnabled( true );
-        ui->toolButton->setEnabled( true );
-        ui->lineEdit->clear();
-        ui->progressBar->hide();
-        pStatusBar->showMessage( tr("Cancel"),  5000);
-        ui->buttonBox->button( QDialogButtonBox::Cancel )->setEnabled( false );
+//        ui->lineEdit->setEnabled( true );
+//        ui->toolButton->setEnabled( true );
+//        ui->lineEdit->clear();
+//        ui->progressBar->hide();
+//        pStatusBar->showMessage( tr("Cancel"),  5000);
+//        ui->buttonBox->button( QDialogButtonBox::Cancel )->setEnabled( false );
     }
 
 }
@@ -272,12 +310,17 @@ int UpdateDialog::versionComparison( const QString &inVersion )
     QXmlStreamReader reader( ba );
     while( reader.readNextStartElement() ){
         if( reader.name() == "data" ){
-            while( reader.readNextStartElement() ){
-                if( reader.name() == "block" ){
-                    if( reader.attributes().hasAttribute("id") ){
+            while( reader.readNextStartElement() )
+            {
+                if( reader.name() == "block" )
+                {
+                    if( reader.attributes().hasAttribute("id") )
+                    {
                         qDebug() << reader.attributes().value("id").toString();
-                        while(reader.readNextStartElement()){
-                            if( reader.name() == "version" ){
+                        while(reader.readNextStartElement())
+                        {
+                            if( reader.name() == "version" )
+                            {
                                 version = reader.readElementText();
                             }else if( reader.name() == "mrh" ){
                                 mrh = reader.readElementText();
@@ -291,7 +334,8 @@ int UpdateDialog::versionComparison( const QString &inVersion )
                         }
                         break;
                     }
-                }else{
+                }else
+                {
                     reader.skipCurrentElement();
                 }
                 break;
@@ -300,13 +344,34 @@ int UpdateDialog::versionComparison( const QString &inVersion )
             reader.skipCurrentElement();
         }
     }
-    //! \todo check version
+
+    //! MRX-T4_R0.0.1.7
     QStringList inList = inVersion.mid(8).split(".");
     QStringList tList = version.mid( 8 ).split(".");
-    for( int i = 0; i < inList.size(); i++ ){
-        if( inList.at( i ) != tList.at( i ) )
-        return 1;
+
+    //! check version
+    if ( inList.size() != tList.size() )
+    { return 0; }
+
+    sysInfo( inVersion + "" + version );
+
+    bool bOk;
+    int v1, v2;
+    for ( int i = 0; i < inList.size(); i++ )
+    {
+        v1 = inList.at( i ).toInt( &bOk );
+        if ( !bOk )
+        { return 0; }
+
+        v2 = tList.at( i ).toInt( &bOk );
+        if ( !bOk )
+        { return 0; }
+
+        if ( v1 > v2 )
+        { return 1; }
     }
+
+    //! equal or less
     return 0;
 }
 
@@ -472,7 +537,6 @@ MThead::MThead(QObject *parent):
     PEntity_MRH(NULL),
     iEndFlag(0)
 {
-//    pSemaphore = new QSemaphore(1);
     vi = 0;
 }
 
@@ -519,6 +583,10 @@ int MThead::updateDevice()
              this,
              SLOT(parseStandOutput())
             );
+    connect( pProc,
+             SIGNAL(finished(int)),
+             this,
+             SLOT(parseStandOutput()) );
 
     pProc->start( (qApp->applicationDirPath() + MRQ_UPDATE_EXE), argument );
     pProc->waitForStarted();
@@ -566,6 +634,7 @@ int MThead::updateController()
                 break;
             }
 
+            //! write
             ret = mrgStorageWriteFile(vi, 0, (char *)"/media/usb0/",
                                       (char *)MRH_UPDATE,
                                       (unsigned char*)(PEntity_MRH->mPayload.data()),
@@ -580,7 +649,7 @@ int MThead::updateController()
             emit resultReady( QString::number( 80 ) );
 
             //! first untar
-            QString strCmd = "tar xzvf /media/usb0/mrh.tar.gz -C /media/usb0/";
+            QString strCmd = "tar -xzvf /media/usb0/mrh.tar.gz -C /media/usb0/";
             ret = mrgSystemRunCmd(vi, strCmd.toLocal8Bit().data(), 0);
             if( ret !=0 ){
                 ret = -5;
@@ -589,6 +658,7 @@ int MThead::updateController()
 
             emit resultReady( QString::number( 85 ) );
 
+            //! copy
             strCmd = "cp /media/usb0/update.sh /home/megarobo/MCT/MRX-T4/update.sh";
             ret = mrgSystemRunCmd(vi, strCmd.toLocal8Bit().data(), 0);
             if( ret !=0 ){
@@ -596,7 +666,7 @@ int MThead::updateController()
                 break;
             }
 
-            //! re untar
+            //! do copy
             strCmd = "sh /home/megarobo/MCT/MRX-T4/update.sh";
             ret = mrgSystemRunCmd(vi, strCmd.toLocal8Bit().data(), 0);
             if(ret !=0){
@@ -612,6 +682,7 @@ int MThead::updateController()
                 break;
             }
 
+            //! success
             ret = mrgSystemSetMRQConfig( vi,
                                          pEntity_MRQ->mDescription.toLatin1().data(),
                                          pXPlugin->SN_MRQ().toLatin1().data() );
@@ -650,71 +721,52 @@ void MThead::emit_progress( const QString &str )
 
 void MThead::run()
 {
-    try{
-//        while( 1 )
-        do
+    int ret = 0;
+
+    emit signal_start();
+
+//    QThread::sleep( 10 );
+
+    try
+    {
+
+        //! MRH Update rst
+        iEndFlag = 0;
         {
-            if ( isInterruptionRequested() )
-            { return; }
+            iProgress = 0;
+            emit resultReady(1);
 
-            if( iFlag )
+            //! MRQ
+            ret = updateDevice();
+
+            int tryCnt = 10;
+            while( iEndFlag != 1 && tryCnt > 0 )
             {
-                iProgress = 0;
+                QThread::msleep( 100 );
 
-                emit resultReady(1);
-
-//                pSemaphore->acquire(1);
-                int ret = updateDevice();
-
-//                //! wait
-//                if( pSemaphore->tryAcquire(1, 10000) ){
-
-//                }else{
-//                    pSemaphore->release(1);
-//                    goto SLEEP;
-//                }
-//                pSemaphore->release(1);
-
-//                //! MRQ Update
-//                if( iEndFlag == 0 || ret < 0 ){
-//                    pSemaphore->acquire(1);
-//                    iProgress = 0;
-//                    ret = updateDevice();
-//                    if( pSemaphore->tryAcquire(1, 10000) ){
-
-//                    }else{
-//                        pSemaphore->release(1);
-//                        goto SLEEP;
-//                    }
-//                    pSemaphore->release(1);
-//                }
-
-                //! MRH Update
-                if( iEndFlag == 1 )
-                {
-                    emit resultReady(9);
-                    emit resultReady(2);
-
-                    ret = updateController();
-
-                    emit resultReady( encode_code( ret, MRH_CODE ) );
-//                    if( ret < 0 ){
-//                        ret = updateController();
-//                    }
-
-//                    emit resultReady( ret );
-
-                    iEndFlag = 0;
-                }
-                iFlag = 0;
+                tryCnt--;
             }
 
-            SLEEP:
-                localSleep(500);
-        }while( 0 );
+            //! MRH Update
+            if( iEndFlag == 1 )
+            {
+                emit resultReady(9);
+                emit resultReady(2);
+
+                ret = updateController();
+
+                emit resultReady( encode_code( ret, MRH_CODE ) );
+
+                iEndFlag = 0;
+            }
+            else
+            {
+                emit resultReady( encode_code( -19, MRQ_CODE ) );
+            }
+        }
     }
     catch( QException &e )
-    {        
+    {
         if( pProc )
         { pProc->close(); }
 
@@ -723,7 +775,8 @@ void MThead::run()
             vi = 0;
         }
     }
-    //delete pProc;
+
+    emit signal_end( ret );
 }
 void MThead::slotReadyRead()
 {

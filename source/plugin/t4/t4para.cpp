@@ -53,6 +53,7 @@ void T4Para::rst()
 
     mStepIndex = 5;
     mSpeed = 20;
+    mCSpeed = 20;
     mCoord = e_coord_base;
 
 //    mJointStepIndex = 6;
@@ -165,6 +166,7 @@ int T4Para::serialOut( QXmlStreamWriter &writer )
     //! robo speed
     writer.writeStartElement("speed");
         writer.writeTextElement( "percent", QString::number( mSpeed ) );
+        writer.writeTextElement( "c_percent", QString::number( mCSpeed ) );
         writer.writeTextElement( "step", QString::number( mStepIndex ) );
     writer.writeEndElement();
 
@@ -346,6 +348,8 @@ int T4Para::serialIn( QXmlStreamReader &reader )
             {
                 if ( reader.name() == "percent" )
                 { mSpeed = reader.readElementText().toDouble(); }
+                else if ( reader.name() == "c_percent" )
+                { mCSpeed = reader.readElementText().toDouble(); }
                 else if ( reader.name() == "step" )
                 { mStepIndex = reader.readElementText().toInt(); }
                 else

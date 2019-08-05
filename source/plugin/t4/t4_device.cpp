@@ -109,7 +109,7 @@ int MRX_T4::_open( int &vi )
     vi = 0;
 
     //! local vi
-    vi = mrgOpenGateWay(1, mAddr.toLatin1().data(), 2000 );
+    vi = mrgOpenGateWay(1, mAddr.toLatin1().data(), 1000 );
     if ( vi > 0 )
     {
         //! \note delay setting changed
@@ -175,6 +175,13 @@ int MRX_T4::_open( int &vi )
             if ( ret != 0 )
             { ret = -1; break; }
             setMRHBBHw( vers );
+
+            ret = mrgRestoreRobotConfig( vi );
+            if ( ret != 0 )
+            {
+                sysWarning( tr("load config fail") );
+            }
+
         }
 
         //! get mrq info
@@ -644,7 +651,16 @@ int MRX_T4::downloadProc()
 
     sysProgress( "Downloading...", true, 0 );
 
-    ret = _downloadProc();
+    do
+    {
+        ret = _downloadProc();
+        if ( ret != 0 )
+        { break; }
+
+        ret = mrgExportRobotConfig( deviceVi() );
+        if ( ret != 0 )
+        { break; }
+    }while( 0 );
 
     sysProgress( "Downloading...", false );
 

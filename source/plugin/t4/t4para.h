@@ -73,28 +73,15 @@ public:
     double mAxisSoftUpper[ T4Para::_axis_cnt ];
     double mAxisSoftLower[ T4Para::_axis_cnt ];
 
-<<<<<<< HEAD
     bool mbAxisSafeEnable;
     double mAxisSafeUpper[ T4Para::_axis_cnt ];
     double mAxisSafeLower[ T4Para::_axis_cnt ];
-
-=======
-    //! robot para
->>>>>>> a43ebcf5685501fbaef541db20e9b533fc2693de
     int mStepIndex;
     double mSpeed;      //! percent
     double mCSpeed;     //! percent
     eCoordinateType mCoord;
 
-<<<<<<< HEAD
     Coordinate mCoordPara[10+2];
-=======
-    //! joint para
-    int mJointStepIndex;
-    double mJointSpeed;
-
-    Coordinate mCoordPara[3];
->>>>>>> a43ebcf5685501fbaef541db20e9b533fc2693de
 
     double mArmLength[3];
 
